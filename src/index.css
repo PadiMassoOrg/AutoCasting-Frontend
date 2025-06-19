@@ -1,3 +1,20 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* src/styles/tailwind.css */
+
+/*
+  Declara las capas antes de importar (requisito v4)
+  ─────────────────────────────────────────────────── */
+@layer theme, base, components, utilities;
+
+/* 1. Tema por defecto (paleta, tamaños, etc.) */
+@import 'tailwindcss/theme.css' layer(theme);
+
+/* 2. Preflight (reset)  ─ puedes omitirlo si no lo quieres */
+@import 'tailwindcss/preflight.css' layer(base);
+
+/* 3. Utilidades clásicas  */
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+/* 4. Cualquier personalización tuya:  */
+@layer utilities {
+  /* ej.  .btn-primary { @apply bg-blue-600 text-white px-4 py-2 rounded; } */
+}
