@@ -1,3 +1,5 @@
+import { Button } from 'autocasting-ui-library';
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center">
@@ -9,6 +11,7 @@ export default function LandingPage() {
             oportunidades reales.
           </p>
         </div>
+        <Button variant="primary">Hola</Button>
       </div>
     </div>
   );
