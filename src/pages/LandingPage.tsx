@@ -1,4 +1,4 @@
-import { Button } from 'autocasting-ui-library';
+import { Button } from 'autocasting-ui-library-padimasso';
 
 export default function LandingPage() {
   return (
@@ -10,7 +10,7 @@ export default function LandingPage() {
             Una plataforma moderna para actores y castineras. Creá tu perfil, compartilo fácilmente, y conectá con
             oportunidades reales.
           </p>
-          <Button variant="secondary">UI Library Button</Button>
+          <Button variant="primary">UI Library Button</Button>
         </div>
       </div>
     </div>

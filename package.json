@@ -11,13 +11,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "autocasting-ui-library": "file:../AutoCasting-UI-Library",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
     "vercel": "^43.3.0"
   },
   "devDependencies": {
+    "autocasting-ui-library-padimasso": "^1.0.4",
+    "clsx": "^2.1.1",
     "@eslint/js": "^9.25.0",
     "@tailwindcss/postcss": "^4.1.10",
     "@types/node": "^24.0.3",
