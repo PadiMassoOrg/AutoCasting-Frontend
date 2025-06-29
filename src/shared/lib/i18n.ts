@@ -4,7 +4,7 @@ import resourcesToBackend from 'i18next-resources-to-backend';
 
 i18n
   .use(initReactI18next)
-  .use(resourcesToBackend((language: any, namespace: any) => import(`./locales/${language}/${namespace}.json`)))
+  .use(resourcesToBackend((language: any, namespace: any) => import(`../../locales/${language}/${namespace}.json`)))
   .init({
     lng: 'es',
     fallbackLng: 'es',

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import i18n from '../i18n';
+import i18n from '../../shared/lib/i18n';
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api/v1',

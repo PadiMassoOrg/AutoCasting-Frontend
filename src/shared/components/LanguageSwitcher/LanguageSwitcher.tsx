@@ -1,4 +1,4 @@
-import { useLanguage } from '../../context/LanguageContext';
+import { useLanguage } from '../../../context/LanguageContext';
 import { useTranslation } from 'react-i18next';
 
 export default function LanguageSwitcher() {
@@ -12,11 +12,11 @@ export default function LanguageSwitcher() {
 
   return (
     <div className="flex gap-2">
-      <button onClick={() => changeLang('en')} className={lang === 'en' ? 'font-bold' : ''}>
-        🇬🇧 English
-      </button>
       <button onClick={() => changeLang('es')} className={lang === 'es' ? 'font-bold' : ''}>
         🇪🇸 Español
+      </button>
+      <button onClick={() => changeLang('en')} className={lang === 'en' ? 'font-bold' : ''}>
+        🇬🇧 English
       </button>
     </div>
   );

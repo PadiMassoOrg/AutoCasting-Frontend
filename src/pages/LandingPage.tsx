@@ -1,5 +1,5 @@
-import { LoginForm } from '../components/Forms';
-import { LanguageSwitcher } from '../components/LanguageSwitcher';
+import { LoginForm } from '../features/auth/components';
+import { LanguageSwitcher } from '../shared/components/LanguageSwitcher';
 
 export default function LandingPage() {
   return (
