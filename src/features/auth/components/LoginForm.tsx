@@ -37,23 +37,32 @@ export default function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
       <FormInputField
         id="email"
-        label={t('login.email')}
+        placeholder={t('auth.login.email')}
         type="email"
         error={errors.email?.message}
         {...register('email')}
       />
       <FormInputField
         id="password"
-        label={t('login.password')}
+        placeholder={t('auth.login.password')}
         type="password"
         error={errors.password?.message}
         {...register('password')}
       />
-      <Button type="submit">{loginMutation.isPending ? t('login.loading') : t('login.submit')}</Button>
+      <h2 className="flex justify-end text-sm cursor-pointer hover:underline transition-all duration-300">
+        {t('auth.page.forgotten_pass')}
+      </h2>
+      <Button type="submit" className="my-2">
+        {loginMutation.isPending ? t('general.state.loading') : t('auth.login.submit')}
+      </Button>
       {serverError && <div className="text-red-600 text-sm text-center">{serverError}</div>}
+      <div className="flex text-sm gap-2 mt-2">
+        <h2>{t('auth.page.create_acc')}</h2>
+        <span className="font-bold cursor-pointer">{t('auth.page.create_acc_cta')}</span>
+      </div>
     </form>
   );
 }

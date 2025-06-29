@@ -10,12 +10,20 @@ export default function LanguageSwitcher() {
     i18n.changeLanguage(newLang);
   };
 
+  const baseButtonStyle = 'px-4 py-2 rounded-md text-sm cursor-pointer transition hover:bg-slate-100';
+
   return (
-    <div className="flex gap-2">
-      <button onClick={() => changeLang('es')} className={lang === 'es' ? 'font-bold' : ''}>
+    <div className="w-full flex items-center justify-between max-w-[768px]">
+      <button
+        onClick={() => changeLang('es')}
+        className={`${baseButtonStyle} ${lang === 'es' ? 'font-bold bg-slate-200' : 'text-slate-600'}`}
+      >
         🇪🇸 Español
       </button>
-      <button onClick={() => changeLang('en')} className={lang === 'en' ? 'font-bold' : ''}>
+      <button
+        onClick={() => changeLang('en')}
+        className={`${baseButtonStyle} ${lang === 'en' ? 'font-bold bg-slate-200' : 'text-slate-600'}`}
+      >
         🇬🇧 English
       </button>
     </div>

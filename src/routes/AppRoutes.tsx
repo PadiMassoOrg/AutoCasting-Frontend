@@ -1,12 +1,12 @@
-// src/routes/AppRoutes.tsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { LandingPage } from '../pages';
+import LoginPage from '../features/auth/pages/LoginPage';
 
 export default function AppRoutes() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<LoginPage />} />
+        {/* <Route path="/" element={<RegisterPage />} /> */}
       </Routes>
     </Router>
   );

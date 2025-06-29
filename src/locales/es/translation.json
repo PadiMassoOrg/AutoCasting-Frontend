@@ -1,8 +1,24 @@
 {
-  "login": {
-    "title": "Inicia sesión en tu cuenta",
-    "email": "Correo electrónico",
-    "password": "Contraseña",
-    "submit": "Iniciar Sesión"
+  "general": {
+    "state": {
+      "loading": "Loading..."
+    }
+  },
+  "auth": {
+    "company": {
+      "header": "Tu Perfil Digital Actoral"
+    },
+    "page": {
+      "or_login_with": "o ingresá con",
+      "forgotten_pass": "¿Olvidaste tu contraseña?",
+      "create_acc": "¿No tienes una cuenta?",
+      "create_acc_cta": "Crea una cuenta aquí"
+    },
+    "login": {
+      "google": "Iniciá sesión con Google",
+      "email": "Email",
+      "password": "Contraseña",
+      "submit": "Iniciar Sesión"
+    }
   }
 }
