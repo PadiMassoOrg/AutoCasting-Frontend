@@ -1,4 +1,4 @@
-import { Button } from 'autocasting-ui-library-padimasso';
+import { Button, FormInputField, GoogleButton } from 'autocasting-ui-library-padimasso';
 
 export default function LandingPage() {
   return (
@@ -10,7 +10,17 @@ export default function LandingPage() {
             Una plataforma moderna para actores y castineras. Creá tu perfil, compartilo fácilmente, y conectá con
             oportunidades reales.
           </p>
-          <Button variant="primary">UI Library Button</Button>
+        </div>
+        <div className="w-[95%] flex flex-col items-center">
+          <FormInputField
+            id={'asd'}
+            type="password"
+            placeholder="Ingresa tu password"
+            label="Contra"
+            error="Ocurrió un error..."
+          ></FormInputField>
+          <Button variant="primary">Enviar</Button>
+          <GoogleButton></GoogleButton>
         </div>
       </div>
     </div>
