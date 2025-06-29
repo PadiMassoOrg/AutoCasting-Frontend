@@ -23,8 +23,11 @@ export default function LoginForm() {
   });
 
   const onSubmit = (data: any) => {
-    setServerError(null); // Limpia errores anteriores
+    setServerError(null);
     loginMutation.mutate(data, {
+      onSuccess: (data) => {
+        localStorage.setItem('authToken', data.token);
+      },
       onError: (err: any) => {
         const message = err?.response?.data?.message || 'Unexpected server error';
         console.log(message);
