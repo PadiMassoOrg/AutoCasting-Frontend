@@ -30,14 +30,13 @@ export default function LoginForm() {
       },
       onError: (err: any) => {
         const message = err?.response?.data?.message || 'Unexpected server error';
-        console.log(message);
         setServerError(message);
       },
     });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-3">
       <FormInputField
         id="email"
         placeholder={t('auth.login.email')}
@@ -59,7 +58,7 @@ export default function LoginForm() {
         {loginMutation.isPending ? t('general.state.loading') : t('auth.login.submit')}
       </Button>
       {serverError && <div className="text-red-600 text-sm text-center">{serverError}</div>}
-      <div className="flex text-sm gap-2 mt-2">
+      <div className="flex text-sm gap-2 mt-1">
         <h2>{t('auth.page.create_acc')}</h2>
         <span className="font-bold cursor-pointer">{t('auth.page.create_acc_cta')}</span>
       </div>

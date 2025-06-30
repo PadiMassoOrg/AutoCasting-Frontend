@@ -1,13 +1,13 @@
 {
+  "company": {
+    "header": "Tu Perfil Digital Actoral"
+  },
   "general": {
     "state": {
       "loading": "Cargando..."
     }
   },
   "auth": {
-    "company": {
-      "header": "Tu Perfil Digital Actoral"
-    },
     "page": {
       "or_login_with": "or sign in with",
       "forgotten_pass": "¿Forgot password?",
