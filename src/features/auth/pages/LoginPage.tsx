@@ -9,8 +9,8 @@ export default function LoginPage() {
 
   return (
     <Layout>
-      <div className="bg-white rounded-[20px] shadow p-6 pb-8">
-        <div className="flex flex-col gap-2 items-center p-6">
+      <div className="bg-white rounded-[20px] shadow p-8">
+        <div className="flex flex-col gap-2 items-center pb-6">
           <Logo></Logo>
           <h2 className="font-bold text-2xl whitespace-nowrap">{t('company.header')}</h2>
         </div>
