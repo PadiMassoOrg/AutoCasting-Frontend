@@ -13,7 +13,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
     "@tanstack/react-query": "^5.81.5",
-    "autocasting-ui-library-padimasso": "file:../AutoCasting-UI-Library-Padimasso",
+    "autocasting-ui-library-padimasso": "^1.0.6",
     "axios": "^1.10.0",
     "i18next": "^25.2.1",
     "react": "^19.1.0",
