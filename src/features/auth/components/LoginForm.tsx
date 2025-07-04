@@ -42,12 +42,14 @@ export default function LoginForm() {
         placeholder={t('auth.login.email')}
         type="email"
         error={errors.email?.message}
+        autoComplete="email"
         {...register('email')}
       />
       <FormInputField
         id="password"
         placeholder={t('auth.login.password')}
         type="password"
+        autoComplete="current-password"
         error={errors.password?.message}
         {...register('password')}
       />
