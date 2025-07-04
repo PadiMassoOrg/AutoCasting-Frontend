@@ -1,5 +1,6 @@
 {
   "company": {
+    "email": "auto-casting.com",
     "header": "Tu Perfil Digital Actoral"
   },
   "general": {
@@ -9,6 +10,12 @@
   },
   "auth": {
     "page": {
+      "welcome": "Bienvenid@ a",
+      "text_1": "Basta de mandar CVs pesados y de pasarte el día enviando self-tapes por mail.",
+      "bullet_1": "Creá tu perfil en <i>segundos</i>.",
+      "bullet_2": "Subí tus mejores clips y mantenelo <i>siempre al día</i>.",
+      "bullet_3": "Generá tu link personal y compartilo <i>donde quieras</i> (castings, agencias, RRSS).",
+      "text_resaltador": "¡Es tu talento, tu perfil, tu link!",
       "or_login_with": "o ingresá con",
       "forgotten_pass": "¿Olvidaste tu contraseña?",
       "create_acc": "¿No tienes una cuenta?",
