@@ -10,10 +10,10 @@ export default function LoginPage() {
 
   return (
     <Layout>
-      <div className="flex flex-row items-center lg:h-[calc(100vh-10rem)] gap-36">
+      <div className="flex flex-row lg:h-[calc(100vh-10rem)] gap-36">
         {/* Banner */}
         <article
-          className="hidden lg:flex h-full flex-col gap-24 mb-5 justify-center relative"
+          className="hidden lg:flex h-full flex-col gap-8 mb-5 justify-center relative"
           style={{ fontFamily: 'var(--font-serif)' }}
         >
           <h2 className="font-extrabold text-5xl">
@@ -31,7 +31,7 @@ export default function LoginPage() {
               <Trans i18nKey="auth.page.bullet_3" components={{ i: <i /> }} />
             </li>
           </ul>
-          <div className="relative">
+          <div className="relative mt-12">
             <h2 className="font-bold pl-6 z-[20] relative">{t('auth.page.text_resaltador')}</h2>
             <img src={Resaltador} alt="higlight-text" className="absolute top-1/2  translate-y-[-55%] z-[0]" />
           </div>
@@ -40,7 +40,7 @@ export default function LoginPage() {
           </aside>
         </article>
         {/* Auth */}
-        <article className="w-full m-auto sm:max-w-sm lg:max-w-md xl:max-w-lg lg:bg-white lg:p-6 lg:rounded-2xl lg:shadow-lg lg:h-full lg:min-h-[45rem] flex flex-col justify-center">
+        <article className="w-full m-auto lg:m-0 sm:max-w-sm lg:max-w-md xl:max-w-lg lg:bg-white lg:p-6 lg:rounded-2xl lg:shadow-lg lg:h-full lg:min-h-[45rem] flex flex-col justify-center">
           <div className="flex flex-col gap-4 items-center pb-8">
             <Logo />
             <h2 className="font-bold text-2xl whitespace-nowrap">{t('company.header')}</h2>
