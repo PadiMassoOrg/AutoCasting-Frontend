@@ -9,19 +9,17 @@ export default function LoginPage() {
 
   return (
     <Layout>
-      <div className="bg-white rounded-[20px] shadow p-8">
-        <div className="flex flex-col gap-2 items-center pb-6">
-          <Logo></Logo>
-          <h2 className="font-bold text-2xl whitespace-nowrap">{t('company.header')}</h2>
-        </div>
-        <GoogleButton className="cursor-pointer">{t('auth.login.google')}</GoogleButton>
-        <div className="w-full p-6 relative flex justify-between items-center">
-          <hr className="opacity-20 w-[30%]" />
-          <p className="text-sm">{t('auth.page.or_login_with')}</p>
-          <hr className="opacity-20 w-[30%]" />
-        </div>
-        <LoginForm />
+      <div className="flex flex-col gap-4 items-center pb-8">
+        <Logo></Logo>
+        <h2 className="font-bold text-2xl whitespace-nowrap">{t('company.header')}</h2>
       </div>
+      <GoogleButton className="cursor-pointer">{t('auth.login.google')}</GoogleButton>
+      <div className="w-full relative flex justify-between items-center py-6">
+        <hr className="opacity-20 w-full" />
+        <p className="text-sm mx-4 whitespace-nowrap">{t('auth.page.or_login_with')}</p>
+        <hr className="opacity-20 w-full" />
+      </div>
+      <LoginForm />
     </Layout>
   );
 }

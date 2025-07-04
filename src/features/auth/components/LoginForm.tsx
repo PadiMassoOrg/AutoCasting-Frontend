@@ -54,11 +54,11 @@ export default function LoginForm() {
       <h2 className="flex justify-end text-sm cursor-pointer hover:underline transition-all duration-300">
         {t('auth.page.forgotten_pass')}
       </h2>
-      <Button type="submit" className="my-2">
+      <Button type="submit" className="mt-8 cursor-pointer">
         {loginMutation.isPending ? t('general.state.loading') : t('auth.login.submit')}
       </Button>
-      {serverError && <div className="text-red-600 text-sm text-center">{serverError}</div>}
-      <div className="flex text-sm gap-2 mt-1">
+      {serverError && <div className="text-red-600 text-sm text-bold w-full mt-[-0.4rem] pl-0.5">{serverError}</div>}
+      <div className="flex text-sm gap-2 mt-2">
         <h2>{t('auth.page.create_acc')}</h2>
         <span className="font-bold cursor-pointer">{t('auth.page.create_acc_cta')}</span>
       </div>
