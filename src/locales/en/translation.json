@@ -1,0 +1,24 @@
+{
+  "company": {
+    "header": "Tu Perfil Digital Actoral"
+  },
+  "general": {
+    "state": {
+      "loading": "Cargando..."
+    }
+  },
+  "auth": {
+    "page": {
+      "or_login_with": "or sign in with",
+      "forgotten_pass": "¿Forgot password?",
+      "create_acc": "¿Don't have an account?",
+      "create_acc_cta": "Create one here"
+    },
+    "login": {
+      "google": "Sign in with Google",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign In"
+    }
+  }
+}
