@@ -6,6 +6,11 @@
   "general": {
     "state": {
       "loading": "Loading..."
+    },
+    "validation": {
+      "name_min": "Ingrese un nombre",
+      "email": "Email inválido",
+      "password_min": "La contraseña debe tener al menos 6 caracteres"
     }
   },
   "auth": {
