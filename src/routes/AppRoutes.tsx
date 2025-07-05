@@ -1,12 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginPage from '../features/auth/pages/LoginPage';
+import { AuthenticationPage } from '../features/auth/pages';
 
 export default function AppRoutes() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
-        {/* <Route path="/" element={<RegisterPage />} /> */}
+        <Route path="/" element={<AuthenticationPage />} />
       </Routes>
     </Router>
   );

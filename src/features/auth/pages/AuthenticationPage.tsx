@@ -7,7 +7,7 @@ import Resaltador from '../../../shared/lib/resaltador.svg';
 import { useState } from 'react';
 import { RegisterForm } from '../components';
 
-export default function LoginPage() {
+export default function AuthenticationPage() {
   const [login, setLogin] = useState(true);
   const { t } = useTranslation();
 
