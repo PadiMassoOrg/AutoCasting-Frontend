@@ -4,8 +4,11 @@ import LoginForm from '../components/LoginForm';
 import { GoogleButton } from 'autocasting-ui-library-padimasso';
 import { Logo } from '../../../shared/components/Logo';
 import Resaltador from '../../../shared/lib/resaltador.svg';
+import { useState } from 'react';
+import { RegisterForm } from '../components';
 
 export default function LoginPage() {
+  const [login, setLogin] = useState(true);
   const { t } = useTranslation();
 
   return (
@@ -39,7 +42,7 @@ export default function LoginPage() {
             <Logo></Logo>
           </aside>
         </article>
-        {/* Auth */}
+        {/* Forms */}
         <article className="w-full m-auto lg:m-0 sm:max-w-sm lg:max-w-md xl:max-w-lg lg:bg-white lg:p-6 lg:rounded-2xl lg:shadow-lg lg:h-full lg:min-h-[45rem] flex flex-col justify-center">
           <div className="flex flex-col gap-4 items-center pb-8">
             <Logo />
@@ -51,7 +54,7 @@ export default function LoginPage() {
             <p className="text-sm mx-4 whitespace-nowrap">{t('auth.page.or_login_with')}</p>
             <hr className="opacity-20 w-full" />
           </div>
-          <LoginForm />
+          {login ? <LoginForm onSwitch={() => setLogin(false)} /> : <RegisterForm onSwitch={() => setLogin(true)} />}
         </article>
       </div>
     </Layout>
