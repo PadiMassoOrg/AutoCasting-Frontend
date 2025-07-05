@@ -26,5 +26,13 @@ export const getRegisterSchema = () => {
   });
 };
 
+export const getForgottenPassSchema = () => {
+  return z.object({
+    email: z.string().email({
+      message: i18next.t('general.validation.email'),
+    }),
+  });
+};
+
 export type LoginFormValues = z.infer<ReturnType<typeof getLoginSchema>>;
 export type RegisterFormValues = z.infer<ReturnType<typeof getRegisterSchema>>;

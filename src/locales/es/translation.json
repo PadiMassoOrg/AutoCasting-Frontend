@@ -11,6 +11,9 @@
       "name_min": "Ingrese un nombre",
       "email": "Email inválido",
       "password_min": "La contraseña debe tener al menos 6 caracteres"
+    },
+    "buttons": {
+      "cancel": "Cancelar"
     }
   },
   "auth": {
@@ -39,6 +42,10 @@
       "email": "Email",
       "password": "Contraseña",
       "submit": "Crear Cuenta"
+    },
+    "forgotten_pass": {
+      "text": "No te preocupes. Ingresá tu correo y te mandaremos un link para crear una nueva.",
+      "submit": "Enviar Link"
     }
   }
 }

@@ -5,12 +5,19 @@ import { useTranslation } from 'react-i18next';
 import { useLoginMutation } from '../hooks/useLoginMutation';
 import { FormInputField, Button } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
+import { useModal } from '../../../context/ModalContext';
+import { ForgottenPasswordForm } from './';
 
 export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const [serverError, setServerError] = useState<string | null>(null);
 
   const { t } = useTranslation();
+  const { openModal } = useModal();
   const loginMutation = useLoginMutation();
+
+  const handleForgottenPass = () => {
+    openModal(<ForgottenPasswordForm />, t('auth.page.forgotten_pass'), 'xl');
+  };
 
   const {
     register,
@@ -51,7 +58,10 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
         error={errors.password?.message}
         {...register('password')}
       />
-      <h2 className="flex justify-end text-sm cursor-pointer hover:underline transition-all duration-300">
+      <h2
+        className="flex justify-end text-sm cursor-pointer hover:underline transition-all duration-300"
+        onClick={handleForgottenPass}
+      >
         {t('auth.page.forgotten_pass')}
       </h2>
       <Button type="submit" className="mt-8 cursor-pointer">
