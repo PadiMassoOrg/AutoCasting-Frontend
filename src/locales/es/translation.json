@@ -6,6 +6,11 @@
   "general": {
     "state": {
       "loading": "Loading..."
+    },
+    "validation": {
+      "name_min": "Ingrese un nombre",
+      "email": "Email inválido",
+      "password_min": "La contraseña debe tener al menos 6 caracteres"
     }
   },
   "auth": {
@@ -19,13 +24,21 @@
       "or_login_with": "o ingresá con",
       "forgotten_pass": "¿Olvidaste tu contraseña?",
       "create_acc": "¿No tienes una cuenta?",
-      "create_acc_cta": "Crea una cuenta aquí"
+      "create_acc_cta": "Crea una cuenta aquí",
+      "login_acc": "¿Ya tienes una cuenta?",
+      "login_acc_cta": "Iniciá sesión aquí"
     },
     "login": {
       "google": "Iniciá sesión con Google",
       "email": "Email",
       "password": "Contraseña",
       "submit": "Iniciar Sesión"
+    },
+    "register": {
+      "name": "Nombre",
+      "email": "Email",
+      "password": "Contraseña",
+      "submit": "Crear Cuenta"
     }
   }
 }
