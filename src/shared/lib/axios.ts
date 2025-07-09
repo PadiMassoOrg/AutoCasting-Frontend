@@ -2,7 +2,7 @@ import axios from 'axios';
 import i18n from '../../shared/lib/i18n';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
+  baseURL: import.meta.env.VITE_BASE_API_URL + '/api/v1',
   withCredentials: true,
 });
 

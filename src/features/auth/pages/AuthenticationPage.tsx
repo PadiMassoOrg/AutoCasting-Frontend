@@ -6,10 +6,16 @@ import { Logo } from '../../../shared/components/Logo';
 import Resaltador from '../../../shared/lib/resaltador.svg';
 import { useState } from 'react';
 import { RegisterForm } from '../components';
+import { useGoogleLoginMutation } from '../hooks/useGoogleLoginMutation';
 
 export default function AuthenticationPage() {
   const [login, setLogin] = useState(true);
   const { t } = useTranslation();
+  const googleLoginMutation = useGoogleLoginMutation();
+
+  const handleGoogleLogin = () => {
+    googleLoginMutation.mutate({ state: 'ACTOR' });
+  };
 
   return (
     <Layout>
@@ -48,7 +54,9 @@ export default function AuthenticationPage() {
             <Logo />
             <h2 className="font-bold text-2xl whitespace-nowrap">{t('company.header')}</h2>
           </div>
-          <GoogleButton className="cursor-pointer">{t('auth.login.google')}</GoogleButton>
+          <GoogleButton className="cursor-pointer" onClick={handleGoogleLogin}>
+            {t('auth.login.google')}
+          </GoogleButton>
           <div className="w-full relative flex justify-between items-center py-6">
             <hr className="opacity-20 w-full" />
             <p className="text-sm mx-4 whitespace-nowrap">{t('auth.page.or_login_with')}</p>
