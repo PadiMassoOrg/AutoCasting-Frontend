@@ -14,7 +14,7 @@ export default function AuthenticationPage() {
   const googleLoginMutation = useGoogleLoginMutation();
 
   const handleGoogleLogin = () => {
-    googleLoginMutation.mutate({ state: 'ACTOR' });
+    googleLoginMutation.mutate({ role: 'ACTOR' });
   };
 
   return (

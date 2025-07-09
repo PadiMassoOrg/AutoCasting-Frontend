@@ -10,8 +10,8 @@ export const register = async (data: { name: string; email: string; password: st
   return response.data;
 };
 
-export const googleLogin = async (data: { state: string }) => {
+export const googleLogin = async (data: { role: string }) => {
   let finalUrl = `${import.meta.env.VITE_BASE_API_URL}/oauth2/authorization/google`;
-  data.state ? (finalUrl += `?state=${data.state}`) : '';
+  data.role ? (finalUrl += `?role=${data.role}`) : '';
   window.location.href = finalUrl;
 };
