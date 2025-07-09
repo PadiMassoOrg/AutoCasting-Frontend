@@ -7,13 +7,16 @@ import { FormInputField, Button } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useModal } from '../../../context/ModalContext';
 import { ForgottenPasswordForm } from './';
+import { setAuthToken } from '../../../shared/lib/cookies';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
-  const [serverError, setServerError] = useState<string | null>(null);
-
   const { t } = useTranslation();
   const { openModal } = useModal();
   const loginMutation = useLoginMutation();
+  const navigate = useNavigate();
+
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const handleForgottenPass = () => {
     openModal(<ForgottenPasswordForm />, t('auth.page.forgotten_pass'), 'xl');
@@ -31,7 +34,8 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
     setServerError(null);
     loginMutation.mutate(data, {
       onSuccess: (data) => {
-        localStorage.setItem('authToken', data.token);
+        setAuthToken(data.token);
+        navigate('/dashboard');
       },
       onError: (err: any) => {
         const message = err?.response?.data?.message || 'Unexpected server error';
