@@ -63,11 +63,10 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
         error={errors.password?.message}
         {...register('password')}
       />
-      <h2
-        className="flex justify-end text-sm cursor-pointer hover:underline transition-all duration-300"
-        onClick={handleForgottenPass}
-      >
-        {t('auth.page.forgotten_pass')}
+      <h2 className="flex justify-end text-sm ">
+        <span className="cursor-pointer hover:underline transition-all duration-300" onClick={handleForgottenPass}>
+          {t('auth.page.forgotten_pass')}
+        </span>
       </h2>
       <Button type="submit" className="mt-8 cursor-pointer">
         {loginMutation.isPending ? t('general.state.loading') : t('auth.login.submit')}
