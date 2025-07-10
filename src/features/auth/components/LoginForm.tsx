@@ -9,6 +9,7 @@ import { useModal } from '../../../context/ModalContext';
 import { ForgottenPasswordForm } from './';
 import { setAuthToken } from '../../../shared/lib/cookies';
 import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../../shared/lib/routes';
 
 export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const { t } = useTranslation();
@@ -35,7 +36,7 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
         setAuthToken(data.token);
-        navigate('/dashboard');
+        navigate(ROUTES.DASHBOARD);
       },
       onError: (err: any) => {
         const message = err?.response?.data?.message || 'Unexpected server error';

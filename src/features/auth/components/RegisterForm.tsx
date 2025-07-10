@@ -7,6 +7,7 @@ import { FormInputField, Button } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { setAuthToken } from '../../../shared/lib/cookies';
 import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../../../shared/lib/routes';
 
 export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -30,7 +31,7 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
     registerMutation.mutate(data, {
       onSuccess: (data) => {
         setAuthToken(data.token);
-        navigate('/dashboard');
+        navigate(ROUTES.DASHBOARD);
       },
       onError: (err: any) => {
         const message = err?.response?.data?.message || 'Unexpected server error';

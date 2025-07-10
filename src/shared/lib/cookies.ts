@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 
 export const setAuthToken = (token: string) => {
-  Cookies.set('authToken', token, { expires: 7 }); // dura 7 días
+  Cookies.set('authToken', token, { expires: 7 });
 };
 
 export const getAuthToken = () => {

@@ -1,8 +1,9 @@
 import axios from 'axios';
 import i18n from '../../shared/lib/i18n';
+import { API_ROUTES } from './routes';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BASE_API_URL + '/api/v1',
+  baseURL: import.meta.env.VITE_BASE_API_URL + API_ROUTES.API_V,
   withCredentials: true,
 });
 

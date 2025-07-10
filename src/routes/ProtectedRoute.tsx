@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { getAuthToken } from '../shared/lib/cookies';
+import { ROUTES } from '../shared/lib/routes';
 
 type ProtectedRouteProps = {
   children: ReactNode;
@@ -9,5 +10,5 @@ type ProtectedRouteProps = {
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const token = getAuthToken();
 
-  return token ? <>{children}</> : <Navigate to="/" replace />;
+  return token ? <>{children}</> : <Navigate to={ROUTES.HOME} replace />;
 }
