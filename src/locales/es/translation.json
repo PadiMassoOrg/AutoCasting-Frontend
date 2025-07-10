@@ -1,11 +1,12 @@
 {
   "company": {
-    "email": "auto-casting.com",
+    "site": "auto-casting.com",
     "header": "Tu Perfil Digital Actoral"
   },
   "general": {
     "state": {
-      "loading": "Loading..."
+      "loading": "Cargando...",
+      "server_err": "Ocurrió un error en el servidor, intente nuevamente."
     },
     "validation": {
       "name_min": "Ingrese un nombre",

@@ -39,7 +39,7 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
         navigate(ROUTES.DASHBOARD);
       },
       onError: (err: any) => {
-        const message = err?.response?.data?.message || 'Unexpected server error';
+        const message = err?.response?.data?.message || t('general.state.server_err');
         setServerError(message);
       },
     });
