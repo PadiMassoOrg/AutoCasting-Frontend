@@ -11,16 +11,12 @@ const OAuthSuccess = () => {
 
   useEffect(() => {
     const token = searchParams.get('token');
-    const timeout = setTimeout(() => {
-      if (token) {
-        setAuthToken(token);
-        navigate(ROUTES.DASHBOARD);
-      } else {
-        navigate('/auth?error=oauth_failed');
-      }
-    }, 700);
-
-    return () => clearTimeout(timeout);
+    if (token) {
+      setAuthToken(token);
+      navigate(ROUTES.DASHBOARD);
+    } else {
+      navigate(`${ROUTES.AUTH}?error=oauth_failed`);
+    }
   }, [searchParams, navigate]);
 
   return (
