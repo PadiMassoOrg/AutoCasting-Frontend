@@ -20,7 +20,7 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const [serverError, setServerError] = useState<string | null>(null);
 
   const handleForgottenPass = () => {
-    openModal(<ForgottenPasswordForm />, t('auth.page.forgotten_pass'), 'xl');
+    openModal(<ForgottenPasswordForm />, t('auth.page.forgotten_pass'), 'lg');
   };
 
   const {

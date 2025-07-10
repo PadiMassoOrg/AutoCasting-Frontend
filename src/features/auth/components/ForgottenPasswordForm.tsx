@@ -24,7 +24,7 @@ export default function ForgottenPasswordForm() {
 
   return (
     <article className="flex flex-col gap-6">
-      <p className="text-sm" style={{ fontFamily: 'var(--font-serif)' }}>
+      <p className="text-base" style={{ fontFamily: 'var(--font-serif)' }}>
         {t('auth.forgotten_pass.text')}
       </p>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -36,7 +36,7 @@ export default function ForgottenPasswordForm() {
           error={errors.email?.message}
           {...register('email')}
         />
-        <hr className="opacity-20 mt-4 mb-12" />
+        <hr className="opacity-20 mt-6 mb-10" />
         <div className="flex gap-2">
           <Button variant="outline" onClick={closeModal}>
             {t('general.buttons.cancel')}
