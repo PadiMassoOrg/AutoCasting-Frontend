@@ -14,6 +14,5 @@ export const register = async (data: { name: string; email: string; password: st
 export const googleLogin = async (data: { role: string }) => {
   let finalUrl = import.meta.env.VITE_BASE_API_URL + API_ROUTES.OAUTH_GOOGLE;
   data.role ? (finalUrl += API_ROUTES.PARAM_ROLE + data.role) : '';
-  finalUrl += '?prompt=select_account';
   window.location.href = finalUrl;
 };
