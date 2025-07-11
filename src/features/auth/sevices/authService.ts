@@ -16,3 +16,8 @@ export const googleLogin = async (data: { role: string }) => {
   data.role ? (finalUrl += API_ROUTES.PARAM_ROLE + data.role) : '';
   window.location.href = finalUrl;
 };
+
+export const forgotPassword = async (data: { email: string }) => {
+  const response = await api.post(API_ROUTES.FORGOT_PASSWORD, data);
+  return response.data;
+};

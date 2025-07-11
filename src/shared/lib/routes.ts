@@ -12,5 +12,6 @@ export const API_ROUTES = {
   AUTH_LOGIN: '/auth/login',
   AUTH_REGISTER: '/auth/register',
   OAUTH_GOOGLE: '/oauth2/authorization/google',
+  FORGOT_PASSWORD: '/auth/forgot-password',
   PARAM_ROLE: '?role=',
 };
