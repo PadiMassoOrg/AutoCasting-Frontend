@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { getResetPasswordSchema, type ResetPasswordValues } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
