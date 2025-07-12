@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getRegisterSchema } from '../schemas/authSchema';
+import { getRegisterSchema, type RegisterFormValues } from '../schemas/authSchema';
 import { useTranslation } from 'react-i18next';
 import { useRegisterMutation } from '../hooks/useRegisterMutation';
 import { FormInputField, Button } from 'autocasting-ui-library-padimasso';
@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { setAuthToken } from '../../../shared/lib/cookies';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../shared/lib/routes';
+import type { AuthenticationResponse } from '../types/auth.types';
 
 export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -20,16 +21,20 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<RegisterFormValues>({
     resolver: zodResolver(getRegisterSchema()),
+    defaultValues: {
+      role: 'ACTOR',
+    },
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: RegisterFormValues) => {
     setServerError(null);
+
     // TODO - Manejo de ACTOR o CASTINERA
-    data.role = 'ACTOR';
+
     registerMutation.mutate(data, {
-      onSuccess: (data) => {
+      onSuccess: (data: AuthenticationResponse) => {
         setAuthToken(data.token);
         navigate(ROUTES.DASHBOARD);
       },

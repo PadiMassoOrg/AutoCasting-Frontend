@@ -8,11 +8,6 @@
       "loading": "Cargando...",
       "server_err": "Ocurrió un error en el servidor, intente nuevamente."
     },
-    "validation": {
-      "name_min": "Ingrese un nombre",
-      "email": "Email inválido",
-      "password_min": "La contraseña debe tener al menos 6 caracteres"
-    },
     "buttons": {
       "cancel": "Cancelar"
     }
@@ -44,9 +39,20 @@
       "password": "Contraseña",
       "submit": "Crear Cuenta"
     },
-    "forgotten_pass": {
+    "forgotten_password": {
       "text": "No te preocupes. Ingresá tu correo y te mandaremos un link para crear una nueva.",
       "submit": "Enviar Link"
+    },
+    "reset_password": {
+      "new": "Nueva contraseña",
+      "repeat": "Repetir contraseña"
+    },
+    "validation": {
+      "name_min": "Ingrese un nombre",
+      "email": "Email inválido",
+      "role": "El rol es requerido",
+      "password_min": "La contraseña debe tener al menos 6 caracteres",
+      "password_missmatch": "Las contraseñas no coinciden"
     }
   }
 }

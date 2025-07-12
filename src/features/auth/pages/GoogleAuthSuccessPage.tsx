@@ -3,8 +3,9 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { setAuthToken } from '../../../shared/lib/cookies';
 import { ROUTES } from '../../../shared/lib/routes';
 import { useTranslation } from 'react-i18next';
+import { Layout } from '../../../shared/components/Layouts';
 
-const OAuthSuccess = () => {
+const GoogleAuthSuccessPage = () => {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -20,10 +21,12 @@ const OAuthSuccess = () => {
   }, [searchParams, navigate]);
 
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center text-center gap-4">
-      <p>{t('general.state.loading')}</p>
-    </div>
+    <Layout>
+      <div className="w-full h-screen flex flex-col items-center justify-center text-center gap-4">
+        <p>{t('general.state.loading')}</p>
+      </div>
+    </Layout>
   );
 };
 
-export default OAuthSuccess;
+export default GoogleAuthSuccessPage;

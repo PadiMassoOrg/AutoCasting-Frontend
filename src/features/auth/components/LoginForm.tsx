@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getLoginSchema } from '../schemas/authSchema';
+import { getLoginSchema, type LoginFormValues } from '../schemas/authSchema';
 import { useTranslation } from 'react-i18next';
 import { useLoginMutation } from '../hooks/useLoginMutation';
 import { FormInputField, Button } from 'autocasting-ui-library-padimasso';
@@ -10,6 +10,7 @@ import { ForgottenPasswordForm } from './';
 import { setAuthToken } from '../../../shared/lib/cookies';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../shared/lib/routes';
+import type { AuthenticationResponse } from '../types/auth.types';
 
 export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const { t } = useTranslation();
@@ -27,14 +28,14 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<LoginFormValues>({
     resolver: zodResolver(getLoginSchema()),
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: LoginFormValues) => {
     setServerError(null);
     loginMutation.mutate(data, {
-      onSuccess: (data) => {
+      onSuccess: (data: AuthenticationResponse) => {
         setAuthToken(data.token);
         navigate(ROUTES.DASHBOARD);
       },

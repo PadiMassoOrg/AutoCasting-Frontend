@@ -3,6 +3,7 @@ export const ROUTES = {
   ALL: '/*',
   AUTH: '/auth',
   GOOGLE_OAUTH_SUCCESS: '/oauth2/success',
+  RESET_PASSWORD: '/reset-password',
   DASHBOARD: '/dashboard',
   PROFILE: '/profile',
 };
@@ -13,5 +14,6 @@ export const API_ROUTES = {
   AUTH_REGISTER: '/auth/register',
   OAUTH_GOOGLE: '/oauth2/authorization/google',
   FORGOT_PASSWORD: '/auth/forgot-password',
+  RESET_PASSWORD: '/auth/reset-password',
   PARAM_ROLE: '?role=',
 };

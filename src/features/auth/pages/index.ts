@@ -1,2 +1,4 @@
 import AuthenticationPage from './AuthenticationPage';
-export { AuthenticationPage };
+import GoogleAuthSuccessPage from './GoogleAuthSuccessPage';
+import ResetPasswordPage from './ResetPasswordPage';
+export { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage };

@@ -1,17 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { login } from '../sevices/authService';
-
-type LoginRequest = {
-  email: string;
-  password: string;
-};
-
-type LoginResponse = {
-  token: string;
-};
+import type { AuthenticationResponse, LoginRequest } from '../types/auth.types';
 
 export const useLoginMutation = () => {
-  return useMutation<LoginResponse, any, LoginRequest>({
+  return useMutation<AuthenticationResponse, any, LoginRequest>({
     mutationFn: login,
   });
 };

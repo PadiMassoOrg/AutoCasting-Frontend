@@ -1,8 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthenticationPage } from '../features/auth/pages';
+import { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage } from '../features/auth/pages';
 import ProtectedRoute from './ProtectedRoute';
 import ProtectedRoutesLayout from './ProtectedRoutesLayout';
-import GoogleAuthSuccess from '../features/auth/pages/GoogleAuthSuccess';
 import { ROUTES } from '../shared/lib/routes';
 
 export default function AppRoutes() {
@@ -10,7 +9,8 @@ export default function AppRoutes() {
     <Router>
       <Routes>
         <Route path={ROUTES.HOME} element={<AuthenticationPage />} />
-        <Route path={ROUTES.GOOGLE_OAUTH_SUCCESS} element={<GoogleAuthSuccess />} />
+        <Route path={ROUTES.GOOGLE_OAUTH_SUCCESS} element={<GoogleAuthSuccessPage />} />
+        <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
         <Route
           path={ROUTES.ALL}
           element={

@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { Button, FormInputField } from 'autocasting-ui-library-padimasso';
 import { useModal } from '../../../context/ModalContext';
 import { useTranslation } from 'react-i18next';
-import { getForgottenPassSchema } from '../schemas/authSchema';
+import { getForgottenPasswordSchema, type ForgottenPasswordValues } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForgotPasswordMutation } from '../hooks/useForgotPasswordMutation';
 import { useState } from 'react';
@@ -18,11 +18,11 @@ export default function ForgottenPasswordForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: zodResolver(getForgottenPassSchema()),
+  } = useForm<ForgottenPasswordValues>({
+    resolver: zodResolver(getForgottenPasswordSchema()),
   });
 
-  const onSubmit = (data: { email: string }) => {
+  const onSubmit = (data: ForgottenPasswordValues) => {
     setServerError(null);
     forgotPasswordMutation.mutate(data, {
       onSuccess: () => {
@@ -38,7 +38,7 @@ export default function ForgottenPasswordForm() {
   return (
     <article className="flex flex-col gap-6">
       <p className="text-base" style={{ fontFamily: 'var(--font-serif)' }}>
-        {t('auth.forgotten_pass.text')}
+        {t('auth.forgotten_password.text')}
       </p>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <FormInputField
@@ -55,7 +55,7 @@ export default function ForgottenPasswordForm() {
           <Button variant="outline" onClick={closeModal}>
             {t('general.buttons.cancel')}
           </Button>
-          <Button type="submit">{t('auth.forgotten_pass.submit')}</Button>
+          <Button type="submit">{t('auth.forgotten_password.submit')}</Button>
         </div>
       </form>
     </article>
