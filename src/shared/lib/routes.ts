@@ -5,8 +5,16 @@ export const ROUTES = {
   GOOGLE_OAUTH_SUCCESS: '/oauth2/success',
   RESET_PASSWORD: '/reset-password',
   DASHBOARD: '/dashboard',
-  PROFILE: '/profile',
+  PROFILE: '/dashboard/profile',
 };
+
+export const USER_ROUTES = [
+  {
+    id: 1,
+    path: '/dashboard/profile',
+    name: 'general.routes.profile',
+  },
+];
 
 export const API_ROUTES = {
   API_V: '/api/v1',

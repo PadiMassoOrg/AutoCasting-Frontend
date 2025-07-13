@@ -6,10 +6,13 @@
   "general": {
     "state": {
       "loading": "Cargando...",
-      "server_err": "Ocurrió un error en el servidor, intente nuevamente."
+      "server_err": "Ocurrió un error, intente nuevamente."
     },
     "buttons": {
       "cancel": "Cancelar"
+    },
+    "routes": {
+      "profile": "Perfil"
     }
   },
   "auth": {
@@ -54,5 +57,8 @@
       "password_min": "La contraseña debe tener al menos 6 caracteres",
       "password_missmatch": "Las contraseñas no coinciden"
     }
+  },
+  "dashboard": {
+    "logout": "Salir"
   }
 }

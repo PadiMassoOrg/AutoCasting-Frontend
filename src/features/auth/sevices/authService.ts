@@ -1,5 +1,6 @@
 import api from '../../../shared/lib/axios';
-import { API_ROUTES } from '../../../shared/lib/routes';
+import { clearAuthToken } from '../../../shared/lib/cookies';
+import { API_ROUTES, ROUTES } from '../../../shared/lib/routes';
 import type {
   ForgotPasswordRequest,
   LoginRequest,
@@ -32,4 +33,9 @@ export const forgotPassword = async (data: ForgotPasswordRequest) => {
 export const resetPassword = async (data: ResetPasswordRequest) => {
   const response = await api.post(API_ROUTES.RESET_PASSWORD, data);
   return response.data;
+};
+
+export const logout = () => {
+  clearAuthToken();
+  window.location.href = ROUTES.HOME;
 };

@@ -37,7 +37,7 @@
 
   /* General */
   body {
-    @apply bg-slate-50;
+    @apply bg-slate-50 list-none;
     font-family: var(--font-inter);
   }
 }
