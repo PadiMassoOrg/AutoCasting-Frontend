@@ -28,8 +28,8 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
         newPassword: data.confirmPassword,
       },
       {
-        onSuccess: (data) => {
-          alert(data);
+        onSuccess: () => {
+          alert('Cambiada con exito');
         },
         onError: (err: any) => {
           const message = err?.response?.data?.message || t('general.state.server_err');

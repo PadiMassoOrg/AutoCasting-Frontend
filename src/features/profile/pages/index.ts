@@ -1,2 +1,3 @@
 import ProfilePage from './ProfilePage';
-export { ProfilePage };
+import PublicProfilePage from './PublicProfilePage';
+export { ProfilePage, PublicProfilePage };

@@ -2,6 +2,7 @@ import api from '../../../shared/lib/axios';
 import { clearAuthToken } from '../../../shared/lib/cookies';
 import { API_ROUTES, ROUTES } from '../../../shared/lib/routes';
 import type {
+  AuthenticationResponse,
   ForgotPasswordRequest,
   LoginRequest,
   RegisterRequest,
@@ -9,12 +10,12 @@ import type {
   RoleRequest,
 } from '../types/auth.types';
 
-export const login = async (data: LoginRequest) => {
+export const login = async (data: LoginRequest): Promise<AuthenticationResponse> => {
   const response = await api.post(API_ROUTES.AUTH_LOGIN, data);
   return response.data;
 };
 
-export const register = async (data: RegisterRequest) => {
+export const register = async (data: RegisterRequest): Promise<AuthenticationResponse> => {
   const response = await api.post(API_ROUTES.AUTH_REGISTER, data);
   return response.data;
 };

@@ -23,5 +23,6 @@ export const API_ROUTES = {
   OAUTH_GOOGLE: '/oauth2/authorization/google',
   FORGOT_PASSWORD: '/auth/forgot-password',
   RESET_PASSWORD: '/auth/reset-password',
+  PROFILE: '/profile',
   PARAM_ROLE: '?role=',
 };

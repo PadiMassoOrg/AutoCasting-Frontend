@@ -4,6 +4,15 @@
     "header": "Tu Perfil Digital Actoral"
   },
   "general": {
+    "role": {
+      "actor": "Actor",
+      "castinera": "Castinera"
+    },
+    "plan": {
+      "free": "Free",
+      "premium_actor_1": "Premium",
+      "premium_castinera": "Premium Castinera"
+    },
     "state": {
       "loading": "Cargando...",
       "server_err": "Ocurrió un error, intente nuevamente."
