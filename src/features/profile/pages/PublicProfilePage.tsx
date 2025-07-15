@@ -46,31 +46,34 @@ const PublicProfilePage = () => {
   if (isLoading) return <p>Cargando perfil público...</p>;
   if (error || !data) return <p>Error al cargar el perfil</p>;
   return (
-    <div className="bg-white min-h-dvh pb-48">
-      <article className="px-4 mt-6 flex flex-col gap-5">
-        {/* Data */}
-        <article className="flex flex-col w-full gap-2">
-          <span className="flex gap-1 items-center justify-center font-semibold text-sm mb-3">
-            {prof.reduce<JSX.Element[]>((acc, curr, index) => {
-              if (index === 0) return [<span key={curr}>{curr}</span>];
-              return [
-                ...acc,
-                <span key={`sep-${index}`} className="mx-1">
-                  •
-                </span>,
-                <span key={curr}>{curr}</span>,
-              ];
-            }, [])}
-          </span>
-          <h2 className="text-3xl">{name}</h2>
-          <span className="flex gap-1 text-gray-400 text-sm font-light">
-            <p>{gender}</p>•<p>{age}</p>
-          </span>
-        </article>
-        {/* Imagenes */}
+    <div className="pb-48 flex flex-col gap-6 justify-center">
+      {/* Data */}
+      <article className="flex flex-col w-full gap-2">
+        <span className="flex gap-1 items-center justify-center font-semibold text-sm mb-3">
+          {prof.reduce<JSX.Element[]>((acc, curr, index) => {
+            if (index === 0) return [<span key={curr}>{curr}</span>];
+            return [
+              ...acc,
+              <span key={`sep-${index}`} className="mx-1">
+                •
+              </span>,
+              <span key={curr}>{curr}</span>,
+            ];
+          }, [])}
+        </span>
+        <h2 className="text-3xl">{name}</h2>
+        <span className="flex gap-1 text-gray-400 text-sm font-light">
+          <p>{gender}</p>•<p>{age}</p>
+        </span>
+      </article>
+      {/* Imagenes */}
+      <article className="sm:hidden">
         <ImageCarousel images={images}></ImageCarousel>
       </article>
-      <PublicFooterBar></PublicFooterBar>
+      {/* Footer Actions */}
+      <article className="sm:hidden">
+        <PublicFooterBar></PublicFooterBar>
+      </article>
     </div>
   );
 };
