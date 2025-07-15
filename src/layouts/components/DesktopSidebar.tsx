@@ -1,6 +1,6 @@
 // src/layouts/DesktopSidebar.tsx
 import { Link, useLocation } from 'react-router-dom';
-import { USER_ROUTES } from '../../shared/lib/routes';
+import { ROUTES, USER_ROUTES } from '../../shared/lib/routes';
 import { useTranslation } from 'react-i18next';
 import { logout } from '../../features/auth/sevices/authService';
 import { LinkLogo } from '../../shared/components/LinkLogo';
@@ -11,7 +11,7 @@ export default function DesktopSidebar() {
 
   return (
     <aside className="hidden md:static md:flex flex-col w-56 bg-white shadow-md min-h-screen p-6 fixed ">
-      <LinkLogo />
+      <LinkLogo path={ROUTES.DASHBOARD} />
       <div className="mt-8 space-y-4">
         {USER_ROUTES.map((item) => (
           <Link

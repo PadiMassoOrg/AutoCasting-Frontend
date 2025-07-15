@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { USER_ROUTES } from '../../shared/lib/routes';
+import { ROUTES, USER_ROUTES } from '../../shared/lib/routes';
 import { useTranslation } from 'react-i18next';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import { logout } from '../../features/auth/sevices/authService';
@@ -16,7 +16,7 @@ export default function MobileSidebar() {
     <div className="md:hidden">
       {/* Header móvil con burger */}
       <div className="flex items-center justify-between bg-white p-4 shadow-md">
-        <LinkLogo horizontal />
+        <LinkLogo horizontal path={ROUTES.DASHBOARD} />
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="focus:outline-none cursor-pointer transition duration-300"
