@@ -1,14 +1,13 @@
-import { useParams } from 'react-router-dom';
-import { usePublicProfile } from '../hooks/usePublicProfile';
+// import { useParams } from 'react-router-dom';
+// import { usePublicProfile } from '../hooks/usePublicProfile';
 import { useTranslation } from 'react-i18next';
 import mock from '../MOCK_PROFILE.json';
-import { PublicNavbar } from '../../../layouts/components';
 import PublicFooterBar from '../components/PublicFooterBar';
 import type { JSX } from 'react';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 
 const PublicProfilePage = () => {
-  const { slug } = useParams<{ slug: string }>();
+  // const { slug } = useParams<{ slug: string }>();
   const { t } = useTranslation();
   // const { data, isLoading, error } = usePublicProfile(slug!);
 
@@ -25,7 +24,7 @@ const PublicProfilePage = () => {
     gender,
     age,
     images,
-    videos,
+    // videos,
     height,
     weight,
     hairColor,
@@ -69,6 +68,26 @@ const PublicProfilePage = () => {
       {/* Imagenes */}
       <article className="sm:hidden">
         <ImageCarousel images={images}></ImageCarousel>
+      </article>
+      <article>
+        <p>{email}</p>
+        <p>{t('general.' + roleStringCode)}</p>
+        <p>{t('general.' + planStringCode)}</p>
+        <p>{height}</p>
+        <p>{weight}</p>
+        <p>{hairColor}</p>
+        <p>{eyeColor}</p>
+        <p>{chestWidth}</p>
+        <p>{waist}</p>
+        <p>{hips}</p>
+        <p>{shirtSize}</p>
+        <p>{pantSize}</p>
+        <p>{dressSize}</p>
+        <p>{shoeSize}</p>
+        <p>{hasDrivingLicense}</p>
+        <p>{hasTattoos}</p>
+        <p>{hasPassport}</p>
+        <p>{diet}</p>
       </article>
       {/* Footer Actions */}
       <article className="sm:hidden">
