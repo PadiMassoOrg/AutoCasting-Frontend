@@ -21,17 +21,12 @@ export default function AuthenticationPage() {
     <Layout>
       <div className="flex flex-row lg:h-[calc(100vh-10rem)] gap-36">
         {/* Banner */}
-        <article
-          className="hidden lg:flex h-full flex-col gap-8 mb-5 justify-center relative"
-          style={{ fontFamily: 'var(--font-inter)' }}
-        >
+        <article className="hidden lg:flex h-full flex-col gap-8 mb-5 justify-center relative">
           <h2 className="font-extrabold text-5xl">
             ¡{t('auth.page.welcome')} <p className="break-after-all">{t('company.site')}!</p>
           </h2>
-          <h2 className="text-neutral-600 opacity-65 font-normal text-lg" style={{ fontFamily: 'var(--font-inter)' }}>
-            {t('auth.page.text_1')}
-          </h2>
-          <ul className="list-disc pl-5" style={{ fontFamily: 'var(--font-serif)' }}>
+          <h2 className="text-neutral-600 opacity-65 font-normal text-lg">{t('auth.page.text_1')}</h2>
+          <ul className="list-disc pl-5">
             <li className="i18n" data-i18n="[html]content.body">
               <Trans i18nKey="auth.page.bullet_1" components={{ i: <i /> }} />
             </li>
