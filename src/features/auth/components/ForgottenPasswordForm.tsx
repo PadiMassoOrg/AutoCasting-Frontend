@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { Button, FormInputField } from 'autocasting-ui-library-padimasso';
+import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
 import { useModal } from '../../../context/ModalContext';
 import { useTranslation } from 'react-i18next';
 import { getForgottenPasswordSchema, type ForgottenPasswordValues } from '../schemas/authSchema';
@@ -49,7 +49,11 @@ export default function ForgottenPasswordForm() {
           error={errors.email?.message}
           {...register('email')}
         />
-        {serverError && <div className="text-red-600 text-sm text-bold w-full mt-[-0.4rem] pl-0.5">{serverError}</div>}
+        {serverError && (
+          <Label variant="error" className="pl-1">
+            {serverError}
+          </Label>
+        )}
         <hr className="opacity-20 mt-6 mb-10" />
         <div className="flex gap-2">
           <Button variant="outline" onClick={closeModal}>

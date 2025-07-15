@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getRegisterSchema, type RegisterFormValues } from '../schemas/authSchema';
 import { useTranslation } from 'react-i18next';
 import { useRegisterMutation } from '../hooks/useRegisterMutation';
-import { FormInputField, Button } from 'autocasting-ui-library-padimasso';
+import { FormInputField, Button, Label } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { setAuthToken } from '../../../shared/lib/cookies';
 import { useNavigate } from 'react-router-dom';
@@ -74,7 +74,11 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
       <Button type="submit" className="mt-8 cursor-pointer">
         {registerMutation.isPending ? t('general.state.loading') : t('auth.register.submit')}
       </Button>
-      {serverError && <div className="text-red-600 text-sm text-bold w-full mt-[-0.4rem] pl-0.5">{serverError}</div>}
+      {serverError && (
+        <Label variant="error" className="pl-1">
+          {serverError}
+        </Label>
+      )}
       <div className="flex text-sm gap-2 mt-2">
         <h2>{t('auth.page.login_acc')}</h2>
         <span className="font-bold cursor-pointer" onClick={onSwitch}>

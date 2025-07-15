@@ -47,7 +47,6 @@ const PublicProfilePage = () => {
   if (error || !data) return <p>Error al cargar el perfil</p>;
   return (
     <div className="bg-white min-h-dvh pb-48">
-      <PublicNavbar></PublicNavbar>
       <article className="px-4 mt-6 flex flex-col gap-5">
         {/* Data */}
         <article className="flex flex-col w-full gap-2">

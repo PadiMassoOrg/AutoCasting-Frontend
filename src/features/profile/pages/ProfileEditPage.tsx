@@ -2,7 +2,7 @@ import { Button } from 'autocasting-ui-library-padimasso';
 import { useProfile } from '../hooks/useProfile';
 import { useNavigate } from 'react-router-dom';
 
-const ProfilePage = () => {
+const ProfileEditPage = () => {
   const navigate = useNavigate();
   const { data, isLoading, error } = useProfile();
 
@@ -18,4 +18,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default ProfileEditPage;
