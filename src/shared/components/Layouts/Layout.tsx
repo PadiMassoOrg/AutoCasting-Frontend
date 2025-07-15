@@ -5,8 +5,8 @@ type LayoutProps = {
 export default function Layout({ children }: LayoutProps) {
   return (
     <>
-      <div className="flex flex-col justify-center min-h-screen">
-        <div className="w-[95%] max-w-[1366px] m-auto p-4">{children}</div>
+      <div className="h-screen w-full bg-[var(--color-primary-white)] lg:bg-[#F9FAFC]">
+        <div className="flex flex-col justify-center h-full w-[95%] max-w-[1366px] m-auto p-4">{children}</div>
       </div>
     </>
   );
