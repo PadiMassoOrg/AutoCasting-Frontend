@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { USER_ROUTES } from '../../shared/lib/routes';
 import { useTranslation } from 'react-i18next';
 import { logout } from '../../features/auth/sevices/authService';
-import { Logo } from '../../shared/components/Logo';
+import { LinkLogo } from '../../shared/components/LinkLogo';
 
 export default function DesktopSidebar() {
   const { t } = useTranslation();
@@ -11,7 +11,7 @@ export default function DesktopSidebar() {
 
   return (
     <aside className="hidden md:static md:flex flex-col w-56 bg-white shadow-md min-h-screen p-6 fixed ">
-      <Logo />{' '}
+      <LinkLogo />
       <div className="mt-8 space-y-4">
         {USER_ROUTES.map((item) => (
           <Link

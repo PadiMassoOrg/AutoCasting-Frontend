@@ -1,9 +1,9 @@
-import { Logo } from '../../shared/components/Logo';
+import { LinkLogo } from '../../shared/components/LinkLogo';
 
 const PublicNavbar = () => {
   return (
     <div className="flex items-center justify-start bg-white p-4 w-full">
-      <Logo horizontal />
+      <LinkLogo horizontal />
     </div>
   );
 };
