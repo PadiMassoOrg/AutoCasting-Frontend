@@ -10,7 +10,8 @@ const ProfileEditPage = () => {
   if (error) return <p>Error al cargar el perfil</p>;
   return (
     <div className="flex flex-col items-center gap-6">
-      <h1>Bienvenido, {data?.name}</h1>
+      <h1>Bienvenido, {data?.basicInfo.stageName}</h1>
+      <h1>Tu email es: {data?.contact.email}</h1>
       <Button variant="primary" className="max-w-sm" onClick={() => navigate(`/profile/${data?.publicSlug}`)}>
         Ver Perfil
       </Button>

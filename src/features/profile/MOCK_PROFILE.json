@@ -1,34 +1,133 @@
 {
-  "name": "Lucía Fernández",
-  "email": "lucia.fernandez@example.com",
+  "id": "5a8be355-ef67-41ff-ac8e-3fd658324250",
   "roleStringCode": "role.actor",
   "planStringCode": "plan.free",
-  "prof": ["Actriz", "Cantante"],
-  "gender": "Mujer",
-  "age": "26 años",
-  "images": [
-    "https://images.pexels.com/photos/31047260/pexels-photo-31047260.jpeg",
-    "https://images.pexels.com/photos/31047241/pexels-photo-31047241.jpeg",
-    "https://images.pexels.com/photos/31047231/pexels-photo-31047231.jpeg",
-    "https://images.pexels.com/photos/31023965/pexels-photo-31023965.jpeg",
-    "https://images.pexels.com/photos/31024001/pexels-photo-31024001.jpeg",
-    "https://images.pexels.com/photos/31023955/pexels-photo-31023955.jpeg",
-    "https://images.pexels.com/photos/31024008/pexels-photo-31024008.jpeg"
+  "publicSlug": "AC-73dd2651",
+  "basicInfo": {
+    "id": "e7a5860e-1309-4b62-a491-a59944c764b3",
+    "stageName": "Tomas Actor",
+    "gender": "Male",
+    "birthDate": "1989-09-26",
+    "professions": [
+      {
+        "id": "e27bc2bc-3b4d-4153-997a-a654b7c81a0e",
+        "stringCode": "profession.singer"
+      },
+      {
+        "id": "7a77cc36-84e4-4298-ad72-f5395a1ded38",
+        "stringCode": "profession.actor"
+      }
+    ]
+  },
+  "contact": {
+    "id": "4c992269-bbb0-49c1-b61f-8f3f0cf51e00",
+    "email": "actor@asd.com",
+    "phoneNumber": "+41794002693"
+  },
+  "socialMedia": {
+    "id": "e0c510ae-6490-4b24-94fc-7b69208ac07c",
+    "instagramUrl": "instagram.com/actor",
+    "tikTokUrl": "tiktok.com/actor"
+  },
+  "media": {
+    "id": "02f5e3eb-ef8e-406c-82b0-4402082040a0",
+    "headshotImageUrl": "https://images.pexels.com/photos/31047260/pexels-photo-31047260.jpeg",
+    "fullBodyImageUrl": "https://images.pexels.com/photos/31024008/pexels-photo-31024008.jpeg",
+    "otherPicturesUrl": [
+      "https://images.pexels.com/photos/31024001/pexels-photo-31024001.jpeg",
+      "https://images.pexels.com/photos/31023955/pexels-photo-31023955.jpeg",
+      "https://images.pexels.com/photos/31024008/pexels-photo-31024008.jpeg"
+    ],
+    "introductionVideoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "showReelVideoUrl": "https://vimeo.com/76979871"
+  },
+  "characteristics": {
+    "id": "752829e8-febf-4c68-94bc-baa815d02bed",
+    "heightCm": 170,
+    "weightKg": 62,
+    "hairColor": {
+      "id": "05dc9d0a-aee5-4b51-86e3-42a1a95c1b4b",
+      "stringCode": "color.black",
+      "category": "HAIR"
+    },
+    "eyeColor": {
+      "id": "8e486d6b-2d1e-4e71-ae8a-6f8554608a35",
+      "stringCode": "color.heterochromia",
+      "category": "EYE"
+    },
+    "chestCm": 112,
+    "waistCm": 80,
+    "hipCm": 120,
+    "shirtSize": "M",
+    "pantSize": "M",
+    "dressSize": null,
+    "shoeSize": "40",
+    "tattoo": false,
+    "passport": true,
+    "drivingLicense": true,
+    "dietOption": {
+      "id": "30d2f6b9-d74c-4fa5-bbcb-9ddd566611ea",
+      "stringCode": "diet.kosher"
+    }
+  },
+  "skills": [
+    {
+      "id": "eedbf920-9904-43ee-adf8-252963085e58",
+      "stringCode": "skill.english_us",
+      "category": "ACCENTS"
+    },
+    {
+      "id": "947facd2-78c4-4195-a8ae-fc5cdec178a4",
+      "stringCode": "skill.physical_theater",
+      "category": "PHYSICAL"
+    },
+    {
+      "id": "84cf1319-e09d-47d8-ba0c-e54a776bd40d",
+      "stringCode": "skill.spanish_es",
+      "category": "ACCENTS"
+    },
+    {
+      "id": "c84a9302-d0df-4427-a5b7-e8005be4c683",
+      "stringCode": "skill.athletics",
+      "category": "SPORT"
+    }
   ],
-  "videos": ["https://www.youtube.com/watch?v=dQw4w9WgXcQ", "https://vimeo.com/76979871"],
-  "height": "170 cm",
-  "weight": "60 kg",
-  "hairColor": "Dark Brown",
-  "eyeColor": "Green",
-  "chestWidth": "88 cm",
-  "waist": "65 cm",
-  "hips": "92 cm",
-  "shirtSize": "M",
-  "pantSize": "38 EU",
-  "dressSize": "36 EU",
-  "shoeSize": "39 EU",
-  "hasTattoos": false,
-  "hasPassport": true,
-  "hasDrivingLicense": true,
-  "diet": "Vegetarian"
+  "credits": [
+    {
+      "id": "0397e988-9363-487b-a1f7-1c58021a9e02",
+      "productionType": {
+        "id": "afc7cd87-5db9-45b3-b3e5-43eea7b5a9da",
+        "stringCode": "production_type.television_streaming"
+      },
+      "projectName": "El Mejor Programa ",
+      "producerName": "Director Tu Vieja",
+      "role": "Actor",
+      "year": "2010"
+    },
+    {
+      "id": "7a689866-841e-41e3-be20-51cda7d24c4c",
+      "productionType": {
+        "id": "afc7cd87-5db9-45b3-b3e5-43eea7b5a9da",
+        "stringCode": "production_type.television_streaming"
+      },
+      "projectName": "El Mejor Programa 2",
+      "producerName": "Director Tu Vieja",
+      "role": "Actor",
+      "year": "2011"
+    }
+  ],
+  "education": [
+    {
+      "id": "8080b363-62d6-4380-ad5a-4848b1122b62",
+      "institution": "Conservatorio Manuel de Falla",
+      "courseName": "Musica Antigua",
+      "graduationYear": "2010"
+    },
+    {
+      "id": "accfd1be-f247-45ff-bb35-b05f7503f206",
+      "institution": "Academy",
+      "courseName": "Television y mas",
+      "graduationYear": "2022"
+    }
+  ]
 }
