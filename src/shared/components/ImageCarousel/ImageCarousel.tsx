@@ -20,11 +20,11 @@ export default function ImageCarousel({ images }: Props) {
       </div>
 
       {/* Slider de thumbnails */}
-      <div className="flex gap-[10px] overflow-x-auto w-full">
+      <div className="flex gap-[8px] overflow-x-auto w-full">
         {images.map((img, index) => (
           <button
             key={index}
-            className={`w-28 aspect-[8/10] flex-shrink-0 rounded-lg overflow-hidden border-2 ${
+            className={`w-34 aspect-[8/10] flex-shrink-0 rounded-lg overflow-hidden border-2 ${
               selectedIndex === index ? 'border-blue-500' : 'border-transparent'
             }`}
             onClick={() => setSelectedIndex(index)}

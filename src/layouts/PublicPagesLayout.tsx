@@ -6,7 +6,7 @@ export default function PublicPagesLayout() {
   return (
     <div className="min-h-screen bg-white">
       <PublicNavbar></PublicNavbar>
-      <main className="p-6">{<Outlet />}</main>
+      <main className="p-4">{<Outlet />}</main>
     </div>
   );
 }

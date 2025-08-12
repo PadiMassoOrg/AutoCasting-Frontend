@@ -1,5 +1,5 @@
 // Response
-export type ProfileResponse = {
+export type BaseProfileResponse = {
   id: string;
   roleStringCode: string;
   planStringCode: string;
@@ -13,48 +13,53 @@ export type ProfileResponse = {
   education: Array<Education>;
 };
 
-export type PublicProfileResponse = {
+export type BasePublicProfileResponse = {
+  id?: string;
   roleStringCode: string;
   planStringCode: string;
   publicSlug: string;
   basicInfo: ProfileBasicInfo;
   contact: ProfileContact;
   socialMedia: ProfileSocialMedia;
+  characteristics: Characteristics;
+  skills: Array<SiteMetadataObject>;
+  credits: Array<Credit>;
+  education: Array<Education>;
 };
 
 // ======================
 // Related Entities
 // ======================
-export type ProfileBasicInfo = {
+export type BaseProfileBasicInfo = {
   id: string;
   stageName: string;
   gender: string;
-  birthDate: Date;
+  birthDate: string;
   professions: Array<SiteMetadataObject>;
 };
 
-export type ProfileContact = {
+export type BaseProfileContact = {
   id: string;
   email: string;
   phoneNumber: string;
 };
 
-export type ProfileSocialMedia = {
+export type BaseProfileSocialMedia = {
   id: string;
   instagramUrl: string;
   tikTokUrl: string;
 };
 
-export type Media = {
+export type BaseMedia = {
   id: string;
   headshotImageUrl: string;
   fullBodyImageUrl: string;
-  otherPicturesUrl: Array<String>;
+  otherPicturesUrl: Array<string>;
   introductionVideoUrl: string;
   showReelVideoUrl: string;
 };
 
-export type Characteristics = {
+export type BaseCharacteristics = {
   id: string;
   heightCm: number;
   weightKg: number;
@@ -64,25 +69,22 @@ export type Characteristics = {
   waistCm: number;
   hipCm: number;
   shirtSize: string;
-  pantSizee: string;
-  dressSizee: string;
+  pantSize: string;
+  dressSize: string;
   shoeSize: string;
   tattoo: boolean;
   passport: boolean;
   drivingLicense: boolean;
   dietOption: SiteMetadataObject;
-  skills: Array<SiteMetadataObject>;
-  credits: Array<Credit>;
-  education: Array<Education>;
 };
 
-export type SiteMetadataObject = {
+export type BaseSiteMetadataObject = {
   id: string;
   stringCode: string;
-  category: string;
+  category?: string;
 };
 
-export type Credit = {
+export type BaseCredit = {
   id: string;
   productionType: SiteMetadataObject;
   projectName: string;
@@ -91,9 +93,37 @@ export type Credit = {
   year: string;
 };
 
-export type Education = {
+export type BaseEducation = {
   id: string;
   institution: string;
   courseName: string;
   graduationYear: string;
 };
+
+// Util: deep-nullable para todo MENOS la propiedad "id" (que queda requerida y no-nula).
+export type DeepNullableExceptId<T> = T extends (...args: any[]) => any
+  ? T
+  : T extends Array<infer U>
+    ? Array<DeepNullableExceptId<U>> | null
+    : T extends object
+      ? {
+          [K in keyof T]: K extends 'id'
+            ? NonNullable<T[K]> // id siempre requerido y no-nulo
+            : DeepNullableExceptId<T[K]> | null; // el resto puede ser null (y se transforma recursivamente)
+        }
+      : T | null;
+/* ======================
+   Export (DeepNullable)
+   ====================== */
+
+export type SiteMetadataObject = BaseSiteMetadataObject;
+export type Credit = DeepNullableExceptId<BaseCredit>;
+export type Education = DeepNullableExceptId<BaseEducation>;
+export type ProfileBasicInfo = DeepNullableExceptId<BaseProfileBasicInfo>;
+export type ProfileContact = DeepNullableExceptId<BaseProfileContact>;
+export type ProfileSocialMedia = DeepNullableExceptId<BaseProfileSocialMedia>;
+export type Media = DeepNullableExceptId<BaseMedia>;
+export type Characteristics = DeepNullableExceptId<BaseCharacteristics>;
+
+export type ProfileResponse = BaseProfileResponse;
+export type PublicProfileResponse = BasePublicProfileResponse;

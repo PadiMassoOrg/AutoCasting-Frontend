@@ -5,17 +5,17 @@
   "publicSlug": "AC-73dd2651",
   "basicInfo": {
     "id": "e7a5860e-1309-4b62-a491-a59944c764b3",
-    "stageName": "Tomas Actor",
-    "gender": "Male",
+    "stageName": "Aldana Martínez",
+    "gender": "gender.female",
     "birthDate": "1989-09-26",
     "professions": [
       {
         "id": "e27bc2bc-3b4d-4153-997a-a654b7c81a0e",
-        "stringCode": "profession.singer"
+        "stringCode": "sitemetadata.profession.singer"
       },
       {
         "id": "7a77cc36-84e4-4298-ad72-f5395a1ded38",
-        "stringCode": "profession.actor"
+        "stringCode": "sitemetadata.profession.actor"
       }
     ]
   },
@@ -39,7 +39,7 @@
       "https://images.pexels.com/photos/31024008/pexels-photo-31024008.jpeg"
     ],
     "introductionVideoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    "showReelVideoUrl": "https://vimeo.com/76979871"
+    "showReelVideoUrl": "https://player.vimeo.com/video/1051369991?h=7d9a692c1c&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
   },
   "characteristics": {
     "id": "752829e8-febf-4c68-94bc-baa815d02bed",
@@ -47,12 +47,12 @@
     "weightKg": 62,
     "hairColor": {
       "id": "05dc9d0a-aee5-4b51-86e3-42a1a95c1b4b",
-      "stringCode": "color.black",
+      "stringCode": "sitemetadata.color.black",
       "category": "HAIR"
     },
     "eyeColor": {
       "id": "8e486d6b-2d1e-4e71-ae8a-6f8554608a35",
-      "stringCode": "color.heterochromia",
+      "stringCode": "sitemetadata.color.heterochromia",
       "category": "EYE"
     },
     "chestCm": 112,
@@ -67,28 +67,28 @@
     "drivingLicense": true,
     "dietOption": {
       "id": "30d2f6b9-d74c-4fa5-bbcb-9ddd566611ea",
-      "stringCode": "diet.kosher"
+      "stringCode": "sitemetadata.diet.kosher"
     }
   },
   "skills": [
     {
       "id": "eedbf920-9904-43ee-adf8-252963085e58",
-      "stringCode": "skill.english_us",
+      "stringCode": "sitemetadata.skill.english_us",
       "category": "ACCENTS"
     },
     {
       "id": "947facd2-78c4-4195-a8ae-fc5cdec178a4",
-      "stringCode": "skill.physical_theater",
+      "stringCode": "sitemetadata.skill.physical_theater",
       "category": "PHYSICAL"
     },
     {
       "id": "84cf1319-e09d-47d8-ba0c-e54a776bd40d",
-      "stringCode": "skill.spanish_es",
+      "stringCode": "sitemetadata.skill.spanish_es",
       "category": "ACCENTS"
     },
     {
       "id": "c84a9302-d0df-4427-a5b7-e8005be4c683",
-      "stringCode": "skill.athletics",
+      "stringCode": "sitemetadata.skill.athletics",
       "category": "SPORT"
     }
   ],
@@ -97,7 +97,7 @@
       "id": "0397e988-9363-487b-a1f7-1c58021a9e02",
       "productionType": {
         "id": "afc7cd87-5db9-45b3-b3e5-43eea7b5a9da",
-        "stringCode": "production_type.television_streaming"
+        "stringCode": "sitemetadata.production_type.television_streaming"
       },
       "projectName": "El Mejor Programa ",
       "producerName": "Director Tu Vieja",
@@ -108,7 +108,7 @@
       "id": "7a689866-841e-41e3-be20-51cda7d24c4c",
       "productionType": {
         "id": "afc7cd87-5db9-45b3-b3e5-43eea7b5a9da",
-        "stringCode": "production_type.television_streaming"
+        "stringCode": "sitemetadata.production_type.television_streaming"
       },
       "projectName": "El Mejor Programa 2",
       "producerName": "Director Tu Vieja",

@@ -4,25 +4,127 @@
     "header": "Tu Perfil Digital Actoral"
   },
   "general": {
-    "role": {
+    "yes": "Sí",
+    "no": "No"
+  },
+  "role": {
+    "actor": "Actor",
+    "castinera": "Castinera"
+  },
+  "plan": {
+    "free": "Free",
+    "premium_actor_1": "Premium",
+    "premium_castinera": "Premium Castinera"
+  },
+  "sitemetadata": {
+    "skill": {
+      "athletics": "Atletismo",
+      "basketball": "Básquet",
+      "boxing": "Boxeo",
+      "cycling": "Ciclismo",
+      "football": "Fútbol",
+      "gymnastics": "Gimnasia",
+      "handball": "Handball",
+      "hockey": "Hockey",
+      "swimming": "Natación",
+      "padel": "Pádel",
+      "rugby": "Rugby",
+      "tennis": "Tenis",
+      "volleyball": "Vóley",
+      "acrobatics": "Acrobacia",
+      "aerial_acrobatics": "Acrobacia aérea",
+      "martial_arts": "Artes marciales",
+      "capoeira": "Capoeira",
+      "stage_combat": "Combate escénico",
+      "contortion": "Contorsionismo",
+      "tightrope_slackline": "Cuerda floja / Slackline",
+      "horseback_riding": "Equitación",
+      "climbing": "Escalada",
+      "stage_fencing": "Esgrima escénica",
+      "juggling": "Malabarismo",
+      "pantomime": "Pantomima",
+      "physical_theater": "Teatro físico",
+      "parkour": "Parkour",
+      "skating": "Patinaje",
+      "stunts": "Acrobacias",
+      "aerial_skills": "Habilidades aéreas",
+      "harness_wirework": "Trabajo con arnés y cuerdas",
+      "stilts": "Zancos",
+      "german": "Alemán",
+      "chinese_mandarin": "Chino mandarín",
+      "spanish_arg": "Español (Argentina)",
+      "french": "Francés",
+      "english": "Inglés",
+      "italian": "Italiano",
+      "portuguese_br": "Portugués (Brasil)",
+      "russian": "Ruso",
+      "spanish_es": "Español (España)",
+      "spanish_neutral": "Español neutro",
+      "spanish_co": "Español (Colombia)",
+      "spanish_ch": "Español (Chile)",
+      "spanish_pe": "Español (Perú)",
+      "spanish_ve": "Español (Venezuela)",
+      "english_us": "Inglés (EE. UU.)",
+      "english_uk": "Inglés (Reino Unido)"
+    },
+    "profession": {
       "actor": "Actor",
-      "castinera": "Castinera"
+      "dancer": "Bailarín",
+      "singer": "Cantante",
+      "influencer": "Influencer",
+      "model": "Modelo",
+      "musician": "Músico",
+      "comedy_standup": "Comediante / Stand-up",
+      "voice_talent": "Actor de voz"
     },
-    "plan": {
-      "free": "Free",
-      "premium_actor_1": "Premium",
-      "premium_castinera": "Premium Castinera"
+    "color": {
+      "black": "Negro",
+      "dark_brown": "Marrón oscuro",
+      "light_brown": "Marrón claro",
+      "brown": "Marrón",
+      "blonde": "Rubio",
+      "dark_blonde": "Rubio oscuro",
+      "light_blonde": "Rubio claro",
+      "red": "Rojo",
+      "gray": "Gris",
+      "white": "Blanco",
+      "no_hair": "Sin cabello",
+      "amber": "Ámbar",
+      "hazel": "Avellana",
+      "blue": "Azul",
+      "light_blue": "Celeste",
+      "green": "Verde",
+      "heterochromia": "Heterocromía"
     },
-    "state": {
-      "loading": "Cargando...",
-      "server_err": "Ocurrió un error, intente nuevamente."
+    "diet": {
+      "omnivore": "Omnívoro",
+      "flexitarian": "Flexitariano",
+      "vegetarian": "Vegetariano",
+      "lacto_ovo_vegetarian": "Lacto-ovo vegetariano",
+      "vegan": "Vegano",
+      "pescatarian": "Pescetariano",
+      "ketogenic": "Cetogénico",
+      "gluten_free": "Sin gluten",
+      "lactose_free": "Sin lactosa",
+      "kosher": "Kosher",
+      "halal": "Halal"
     },
-    "buttons": {
-      "cancel": "Cancelar"
-    },
-    "routes": {
-      "profile": "Perfil"
+    "production_type": {
+      "theatre": "Teatro",
+      "television_streaming": "Televisión / Streaming",
+      "film": "Cine",
+      "commercial": "Comercial"
     }
+  },
+  "state": {
+    "loading": "Cargando...",
+    "server_err": "Ocurrió un error, intente nuevamente."
+  },
+  "buttons": {
+    "cancel": "Cancelar"
+  },
+  "routes": {
+    "profile": "Perfil"
   },
   "auth": {
     "page": {
@@ -66,6 +168,40 @@
       "password_min": "La contraseña debe tener al menos 6 caracteres",
       "password_missmatch": "Las contraseñas no coinciden"
     }
+  },
+  "profile": {
+    "page": {
+      "videos": "Videos",
+      "introduction_video": "Video de presentación",
+      "showreel_video": "Videoreel"
+    },
+    "pills": {
+      "characteristics": "Características",
+      "skills": "Habilidades ",
+      "credits": "Créditos",
+      "education": "Formación"
+    },
+    "characteristics": {
+      "gender": "Género",
+      "age": "Edad",
+      "location": "Locación",
+      "height": "Estatura",
+      "weight": "Peso",
+      "hairColor": "Cabello",
+      "eyeColor": "Ojos",
+      "chest": "Busto",
+      "waist": "Cintura",
+      "hip": "Caderas",
+      "shirt": "Camisa",
+      "pant": "Pantalón",
+      "dress": "Vestido",
+      "shoe": "Calzado",
+      "tattoo": "Tatuajes",
+      "passport": "Pasaporte",
+      "drivingLicense": "Lic. de Conducir",
+      "diet": "Dieta"
+    },
+    "validation": {}
   },
   "dashboard": {
     "logout": "Salir"
