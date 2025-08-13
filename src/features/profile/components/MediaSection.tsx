@@ -1,4 +1,3 @@
-import React from 'react';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 import { useTranslation } from 'react-i18next';
 import VideoPreviewCard from '../../../shared/components/Video/VideoPreviewCard';
@@ -16,7 +15,7 @@ type MediaProps = {
 };
 
 const MediaSection = ({ data }: MediaProps) => {
-  const { id, headshotImageUrl, fullBodyImageUrl, otherPicturesUrl, introductionVideoUrl, showReelVideoUrl } = data;
+  const { headshotImageUrl, fullBodyImageUrl, otherPicturesUrl, introductionVideoUrl, showReelVideoUrl } = data;
   const { t } = useTranslation();
 
   const mergePictures = () => {

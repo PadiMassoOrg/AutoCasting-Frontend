@@ -17,6 +17,15 @@
     "premium_castinera": "Premium Castinera"
   },
   "sitemetadata": {
+    "category": {
+      "scenic": "Habilidades España",
+      "sport": "Deportes",
+      "physical": "Habilidades Físicas",
+      "language": "Idiomas",
+      "accent": "Acentos",
+      "hair_color": "Color de cabello",
+      "eye_color": "Color de ojos"
+    },
     "skill": {
       "athletics": "Atletismo",
       "basketball": "Básquet",

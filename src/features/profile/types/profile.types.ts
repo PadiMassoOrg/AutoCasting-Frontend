@@ -81,7 +81,7 @@ export type BaseCharacteristics = {
 export type BaseSiteMetadataObject = {
   id: string;
   stringCode: string;
-  category?: string;
+  categoryStringCode?: string;
 };
 
 export type BaseCredit = {
@@ -112,10 +112,10 @@ export type DeepNullableExceptId<T> = T extends (...args: any[]) => any
             : DeepNullableExceptId<T[K]> | null; // el resto puede ser null (y se transforma recursivamente)
         }
       : T | null;
+
 /* ======================
    Export (DeepNullable)
    ====================== */
-
 export type SiteMetadataObject = BaseSiteMetadataObject;
 export type Credit = DeepNullableExceptId<BaseCredit>;
 export type Education = DeepNullableExceptId<BaseEducation>;
