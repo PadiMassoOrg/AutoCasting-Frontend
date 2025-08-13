@@ -1,4 +1,4 @@
-import React, { type JSX } from 'react';
+import { type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SiteMetadataObject } from '../types/profile.types';
 
