@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import type { Education } from '../../types/profile.types';
 
 const EducationPanel = ({ education }: { education: Education[] }) => {

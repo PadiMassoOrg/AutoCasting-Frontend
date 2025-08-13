@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Credit } from '../../types/profile.types';
 import Separator from '../../../../shared/components/Separator/Separator';
@@ -49,7 +49,7 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
 
   return (
     <div className="flex flex-col gap-6" style={{ overflowAnchor: 'none' }}>
-      {categories.map((catKey, idx) => {
+      {categories.map((catKey) => {
         const list = groups[catKey];
         if (!list?.length) return null;
         const isOpen = open[catKey] ?? true;

@@ -1,4 +1,3 @@
-import React from 'react';
 import UniversalVideoPlayer from './UniversalVideoPlayer';
 
 const VideoPreviewCard = ({ videoUrl }: { videoUrl: string }) => {

@@ -1,5 +1,5 @@
-import React, { useMemo, useRef, useState } from 'react';
-import type { Credit, Education, PublicProfileResponse } from '../../types/profile.types';
+import { useMemo, useRef, useState } from 'react';
+import type { PublicProfileResponse } from '../../types/profile.types';
 import { useTranslation } from 'react-i18next';
 import PanelSwitch from './PanelSwitch';
 
@@ -90,26 +90,4 @@ function getPillLabel(key: PillKey, t: ReturnType<typeof useTranslation>['t']) {
     case 'education':
       return t('profile.pills.education');
   }
-
-  /* ------------------------------- Education --------------------------------- */
-
-  function EducationView({ items }: { items: Education[] }) {
-    return (
-      <ul className="flex flex-col gap-3">
-        {items.map((e) => (
-          <li key={e.id} className="rounded-lg border p-3">
-            <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
-              <span className="font-medium text-gray-900">{e.institution}</span>
-              <span>•</span>
-              <span>{e.courseName}</span>
-              <span>•</span>
-              <span>{e.graduationYear}</span>
-            </div>
-          </li>
-        ))}
-      </ul>
-    );
-  }
-
-  /* --------------------------------- Helpers --------------------------------- */
 }

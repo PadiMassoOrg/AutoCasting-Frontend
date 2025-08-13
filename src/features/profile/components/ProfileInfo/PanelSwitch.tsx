@@ -1,4 +1,3 @@
-import React from 'react';
 import type { PublicProfileResponse } from '../../types/profile.types';
 import type { useTranslation } from 'react-i18next';
 import CharacteristicsPanel from './CharacteristicsPanel';

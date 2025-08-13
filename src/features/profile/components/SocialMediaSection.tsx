@@ -1,4 +1,3 @@
-import React from 'react';
 import instagram from '../icons/instagram.svg';
 import tikTok from '../icons/tikTok.svg';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +10,7 @@ type SocialMediaProps = {
   };
 };
 
-const SocialMediaSection = ({ data }: SocialMediaProps) => {
+const SocialMediaSection = ({}: SocialMediaProps) => {
   const { t } = useTranslation();
   return (
     <article className="flex flex-col gap-4 items-center">
