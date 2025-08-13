@@ -90,11 +90,6 @@ function getPillLabel(key: PillKey, t: ReturnType<typeof useTranslation>['t']) {
     case 'education':
       return t('profile.pills.education');
   }
-  /* --------------------------------- Credits --------------------------------- */
-
-  function CreditsView({ items, t }: { items: Credit[]; t: ReturnType<typeof useTranslation>['t'] }) {
-    return <ul className="flex flex-col gap-3"></ul>;
-  }
 
   /* ------------------------------- Education --------------------------------- */
 

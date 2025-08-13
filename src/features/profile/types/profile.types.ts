@@ -117,8 +117,8 @@ export type DeepNullableExceptId<T> = T extends (...args: any[]) => any
    Export (DeepNullable)
    ====================== */
 export type SiteMetadataObject = BaseSiteMetadataObject;
-export type Credit = DeepNullableExceptId<BaseCredit>;
-export type Education = DeepNullableExceptId<BaseEducation>;
+export type Credit = BaseCredit;
+export type Education = BaseEducation;
 export type ProfileBasicInfo = DeepNullableExceptId<BaseProfileBasicInfo>;
 export type ProfileContact = DeepNullableExceptId<BaseProfileContact>;
 export type ProfileSocialMedia = DeepNullableExceptId<BaseProfileSocialMedia>;

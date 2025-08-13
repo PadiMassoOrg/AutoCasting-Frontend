@@ -5,6 +5,7 @@ import mock from '../MOCK_PROFILE.json';
 import { ViewerActions, BasicInfoSection, MediaSection } from '../components/';
 import Separator from '../../../shared/components/Separator/Separator';
 import ProfileInfoCarousel from '../components/ProfileInfo/PanelCarousel';
+import SocialMediaSection from '../components/SocialMediaSection';
 
 const PublicProfilePage = () => {
   // const { slug } = useParams<{ slug: string }>();
@@ -21,12 +22,14 @@ const PublicProfilePage = () => {
   if (error || !data) return <p>Error al cargar el perfil</p>;
 
   return (
-    <div className="pb-48 pt-3 flex flex-col gap-3 justify-center">
+    <div className="relative pt-3 pb-10 flex flex-col gap-3 justify-center">
       <ViewerActions></ViewerActions>
       <BasicInfoSection data={basicInfo}></BasicInfoSection>
       <MediaSection data={media}></MediaSection>
       <Separator className="opacity-25 my-12"></Separator>
       <ProfileInfoCarousel profile={data}></ProfileInfoCarousel>
+      <Separator className="opacity-25 my-8"></Separator>
+      <SocialMediaSection data={socialMedia}></SocialMediaSection>
     </div>
   );
 };

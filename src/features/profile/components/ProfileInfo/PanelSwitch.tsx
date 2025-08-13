@@ -3,6 +3,8 @@ import type { PublicProfileResponse } from '../../types/profile.types';
 import type { useTranslation } from 'react-i18next';
 import CharacteristicsPanel from './CharacteristicsPanel';
 import SkillsPanel from './SkillsPanel';
+import CreditsPanel from './CreditsPanel';
+import EducationPanel from './EducationPanel';
 
 type PillKey = 'characteristics' | 'skills' | 'credits' | 'education';
 
@@ -41,9 +43,9 @@ const PanelSwitch = ({
         id={`panel-credits`}
         aria-labelledby="tab-credits"
         hidden={activeKey !== 'credits'}
-        className="rounded-xl border p-4"
+        className="rounded-xl border border-[var(--color-secondary-outline)] p-6"
       >
-        {/* <CreditsView items={profile.credits} t={t} /> */}
+        <CreditsPanel credits={profile.credits} />
       </div>
 
       <div
@@ -51,9 +53,9 @@ const PanelSwitch = ({
         id={`panel-education`}
         aria-labelledby="tab-education"
         hidden={activeKey !== 'education'}
-        className="rounded-xl border p-4"
+        className="rounded-xl border border-[var(--color-secondary-outline)] py-6 px-7"
       >
-        {/* <EducationView items={profile.education} /> */}
+        <EducationPanel education={profile.education} />
       </div>
     </>
   );

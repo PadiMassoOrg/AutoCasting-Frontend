@@ -12,7 +12,7 @@ export const USER_ROUTES = [
   {
     id: 1,
     path: '/dashboard/profile',
-    name: 'general.routes.profile',
+    name: 'routes.profile',
   },
 ];
 

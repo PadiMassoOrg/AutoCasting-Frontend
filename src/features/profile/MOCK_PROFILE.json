@@ -107,6 +107,17 @@
       "year": "2011"
     },
     {
+      "id": "7bc9aeaf-2c31-4d65-9451-a9e23fdae4e6",
+      "productionType": {
+        "id": "d19d57f9-280f-42f9-99b1-1ce53201450b",
+        "stringCode": "sitemetadata.production_type.film"
+      },
+      "projectName": "Historiy y mas!",
+      "producerName": "Director Un Pasado",
+      "role": "Presentador",
+      "year": "2015"
+    },
+    {
       "id": "a9bef437-bf53-41bb-ba4a-3ac337d59813",
       "productionType": {
         "id": "7efdc02a-b995-4db4-b3f0-6a3bf0553b24",

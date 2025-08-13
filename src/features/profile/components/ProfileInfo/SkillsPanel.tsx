@@ -46,7 +46,7 @@ export default function SkillsPanel({ skills }: Props) {
 
   return (
     <div className="flex flex-col gap-4" style={{ overflowAnchor: 'none' }}>
-      {categories.map((catKey, idx) => {
+      {categories.map((catKey) => {
         const list = groups[catKey];
         if (!list?.length) return null;
         const isOpen = open[catKey] ?? true;
@@ -59,15 +59,16 @@ export default function SkillsPanel({ skills }: Props) {
                 setOpen((s) => ({ ...s, [catKey]: !isOpen }));
                 requestAnimationFrame(() => window.scrollTo({ top: y }));
               }}
-              className="w-full flex items-center justify-between  cursor-pointer"
+              className="w-full flex items-center justify-between cursor-pointer"
               aria-expanded={isOpen}
               aria-controls={`skills-${catKey}`}
             >
               <span className="font-semibold text-lg">{t(catKey)}:</span>
               <Chevron open={isOpen} />
             </button>
+            {/* Lista de Skills */}
             {isOpen && (
-              <div id={`skills-${catKey}`} className="mt-3 flex flex-wrap gap-2">
+              <article id={`skills-${catKey}`} className="mt-3 flex flex-wrap gap-2">
                 {list.map((s) => (
                   <span
                     key={s.id}
@@ -77,7 +78,7 @@ export default function SkillsPanel({ skills }: Props) {
                     {t(s.stringCode)}
                   </span>
                 ))}
-              </div>
+              </article>
             )}
             <Separator className="opacity-20 my-4" />
           </article>

@@ -39,7 +39,7 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
         navigate(ROUTES.DASHBOARD);
       },
       onError: (err: any) => {
-        const message = err?.response?.data?.message || t('general.state.server_err');
+        const message = err?.response?.data?.message || t('state.server_err');
         setServerError(message);
       },
     });
@@ -72,7 +72,7 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
         {...register('password')}
       />
       <Button type="submit" className="mt-8 cursor-pointer">
-        {registerMutation.isPending ? t('general.state.loading') : t('auth.register.submit')}
+        {registerMutation.isPending ? t('state.loading') : t('auth.register.submit')}
       </Button>
       {serverError && (
         <Label variant="error" className="pl-1">
