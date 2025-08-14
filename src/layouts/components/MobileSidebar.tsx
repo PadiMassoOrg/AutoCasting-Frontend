@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { ROUTES, USER_ROUTES } from '../../shared/lib/routes';
 import { useTranslation } from 'react-i18next';
 import { LinkLogo } from '../../shared/components/LinkLogo';
-import { logout } from '../../features/auth/sevices/authService';
+import { logout } from '../../features/auth/services/authService';
 
 export default function MobileSidebar() {
   const { t } = useTranslation();

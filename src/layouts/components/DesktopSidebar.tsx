@@ -2,7 +2,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { ROUTES, USER_ROUTES } from '../../shared/lib/routes';
 import { useTranslation } from 'react-i18next';
-import { logout } from '../../features/auth/sevices/authService';
+import { logout } from '../../features/auth/services/authService';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 
 export default function DesktopSidebar() {
