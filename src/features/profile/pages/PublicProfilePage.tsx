@@ -2,7 +2,7 @@
 // import { usePublicProfile } from '../hooks/usePublicProfile';
 import mock from '../MOCK_PROFILE.json';
 import { ViewerActions, BasicInfoSection, MediaSection } from '../components/';
-import Separator from '../../../shared/components/Separator/Separator';
+import Separator from '../../../shared/components/A EXTRAER EN UI LIB/Separator/Separator';
 import ProfileInfoCarousel from '../components/ProfileInfo/PanelCarousel';
 import SocialMediaSection from '../components/SocialMediaSection';
 

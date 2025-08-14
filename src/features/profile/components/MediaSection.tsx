@@ -1,7 +1,7 @@
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 import { useTranslation } from 'react-i18next';
 import VideoPreviewCard from '../../../shared/components/Video/VideoPreviewCard';
-import Separator from '../../../shared/components/Separator/Separator';
+import Separator from '../../../shared/components/A EXTRAER EN UI LIB/Separator/Separator';
 
 type MediaProps = {
   data: {

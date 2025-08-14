@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Credit } from '../../types/profile.types';
-import Separator from '../../../../shared/components/Separator/Separator';
+import Separator from '../../../../shared/components/A EXTRAER EN UI LIB/Separator/Separator';
 
 const ORDER_KEYS = [
   'sitemetadata.production_type.theatre',
