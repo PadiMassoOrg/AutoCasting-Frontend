@@ -6,11 +6,17 @@ import { ROUTES, USER_ROUTES } from '../../shared/lib/routes';
 import { useTranslation } from 'react-i18next';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import { logout } from '../../features/auth/services/authService';
+import { useProfile } from '../../features/profile/hooks/useProfile';
 
 export default function MobileSidebar() {
   const { t } = useTranslation();
   const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const { data } = useProfile();
+
+  const toPublicProfile = () => {
+    window.location.href = ROUTES.PUBLIC_PROFILE + '/' + data?.publicSlug;
+  };
 
   return (
     <div className="md:hidden">
@@ -38,6 +44,9 @@ export default function MobileSidebar() {
               {t(item.name)}
             </Link>
           ))}
+          <li className="block px-2 py-2 rounded cursor-pointer hover:font-bold" onClick={toPublicProfile}>
+            Ver Perfil Publico
+          </li>
           <li className="block px-2 py-2 rounded cursor-pointer hover:font-bold" onClick={logout}>
             {t('dashboard.logout')}
           </li>

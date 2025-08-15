@@ -23,6 +23,7 @@ export type BasePublicProfileResponse = {
   basicInfo: ProfileBasicInfo;
   contact: ProfileContact;
   socialMedia: ProfileSocialMedia;
+  media: Media;
   characteristics: Characteristics;
   skills: Array<SiteMetadataObject>;
   credits: Array<Credit>;

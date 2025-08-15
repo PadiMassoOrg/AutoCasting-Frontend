@@ -6,6 +6,7 @@ export const ROUTES = {
   RESET_PASSWORD: '/reset-password',
   DASHBOARD: '/dashboard',
   PROFILE: '/dashboard/profile',
+  PUBLIC_PROFILE: '/profile',
 };
 
 export const USER_ROUTES = [
