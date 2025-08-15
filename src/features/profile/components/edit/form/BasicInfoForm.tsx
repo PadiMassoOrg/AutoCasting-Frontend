@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ProfileBasicInfo } from '../../../types/profile.types';
 import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
@@ -13,17 +13,28 @@ export default function BasicInfoForm({
   professionsMeta: SiteMetadataObject[];
 }) {
   const { t, i18n } = useTranslation();
+  const basicInfoAutosave = useBasicInfoAutosave();
 
   const [stageName, setStageName] = useState(data.stageName ?? '');
   const [gender, setGender] = useState(data.gender ?? '');
   const [professions, setProfessions] = useState<string[]>((data.professions ?? []).map((p) => p.id));
 
+  // 1. Stage Name
+  const lastCommittedStageName = useRef<string>(data.stageName ?? '');
+
+  const commitStageName = useCallback(() => {
+    const trimmed = stageName.trim();
+    if (trimmed && trimmed !== lastCommittedStageName.current) {
+      lastCommittedStageName.current = trimmed; // evita doble envío
+      basicInfoAutosave.immediate({ stageName: trimmed });
+    }
+  }, [stageName, basicInfoAutosave]);
+
+  // 3. Date
   const parsed = parseISO(data.birthDate ?? '');
   const [bYear, setBYear] = useState(parsed.year);
   const [bMonth, setBMonth] = useState(parsed.month);
   const [bDay, setBDay] = useState(parsed.day);
-
-  const basicInfoAutosave = useBasicInfoAutosave();
 
   const YEAR_START = 1900;
   const YEAR_END = new Date().getFullYear();
@@ -59,13 +70,9 @@ export default function BasicInfoForm({
     if (bDay && Number(bDay) > daysInThisMonth) setBDay('');
   }, [daysInThisMonth, bDay]);
 
-  const onStageNameChange = useCallback(
-    (v: string) => {
-      setStageName(v);
-      basicInfoAutosave.schedule({ stageName: v });
-    },
-    [basicInfoAutosave]
-  );
+  const onStageNameChange = useCallback((v: string) => {
+    setStageName(v);
+  }, []);
 
   const onGenderChange = useCallback(
     (v: string) => {
@@ -125,10 +132,11 @@ export default function BasicInfoForm({
         id="stageName"
         label={t('profile.basic_info.artistic_name')}
         labelClassName="font-semibold text-base"
+        placeholder={t('general.placeholder.stage_name')}
         value={stageName}
         onChange={(e) => onStageNameChange(e.target.value)}
-        onBlur={() => basicInfoAutosave.flush()}
-        placeholder={t('general.placeholder.stage_name')}
+        onBlur={commitStageName}
+        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), commitStageName())}
       />
 
       <FormSelectField
