@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { SiteMetadataObject } from '../../types/profile.types';
-import Separator from '../../../../shared/components/A EXTRAER EN UI LIB/Separator/Separator';
+import type { SiteMetadataObject } from '../../../types/profile.types';
+import Separator from '../../../../../shared/components/A EXTRAER EN UI LIB/Separator/Separator';
 
 type Props = { skills: SiteMetadataObject[] };
 

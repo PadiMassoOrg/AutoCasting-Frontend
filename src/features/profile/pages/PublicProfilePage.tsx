@@ -1,10 +1,10 @@
 // import { useParams } from 'react-router-dom';
 // import { usePublicProfile } from '../hooks/usePublicProfile';
 import mock from '../MOCK_PROFILE.json';
-import { ViewerActions, BasicInfoSection, MediaSection } from '../components/';
+import { ViewerActions, BasicInfoSection, MediaSection } from '../components/public';
 import Separator from '../../../shared/components/A EXTRAER EN UI LIB/Separator/Separator';
-import ProfileInfoCarousel from '../components/ProfileInfo/PanelCarousel';
-import SocialMediaSection from '../components/SocialMediaSection';
+import ProfileInfoCarousel from '../components/public/Details/PanelCarousel';
+import SocialMediaSection from '../components/public/SocialMediaSection';
 
 const PublicProfilePage = () => {
   // const { slug } = useParams<{ slug: string }>();

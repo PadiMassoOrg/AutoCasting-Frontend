@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { Education } from '../../types/profile.types';
+import type { Education } from '../../../types/profile.types';
 
 const EducationPanel = ({ education }: { education: Education[] }) => {
   const items = useMemo(() => {

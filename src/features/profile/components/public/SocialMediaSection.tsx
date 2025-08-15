@@ -1,5 +1,5 @@
-import instagram from '../icons/instagram.svg';
-import tikTok from '../icons/tikTok.svg';
+import instagram from '../../icons/instagram.svg';
+import tikTok from '../../icons/tikTok.svg';
 import { useTranslation } from 'react-i18next';
 
 type SocialMediaProps = {

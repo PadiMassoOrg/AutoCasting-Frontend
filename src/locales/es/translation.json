@@ -5,7 +5,16 @@
   },
   "general": {
     "yes": "Sí",
-    "no": "No"
+    "no": "No",
+    "placeholder": {
+      "select": "Seleccionar",
+      "day": "Día",
+      "month": "Mes",
+      "year": "Año",
+      "email": "Email",
+      "phoneNumber": "Número",
+      "url": "URL"
+    }
   },
   "role": {
     "actor": "Actor",
@@ -183,13 +192,32 @@
       "videos": "Videos",
       "introduction_video": "Video de presentación",
       "showreel_video": "Videoreel",
-      "socials": "Sociales"
+      "socials": "Sociales",
+      "profile": "Perfil"
     },
     "pills": {
+      "profile": "Perfil",
+      "media": "Media",
+      "details": "Detalles",
       "characteristics": "Características",
       "skills": "Habilidades ",
       "credits": "Créditos",
       "education": "Formación"
+    },
+    "basic_info": {
+      "basic_info": "Información Básica",
+      "artistic_name": "Nombre Artístico",
+      "gender": "Género",
+      "birth_date": "Fecha de Nacimiento",
+      "location": "Locación",
+      "profession": "Profesión",
+      "profession_label": "(Selecciona hasta 3) 0 de 3 seleccionadas",
+      "contact": "Contacto",
+      "email": "Email",
+      "whatsapp": "Whatsapp",
+      "social_media": "Redes Sociales",
+      "instagram": "Instagram",
+      "tikTok": "TikTok"
     },
     "characteristics": {
       "gender": "Género",

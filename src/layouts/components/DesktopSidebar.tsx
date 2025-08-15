@@ -10,7 +10,7 @@ export default function DesktopSidebar() {
   const { pathname } = useLocation();
 
   return (
-    <aside className="hidden md:static md:flex flex-col w-56 bg-white shadow-md min-h-screen p-6 fixed ">
+    <aside className="hidden md:static md:flex flex-col w-56 bg-white min-h-screen p-6 fixed">
       <LinkLogo path={ROUTES.DASHBOARD} />
       <div className="mt-8 space-y-4">
         {USER_ROUTES.map((item) => (

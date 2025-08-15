@@ -1,9 +1,6 @@
-import type { PublicProfileResponse } from '../../types/profile.types';
+import type { PublicProfileResponse } from '../../../types/profile.types';
 import type { useTranslation } from 'react-i18next';
-import CharacteristicsPanel from './CharacteristicsPanel';
-import SkillsPanel from './SkillsPanel';
-import CreditsPanel from './CreditsPanel';
-import EducationPanel from './EducationPanel';
+import { CharacteristicsPanel, CreditsPanel, EducationPanel, SkillsPanel } from './';
 
 type PillKey = 'characteristics' | 'skills' | 'credits' | 'education';
 

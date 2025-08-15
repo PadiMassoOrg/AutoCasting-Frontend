@@ -1,7 +1,7 @@
 export type SiteMetadataObject = {
   id: string;
   stringCode: string; // p.ej. "sitemetadata.skill.athletics"
-  categoryStringCode: string; // p.ej. "sitemetadata.category.sport"
+  categoryStringCode?: string; // p.ej. "sitemetadata.category.sport"
 };
 
 export type SiteMetadataResponse = {

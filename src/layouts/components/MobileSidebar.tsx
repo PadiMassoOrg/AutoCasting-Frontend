@@ -15,7 +15,7 @@ export default function MobileSidebar() {
   return (
     <div className="md:hidden">
       {/* Header móvil con burger */}
-      <div className="flex items-center justify-between bg-white p-4 shadow-md">
+      <div className="flex items-center justify-between bg-white p-6">
         <LinkLogo horizontal path={ROUTES.DASHBOARD} />
         <button
           onClick={() => setIsOpen(!isOpen)}

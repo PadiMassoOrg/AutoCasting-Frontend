@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import type { PublicProfileResponse } from '../../types/profile.types';
+import type { PublicProfileResponse } from '../../../types/profile.types';
 import { useTranslation } from 'react-i18next';
 import PanelSwitch from './PanelSwitch';
 

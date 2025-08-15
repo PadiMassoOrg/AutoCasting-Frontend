@@ -1,3 +1,5 @@
+import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
+
 // Response
 export type BaseProfileResponse = {
   id: string;
@@ -7,6 +9,7 @@ export type BaseProfileResponse = {
   basicInfo: ProfileBasicInfo;
   contact: ProfileContact;
   socialMedia: ProfileSocialMedia;
+  media: Media;
   characteristics: Characteristics;
   skills: Array<SiteMetadataObject>;
   credits: Array<Credit>;
@@ -116,7 +119,6 @@ export type DeepNullableExceptId<T> = T extends (...args: any[]) => any
 /* ======================
    Export (DeepNullable)
    ====================== */
-export type SiteMetadataObject = BaseSiteMetadataObject;
 export type Credit = BaseCredit;
 export type Education = BaseEducation;
 export type ProfileBasicInfo = DeepNullableExceptId<BaseProfileBasicInfo>;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Characteristics, SiteMetadataObject } from '../../types/profile.types';
-import Separator from '../../../../shared/components/A EXTRAER EN UI LIB/Separator/Separator';
+import type { Characteristics, SiteMetadataObject } from '../../../types/profile.types';
+import Separator from '../../../../../shared/components/A EXTRAER EN UI LIB/Separator/Separator';
 
 export default function CharacteristicsPanel({ data }: { data: Characteristics }) {
   const { t } = useTranslation();

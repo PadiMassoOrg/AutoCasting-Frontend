@@ -1,5 +1,5 @@
-import share from '../icons/share.svg';
-import message from '../icons/message.svg';
+import share from '../../icons/share.svg';
+import message from '../../icons/message.svg';
 
 const ViewerActions = () => {
   return (
