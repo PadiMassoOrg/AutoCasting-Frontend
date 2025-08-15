@@ -1,6 +1,5 @@
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 
-// Response
 export type BaseProfileResponse = {
   id: string;
   roleStringCode: string;
@@ -38,7 +37,7 @@ export type BaseProfileBasicInfo = {
   stageName: string;
   gender: string;
   birthDate: string;
-  professions: Array<SiteMetadataObject>;
+  professions: SiteMetadataObject[];
 };
 
 export type BaseProfileContact = {

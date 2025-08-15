@@ -30,9 +30,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         // buster: 'app-build-hash',  // opcional para invalidar TODO en cambios mayores
       }}
     >
+      <MetadataBootstrap />
       <ModalProvider>
         <LanguageProvider>
-          <MetadataBootstrap />
           <AppRoutes />
         </LanguageProvider>
       </ModalProvider>

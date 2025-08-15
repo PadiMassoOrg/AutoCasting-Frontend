@@ -7,6 +7,7 @@
     "yes": "Sí",
     "no": "No",
     "placeholder": {
+      "stage_name": "Ricardo Darín",
       "select": "Seleccionar",
       "day": "Día",
       "month": "Mes",
@@ -26,6 +27,11 @@
     "premium_castinera": "Premium Castinera"
   },
   "sitemetadata": {
+    "gender": {
+      "male": "Hombre",
+      "female": "Mujer",
+      "other": "Otros"
+    },
     "category": {
       "scenic": "Habilidades España",
       "sport": "Deportes",

@@ -1,8 +1,8 @@
 // import { useParams } from 'react-router-dom';
 // import { usePublicProfile } from '../hooks/usePublicProfile';
+import { Separator } from 'autocasting-ui-library-padimasso';
 import mock from '../MOCK_PROFILE.json';
 import { ViewerActions, BasicInfoSection, MediaSection } from '../components/public';
-import Separator from '../../../shared/components/A EXTRAER EN UI LIB/Separator/Separator';
 import ProfileInfoCarousel from '../components/public/Details/PanelCarousel';
 import SocialMediaSection from '../components/public/SocialMediaSection';
 

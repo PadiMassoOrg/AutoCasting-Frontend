@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { SiteMetadataObject } from '../../../types/profile.types';
-import Separator from '../../../../../shared/components/A EXTRAER EN UI LIB/Separator/Separator';
-
+import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
+import { Separator } from 'autocasting-ui-library-padimasso';
 type Props = { skills: SiteMetadataObject[] };
 
 const ORDER_KEYS = [

@@ -11,7 +11,7 @@ const ProfileEditPage = () => {
   if (error) return <p>Error al cargar el perfil</p>;
   if (data)
     return (
-      <div className="flex flex-col items-center gap-6 mt-5">
+      <div className="w-full flex flex-col items-center gap-6 mt-5">
         <ProfileEditShell profile={data} />
         <Button variant="primary" className="max-w-sm" onClick={() => navigate(`/profile/${data?.publicSlug}`)}>
           Ver Perfil

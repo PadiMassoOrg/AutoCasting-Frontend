@@ -36,9 +36,12 @@ export default function HorizontalCarousel({ active, onChange, children, classNa
     if (e.key === 'ArrowLeft') prev();
   };
 
+  // porcentaje de desplazamiento por slide
+  const step = 100 / slides.length;
+
   return (
     <div
-      className={`relative overflow-hidden ${className ?? ''}`}
+      className={`relative w-full overflow-hidden ${className ?? ''}`}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
@@ -47,12 +50,22 @@ export default function HorizontalCarousel({ active, onChange, children, classNa
       aria-roledescription="carousel"
     >
       <div
-        className="flex transition-transform duration-300 ease-out"
-        style={{ transform: `translateX(-${active * 100}%)`, width: `${slides.length * 100}%` }}
+        className="flex w-full min-w-0 transition-transform duration-300 ease-out"
+        // nos movemos en pasos de (100 / slides)%
+        style={{
+          width: `${slides.length * 100}%`,
+          transform: `translateX(-${active * step}%)`,
+        }}
       >
         {slides.map((child, idx) => (
-          <div key={idx} className="w-full shrink-0 px-1">
-            {child}
+          <div
+            key={idx}
+            // cada slide ocupa 1/N del track, puede encoger, y su padding no suma ancho
+            className="shrink-0 grow-0 min-w-0 box-border px-1"
+            style={{ width: `${step}%` }}
+          >
+            {/* wrapper interno por si querés paddings propios del slide */}
+            <div className="w-full min-w-0">{child}</div>
           </div>
         ))}
       </div>

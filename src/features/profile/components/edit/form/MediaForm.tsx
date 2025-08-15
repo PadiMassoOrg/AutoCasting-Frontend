@@ -1,6 +1,4 @@
-import type { Media } from '../../types/profile.types';
-
-export default function MediaForm({ data }: { data: Media }) {
+export default function MediaForm() {
   return (
     <div>
       <h3 className="font-semibold mb-3">Media</h3>

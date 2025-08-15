@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Credit } from '../../../types/profile.types';
-import Separator from '../../../../../shared/components/A EXTRAER EN UI LIB/Separator/Separator';
+import { Separator } from 'autocasting-ui-library-padimasso';
 
 const ORDER_KEYS = [
   'sitemetadata.production_type.theatre',

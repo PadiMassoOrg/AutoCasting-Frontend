@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import type { ProfileResponse } from '../types/profile.types';
 import { getMyProfile } from '../services/profileService';
+import { PROFILE_CACHE_KEY } from '../services/profileService';
 
 export const useProfile = () => {
-  return useQuery<ProfileResponse>({
-    queryKey: ['profile'],
+  return useQuery({
+    queryKey: PROFILE_CACHE_KEY,
     queryFn: getMyProfile,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 0,
+    refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     retry: 1,
   });

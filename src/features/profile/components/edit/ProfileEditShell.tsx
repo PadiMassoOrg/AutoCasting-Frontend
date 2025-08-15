@@ -1,11 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ProfileResponse } from '../../types/profile.types';
-import Pills from '../../../../shared/components/A EXTRAER EN UI LIB/Pills/Pills';
 import HorizontalCarousel from '../../../../shared/components/A EXTRAER EN UI LIB/HorizontalCarousel/HorizontalCarousel';
-import { CharacteristicsForm, MediaForm } from '.';
 import CarouselHeader from '../../../../shared/components/A EXTRAER EN UI LIB/CarouselHeader/CarouselHeader';
-import Separator from '../../../../shared/components/A EXTRAER EN UI LIB/Separator/Separator';
+import { ProfileEditSection, MediaEditSection, DetailsEditSection } from './section';
+import { Separator } from 'autocasting-ui-library-padimasso';
 
 type OuterKey = 'profile' | 'media' | 'details';
 
@@ -29,16 +28,14 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
   return (
     <section className="w-full">
       <CarouselHeader items={outerItems} active={outerIndex} onChange={(i) => setOuter(OUTER_ORDER[i])} />
-      <Separator className="opacity-20 my-10" />
+      <Separator className="opacity-20 my-9" />
       <HorizontalCarousel active={outerIndex} onChange={(i) => setOuter(OUTER_ORDER[i])}>
+        <ProfileEditSection profile={profile}></ProfileEditSection>
         <div className="min-h-[60vh]">
-          <h2>Profile</h2>
+          <MediaEditSection media={profile.media} />
         </div>
         <div className="min-h-[60vh]">
-          <MediaForm data={profile.media} />
-        </div>
-        <div className="min-h-[60vh]">
-          <CharacteristicsForm data={profile.characteristics} />
+          <DetailsEditSection profile={profile} />
         </div>
       </HorizontalCarousel>
     </section>
