@@ -1,4 +1,4 @@
-import type { Characteristics } from '../../types/profile.types';
+import type { Characteristics } from '../../../types/profile.types';
 
 export default function CharacteristicsForm({ data }: { data: Characteristics }) {
   return (

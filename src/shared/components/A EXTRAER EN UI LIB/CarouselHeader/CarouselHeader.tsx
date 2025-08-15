@@ -1,4 +1,3 @@
-import hilighter from '../../../../features/profile/icons/highliter.svg';
 import HilighterSvg from '../../../../features/profile/icons/HilighterSvg';
 export type HeaderItem = { key: string; label: string };
 

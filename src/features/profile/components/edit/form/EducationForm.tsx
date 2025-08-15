@@ -1,4 +1,4 @@
-import type { Education } from '../../types/profile.types';
+import type { Education } from '../../../types/profile.types';
 
 export default function EducationForm({ data }: { data: Education[] }) {
   return (

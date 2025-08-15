@@ -1,6 +1,6 @@
 import { type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { SiteMetadataObject } from '../../types/profile.types';
+import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 
 type BasicInfoProps = {
   data: {
@@ -8,7 +8,7 @@ type BasicInfoProps = {
     stageName: string;
     gender: string;
     birthDate: string;
-    professions: Array<SiteMetadataObject>;
+    professions: SiteMetadataObject[];
   };
 };
 

@@ -1,4 +1,4 @@
-import type { Credit } from '../../types/profile.types';
+import type { Credit } from '../../../types/profile.types';
 
 export default function CreditsForm({ data }: { data: Credit[] }) {
   return (

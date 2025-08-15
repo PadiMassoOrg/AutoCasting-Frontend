@@ -38,6 +38,7 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
           <DetailsEditSection profile={profile} />
         </div>
       </HorizontalCarousel>
+      <Separator className="opacity-20 mt-9" />
     </section>
   );
 }

@@ -6,10 +6,10 @@ export type BasicInfoPatchRequest = {
 };
 
 export type ContactPatchRequest = {
-  phoneNumber: string;
+  phoneNumber?: string;
 };
 
 export type SocialMediaPatchRequest = {
-  instagramUrl: string;
-  tikTokUrl: string;
+  instagramUrl?: string;
+  tikTokUrl?: string;
 };

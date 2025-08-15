@@ -23,7 +23,7 @@ export function useContactAutosave() {
   });
 }
 
-export function useSocialAutosave() {
+export function useSocialMediaAutosave() {
   return useSectionAutosave<SocialMediaPatchRequest, ProfileSocialMedia>({
     mutationFn: patchSocialMedia,
     delay: 400,

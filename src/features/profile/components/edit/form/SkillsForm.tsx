@@ -1,4 +1,4 @@
-import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
+import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
 
 export default function SkillsForm({ data }: { data: SiteMetadataObject[] }) {
   return (

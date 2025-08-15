@@ -1,9 +1,17 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEventHandler,
+  type FocusEventHandler,
+  type KeyboardEventHandler,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ProfileBasicInfo } from '../../../types/profile.types';
-import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
 import { FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
 import { useBasicInfoAutosave } from '../../../hooks/autosaves';
+import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
 
 export default function BasicInfoForm({
   data,
@@ -15,13 +23,22 @@ export default function BasicInfoForm({
   const { t, i18n } = useTranslation();
   const basicInfoAutosave = useBasicInfoAutosave();
 
+  // Local State
   const [stageName, setStageName] = useState(data.stageName ?? '');
+
   const [gender, setGender] = useState(data.gender ?? '');
+
+  const parsed = parseISO(data.birthDate ?? '');
+  const [bYear, setBYear] = useState(parsed.year);
+  const [bMonth, setBMonth] = useState(parsed.month);
+  const [bDay, setBDay] = useState(parsed.day);
+
   const [professions, setProfessions] = useState<string[]>((data.professions ?? []).map((p) => p.id));
 
-  // 1. Stage Name
   const lastCommittedStageName = useRef<string>(data.stageName ?? '');
+  const lastCommittedBirth = useRef<string>(data.birthDate ?? '');
 
+  // Stage Name
   const commitStageName = useCallback(() => {
     const trimmed = stageName.trim();
     if (trimmed && trimmed !== lastCommittedStageName.current) {
@@ -30,12 +47,91 @@ export default function BasicInfoForm({
     }
   }, [stageName, basicInfoAutosave]);
 
-  // 3. Date
-  const parsed = parseISO(data.birthDate ?? '');
-  const [bYear, setBYear] = useState(parsed.year);
-  const [bMonth, setBMonth] = useState(parsed.month);
-  const [bDay, setBDay] = useState(parsed.day);
+  const onStageNameChange = useCallback((v: string) => {
+    setStageName(v);
+  }, []);
 
+  // Gender
+  const onGenderChange = useCallback(
+    (v: string) => {
+      setGender(v);
+      basicInfoAutosave.immediate({ gender: v });
+    },
+    [basicInfoAutosave]
+  );
+
+  // Date
+  const daysInThisMonth = getDaysInMonth(bYear, bMonth);
+  if (bDay && Number(bDay) > daysInThisMonth) {
+    setBDay('');
+  }
+
+  const birthDebounce = useRef<number | null>(null);
+  const clearBirthDebounce = () => {
+    if (birthDebounce.current) {
+      window.clearTimeout(birthDebounce.current);
+      birthDebounce.current = null;
+    }
+  };
+
+  const commitBirth = useCallback(
+    (y: string, m: string, d: string) => {
+      if (y && m && d && isValidDate(y, m, d)) {
+        const iso = `${y}-${m}-${d}`;
+        if (iso !== lastCommittedBirth.current) {
+          lastCommittedBirth.current = iso;
+          basicInfoAutosave.immediate({ birthDate: iso });
+        }
+      }
+    },
+    [basicInfoAutosave]
+  );
+
+  const scheduleBirth = useCallback(
+    (y: string, m: string, d: string) => {
+      clearBirthDebounce();
+      birthDebounce.current = window.setTimeout(() => commitBirth(y, m, d), 600);
+    },
+    [commitBirth]
+  );
+
+  const onYearChange = useCallback(
+    (v: string) => {
+      setBYear(v);
+      scheduleBirth(v, bMonth, bDay);
+    },
+    [bMonth, bDay, scheduleBirth]
+  );
+  const onMonthChange = useCallback(
+    (v: string) => {
+      setBMonth(v);
+      scheduleBirth(bYear, v, bDay);
+    },
+    [bYear, bDay, scheduleBirth]
+  );
+  const onDayChange = useCallback(
+    (v: string) => {
+      setBDay(v);
+      scheduleBirth(bYear, bMonth, v);
+    },
+    [bYear, bMonth, scheduleBirth]
+  );
+
+  const onAnyBirthBlur = () => {
+    clearBirthDebounce();
+    commitBirth(bYear, bMonth, bDay);
+  };
+
+  // Profession
+  const toggleProfession = (id: string) => {
+    setProfessions((curr) => {
+      const next = curr.includes(id) ? curr.filter((x) => x !== id) : [...curr, id];
+      basicInfoAutosave.immediate({ professionIds: next });
+      return next;
+    });
+  };
+
+  // Selects
   const YEAR_START = 1900;
   const YEAR_END = new Date().getFullYear();
 
@@ -50,13 +146,12 @@ export default function BasicInfoForm({
 
   const monthOptions = useMemo(() => {
     const fmt = new Intl.DateTimeFormat(i18n.language, { month: 'long' });
-    return Array.from({ length: 12 }, (_, i) => {
-      const m = i + 1;
-      return { value: String(m).padStart(2, '0'), label: capitalize(fmt.format(new Date(2000, i, 1))) };
-    });
+    return Array.from({ length: 12 }, (_, i) => ({
+      value: String(i + 1).padStart(2, '0'),
+      label: capitalize(fmt.format(new Date(2000, i, 1))),
+    }));
   }, [i18n.language]);
 
-  const daysInThisMonth = getDaysInMonth(bYear, bMonth);
   const dayOptions = useMemo(
     () =>
       Array.from({ length: daysInThisMonth }, (_, i) => {
@@ -66,67 +161,34 @@ export default function BasicInfoForm({
     [daysInThisMonth]
   );
 
-  useEffect(() => {
-    if (bDay && Number(bDay) > daysInThisMonth) setBDay('');
-  }, [daysInThisMonth, bDay]);
+  // Handlers del nombre artístico
+  const handleStageNameChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    onStageNameChange(e.target.value);
+  };
 
-  const onStageNameChange = useCallback((v: string) => {
-    setStageName(v);
-  }, []);
-
-  const onGenderChange = useCallback(
-    (v: string) => {
-      setGender(v);
-      basicInfoAutosave.immediate({ gender: v });
-    },
-    [basicInfoAutosave]
-  );
-
-  const tryScheduleBirthSave = (y: string, m: string, d: string) => {
-    if (y && m && d && isValidDate(y, m, d)) {
-      basicInfoAutosave.schedule({ birthDate: `${y}-${m}-${d}` });
+  const handleStageNameKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      commitStageName();
     }
   };
 
-  const onYearChange = useCallback(
-    (v: string) => {
-      setBYear(v);
-      tryScheduleBirthSave(v, bMonth, bDay);
-    },
-    [bMonth, bDay]
-  );
-
-  const onMonthChange = useCallback(
-    (v: string) => {
-      setBMonth(v);
-      tryScheduleBirthSave(bYear, v, bDay);
-    },
-    [bYear, bDay]
-  );
-
-  const onDayChange = useCallback(
-    (v: string) => {
-      setBDay(v);
-      tryScheduleBirthSave(bYear, bMonth, v);
-    },
-    [bYear, bMonth]
-  );
-
-  const toggleProfession = (id: string) => {
-    setProfessions((curr) => {
-      const next = curr.includes(id) ? curr.filter((x) => x !== id) : [...curr, id];
-      basicInfoAutosave.immediate({ professionIds: next });
-      return next;
-    });
+  const handleStageNameBlur: FocusEventHandler<HTMLInputElement> = () => {
+    commitStageName();
   };
 
-  useEffect(() => basicInfoAutosave.flush, [basicInfoAutosave.flush]);
+  // Handlers de selects
+  const handleGenderChange: ChangeEventHandler<HTMLSelectElement> = (e) => {
+    onGenderChange(e.target.value);
+  };
+
+  const handleDayChange: ChangeEventHandler<HTMLSelectElement> = (e) => onDayChange(e.target.value);
+  const handleMonthChange: ChangeEventHandler<HTMLSelectElement> = (e) => onMonthChange(e.target.value);
+  const handleYearChange: ChangeEventHandler<HTMLSelectElement> = (e) => onYearChange(e.target.value);
 
   return (
-    <div className="w-full flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <h3 className="font-bold text-base">{t('profile.basic_info.basic_info')}</h3>
-      </div>
+    <div className="w-full flex flex-col gap-5">
+      <h3 className="font-bold text-base">{t('profile.basic_info.basic_info')}</h3>
 
       <FormInputField
         id="stageName"
@@ -134,16 +196,17 @@ export default function BasicInfoForm({
         labelClassName="font-semibold text-base"
         placeholder={t('general.placeholder.stage_name')}
         value={stageName}
-        onChange={(e) => onStageNameChange(e.target.value)}
-        onBlur={commitStageName}
-        onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), commitStageName())}
+        onChange={handleStageNameChange}
+        onBlur={handleStageNameBlur}
+        onKeyDown={handleStageNameKeyDown}
       />
 
       <FormSelectField
         id="gender"
         label={t('profile.basic_info.gender')}
+        labelClassName="font-semibold text-base"
         value={gender}
-        onChange={(e) => onGenderChange(e.target.value)}
+        onChange={handleGenderChange}
         placeholder={t('general.placeholder.select')}
         options={[
           { value: 'gender.female', label: t('sitemetadata.gender.female') },
@@ -153,29 +216,29 @@ export default function BasicInfoForm({
       />
 
       <div className="flex flex-col gap-2">
-        <Label className="text-sm mb-2 block">{t('profile.basic_info.birth_date')}</Label>
+        <Label className="text-base font-semibold">{t('profile.basic_info.birth_date')}</Label>
         <div className="grid grid-cols-3 gap-2">
           <FormSelectField
             id="birth-day"
             value={bDay}
-            onChange={(e) => onDayChange(e.target.value)}
-            onBlur={() => basicInfoAutosave.flush()}
+            onChange={handleDayChange}
+            onBlur={onAnyBirthBlur}
             placeholder={t('general.placeholder.day')}
             options={dayOptions}
           />
           <FormSelectField
             id="birth-month"
             value={bMonth}
-            onChange={(e) => onMonthChange(e.target.value)}
-            onBlur={() => basicInfoAutosave.flush()}
+            onChange={handleMonthChange}
+            onBlur={onAnyBirthBlur}
             placeholder={t('general.placeholder.month')}
             options={monthOptions}
           />
           <FormSelectField
             id="birth-year"
             value={bYear}
-            onChange={(e) => onYearChange(e.target.value)}
-            onBlur={() => basicInfoAutosave.flush()}
+            onChange={handleYearChange}
+            onBlur={onAnyBirthBlur}
             placeholder={t('general.placeholder.year')}
             options={yearOptions}
           />
@@ -183,9 +246,9 @@ export default function BasicInfoForm({
       </div>
 
       {/* Profesión */}
-      <div>
-        <label className="text-sm mb-2 block">{t('profile.basic_info.profession')}</label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="flex flex-col gap-2">
+        <Label className="text-base font-bold">{t('profile.basic_info.profession')}</Label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3 place-items-start">
           {professionsMeta.map((p) => {
             const active = professions.includes(p.id);
             return (
@@ -194,8 +257,8 @@ export default function BasicInfoForm({
                 type="button"
                 onClick={() => toggleProfession(p.id)}
                 className={[
-                  'w-full px-3 py-2 rounded-xl text-sm text-center',
-                  'truncate whitespace-nowrap',
+                  'w-full inline-flex items-center justify-center px-6 py-3 rounded-full text-sm text-center cursor-pointer',
+                  'whitespace-nowrap',
                   active ? 'bg-black text-white' : 'bg-gray-100',
                 ].join(' ')}
                 title={t(p.stringCode)}

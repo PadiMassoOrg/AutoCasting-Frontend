@@ -1,7 +1,11 @@
 import type { ProfileResponse } from '../../../types/profile.types';
 
 const DetailsEditSection = ({ profile }: { profile: ProfileResponse }) => {
-  return <h2>Details Section</h2>;
+  return (
+    <>
+      <h2>Details Section</h2> <span>{profile.characteristics.tattoo}</span>;
+    </>
+  );
 };
 
 export default DetailsEditSection;
