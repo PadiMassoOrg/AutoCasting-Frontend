@@ -1,7 +1,8 @@
 import { useMemo, useRef, useState } from 'react';
 import type { PublicProfileResponse } from '../../../types/profile.types';
 import { useTranslation } from 'react-i18next';
-import PanelSwitch from './PanelSwitch';
+import ProfileInfoPanelSwitch from './ProfileInfoPanelSwitch';
+import Pills from '../../../../../shared/components/A EXTRAER EN UI LIB/Pills/Pills';
 
 type PillKey = 'characteristics' | 'skills' | 'credits' | 'education';
 
@@ -15,7 +16,6 @@ const PILL_ORDER: PillKey[] = ['characteristics', 'skills', 'credits', 'educatio
 export default function ProfileInfoCarousel({ profile, className }: Props) {
   const { t } = useTranslation();
   const [active, setActive] = useState<PillKey>('characteristics');
-  const listRef = useRef<HTMLDivElement>(null);
 
   const counts = useMemo(
     () => ({
@@ -40,40 +40,11 @@ export default function ProfileInfoCarousel({ profile, className }: Props) {
   return (
     <section className={`w-full ${className ?? ''}`}>
       {/* Pills */}
-      <div className="relative">
-        <div className="flex items-center gap-2">
-          <div
-            ref={listRef}
-            role="tablist"
-            aria-label="Profile sections"
-            className="flex-1 flex items-center gap-2 overflow-x-auto no-scrollbar snap-x"
-          >
-            {pills.map(({ key, label }) => {
-              const selected = active === key;
-              return (
-                <button
-                  key={key}
-                  role="tab"
-                  aria-selected={selected}
-                  aria-controls={`panel-${key}`}
-                  id={`tab-${key}`}
-                  onClick={() => setActive(key)}
-                  className={[
-                    'bg-[var(--color-primary-light-grey)] text-base font-semibold cursor-pointer px-4 py-2 snap-start whitespace-nowrap rounded-full',
-                    selected && 'bg-black text-white',
-                  ].join(' ')}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      <Pills items={pills} value={active} onChange={setActive}></Pills>
 
       {/* Panel */}
       <div className="mt-5">
-        <PanelSwitch activeKey={active} profile={profile} t={t} />
+        <ProfileInfoPanelSwitch activeKey={active} profile={profile} t={t} />
       </div>
     </section>
   );

@@ -4,7 +4,7 @@ import { CharacteristicsPanel, CreditsPanel, EducationPanel, SkillsPanel } from 
 
 type PillKey = 'characteristics' | 'skills' | 'credits' | 'education';
 
-const PanelSwitch = ({
+const ProfileInfoPanelSwitch = ({
   activeKey,
   profile,
 }: {
@@ -57,4 +57,4 @@ const PanelSwitch = ({
   );
 };
 
-export default PanelSwitch;
+export default ProfileInfoPanelSwitch;
