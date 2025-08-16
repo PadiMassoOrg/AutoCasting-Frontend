@@ -9,10 +9,9 @@ export const usePublicProfile = (slug?: string) => {
   const bump = qc.getQueryState<PublicProfileResponse>(PUBLIC_PROFILE_CACHE_KEY)?.dataUpdatedAt ?? 0;
 
   return useQuery({
-    queryKey: ['public-profile', slug, bump],
-    queryFn: () => getPublicProfile(slug!), // el backend necesita slug
+    queryKey: [PUBLIC_PROFILE_CACHE_KEY, slug, bump],
+    queryFn: () => getPublicProfile(slug!),
     enabled: !!slug,
-    // Evita refetches innecesarios; el "bump" es quien fuerza la actualización
     staleTime: Infinity,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
