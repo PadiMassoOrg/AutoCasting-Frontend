@@ -13,3 +13,11 @@ export type SocialMediaPatchRequest = {
   instagramUrl?: string;
   tikTokUrl?: string;
 };
+
+export type MediaPatchRequest = {
+  headshotImageUrl?: string;
+  fullBodyImageUrl?: string;
+  otherPicturesUrl?: Array<string>;
+  introductionVideoUrl?: string;
+  showReelVideoUrl?: string;
+};

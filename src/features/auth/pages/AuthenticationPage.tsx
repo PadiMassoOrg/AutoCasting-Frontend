@@ -1,5 +1,4 @@
 import { Trans, useTranslation } from 'react-i18next';
-import { Layout } from '../../../shared/components/Layouts';
 import LoginForm from '../components/LoginForm';
 import { GoogleButton } from 'autocasting-ui-library-padimasso';
 import Resaltador from '../../../shared/lib/resaltador.svg';
@@ -7,6 +6,7 @@ import { useState } from 'react';
 import { RegisterForm } from '../components';
 import { useGoogleLoginMutation } from '../hooks/useGoogleLoginMutation';
 import { LinkLogo } from '../../../shared/components/LinkLogo';
+import AuthenticationLayout from '../../../layouts/AuthenticationLayout';
 
 export default function AuthenticationPage() {
   const [login, setLogin] = useState(true);
@@ -18,7 +18,7 @@ export default function AuthenticationPage() {
   };
 
   return (
-    <Layout>
+    <AuthenticationLayout>
       <div className="flex flex-row items-center gap-36 w-full h-full">
         {/* Banner */}
         <article className="hidden lg:flex flex-col gap-8 justify-center relative h-dvh">
@@ -62,6 +62,6 @@ export default function AuthenticationPage() {
           {login ? <LoginForm onSwitch={() => setLogin(false)} /> : <RegisterForm onSwitch={() => setLogin(true)} />}
         </article>
       </div>
-    </Layout>
+    </AuthenticationLayout>
   );
 }

@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ProfileResponse } from '../../types/profile.types';
-import HorizontalCarousel from '../../../../shared/components/A EXTRAER EN UI LIB/HorizontalCarousel/HorizontalCarousel';
-import CarouselHeader from '../../../../shared/components/A EXTRAER EN UI LIB/CarouselHeader/CarouselHeader';
 import { ProfileEditSection, MediaEditSection, DetailsEditSection } from './section';
 import { Separator } from 'autocasting-ui-library-padimasso';
+import CarouselHeader from './CarouselHeader/CarouselHeader';
+import HorizontalCarousel from './HorizontalCarousel/HorizontalCarousel';
 
 type OuterKey = 'profile' | 'media' | 'details';
 
@@ -31,12 +31,8 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
       <Separator className="opacity-20 my-9" />
       <HorizontalCarousel active={outerIndex} onChange={(i) => setOuter(OUTER_ORDER[i])}>
         <ProfileEditSection profile={profile}></ProfileEditSection>
-        <div className="min-h-[60vh]">
-          <MediaEditSection media={profile.media} />
-        </div>
-        <div className="min-h-[60vh]">
-          <DetailsEditSection profile={profile} />
-        </div>
+        <MediaEditSection media={profile.media} />
+        <DetailsEditSection profile={profile} />
       </HorizontalCarousel>
       <Separator className="opacity-20 mt-9" />
     </section>

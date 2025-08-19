@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import type { PublicProfileResponse } from '../../../types/profile.types';
 import { useTranslation } from 'react-i18next';
 import ProfileInfoPanelSwitch from './ProfileInfoPanelSwitch';
-import Pills from '../../../../../shared/components/A EXTRAER EN UI LIB/Pills/Pills';
+import Pills from '../Pills/Pills';
 
 type PillKey = 'characteristics' | 'skills' | 'credits' | 'education';
 
@@ -39,10 +39,7 @@ export default function ProfileInfoCarousel({ profile, className }: Props) {
 
   return (
     <section className={`w-full ${className ?? ''}`}>
-      {/* Pills */}
       <Pills items={pills} value={active} onChange={setActive}></Pills>
-
-      {/* Panel */}
       <div className="mt-5">
         <ProfileInfoPanelSwitch activeKey={active} profile={profile} t={t} />
       </div>

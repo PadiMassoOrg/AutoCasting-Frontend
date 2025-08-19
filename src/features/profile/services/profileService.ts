@@ -2,13 +2,19 @@ import api from '../../../shared/lib/axios';
 import { API_ROUTES } from '../../../shared/lib/routes';
 import { stripUndefined } from '../../../shared/utils/stripUndefined';
 import type {
+  Media,
   ProfileBasicInfo,
   ProfileContact,
   ProfileResponse,
   ProfileSocialMedia,
   PublicProfileResponse,
 } from '../types/profile.types';
-import type { BasicInfoPatchRequest } from '../types/requests';
+import type {
+  BasicInfoPatchRequest,
+  ContactPatchRequest,
+  MediaPatchRequest,
+  SocialMediaPatchRequest,
+} from '../types/requests';
 
 export const PROFILE_CACHE_KEY = ['cache-profile'] as const;
 export const PUBLIC_PROFILE_CACHE_KEY = ['cache-profile'] as const;
@@ -32,11 +38,16 @@ export async function patchBasicInfo(payload: BasicInfoPatchRequest): Promise<Pr
   const { data } = await api.patch(API_ROUTES.BASIC_INFO, body);
   return data;
 }
-export async function patchContact(input: Partial<ProfileContact>): Promise<ProfileContact> {
-  const { data } = await api.patch(API_ROUTES.CONTACT, input);
+export async function patchContact(payload: ContactPatchRequest): Promise<ProfileContact> {
+  const { data } = await api.patch(API_ROUTES.CONTACT, payload);
   return data;
 }
-export async function patchSocialMedia(input: Partial<ProfileSocialMedia>): Promise<ProfileSocialMedia> {
-  const { data } = await api.patch(API_ROUTES.SOCIAL_MEDIA, input);
+export async function patchSocialMedia(payload: SocialMediaPatchRequest): Promise<ProfileSocialMedia> {
+  const { data } = await api.patch(API_ROUTES.SOCIAL_MEDIA, payload);
+  return data;
+}
+
+export async function patchMedia(payload: MediaPatchRequest): Promise<Media> {
+  const { data } = await api.patch(API_ROUTES.MEDIA, payload);
   return data;
 }

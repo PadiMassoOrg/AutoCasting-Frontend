@@ -1,4 +1,4 @@
-import HilighterSvg from '../../../../features/profile/icons/HilighterSvg';
+import HilighterSvg from '../../../../../features/profile/icons/HilighterSvg';
 export type HeaderItem = { key: string; label: string };
 
 export default function CarouselHeader({

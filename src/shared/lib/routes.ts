@@ -35,4 +35,5 @@ export const API_ROUTES = {
   BASIC_INFO: '/profile/basic-info',
   CONTACT: '/profile/contact',
   SOCIAL_MEDIA: '/profile/social-media',
+  MEDIA: '/profile/media',
 };
