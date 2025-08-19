@@ -1,35 +1,28 @@
 import { supabase } from '../../../../shared/lib/supabase';
 
-const BUCKET = 'profile-media';
+const BUCKET_NAME = 'profile-media-public';
 
-function extOf(file: File) {
-  const e = file.name.split('.').pop() || 'bin';
-  return e.toLowerCase();
-}
-function safeName(base: string) {
-  return base.replace(/[^a-z0-9-_]/gi, '-').toLowerCase();
-}
-function uniqueName(kind: string, file: File) {
-  const ts = Date.now();
-  const rnd = Math.random().toString(36).slice(2, 8);
-  return `${kind}_${ts}_${rnd}.${extOf(file)}`;
-}
-
-/**
- * Opción A: bucket PÚBLICO
- * Sube y devuelve { publicUrl, path }.
- */
-export async function uploadPublic(kind: 'headshot' | 'fullbody' | 'other', file: File, userId: string) {
-  const path = `${safeName(userId)}/${uniqueName(kind, file)}`;
-
-  const { error } = await supabase.storage.from(BUCKET).upload(path, file, {
-    cacheControl: '3600',
+export async function uploadPublic(key: string, file: File) {
+  const { error } = await supabase.storage.from(BUCKET_NAME).upload(key, file, {
     upsert: false,
+    cacheControl: '31536000',
     contentType: file.type,
   });
 
   if (error) throw error;
 
-  const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
-  return { publicUrl: data.publicUrl, path };
+  const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(key);
+  return { publicUrl: data.publicUrl, key };
+}
+
+export async function cleanupOldSlotFiles(profileId: string, slot: 'headshot' | 'fullbody', keepKey: string) {
+  const dir = `profiles/${profileId}/media/${slot}`;
+  const { data, error } = await supabase.storage.from(BUCKET_NAME).list(dir, { limit: 100 });
+  if (error || !data?.length) return;
+
+  const toRemove = data.map((o) => `${dir}/${o.name}`).filter((fullPath) => fullPath !== keepKey);
+
+  if (toRemove.length) {
+    await supabase.storage.from(BUCKET_NAME).remove(toRemove);
+  }
 }

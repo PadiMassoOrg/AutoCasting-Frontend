@@ -14,8 +14,20 @@
       "year": "Año",
       "email": "Email",
       "phoneNumber": "Número",
-      "url": "URL"
+      "url": "URL",
+      "headshot": "Primer Plano",
+      "fullbody": "Cuerpo Entero"
     }
+  },
+  "state": {
+    "loading": "Cargando...",
+    "server_err": "Ocurrió un error, intente nuevamente."
+  },
+  "buttons": {
+    "cancel": "Cancelar"
+  },
+  "routes": {
+    "profile": "Perfil"
   },
   "role": {
     "actor": "Actor",
@@ -140,16 +152,6 @@
       "commercial": "Comercial"
     }
   },
-  "state": {
-    "loading": "Cargando...",
-    "server_err": "Ocurrió un error, intente nuevamente."
-  },
-  "buttons": {
-    "cancel": "Cancelar"
-  },
-  "routes": {
-    "profile": "Perfil"
-  },
   "auth": {
     "page": {
       "welcome": "Bienvenid@ a",
@@ -224,6 +226,14 @@
       "social_media": "Redes Sociales",
       "instagram": "Instagram",
       "tikTok": "TikTok"
+    },
+    "media": {
+      "photos": "Fotos",
+      "headshot_fullbody": "Primer Plano y Cuerpo Entero",
+      "other": "Otras Fotos",
+      "videos": "Videos",
+      "introduction": "Video de Presentación",
+      "videoreel": "Videoreel"
     },
     "characteristics": {
       "gender": "Género",

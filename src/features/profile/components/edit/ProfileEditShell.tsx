@@ -31,7 +31,7 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
       <Separator className="opacity-20 my-9" />
       <HorizontalCarousel active={outerIndex} onChange={(i) => setOuter(OUTER_ORDER[i])}>
         <ProfileEditSection profile={profile}></ProfileEditSection>
-        <MediaEditSection media={profile.media} />
+        <MediaEditSection media={profile.media} supabaseId={profile.id} />
         <DetailsEditSection profile={profile} />
       </HorizontalCarousel>
       <Separator className="opacity-20 mt-9" />
