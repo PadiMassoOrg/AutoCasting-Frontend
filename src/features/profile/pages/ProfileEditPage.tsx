@@ -6,12 +6,7 @@ const ProfileEditPage = () => {
 
   if (isLoading) return <p>Cargando perfil...</p>;
   if (error) return <p>Error al cargar el perfil</p>;
-  if (data)
-    return (
-      <div className="w-full flex flex-col items-center gap-6 mt-5">
-        <ProfileEditShell profile={data} />
-      </div>
-    );
+  if (data) return <ProfileEditShell profile={data} />;
 };
 
 export default ProfileEditPage;

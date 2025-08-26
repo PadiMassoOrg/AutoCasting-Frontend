@@ -1,7 +1,24 @@
 import { useSectionAutosave } from './useSectionAutoSave';
-import { patchBasicInfo, patchContact, patchSocialMedia, PROFILE_CACHE_KEY } from '../services/profileService';
-import type { BasicInfoPatchRequest, ContactPatchRequest, SocialMediaPatchRequest } from '../types/requests';
-import type { ProfileBasicInfo, ProfileContact, ProfileSocialMedia, ProfileResponse } from '../types/profile.types';
+import {
+  patchBasicInfo,
+  patchContact,
+  patchMedia,
+  patchSocialMedia,
+  PROFILE_CACHE_KEY,
+} from '../services/profileService';
+import type {
+  BasicInfoPatchRequest,
+  ContactPatchRequest,
+  MediaPatchRequest,
+  SocialMediaPatchRequest,
+} from '../types/requests';
+import type {
+  ProfileBasicInfo,
+  ProfileContact,
+  ProfileSocialMedia,
+  ProfileResponse,
+  Media,
+} from '../types/profile.types';
 
 export function useBasicInfoAutosave() {
   return useSectionAutosave<BasicInfoPatchRequest, ProfileBasicInfo>({
@@ -28,6 +45,16 @@ export function useSocialMediaAutosave() {
     mutationFn: patchSocialMedia,
     delay: 400,
     onSuccessUpdate: (prev: ProfileResponse, updated) => ({ ...prev, socialMedia: updated }),
+    cacheKeys: [PROFILE_CACHE_KEY],
+    invalidateOnSuccess: 'active',
+  });
+}
+
+export function useMediaAutosave() {
+  return useSectionAutosave<MediaPatchRequest, Media>({
+    mutationFn: patchMedia,
+    delay: 400,
+    onSuccessUpdate: (prev: ProfileResponse, updated) => ({ ...prev, media: updated }),
     cacheKeys: [PROFILE_CACHE_KEY],
     invalidateOnSuccess: 'active',
   });

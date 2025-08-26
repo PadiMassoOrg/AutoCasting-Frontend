@@ -3,7 +3,8 @@ import CharacteristicsForm from './CharacteristicsForm';
 import ContactForm from './ContactForm';
 import CreditsForm from './CreditsForm';
 import EducationForm from './EducationForm';
-import MediaForm from './MediaForm';
+import MediaPhotosForm from './MediaPhotosForm';
+import MediaVideosForm from './MediaVideosForm';
 import SkillsForm from './SkillsForm';
 import SocialMediaForm from './SocialMediaForm';
 
@@ -12,7 +13,8 @@ export {
   CreditsForm,
   SkillsForm,
   CharacteristicsForm,
-  MediaForm,
+  MediaPhotosForm,
+  MediaVideosForm,
   SocialMediaForm,
   BasicInfoForm,
   ContactForm,
