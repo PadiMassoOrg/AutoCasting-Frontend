@@ -1,8 +1,13 @@
 import type { ProfileResponse } from '../../../types/profile.types';
+import DetailsInfoCarousel from '../Carousel/DetailsInfoCarousel/DetailsInfoCarousel';
 
 const DetailsEditSection = ({ profile }: { profile: ProfileResponse }) => {
-  if (!profile) return;
-  return <h2>Details Section</h2>;
+  if (!profile) return null;
+  return (
+    <div className="w-full min-w-0 max-w-none">
+      <DetailsInfoCarousel profile={profile} />
+    </div>
+  );
 };
 
 export default DetailsEditSection;

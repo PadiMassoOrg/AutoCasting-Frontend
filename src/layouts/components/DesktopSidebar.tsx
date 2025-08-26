@@ -1,10 +1,9 @@
-// src/layouts/DesktopSidebar.tsx
-import { Link, useLocation } from 'react-router-dom';
-import { ROUTES, USER_ROUTES } from '../../shared/lib/routes';
 import { useTranslation } from 'react-i18next';
+import { Link, useLocation } from 'react-router-dom';
 import { logout } from '../../features/auth/services/authService';
-import { LinkLogo } from '../../shared/components/LinkLogo';
 import { useProfile } from '../../features/profile/hooks/useProfile';
+import { LinkLogo } from '../../shared/components/LinkLogo';
+import { ROUTES, USER_ROUTES } from '../../shared/lib/routes';
 
 export default function DesktopSidebar() {
   const { t } = useTranslation();
@@ -16,7 +15,7 @@ export default function DesktopSidebar() {
   };
 
   return (
-    <aside className="hidden md:static md:flex flex-col w-62 h-full bg-white p-6 fixed border-r-[var(--color-secondary-grey)] border-r">
+    <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:h-screen md:w-[264px] shrink-0 bg-white p-6 border-r border-r-[var(--color-secondary-grey)] z-20">
       <LinkLogo path={ROUTES.DASHBOARD} />
       <div className="mt-8 space-y-4">
         {USER_ROUTES.map((item) => (

@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
-import type { PublicProfileResponse } from '../../../types/profile.types';
 import { useTranslation } from 'react-i18next';
-import ProfileInfoPanelSwitch from './ProfileInfoPanelSwitch';
+import type { PublicProfileResponse } from '../../../types/profile.types';
 import Pills from '../Pills/Pills';
+import ProfileInfoPanelSwitch from './ProfileInfoPanelSwitch';
 
 type PillKey = 'characteristics' | 'skills' | 'credits' | 'education';
 
