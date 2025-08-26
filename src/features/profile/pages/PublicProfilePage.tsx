@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
 import { usePublicProfile } from '../hooks/usePublicProfile';
-import { Separator } from 'autocasting-ui-library-padimasso';
 import { ViewerActions, BasicInfoSection, MediaSection } from '../components/public';
 import ProfileInfoCarousel from '../components/public/Details/ProfileInfoCarousel';
 import SocialMediaSection from '../components/public/SocialMediaSection';
@@ -11,6 +10,7 @@ const PublicProfilePage = () => {
 
   if (isLoading) return <p>Cargando perfil público...</p>;
   if (error || !data) return <p>Error al cargar el perfil</p>;
+
   const { basicInfo, socialMedia, media } = data;
 
   return (
@@ -19,7 +19,6 @@ const PublicProfilePage = () => {
       <BasicInfoSection data={basicInfo}></BasicInfoSection>
       <MediaSection data={media}></MediaSection>
       <ProfileInfoCarousel profile={data}></ProfileInfoCarousel>
-      <Separator className="opacity-25 my-12"></Separator>
       <SocialMediaSection data={socialMedia}></SocialMediaSection>
     </div>
   );

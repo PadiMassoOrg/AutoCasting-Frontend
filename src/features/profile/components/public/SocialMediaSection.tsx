@@ -2,6 +2,7 @@ import instagram from '../../icons/instagram.svg';
 import tikTok from '../../icons/tikTok.svg';
 import { useTranslation } from 'react-i18next';
 import type { ProfileSocialMedia } from '../../types/profile.types';
+import { Separator } from 'autocasting-ui-library-padimasso';
 
 function normalizeExternalUrl(raw?: string | null): string | null {
   if (!raw) return null;
@@ -29,15 +30,7 @@ function SocialLink({ href, label, iconSrc }: { href: string | null; label: stri
   const enabled = !!href;
 
   if (!enabled) {
-    return (
-      <span
-        aria-disabled="true"
-        className={`bg-[var(--color-primary-light-grey)] opacity-50 ${commonClasses}`}
-        title={label}
-      >
-        <img src={iconSrc} alt="" className="w-5 h-5" />
-      </span>
-    );
+    return;
   }
 
   return (
@@ -59,15 +52,20 @@ const SocialMediaSection = ({ data }: { data: ProfileSocialMedia }) => {
   const instaUrl = normalizeExternalUrl(data.instagramUrl);
   const tiktokUrl = normalizeExternalUrl(data.tikTokUrl);
 
-  return (
-    <article className="flex flex-col gap-4 items-center">
-      <h2 className="text-lg font-bold">{t('profile.page.socials')}:</h2>
+  const hasSocials = Boolean(instaUrl || tiktokUrl);
 
-      <div className="w-full flex gap-4 items-center justify-center">
-        <SocialLink href={instaUrl} label="Instagram" iconSrc={instagram} />
-        <SocialLink href={tiktokUrl} label="TikTok" iconSrc={tikTok} />
-      </div>
-    </article>
+  if (!hasSocials) return;
+  return (
+    <>
+      <Separator className="opacity-25 my-12"></Separator>
+      <article className="flex flex-col gap-4 items-center">
+        <h2 className="text-lg font-bold">{t('profile.page.socials')}:</h2>
+        <div className="w-full flex gap-4 items-center justify-center">
+          <SocialLink href={instaUrl} label="Instagram" iconSrc={instagram} />
+          <SocialLink href={tiktokUrl} label="TikTok" iconSrc={tikTok} />
+        </div>
+      </article>
+    </>
   );
 };
 
