@@ -73,7 +73,9 @@ export default function Pills<K extends string = string>({
             return (
               <button
                 key={String(key)}
-                ref={(el) => (btnRefs.current[String(key)] = el)}
+                ref={(el) => {
+                  btnRefs.current[String(key)] = el;
+                }}
                 role="tab"
                 aria-selected={selected}
                 aria-controls={`panel-${String(key)}`}
