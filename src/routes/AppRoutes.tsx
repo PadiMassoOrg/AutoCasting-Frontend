@@ -1,14 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage } from '../features/auth/pages';
 import { PublicProfilePage } from '../features/profile/pages/';
+import PublicPagesLayout from '../layouts/PublicPagesLayout';
+import { ScrollToTop } from '../shared/components/ScrollToTop/ScrollToTop';
+import { ROUTES } from '../shared/lib/routes';
 import ProtectedRoute from './ProtectedRoute';
 import ProtectedRoutesLayout from './ProtectedRoutesLayout';
-import { ROUTES } from '../shared/lib/routes';
-import PublicPagesLayout from '../layouts/PublicPagesLayout';
 
 export default function AppRoutes() {
   return (
     <Router>
+      <ScrollToTop selector="#public-page-scroll-root" />
       <Routes>
         {/* App */}
         <Route path={ROUTES.HOME} element={<AuthenticationPage />} />

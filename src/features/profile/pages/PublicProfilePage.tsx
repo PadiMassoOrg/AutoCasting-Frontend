@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
-import { usePublicProfile } from '../hooks/usePublicProfile';
-import { ViewerActions, BasicInfoSection, MediaSection } from '../components/public';
+import { BasicInfoSection, MediaSection, ViewerActions } from '../components/public';
 import ProfileInfoCarousel from '../components/public/Details/ProfileInfoCarousel';
 import SocialMediaSection from '../components/public/SocialMediaSection';
+import { usePublicProfile } from '../hooks/usePublicProfile';
 
 const PublicProfilePage = () => {
   const { slug } = useParams<{ slug: string }>();
