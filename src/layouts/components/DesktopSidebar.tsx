@@ -4,13 +4,19 @@ import { ROUTES, USER_ROUTES } from '../../shared/lib/routes';
 import { useTranslation } from 'react-i18next';
 import { logout } from '../../features/auth/services/authService';
 import { LinkLogo } from '../../shared/components/LinkLogo';
+import { useProfile } from '../../features/profile/hooks/useProfile';
 
 export default function DesktopSidebar() {
   const { t } = useTranslation();
   const { pathname } = useLocation();
+  const { data } = useProfile();
+
+  const toPublicProfile = () => {
+    window.location.href = ROUTES.PUBLIC_PROFILE + '/' + data?.publicSlug;
+  };
 
   return (
-    <aside className="hidden md:static md:flex flex-col w-56 bg-white min-h-screen p-6 fixed">
+    <aside className="hidden md:static md:flex flex-col w-62 h-full bg-white p-6 fixed border-r-[var(--color-secondary-grey)] border-r">
       <LinkLogo path={ROUTES.DASHBOARD} />
       <div className="mt-8 space-y-4">
         {USER_ROUTES.map((item) => (
@@ -26,6 +32,9 @@ export default function DesktopSidebar() {
             {t(item.name)}
           </Link>
         ))}
+        <li className="block px-2 py-2 rounded cursor-pointer hover:font-bold" onClick={toPublicProfile}>
+          Ver Perfil Publico
+        </li>
         <li className="block px-4 py-2 rounded cursor-pointer hover:font-bold" onClick={logout}>
           {t('dashboard.logout')}
         </li>
