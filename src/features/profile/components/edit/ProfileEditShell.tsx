@@ -34,7 +34,6 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
         <MediaEditSection media={profile.media} supabaseId={profile.id} />
         <DetailsEditSection profile={profile} />
       </HorizontalCarousel>
-      <Separator className="opacity-20 mt-9" />
     </section>
   );
 }
