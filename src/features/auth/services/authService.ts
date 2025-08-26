@@ -1,5 +1,6 @@
 import api from '../../../shared/lib/axios';
 import { clearAuthToken } from '../../../shared/lib/cookies';
+import { queryClient } from '../../../shared/lib/queryClient';
 import { API_ROUTES, ROUTES } from '../../../shared/lib/routes';
 import type {
   AuthenticationResponse,
@@ -38,5 +39,6 @@ export const resetPassword = async (data: ResetPasswordRequest) => {
 
 export const logout = () => {
   clearAuthToken();
+  queryClient.clear();
   window.location.href = ROUTES.HOME;
 };

@@ -34,10 +34,6 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
     // TODO - Manejo de ACTOR o CASTINERA
 
     registerMutation.mutate(data, {
-      onSuccess: (data: AuthenticationResponse) => {
-        setAuthToken(data.token);
-        navigate(ROUTES.DASHBOARD);
-      },
       onError: (err: any) => {
         const message = err?.response?.data?.message || t('state.server_err');
         setServerError(message);

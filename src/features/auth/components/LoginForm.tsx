@@ -35,10 +35,6 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const onSubmit = (data: LoginFormValues) => {
     setServerError(null);
     loginMutation.mutate(data, {
-      onSuccess: (data: AuthenticationResponse) => {
-        setAuthToken(data.token);
-        navigate(ROUTES.DASHBOARD);
-      },
       onError: (err: any) => {
         const message = err?.response?.data?.message || t('state.server_err');
         setServerError(message);
