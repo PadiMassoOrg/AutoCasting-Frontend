@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 type Props = {
   active: number;
@@ -9,6 +9,7 @@ type Props = {
 
 export default function HorizontalCarousel({ active, onChange, children, className }: Props) {
   const slides = React.Children.toArray(children);
+
   const startX = useRef<number | null>(null);
   const deltaX = useRef(0);
 
@@ -36,8 +37,45 @@ export default function HorizontalCarousel({ active, onChange, children, classNa
     if (e.key === 'ArrowLeft') prev();
   };
 
-  // porcentaje de desplazamiento por slide
-  const step = 100 / slides.length;
+  // ---- altura auto según slide activo ----
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Asegurá que el array de refs tenga mismo largo que slides
+  useEffect(() => {
+    slideRefs.current = Array(slides.length).fill(null);
+  }, [slides.length]);
+
+  const setAutoHeight = () => {
+    const wrap = wrapperRef.current;
+    const node = slideRefs.current[active];
+    if (!wrap || !node) return;
+    const h = node.offsetHeight;
+    wrap.style.height = h ? `${h}px` : 'auto';
+  };
+
+  useEffect(() => {
+    setAutoHeight();
+  }, [active, slides.length]);
+
+  useEffect(() => {
+    const node = slideRefs.current[active];
+    if (!node) return;
+
+    const ro = new ResizeObserver(() => setAutoHeight());
+    ro.observe(node);
+
+    const onWin = () => setAutoHeight();
+    window.addEventListener('resize', onWin);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', onWin);
+    };
+  }, [active]);
+
+  const step = slides.length ? 100 / slides.length : 100;
 
   return (
     <div
@@ -48,23 +86,24 @@ export default function HorizontalCarousel({ active, onChange, children, classNa
       onKeyDown={onKeyDown}
       tabIndex={0}
       aria-roledescription="carousel"
+      ref={wrapperRef}
+      style={{ transition: 'height 200ms ease' }}
     >
       <div
-        className="flex w-full min-w-0 transition-transform duration-300 ease-out"
-        // nos movemos en pasos de (100 / slides)%
-        style={{
-          width: `${slides.length * 100}%`,
-          transform: `translateX(-${active * step}%)`,
-        }}
+        ref={trackRef}
+        className="flex w-full min-w-0 items-start transition-transform duration-300 ease-out"
+        style={{ width: `${slides.length * 100}%`, transform: `translateX(-${active * step}%)` }}
       >
         {slides.map((child, idx) => (
           <div
             key={idx}
-            // cada slide ocupa 1/N del track, puede encoger, y su padding no suma ancho
+            // ⬇️ callback-ref que NO devuelve nada (void)
+            ref={(el) => {
+              slideRefs.current[idx] = el;
+            }}
             className="shrink-0 grow-0 min-w-0 box-border px-1"
             style={{ width: `${step}%` }}
           >
-            {/* wrapper interno por si querés paddings propios del slide */}
             <div className="w-full min-w-0">{child}</div>
           </div>
         ))}
