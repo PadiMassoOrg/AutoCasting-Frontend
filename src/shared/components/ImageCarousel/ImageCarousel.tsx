@@ -1,16 +1,17 @@
 import { useState } from 'react';
 
 type Props = {
-  images: string[];
+  images: string[] | null;
 };
 
 export default function ImageCarousel({ images }: Props) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const selectedImage = images[selectedIndex];
 
   if (!images || images.length === 0) {
-    return <div className="text-center text-gray-500">No hay imágenes disponibles.</div>;
+    return;
   }
+
+  const selectedImage = images[selectedIndex];
 
   return (
     <div className="w-full flex flex-col items-center gap-[10px]">

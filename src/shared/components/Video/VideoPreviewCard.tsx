@@ -1,7 +1,7 @@
 import UniversalVideoPlayer from './UniversalVideoPlayer';
 
-const VideoPreviewCard = ({ videoUrl }: { videoUrl: string }) => {
-  if (!videoUrl) return null;
+const VideoPreviewCard = ({ videoUrl }: { videoUrl: string | null }) => {
+  if (!videoUrl) return;
   return (
     <UniversalVideoPlayer
       url={videoUrl}
