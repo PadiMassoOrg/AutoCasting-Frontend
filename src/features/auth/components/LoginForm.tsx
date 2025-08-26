@@ -7,16 +7,11 @@ import { FormInputField, Button, Label } from 'autocasting-ui-library-padimasso'
 import { useState } from 'react';
 import { useModal } from '../../../context/ModalContext';
 import { ForgottenPasswordForm } from './';
-import { setAuthToken } from '../../../shared/lib/cookies';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../../shared/lib/routes';
-import type { AuthenticationResponse } from '../types/auth.types';
 
 export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const { t } = useTranslation();
   const { openModal } = useModal();
   const loginMutation = useLoginMutation();
-  const navigate = useNavigate();
 
   const [serverError, setServerError] = useState<string | null>(null);
 

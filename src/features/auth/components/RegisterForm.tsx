@@ -5,17 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { useRegisterMutation } from '../hooks/useRegisterMutation';
 import { FormInputField, Button, Label } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
-import { setAuthToken } from '../../../shared/lib/cookies';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../../shared/lib/routes';
-import type { AuthenticationResponse } from '../types/auth.types';
 
 export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
   const [serverError, setServerError] = useState<string | null>(null);
 
   const { t } = useTranslation();
   const registerMutation = useRegisterMutation();
-  const navigate = useNavigate();
 
   const {
     register,
