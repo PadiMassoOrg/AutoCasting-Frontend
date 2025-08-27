@@ -10,39 +10,38 @@ import GroupedCredits from './GroupedCredits';
 export default function CreditsForm({ data }: { data: Credit[] }) {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
+  const saveNew = useCreditsAutosave();
 
   const [credits, setCredits] = useState<Credit[]>(data ?? []);
 
+  const handleSaveNew = (newCredit: DraftCredit) => {
+    saveNew.immediate(newCredit);
+    closeModal();
+  };
+
   const openCreateModal = () => {
     openModal(
-      <CreditModal
-        mode="create"
-        onCancel={closeModal}
-        onSave={async (draft) => {
-          await createCredit(draft); // sin id
-          closeModal();
-        }}
-      />,
+      <CreditModal mode="create" onCancel={closeModal} onSave={handleSaveNew} />,
       t('profile.credits.add_new'),
       'lg'
     );
   };
 
-  const openEditModal = (credit: Credit) => {
-    openModal(
-      <CreditModal
-        mode="edit"
-        initial={credit}
-        onCancel={closeModal}
-        onSave={async (draft) => {
-          await updateCredit(draft as DraftCredit); // con id
-          closeModal();
-        }}
-      />,
-      t('profile.credits.edit'),
-      'lg'
-    );
-  };
+  // const openEditModal = (credit: Credit) => {
+  //   openModal(
+  //     <CreditModal
+  //       mode="edit"
+  //       initial={credit}
+  //       onCancel={closeModal}
+  //       onSave={async (draft) => {
+  //         await updateCredit(draft as DraftCredit); // con id
+  //         closeModal();
+  //       }}
+  //     />,
+  //     t('profile.credits.edit'),
+  //     'lg'
+  //   );
+  // };
 
   return (
     <div className="flex flex-col gap-4">

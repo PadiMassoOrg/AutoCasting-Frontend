@@ -20,6 +20,10 @@
       "dash": "--"
     }
   },
+  "validation": {
+    "required": "Campo obligatorio.",
+    "number": "Solo números"
+  },
   "state": {
     "loading": "Cargando...",
     "server_err": "Ocurrió un error, intente nuevamente."
@@ -27,6 +31,9 @@
   "buttons": {
     "cancel": "Cancelar",
     "save": "Guardar"
+  },
+  "dashboard": {
+    "logout": "Salir"
   },
   "routes": {
     "profile": "Perfil"
@@ -278,10 +285,6 @@
       "role": "Rol",
       "role_placeholder": "Hamlet, Protagónico, Grupal...",
       "year": "Año"
-    },
-    "validation": {}
-  },
-  "dashboard": {
-    "logout": "Salir"
+    }
   }
 }
