@@ -1,11 +1,11 @@
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getLoginSchema, type LoginFormValues } from '../schemas/authSchema';
-import { useTranslation } from 'react-i18next';
-import { useLoginMutation } from '../hooks/useLoginMutation';
-import { FormInputField, Button, Label } from 'autocasting-ui-library-padimasso';
+import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../context/ModalContext';
+import { useLoginMutation } from '../hooks/useLoginMutation';
+import { getLoginSchema, type LoginFormValues } from '../schemas/authSchema';
 import { ForgottenPasswordForm } from './';
 
 export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {

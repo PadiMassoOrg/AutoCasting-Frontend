@@ -11,3 +11,6 @@ export type ContactPatchRequest = Partial<BaseProfileContact>;
 export type SocialMediaPatchRequest = Partial<BaseProfileSocialMedia>;
 export type MediaPatchRequest = Partial<BaseMedia>;
 export type CharacteristicsPatchRequest = Partial<BaseCharacteristics>;
+export type SkillsPatchRequest = {
+  skillIds: string[];
+};

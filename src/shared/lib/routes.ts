@@ -37,4 +37,5 @@ export const API_ROUTES = {
   SOCIAL_MEDIA: '/profile/social-media',
   MEDIA: '/profile/media',
   CHARACTERISTICS: '/profile/characteristics',
+  SKILLS: '/profile/skills',
 };

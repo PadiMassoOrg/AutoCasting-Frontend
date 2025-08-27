@@ -1,11 +1,11 @@
-import { useForm } from 'react-hook-form';
-import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
-import { useModal } from '../../../context/ModalContext';
-import { useTranslation } from 'react-i18next';
-import { getForgottenPasswordSchema, type ForgottenPasswordValues } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForgotPasswordMutation } from '../hooks/useForgotPasswordMutation';
+import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useModal } from '../../../context/ModalContext';
+import { useForgotPasswordMutation } from '../hooks/useForgotPasswordMutation';
+import { getForgottenPasswordSchema, type ForgottenPasswordValues } from '../schemas/authSchema';
 
 export default function ForgottenPasswordForm() {
   const { closeModal } = useModal();
@@ -55,7 +55,7 @@ export default function ForgottenPasswordForm() {
         <hr className="opacity-20 mt-6 mb-10" />
         <div className="flex gap-2">
           <Button variant="outline" onClick={closeModal}>
-            {t('general.buttons.cancel')}
+            {t('buttons.cancel')}
           </Button>
           <Button type="submit">{t('auth.forgotten_password.submit')}</Button>
         </div>

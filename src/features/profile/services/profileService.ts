@@ -1,6 +1,7 @@
 import api from '../../../shared/lib/axios';
 import { API_ROUTES } from '../../../shared/lib/routes';
 import { stripUndefined } from '../../../shared/utils/stripUndefined';
+import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 import type {
   Characteristics,
   Media,
@@ -15,6 +16,7 @@ import type {
   CharacteristicsPatchRequest,
   ContactPatchRequest,
   MediaPatchRequest,
+  SkillsPatchRequest,
   SocialMediaPatchRequest,
 } from '../types/requests';
 
@@ -56,5 +58,10 @@ export async function patchMedia(payload: MediaPatchRequest): Promise<Media> {
 
 export async function patchCharacteristics(payload: CharacteristicsPatchRequest): Promise<Characteristics> {
   const { data } = await api.patch(API_ROUTES.CHARACTERISTICS, payload);
+  return data;
+}
+
+export async function patchSkills(payload: SkillsPatchRequest): Promise<SiteMetadataObject[]> {
+  const { data } = await api.patch(API_ROUTES.SKILLS, payload);
   return data;
 }

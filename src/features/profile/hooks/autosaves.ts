@@ -1,8 +1,10 @@
+import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 import {
   patchBasicInfo,
   patchCharacteristics,
   patchContact,
   patchMedia,
+  patchSkills,
   patchSocialMedia,
   PROFILE_CACHE_KEY,
 } from '../services/profileService';
@@ -19,6 +21,7 @@ import type {
   CharacteristicsPatchRequest,
   ContactPatchRequest,
   MediaPatchRequest,
+  SkillsPatchRequest,
   SocialMediaPatchRequest,
 } from '../types/requests';
 import { useSectionAutosave } from './useSectionAutoSave';
@@ -69,7 +72,20 @@ export function useCharacteristicsAutosave() {
     delay: 400,
     onSuccessUpdate: (prev, updated) => ({
       ...prev,
-      characteristics: updated, // ⚡ reemplazo completo
+      characteristics: updated,
+    }),
+    cacheKeys: [PROFILE_CACHE_KEY],
+    invalidateOnSuccess: 'active',
+  });
+}
+
+export function useSkillsAutosave() {
+  return useSectionAutosave<SkillsPatchRequest, SiteMetadataObject[]>({
+    mutationFn: patchSkills,
+    delay: 200,
+    onSuccessUpdate: (prev, updated) => ({
+      ...prev,
+      skills: updated,
     }),
     cacheKeys: [PROFILE_CACHE_KEY],
     invalidateOnSuccess: 'active',

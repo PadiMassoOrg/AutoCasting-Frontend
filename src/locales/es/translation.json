@@ -25,7 +25,8 @@
     "server_err": "Ocurrió un error, intente nuevamente."
   },
   "buttons": {
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "save": "Guardar"
   },
   "routes": {
     "profile": "Perfil"
@@ -258,6 +259,12 @@
       "passport": "Pasaporte",
       "drivingLicense": "Lic. de Conducir",
       "diet": "Dieta"
+    },
+    "skills": {
+      "skills": "Habilidades",
+      "add_new": "Agregar nueva habilidad",
+      "add_new_subtitle": "Buscar o agregar nueva habilidad",
+      "add_new_placeholder": "Agregar Habilidad"
     },
     "validation": {}
   },
