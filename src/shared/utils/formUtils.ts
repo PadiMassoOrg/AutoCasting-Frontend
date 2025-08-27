@@ -19,6 +19,23 @@ export const onSelect =
   (e) =>
     fn(e.target.value);
 
+export const onCheckbox =
+  (fn: (v: boolean) => void): React.ChangeEventHandler<HTMLInputElement> =>
+  (e) =>
+    fn(e.target.checked);
+
+export const onNumberText =
+  (fn: (v: string) => void): React.ChangeEventHandler<HTMLInputElement> =>
+  (e) =>
+    fn(e.target.value);
+
+export const onUuidSelect =
+  (fn: (v: string | null) => void): React.ChangeEventHandler<HTMLSelectElement> =>
+  (e) => {
+    const raw = e.target.value;
+    fn(raw && raw.trim().length > 0 ? raw : null);
+  };
+
 export const commitOnEnter =
   (commit: () => void): KeyboardEventHandler<HTMLInputElement> =>
   (e) => {
@@ -154,6 +171,167 @@ export function useToggleSet<T>(initial: T[], onChange?: (next: T[]) => void) {
     [set, onChange]
   );
   return { values: set, toggle, setValues: setSet };
+}
+
+type UseCommittedIntOpts = {
+  min?: number;
+  max?: number;
+  allowNull?: boolean; // enviar null si el campo queda vacío
+  debounceMs?: number; // si quieres commit diferido (opcional)
+};
+
+export function useCommittedInt(
+  initial: number | null | undefined,
+  commitFn: (v: number | null) => void,
+  opts?: UseCommittedIntOpts
+) {
+  const [value, setValue] = useState(
+    initial == null ? '' : String(Math.trunc(initial)) // muestra entero
+  );
+  const last = useRef<number | null>(initial ?? null);
+  const [error, setError] = useState<string | null>(null);
+  const debounce = useRef<number | null>(null);
+
+  const clearDebounce = () => {
+    if (debounce.current) {
+      window.clearTimeout(debounce.current);
+      debounce.current = null;
+    }
+  };
+
+  const parseCommitValue = useCallback((): { ok: boolean; value: number | null; err?: string } => {
+    const s = value.trim();
+
+    if (s === '') {
+      if (opts?.allowNull) return { ok: true, value: null };
+      return { ok: false, value: null, err: 'Requerido' };
+    }
+
+    // admite +/-
+    if (!/^[+-]?\d+$/.test(s)) return { ok: false, value: null, err: 'Número inválido' };
+
+    let n = Number(s);
+    if (!Number.isFinite(n)) return { ok: false, value: null, err: 'Número inválido' };
+
+    n = Math.trunc(n); // entero
+
+    if (opts?.min != null && n < opts.min) return { ok: false, value: null, err: `Min ${opts.min}` };
+    if (opts?.max != null && n > opts.max) return { ok: false, value: null, err: `Max ${opts.max}` };
+
+    return { ok: true, value: n };
+  }, [value, opts?.allowNull, opts?.min, opts?.max]);
+
+  const doCommit = useCallback(() => {
+    const { ok, value, err } = parseCommitValue();
+    setError(err ?? null);
+    if (!ok) return;
+
+    // evita commits duplicados
+    const same = value === last.current || (value == null && last.current == null);
+
+    if (!same) {
+      last.current = value;
+      commitFn(value);
+    }
+  }, [commitFn, parseCommitValue]);
+
+  const commit = useCallback(() => {
+    clearDebounce();
+    doCommit();
+  }, [doCommit]);
+
+  const schedule = useCallback(() => {
+    clearDebounce();
+    if (opts?.debounceMs && opts.debounceMs > 0) {
+      debounce.current = window.setTimeout(doCommit, opts.debounceMs);
+    }
+  }, [doCommit, opts?.debounceMs]);
+
+  return {
+    value, // úsalo en value del <input>
+    setValue, // si necesitas setear manual
+    error, // mensaje de error (o null)
+    onChange: onNumberText((s) => {
+      setValue(s);
+      if (opts?.debounceMs) schedule();
+    }),
+    onBlur: commitOnBlur(commit),
+    onKeyDown: commitOnEnter(commit),
+    commit,
+  };
+}
+
+export function useCommittedBoolean(initial: boolean, commitFn: (v: boolean) => void) {
+  const [value, setValue] = useState(!!initial);
+  const last = useRef(!!initial);
+
+  const commit = useCallback(
+    (v: boolean) => {
+      if (v !== last.current) {
+        last.current = v;
+        commitFn(v);
+      }
+    },
+    [commitFn]
+  );
+
+  return {
+    checked: value,
+    setChecked: setValue,
+    onChange: onCheckbox((v) => {
+      setValue(v);
+      commit(v);
+    }),
+  };
+}
+
+const UUID_RX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+type UseCommittedUuidOpts = { allowNull?: boolean };
+
+export function useCommittedUuid(
+  initial: string | null | undefined,
+  commitFn: (v: string | null) => void,
+  opts?: UseCommittedUuidOpts
+) {
+  const [value, setValue] = useState<string>(initial ?? ''); // '' representa null
+  const last = useRef<string | null>(initial ?? null);
+  const [error, setError] = useState<string | null>(null);
+
+  const commit = useCallback(
+    (raw?: string) => {
+      const v = (raw ?? value).trim();
+      const out = v === '' ? null : v;
+
+      if (out === null && !opts?.allowNull) {
+        setError('Requerido');
+        return;
+      }
+      if (out !== null && !UUID_RX.test(out)) {
+        setError('UUID inválido');
+        return;
+      }
+      setError(null);
+
+      const same = out === last.current;
+      if (!same) {
+        last.current = out;
+        commitFn(out);
+      }
+    },
+    [value, commitFn, opts?.allowNull]
+  );
+
+  return {
+    value, // úsalo en <select value={value}>
+    setValue,
+    error,
+    onChange: onUuidSelect((v) => {
+      setValue(v ?? '');
+      commit(v ?? '');
+    }),
+    onBlur: commitOnBlur(() => commit()),
+  };
 }
 
 /* ---------- helpers internos fecha ---------- */

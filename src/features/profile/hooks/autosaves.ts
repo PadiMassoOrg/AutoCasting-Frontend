@@ -1,6 +1,7 @@
 import { useSectionAutosave } from './useSectionAutoSave';
 import {
   patchBasicInfo,
+  patchCharacteristics,
   patchContact,
   patchMedia,
   patchSocialMedia,
@@ -8,6 +9,7 @@ import {
 } from '../services/profileService';
 import type {
   BasicInfoPatchRequest,
+  CharacteristicsPatchRequest,
   ContactPatchRequest,
   MediaPatchRequest,
   SocialMediaPatchRequest,
@@ -18,6 +20,7 @@ import type {
   ProfileSocialMedia,
   ProfileResponse,
   Media,
+  Characteristics,
 } from '../types/profile.types';
 
 export function useBasicInfoAutosave() {
@@ -55,6 +58,16 @@ export function useMediaAutosave() {
     mutationFn: patchMedia,
     delay: 400,
     onSuccessUpdate: (prev: ProfileResponse, updated) => ({ ...prev, media: updated }),
+    cacheKeys: [PROFILE_CACHE_KEY],
+    invalidateOnSuccess: 'active',
+  });
+}
+
+export function useCharacteristicsAutosave() {
+  return useSectionAutosave<CharacteristicsPatchRequest, Characteristics>({
+    mutationFn: patchCharacteristics,
+    delay: 400,
+    onSuccessUpdate: (prev: ProfileResponse, updated) => ({ ...prev, contact: updated }),
     cacheKeys: [PROFILE_CACHE_KEY],
     invalidateOnSuccess: 'active',
   });

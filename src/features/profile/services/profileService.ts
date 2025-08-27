@@ -2,6 +2,7 @@ import api from '../../../shared/lib/axios';
 import { API_ROUTES } from '../../../shared/lib/routes';
 import { stripUndefined } from '../../../shared/utils/stripUndefined';
 import type {
+  Characteristics,
   Media,
   ProfileBasicInfo,
   ProfileContact,
@@ -11,6 +12,7 @@ import type {
 } from '../types/profile.types';
 import type {
   BasicInfoPatchRequest,
+  CharacteristicsPatchRequest,
   ContactPatchRequest,
   MediaPatchRequest,
   SocialMediaPatchRequest,
@@ -49,5 +51,10 @@ export async function patchSocialMedia(payload: SocialMediaPatchRequest): Promis
 
 export async function patchMedia(payload: MediaPatchRequest): Promise<Media> {
   const { data } = await api.patch(API_ROUTES.MEDIA, payload);
+  return data;
+}
+
+export async function patchCharacteristics(payload: CharacteristicsPatchRequest): Promise<Characteristics> {
+  const { data } = await api.patch(API_ROUTES.CHARACTERISTICS, payload);
   return data;
 }

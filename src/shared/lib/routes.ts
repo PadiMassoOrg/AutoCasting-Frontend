@@ -36,4 +36,5 @@ export const API_ROUTES = {
   CONTACT: '/profile/contact',
   SOCIAL_MEDIA: '/profile/social-media',
   MEDIA: '/profile/media',
+  CHARACTERISTICS: '/profile/characteristics',
 };

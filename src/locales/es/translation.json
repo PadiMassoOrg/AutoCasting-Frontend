@@ -236,11 +236,14 @@
       "videoreel": "Videoreel"
     },
     "characteristics": {
+      "characteristics": "Características",
       "gender": "Género",
       "age": "Edad",
       "location": "Locación",
       "height": "Estatura",
+      "heightCm": "Estatura (cm)",
       "weight": "Peso",
+      "weightKg": "Peso (kg)",
       "hairColor": "Cabello",
       "eyeColor": "Ojos",
       "chest": "Busto",

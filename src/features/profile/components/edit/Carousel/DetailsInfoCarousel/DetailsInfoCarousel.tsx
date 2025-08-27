@@ -2,8 +2,8 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ProfileResponse } from '../../../../types/profile.types';
-import { CharacteristicsPanel, CreditsPanel, EducationPanel, SkillsPanel } from '../../../public/Details';
 import Pills from '../../../public/Pills/Pills';
+import { CharacteristicsForm, CreditsForm, EducationForm, SkillsForm } from '../../form';
 
 type PillKey = 'characteristics' | 'skills' | 'credits' | 'education';
 const ORDER: PillKey[] = ['characteristics', 'skills', 'credits', 'education'];
@@ -38,22 +38,22 @@ export default function DetailsInfoCarousel({ profile }: { profile: ProfileRespo
       <div className="mt-5 w-full min-w-0">
         {active === 'characteristics' && (
           <div className="rounded-xl border border-[var(--color-secondary-outline)] py-6 px-7">
-            <CharacteristicsPanel data={profile.characteristics} />
+            <CharacteristicsForm data={profile.characteristics} />
           </div>
         )}
         {active === 'skills' && (
           <div className="rounded-xl border border-[var(--color-secondary-outline)] py-6 px-7">
-            <SkillsPanel skills={profile.skills} />
+            <SkillsForm data={profile.skills} />
           </div>
         )}
         {active === 'credits' && (
           <div className="rounded-xl border border-[var(--color-secondary-outline)] p-6">
-            <CreditsPanel credits={profile.credits} />
+            <CreditsForm data={profile.credits} />
           </div>
         )}
         {active === 'education' && (
           <div className="rounded-xl border border-[var(--color-secondary-outline)] py-6 px-7">
-            <EducationPanel education={profile.education} />
+            <EducationForm data={profile.education} />
           </div>
         )}
       </div>
