@@ -1,21 +1,21 @@
 import BasicInfoForm from './BasicInfoForm';
 import CharacteristicsForm from './CharacteristicsForm';
 import ContactForm from './ContactForm';
-import CreditsForm from './CreditsForm';
+import CreditsForm from './Credits/CreditsForm';
 import EducationForm from './EducationForm';
 import MediaPhotosForm from './MediaPhotosForm';
 import MediaVideosForm from './MediaVideosForm';
-import SkillsForm from './SkillsForm';
+import SkillsForm from './Skills/SkillsForm';
 import SocialMediaForm from './SocialMediaForm';
 
 export {
-  EducationForm,
-  CreditsForm,
-  SkillsForm,
+  BasicInfoForm,
   CharacteristicsForm,
+  ContactForm,
+  CreditsForm,
+  EducationForm,
   MediaPhotosForm,
   MediaVideosForm,
+  SkillsForm,
   SocialMediaForm,
-  BasicInfoForm,
-  ContactForm,
 };

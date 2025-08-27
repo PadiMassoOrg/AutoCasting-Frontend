@@ -1,4 +1,5 @@
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
+import { createNewCredit } from '../services/creditsService';
 import {
   patchBasicInfo,
   patchCharacteristics,
@@ -10,6 +11,7 @@ import {
 } from '../services/profileService';
 import type {
   Characteristics,
+  Credit,
   Media,
   ProfileBasicInfo,
   ProfileContact,
@@ -20,6 +22,7 @@ import type {
   BasicInfoPatchRequest,
   CharacteristicsPatchRequest,
   ContactPatchRequest,
+  CreditRequest,
   MediaPatchRequest,
   SkillsPatchRequest,
   SocialMediaPatchRequest,
@@ -86,6 +89,19 @@ export function useSkillsAutosave() {
     onSuccessUpdate: (prev, updated) => ({
       ...prev,
       skills: updated,
+    }),
+    cacheKeys: [PROFILE_CACHE_KEY],
+    invalidateOnSuccess: 'active',
+  });
+}
+
+export function useCreditsAutosave() {
+  return useSectionAutosave<CreditRequest, Credit>({
+    mutationFn: createNewCredit,
+    delay: 200,
+    onSuccessUpdate: (prev, updated) => ({
+      ...prev,
+      credits: updated,
     }),
     cacheKeys: [PROFILE_CACHE_KEY],
     invalidateOnSuccess: 'active',

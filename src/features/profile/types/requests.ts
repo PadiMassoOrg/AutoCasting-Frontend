@@ -1,5 +1,6 @@
 import type {
   BaseCharacteristics,
+  BaseCredit,
   BaseMedia,
   BaseProfileBasicInfo,
   BaseProfileContact,
@@ -14,3 +15,4 @@ export type CharacteristicsPatchRequest = Partial<BaseCharacteristics>;
 export type SkillsPatchRequest = {
   skillIds: string[];
 };
+export type CreditRequest = Partial<BaseCredit>;

@@ -10,6 +10,7 @@ export type SiteMetadataResponse = {
   professions: SiteMetadataObject[];
   colorOptions: SiteMetadataObject[];
   dietOptions: SiteMetadataObject[];
+  productionTypeOptions: SiteMetadataObject[];
 };
 
 export type SiteMetadataVersion = {

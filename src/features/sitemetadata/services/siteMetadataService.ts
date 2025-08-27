@@ -6,6 +6,7 @@ export const METADATA_CACHE_KEY = ['cache-sitemetadata'] as const;
 
 export const fetchSiteMetadata = async (): Promise<SiteMetadataResponse> => {
   const response = await api.get(API_ROUTES.SITEMETADATA);
+  console.log(response.data);
   return response.data;
 };
 

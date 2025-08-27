@@ -266,6 +266,19 @@
       "add_new_subtitle": "Buscar o agregar nueva habilidad",
       "add_new_placeholder": "Agregar Habilidad"
     },
+    "credits": {
+      "credits": "Créditos",
+      "add_new": "Agregar nuevo crédito",
+      "production_type": "Tipo de producción",
+      "production_type_placeholder": "Ej. TV, Publicidad, Cine...",
+      "project": "Nombre del proyecto",
+      "project_placeholder": "Ej. Hamlet, Stranger Things…",
+      "director": "Director/Productora",
+      "director_placeholder": "Ej. Steven Spilberg, Netflix…",
+      "role": "Rol",
+      "role_placeholder": "Hamlet, Protagónico, Grupal...",
+      "year": "Año"
+    },
     "validation": {}
   },
   "dashboard": {

@@ -1,8 +1,7 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
-type Props = { skills: SiteMetadataObject[] };
+import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
 
 const ORDER_KEYS = [
   'sitemetadata.category.scenic',
@@ -10,32 +9,31 @@ const ORDER_KEYS = [
   'sitemetadata.category.physical',
   'sitemetadata.category.language',
   'sitemetadata.category.accent',
-];
+] as const;
 
-export default function SkillsPanel({ skills }: Props) {
+const FALLBACK_CAT = 'sitemetadata.category.other';
+
+function GroupedSkills({ skills }: { skills: SiteMetadataObject[] }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState<Record<string, boolean>>({});
 
-  // Agrupa por categoryStringCode
   const groups = useMemo(() => {
     const g: Record<string, SiteMetadataObject[]> = {};
     for (const s of skills) {
-      const catKey = (s as any).categoryStringCode as string;
-      (g[catKey] ??= []).push(s);
+      const cat = (s as any).categoryStringCode ?? FALLBACK_CAT;
+      (g[cat] ??= []).push(s);
     }
-    // orden interno por label traducido
     for (const k of Object.keys(g)) {
       g[k].sort((a, b) => t(a.stringCode).localeCompare(t(b.stringCode)));
     }
     return g;
   }, [skills, t]);
 
-  // Categorías ordenadas según ORDER_KEYS; resto por su título traducido
   const categories = useMemo(() => {
     const cats = Object.keys(groups);
     return cats.sort((a, b) => {
-      const ia = ORDER_KEYS.indexOf(a);
-      const ib = ORDER_KEYS.indexOf(b);
+      const ia = ORDER_KEYS.indexOf(a as any);
+      const ib = ORDER_KEYS.indexOf(b as any);
       if (ia !== -1 && ib !== -1) return ia - ib;
       if (ia !== -1) return -1;
       if (ib !== -1) return 1;
@@ -43,31 +41,37 @@ export default function SkillsPanel({ skills }: Props) {
     });
   }, [groups, t]);
 
+  if (categories.length === 0) return null;
+
   return (
-    <div className="flex flex-col gap-4" style={{ overflowAnchor: 'none' }}>
-      {categories.map((catKey) => {
-        const list = groups[catKey];
+    <div className="flex flex-col gap-4">
+      {categories.map((cat) => {
+        const list = groups[cat];
         if (!list?.length) return null;
-        const isOpen = open[catKey] ?? true;
+        const isOpen = open[cat] ?? true;
+
         return (
-          <article key={catKey}>
+          <article key={cat}>
             <button
               type="button"
-              onClick={() => {
-                const y = window.scrollY; // evita “salto” al expandir/colapsar
-                setOpen((s) => ({ ...s, [catKey]: !isOpen }));
-                requestAnimationFrame(() => window.scrollTo({ top: y }));
-              }}
               className="w-full flex items-center justify-between cursor-pointer"
               aria-expanded={isOpen}
-              aria-controls={`skills-${catKey}`}
+              aria-controls={`skills-${cat}`}
+              onClick={() => setOpen((s) => ({ ...s, [cat]: !isOpen }))}
             >
-              <span className="font-semibold text-lg">{t(catKey)}:</span>
-              <Chevron open={isOpen} />
+              <span className="font-semibold text-lg">{t(cat)}:</span>
+              <svg
+                className={`w-6 h-6 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
+              </svg>
             </button>
-            {/* Lista de Skills */}
+
             {isOpen && (
-              <article id={`skills-${catKey}`} className="mt-3 flex flex-wrap gap-2">
+              <div id={`skills-${cat}`} className="mt-3 flex flex-wrap gap-2">
                 {list.map((s) => (
                   <span
                     key={s.id}
@@ -77,9 +81,10 @@ export default function SkillsPanel({ skills }: Props) {
                     {t(s.stringCode)}
                   </span>
                 ))}
-              </article>
+              </div>
             )}
-            <Separator className="opacity-20 my-4" />
+
+            <Separator className="opacity-20 my-2" />
           </article>
         );
       })}
@@ -87,15 +92,4 @@ export default function SkillsPanel({ skills }: Props) {
   );
 }
 
-function Chevron({ open }: { open: boolean }) {
-  return (
-    <svg
-      className={`w-7 transition-transform ${open ? 'rotate-180' : ''}`}
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
-    </svg>
-  );
-}
+export default GroupedSkills;

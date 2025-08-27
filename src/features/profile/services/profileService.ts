@@ -22,10 +22,8 @@ import type {
 
 export const PROFILE_CACHE_KEY = ['cache-profile'] as const;
 export const PUBLIC_PROFILE_CACHE_KEY = ['cache-profile'] as const;
-export const PROFILE_BASIC_INFO_CACHE_KEY = ['cache-profile-basic-info'] as const;
-export const PROFILE_CONTACT_CACHE_KEY = ['cache-profile-contact'] as const;
-export const PROFILE_SOCIAL_MEDIA_CACHE_KEY = ['cache-profile-social-media'] as const;
 
+// GET
 export const getMyProfile = async (): Promise<ProfileResponse> => {
   const response = await api.get(API_ROUTES.PROFILE);
   return response.data;

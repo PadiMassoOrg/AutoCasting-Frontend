@@ -38,4 +38,6 @@ export const API_ROUTES = {
   MEDIA: '/profile/media',
   CHARACTERISTICS: '/profile/characteristics',
   SKILLS: '/profile/skills',
+  // Credits
+  CREDIT: '/credit',
 };
