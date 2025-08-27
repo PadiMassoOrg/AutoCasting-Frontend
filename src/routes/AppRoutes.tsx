@@ -10,7 +10,7 @@ import ProtectedRoutesLayout from './ProtectedRoutesLayout';
 export default function AppRoutes() {
   return (
     <Router>
-      <ScrollToTop selector="#public-page-scroll-root" />
+      <ScrollToTop selector="#app-scroll-root" />
       <Routes>
         {/* App */}
         <Route path={ROUTES.HOME} element={<AuthenticationPage />} />

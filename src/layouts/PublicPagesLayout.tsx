@@ -6,7 +6,9 @@ export default function PublicPagesLayout() {
   return (
     <div className="min-h-screen bg-white">
       <PublicNavbar></PublicNavbar>
-      <main className="p-4">{<Outlet />}</main>
+      <main className="p-4" id="app-scroll-root">
+        {<Outlet />}
+      </main>
     </div>
   );
 }
