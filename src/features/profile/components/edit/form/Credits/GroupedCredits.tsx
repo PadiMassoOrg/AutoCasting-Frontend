@@ -97,10 +97,15 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
                         </div>
                       </div>
                       <div className="flex flex-col justify-around items-center ml-3 pl-3 border-l border-[var(--color-secondary-outline)]">
-                        <button type="button" className="cursor-pointer" aria-label="Delete">
+                        <button
+                          type="button"
+                          onClick={() => onDelete(c)}
+                          className="cursor-pointer"
+                          aria-label="Delete"
+                        >
                           <img src={deleteIcon} alt="" className="w-5" />
                         </button>
-                        <button type="button" className="cursor-pointer" aria-label="Edit">
+                        <button type="button" onClick={() => onEdit(c)} className="cursor-pointer" aria-label="Edit">
                           <img src={editIcon} alt="" className="w-5" />
                         </button>
                       </div>

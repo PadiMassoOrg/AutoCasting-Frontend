@@ -1,5 +1,5 @@
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
-import { createNewCredit } from '../services/creditsService';
+import { createNewCredit, deleteCredit, patchCredit, PROFILE_CREDITS_CACHE_KEY } from '../services/creditsService';
 import {
   patchBasicInfo,
   patchCharacteristics,
@@ -94,16 +94,56 @@ export function useSkillsAutosave() {
     invalidateOnSuccess: 'active',
   });
 }
-
-export function useCreditsAutosave() {
+// CREATE
+export function useCreditAutosave() {
   return useSectionAutosave<CreditRequest, Credit>({
     mutationFn: createNewCredit,
     delay: 200,
-    onSuccessUpdate: (prev, updated) => ({
-      ...prev,
-      credits: updated,
-    }),
-    cacheKeys: [PROFILE_CACHE_KEY],
-    invalidateOnSuccess: 'active',
+    cacheKeys: [PROFILE_CACHE_KEY, PROFILE_CREDITS_CACHE_KEY], // 👈 ambas
+    invalidateOnSuccess: false, // ya hacemos setQueryData
+    onSuccessUpdate: (prev, created) => {
+      if (Array.isArray(prev)) {
+        // prev = Credit[]
+        return [...prev, created];
+      }
+      // prev = ProfileResponse
+      return {
+        ...prev,
+        credits: [...(prev?.credits ?? []), created],
+      };
+    },
+  });
+}
+
+// PATCH
+export function useCreditPatchAutosave() {
+  return useSectionAutosave<CreditRequest, Credit>({
+    mutationFn: patchCredit,
+    delay: 200,
+    cacheKeys: [PROFILE_CACHE_KEY, PROFILE_CREDITS_CACHE_KEY],
+    invalidateOnSuccess: false,
+    onSuccessUpdate: (prev, updated) => {
+      const replace = (arr: Credit[]) => arr.map((c) => (c.id === updated.id ? updated : c));
+      if (Array.isArray(prev)) return replace(prev);
+      return { ...prev, credits: replace(prev?.credits ?? []) };
+    },
+  });
+}
+
+// DELETE
+export function useCreditDeleteAutosave() {
+  return useSectionAutosave<{ id: string }, { id: string }>({
+    mutationFn: async ({ id }) => {
+      await deleteCredit(id); // puede ser 204 No Content
+      return { id }; // <- devolvemos el id borrado sí o sí
+    },
+    delay: 0,
+    cacheKeys: [PROFILE_CACHE_KEY, PROFILE_CREDITS_CACHE_KEY],
+    invalidateOnSuccess: false,
+    onSuccessUpdate: (prev, { id }) => {
+      const remove = (arr: Credit[]) => arr.filter((c) => c.id !== id);
+      if (Array.isArray(prev)) return remove(prev);
+      return { ...prev, credits: remove(prev?.credits ?? []) };
+    },
   });
 }

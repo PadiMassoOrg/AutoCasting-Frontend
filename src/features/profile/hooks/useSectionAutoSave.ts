@@ -1,10 +1,9 @@
-// src/shared/hooks/useSectionAutosave.ts
-import { useRef, useState, useCallback } from 'react';
+// shared/hooks/useSectionAutosave.ts
 import { useMutation, useQueryClient, type QueryKey } from '@tanstack/react-query';
+import { useCallback, useRef, useState } from 'react';
 import { PROFILE_CACHE_KEY } from '../services/profileService';
 
-type OnSuccessUpdate<T> = (draft: any, updated: T) => any;
-
+type OnSuccessUpdate<TResult> = (draft: any, updated: TResult) => any;
 type RefetchType = 'active' | 'inactive' | 'all';
 
 export function useSectionAutosave<TPayload, TResult>({
@@ -13,12 +12,14 @@ export function useSectionAutosave<TPayload, TResult>({
   onSuccessUpdate,
   cacheKeys = [PROFILE_CACHE_KEY],
   invalidateOnSuccess = 'active',
+  extraInvalidateKeys = [], // 👈 NUEVO
 }: {
   mutationFn: (payload: TPayload) => Promise<TResult>;
   delay?: number;
   onSuccessUpdate: OnSuccessUpdate<TResult>;
   cacheKeys?: ReadonlyArray<QueryKey>;
   invalidateOnSuccess?: false | RefetchType;
+  extraInvalidateKeys?: ReadonlyArray<QueryKey>; // 👈 NUEVO
 }) {
   const qc = useQueryClient();
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -27,26 +28,30 @@ export function useSectionAutosave<TPayload, TResult>({
 
   const mutation = useMutation({
     mutationFn,
-    onMutate: async (vars) => {
+    onMutate: async () => {
       setSaving('saving');
       pending.current = null;
-      return { vars };
     },
     onSuccess: (updated) => {
+      // 1) actualizo SOLO las cacheKeys indicadas
       for (const key of cacheKeys) {
-        qc.setQueryData(key, (prev: any) => onSuccessUpdate(prev, updated));
+        qc.setQueriesData({ queryKey: key }, (prev: any) => onSuccessUpdate(prev, updated));
       }
+      // 2) invalido mis cacheKeys si querés
       if (invalidateOnSuccess) {
         for (const key of cacheKeys) {
           qc.invalidateQueries({ queryKey: key, refetchType: invalidateOnSuccess });
         }
       }
+      // 3) y además invalido OTRAS keys (p.ej. públicas)
+      for (const k of extraInvalidateKeys) {
+        qc.invalidateQueries({ queryKey: k, refetchType: 'active' });
+      }
+
       setSaving('saved');
       setTimeout(() => setSaving('idle'), 1200);
     },
-    onError: () => {
-      setSaving('error');
-    },
+    onError: () => setSaving('error'),
   });
 
   const flush = useCallback(() => {
@@ -54,18 +59,14 @@ export function useSectionAutosave<TPayload, TResult>({
       clearTimeout(timer.current);
       timer.current = null;
     }
-    if (pending.current) {
-      mutation.mutate(pending.current);
-    }
+    if (pending.current) mutation.mutate(pending.current);
   }, [mutation]);
 
   const schedule = useCallback(
     (payload: TPayload) => {
       pending.current = { ...(pending.current as any), ...(payload as any) };
       if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => {
-        if (pending.current) mutation.mutate(pending.current);
-      }, delay);
+      timer.current = setTimeout(() => pending.current && mutation.mutate(pending.current), delay);
     },
     [delay, mutation]
   );

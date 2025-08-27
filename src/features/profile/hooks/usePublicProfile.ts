@@ -13,6 +13,7 @@ export const usePublicProfile = (slug?: string) => {
     queryFn: () => getPublicProfile(slug!),
     enabled: !!slug,
     staleTime: Infinity,
+    refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });

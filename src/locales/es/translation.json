@@ -30,7 +30,8 @@
   },
   "buttons": {
     "cancel": "Cancelar",
-    "save": "Guardar"
+    "save": "Guardar",
+    "delete": "Borrar"
   },
   "dashboard": {
     "logout": "Salir"
@@ -276,6 +277,9 @@
     "credits": {
       "credits": "Créditos",
       "add_new": "Agregar nuevo crédito",
+      "edit": "Editar crédito",
+      "delete": "Borrar crédito",
+      "delete_confirm": "Estás por borrar",
       "production_type": "Tipo de producción",
       "production_type_placeholder": "Ej. TV, Publicidad, Cine...",
       "project": "Nombre del proyecto",

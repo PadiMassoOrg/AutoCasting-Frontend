@@ -20,7 +20,7 @@ function GroupedSkills({ skills }: { skills: SiteMetadataObject[] }) {
   const groups = useMemo(() => {
     const g: Record<string, SiteMetadataObject[]> = {};
     for (const s of skills) {
-      const cat = (s as any).categoryStringCode ?? FALLBACK_CAT;
+      const cat = (s as SiteMetadataObject).categoryStringCode ?? FALLBACK_CAT;
       (g[cat] ??= []).push(s);
     }
     for (const k of Object.keys(g)) {
