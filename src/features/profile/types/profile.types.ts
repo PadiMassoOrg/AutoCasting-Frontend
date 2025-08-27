@@ -39,6 +39,7 @@ export type BaseProfileBasicInfo = {
   gender: string;
   birthDate: string;
   professions: SiteMetadataObject[];
+  professionIds: string[];
 };
 
 export type BaseProfileContact = {
@@ -67,7 +68,9 @@ export type BaseCharacteristics = {
   heightCm: number;
   weightKg: number;
   hairColor: SiteMetadataObject;
+  hairColorId: string;
   eyeColor: SiteMetadataObject;
+  eyeColorId: string;
   chestCm: number;
   waistCm: number;
   hipCm: number;
@@ -79,6 +82,7 @@ export type BaseCharacteristics = {
   passport: boolean;
   drivingLicense: boolean;
   dietOption: SiteMetadataObject;
+  dietOptionId: string;
 };
 
 export type BaseSiteMetadataObject = {

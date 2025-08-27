@@ -1,5 +1,6 @@
 import {
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -261,27 +262,41 @@ export function useCommittedInt(
   };
 }
 
-export function useCommittedBoolean(initial: boolean, commitFn: (v: boolean) => void) {
-  const [value, setValue] = useState(!!initial);
-  const last = useRef(!!initial);
+export function useCommittedBoolean(initial: boolean | null | undefined, commitFn: (v: boolean) => void) {
+  const safeInitial = initial ?? false;
+  const [value, setValue] = useState<string>(String(safeInitial)); // 'true' | 'false'
+  const last = useRef<boolean>(safeInitial);
 
-  const commit = useCallback(
-    (v: boolean) => {
-      if (v !== last.current) {
-        last.current = v;
-        commitFn(v);
+  // sync con nuevas props
+  useEffect(() => {
+    const next = initial ?? false;
+    if (next !== last.current) {
+      last.current = next;
+      setValue(String(next));
+    }
+  }, [initial]);
+
+  const commitIfChanged = useCallback(
+    (raw: string) => {
+      const out = raw === 'true';
+      if (out !== last.current) {
+        last.current = out;
+        commitFn(out);
       }
     },
     [commitFn]
   );
 
   return {
-    checked: value,
-    setChecked: setValue,
-    onChange: onCheckbox((v) => {
+    value, // 'true' | 'false'
+    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const v = e.target.value;
       setValue(v);
-      commit(v);
-    }),
+      commitIfChanged(v); // <-- SOLO acá
+    },
+    onBlur: () => {
+      // no-op para evitar la doble llamada
+    },
   };
 }
 

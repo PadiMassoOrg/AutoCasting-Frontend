@@ -16,7 +16,8 @@
       "phoneNumber": "Número",
       "url": "URL",
       "headshot": "Primer Plano",
-      "fullbody": "Cuerpo Entero"
+      "fullbody": "Cuerpo Entero",
+      "dash": "--"
     }
   },
   "state": {
@@ -250,9 +251,9 @@
       "waist": "Cintura",
       "hip": "Caderas",
       "shirt": "Camisa",
-      "pant": "Pantalón",
+      "pants": "Pantalón",
       "dress": "Vestido",
-      "shoe": "Calzado",
+      "shoes": "Calzado",
       "tattoo": "Tatuajes",
       "passport": "Pasaporte",
       "drivingLicense": "Lic. de Conducir",

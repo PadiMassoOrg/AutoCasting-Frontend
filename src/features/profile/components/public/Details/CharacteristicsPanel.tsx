@@ -1,8 +1,8 @@
+import { Separator } from 'autocasting-ui-library-padimasso';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Characteristics } from '../../../types/profile.types';
-import { Separator } from 'autocasting-ui-library-padimasso';
 import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
+import type { Characteristics } from '../../../types/profile.types';
 
 export default function CharacteristicsPanel({ data }: { data: Characteristics }) {
   const { t } = useTranslation();
@@ -16,9 +16,9 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
     'waist',
     'hip',
     'shirt',
-    'pant',
+    'pants',
     'dress',
-    'shoe',
+    'shoes',
     'tattoo',
     'passport',
     'drivingLicense',
@@ -34,9 +34,9 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
     waist: 'waistCm',
     hip: 'hipCm',
     shirt: 'shirtSize',
-    pant: 'pantSize',
+    pants: 'pantSize',
     dress: 'dressSize',
-    shoe: 'shoeSize',
+    shoes: 'shoeSize',
     tattoo: 'tattoo',
     passport: 'passport',
     drivingLicense: 'drivingLicense',
