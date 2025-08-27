@@ -84,7 +84,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           id="heightCm"
           label={t('profile.characteristics.heightCm')}
           labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.stage_name')}
+          placeholder={t('general.placeholder.dash')}
           value={heightCm.value}
           onChange={heightCm.onChange}
           onBlur={heightCm.onBlur}
@@ -94,7 +94,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           id="weightKg"
           label={t('profile.characteristics.weightKg')}
           labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.stage_name')}
+          placeholder={t('general.placeholder.dash')}
           value={weightKg.value}
           onChange={weightKg.onChange}
           onBlur={weightKg.onBlur}
