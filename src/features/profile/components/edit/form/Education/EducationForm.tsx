@@ -1,22 +1,26 @@
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../../context/ModalContext';
-import { useCreditAutosave, useCreditDeleteAutosave, useEducationPatchAutosave } from '../../../../hooks/autosaves';
-import type { Credit } from '../../../../types/profile.types';
-import CreditDeleteModal from './CreditDeleteModal';
-import CreditModal from './CreditModal';
-import GroupedCredits from './GroupedCredits';
+import {
+  useEducationAutosave,
+  useEducationDeleteAutosave,
+  useEducationPatchAutosave,
+} from '../../../../hooks/autosaves';
+import type { Education } from '../../../../types/profile.types';
+import EducationDeleteModal from './EducationDeleteModal';
+import EducationModal from './EducationModal';
 
-export default function CreditsForm({ data }: { data: Credit[] }) {
+export default function EducationForm({ data }: { data: Education[] }) {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
-  const createMut = useCreditAutosave();
+
+  const createMut = useEducationAutosave();
   const patchMut = useEducationPatchAutosave();
-  const deleteMut = useCreditDeleteAutosave();
+  const deleteMut = useEducationDeleteAutosave();
 
   const openCreateModal = () => {
     openModal(
-      <CreditModal
+      <EducationModal
         mode="create"
         onCancel={closeModal}
         onSave={(draft) => {
@@ -24,39 +28,39 @@ export default function CreditsForm({ data }: { data: Credit[] }) {
           closeModal();
         }}
       />,
-      t('profile.credits.add_new'),
+      t('profile.education.add_new'),
       'lg'
     );
   };
 
-  const openEditModal = (credit: Credit) => {
+  const openEditModal = (education: Education) => {
     openModal(
-      <CreditModal
+      <EducationModal
         mode="edit"
-        initial={credit}
+        initial={education}
         onCancel={closeModal}
         onSave={(draft) => {
           patchMut.immediate(draft);
           closeModal();
         }}
       />,
-      t('profile.credits.edit'),
+      t('profile.education.edit'),
       'lg'
     );
   };
 
-  const openDeleteModal = (credit: Credit) => {
+  const openDeleteModal = (education: Education) => {
     openModal(
-      <CreditDeleteModal
-        credit={credit}
+      <EducationDeleteModal
+        education={education}
         onCancel={closeModal}
         onConfirm={() => {
-          deleteMut.immediate({ id: credit.id });
+          deleteMut.immediate({ id: education.id });
           closeModal();
         }}
         t={t}
       />,
-      t('profile.credits.delete'),
+      t('profile.education.delete'),
       'sm'
     );
   };
@@ -69,7 +73,7 @@ export default function CreditsForm({ data }: { data: Credit[] }) {
         <span className="text-base font-medium">{t('profile.credits.add_new')}</span>
       </Button>
       <Separator className="opacity-20 my-2" />
-      {data?.length > 0 && <GroupedCredits data={data} onEdit={openEditModal} onDelete={openDeleteModal} />}
+      {data?.length > 0 && <GroupedEducation data={data} onEdit={openEditModal} onDelete={openDeleteModal} />}
     </div>
   );
 }

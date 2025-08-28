@@ -40,4 +40,6 @@ export const API_ROUTES = {
   SKILLS: '/profile/skills',
   // Credits
   CREDIT: '/credit',
+  // Education
+  EDUCATION: '/education',
 };

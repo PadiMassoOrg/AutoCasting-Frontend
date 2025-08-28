@@ -5,6 +5,7 @@ import type { CreditRequest } from '../types/requests';
 import { PROFILE_CACHE_KEY } from './profileService';
 
 export const PROFILE_CREDITS_CACHE_KEY = [PROFILE_CACHE_KEY, 'credits'];
+
 // POST
 export const createNewCredit = async (payload: CreditRequest): Promise<Credit> => {
   const response = await api.post(API_ROUTES.CREDIT, payload);

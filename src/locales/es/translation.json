@@ -289,6 +289,19 @@
       "role": "Rol",
       "role_placeholder": "Hamlet, Protagónico, Grupal...",
       "year": "Año"
+    },
+    "education": {
+      "education": "Formación",
+      "add_new": "Agregar nueva formación",
+      "edit": "Editar formación",
+      "delete": "Borrar formación",
+      "delete_confirm": "Estás por borrar",
+      "institution": "Institución",
+      "institution_placeholder": "Nombre de la institución",
+      "courseName": "Nombre del curso / Título obtenido",
+      "courseName_placeholder": "Ej. Lic. en Actuación",
+      "graduationYear": "Fecha de finalización",
+      "graduationYear_placeholder": "--"
     }
   }
 }

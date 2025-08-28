@@ -1,6 +1,12 @@
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 import { createNewCredit, deleteCredit, patchCredit, PROFILE_CREDITS_CACHE_KEY } from '../services/creditsService';
 import {
+  createNewEducation,
+  deleteEducation,
+  patchEducation,
+  PROFILE_EDUCATION_CACHE_KEY,
+} from '../services/educationService';
+import {
   patchBasicInfo,
   patchCharacteristics,
   patchContact,
@@ -12,6 +18,7 @@ import {
 import type {
   Characteristics,
   Credit,
+  Education,
   Media,
   ProfileBasicInfo,
   ProfileContact,
@@ -23,6 +30,7 @@ import type {
   CharacteristicsPatchRequest,
   ContactPatchRequest,
   CreditRequest,
+  EducationRequest,
   MediaPatchRequest,
   SkillsPatchRequest,
   SocialMediaPatchRequest,
@@ -94,7 +102,7 @@ export function useSkillsAutosave() {
     invalidateOnSuccess: 'active',
   });
 }
-// CREATE
+
 export function useCreditAutosave() {
   return useSectionAutosave<CreditRequest, Credit>({
     mutationFn: createNewCredit,
@@ -115,7 +123,6 @@ export function useCreditAutosave() {
   });
 }
 
-// PATCH
 export function useCreditPatchAutosave() {
   return useSectionAutosave<CreditRequest, Credit>({
     mutationFn: patchCredit,
@@ -130,7 +137,6 @@ export function useCreditPatchAutosave() {
   });
 }
 
-// DELETE
 export function useCreditDeleteAutosave() {
   return useSectionAutosave<{ id: string }, { id: string }>({
     mutationFn: async ({ id }) => {
@@ -144,6 +150,56 @@ export function useCreditDeleteAutosave() {
       const remove = (arr: Credit[]) => arr.filter((c) => c.id !== id);
       if (Array.isArray(prev)) return remove(prev);
       return { ...prev, credits: remove(prev?.credits ?? []) };
+    },
+  });
+}
+
+export function useEducationAutosave() {
+  return useSectionAutosave<EducationRequest, Education>({
+    mutationFn: createNewEducation,
+    delay: 200,
+    cacheKeys: [PROFILE_CACHE_KEY, PROFILE_EDUCATION_CACHE_KEY], // 👈 ambas
+    invalidateOnSuccess: false, // ya hacemos setQueryData
+    onSuccessUpdate: (prev, created) => {
+      if (Array.isArray(prev)) {
+        return [...prev, created];
+      }
+      // prev = ProfileResponse
+      return {
+        ...prev,
+        education: [...(prev?.education ?? []), created],
+      };
+    },
+  });
+}
+
+export function useEducationPatchAutosave() {
+  return useSectionAutosave<CreditRequest, Education>({
+    mutationFn: patchEducation,
+    delay: 200,
+    cacheKeys: [PROFILE_CACHE_KEY, PROFILE_EDUCATION_CACHE_KEY],
+    invalidateOnSuccess: false,
+    onSuccessUpdate: (prev, updated) => {
+      const replace = (arr: Education[]) => arr.map((c) => (c.id === updated.id ? updated : c));
+      if (Array.isArray(prev)) return replace(prev);
+      return { ...prev, education: replace(prev?.education ?? []) };
+    },
+  });
+}
+
+export function useEducationDeleteAutosave() {
+  return useSectionAutosave<{ id: string }, { id: string }>({
+    mutationFn: async ({ id }) => {
+      await deleteEducation(id);
+      return { id };
+    },
+    delay: 0,
+    cacheKeys: [PROFILE_CACHE_KEY, PROFILE_EDUCATION_CACHE_KEY],
+    invalidateOnSuccess: false,
+    onSuccessUpdate: (prev, { id }) => {
+      const remove = (arr: Education[]) => arr.filter((c) => c.id !== id);
+      if (Array.isArray(prev)) return remove(prev);
+      return { ...prev, education: remove(prev?.education ?? []) };
     },
   });
 }
