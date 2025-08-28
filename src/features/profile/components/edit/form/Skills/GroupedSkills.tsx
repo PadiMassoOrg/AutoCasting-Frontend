@@ -11,23 +11,25 @@ const ORDER_KEYS = [
   'sitemetadata.category.accent',
 ] as const;
 
-const FALLBACK_CAT = 'sitemetadata.category.other';
-
 function GroupedSkills({ skills }: { skills: SiteMetadataObject[] }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState<Record<string, boolean>>({});
 
+  const allCategorized = useMemo(() => skills.length > 0 && skills.every((s: any) => !!s.categoryStringCode), [skills]);
+
   const groups = useMemo(() => {
     const g: Record<string, SiteMetadataObject[]> = {};
+    if (!allCategorized) return g;
+
     for (const s of skills) {
-      const cat = (s as SiteMetadataObject).categoryStringCode ?? FALLBACK_CAT;
+      const cat = (s as any).categoryStringCode as string;
       (g[cat] ??= []).push(s);
     }
     for (const k of Object.keys(g)) {
       g[k].sort((a, b) => t(a.stringCode).localeCompare(t(b.stringCode)));
     }
     return g;
-  }, [skills, t]);
+  }, [skills, allCategorized, t]);
 
   const categories = useMemo(() => {
     const cats = Object.keys(groups);
@@ -41,6 +43,8 @@ function GroupedSkills({ skills }: { skills: SiteMetadataObject[] }) {
     });
   }, [groups, t]);
 
+  if (!skills?.length) return null;
+  if (!allCategorized) return null;
   if (categories.length === 0) return null;
 
   return (
