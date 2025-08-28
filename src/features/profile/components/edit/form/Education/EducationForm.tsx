@@ -6,6 +6,8 @@ import {
   useEducationDeleteAutosave,
   useEducationPatchAutosave,
 } from '../../../../hooks/autosaves';
+import deleteIcon from '../../../../icons/delete.svg';
+import editIcon from '../../../../icons/edit.svg';
 import type { Education } from '../../../../types/profile.types';
 import EducationDeleteModal from './EducationDeleteModal';
 import EducationModal from './EducationModal';
@@ -67,13 +69,48 @@ export default function EducationForm({ data }: { data: Education[] }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h3 className="font-bold text-base">{t('profile.credits.credits')}</h3>
+      <h3 className="font-bold text-base">{t('profile.education.education')}</h3>
       <Button onClick={openCreateModal} className="flex items-center justify-center gap-2">
         <span className="text-3xl mb-1 font-extralight">+</span>
-        <span className="text-base font-medium">{t('profile.credits.add_new')}</span>
+        <span className="text-base font-medium">{t('profile.education.add_new')}</span>
       </Button>
+
       <Separator className="opacity-20 my-2" />
-      {data?.length > 0 && <GroupedEducation data={data} onEdit={openEditModal} onDelete={openDeleteModal} />}
+
+      {data?.length > 0 && (
+        <article className="flex flex-col gap-4">
+          {data.map((e) => (
+            <article key={e.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3">
+              <div className="flex flex-row justify-between">
+                <div className="grow">
+                  <div className="flex items-center justify-between gap-4">
+                    <h4 className="font-semibold text-base leading-snug">{e.courseName}</h4>
+                    <span className="shrink-0 rounded-lg border border-[var(--color-secondary-outline)] px-3 py-1 text-base font-light tracking-wide">
+                      {e.graduationYear}
+                    </span>
+                  </div>
+                  <div className="mt-3 text-base font-light text-[var(--color-secondary-grey-fonts)]">
+                    {e.institution}
+                  </div>
+                </div>
+                <div className="flex flex-col justify-around items-center ml-3 pl-3 border-l border-[var(--color-secondary-outline)]">
+                  <button
+                    type="button"
+                    onClick={() => openDeleteModal(e)}
+                    className="cursor-pointer"
+                    aria-label="Delete"
+                  >
+                    <img src={deleteIcon} alt="" className="w-5" />
+                  </button>
+                  <button type="button" onClick={() => openEditModal(e)} className="cursor-pointer" aria-label="Edit">
+                    <img src={editIcon} alt="" className="w-5" />
+                  </button>
+                </div>
+              </div>
+            </article>
+          ))}
+        </article>
+      )}
     </div>
   );
 }
