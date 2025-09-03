@@ -29,7 +29,7 @@ export default function ForgottenPasswordForm() {
         closeModal();
       },
       onError: (err: any) => {
-        const message = err?.response?.data?.message || t('general.state.server_err');
+        const message = err?.response?.data?.message || t('state.server_err');
         setServerError(message);
       },
     });

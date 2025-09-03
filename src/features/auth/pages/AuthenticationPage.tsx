@@ -1,12 +1,12 @@
-import { Trans, useTranslation } from 'react-i18next';
-import LoginForm from '../components/LoginForm';
 import { GoogleButton } from 'autocasting-ui-library-padimasso';
-import Resaltador from '../../../shared/lib/resaltador.svg';
 import { useState } from 'react';
-import { RegisterForm } from '../components';
-import { useGoogleLoginMutation } from '../hooks/useGoogleLoginMutation';
-import { LinkLogo } from '../../../shared/components/LinkLogo';
+import { Trans, useTranslation } from 'react-i18next';
 import AuthenticationLayout from '../../../layouts/AuthenticationLayout';
+import { LinkLogo } from '../../../shared/components/LinkLogo';
+import Resaltador from '../../../shared/lib/resaltador.svg';
+import { RegisterForm } from '../components';
+import LoginForm from '../components/LoginForm';
+import { useGoogleLoginMutation } from '../hooks/useGoogleLoginMutation';
 
 export default function AuthenticationPage() {
   const [login, setLogin] = useState(true);

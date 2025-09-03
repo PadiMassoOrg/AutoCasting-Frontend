@@ -20,10 +20,8 @@ const MediaSection = ({ data }: { data: Media }) => {
 
   return (
     <article className="w-full flex flex-col gap-2">
-      {/* Siempre mostramos un carrusel: si no hay imágenes reales, se verán los placeholders */}
       <ImageCarousel images={hasImages ? images : null} />
 
-      {/* Separadores según reglas previas */}
       {!hasVideos && <Separator className="opacity-25 my-12" />}
 
       {hasVideos && (

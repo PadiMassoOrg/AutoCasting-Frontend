@@ -1,16 +1,18 @@
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getRegisterSchema, type RegisterFormValues } from '../schemas/authSchema';
+import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useRegisterMutation } from '../hooks/useRegisterMutation';
-import { FormInputField, Button, Label } from 'autocasting-ui-library-padimasso';
-import { useState } from 'react';
+import { getRegisterSchema, type RegisterFormValues } from '../schemas/authSchema';
 
 export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
-  const [serverError, setServerError] = useState<string | null>(null);
-
   const { t } = useTranslation();
   const registerMutation = useRegisterMutation();
+
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  const ROLE_ACTOR = 'ACTOR';
 
   const {
     register,
@@ -19,14 +21,12 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(getRegisterSchema()),
     defaultValues: {
-      role: 'ACTOR',
+      role: ROLE_ACTOR,
     },
   });
 
   const onSubmit = (data: RegisterFormValues) => {
     setServerError(null);
-
-    // TODO - Manejo de ACTOR o CASTINERA
 
     registerMutation.mutate(data, {
       onError: (err: any) => {
@@ -66,9 +66,9 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
         {registerMutation.isPending ? t('state.loading') : t('auth.register.submit')}
       </Button>
       {serverError && (
-        <Label variant="error" className="pl-1">
-          {serverError}
-        </Label>
+        <div className="text-center">
+          <Label variant="error">{serverError}</Label>
+        </div>
       )}
       <div className="flex text-sm gap-2 mt-2">
         <h2>{t('auth.page.login_acc')}</h2>
