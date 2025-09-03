@@ -87,11 +87,8 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
     previewUrl,
     onSelect,
     onClear,
-
-    openOnClick = true,
     onEditClick,
     onDeleteClick,
-
     className,
     classes,
     style,
@@ -99,21 +96,17 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
     roundedClassName = DEFAULT_ROUNDED,
     dashed = true,
     objectFit = 'cover',
-
     disabled = false,
     multiple = false,
     accept = 'image/*',
     capture,
     maxSizeMB,
     onError,
-
     renderEmpty,
     renderPreview,
-
     bustKey,
     busy = false,
     busyText = 'Loading...',
-
     ariaLabel = 'Upload file',
   },
   ref
