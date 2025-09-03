@@ -36,7 +36,8 @@ export type BasePublicProfileResponse = {
 export type BaseProfileBasicInfo = {
   id: string;
   stageName: string;
-  gender: string;
+  gender: SiteMetadataObject;
+  genderId: string;
   birthDate: string;
   professions: SiteMetadataObject[];
   professionIds: string[];

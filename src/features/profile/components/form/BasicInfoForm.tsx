@@ -1,8 +1,15 @@
 import { Button, FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { onSelect, useCommittedText, useIsoDateField, useToggleSet } from '../../../../shared/utils/formUtils';
+import {
+  onSelect,
+  useCommittedText,
+  useCommittedUuid,
+  useIsoDateField,
+  useToggleSet,
+} from '../../../../shared/utils/formUtils';
 import { capitalize } from '../../../../shared/utils/textUtils';
+import { useCachedSiteMetadataOption } from '../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 import { useBasicInfoAutosave } from '../../hooks/autosaves';
 import type { ProfileBasicInfo } from '../../types/profile.types';
@@ -15,6 +22,7 @@ export default function BasicInfoForm({
   professionsMeta: SiteMetadataObject[];
 }) {
   const { t, i18n } = useTranslation();
+  const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
   const basicInfoAutosave = useBasicInfoAutosave();
 
   const stageName = useCommittedText(data.stageName ?? '', (v) => basicInfoAutosave.immediate({ stageName: v }), {
@@ -22,11 +30,11 @@ export default function BasicInfoForm({
   });
 
   // Género
-  const [gender, setGender] = useState(data.gender ?? '');
-  const handleGenderChange = onSelect((v) => {
-    setGender(v);
-    basicInfoAutosave.immediate({ gender: v });
-  });
+  const gender = useCommittedUuid(
+    data.gender?.id ?? null,
+    (id) => basicInfoAutosave.immediate({ genderId: id ?? undefined }),
+    { allowNull: true }
+  );
 
   // Fecha (usa el hook)
   const birth = useIsoDateField(data.birthDate ?? '', (iso) => basicInfoAutosave.immediate({ birthDate: iso }), 600);
@@ -72,17 +80,14 @@ export default function BasicInfoForm({
         onKeyDown={stageName.onKeyDown}
       />
       <FormSelectField
-        id="gender"
+        id="genderId"
         label={t('profile.basic_info.gender')}
         labelClassName="font-semibold text-base"
-        value={gender}
-        onChange={handleGenderChange}
         placeholder={t('general.placeholder.select')}
-        options={[
-          { value: 'gender.female', label: t('sitemetadata.gender.female') },
-          { value: 'gender.male', label: t('sitemetadata.gender.male') },
-          { value: 'gender.other', label: t('sitemetadata.gender.other') },
-        ]}
+        value={gender.value}
+        onChange={gender.onChange}
+        onBlur={gender.onBlur}
+        options={genderOptions}
       />
       <div className="flex flex-col gap-2">
         <Label className="text-base font-semibold">{t('profile.basic_info.birth_date')}</Label>

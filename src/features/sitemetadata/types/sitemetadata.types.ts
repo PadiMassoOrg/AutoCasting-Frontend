@@ -8,6 +8,7 @@ export type SiteMetadataResponse = {
   version: string;
   skills: SiteMetadataObject[];
   professions: SiteMetadataObject[];
+  genderOptions: SiteMetadataObject[];
   colorOptions: SiteMetadataObject[];
   dietOptions: SiteMetadataObject[];
   productionTypeOptions: SiteMetadataObject[];
