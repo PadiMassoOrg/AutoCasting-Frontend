@@ -1,10 +1,9 @@
-// features/profile-media/hooks/useProfileMediaPatch.ts
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { cleanupOldSlotFiles, uploadPublic } from '../lib/profile-media';
-import type { MediaPatchRequest } from '../../../profile/types/requests';
 import { patchMedia, PROFILE_CACHE_KEY } from '../../../profile/services/profileService';
+import { cleanupOldSlotFiles, uploadPublic } from '../lib/profile-media';
 
 type Slot = 'headshot' | 'fullbody' | 'other';
+type MutationArgs = { file: File; slot: 'headshot' | 'fullbody' } | { file: File; slot: 'other'; index: number };
 
 function getExt(name: string, type?: string) {
   const byName = name?.split('.').pop();
@@ -24,38 +23,30 @@ export function useProfileMediaPatch(profileId: string) {
   const qc = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ file, slot }: { file: File; slot: Slot }) => {
-      // Validaciones mínimas
+    mutationFn: async (args: MutationArgs) => {
+      const { file, slot } = args;
       if (!file.type.startsWith('image/')) throw new Error('Formato no soportado');
       if (file.size > 8 * 1024 * 1024) throw new Error('Máximo 8MB');
 
-      // Key en Storage
       const key = buildStorageKey(profileId, slot, file);
-
-      // Subida pública (ajusta tu uploadPublic para aceptar key directo + { upsert })
       const { publicUrl } = await uploadPublic(key, file);
 
-      // Armar PATCH para tu backend
-      const payload: MediaPatchRequest = {};
+      // Request payload **granular**
+      const payload: any = {};
       if (slot === 'headshot') payload.headshotImageUrl = publicUrl;
       if (slot === 'fullbody') payload.fullBodyImageUrl = publicUrl;
       if (slot === 'other') {
-        // ⚠️ Tu endpoint reemplaza el Set completo. Mergeá con lo que hay en caché:
-        const prev = qc.getQueryData(PROFILE_CACHE_KEY) as { media?: { otherPicturesUrl?: string[] } } | undefined;
-        const merged = Array.from(new Set([...(prev?.media?.otherPicturesUrl ?? []), publicUrl]));
-        payload.otherPicturesUrl = merged;
+        const { index } = args as Extract<MutationArgs, { slot: 'other' }>;
+        payload.otherPictures = [{ index, url: publicUrl }];
       }
 
-      // PATCH
       const updatedMedia = await patchMedia(payload);
       if (slot !== 'other') {
         await cleanupOldSlotFiles(profileId, slot, key);
       }
       return updatedMedia;
     },
-
     onSuccess: (updatedMedia) => {
-      // Refrescar perfil en caché
       qc.setQueryData(PROFILE_CACHE_KEY, (prev: any) => (prev ? { ...prev, media: updatedMedia } : prev));
     },
   });

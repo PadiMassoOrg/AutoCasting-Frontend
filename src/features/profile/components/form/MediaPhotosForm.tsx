@@ -5,30 +5,48 @@ import { useProfileMediaPatch } from '../../../supabase/media/hooks/useProfileMe
 import type { Media } from '../../types/profile.types';
 import UploadTile from '../UploadTile/UploadTile';
 
-type Slot = 'headshot' | 'fullbody' | 'other';
 const OTHER_SLOTS = 6;
+
+// File -> dataURL para un preview que no “explota”
+const fileToDataUrl = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+// Añade bust sólo si hay URL
+const withBust = (url?: string, bust?: number) => {
+  if (!url) return undefined;
+  if (!bust) return url;
+  return url.includes('?') ? `${url}&b=${bust}` : `${url}?b=${bust}`;
+};
 
 export default function MediaForm({ media, supabaseId }: { media: Media; supabaseId: string }) {
   const { t } = useTranslation();
   const { mutate: upload } = useProfileMediaPatch(supabaseId);
-  const [preview, setPreview] = useState<Partial<Record<Slot, string>>>({});
-  const [pending, setPending] = useState<Set<Slot>>(new Set());
 
-  // Cache-busting por slot (incrementa para forzar <img> a refrescar)
-  const [bust, setBust] = useState<Partial<Record<Slot, number>>>({});
+  console.log(media);
 
-  // ---- OTRAS FOTOS: estados por índice 0..5 (no toca tu UploadTile) ----
+  // Headshot/Fullbody
+  const [preview, setPreview] = useState<Partial<Record<'headshot' | 'fullbody', string>>>({});
+  const [pending, setPending] = useState<Set<'headshot' | 'fullbody'>>(new Set());
+  const [bust, setBust] = useState<Partial<Record<'headshot' | 'fullbody', number>>>({});
+
+  // Otras fotos (0..5), estados por índice
   const [otherPreview, setOtherPreview] = useState<Record<number, string | undefined>>({});
   const [otherPending, setOtherPending] = useState<Set<number>>(new Set());
   const [otherBust, setOtherBust] = useState<Record<number, number | undefined>>({});
+
   const others = media.otherPicturesUrl ?? [];
 
-  const pick = (slot: Slot) => (files: File[] | File) => {
+  // --- HEADSHOT / FULLBODY ---
+  const pick = (slot: 'headshot' | 'fullbody') => async (files: File[] | File) => {
     const file = Array.isArray(files) ? files[0] : files;
     if (!file) return;
 
-    const localUrl = URL.createObjectURL(file);
-
+    const localUrl = await fileToDataUrl(file);
     setPreview((prev) => ({ ...prev, [slot]: localUrl }));
     setPending((prev) => new Set(prev).add(slot));
 
@@ -36,12 +54,10 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
       { file, slot },
       {
         onSuccess: () => {
-          // incrementa bustKey para evitar servir caché de current.jpg
           setBust((prev) => ({ ...prev, [slot]: (prev[slot] ?? 0) + 1 }));
         },
         onSettled: () => {
-          URL.revokeObjectURL(localUrl);
-          setPreview((prev) => ({ ...prev, [slot]: undefined }));
+          // quitamos sólo el loading, el preview queda hasta que media traiga la URL remota
           setPending((prev) => {
             const next = new Set(prev);
             next.delete(slot);
@@ -52,29 +68,28 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
     );
   };
 
-  const pickOther = (index: number) => (files: File[] | File) => {
+  // --- OTHER (por índice) ---
+  const pickOther = (index: number) => async (files: File[] | File) => {
     const file = Array.isArray(files) ? files[0] : files;
     if (!file) return;
 
-    const localUrl = URL.createObjectURL(file);
+    const localUrl = await fileToDataUrl(file);
     setOtherPreview((p) => ({ ...p, [index]: localUrl }));
     setOtherPending((p) => new Set(p).add(index));
 
     upload(
-      { file, slot: 'other' },
+      { file, slot: 'other', index },
       {
         onSuccess: () => {
-          // fuerza refresco del <img> por si el CDN/navegador cachea
           setOtherBust((b) => ({ ...b, [index]: (b[index] ?? 0) + 1 }));
         },
         onSettled: () => {
-          URL.revokeObjectURL(localUrl);
-          setOtherPreview((p) => ({ ...p, [index]: undefined }));
           setOtherPending((p) => {
             const n = new Set(p);
             n.delete(index);
             return n;
           });
+          // mantenemos el preview; cuando el cache se refresque, value tomará la URL remota
         },
       }
     );
@@ -87,26 +102,29 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
         <div className="flex flex-row items-center gap-2">
           <UploadTile
             label={t('general.placeholder.headshot')}
+            // Mientras está pending, NO pasar value (evita undefined?b=1 y prioriza preview)
+            value={pending.has('headshot') ? undefined : withBust(media.headshotImageUrl, bust.headshot)}
             previewUrl={preview.headshot ?? null}
-            value={media.headshotImageUrl ?? undefined}
             onSelect={pick('headshot')}
             disabled={pending.has('headshot')}
             busy={pending.has('headshot')}
             busyText={t('state.loading')}
-            bustKey={bust.headshot}
+            // Si tu UploadTile agrega bust por su cuenta, puedes quitar bustKey para preview
+            bustKey={undefined}
             accept="image/*"
             maxSizeMB={8}
             objectFit="cover"
           />
+
           <UploadTile
             label={t('general.placeholder.fullbody')}
+            value={pending.has('fullbody') ? undefined : withBust(media.fullBodyImageUrl, bust.fullbody)}
             previewUrl={preview.fullbody ?? null}
-            value={media.fullBodyImageUrl ?? undefined}
             onSelect={pick('fullbody')}
             disabled={pending.has('fullbody')}
             busy={pending.has('fullbody')}
             busyText={t('state.loading')}
-            bustKey={bust.fullbody}
+            bustKey={undefined}
             accept="image/*"
             maxSizeMB={8}
             objectFit="cover"
@@ -122,12 +140,13 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             <UploadTile
               key={i}
               label={`${t('profile.media.other')} ${i + 1}`}
-              // si existe en backend, mostrarlo; si estoy subiendo, mostrar preview local
-              value={others[i] ?? undefined}
+              // Independencia por slot: si este está pending, mostramos sólo preview
+              value={otherPending.has(i) ? undefined : withBust(others[i], otherBust[i])}
               previewUrl={otherPreview[i] ?? null}
               busy={otherPending.has(i)}
               busyText={t('state.loading')}
-              bustKey={otherBust[i]}
+              // Evitar que el componente aplique bust sobre preview
+              bustKey={undefined}
               onSelect={pickOther(i)}
               accept="image/*"
               maxSizeMB={8}
