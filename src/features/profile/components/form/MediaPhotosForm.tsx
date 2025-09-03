@@ -1,8 +1,10 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { Label } from 'autocasting-ui-library-padimasso';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useProfileMediaDelete } from '../../../supabase/media/hooks/useProfileMediaDelete';
 import { useProfileMediaPatch } from '../../../supabase/media/hooks/useProfileMediaPatch';
+import { PROFILE_CACHE_KEY } from '../../services/profileService';
 import type { Media } from '../../types/profile.types';
 import UploadTile from '../UploadTile/UploadTile';
 
@@ -23,7 +25,14 @@ const withBust = (url: string | null | undefined, bust?: number): string | undef
 };
 
 export default function MediaForm({ media, supabaseId }: { media: Media; supabaseId: string }) {
+  const qc = useQueryClient();
   const { t } = useTranslation();
+
+  // 🔴 Estado “vivo” del media en este form: se actualiza en onSuccess de upload/delete
+  const [liveMedia, setLiveMedia] = useState<Media>(media);
+  // Si el parent cambia el media (ej. por un refetch), sincronizamos:
+  useEffect(() => setLiveMedia(media), [media]);
+
   const { mutate: upload } = useProfileMediaPatch(supabaseId);
   const { mutateAsync: removeMedia } = useProfileMediaDelete();
 
@@ -40,7 +49,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
   const [removedFullbody, setRemovedFullbody] = useState(false);
   const [removedOthers, setRemovedOthers] = useState<Set<number>>(new Set());
 
-  const others = media.otherPicturesUrl ?? [];
+  const others = liveMedia.otherPicturesUrl ?? [];
 
   // subir/editar
   const pick = (slot: 'headshot' | 'fullbody') => async (files: File[] | File) => {
@@ -53,7 +62,18 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
     upload(
       { file, slot },
       {
-        onSuccess: () => setBust((prev) => ({ ...prev, [slot]: (prev[slot] ?? 0) + 1 })),
+        onSuccess: (updated) => {
+          // 🔄 actualiza UI con lo que devolvió el backend
+          setLiveMedia(updated);
+          // ya tenemos URL remota -> limpiamos preview local
+          setPreview((p) => ({ ...p, [slot]: undefined }));
+          setBust((prev) => ({ ...prev, [slot]: (prev[slot] ?? 0) + 1 }));
+          // opcional: al subir, asegúrate de que los "removed" estén apagados
+          if (slot === 'headshot') setRemovedHeadshot(false);
+          if (slot === 'fullbody') setRemovedFullbody(false);
+          // también empujamos a la cache por si otro componente escucha esa query
+          qc.setQueryData(PROFILE_CACHE_KEY, (prev: any) => (prev ? { ...prev, media: updated } : prev));
+        },
         onSettled: () =>
           setPending((prev) => {
             const n = new Set(prev);
@@ -74,7 +94,20 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
     upload(
       { file, slot: 'other', index },
       {
-        onSuccess: () => setOtherBust((b) => ({ ...b, [index]: (b[index] ?? 0) + 1 })),
+        onSuccess: (updated) => {
+          setLiveMedia(updated);
+          // limpiamos solo el preview del índice subido
+          setOtherPreview((p) => ({ ...p, [index]: undefined }));
+          setOtherBust((b) => ({ ...b, [index]: (b[index] ?? 0) + 1 }));
+          // si lo habíamos marcado como "removed", lo sacamos
+          setRemovedOthers((s) => {
+            if (!s.has(index)) return s;
+            const n = new Set(s);
+            n.delete(index);
+            return n;
+          });
+          qc.setQueryData(PROFILE_CACHE_KEY, (prev: any) => (prev ? { ...prev, media: updated } : prev));
+        },
         onSettled: () =>
           setOtherPending((p) => {
             const n = new Set(p);
@@ -85,36 +118,50 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
     );
   };
 
-  // borrar (usa hook) — le pasamos la URL explícita
+  // borrar (usa hook) — NO corta si falta URL
   const onDeleteHeadshot = async () => {
-    const url = media.headshotImageUrl ?? undefined;
-    if (!url) return;
+    const url = liveMedia.headshotImageUrl ?? undefined;
     setRemovedHeadshot(true);
     try {
-      await removeMedia({ slot: 'headshot', url });
+      const updated = await removeMedia({ slot: 'headshot', url });
+      // ✅ refresca UI
+      setLiveMedia(updated);
+      setPreview((p) => ({ ...p, headshot: undefined })); // quita preview local si existía
+      setRemovedHeadshot(false); // ya no hace falta ocultar forzado
+      qc.setQueryData(PROFILE_CACHE_KEY, (prev: any) => (prev ? { ...prev, media: updated } : prev));
     } catch {
       setRemovedHeadshot(false);
     }
   };
 
   const onDeleteFullbody = async () => {
-    const url = media.fullBodyImageUrl ?? undefined;
-    if (!url) return;
+    const url = liveMedia.fullBodyImageUrl ?? undefined;
     setRemovedFullbody(true);
     try {
-      await removeMedia({ slot: 'fullbody', url });
+      const updated = await removeMedia({ slot: 'fullbody', url });
+      setLiveMedia(updated);
+      setPreview((p) => ({ ...p, fullbody: undefined }));
+      setRemovedFullbody(false);
+      qc.setQueryData(PROFILE_CACHE_KEY, (prev: any) => (prev ? { ...prev, media: updated } : prev));
     } catch {
       setRemovedFullbody(false);
     }
   };
 
   const onDeleteOther = async (index: number) => {
-    const url = (media.otherPicturesUrl ?? [])[index] ?? undefined;
-    if (!url) return;
+    const url = (liveMedia.otherPicturesUrl ?? [])[index] ?? undefined;
     setRemovedOthers((s) => new Set(s).add(index));
     setOtherPending((s) => new Set(s).add(index));
     try {
-      await removeMedia({ slot: 'other', index, url });
+      const updated = await removeMedia({ slot: 'other', index, url });
+      setLiveMedia(updated);
+      setOtherPreview((p) => ({ ...p, [index]: undefined }));
+      setRemovedOthers((s) => {
+        const n = new Set(s);
+        n.delete(index);
+        return n;
+      });
+      qc.setQueryData(PROFILE_CACHE_KEY, (prev: any) => (prev ? { ...prev, media: updated } : prev));
     } finally {
       setOtherPending((s) => {
         const n = new Set(s);
@@ -124,10 +171,9 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
     }
   };
 
-  // ----- HAS IMAGE? -> decide openOnClick dinámico -----
-  const headshotHasImage = (!removedHeadshot && !!media.headshotImageUrl) || !!preview.headshot;
-  const fullbodyHasImage = (!removedFullbody && !!media.fullBodyImageUrl) || !!preview.fullbody;
-
+  // ----- HAS IMAGE? -> decide openOnClick dinámico (usar liveMedia) -----
+  const headshotHasImage = (!removedHeadshot && !!liveMedia.headshotImageUrl) || !!preview.headshot;
+  const fullbodyHasImage = (!removedFullbody && !!liveMedia.fullBodyImageUrl) || !!preview.fullbody;
   const otherHasImage = (i: number) =>
     (!removedOthers.has(i) && typeof others[i] === 'string' && (others[i] as string).trim().length > 0) ||
     !!otherPreview[i];
@@ -140,7 +186,9 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
           <UploadTile
             label={t('general.placeholder.headshot')}
             value={
-              removedHeadshot || pending.has('headshot') ? undefined : withBust(media.headshotImageUrl, bust.headshot)
+              removedHeadshot || pending.has('headshot')
+                ? undefined
+                : withBust(liveMedia.headshotImageUrl, bust.headshot)
             }
             previewUrl={preview.headshot ?? null}
             onSelect={pick('headshot')}
@@ -151,14 +199,16 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             accept="image/*"
             maxSizeMB={8}
             objectFit="cover"
-            openOnClick={!headshotHasImage} // ⬅️ click en tile solo si está vacío
+            openOnClick={!headshotHasImage}
             onDeleteClick={onDeleteHeadshot}
           />
 
           <UploadTile
             label={t('general.placeholder.fullbody')}
             value={
-              removedFullbody || pending.has('fullbody') ? undefined : withBust(media.fullBodyImageUrl, bust.fullbody)
+              removedFullbody || pending.has('fullbody')
+                ? undefined
+                : withBust(liveMedia.fullBodyImageUrl, bust.fullbody)
             }
             previewUrl={preview.fullbody ?? null}
             onSelect={pick('fullbody')}
@@ -169,7 +219,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             accept="image/*"
             maxSizeMB={8}
             objectFit="cover"
-            openOnClick={!fullbodyHasImage} // ⬅️ click en tile solo si está vacío
+            openOnClick={!fullbodyHasImage}
             onDeleteClick={onDeleteFullbody}
           />
         </div>
@@ -197,7 +247,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
                 objectFit="cover"
                 aspectRatio="3 / 4"
                 multiple={false}
-                openOnClick={!hasImg} // ⬅️ click en tile solo si está vacío
+                openOnClick={!hasImg}
                 onDeleteClick={() => onDeleteOther(i)}
               />
             );

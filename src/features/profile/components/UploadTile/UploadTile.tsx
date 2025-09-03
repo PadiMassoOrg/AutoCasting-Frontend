@@ -21,17 +21,11 @@ export type UploadTileProps = {
   label?: React.ReactNode;
   value?: string | null;
   previewUrl?: string | null;
-
   onSelect: (files: File[] | File) => void;
   onClear?: () => void;
-
-  /** No abrir el file picker al clickear la imagen */
   openOnClick?: boolean;
-
-  /** Callbacks de acciones */
-  onEditClick?: () => void; // si no viene, usa inputRef.click()
-  onDeleteClick?: () => void; // si no viene, usa onClear()
-
+  onEditClick?: () => void;
+  onDeleteClick?: () => void;
   className?: string;
   classes?: UploadTileClasses;
   style?: React.CSSProperties;
@@ -39,24 +33,17 @@ export type UploadTileProps = {
   roundedClassName?: string;
   dashed?: boolean;
   objectFit?: 'cover' | 'contain';
-
   disabled?: boolean;
   multiple?: boolean;
   accept?: string;
   capture?: 'user' | 'environment';
   maxSizeMB?: number;
   onError?: (err: Error) => void;
-
   renderEmpty?: () => React.ReactNode;
   renderPreview?: (url: string) => React.ReactNode;
-
-  /** Cache-busting */
   bustKey?: string | number;
-
-  /** Overlay de carga */
   busy?: boolean;
   busyText?: React.ReactNode;
-
   ariaLabel?: string;
 };
 
@@ -113,7 +100,6 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
 ) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
-  const [hover, setHover] = useState(false);
 
   const openDialog = useCallback(() => {
     if (!disabled) inputRef.current?.click();
@@ -140,7 +126,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const fl = e.target.files;
     if (fl?.length) handleFiles(fl);
-    e.currentTarget.value = ''; // permite re-seleccionar el mismo archivo
+    e.currentTarget.value = '';
   };
 
   const onDrop = (e: DragEvent<HTMLDivElement>) => {
@@ -159,12 +145,9 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
 
   const baseBorder = dashed ? 'border-1 border-dashed' : 'border';
   const dragCls = dragOver ? 'bg-gray-100 border-gray-400' : 'bg-gray-50 border-gray-300';
-  const hoverCls = hover ? 'bg-gray-100' : '';
 
   const displayUrl = withBust(previewUrl ?? value ?? undefined, bustKey);
   const hasImage = Boolean(displayUrl);
-
-  // ✅ Solo es clickeable (y cursor-pointer) cuando NO hay imagen (primer upload).
   const rootClickable = !disabled && !busy && !hasImage;
 
   return (
@@ -195,8 +178,6 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
     >
       <div
         className={clsx(
@@ -204,12 +185,10 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
           baseBorder,
           roundedClassName,
           dragCls,
-          hoverCls,
           disabled && 'opacity-50 pointer-events-none',
           classes?.inner
         )}
       >
-        {/* Preview o estado vacío */}
         {displayUrl ? (
           renderPreview ? (
             renderPreview(displayUrl)
@@ -241,7 +220,6 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
         )}
       </div>
 
-      {/* Overlay busy */}
       {busy && (
         <div
           className={clsx('absolute inset-0 grid place-items-center', roundedClassName, classes?.overlay)}
@@ -257,11 +235,10 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
         </div>
       )}
 
-      {/* ✅ ActionBar SOLO cuando HAY imagen (placeholder no la muestra) */}
       {hasImage && !busy && (
         <div
           className={clsx(
-            'absolute left-0 right-0 bottom-0 px-5 py-3 bg-black/45',
+            'absolute left-0 right-0 bottom-0 px-5 py-3 bg-black/45 z-10 pointer-events-auto',
             roundedClassName,
             classes?.actionsBar
           )}
@@ -272,9 +249,10 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
             <button
               type="button"
               className={clsx(
-                'h-12 w-12 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center cursor-pointer',
+                'h-12 w-12 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center',
                 classes?.actionBtn
               )}
+              style={{ cursor: 'pointer' }} // 🔒 fuerza pointer
               aria-label="Editar imagen"
               onClick={(e) => {
                 e.stopPropagation();
@@ -287,9 +265,10 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
             <button
               type="button"
               className={clsx(
-                'h-12 w-12 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center cursor-pointer',
+                'h-12 w-12 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center',
                 classes?.actionBtn
               )}
+              style={{ cursor: 'pointer' }} // 🔒 fuerza pointer
               aria-label="Eliminar imagen"
               onClick={(e) => {
                 e.stopPropagation();
@@ -303,7 +282,6 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
         </div>
       )}
 
-      {/* Input real */}
       <input
         ref={inputRef}
         className={clsx('hidden', classes?.input)}

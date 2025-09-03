@@ -8,12 +8,6 @@ type DeleteArgs =
   | { slot: 'fullbody'; url?: string | null }
   | { slot: 'other'; index: number; url?: string | null };
 
-/**
- * Recibe la URL actual desde el caller (no usa cache para leerla).
- * 1) Si hay URL, borra en Supabase (tolerante a ?query).
- * 2) PATCH con present & null alineado a JsonNullable en backend.
- * 3) Actualiza la cache del perfil con la respuesta del PATCH.
- */
 export function useProfileMediaDelete() {
   const qc = useQueryClient();
 
@@ -21,7 +15,6 @@ export function useProfileMediaDelete() {
     mutationFn: async (args: DeleteArgs) => {
       const { slot } = args;
 
-      // 1) borrar en Supabase si hay URL
       const url =
         slot === 'headshot'
           ? ((args as Extract<DeleteArgs, { slot: 'headshot' }>).url ?? undefined)
@@ -39,7 +32,6 @@ export function useProfileMediaDelete() {
         }
       }
 
-      // 2) PATCH present & null
       let payload: MediaPatchRequest;
       if (slot === 'headshot') payload = { headshotImageUrl: null };
       else if (slot === 'fullbody') payload = { fullBodyImageUrl: null };
