@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import ProfileEditShell from '../components/edit/ProfileEditShell';
+import ProfileEditShell from '../components/ProfileEditShell';
 import { useProfile } from '../hooks/useProfile';
 
 const ProfileEditPage = () => {

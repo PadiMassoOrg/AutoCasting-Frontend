@@ -9,7 +9,6 @@ import type {
   ProfileContact,
   ProfileResponse,
   ProfileSocialMedia,
-  PublicProfileResponse,
 } from '../types/profile.types';
 import type {
   BasicInfoPatchRequest,
@@ -21,16 +20,10 @@ import type {
 } from '../types/requests';
 
 export const PROFILE_CACHE_KEY = ['cache-profile'] as const;
-export const PUBLIC_PROFILE_CACHE_KEY = ['cache-profile'] as const;
 
 // GET
 export const getMyProfile = async (): Promise<ProfileResponse> => {
   const response = await api.get(API_ROUTES.PROFILE);
-  return response.data;
-};
-
-export const getPublicProfile = async (slug: string): Promise<PublicProfileResponse> => {
-  const response = await api.get(API_ROUTES.PROFILE + `/${slug}`);
   return response.data;
 };
 

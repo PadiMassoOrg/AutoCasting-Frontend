@@ -1,6 +1,7 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage } from '../features/auth/pages';
-import { PublicProfilePage } from '../features/profile/pages/';
+
+import { PublicProfilePage } from '../features/public-profile/pages';
 import PublicPagesLayout from '../layouts/PublicPagesLayout';
 import { ScrollToTop } from '../shared/components/ScrollToTop/ScrollToTop';
 import { ROUTES } from '../shared/lib/routes';
