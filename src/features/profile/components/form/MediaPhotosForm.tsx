@@ -16,9 +16,9 @@ const fileToDataUrl = (file: File) =>
     reader.readAsDataURL(file);
   });
 
-// Añade bust sólo si hay URL
-const withBust = (url?: string, bust?: number) => {
-  if (!url) return undefined;
+// ✅ Acepta string | null | undefined y devuelve string | undefined
+const withBust = (url: string | null | undefined, bust?: number): string | undefined => {
+  if (!url) return undefined; // cubre null y undefined
   if (!bust) return url;
   return url.includes('?') ? `${url}&b=${bust}` : `${url}?b=${bust}`;
 };
@@ -26,8 +26,6 @@ const withBust = (url?: string, bust?: number) => {
 export default function MediaForm({ media, supabaseId }: { media: Media; supabaseId: string }) {
   const { t } = useTranslation();
   const { mutate: upload } = useProfileMediaPatch(supabaseId);
-
-  console.log(media);
 
   // Headshot/Fullbody
   const [preview, setPreview] = useState<Partial<Record<'headshot' | 'fullbody', string>>>({});
@@ -109,7 +107,6 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             disabled={pending.has('headshot')}
             busy={pending.has('headshot')}
             busyText={t('state.loading')}
-            // Si tu UploadTile agrega bust por su cuenta, puedes quitar bustKey para preview
             bustKey={undefined}
             accept="image/*"
             maxSizeMB={8}
@@ -141,11 +138,10 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
               key={i}
               label={`${t('profile.media.other')} ${i + 1}`}
               // Independencia por slot: si este está pending, mostramos sólo preview
-              value={otherPending.has(i) ? undefined : withBust(others[i], otherBust[i])}
+              value={otherPending.has(i) ? undefined : withBust(others[i] as string | null, otherBust[i])}
               previewUrl={otherPreview[i] ?? null}
               busy={otherPending.has(i)}
               busyText={t('state.loading')}
-              // Evitar que el componente aplique bust sobre preview
               bustKey={undefined}
               onSelect={pickOther(i)}
               accept="image/*"
