@@ -18,20 +18,17 @@ const MediaSection = ({ data }: { data: Media }) => {
   const hasImages = images.length > 0;
   const hasVideos = Boolean(introductionVideoUrl || showReelVideoUrl);
 
-  if (!hasImages && !hasVideos) return;
   return (
     <article className="w-full flex flex-col gap-2">
-      {hasImages && (
-        <>
-          <ImageCarousel images={images} />
-          {/* Si NO hay videos, separador debajo (regla 2) */}
-          {!hasVideos && <Separator className="opacity-25 my-12" />}
-        </>
-      )}
+      {/* Siempre mostramos un carrusel: si no hay imágenes reales, se verán los placeholders */}
+      <ImageCarousel images={hasImages ? images : null} />
+
+      {/* Separadores según reglas previas */}
+      {!hasVideos && <Separator className="opacity-25 my-12" />}
 
       {hasVideos && (
         <>
-          {hasImages && <Separator className="opacity-25 my-12" />}
+          <Separator className="opacity-25 my-12" />
           <h2 className="font-bold text-xl mb-3">{t('profile.page.videos')}</h2>
           <div className="flex flex-col gap-4">
             {introductionVideoUrl && (
