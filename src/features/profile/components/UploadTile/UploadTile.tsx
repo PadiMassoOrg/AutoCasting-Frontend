@@ -1,6 +1,7 @@
-// ui-lib/UploadTile.tsx
-import React, { useRef, useState, useCallback, forwardRef, type ChangeEvent, type DragEvent } from 'react';
 import clsx from 'clsx';
+import React, { forwardRef, useCallback, useRef, useState, type ChangeEvent, type DragEvent } from 'react';
+import deleteIcon from '../../../../shared/icons/delete.svg';
+import editIcon from '../../../../shared/icons/edit.svg';
 
 export type UploadTileClasses = Partial<{
   root: string;
@@ -12,55 +13,50 @@ export type UploadTileClasses = Partial<{
   remove: string;
   input: string;
   overlay: string;
+  actionsBar: string;
+  actionBtn: string;
 }>;
 
 export type UploadTileProps = {
-  /** Texto o nodo cuando está vacío */
   label?: React.ReactNode;
-  /** URL persistida (server) */
   value?: string | null;
-  /** URL de preview temporal (ObjectURL). Tiene prioridad sobre `value` */
   previewUrl?: string | null;
 
-  /** Callback con 1 o N archivos */
   onSelect: (files: File[] | File) => void;
-  /** Limpia el valor actual (si controlás desde afuera) */
   onClear?: () => void;
 
-  /** Estética / estilos */
+  /** No abrir el file picker al clickear la imagen */
+  openOnClick?: boolean;
+
+  /** Callbacks de acciones */
+  onEditClick?: () => void; // si no viene, usa inputRef.click()
+  onDeleteClick?: () => void; // si no viene, usa onClear()
+
   className?: string;
   classes?: UploadTileClasses;
   style?: React.CSSProperties;
-  /** CSS aspect-ratio (p. ej. 0.75, "3/4", "1 / 1") */
   aspectRatio?: number | string;
-  /** Tailwind rounded (default: "rounded-xl") */
   roundedClassName?: string;
-  /** Borde punteado (dashed) */
   dashed?: boolean;
-  /** cover | contain (default: cover) */
   objectFit?: 'cover' | 'contain';
 
-  /** Comportamiento */
   disabled?: boolean;
   multiple?: boolean;
-  accept?: string; // "image/*,video/*"
+  accept?: string;
   capture?: 'user' | 'environment';
   maxSizeMB?: number;
   onError?: (err: Error) => void;
 
-  /** Personalizaciones profundas */
   renderEmpty?: () => React.ReactNode;
   renderPreview?: (url: string) => React.ReactNode;
-  renderOverlay?: () => React.ReactNode;
 
-  /** Cache-busting: agrega ?v={bustKey} */
+  /** Cache-busting */
   bustKey?: string | number;
 
-  /** Overlay de carga simple sin tener que pasar renderOverlay */
+  /** Overlay de carga */
   busy?: boolean;
   busyText?: React.ReactNode;
 
-  /** Accesibilidad */
   ariaLabel?: string;
 };
 
@@ -91,6 +87,11 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
     previewUrl,
     onSelect,
     onClear,
+
+    openOnClick = true,
+    onEditClick,
+    onDeleteClick,
+
     className,
     classes,
     style,
@@ -108,7 +109,6 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
 
     renderEmpty,
     renderPreview,
-    renderOverlay,
 
     bustKey,
     busy = false,
@@ -169,19 +169,31 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
   const hoverCls = hover ? 'bg-gray-100' : '';
 
   const displayUrl = withBust(previewUrl ?? value ?? undefined, bustKey);
+  const hasImage = Boolean(displayUrl);
+
+  // ✅ Solo es clickeable (y cursor-pointer) cuando NO hay imagen (primer upload).
+  const rootClickable = !disabled && !busy && !hasImage;
 
   return (
     <div
       ref={ref}
-      className={clsx('cursor-pointer relative w-full select-none focus:outline-none', classes?.root, className)}
+      className={clsx(
+        'relative w-full select-none focus:outline-none overflow-hidden',
+        rootClickable ? 'cursor-pointer' : 'cursor-default',
+        classes?.root,
+        className
+      )}
       style={{ ...style, aspectRatio }}
-      role="button"
+      role={rootClickable ? 'button' : undefined}
       aria-label={ariaLabel}
       aria-disabled={disabled || undefined}
       aria-busy={busy || undefined}
-      tabIndex={0}
-      onClick={openDialog}
+      tabIndex={rootClickable ? 0 : -1}
+      onClick={() => {
+        if (rootClickable) openDialog();
+      }}
       onKeyDown={(e) => {
+        if (!rootClickable) return;
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           openDialog();
@@ -236,23 +248,65 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
         )}
       </div>
 
-      {/* Overlay: usa el custom si viene; si no, muestra uno simple cuando busy=true */}
-      {(renderOverlay || busy) && (
+      {/* Overlay busy */}
+      {busy && (
         <div
           className={clsx('absolute inset-0 grid place-items-center', roundedClassName, classes?.overlay)}
           style={{ pointerEvents: 'none', background: 'rgba(0,0,0,0.25)' }}
         >
-          {renderOverlay ? (
-            renderOverlay()
-          ) : (
-            <div className="flex items-center gap-2 text-white text-sm">
-              <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" opacity="0.25" />
-                <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="2" />
-              </svg>
-              <span>{busyText}</span>
-            </div>
+          <div className="flex items-center gap-2 text-white text-sm">
+            <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" opacity="0.25" />
+              <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="2" />
+            </svg>
+            <span>{busyText}</span>
+          </div>
+        </div>
+      )}
+
+      {/* ✅ ActionBar SOLO cuando HAY imagen (placeholder no la muestra) */}
+      {hasImage && !busy && (
+        <div
+          className={clsx(
+            'absolute left-0 right-0 bottom-0 px-5 py-3 bg-black/45',
+            roundedClassName,
+            classes?.actionsBar
           )}
+          style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex flex-row justify-between items-center">
+            <button
+              type="button"
+              className={clsx(
+                'h-12 w-12 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center cursor-pointer',
+                classes?.actionBtn
+              )}
+              aria-label="Editar imagen"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onEditClick) onEditClick();
+                else openDialog();
+              }}
+            >
+              <img src={editIcon} />
+            </button>
+            <button
+              type="button"
+              className={clsx(
+                'h-12 w-12 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center cursor-pointer',
+                classes?.actionBtn
+              )}
+              aria-label="Eliminar imagen"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onDeleteClick) onDeleteClick();
+                else onClear?.();
+              }}
+            >
+              <img src={deleteIcon} />
+            </button>
+          </div>
         </div>
       )}
 
@@ -267,25 +321,6 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
         disabled={disabled}
         onChange={onInputChange}
       />
-
-      {/* Botón limpiar */}
-      {onClear && (previewUrl || value) && (
-        <button
-          type="button"
-          className={clsx(
-            'absolute top-2 right-2 h-8 w-8 rounded-full bg-black/60 text-white',
-            'flex items-center justify-center text-sm',
-            classes?.remove
-          )}
-          onClick={(e) => {
-            e.stopPropagation();
-            onClear();
-          }}
-          aria-label="Eliminar archivo"
-        >
-          ×
-        </button>
-      )}
     </div>
   );
 });
