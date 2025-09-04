@@ -1,4 +1,3 @@
-// src/layouts/MobileSidebar.tsx
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +18,7 @@ export default function MobileSidebar() {
   };
 
   return (
-    <div className="md:hidden">
+    <div className="">
       <div className="flex items-center justify-between bg-white p-6">
         <LinkLogo horizontal path={ROUTES.DASHBOARD} />
         <button

@@ -14,7 +14,7 @@ const ORDER: OuterKey[] = ['profile', 'media', 'details'];
 export default function ProfileEditShell({ profile }: { profile: ProfileResponse }) {
   const { t } = useTranslation();
   // TODO - Verify Media Queries
-  const isDesktop = useMedia('(min-width: 768px)');
+  const isDesktop = useMedia('(min-width: 1024px)');
 
   const [outer, setOuter] = useState<OuterKey>('profile');
   const outerIndex = ORDER.indexOf(outer);

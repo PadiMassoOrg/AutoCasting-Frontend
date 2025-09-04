@@ -6,12 +6,10 @@ export default function CarouselHeader({
   items,
   active,
   onChange,
-  className,
 }: {
   items: HeaderItem[];
   active: number;
   onChange: (index: number) => void;
-  className?: string;
 }) {
   const canPrev = active > 0;
   const canNext = active < items.length - 1;
@@ -20,7 +18,11 @@ export default function CarouselHeader({
   const next = () => canNext && onChange(active + 1);
 
   return (
-    <div className={`w-full ${className ?? ''}`}>
+    <div
+      className={`
+        w-full 
+      `}
+    >
       {/* Dots */}
       <div className="flex items-center gap-2 justify-center mb-6">
         {items.map((_, i) => (
