@@ -12,7 +12,7 @@ export default function DashboardLayout() {
       <MobileSidebar />
       <main
         className={`
-          pt-4 px-4 min-w-0 overflow-x-hidden min-h-screen  
+          pt-4 px-4 min-w-0 overflow-x-hidden min-h-screen
         `}
       >
         <Outlet />

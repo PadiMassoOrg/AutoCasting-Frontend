@@ -13,7 +13,6 @@ const ORDER: OuterKey[] = ['profile', 'media', 'details'];
 
 export default function ProfileEditShell({ profile }: { profile: ProfileResponse }) {
   const { t } = useTranslation();
-  // TODO - Verify Media Queries
   const isDesktop = useMedia('(min-width: 1024px)');
 
   const [outer, setOuter] = useState<OuterKey>('profile');
@@ -29,11 +28,17 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
   );
 
   return (
-    <section className="w-full min-w-0">
+    <section className="w-full min-w-0 lg:flex lg:flex-row lg:gap-6">
       <CarouselHeader items={items} active={outerIndex} onChange={(i) => setOuter(ORDER[i])} />
-      <Separator className="opacity-20 my-9" />
+      <Separator className="opacity-20 my-9 lg:hidden" />
 
       {isDesktop ? (
+        <article className="w-full lg:pb-10 lg:pl-10">
+          {outer === 'profile' && <ProfileEditSection profile={profile} />}
+          {outer === 'media' && <MediaEditSection media={profile.media} supabaseId={profile.id} />}
+          {outer === 'details' && <DetailsEditSection profile={profile} />}
+        </article>
+      ) : (
         <HorizontalCarousel
           key={isDesktop ? 'desktop' : 'mobile'}
           active={outerIndex}
@@ -43,12 +48,6 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
           <MediaEditSection media={profile.media} supabaseId={profile.id} />
           <DetailsEditSection profile={profile} />
         </HorizontalCarousel>
-      ) : (
-        <div className="w-full min-w-0">
-          {outer === 'profile' && <ProfileEditSection profile={profile} />}
-          {outer === 'media' && <MediaEditSection media={profile.media} supabaseId={profile.id} />}
-          {outer === 'details' && <DetailsEditSection profile={profile} />}
-        </div>
       )}
     </section>
   );

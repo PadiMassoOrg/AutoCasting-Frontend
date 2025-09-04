@@ -212,7 +212,8 @@
       "introduction_video": "Video de presentación",
       "showreel_video": "Videoreel",
       "socials": "Sociales",
-      "profile": "Perfil"
+      "profile": "Perfil",
+      "edit_profile": "Editar Perfil"
     },
     "share": {
       "whatsapp_text": "Hola {{name}}, te escribo por tu perfil de AutoCasting.",
