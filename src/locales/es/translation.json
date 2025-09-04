@@ -4,12 +4,162 @@
     "header": "Tu Perfil Digital Actoral"
   },
   "general": {
-    "state": {
-      "loading": "Cargando...",
-      "server_err": "Ocurrió un error en el servidor, intente nuevamente."
+    "yes": "Sí",
+    "no": "No",
+    "placeholder": {
+      "stage_name": "Ricardo Darín",
+      "select": "Seleccionar",
+      "day": "Día",
+      "month": "Mes",
+      "year": "Año",
+      "email": "Email",
+      "phoneNumber": "Número",
+      "url": "URL",
+      "headshot": "Primer Plano",
+      "fullbody": "Cuerpo Entero",
+      "dash": "--"
+    }
+  },
+  "validation": {
+    "required": "Campo obligatorio.",
+    "number": "Solo números"
+  },
+  "state": {
+    "loading": "Cargando...",
+    "server_err": "Ocurrió un error, intente nuevamente."
+  },
+  "buttons": {
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Borrar"
+  },
+  "dashboard": {
+    "logout": "Salir"
+  },
+  "routes": {
+    "profile": "Perfil"
+  },
+  "role": {
+    "actor": "Actor",
+    "castinera": "Castinera"
+  },
+  "plan": {
+    "free": "Free",
+    "premium_actor_1": "Premium",
+    "premium_castinera": "Premium Castinera"
+  },
+  "sitemetadata": {
+    "gender": {
+      "male": "Hombre",
+      "female": "Mujer",
+      "other": "Otros"
     },
-    "buttons": {
-      "cancel": "Cancelar"
+    "category": {
+      "scenic": "Habilidades España",
+      "sport": "Deportes",
+      "physical": "Habilidades Físicas",
+      "language": "Idiomas",
+      "accent": "Acentos",
+      "hair_color": "Color de cabello",
+      "eye_color": "Color de ojos"
+    },
+    "skill": {
+      "athletics": "Atletismo",
+      "basketball": "Básquet",
+      "boxing": "Boxeo",
+      "cycling": "Ciclismo",
+      "football": "Fútbol",
+      "gymnastics": "Gimnasia",
+      "handball": "Handball",
+      "hockey": "Hockey",
+      "swimming": "Natación",
+      "padel": "Pádel",
+      "rugby": "Rugby",
+      "tennis": "Tenis",
+      "volleyball": "Vóley",
+      "acrobatics": "Acrobacia",
+      "aerial_acrobatics": "Acrobacia aérea",
+      "martial_arts": "Artes marciales",
+      "capoeira": "Capoeira",
+      "stage_combat": "Combate escénico",
+      "contortion": "Contorsionismo",
+      "tightrope_slackline": "Cuerda floja / Slackline",
+      "horseback_riding": "Equitación",
+      "climbing": "Escalada",
+      "stage_fencing": "Esgrima escénica",
+      "juggling": "Malabarismo",
+      "pantomime": "Pantomima",
+      "physical_theater": "Teatro físico",
+      "parkour": "Parkour",
+      "skating": "Patinaje",
+      "stunts": "Acrobacias",
+      "aerial_skills": "Habilidades aéreas",
+      "harness_wirework": "Trabajo con arnés y cuerdas",
+      "stilts": "Zancos",
+      "german": "Alemán",
+      "chinese_mandarin": "Chino mandarín",
+      "spanish_arg": "Español (Argentina)",
+      "french": "Francés",
+      "english": "Inglés",
+      "italian": "Italiano",
+      "portuguese_br": "Portugués (Brasil)",
+      "russian": "Ruso",
+      "spanish_es": "Español (España)",
+      "spanish_neutral": "Español neutro",
+      "spanish_co": "Español (Colombia)",
+      "spanish_ch": "Español (Chile)",
+      "spanish_pe": "Español (Perú)",
+      "spanish_ve": "Español (Venezuela)",
+      "english_us": "Inglés (EE. UU.)",
+      "english_uk": "Inglés (Reino Unido)"
+    },
+    "profession": {
+      "actor": "Actor",
+      "dancer": "Bailarín",
+      "singer": "Cantante",
+      "influencer": "Influencer",
+      "model": "Modelo",
+      "musician": "Músico",
+      "standup": "Stand-up",
+      "voice_talent": "Actor de voz"
+    },
+    "color": {
+      "black": "Negro",
+      "dark_brown": "Marrón oscuro",
+      "light_brown": "Marrón claro",
+      "brown": "Marrón",
+      "blonde": "Rubio",
+      "dark_blonde": "Rubio oscuro",
+      "light_blonde": "Rubio claro",
+      "red": "Rojo",
+      "gray": "Gris",
+      "white": "Blanco",
+      "no_hair": "Sin cabello",
+      "amber": "Ámbar",
+      "hazel": "Avellana",
+      "blue": "Azul",
+      "light_blue": "Celeste",
+      "green": "Verde",
+      "heterochromia": "Heterocromía"
+    },
+    "diet": {
+      "omnivore": "Omnívoro",
+      "flexitarian": "Flexitariano",
+      "vegetarian": "Vegetariano",
+      "lacto_ovo_vegetarian": "Lacto-ovo vegetariano",
+      "vegan": "Vegano",
+      "pescatarian": "Pescetariano",
+      "ketogenic": "Cetogénico",
+      "gluten_free": "Sin gluten",
+      "lactose_free": "Sin lactosa",
+      "kosher": "Kosher",
+      "halal": "Halal"
+    },
+    "production_type": {
+      "theatre": "Teatro",
+      "television_streaming": "Televisión / Streaming",
+      "film": "Cine",
+      "commercial": "Comercial"
     }
   },
   "auth": {
@@ -53,6 +203,105 @@
       "role": "El rol es requerido",
       "password_min": "La contraseña debe tener al menos 6 caracteres",
       "password_missmatch": "Las contraseñas no coinciden"
+    }
+  },
+  "profile": {
+    "page": {
+      "videos": "Videos",
+      "introduction_video": "Video de presentación",
+      "showreel_video": "Videoreel",
+      "socials": "Sociales",
+      "profile": "Perfil"
+    },
+    "pills": {
+      "profile": "Perfil",
+      "media": "Media",
+      "details": "Detalles",
+      "characteristics": "Características",
+      "skills": "Habilidades ",
+      "credits": "Créditos",
+      "education": "Formación"
+    },
+    "basic_info": {
+      "basic_info": "Información Básica",
+      "artistic_name": "Nombre Artístico",
+      "gender": "Género",
+      "birth_date": "Fecha de Nacimiento",
+      "location": "Locación",
+      "profession": "Profesión",
+      "profession_label": "(Selecciona hasta 3) 0 de 3 seleccionadas",
+      "contact": "Contacto",
+      "email": "Email",
+      "whatsapp": "Whatsapp",
+      "social_media": "Redes Sociales",
+      "instagram": "Instagram",
+      "tikTok": "TikTok"
+    },
+    "media": {
+      "photos": "Fotos",
+      "headshot_fullbody": "Primer Plano y Cuerpo Entero",
+      "other": "Otras Fotos",
+      "videos": "Videos",
+      "introduction": "Video de Presentación",
+      "videoreel": "Videoreel"
+    },
+    "characteristics": {
+      "characteristics": "Características",
+      "gender": "Género",
+      "age": "Edad",
+      "location": "Locación",
+      "height": "Estatura",
+      "heightCm": "Estatura (cm)",
+      "weight": "Peso",
+      "weightKg": "Peso (kg)",
+      "hairColor": "Cabello",
+      "eyeColor": "Ojos",
+      "chest": "Busto",
+      "waist": "Cintura",
+      "hip": "Caderas",
+      "shirt": "Camisa",
+      "pants": "Pantalón",
+      "dress": "Vestido",
+      "shoes": "Calzado",
+      "tattoo": "Tatuajes",
+      "passport": "Pasaporte",
+      "drivingLicense": "Lic. de Conducir",
+      "diet": "Dieta"
+    },
+    "skills": {
+      "skills": "Habilidades",
+      "add_new": "Agregar nueva habilidad",
+      "add_new_subtitle": "Buscar o agregar nueva habilidad",
+      "add_new_placeholder": "Agregar Habilidad"
+    },
+    "credits": {
+      "credits": "Créditos",
+      "add_new": "Agregar nuevo crédito",
+      "edit": "Editar crédito",
+      "delete": "Borrar crédito",
+      "delete_confirm": "Estás por borrar",
+      "production_type": "Tipo de producción",
+      "production_type_placeholder": "Ej. TV, Publicidad, Cine...",
+      "project": "Nombre del proyecto",
+      "project_placeholder": "Ej. Hamlet, Stranger Things…",
+      "director": "Director/Productora",
+      "director_placeholder": "Ej. Steven Spilberg, Netflix…",
+      "role": "Rol",
+      "role_placeholder": "Hamlet, Protagónico, Grupal...",
+      "year": "Año"
+    },
+    "education": {
+      "education": "Formación",
+      "add_new": "Agregar nueva formación",
+      "edit": "Editar formación",
+      "delete": "Borrar formación",
+      "delete_confirm": "Estás por borrar",
+      "institution": "Institución",
+      "institution_placeholder": "Nombre de la institución",
+      "courseName": "Nombre del curso / Título obtenido",
+      "courseName_placeholder": "Ej. Lic. en Actuación",
+      "graduationYear": "Fecha de finalización",
+      "graduationYear_placeholder": "--"
     }
   }
 }

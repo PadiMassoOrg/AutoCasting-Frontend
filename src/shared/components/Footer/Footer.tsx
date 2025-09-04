@@ -1,11 +1,11 @@
-import { LanguageSwitcher } from '../LanguageSwitcher';
+import { Separator } from 'autocasting-ui-library-padimasso';
+import { LinkLogo } from '../LinkLogo';
 
 const Footer = () => {
   return (
-    <div className="w-full h-16 bg-slate-200 flex flex-col items-center">
-      <div className="w-[80%] m-auto">
-        <LanguageSwitcher></LanguageSwitcher>
-      </div>
+    <div className="w-full grid items-center md:hidden">
+      <Separator className="opacity-20 mt-20" />
+      <LinkLogo horizontal className="py-12" path={null}></LinkLogo>
     </div>
   );
 };

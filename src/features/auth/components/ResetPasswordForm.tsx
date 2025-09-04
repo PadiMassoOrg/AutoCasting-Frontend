@@ -1,10 +1,10 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { getResetPasswordSchema, type ResetPasswordValues } from '../schemas/authSchema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, FormInputField } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useResetPasswordMutation } from '../hooks/useResetPasswordMutation';
+import { getResetPasswordSchema, type ResetPasswordValues } from '../schemas/authSchema';
 
 const ResetPasswordForm = ({ token }: { token: string }) => {
   const { t } = useTranslation();
@@ -28,11 +28,8 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
         newPassword: data.confirmPassword,
       },
       {
-        onSuccess: (data) => {
-          alert(data);
-        },
         onError: (err: any) => {
-          const message = err?.response?.data?.message || t('general.state.server_err');
+          const message = err?.response?.data?.message || t('state.server_err');
           setServerError(message);
         },
       }
@@ -56,9 +53,13 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
         error={errors.confirmPassword?.message}
       />
       <Button type="submit" className="w-full">
-        {resetPasswordMutation.isPending ? t('general.state.loading') : t('auth.login.submit')}
+        {resetPasswordMutation.isPending ? t('state.loading') : t('auth.login.submit')}
       </Button>
-      {serverError && <div className="text-red-600 text-sm text-bold w-full mt-[-0.4rem] pl-0.5">{serverError}</div>}
+      {serverError && (
+        <Label variant="error" className="pl-1">
+          {serverError}
+        </Label>
+      )}
     </form>
   );
 };

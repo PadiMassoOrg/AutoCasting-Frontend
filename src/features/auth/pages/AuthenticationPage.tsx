@@ -1,11 +1,11 @@
-import { Trans, useTranslation } from 'react-i18next';
-import { Layout } from '../../../shared/components/Layouts';
-import LoginForm from '../components/LoginForm';
 import { GoogleButton } from 'autocasting-ui-library-padimasso';
-import { Logo } from '../../../shared/components/Logo';
-import Resaltador from '../../../shared/lib/resaltador.svg';
 import { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import AuthenticationLayout from '../../../layouts/AuthenticationLayout';
+import { LinkLogo } from '../../../shared/components/LinkLogo';
+import Resaltador from '../../../shared/lib/resaltador.svg';
 import { RegisterForm } from '../components';
+import LoginForm from '../components/LoginForm';
 import { useGoogleLoginMutation } from '../hooks/useGoogleLoginMutation';
 
 export default function AuthenticationPage() {
@@ -18,20 +18,15 @@ export default function AuthenticationPage() {
   };
 
   return (
-    <Layout>
-      <div className="flex flex-row lg:h-[calc(100vh-10rem)] gap-36">
+    <AuthenticationLayout>
+      <div className="flex flex-row items-center gap-36 w-full h-full">
         {/* Banner */}
-        <article
-          className="hidden lg:flex h-full flex-col gap-8 mb-5 justify-center relative"
-          style={{ fontFamily: 'var(--font-inter)' }}
-        >
+        <article className="hidden lg:flex flex-col gap-8 justify-center relative h-dvh">
           <h2 className="font-extrabold text-5xl">
             ¡{t('auth.page.welcome')} <p className="break-after-all">{t('company.site')}!</p>
           </h2>
-          <h2 className="text-neutral-600 opacity-65 font-normal text-lg" style={{ fontFamily: 'var(--font-inter)' }}>
-            {t('auth.page.text_1')}
-          </h2>
-          <ul className="list-disc pl-5" style={{ fontFamily: 'var(--font-serif)' }}>
+          <h2 className="text-neutral-600 opacity-65 font-normal text-lg">{t('auth.page.text_1')}</h2>
+          <ul className="list-disc pl-5">
             <li className="i18n" data-i18n="[html]content.body">
               <Trans i18nKey="auth.page.bullet_1" components={{ i: <i /> }} />
             </li>
@@ -46,14 +41,14 @@ export default function AuthenticationPage() {
             <h2 className="font-bold pl-6 z-[20] relative">{t('auth.page.text_resaltador')}</h2>
             <img src={Resaltador} alt="higlight-text" className="absolute top-1/2  translate-y-[-55%] z-[0]" />
           </div>
-          <aside className="absolute bottom-0 left-1/2">
-            <Logo></Logo>
+          <aside className="self-center mt-20">
+            <LinkLogo></LinkLogo>
           </aside>
         </article>
         {/* Forms */}
-        <article className="w-full m-auto lg:m-0 sm:max-w-sm lg:max-w-md xl:max-w-lg lg:bg-white lg:p-6 lg:rounded-2xl lg:shadow-lg lg:h-full lg:min-h-[45rem] flex flex-col justify-center">
+        <article className="w-full m-auto sm:max-w-md xl:max-w-lg lg:bg-white lg:p-6 lg:rounded-2xl lg:shadow-lg lg:h-full lg:min-h-[45rem] flex flex-col justify-center">
           <div className="flex flex-col gap-4 items-center pb-8">
-            <Logo />
+            <LinkLogo></LinkLogo>
             <h2 className="font-bold text-2xl whitespace-nowrap">{t('company.header')}</h2>
           </div>
           <GoogleButton className="cursor-pointer" onClick={handleGoogleLogin}>
@@ -67,6 +62,6 @@ export default function AuthenticationPage() {
           {login ? <LoginForm onSwitch={() => setLogin(false)} /> : <RegisterForm onSwitch={() => setLogin(true)} />}
         </article>
       </div>
-    </Layout>
+    </AuthenticationLayout>
   );
 }

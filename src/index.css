@@ -22,12 +22,14 @@
     /* Primary Colors */
     --color-primary-white: #ffffff;
     --color-primary-black: #070707;
+    --color-primary-light-grey: #f3f4f9;
     --color-primary-greenyellow: #aeff00;
     /* Secondary Colors */
-    --color-secondary-offwhite: #f4f5ff;
-    --color-secondary-offblack: #17171a;
-    --color-secondary-outline: #e7e7e7;
-    ---color-secondary-grey: #b1b3c5;
+    --color-secondary-offwhite: #ebedfd;
+    --color-secondary-outline: #e0e0e0;
+    --color-secondary-disabled-grey: #a1a3b2;
+    --color-secondary-grey: #767680;
+    --color-secondary-grey-fonts: #6c6e7c;
     /* Alert Colors */
     --color-alert-error: #ef0c0c;
     /* Fonts */
@@ -37,11 +39,19 @@
 
   /* General */
   body {
-    @apply bg-slate-50;
+    @apply bg-[var(--color-primary-white)] list-none;
     font-family: var(--font-inter);
   }
 }
 
 @layer utilities {
   /* ej.  .btn-primary { @apply bg-blue-600 text-white px-4 py-2 rounded; } */
+  .scrollbar-hide {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
 }

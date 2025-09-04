@@ -1,22 +1,17 @@
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getLoginSchema, type LoginFormValues } from '../schemas/authSchema';
-import { useTranslation } from 'react-i18next';
-import { useLoginMutation } from '../hooks/useLoginMutation';
-import { FormInputField, Button } from 'autocasting-ui-library-padimasso';
+import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../context/ModalContext';
+import { useLoginMutation } from '../hooks/useLoginMutation';
+import { getLoginSchema, type LoginFormValues } from '../schemas/authSchema';
 import { ForgottenPasswordForm } from './';
-import { setAuthToken } from '../../../shared/lib/cookies';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../../shared/lib/routes';
-import type { AuthenticationResponse } from '../types/auth.types';
 
 export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const { t } = useTranslation();
   const { openModal } = useModal();
   const loginMutation = useLoginMutation();
-  const navigate = useNavigate();
 
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -35,12 +30,8 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const onSubmit = (data: LoginFormValues) => {
     setServerError(null);
     loginMutation.mutate(data, {
-      onSuccess: (data: AuthenticationResponse) => {
-        setAuthToken(data.token);
-        navigate(ROUTES.DASHBOARD);
-      },
       onError: (err: any) => {
-        const message = err?.response?.data?.message || t('general.state.server_err');
+        const message = err?.response?.data?.message || t('state.server_err');
         setServerError(message);
       },
     });
@@ -64,15 +55,19 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
         error={errors.password?.message}
         {...register('password')}
       />
-      <h2 className="flex justify-end text-sm ">
-        <span className="cursor-pointer hover:underline transition-all duration-300" onClick={handleForgottenPass}>
+      <div className="flex justify-end text-sm">
+        <h2 className="cursor-pointer hover:underline transition-all duration-300" onClick={handleForgottenPass}>
           {t('auth.page.forgotten_pass')}
-        </span>
-      </h2>
+        </h2>
+      </div>
       <Button type="submit" className="mt-8 cursor-pointer">
-        {loginMutation.isPending ? t('general.state.loading') : t('auth.login.submit')}
+        {loginMutation.isPending ? t('state.loading') : t('auth.login.submit')}
       </Button>
-      {serverError && <div className="text-red-600 text-sm text-bold w-full mt-[-0.4rem] pl-0.5">{serverError}</div>}
+      {serverError && (
+        <Label variant="error" className="pl-1">
+          {serverError}
+        </Label>
+      )}
       <div className="flex text-sm gap-2 mt-2">
         <h2>{t('auth.page.create_acc')}</h2>
         <span className="font-bold cursor-pointer" onClick={onSwitch}>

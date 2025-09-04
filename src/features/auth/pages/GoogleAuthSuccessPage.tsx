@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import AuthenticationLayout from '../../../layouts/AuthenticationLayout';
 import { setAuthToken } from '../../../shared/lib/cookies';
 import { ROUTES } from '../../../shared/lib/routes';
-import { useTranslation } from 'react-i18next';
-import { Layout } from '../../../shared/components/Layouts';
 
 const GoogleAuthSuccessPage = () => {
   const { t } = useTranslation();
@@ -21,11 +21,11 @@ const GoogleAuthSuccessPage = () => {
   }, [searchParams, navigate]);
 
   return (
-    <Layout>
+    <AuthenticationLayout>
       <div className="w-full h-screen flex flex-col items-center justify-center text-center gap-4">
-        <p>{t('general.state.loading')}</p>
+        <p>{t('state.loading')}</p>
       </div>
-    </Layout>
+    </AuthenticationLayout>
   );
 };
 

@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { forgotPassword } from '../sevices/authService';
+import { forgotPassword } from '../services/authService';
 import type { ForgotPasswordRequest } from '../types/auth.types';
 
 export const useForgotPasswordMutation = () => {

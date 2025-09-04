@@ -1,21 +1,18 @@
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getRegisterSchema, type RegisterFormValues } from '../schemas/authSchema';
+import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useRegisterMutation } from '../hooks/useRegisterMutation';
-import { FormInputField, Button } from 'autocasting-ui-library-padimasso';
-import { useState } from 'react';
-import { setAuthToken } from '../../../shared/lib/cookies';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '../../../shared/lib/routes';
-import type { AuthenticationResponse } from '../types/auth.types';
+import { getRegisterSchema, type RegisterFormValues } from '../schemas/authSchema';
 
 export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
-  const [serverError, setServerError] = useState<string | null>(null);
-
   const { t } = useTranslation();
   const registerMutation = useRegisterMutation();
-  const navigate = useNavigate();
+
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  const ROLE_ACTOR = 'ACTOR';
 
   const {
     register,
@@ -24,22 +21,16 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(getRegisterSchema()),
     defaultValues: {
-      role: 'ACTOR',
+      role: ROLE_ACTOR,
     },
   });
 
   const onSubmit = (data: RegisterFormValues) => {
     setServerError(null);
 
-    // TODO - Manejo de ACTOR o CASTINERA
-
     registerMutation.mutate(data, {
-      onSuccess: (data: AuthenticationResponse) => {
-        setAuthToken(data.token);
-        navigate(ROUTES.DASHBOARD);
-      },
       onError: (err: any) => {
-        const message = err?.response?.data?.message || t('general.state.server_err');
+        const message = err?.response?.data?.message || t('state.server_err');
         setServerError(message);
       },
     });
@@ -72,9 +63,13 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
         {...register('password')}
       />
       <Button type="submit" className="mt-8 cursor-pointer">
-        {registerMutation.isPending ? t('general.state.loading') : t('auth.register.submit')}
+        {registerMutation.isPending ? t('state.loading') : t('auth.register.submit')}
       </Button>
-      {serverError && <div className="text-red-600 text-sm text-bold w-full mt-[-0.4rem] pl-0.5">{serverError}</div>}
+      {serverError && (
+        <div className="text-center">
+          <Label variant="error">{serverError}</Label>
+        </div>
+      )}
       <div className="flex text-sm gap-2 mt-2">
         <h2>{t('auth.page.login_acc')}</h2>
         <span className="font-bold cursor-pointer" onClick={onSwitch}>

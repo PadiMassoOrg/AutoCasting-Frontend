@@ -1,7 +1,7 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ResetPasswordForm } from '../components';
 import { useEffect } from 'react';
-import { Layout } from '../../../shared/components/Layouts';
+import AuthenticationLayout from '../../../layouts/AuthenticationLayout';
 
 const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();
@@ -16,12 +16,12 @@ const ResetPasswordPage = () => {
 
   if (token)
     return (
-      <Layout>
+      <AuthenticationLayout>
         <article className="">
           <h2>ResetPassword Page</h2>
         </article>
         <ResetPasswordForm token={token}></ResetPasswordForm>
-      </Layout>
+      </AuthenticationLayout>
     );
 };
 
