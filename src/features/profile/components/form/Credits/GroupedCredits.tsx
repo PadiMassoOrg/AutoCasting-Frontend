@@ -66,7 +66,7 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
           <div key={catKey} className="w-full">
             <span
               onClick={() => {
-                const y = window.scrollY; // evita el “salto” visual
+                const y = window.scrollY;
                 setOpen((s) => ({ ...s, [catKey]: !isOpen }));
                 requestAnimationFrame(() => window.scrollTo({ top: y }));
               }}
@@ -117,7 +117,7 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
   );
 }
 
-/* ------------------------------- UI bits ---------------------------------- */
+// TODO - Move Components
 function Chevron({ open }: { open: boolean }) {
   return (
     <svg

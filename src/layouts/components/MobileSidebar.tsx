@@ -1,12 +1,12 @@
 // src/layouts/MobileSidebar.tsx
-import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
-import { ROUTES, USER_ROUTES } from '../../shared/lib/routes';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LinkLogo } from '../../shared/components/LinkLogo';
+import { Link, useLocation } from 'react-router-dom';
 import { logout } from '../../features/auth/services/authService';
 import { useProfile } from '../../features/profile/hooks/useProfile';
+import { LinkLogo } from '../../shared/components/LinkLogo';
+import { ROUTES, USER_ROUTES } from '../../shared/lib/routes';
 
 export default function MobileSidebar() {
   const { t } = useTranslation();
@@ -20,7 +20,6 @@ export default function MobileSidebar() {
 
   return (
     <div className="md:hidden">
-      {/* Header móvil con burger */}
       <div className="flex items-center justify-between bg-white p-6">
         <LinkLogo horizontal path={ROUTES.DASHBOARD} />
         <button
@@ -30,8 +29,6 @@ export default function MobileSidebar() {
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
-
-      {/* Menú desplegable */}
       {isOpen && (
         <nav className="bg-white shadow-md p-4 transition duration-300">
           {USER_ROUTES.map((item) => (

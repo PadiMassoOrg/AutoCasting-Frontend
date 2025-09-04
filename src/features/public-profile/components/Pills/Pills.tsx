@@ -1,6 +1,5 @@
-// shared/components/Pills/Pills.tsx
-import React, { useEffect, useMemo, useRef } from 'react';
 import { clsx } from 'clsx';
+import React, { useEffect, useMemo, useRef } from 'react';
 
 export type PillItem<K extends string = string> = {
   key: K;
@@ -25,11 +24,9 @@ export default function Pills<K extends string = string>({
   const listRef = useRef<HTMLDivElement>(null);
   const btnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
-  // índice actual (para teclas ← →)
   const idx = useMemo(() => items.findIndex((i) => i.key === value), [items, value]);
   const clamp = (n: number) => Math.max(0, Math.min(items.length - 1, n));
 
-  // centro en vista la pill activa
   useEffect(() => {
     const el = btnRefs.current[String(value)];
     el?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });

@@ -1,4 +1,3 @@
-// HorizontalCarousel.tsx
 import React, { useEffect, useRef } from 'react';
 
 type Props = {
@@ -9,30 +8,27 @@ type Props = {
 };
 
 export default function HorizontalCarousel({ active, onChange, children, className }: Props) {
-  const slides = React.Children.toArray(children);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const isProgrammaticScroll = useRef(false);
+  const slides = React.Children.toArray(children);
 
-  // Scroll al slide activo cuando cambia `active`
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
     const x = active * el.clientWidth;
     isProgrammaticScroll.current = true;
     el.scrollTo({ left: x, behavior: 'smooth' });
-    // desbloqueo el flag después de un tiempo razonable
     const id = window.setTimeout(() => (isProgrammaticScroll.current = false), 350);
     return () => window.clearTimeout(id);
   }, [active]);
 
-  // Sincroniza el índice al hacer scroll manual (wheel/touchpad/arrastre)
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
 
     let raf = 0;
     const onScroll = () => {
-      if (isProgrammaticScroll.current) return; // ignora scroll programático
+      if (isProgrammaticScroll.current) return;
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const w = el.clientWidth || 1;
@@ -48,7 +44,6 @@ export default function HorizontalCarousel({ active, onChange, children, classNa
     };
   }, [active, onChange]);
 
-  // Reparaciones al volver con back/forward (bfcache) y visibilidad
   useEffect(() => {
     const el = scrollerRef.current;
     if (!el) return;
@@ -59,7 +54,6 @@ export default function HorizontalCarousel({ active, onChange, children, classNa
     };
 
     const onPageShow = (e: PageTransitionEvent) => {
-      // @ts-ignore persisted puede no estar tipado
       if (e.persisted) requestAnimationFrame(() => requestAnimationFrame(resync));
       else requestAnimationFrame(resync);
     };
@@ -83,7 +77,6 @@ export default function HorizontalCarousel({ active, onChange, children, classNa
     };
   }, [active]);
 
-  // Asegura que cada slide ocupe exactamente el ancho visible
   return (
     <div className={`relative w-full min-w-0 ${className ?? ''}`}>
       <div
@@ -93,13 +86,11 @@ export default function HorizontalCarousel({ active, onChange, children, classNa
           flex snap-x snap-mandatory scroll-pl-0
           scrollbar-hide
         "
-        // accesibilidad
         tabIndex={0}
         aria-roledescription="carousel"
       >
         {slides.map((child, idx) => (
           <div key={idx} className="snap-start shrink-0 grow-0 basis-full min-w-0">
-            {/* padding interno, no en el slide contenedor */}
             <div className="w-full min-w-0 px-1">{child}</div>
           </div>
         ))}
@@ -107,8 +98,3 @@ export default function HorizontalCarousel({ active, onChange, children, classNa
     </div>
   );
 }
-
-/* CSS opcional para ocultar scrollbar si quieres (global o Tailwind plugin):
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-*/

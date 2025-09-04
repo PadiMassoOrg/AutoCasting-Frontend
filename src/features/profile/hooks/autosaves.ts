@@ -42,8 +42,8 @@ export function useBasicInfoAutosave() {
     mutationFn: patchBasicInfo,
     delay: 800,
     onSuccessUpdate: (prev: ProfileResponse, updated) => ({ ...prev, basicInfo: updated }),
-    cacheKeys: [PROFILE_CACHE_KEY], // aquí podrías añadir otras keys si las tuvieras
-    invalidateOnSuccess: 'active', // o false si no querés refetch
+    cacheKeys: [PROFILE_CACHE_KEY],
+    invalidateOnSuccess: 'active',
   });
 }
 
@@ -107,14 +107,12 @@ export function useCreditAutosave() {
   return useSectionAutosave<CreditRequest, Credit>({
     mutationFn: createNewCredit,
     delay: 200,
-    cacheKeys: [PROFILE_CACHE_KEY, PROFILE_CREDITS_CACHE_KEY], // 👈 ambas
-    invalidateOnSuccess: false, // ya hacemos setQueryData
+    cacheKeys: [PROFILE_CACHE_KEY, PROFILE_CREDITS_CACHE_KEY],
+    invalidateOnSuccess: false,
     onSuccessUpdate: (prev, created) => {
       if (Array.isArray(prev)) {
-        // prev = Credit[]
         return [...prev, created];
       }
-      // prev = ProfileResponse
       return {
         ...prev,
         credits: [...(prev?.credits ?? []), created],
@@ -140,8 +138,8 @@ export function useCreditPatchAutosave() {
 export function useCreditDeleteAutosave() {
   return useSectionAutosave<{ id: string }, { id: string }>({
     mutationFn: async ({ id }) => {
-      await deleteCredit(id); // puede ser 204 No Content
-      return { id }; // <- devolvemos el id borrado sí o sí
+      await deleteCredit(id);
+      return { id };
     },
     delay: 0,
     cacheKeys: [PROFILE_CACHE_KEY, PROFILE_CREDITS_CACHE_KEY],
@@ -158,13 +156,12 @@ export function useEducationAutosave() {
   return useSectionAutosave<EducationRequest, Education>({
     mutationFn: createNewEducation,
     delay: 200,
-    cacheKeys: [PROFILE_CACHE_KEY, PROFILE_EDUCATION_CACHE_KEY], // 👈 ambas
-    invalidateOnSuccess: false, // ya hacemos setQueryData
+    cacheKeys: [PROFILE_CACHE_KEY, PROFILE_EDUCATION_CACHE_KEY],
+    invalidateOnSuccess: false,
     onSuccessUpdate: (prev, created) => {
       if (Array.isArray(prev)) {
         return [...prev, created];
       }
-      // prev = ProfileResponse
       return {
         ...prev,
         education: [...(prev?.education ?? []), created],
@@ -174,7 +171,7 @@ export function useEducationAutosave() {
 }
 
 export function useEducationPatchAutosave() {
-  return useSectionAutosave<CreditRequest, Education>({
+  return useSectionAutosave<EducationRequest, Education>({
     mutationFn: patchEducation,
     delay: 200,
     cacheKeys: [PROFILE_CACHE_KEY, PROFILE_EDUCATION_CACHE_KEY],

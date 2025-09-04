@@ -7,7 +7,7 @@ import ProfileInfoPanelSwitch from './ProfileInfoPanelSwitch';
 type PillKey = 'characteristics' | 'skills' | 'credits' | 'education';
 
 type Props = {
-  profile: PublicProfileResponse; // <- te paso la entidad completa
+  profile: PublicProfileResponse;
   className?: string;
 };
 
@@ -41,12 +41,13 @@ export default function ProfileInfoCarousel({ profile, className }: Props) {
     <section className={`w-full ${className ?? ''}`}>
       <Pills items={pills} value={active} onChange={setActive}></Pills>
       <div className="mt-5">
-        <ProfileInfoPanelSwitch activeKey={active} profile={profile} t={t} />
+        <ProfileInfoPanelSwitch activeKey={active} profile={profile} />
       </div>
     </section>
   );
 }
 
+// TODO - Move Helpers
 function getPillLabel(key: PillKey, t: ReturnType<typeof useTranslation>['t']) {
   switch (key) {
     case 'characteristics':

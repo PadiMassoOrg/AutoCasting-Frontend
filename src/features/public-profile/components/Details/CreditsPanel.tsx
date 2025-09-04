@@ -12,15 +12,14 @@ const ORDER_KEYS = [
 
 const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
   const { t } = useTranslation();
+  const [open, setOpen] = useState<Record<string, boolean>>({});
 
-  // Agrupar por tipo de producción (clave = stringCode)
   const groups = useMemo(() => {
     const g: Record<string, Credit[]> = {};
     for (const c of credits) {
       const key = c.productionType.stringCode;
       (g[key] ??= []).push(c);
     }
-    // Orden interno por año desc, luego por nombre de proyecto
     for (const k of Object.keys(g)) {
       g[k].sort((a, b) => {
         const ya = Number(a.year);
@@ -32,7 +31,6 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
     return g;
   }, [credits]);
 
-  // Orden de categorías según ORDER_KEYS; resto por su traducción
   const categories = useMemo(() => {
     const cats = Object.keys(groups);
     return cats.sort((a, b) => {
@@ -44,8 +42,6 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
       return t(a).localeCompare(t(b));
     });
   }, [groups, t]);
-
-  const [open, setOpen] = useState<Record<string, boolean>>({});
 
   return (
     <div className="flex flex-col gap-6" style={{ overflowAnchor: 'none' }}>
@@ -59,7 +55,7 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
             <button
               type="button"
               onClick={() => {
-                const y = window.scrollY; // evita “salto” de la página
+                const y = window.scrollY;
                 setOpen((s) => ({ ...s, [catKey]: !isOpen }));
                 requestAnimationFrame(() => window.scrollTo({ top: y }));
               }}
@@ -100,8 +96,7 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
 
 export default CreditsPanel;
 
-/* ------------------------------- UI bits ---------------------------------- */
-
+// TODO - Move Components
 function Chevron({ open }: { open: boolean }) {
   return (
     <svg

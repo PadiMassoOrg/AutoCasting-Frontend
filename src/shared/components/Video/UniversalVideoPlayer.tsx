@@ -13,38 +13,6 @@ type Props = {
   className?: string;
 };
 
-function detectProvider(url: string): Provider {
-  try {
-    const u = new URL(url);
-    if (/youtube\.com|youtu\.be/i.test(u.hostname)) return 'youtube';
-    if (/vimeo\.com/i.test(u.hostname)) return 'vimeo';
-  } catch {}
-  return 'unknown';
-}
-
-function getYouTubeId(url: string): string | undefined {
-  try {
-    const u = new URL(url);
-    if (u.hostname === 'youtu.be') return u.pathname.slice(1);
-    const v = u.searchParams.get('v');
-    if (v) return v;
-    const m = u.pathname.match(/\/(embed|shorts)\/([^/?#]+)/i);
-    return m?.[2];
-  } catch {}
-  return undefined;
-}
-
-function getVimeoId(url: string): string | undefined {
-  try {
-    const u = new URL(url);
-    // toma el último segmento numérico del path
-    const parts = u.pathname.split('/').filter(Boolean);
-    const candidate = parts.reverse().find((p) => /^\d+$/.test(p));
-    return candidate;
-  } catch {}
-  return undefined;
-}
-
 export default function UniversalVideoPlayer({
   url,
   title = 'Video',
@@ -71,10 +39,9 @@ export default function UniversalVideoPlayer({
       });
       if (loop) {
         params.set('loop', '1');
-        params.set('playlist', id); // requisito de YT para loop
+        params.set('playlist', id);
       }
       if (start && start > 0) params.set('start', String(start));
-      // dominio de privacidad mejorada
       return `https://www.youtube-nocookie.com/embed/${id}?${params.toString()}`;
     }
 
@@ -90,7 +57,6 @@ export default function UniversalVideoPlayer({
         muted: muted ? '1' : '0',
         loop: loop ? '1' : '0',
       });
-      // Nota: Vimeo no soporta "start" directo en el embed estándar
       return `https://player.vimeo.com/video/${id}?${params.toString()}`;
     }
 
@@ -98,7 +64,6 @@ export default function UniversalVideoPlayer({
   }, [provider, url, autoplay, controls, muted, loop, start]);
 
   if (!src) {
-    // Fallback seguro si la URL no es de YT/Vimeo
     return (
       <div className={`p-3 border rounded-2xl text-sm ${className ?? ''}`}>
         Proveedor no soportado.{' '}
@@ -122,4 +87,36 @@ export default function UniversalVideoPlayer({
       />
     </div>
   );
+}
+
+// TODO - Move Helpers
+function detectProvider(url: string): Provider {
+  try {
+    const u = new URL(url);
+    if (/youtube\.com|youtu\.be/i.test(u.hostname)) return 'youtube';
+    if (/vimeo\.com/i.test(u.hostname)) return 'vimeo';
+  } catch {}
+  return 'unknown';
+}
+
+function getYouTubeId(url: string): string | undefined {
+  try {
+    const u = new URL(url);
+    if (u.hostname === 'youtu.be') return u.pathname.slice(1);
+    const v = u.searchParams.get('v');
+    if (v) return v;
+    const m = u.pathname.match(/\/(embed|shorts)\/([^/?#]+)/i);
+    return m?.[2];
+  } catch {}
+  return undefined;
+}
+
+function getVimeoId(url: string): string | undefined {
+  try {
+    const u = new URL(url);
+    const parts = u.pathname.split('/').filter(Boolean);
+    const candidate = parts.reverse().find((p) => /^\d+$/.test(p));
+    return candidate;
+  } catch {}
+  return undefined;
 }

@@ -6,6 +6,7 @@
   "general": {
     "yes": "Sí",
     "no": "No",
+    "copied": "Copaiado con éxito",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "select": "Seleccionar",
@@ -212,6 +213,9 @@
       "showreel_video": "Videoreel",
       "socials": "Sociales",
       "profile": "Perfil"
+    },
+    "share": {
+      "profile_no_name": "Perfil en AutoCasting"
     },
     "pills": {
       "profile": "Perfil",

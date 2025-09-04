@@ -48,7 +48,6 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
   const [form, setForm] = useState<DraftCredit>(() => (mode === 'edit' ? makeFromInitial(initial) : makeEmpty()));
   const [errors, setErrors] = useState<Partial<Record<keyof DraftCredit, string>>>({});
 
-  // reset cuando cambian mode/initial
   useEffect(() => {
     setForm(mode === 'edit' ? makeFromInitial(initial) : makeEmpty());
     setErrors({});

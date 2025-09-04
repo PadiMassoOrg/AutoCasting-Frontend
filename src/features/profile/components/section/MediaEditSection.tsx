@@ -5,6 +5,7 @@ import { MediaPhotosForm, MediaVideosForm } from '../form';
 
 const MediaEditSection = ({ media, supabaseId }: { media: Media; supabaseId: string }) => {
   const { t } = useTranslation();
+
   return (
     <div className="w-full flex flex-col gap-5">
       <h3 className="font-bold text-base">{t('profile.media.photos')}</h3>

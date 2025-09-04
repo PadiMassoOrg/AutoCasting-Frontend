@@ -13,7 +13,8 @@ const ORDER: OuterKey[] = ['profile', 'media', 'details'];
 
 export default function ProfileEditShell({ profile }: { profile: ProfileResponse }) {
   const { t } = useTranslation();
-  const isDesktop = useMedia('(min-width: 768px)'); // md breakpoint
+  // TODO - Verify Media Queries
+  const isDesktop = useMedia('(min-width: 768px)');
 
   const [outer, setOuter] = useState<OuterKey>('profile');
   const outerIndex = ORDER.indexOf(outer);
@@ -33,7 +34,6 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
       <Separator className="opacity-20 my-9" />
 
       {isDesktop ? (
-        // Desktop: carrusel horizontal como siempre
         <HorizontalCarousel
           key={isDesktop ? 'desktop' : 'mobile'}
           active={outerIndex}
@@ -44,7 +44,6 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
           <DetailsEditSection profile={profile} />
         </HorizontalCarousel>
       ) : (
-        // Mobile: SIN transform → un solo panel visible
         <div className="w-full min-w-0">
           {outer === 'profile' && <ProfileEditSection profile={profile} />}
           {outer === 'media' && <MediaEditSection media={profile.media} supabaseId={profile.id} />}

@@ -66,6 +66,7 @@ export default function CarouselHeader({
   );
 }
 
+// TODO - Move Components
 function ChevronLeft() {
   return (
     <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="cursor-pointer">
@@ -73,6 +74,7 @@ function ChevronLeft() {
     </svg>
   );
 }
+
 function ChevronRight() {
   return (
     <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="cursor-pointer">

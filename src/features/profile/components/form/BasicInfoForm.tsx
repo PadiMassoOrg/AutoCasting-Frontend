@@ -23,29 +23,23 @@ export default function BasicInfoForm({
 }) {
   const { t, i18n } = useTranslation();
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
-  const basicInfoAutosave = useBasicInfoAutosave();
+  const autosave = useBasicInfoAutosave();
 
-  const stageName = useCommittedText(data.stageName ?? '', (v) => basicInfoAutosave.immediate({ stageName: v }), {
+  const stageName = useCommittedText(data.stageName ?? '', (v) => autosave.immediate({ stageName: v }), {
     trim: true,
   });
 
-  // Género
-  const gender = useCommittedUuid(
-    data.gender?.id ?? null,
-    (id) => basicInfoAutosave.immediate({ genderId: id ?? undefined }),
-    { allowNull: true }
-  );
+  const gender = useCommittedUuid(data.gender?.id ?? null, (id) => autosave.immediate({ genderId: id ?? undefined }), {
+    allowNull: true,
+  });
 
-  // Fecha (usa el hook)
-  const birth = useIsoDateField(data.birthDate ?? '', (iso) => basicInfoAutosave.immediate({ birthDate: iso }), 600);
+  const birth = useIsoDateField(data.birthDate ?? '', (iso) => autosave.immediate({ birthDate: iso }), 600);
 
-  // Profesiones
   const professions = useToggleSet<string>(
     (data.professions ?? []).map((p) => p.id),
-    (next) => basicInfoAutosave.immediate({ professionIds: next })
+    (next) => autosave.immediate({ professionIds: next })
   );
 
-  // Opciones año/mes/día
   const YEAR_END = new Date().getFullYear();
   const YEAR_START = YEAR_END - 80;
 

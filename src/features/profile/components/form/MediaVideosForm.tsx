@@ -6,28 +6,22 @@ import type { Media } from '../../types/profile.types';
 
 const MediaVideosForm = ({ data }: { data: Media }) => {
   const { t } = useTranslation();
-  const mediaAutosave = useMediaAutosave();
+  const autosave = useMediaAutosave();
 
   const introduction = useCommittedText(
     data.introductionVideoUrl ?? '',
-    (v) => mediaAutosave.immediate({ introductionVideoUrl: v }),
+    (v) => autosave.immediate({ introductionVideoUrl: v }),
     {
       trim: true,
     }
   );
-
-  const videoreel = useCommittedText(
-    data.showReelVideoUrl ?? '',
-    (v) => mediaAutosave.immediate({ showReelVideoUrl: v }),
-    {
-      trim: true,
-    }
-  );
+  const videoreel = useCommittedText(data.showReelVideoUrl ?? '', (v) => autosave.immediate({ showReelVideoUrl: v }), {
+    trim: true,
+  });
 
   return (
     <div className="w-full flex flex-col gap-5">
       <h3 className="font-bold text-base">{t('profile.media.videos')}</h3>
-
       <FormInputField
         id="introduction"
         label={t('profile.media.introduction')}
@@ -37,7 +31,6 @@ const MediaVideosForm = ({ data }: { data: Media }) => {
         onBlur={introduction.onBlur}
         onKeyDown={introduction.onKeyDown}
       />
-
       <FormInputField
         id="videoreel"
         label={t('profile.media.videoreel')}

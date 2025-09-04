@@ -31,7 +31,6 @@ export default function SkillsForm({ data }: { data: SiteMetadataObject[] }) {
           closeModal();
         }}
         onCancel={closeModal}
-        t={t}
       />,
       t('profile.skills.add_new'),
       'lg'

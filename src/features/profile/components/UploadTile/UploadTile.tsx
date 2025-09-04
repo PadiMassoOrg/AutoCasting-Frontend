@@ -252,7 +252,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
                 'h-12 w-12 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center',
                 classes?.actionBtn
               )}
-              style={{ cursor: 'pointer' }} // 🔒 fuerza pointer
+              style={{ cursor: 'pointer' }}
               aria-label="Editar imagen"
               onClick={(e) => {
                 e.stopPropagation();
@@ -268,7 +268,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
                 'h-12 w-12 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center',
                 classes?.actionBtn
               )}
-              style={{ cursor: 'pointer' }} // 🔒 fuerza pointer
+              style={{ cursor: 'pointer' }}
               aria-label="Eliminar imagen"
               onClick={(e) => {
                 e.stopPropagation();

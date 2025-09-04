@@ -61,6 +61,7 @@ export default function DetailsInfoCarousel({ profile }: { profile: ProfileRespo
   );
 }
 
+// TODO - Move Components
 function getLabel(key: PillKey, t: ReturnType<typeof useTranslation>['t']) {
   switch (key) {
     case 'characteristics':

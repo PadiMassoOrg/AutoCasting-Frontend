@@ -6,24 +6,18 @@ import type { ProfileSocialMedia } from '../../types/profile.types';
 
 export default function SocialMediaForm({ data }: { data: ProfileSocialMedia }) {
   const { t } = useTranslation();
-  const socialMediaAutosave = useSocialMediaAutosave();
+  const autosave = useSocialMediaAutosave();
 
-  const instagramUrl = useCommittedText(
-    data.instagramUrl ?? '',
-    (v) => socialMediaAutosave.immediate({ instagramUrl: v }),
-    {
-      trim: true,
-    }
-  );
-
-  const tikTokUrl = useCommittedText(data.tikTokUrl ?? '', (v) => socialMediaAutosave.immediate({ tikTokUrl: v }), {
+  const instagramUrl = useCommittedText(data.instagramUrl ?? '', (v) => autosave.immediate({ instagramUrl: v }), {
+    trim: true,
+  });
+  const tikTokUrl = useCommittedText(data.tikTokUrl ?? '', (v) => autosave.immediate({ tikTokUrl: v }), {
     trim: true,
   });
 
   return (
     <div className="w-full flex flex-col gap-5">
       <h3 className="font-bold text-base">{t('profile.basic_info.social_media')}</h3>
-
       <FormInputField
         id="instagramUrl"
         label={t('profile.basic_info.instagram')}
@@ -34,7 +28,6 @@ export default function SocialMediaForm({ data }: { data: ProfileSocialMedia }) 
         onBlur={instagramUrl.onBlur}
         onKeyDown={instagramUrl.onKeyDown}
       />
-
       <FormInputField
         id="phoneNumber"
         label={t('profile.basic_info.tikTok')}

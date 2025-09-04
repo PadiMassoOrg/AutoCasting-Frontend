@@ -28,21 +28,16 @@ export async function cleanupOldSlotFiles(profileId: string, slot: 'headshot' | 
 }
 
 export async function removeByPublicUrl(publicUrl: string) {
-  // 1) quitar query/hash
   const clean = publicUrl.split('#')[0].split('?')[0];
-
-  // 2) localizar el inicio del path público del bucket
   const marker = `/storage/v1/object/public/${BUCKET_NAME}/`;
   const idx = clean.indexOf(marker);
   if (idx === -1) {
     throw new Error('URL pública inválida: no se pudo resolver el key');
   }
 
-  // 3) extraer y decodificar el key dentro del bucket
   const keyEncoded = clean.slice(idx + marker.length); // "profiles/.../file.jpg"
   const key = decodeURIComponent(keyEncoded);
 
-  // 4) borrar
   const { error } = await supabase.storage.from(BUCKET_NAME).remove([key]);
   if (error) throw error;
 }

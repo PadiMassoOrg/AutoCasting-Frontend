@@ -22,7 +22,7 @@ export default function EducationForm({ data }: { data: Education[] }) {
         mode="create"
         onCancel={closeModal}
         onSave={(draft) => {
-          createMut.immediate(draft); // esto actualiza el cache + invalida
+          createMut.immediate(draft);
           closeModal();
         }}
       />,
@@ -56,7 +56,6 @@ export default function EducationForm({ data }: { data: Education[] }) {
           deleteMut.immediate({ id: education.id });
           closeModal();
         }}
-        t={t}
       />,
       t('profile.education.delete'),
       'sm'

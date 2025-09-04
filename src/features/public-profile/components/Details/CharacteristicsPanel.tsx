@@ -43,7 +43,6 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
     diet: 'dietOption',
   };
 
-  // Para agregar líneas divisorias como en la captura
   const dividerBefore = new Set(['hairColor', 'shirt']);
 
   return (
@@ -68,6 +67,7 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
   );
 }
 
+// TODO - Move Helpers
 function formatValue(key: string, raw: unknown, t: ReturnType<typeof useTranslation>['t']): React.ReactNode {
   if (raw == null) return '-';
   if (key === 'height') return `${raw} cm`;

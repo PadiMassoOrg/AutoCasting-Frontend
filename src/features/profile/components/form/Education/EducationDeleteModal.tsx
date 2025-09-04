@@ -1,17 +1,18 @@
 import { Button } from 'autocasting-ui-library-padimasso';
+import { useTranslation } from 'react-i18next';
 import type { Education } from '../../../types/profile.types';
 
 const EducationDeleteModal = ({
   education,
   onConfirm,
   onCancel,
-  t,
 }: {
   education: Education;
   onConfirm: () => void | Promise<void>;
   onCancel: () => void;
-  t: (k: string) => string;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <article className="flex flex-col gap-5">
       <p className="text-base">

@@ -4,13 +4,37 @@ import instagram from '../../../shared/icons/instagram.svg';
 import tikTok from '../../../shared/icons/tikTok.svg';
 import type { ProfileSocialMedia } from '../../profile/types/profile.types';
 
+const SocialMediaSection = ({ data }: { data: ProfileSocialMedia }) => {
+  const { t } = useTranslation();
+
+  const instaUrl = normalizeExternalUrl(data.instagramUrl);
+  const tiktokUrl = normalizeExternalUrl(data.tikTokUrl);
+
+  const hasSocials = Boolean(instaUrl || tiktokUrl);
+
+  if (!hasSocials) return;
+  return (
+    <>
+      <Separator className="opacity-25 my-12"></Separator>
+      <article className="flex flex-col gap-4 items-center">
+        <h2 className="text-lg font-bold">{t('profile.page.socials')}:</h2>
+        <div className="w-full flex gap-4 items-center justify-center">
+          <SocialLink href={instaUrl} label="Instagram" iconSrc={instagram} />
+          <SocialLink href={tiktokUrl} label="TikTok" iconSrc={tikTok} />
+        </div>
+      </article>
+    </>
+  );
+};
+
+export default SocialMediaSection;
+
+// TODO - Mover Helpers
 function normalizeExternalUrl(raw?: string | null): string | null {
   if (!raw) return null;
   let url = raw.trim();
 
-  // Adjust https
   if (!/^https?:\/\//i.test(url)) {
-    // permite cosas tipo example.com o tiktok.com/user
     if (/^[\w.-]+\.[a-z]{2,}($|[\/?#])/i.test(url)) {
       url = `https://${url}`;
     } else {
@@ -18,7 +42,6 @@ function normalizeExternalUrl(raw?: string | null): string | null {
     }
   }
 
-  // Bloquea esquemas peligrosos
   const lower = url.toLowerCase();
   if (lower.startsWith('javascript:') || lower.startsWith('data:')) return null;
 
@@ -45,28 +68,3 @@ function SocialLink({ href, label, iconSrc }: { href: string | null; label: stri
     </a>
   );
 }
-
-const SocialMediaSection = ({ data }: { data: ProfileSocialMedia }) => {
-  const { t } = useTranslation();
-
-  const instaUrl = normalizeExternalUrl(data.instagramUrl);
-  const tiktokUrl = normalizeExternalUrl(data.tikTokUrl);
-
-  const hasSocials = Boolean(instaUrl || tiktokUrl);
-
-  if (!hasSocials) return;
-  return (
-    <>
-      <Separator className="opacity-25 my-12"></Separator>
-      <article className="flex flex-col gap-4 items-center">
-        <h2 className="text-lg font-bold">{t('profile.page.socials')}:</h2>
-        <div className="w-full flex gap-4 items-center justify-center">
-          <SocialLink href={instaUrl} label="Instagram" iconSrc={instagram} />
-          <SocialLink href={tiktokUrl} label="TikTok" iconSrc={tikTok} />
-        </div>
-      </article>
-    </>
-  );
-};
-
-export default SocialMediaSection;

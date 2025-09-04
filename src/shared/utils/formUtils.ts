@@ -9,7 +9,6 @@ import {
   type KeyboardEventHandler,
 } from 'react';
 
-// ---- wrappers mínimos para eventos ----
 export const onInput =
   (fn: (v: string) => void): ChangeEventHandler<HTMLInputElement> =>
   (e) =>
@@ -51,7 +50,6 @@ export const commitOnBlur =
   () =>
     commit();
 
-// ---- texto con confirmación (blur/Enter) y anti-doble envío ----
 export function useCommittedText(initial: string, commitFn: (v: string) => void, opts?: { trim?: boolean }) {
   const [value, setValue] = useState(initial ?? '');
   const last = useRef(initial ?? '');
@@ -73,7 +71,6 @@ export function useCommittedText(initial: string, commitFn: (v: string) => void,
   };
 }
 
-// ---- helper fecha ISO con debounce y validación ----
 export function useIsoDateField(
   initialISO: string | null | undefined,
   commitFn: (iso: string) => void,
@@ -159,7 +156,6 @@ export function useIsoDateField(
   };
 }
 
-// ---- sets toggleables (p. ej. profesiones) ----
 export function useToggleSet<T>(initial: T[], onChange?: (next: T[]) => void) {
   const [set, setSet] = useState<T[]>(initial ?? []);
   const toggle = useCallback(
@@ -177,8 +173,8 @@ export function useToggleSet<T>(initial: T[], onChange?: (next: T[]) => void) {
 type UseCommittedIntOpts = {
   min?: number;
   max?: number;
-  allowNull?: boolean; // enviar null si el campo queda vacío
-  debounceMs?: number; // si quieres commit diferido (opcional)
+  allowNull?: boolean;
+  debounceMs?: number;
 };
 
 export function useCommittedInt(
@@ -186,9 +182,7 @@ export function useCommittedInt(
   commitFn: (v: number | null) => void,
   opts?: UseCommittedIntOpts
 ) {
-  const [value, setValue] = useState(
-    initial == null ? '' : String(Math.trunc(initial)) // muestra entero
-  );
+  const [value, setValue] = useState(initial == null ? '' : String(Math.trunc(initial)));
   const last = useRef<number | null>(initial ?? null);
   const [error, setError] = useState<string | null>(null);
   const debounce = useRef<number | null>(null);
@@ -208,13 +202,12 @@ export function useCommittedInt(
       return { ok: false, value: null, err: 'Requerido' };
     }
 
-    // admite +/-
     if (!/^[+-]?\d+$/.test(s)) return { ok: false, value: null, err: 'Número inválido' };
 
     let n = Number(s);
     if (!Number.isFinite(n)) return { ok: false, value: null, err: 'Número inválido' };
 
-    n = Math.trunc(n); // entero
+    n = Math.trunc(n);
 
     if (opts?.min != null && n < opts.min) return { ok: false, value: null, err: `Min ${opts.min}` };
     if (opts?.max != null && n > opts.max) return { ok: false, value: null, err: `Max ${opts.max}` };
@@ -227,7 +220,6 @@ export function useCommittedInt(
     setError(err ?? null);
     if (!ok) return;
 
-    // evita commits duplicados
     const same = value === last.current || (value == null && last.current == null);
 
     if (!same) {
@@ -249,9 +241,9 @@ export function useCommittedInt(
   }, [doCommit, opts?.debounceMs]);
 
   return {
-    value, // úsalo en value del <input>
-    setValue, // si necesitas setear manual
-    error, // mensaje de error (o null)
+    value,
+    setValue,
+    error,
     onChange: onNumberText((s) => {
       setValue(s);
       if (opts?.debounceMs) schedule();
@@ -264,10 +256,9 @@ export function useCommittedInt(
 
 export function useCommittedBoolean(initial: boolean | null | undefined, commitFn: (v: boolean) => void) {
   const safeInitial = initial ?? false;
-  const [value, setValue] = useState<string>(String(safeInitial)); // 'true' | 'false'
+  const [value, setValue] = useState<string>(String(safeInitial));
   const last = useRef<boolean>(safeInitial);
 
-  // sync con nuevas props
   useEffect(() => {
     const next = initial ?? false;
     if (next !== last.current) {
@@ -288,13 +279,14 @@ export function useCommittedBoolean(initial: boolean | null | undefined, commitF
   );
 
   return {
-    value, // 'true' | 'false'
+    value,
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => {
       const v = e.target.value;
       setValue(v);
-      commitIfChanged(v); // <-- SOLO acá
+      commitIfChanged(v);
     },
     onBlur: () => {
+      // Blank on purpose
       // no-op para evitar la doble llamada
     },
   };
@@ -309,7 +301,7 @@ export function useCommittedUuid(
   commitFn: (v: string | null) => void,
   opts?: UseCommittedUuidOpts
 ) {
-  const [value, setValue] = useState<string>(initial ?? ''); // '' representa null
+  const [value, setValue] = useState<string>(initial ?? '');
   const last = useRef<string | null>(initial ?? null);
   const [error, setError] = useState<string | null>(null);
 
@@ -338,7 +330,7 @@ export function useCommittedUuid(
   );
 
   return {
-    value, // úsalo en <select value={value}>
+    value,
     setValue,
     error,
     onChange: onUuidSelect((v) => {
@@ -349,7 +341,7 @@ export function useCommittedUuid(
   };
 }
 
-/* ---------- helpers internos fecha ---------- */
+// TODO - Move Helpers
 function parseISO(iso: string) {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
   if (!m) return { year: '', month: '', day: '' };

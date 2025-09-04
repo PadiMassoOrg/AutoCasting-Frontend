@@ -20,7 +20,7 @@ export default function CreditsForm({ data }: { data: Credit[] }) {
         mode="create"
         onCancel={closeModal}
         onSave={(draft) => {
-          createMut.immediate(draft); // esto actualiza el cache + invalida
+          createMut.immediate(draft);
           closeModal();
         }}
       />,
@@ -54,7 +54,6 @@ export default function CreditsForm({ data }: { data: Credit[] }) {
           deleteMut.immediate({ id: credit.id });
           closeModal();
         }}
-        t={t}
       />,
       t('profile.credits.delete'),
       'sm'

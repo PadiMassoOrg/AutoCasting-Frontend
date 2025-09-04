@@ -26,6 +26,7 @@ export function useProfileMediaDelete() {
         try {
           await removeByPublicUrl(url);
         } catch (err) {
+          // Blank on purpose
           // Si el objeto ya no existe o hay error menor, seguimos igual con el PATCH
           // (evita bloquear el flujo por un 404 del storage).
           // console.warn('removeByPublicUrl fallo, continuo con PATCH', err);

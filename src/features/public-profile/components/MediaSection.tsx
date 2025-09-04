@@ -5,8 +5,8 @@ import VideoPreviewCard from '../../../shared/components/Video/VideoPreviewCard'
 import type { Media } from '../../profile/types/profile.types';
 
 const MediaSection = ({ data }: { data: Media }) => {
-  const { headshotImageUrl, fullBodyImageUrl, otherPicturesUrl, introductionVideoUrl, showReelVideoUrl } = data;
   const { t } = useTranslation();
+  const { headshotImageUrl, fullBodyImageUrl, otherPicturesUrl, introductionVideoUrl, showReelVideoUrl } = data;
 
   const mergePictures = (): string[] => {
     return [headshotImageUrl, fullBodyImageUrl, ...(otherPicturesUrl ?? [])].filter(

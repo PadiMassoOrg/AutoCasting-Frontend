@@ -1,5 +1,6 @@
 import { Button, FormSelectField, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Chip } from '../../../../../shared/components/Chip/Chip';
 import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
 
@@ -8,14 +9,13 @@ export function NewSkillModal({
   allOptions,
   onSave,
   onCancel,
-  t,
 }: {
   initial: SiteMetadataObject[];
   allOptions: { value: string; label: string }[];
   onSave: (next: SiteMetadataObject[]) => void;
   onCancel: () => void;
-  t: (k: string) => string;
 }) {
+  const { t } = useTranslation();
   const [draft, setDraft] = useState<SiteMetadataObject[]>(initial);
   const [selectedId, setSelectedId] = useState<string>('');
 

@@ -4,8 +4,6 @@ import { getPublicProfile, PUBLIC_PROFILE_CACHE_KEY } from '../services/publicPr
 
 export const usePublicProfile = (slug?: string) => {
   const qc = useQueryClient();
-
-  // “Bump” se actualiza cada vez que el perfil en cache se modifica (autosaves/setQueryData)
   const bump = qc.getQueryState<PublicProfileResponse>(PUBLIC_PROFILE_CACHE_KEY)?.dataUpdatedAt ?? 0;
 
   return useQuery({

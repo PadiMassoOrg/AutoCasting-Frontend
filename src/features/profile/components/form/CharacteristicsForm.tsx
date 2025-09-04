@@ -16,11 +16,13 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
   const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
   const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye_color');
   const dietOptions = useCachedSiteMetadataOption('dietOptions', t);
+
   const booleanOptions = [
     { value: 'true', label: t('general.yes') },
     { value: 'false', label: t('general.no') },
   ];
 
+  //TODO - Verify Constraints and ZOD usage.
   const heightCm = useCommittedInt(data.heightCm ?? null, (v) => autosave.immediate({ heightCm: v ?? undefined }), {
     min: 20,
     max: 500,

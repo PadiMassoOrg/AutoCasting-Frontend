@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import message from '../../../shared/icons/message.svg';
 import share from '../../../shared/icons/share.svg';
 import { usePublicProfile } from '../hooks/usePublicProfile';
 
 export default function ViewerActions() {
+  const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
   const { data } = usePublicProfile(slug!);
 
@@ -15,12 +17,12 @@ export default function ViewerActions() {
     try {
       if (navigator.share) {
         await navigator.share({
-          title: data?.basicInfo?.stageName ?? 'Perfil en AutoCasting',
+          title: data?.basicInfo?.stageName ?? t('profile.share.profile_no_name'),
           url,
         });
       } else if (navigator.clipboard) {
         await navigator.clipboard.writeText(url);
-        alert('Link copiado');
+        alert(t('general.copied'));
       } else {
         const ta = document.createElement('textarea');
         ta.value = url;
@@ -28,9 +30,10 @@ export default function ViewerActions() {
         ta.select();
         document.execCommand('copy');
         document.body.removeChild(ta);
-        alert('Link copiado');
+        alert(t('general.copied'));
       }
     } catch {
+      // Blank on purpose
       // usuario canceló o no hay soporte; silenciar
     }
   };
@@ -79,7 +82,7 @@ export default function ViewerActions() {
   );
 }
 
-// Helpers
+// TODO - Mover Helpers
 function normalizePhone(raw?: string | null): string | null {
   if (!raw) return null;
   let p = raw.trim().replace(/[^\d+]/g, '');
@@ -91,6 +94,7 @@ function buildWhatsAppUrl(phone?: string | null, name?: string | null) {
   const p = normalizePhone(phone);
   if (!p) return null;
   const num = p.replace(/^\+/, '');
+  // TODO - Refinar Texto o crear Template en algun lado.
   const text = `Hola ${name ?? ''}, te escribo desde tu perfil de AutoCasting.`;
   return `https://wa.me/${num}?text=${encodeURIComponent(text)}`;
 }
