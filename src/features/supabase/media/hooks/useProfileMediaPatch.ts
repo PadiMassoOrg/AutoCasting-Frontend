@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { patchMedia, PROFILE_CACHE_KEY } from '../../../profile/services/profileService';
+import { patchMedia, PROFILE_CACHE_KEY } from '../../../profile-edit/services/profileService';
 import { cleanupOldSlotFiles, uploadPublic } from '../lib/profile-media';
 
 type Slot = 'headshot' | 'fullbody' | 'other';
@@ -15,7 +15,6 @@ function getExt(name: string, type?: string) {
 function buildStorageKey(profileId: string, slot: Slot, file: File) {
   const ext = getExt(file.name, file.type);
   const ts = Date.now();
-  // cada subida crea un objeto nuevo
   return `profiles/${profileId}/media/${slot}/${ts}.${ext}`;
 }
 
@@ -31,7 +30,6 @@ export function useProfileMediaPatch(profileId: string) {
       const key = buildStorageKey(profileId, slot, file);
       const { publicUrl } = await uploadPublic(key, file);
 
-      // Request payload **granular**
       const payload: any = {};
       if (slot === 'headshot') payload.headshotImageUrl = publicUrl;
       if (slot === 'fullbody') payload.fullBodyImageUrl = publicUrl;

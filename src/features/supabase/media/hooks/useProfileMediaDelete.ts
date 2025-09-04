@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { PROFILE_CACHE_KEY, patchMedia } from '../../../profile/services/profileService';
-import type { MediaPatchRequest } from '../../../profile/types/requests';
+import { PROFILE_CACHE_KEY, patchMedia } from '../../../profile-edit/services/profileService';
+import type { MediaPatchRequest } from '../../../profile-edit/types/requests';
 import { removeByPublicUrl } from '../lib/profile-media';
 
 type DeleteArgs =
@@ -26,6 +26,7 @@ export function useProfileMediaDelete() {
         try {
           await removeByPublicUrl(url);
         } catch (err) {
+          // Blank on purpose
           // Si el objeto ya no existe o hay error menor, seguimos igual con el PATCH
           // (evita bloquear el flujo por un 404 del storage).
           // console.warn('removeByPublicUrl fallo, continuo con PATCH', err);

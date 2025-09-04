@@ -1,7 +1,8 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Credit } from '../../../profile/types/profile.types';
+import { ChevronUpDown } from '../../../../shared/components/Chevron';
+import type { Credit } from '../../../profile-edit/types/profile.types';
 
 const ORDER_KEYS = [
   'sitemetadata.production_type.theatre',
@@ -12,15 +13,14 @@ const ORDER_KEYS = [
 
 const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
   const { t } = useTranslation();
+  const [open, setOpen] = useState<Record<string, boolean>>({});
 
-  // Agrupar por tipo de producción (clave = stringCode)
   const groups = useMemo(() => {
     const g: Record<string, Credit[]> = {};
     for (const c of credits) {
       const key = c.productionType.stringCode;
       (g[key] ??= []).push(c);
     }
-    // Orden interno por año desc, luego por nombre de proyecto
     for (const k of Object.keys(g)) {
       g[k].sort((a, b) => {
         const ya = Number(a.year);
@@ -32,7 +32,6 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
     return g;
   }, [credits]);
 
-  // Orden de categorías según ORDER_KEYS; resto por su traducción
   const categories = useMemo(() => {
     const cats = Object.keys(groups);
     return cats.sort((a, b) => {
@@ -44,8 +43,6 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
       return t(a).localeCompare(t(b));
     });
   }, [groups, t]);
-
-  const [open, setOpen] = useState<Record<string, boolean>>({});
 
   return (
     <div className="flex flex-col gap-6" style={{ overflowAnchor: 'none' }}>
@@ -59,7 +56,7 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
             <button
               type="button"
               onClick={() => {
-                const y = window.scrollY; // evita “salto” de la página
+                const y = window.scrollY;
                 setOpen((s) => ({ ...s, [catKey]: !isOpen }));
                 requestAnimationFrame(() => window.scrollTo({ top: y }));
               }}
@@ -68,7 +65,7 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
               aria-controls={`credits-${catKey}`}
             >
               <span className="font-semibold text-lg">{t(catKey)}:</span>
-              <Chevron open={isOpen} />
+              <ChevronUpDown open={isOpen} />
             </button>
 
             {/* Lista de Credits */}
@@ -99,18 +96,3 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
 };
 
 export default CreditsPanel;
-
-/* ------------------------------- UI bits ---------------------------------- */
-
-function Chevron({ open }: { open: boolean }) {
-  return (
-    <svg
-      className={`w-7 transition-transform ${open ? 'rotate-180' : ''}`}
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
-    </svg>
-  );
-}

@@ -6,7 +6,7 @@ export function useSiteMetadata() {
     queryKey: METADATA_CACHE_KEY,
     queryFn: fetchSiteMetadata,
     staleTime: Infinity,
-    gcTime: 1000 * 60 * 60 * 24 * 30, // 30 días en memoria (persistencia aparte)
+    gcTime: 1000 * 60 * 60 * 24 * 30, // 30 Days
     refetchOnMount: false,
     refetchOnWindowFocus: false,
   });

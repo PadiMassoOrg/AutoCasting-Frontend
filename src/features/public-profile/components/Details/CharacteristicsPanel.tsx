@@ -1,8 +1,8 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Characteristics } from '../../../profile/types/profile.types';
-import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
+import type { Characteristics } from '../../../profile-edit/types/profile.types';
+import { formatCharacteristicValue } from '../../utils/publicProfileUtils';
 
 export default function CharacteristicsPanel({ data }: { data: Characteristics }) {
   const { t } = useTranslation();
@@ -43,7 +43,6 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
     diet: 'dietOption',
   };
 
-  // Para agregar líneas divisorias como en la captura
   const dividerBefore = new Set(['hairColor', 'shirt']);
 
   return (
@@ -51,7 +50,7 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
       {keys.map((key) => {
         const label = t(`profile.characteristics.${key}`);
         const raw = (data as any)?.[propMap[key]];
-        const value = formatValue(key, raw, t);
+        const value = formatCharacteristicValue(key, raw, t);
         return (
           <React.Fragment key={key}>
             {dividerBefore.has(key) && <Separator className="opacity-20 my-1" />}
@@ -66,16 +65,4 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
       })}
     </div>
   );
-}
-
-function formatValue(key: string, raw: unknown, t: ReturnType<typeof useTranslation>['t']): React.ReactNode {
-  if (raw == null) return '-';
-  if (key === 'height') return `${raw} cm`;
-  if (key === 'weight') return `${raw} kg`;
-  if (key === 'hairColor' || key === 'eyeColor' || key === 'diet') {
-    const obj = raw as SiteMetadataObject;
-    return t(obj.stringCode);
-  }
-  if (typeof raw === 'boolean') return raw ? t('general.yes') : t('general.no');
-  return String(raw);
 }

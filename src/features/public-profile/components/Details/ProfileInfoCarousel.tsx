@@ -1,61 +1,44 @@
-import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { PublicProfileResponse } from '../../../profile/types/profile.types';
-import Pills from '../Pills/Pills';
+import { InfoCarousel } from '../../../../shared/components/InfoCarousel';
+import type { PublicProfileResponse } from '../../../profile-edit/types/profile.types';
 import ProfileInfoPanelSwitch from './ProfileInfoPanelSwitch';
 
 type PillKey = 'characteristics' | 'skills' | 'credits' | 'education';
+const ORDER: readonly PillKey[] = ['characteristics', 'skills', 'credits', 'education'];
 
-type Props = {
-  profile: PublicProfileResponse; // <- te paso la entidad completa
+export default function ProfileInfoCarousel({
+  profile,
+  className,
+}: {
+  profile: PublicProfileResponse;
   className?: string;
-};
-
-const PILL_ORDER: PillKey[] = ['characteristics', 'skills', 'credits', 'education'];
-
-export default function ProfileInfoCarousel({ profile, className }: Props) {
+}) {
   const { t } = useTranslation();
-  const [active, setActive] = useState<PillKey>('characteristics');
-
-  const counts = useMemo(
-    () => ({
-      characteristics: undefined as number | undefined,
-      skills: profile.skills.length ?? 0,
-      credits: profile.credits.length ?? 0,
-      education: profile.education.length ?? 0,
-    }),
-    [profile]
-  );
-
-  const pills = useMemo(
-    () =>
-      PILL_ORDER.map((key) => ({
-        key,
-        label: getPillLabel(key, t),
-        count: counts[key as keyof typeof counts],
-      })),
-    [counts, t]
-  );
 
   return (
-    <section className={`w-full ${className ?? ''}`}>
-      <Pills items={pills} value={active} onChange={setActive}></Pills>
-      <div className="mt-5">
-        <ProfileInfoPanelSwitch activeKey={active} profile={profile} t={t} />
-      </div>
-    </section>
+    <InfoCarousel<PillKey, PublicProfileResponse>
+      data={profile}
+      order={ORDER}
+      renderers={renderers}
+      getCount={getCount}
+      t={t}
+      className={className}
+      defaultActive="characteristics"
+      panelWrapperClassName="mt-5"
+      translationPrefix="profile.pills"
+    />
   );
 }
 
-function getPillLabel(key: PillKey, t: ReturnType<typeof useTranslation>['t']) {
-  switch (key) {
-    case 'characteristics':
-      return t('profile.pills.characteristics');
-    case 'skills':
-      return t('profile.pills.skills');
-    case 'credits':
-      return t('profile.pills.credits');
-    case 'education':
-      return t('profile.pills.education');
-  }
-}
+const renderers = {
+  characteristics: (p: PublicProfileResponse) => <ProfileInfoPanelSwitch activeKey="characteristics" profile={p} />,
+  skills: (p: PublicProfileResponse) => <ProfileInfoPanelSwitch activeKey="skills" profile={p} />,
+  credits: (p: PublicProfileResponse) => <ProfileInfoPanelSwitch activeKey="credits" profile={p} />,
+  education: (p: PublicProfileResponse) => <ProfileInfoPanelSwitch activeKey="education" profile={p} />,
+} as const;
+
+const getCount = {
+  skills: (p: PublicProfileResponse) => p.skills?.length ?? 0,
+  credits: (p: PublicProfileResponse) => p.credits?.length ?? 0,
+  education: (p: PublicProfileResponse) => p.education?.length ?? 0,
+} as const;

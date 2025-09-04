@@ -2,11 +2,11 @@ import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 import VideoPreviewCard from '../../../shared/components/Video/VideoPreviewCard';
-import type { Media } from '../../profile/types/profile.types';
+import type { Media } from '../../profile-edit/types/profile.types';
 
 const MediaSection = ({ data }: { data: Media }) => {
-  const { headshotImageUrl, fullBodyImageUrl, otherPicturesUrl, introductionVideoUrl, showReelVideoUrl } = data;
   const { t } = useTranslation();
+  const { headshotImageUrl, fullBodyImageUrl, otherPicturesUrl, introductionVideoUrl, showReelVideoUrl } = data;
 
   const mergePictures = (): string[] => {
     return [headshotImageUrl, fullBodyImageUrl, ...(otherPicturesUrl ?? [])].filter(

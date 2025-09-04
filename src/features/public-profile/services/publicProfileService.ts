@@ -1,6 +1,6 @@
 import api from '../../../shared/lib/axios';
 import { API_ROUTES } from '../../../shared/lib/routes';
-import type { PublicProfileResponse } from '../../profile/types/profile.types';
+import type { PublicProfileResponse } from '../../profile-edit/types/profile.types';
 
 export const PUBLIC_PROFILE_CACHE_KEY = ['cache-profile'] as const;
 

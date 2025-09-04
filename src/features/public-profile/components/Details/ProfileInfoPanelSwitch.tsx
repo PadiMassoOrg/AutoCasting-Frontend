@@ -1,17 +1,9 @@
-import type { useTranslation } from 'react-i18next';
 import { CharacteristicsPanel, CreditsPanel, EducationPanel, SkillsPanel } from '.';
-import type { PublicProfileResponse } from '../../../profile/types/profile.types';
+import type { PublicProfileResponse } from '../../../profile-edit/types/profile.types';
 
 type PillKey = 'characteristics' | 'skills' | 'credits' | 'education';
 
-const ProfileInfoPanelSwitch = ({
-  activeKey,
-  profile,
-}: {
-  activeKey: PillKey;
-  profile: PublicProfileResponse;
-  t: ReturnType<typeof useTranslation>['t'];
-}) => {
+const ProfileInfoPanelSwitch = ({ activeKey, profile }: { activeKey: PillKey; profile: PublicProfileResponse }) => {
   return (
     <>
       <div

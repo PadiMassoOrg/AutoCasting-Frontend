@@ -14,10 +14,8 @@ import { ModalProvider } from './context/ModalContext';
 import { queryClient } from './shared/lib/queryClient';
 
 const persister = createAsyncStoragePersister({
-  storage: window.localStorage, // o window.sessionStorage
+  storage: window.localStorage,
   key: 'pm-query-cache',
-  // throttleTime: 1000,          // opcional
-  // serialize/deserialize: ...   // opcional (p.ej. con lz-string)
 });
 
 if ('scrollRestoration' in window.history) {
@@ -31,7 +29,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       persistOptions={{
         persister,
         maxAge: 24 * 60 * 60 * 1000, // 24h
-        // buster: 'app-build-hash',  // opcional para invalidar TODO en cambios mayores
       }}
     >
       <MetadataBootstrap />

@@ -8,6 +8,7 @@ const PublicProfilePage = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data, isLoading, error } = usePublicProfile(slug!);
 
+  // TODO - Verify Flow
   if (isLoading) return <p>Cargando perfil público...</p>;
   if (error || !data) return <p>Error al cargar el perfil</p>;
 

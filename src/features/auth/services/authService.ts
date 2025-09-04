@@ -2,7 +2,7 @@ import api from '../../../shared/lib/axios';
 import { clearAuthToken } from '../../../shared/lib/cookies';
 import { queryClient } from '../../../shared/lib/queryClient';
 import { API_ROUTES, ROUTES } from '../../../shared/lib/routes';
-import { PROFILE_CACHE_KEY } from '../../profile/services/profileService';
+import { PROFILE_CACHE_KEY } from '../../profile-edit/services/profileService';
 import type {
   AuthenticationResponse,
   ForgotPasswordRequest,
