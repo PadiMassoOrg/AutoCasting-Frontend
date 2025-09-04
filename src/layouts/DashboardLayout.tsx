@@ -13,6 +13,7 @@ export default function DashboardLayout() {
       <main
         className={`
           pt-4 px-4 min-w-0 overflow-x-hidden min-h-screen
+          lg:p-10 lg:pt-4
         `}
       >
         <Outlet />

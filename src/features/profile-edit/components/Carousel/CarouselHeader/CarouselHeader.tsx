@@ -73,25 +73,56 @@ export default function CarouselHeader({
       </article>
 
       {/* VERTICAL */}
-      <article className="hidden lg:relative lg:flex lg:flex-col lg:w-[264px] lg:h-full lg:gap-20 lg:py-4">
+      <article className="hidden lg:relative lg:flex lg:flex-col lg:w-[264px] lg:h-full lg:gap-14 lg:py-4">
         <span className="absolute top-0 right-0 h-full border-r-1 border-black/20"></span>
-        {/* Main Title */}
         <div className="w-full">
           <h2 className="font-bold text-base">{t('profile.page.edit_profile')}</h2>
         </div>
-        {/* Carousel Menu */}
-        <article>
-          <div className="w-full flex flex-row justify-around">
-            <div className="relative inline-flex items-center justify-center min-h-[50px] isolation-auto">
-              <div className="text-2xl font-bold relative z-10">{items[active]?.label}</div>
-              <HilighterSvg
-                width={110}
-                height={56}
-                className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10"
-              />
-            </div>
-          </div>
-        </article>
+        <nav aria-label={'Edit profile sections'}>
+          <ul className="flex flex-col gap-8">
+            {items.map((it, i) => {
+              const selected = i === active;
+              return (
+                <li key={it.key}>
+                  <button
+                    type="button"
+                    onClick={() => onChange(i)}
+                    aria-current={selected ? 'true' : undefined}
+                    className="group w-full flex items-center gap-10 focus:outline-none"
+                  >
+                    <span
+                      className={[
+                        'relative inline-flex items-center justify-center w-8 h-8 rounded-full transition',
+                        selected ? 'bg-black text-white' : 'bg-black/5 text-black/60  group-hover:bg-black/10 ',
+                      ].join(' ')}
+                      aria-hidden="true"
+                    >
+                      <ChevronRight />
+                    </span>
+                    <span className="relative inline-flex items-center min-h-[40px]">
+                      <span
+                        className={[
+                          'cursor-pointer relative z-10 text-xl group-hover:text-black',
+                          selected ? 'font-bold text-black' : 'font-semibold text-black/30',
+                        ].join(' ')}
+                      >
+                        {it.label}
+                      </span>
+
+                      {selected && (
+                        <HilighterSvg
+                          width={120}
+                          height={48}
+                          className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10"
+                        />
+                      )}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
       </article>
     </div>
   );

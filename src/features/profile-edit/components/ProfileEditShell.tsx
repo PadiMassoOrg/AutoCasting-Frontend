@@ -28,12 +28,12 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
   );
 
   return (
-    <section className="w-full min-w-0 lg:flex lg:flex-row lg:gap-6">
+    <section className="w-full min-w-0 lg:flex lg:flex-row lg:gap-4">
       <CarouselHeader items={items} active={outerIndex} onChange={(i) => setOuter(ORDER[i])} />
       <Separator className="opacity-20 my-9 lg:hidden" />
 
       {isDesktop ? (
-        <article className="w-full lg:pb-10 lg:pl-10">
+        <article className="w-full lg:pb-4 lg:pl-10">
           {outer === 'profile' && <ProfileEditSection profile={profile} />}
           {outer === 'media' && <MediaEditSection media={profile.media} supabaseId={profile.id} />}
           {outer === 'details' && <DetailsEditSection profile={profile} />}
