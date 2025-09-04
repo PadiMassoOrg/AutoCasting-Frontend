@@ -1,7 +1,7 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useSiteMetadataSlice } from '../../../sitemetadata/hooks/useSiteMetadataSlice';
 import type { ProfileResponse } from '../../types/profile.types';
-import { BasicInfoForm, ContactForm, SocialMediaForm } from '../form';
+import { BasicInfoForm, ContactForm, SocialMediaForm } from '../Form';
 
 const ProfileEditSection = ({ profile }: { profile: ProfileResponse }) => {
   const { data: professions = [] } = useSiteMetadataSlice('professions');

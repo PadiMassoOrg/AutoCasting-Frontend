@@ -1,6 +1,6 @@
 import { type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { ProfileBasicInfo } from '../../profile/types/profile.types';
+import type { ProfileBasicInfo } from '../../profile-edit/types/profile.types';
 
 const BasicInfoSection = ({ data }: { data: ProfileBasicInfo }) => {
   const { t } = useTranslation();

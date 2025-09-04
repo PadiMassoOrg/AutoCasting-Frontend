@@ -1,5 +1,5 @@
 import { CharacteristicsPanel, CreditsPanel, EducationPanel, SkillsPanel } from '.';
-import type { PublicProfileResponse } from '../../../profile/types/profile.types';
+import type { PublicProfileResponse } from '../../../profile-edit/types/profile.types';
 
 type PillKey = 'characteristics' | 'skills' | 'credits' | 'education';
 

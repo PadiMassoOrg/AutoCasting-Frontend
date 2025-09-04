@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 import { logout } from '../../features/auth/services/authService';
-import { useProfile } from '../../features/profile/hooks/useProfile';
+import { useProfile } from '../../features/profile-edit/hooks/useProfile';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import { ROUTES, USER_ROUTES } from '../../shared/lib/routes';
 

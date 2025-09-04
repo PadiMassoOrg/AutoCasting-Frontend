@@ -1,7 +1,7 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import type { Media } from '../../types/profile.types';
-import { MediaPhotosForm, MediaVideosForm } from '../form';
+import { MediaPhotosForm, MediaVideosForm } from '../Form';
 
 const MediaEditSection = ({ media, supabaseId }: { media: Media; supabaseId: string }) => {
   const { t } = useTranslation();

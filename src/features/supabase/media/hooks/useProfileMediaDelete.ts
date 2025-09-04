@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { PROFILE_CACHE_KEY, patchMedia } from '../../../profile/services/profileService';
-import type { MediaPatchRequest } from '../../../profile/types/requests';
+import { PROFILE_CACHE_KEY, patchMedia } from '../../../profile-edit/services/profileService';
+import type { MediaPatchRequest } from '../../../profile-edit/types/requests';
 import { removeByPublicUrl } from '../lib/profile-media';
 
 type DeleteArgs =

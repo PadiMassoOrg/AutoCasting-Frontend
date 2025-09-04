@@ -215,6 +215,8 @@
       "profile": "Perfil"
     },
     "share": {
+      "whatsapp_text": "Hola {{name}}, te escribo por tu perfil de AutoCasting.",
+      "whatsapp_text_fallback": "Hola, te escribo por tu perfil de AutoCasting.",
       "profile_no_name": "Perfil en AutoCasting"
     },
     "pills": {

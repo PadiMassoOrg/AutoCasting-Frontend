@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import type { PublicProfileResponse } from '../../profile/types/profile.types';
+import type { PublicProfileResponse } from '../../profile-edit/types/profile.types';
 import { getPublicProfile, PUBLIC_PROFILE_CACHE_KEY } from '../services/publicProfileService';
 
 export const usePublicProfile = (slug?: string) => {

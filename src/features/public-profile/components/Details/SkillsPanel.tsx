@@ -1,6 +1,7 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ChevronUpDown } from '../../../../shared/components/Chevron';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 type Props = { skills: SiteMetadataObject[] };
 
@@ -60,10 +61,8 @@ export default function SkillsPanel({ skills }: Props) {
               aria-controls={`skills-${catKey}`}
             >
               <span className="font-semibold text-lg">{t(catKey)}:</span>
-              <Chevron open={isOpen} />
+              <ChevronUpDown open={isOpen} />
             </button>
-
-            {/* Lista de Skills */}
             {isOpen && (
               <article id={`skills-${catKey}`} className="mt-3 flex flex-wrap gap-2">
                 {list.map((s) => (
@@ -82,19 +81,5 @@ export default function SkillsPanel({ skills }: Props) {
         );
       })}
     </div>
-  );
-}
-
-// TODO - Move Components
-function Chevron({ open }: { open: boolean }) {
-  return (
-    <svg
-      className={`w-7 transition-transform ${open ? 'rotate-180' : ''}`}
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
-    </svg>
   );
 }

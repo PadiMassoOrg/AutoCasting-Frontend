@@ -6,7 +6,7 @@ import { useMedia } from '../../../shared/hooks/useMedia';
 import type { ProfileResponse } from '../types/profile.types';
 import CarouselHeader from './Carousel/CarouselHeader/CarouselHeader';
 import HorizontalCarousel from './Carousel/HorizontalCarousel/HorizontalCarousel';
-import { DetailsEditSection, MediaEditSection, ProfileEditSection } from './section';
+import { DetailsEditSection, MediaEditSection, ProfileEditSection } from './Section';
 
 type OuterKey = 'profile' | 'media' | 'details';
 const ORDER: OuterKey[] = ['profile', 'media', 'details'];

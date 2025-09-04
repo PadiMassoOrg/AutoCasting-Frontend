@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { patchMedia, PROFILE_CACHE_KEY } from '../../../profile/services/profileService';
+import { patchMedia, PROFILE_CACHE_KEY } from '../../../profile-edit/services/profileService';
 import { cleanupOldSlotFiles, uploadPublic } from '../lib/profile-media';
 
 type Slot = 'headshot' | 'fullbody' | 'other';

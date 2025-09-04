@@ -1,7 +1,8 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Credit } from '../../../profile/types/profile.types';
+import { ChevronUpDown } from '../../../../shared/components/Chevron';
+import type { Credit } from '../../../profile-edit/types/profile.types';
 
 const ORDER_KEYS = [
   'sitemetadata.production_type.theatre',
@@ -64,7 +65,7 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
               aria-controls={`credits-${catKey}`}
             >
               <span className="font-semibold text-lg">{t(catKey)}:</span>
-              <Chevron open={isOpen} />
+              <ChevronUpDown open={isOpen} />
             </button>
 
             {/* Lista de Credits */}
@@ -95,17 +96,3 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
 };
 
 export default CreditsPanel;
-
-// TODO - Move Components
-function Chevron({ open }: { open: boolean }) {
-  return (
-    <svg
-      className={`w-7 transition-transform ${open ? 'rotate-180' : ''}`}
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
-    </svg>
-  );
-}

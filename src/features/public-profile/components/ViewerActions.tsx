@@ -2,6 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import message from '../../../shared/icons/message.svg';
 import share from '../../../shared/icons/share.svg';
+import { isBrowser } from '../../../shared/utils/domUtils';
+import { whatsappLink } from '../../../shared/utils/phoneUtils';
+import { shareUrl } from '../../../shared/utils/shareUtils';
 import { usePublicProfile } from '../hooks/usePublicProfile';
 
 export default function ViewerActions() {
@@ -9,33 +12,22 @@ export default function ViewerActions() {
   const { slug } = useParams<{ slug: string }>();
   const { data } = usePublicProfile(slug!);
 
-  const url = typeof window !== 'undefined' ? window.location.href : '';
-  const waUrl = buildWhatsAppUrl(data?.contact?.phoneNumber, data?.basicInfo?.stageName);
+  const url = isBrowser ? window.location.href : '';
+  // TODO - Definir Texts o Template
+  const text = data?.basicInfo?.stageName
+    ? t('profile.share.whatsapp_text', { name: data.basicInfo.stageName })
+    : t('profile.share.whatsapp_text_fallback');
+  const waUrl = data?.contact?.phoneNumber ? whatsappLink(data.contact.phoneNumber, text) : null;
   const mailtoUrl = data?.contact?.email ? `mailto:${data.contact.email}` : null;
 
   const handleShare = async () => {
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: data?.basicInfo?.stageName ?? t('profile.share.profile_no_name'),
-          url,
-        });
-      } else if (navigator.clipboard) {
-        await navigator.clipboard.writeText(url);
-        alert(t('general.copied'));
-      } else {
-        const ta = document.createElement('textarea');
-        ta.value = url;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-        alert(t('general.copied'));
-      }
-    } catch {
-      // Blank on purpose
-      // usuario canceló o no hay soporte; silenciar
-    }
+    await shareUrl({
+      title: data?.basicInfo?.stageName ?? t('profile.share.profile_no_name'),
+      url,
+      // TODO - Definir Toasts o como dar output al user
+      onCopied: () => alert(t('general.copied')),
+      onError: () => alert(t('general.error')),
+    });
   };
 
   return (
@@ -44,7 +36,8 @@ export default function ViewerActions() {
         type="button"
         onClick={handleShare}
         className="bg-[var(--color-primary-light-grey)] rounded-md p-3 flex items-center justify-center cursor-pointer"
-        aria-label="Compartir perfil"
+        aria-label={t('profile.share.share_profile')}
+        title={t('profile.share.share_profile')}
       >
         <img src={share} alt="" className="w-5" />
       </button>
@@ -55,7 +48,8 @@ export default function ViewerActions() {
           target="_blank"
           rel="noopener noreferrer"
           className="bg-[var(--color-primary-light-grey)] rounded-md p-3 flex items-center justify-center cursor-pointer"
-          aria-label="Enviar WhatsApp"
+          aria-label={t('profile.share.whatsapp')}
+          title="WhatsApp"
         >
           <img src={message} alt="" className="w-5" />
         </a>
@@ -63,7 +57,8 @@ export default function ViewerActions() {
         <a
           href={mailtoUrl}
           className="bg-[var(--color-primary-light-grey)] rounded-md p-3 flex items-center justify-center cursor-pointer"
-          aria-label="Enviar email"
+          aria-label={t('profile.share.email')}
+          title="Email"
         >
           <img src={message} alt="" className="w-5" />
         </a>
@@ -72,29 +67,12 @@ export default function ViewerActions() {
           type="button"
           disabled
           className="bg-[var(--color-primary-light-grey)] rounded-md p-3 flex items-center justify-center opacity-50 cursor-not-allowed"
-          title="Sin información de contacto"
-          aria-label="Sin información de contacto"
+          title={t('profile.share.no_contact')}
+          aria-label={t('profile.share.no_contact')}
         >
           <img src={message} alt="" className="w-5" />
         </button>
       )}
     </div>
   );
-}
-
-// TODO - Mover Helpers
-function normalizePhone(raw?: string | null): string | null {
-  if (!raw) return null;
-  let p = raw.trim().replace(/[^\d+]/g, '');
-  if (p.startsWith('00')) p = '+' + p.slice(2);
-  return p || null;
-}
-
-function buildWhatsAppUrl(phone?: string | null, name?: string | null) {
-  const p = normalizePhone(phone);
-  if (!p) return null;
-  const num = p.replace(/^\+/, '');
-  // TODO - Refinar Texto o crear Template en algun lado.
-  const text = `Hola ${name ?? ''}, te escribo desde tu perfil de AutoCasting.`;
-  return `https://wa.me/${num}?text=${encodeURIComponent(text)}`;
 }
