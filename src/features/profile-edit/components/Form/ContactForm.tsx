@@ -26,6 +26,7 @@ export default function ContactForm({ data }: { data: ProfileContact }) {
         placeholder={t('general.placeholder.email')}
         value={email}
         disabled
+        autoComplete="email"
       />
 
       <FormInputField

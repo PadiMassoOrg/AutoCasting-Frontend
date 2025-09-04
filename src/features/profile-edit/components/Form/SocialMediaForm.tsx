@@ -29,7 +29,7 @@ export default function SocialMediaForm({ data }: { data: ProfileSocialMedia }) 
         onKeyDown={instagramUrl.onKeyDown}
       />
       <FormInputField
-        id="phoneNumber"
+        id="tikTokUrl"
         label={t('profile.basic_info.tikTok')}
         labelClassName="font-semibold text-base"
         placeholder={t('general.placeholder.url')}
