@@ -152,7 +152,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
     !!otherPreview[i];
 
   return (
-    <article className="flex flex-col gap-5">
+    <article className="flex flex-col gap-7">
       <div className="flex flex-col gap-2">
         <Label className="text-base font-semibold">{t('profile.media.headshot_fullbody')}</Label>
         <div className="flex flex-row items-center gap-2">
@@ -174,6 +174,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             objectFit="cover"
             openOnClick={!headshotHasImage}
             onDeleteClick={onDeleteHeadshot}
+            className="max-w-64"
           />
 
           <UploadTile
@@ -194,13 +195,14 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             objectFit="cover"
             openOnClick={!fullbodyHasImage}
             onDeleteClick={onDeleteFullbody}
+            className="min-w-auto max-w-64"
           />
         </div>
       </div>
 
       <div className="flex flex-col gap-2">
         <Label className="text-base font-semibold">{t('profile.media.other')}</Label>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-2 md:grid-cols-[repeat(3,max-content)]">
           {Array.from({ length: OTHER_SLOTS }, (_, i) => {
             const isRemoved = removedOthers.has(i);
             const hasImg = otherHasImage(i);
@@ -222,6 +224,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
                 multiple={false}
                 openOnClick={!hasImg}
                 onDeleteClick={() => onDeleteOther(i)}
+                className="max-w-51"
               />
             );
           })}

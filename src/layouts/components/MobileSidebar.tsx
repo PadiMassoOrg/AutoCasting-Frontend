@@ -19,13 +19,17 @@ export default function MobileSidebar() {
 
   return (
     <div className="">
-      <div className="flex items-center justify-between bg-white p-6">
+      <div className="flex items-center justify-between bg-white p-6 lg:p-7">
         <LinkLogo horizontal path={ROUTES.DASHBOARD} />
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="focus:outline-none cursor-pointer transition duration-300"
         >
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          {isOpen ? (
+            <X className="w-6 h-6 lg:w-[26px] lg:h-[26px]" />
+          ) : (
+            <Menu className="w-6 h-6 lg:w-[26px] lg:h-[26px]" />
+          )}
         </button>
       </div>
       {isOpen && (

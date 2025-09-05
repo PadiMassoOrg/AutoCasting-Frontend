@@ -7,7 +7,7 @@ const DetailsEditSection = ({ profile }: { profile: ProfileResponse }) => {
   // TODO - Verify
   if (!profile) return null;
   return (
-    <article className="lg:flex lg:flex-col lg:gap-6 lg:py-4">
+    <article className="lg:flex lg:flex-col lg:gap-6">
       <h3 className="hidden lg:block text-2xl font-bold">{t('profile.pills.media')}</h3>
       <div className="w-full min-w-0 max-w-none lg:min-h-screen">
         <DetailsInfoCarousel profile={profile} />

@@ -4,21 +4,23 @@ import { MobileSidebar } from './components/';
 
 export default function DashboardLayout() {
   return (
-    <div
-      className={`
-          flex flex-col overflow-x-hidden
-        `}
-    >
+    <>
       <MobileSidebar />
-      <main
+      <div
         className={`
-          pt-4 px-4 min-w-0 overflow-x-hidden min-h-screen
-          lg:p-10 lg:pt-4
+        w-full flex flex-col overflow-x-hidden items-center
         `}
       >
-        <Outlet />
-      </main>
-      <Footer></Footer>
-    </div>
+        <main
+          className={`
+          w-full max-w-[1880px] pt-6 px-4 min-w-0 overflow-x-hidden min-h-screen 
+          lg:p-10 lg:pt-6
+          `}
+        >
+          <Outlet />
+        </main>
+        <Footer></Footer>
+      </div>
+    </>
   );
 }

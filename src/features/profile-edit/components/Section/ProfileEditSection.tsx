@@ -9,7 +9,7 @@ const ProfileEditSection = ({ profile }: { profile: ProfileResponse }) => {
   const { data: professions = [] } = useSiteMetadataSlice('professions');
 
   return (
-    <article className="lg:flex lg:flex-col lg:gap-6 lg:py-4">
+    <article className="lg:flex lg:flex-col lg:gap-6">
       <h3 className="hidden lg:block text-2xl font-bold">{t('profile.page.profile')}</h3>
       <BasicInfoForm data={profile.basicInfo} professionsMeta={professions}></BasicInfoForm>
       <Separator className="opacity-20 my-8" />

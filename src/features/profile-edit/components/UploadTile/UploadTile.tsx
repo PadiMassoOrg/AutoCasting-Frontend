@@ -238,7 +238,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
       {hasImage && !busy && (
         <div
           className={clsx(
-            'absolute left-0 right-0 bottom-0 px-5 py-3 bg-black/45 z-10 pointer-events-auto',
+            'absolute left-0 right-0 bottom-0 px-2 py-2 xs:px-3 sm:px-5 sm:py-3   bg-black/45 z-10 pointer-events-auto',
             roundedClassName,
             classes?.actionsBar
           )}
@@ -249,7 +249,8 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
             <button
               type="button"
               className={clsx(
-                'h-12 w-12 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center',
+                'w-7 h-7 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center',
+                'sm:w-12 sm:h-12 ',
                 classes?.actionBtn
               )}
               style={{ cursor: 'pointer' }}
@@ -260,12 +261,13 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
                 else openDialog();
               }}
             >
-              <img src={editIcon} />
+              <img src={editIcon} className="w-[10px] h-[10px] sm:w-auto sm:h-auto" />
             </button>
             <button
               type="button"
               className={clsx(
-                'h-12 w-12 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center',
+                'w-7 h-7 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center',
+                'sm:w-12 sm:h-12 ',
                 classes?.actionBtn
               )}
               style={{ cursor: 'pointer' }}
@@ -276,7 +278,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
                 else onClear?.();
               }}
             >
-              <img src={deleteIcon} />
+              <img src={deleteIcon} className="w-[10px] h-[10px] sm:w-auto sm:h-auto" />
             </button>
           </div>
         </div>

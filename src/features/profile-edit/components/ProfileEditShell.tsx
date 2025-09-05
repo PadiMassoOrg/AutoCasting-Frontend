@@ -31,12 +31,17 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
     <section className="w-full min-w-0 lg:flex lg:flex-row lg:gap-4">
       <CarouselHeader items={items} active={outerIndex} onChange={(i) => setOuter(ORDER[i])} />
       <Separator className="opacity-20 my-9 lg:hidden" />
-
       {isDesktop ? (
-        <article className="w-full lg:pb-4 lg:pl-10">
-          {outer === 'profile' && <ProfileEditSection profile={profile} />}
-          {outer === 'media' && <MediaEditSection media={profile.media} supabaseId={profile.id} />}
-          {outer === 'details' && <DetailsEditSection profile={profile} />}
+        <article className="w-full lg:pb-4 lg:py-6 lg:max-w-[590px] xl:max-w-[778px] lg:m-auto">
+          <section className={outer === 'profile' ? 'block' : 'hidden'} aria-hidden={outer !== 'profile'}>
+            <ProfileEditSection profile={profile} />
+          </section>
+          <section className={outer === 'media' ? 'block' : 'hidden'} aria-hidden={outer !== 'media'}>
+            <MediaEditSection media={profile.media} supabaseId={profile.id} />
+          </section>
+          <section className={outer === 'details' ? 'block' : 'hidden'} aria-hidden={outer !== 'details'}>
+            <DetailsEditSection profile={profile} />
+          </section>
         </article>
       ) : (
         <HorizontalCarousel
