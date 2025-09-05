@@ -2,7 +2,7 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMedia } from '../../../shared/hooks/useMedia';
+import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import type { ProfileResponse } from '../types/profile.types';
 import CarouselHeader from './Carousel/CarouselHeader/CarouselHeader';
 import HorizontalCarousel from './Carousel/HorizontalCarousel/HorizontalCarousel';
@@ -13,7 +13,7 @@ const ORDER: OuterKey[] = ['profile', 'media', 'details'];
 
 export default function ProfileEditShell({ profile }: { profile: ProfileResponse }) {
   const { t } = useTranslation();
-  const isDesktop = useMedia('(min-width: 1024px)');
+  const isDesktop = useMedia(LG_SCREEN_SIZE);
 
   const [outer, setOuter] = useState<OuterKey>('profile');
   const outerIndex = ORDER.indexOf(outer);
