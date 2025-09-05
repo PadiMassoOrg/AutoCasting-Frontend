@@ -4,11 +4,13 @@ import { PublicNavbar } from './components';
 
 export default function PublicPagesLayout() {
   return (
-    <div className="min-h-screen bg-white">
+    <>
       <PublicNavbar></PublicNavbar>
-      <main className="p-4" id="app-scroll-root">
-        {<Outlet />}
-      </main>
-    </div>
+      <div className="min-h-screen bg-white">
+        <main className="p-4 lg:p-10 lg:pt-6" id="app-scroll-root">
+          {<Outlet />}
+        </main>
+      </div>
+    </>
   );
 }

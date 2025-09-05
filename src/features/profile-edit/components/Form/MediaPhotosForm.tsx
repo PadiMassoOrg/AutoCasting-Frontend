@@ -195,7 +195,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             objectFit="cover"
             openOnClick={!fullbodyHasImage}
             onDeleteClick={onDeleteFullbody}
-            className="min-w-auto max-w-64"
+            className="max-w-64"
           />
         </div>
       </div>
@@ -224,7 +224,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
                 multiple={false}
                 openOnClick={!hasImg}
                 onDeleteClick={() => onDeleteOther(i)}
-                className="max-w-51"
+                className="md:min-w-51 max-w-51"
               />
             );
           })}

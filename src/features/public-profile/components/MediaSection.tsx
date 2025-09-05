@@ -25,7 +25,7 @@ const MediaSection = ({ data }: { data: Media }) => {
       {!hasVideos && <Separator className="opacity-25 my-12" />}
 
       {hasVideos && (
-        <>
+        <article className="lg:hidden">
           <Separator className="opacity-25 my-12" />
           <h2 className="font-bold text-xl mb-3">{t('profile.page.videos')}</h2>
           <div className="flex flex-col gap-4">
@@ -43,7 +43,7 @@ const MediaSection = ({ data }: { data: Media }) => {
             )}
           </div>
           <Separator className="opacity-25 my-12" />
-        </>
+        </article>
       )}
     </article>
   );
