@@ -213,7 +213,8 @@
       "showreel_video": "Videoreel",
       "socials": "Sociales",
       "profile": "Perfil",
-      "edit_profile": "Editar Perfil"
+      "edit_profile": "Editar Perfil",
+      "progress_title": "Perfil Completado"
     },
     "share": {
       "whatsapp_text": "Hola {{name}}, te escribo por tu perfil de AutoCasting.",

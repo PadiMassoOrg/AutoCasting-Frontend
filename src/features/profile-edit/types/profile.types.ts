@@ -1,4 +1,5 @@
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
+import type { ProfileProgress } from '../services/computeProfileProgress';
 
 export type BaseProfileResponse = {
   id: string;
@@ -132,5 +133,5 @@ export type ProfileSocialMedia = DeepNullableExceptId<BaseProfileSocialMedia>;
 export type Media = DeepNullableExceptId<BaseMedia>;
 export type Characteristics = DeepNullableExceptId<BaseCharacteristics>;
 
-export type ProfileResponse = BaseProfileResponse;
+export type ProfileResponse = BaseProfileResponse & { progress: ProfileProgress };
 export type PublicProfileResponse = BasePublicProfileResponse;
