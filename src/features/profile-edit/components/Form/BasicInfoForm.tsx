@@ -123,7 +123,9 @@ export default function BasicInfoForm({
               <Button
                 key={p.id}
                 onClick={() => professions.toggle(p.id)}
-                className={['whitespace-nowrap', active ? 'bg-black text-white' : 'bg-gray-100'].join(' ')}
+                className={['whitespace-nowrap cursor-pointer', active ? 'bg-black text-white' : 'bg-gray-100'].join(
+                  ' '
+                )}
                 title={t(p.stringCode)}
               >
                 {t(p.stringCode)}
