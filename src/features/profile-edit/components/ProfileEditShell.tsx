@@ -6,7 +6,7 @@ import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import type { ProfileResponse } from '../types/profile.types';
 import CarouselHeader from './Carousel/CarouselHeader/CarouselHeader';
 import HorizontalCarousel from './Carousel/HorizontalCarousel/HorizontalCarousel';
-import { ProfileCompletionCard } from './ProfileCompletionCard/ProfileProgressBar';
+import { ProfileCompletionCard } from './ProfileCompletionCard/ProfileCompletionCard';
 import { DetailsEditSection, MediaEditSection, ProfileEditSection } from './Section';
 
 type OuterKey = 'profile' | 'media' | 'details';
@@ -29,9 +29,9 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
   );
 
   return (
-    <section className="w-full min-w-0 flex flex-col gap-6 lg:flex-row lg:gap-4">
+    <section className="w-full min-w-0 flex flex-col gap-6">
       <ProfileCompletionCard progress={profile.progress} isEdit></ProfileCompletionCard>
-      <div className="article">
+      <div className="lg:flex lg:flex-row lg:gap-4">
         <CarouselHeader items={items} active={outerIndex} onChange={(i) => setOuter(ORDER[i])} />
         <Separator className="opacity-20 my-9 lg:hidden" />
         {isDesktop ? (

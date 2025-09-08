@@ -7,7 +7,7 @@ import type { ProfileProgress } from '../../services/computeProfileProgress';
 export function ProfileCompletionCard({ progress, isEdit }: { progress: ProfileProgress; isEdit: boolean }) {
   const { t } = useTranslation();
   return (
-    <div className="flex items-center rounded-full bg-white justify-center pr-2 pl-6 py-2 gap-3 border border-[var(--color-secondary-outline)]">
+    <div className="flex items-center rounded-full bg-white justify-center pr-2 pl-6 py-2 gap-3 border border-[var(--color-secondary-outline)] lg:hidden">
       <article className="flex-1">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold">{t('profile.page.progress_title')}</h3>
