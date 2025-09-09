@@ -2,6 +2,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage } from '../features/auth/pages';
 
 import { PublicProfilePage } from '../features/public-profile/pages';
+import { TalentDatabasePage } from '../features/talent-database/pages';
 import PublicPagesLayout from '../layouts/PublicPagesLayout';
 import { ScrollToTop } from '../shared/components/ScrollToTop/ScrollToTop';
 import { ROUTES } from '../shared/lib/routes';
@@ -20,6 +21,7 @@ export default function AppRoutes() {
         {/* Public */}
         <Route element={<PublicPagesLayout />}>
           <Route path="/profile/:slug" element={<PublicProfilePage />} />
+          <Route path="/talent-database" element={<TalentDatabasePage />} />
         </Route>
         {/* Protected */}
         <Route

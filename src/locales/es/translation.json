@@ -38,7 +38,8 @@
     "logout": "Salir"
   },
   "routes": {
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "talent-database": "Catálogo"
   },
   "role": {
     "actor": "Actor",
@@ -310,6 +311,11 @@
       "courseName_placeholder": "Ej. Lic. en Actuación",
       "graduationYear": "Fecha de finalización",
       "graduationYear_placeholder": "--"
+    }
+  },
+  "talent": {
+    "page": {
+      "title": "Catálogo"
     }
   }
 }

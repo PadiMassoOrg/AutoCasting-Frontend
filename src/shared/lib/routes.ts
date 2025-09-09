@@ -15,6 +15,11 @@ export const USER_ROUTES = [
     path: '/dashboard/profile',
     name: 'routes.profile',
   },
+  {
+    id: 2,
+    path: '/talent-database',
+    name: 'routes.talent-database',
+  },
 ];
 
 export const API_ROUTES = {
@@ -42,4 +47,6 @@ export const API_ROUTES = {
   CREDIT: '/credit',
   // Education
   EDUCATION: '/education',
+  // Talent Database
+  TALENT_DATABASE: '/profile/talent-database',
 };
