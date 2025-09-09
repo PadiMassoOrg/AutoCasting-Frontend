@@ -1,18 +1,15 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import type { SliceResponse } from '../../../shared/types/sliceResponse.types';
-import { getTalentDatabase, TALENT_DATABASE_CACHE_KEY } from '../services/talentDatabaseService';
-import type { ProfileCardResponse } from '../types/talent-database.types';
+import { getTalentDatabase } from '../services/talentDatabaseService';
+import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
 
-export const useTalentDatabase = () => {
-  const qc = useQueryClient();
-  const bump = qc.getQueryState<SliceResponse<ProfileCardResponse>>(TALENT_DATABASE_CACHE_KEY)?.dataUpdatedAt ?? 0;
-
-  return useQuery({
-    queryKey: [TALENT_DATABASE_CACHE_KEY, bump],
-    queryFn: () => getTalentDatabase(),
-    staleTime: Infinity,
-    refetchOnMount: 'always',
+export function useTalentDatabase(size = 6, filters?: TalentFiltersQS) {
+  return useInfiniteQuery<SliceResponse<ProfileCardResponse>>({
+    queryKey: ['talents', size, filters],
+    initialPageParam: 0,
+    queryFn: ({ pageParam }) => getTalentDatabase(pageParam as number, size, filters),
+    getNextPageParam: (lastPage, allPages) => (lastPage.hasNext ? allPages.length : undefined),
+    staleTime: 60_000,
     refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
   });
-};
+}
