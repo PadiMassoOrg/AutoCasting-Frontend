@@ -1,7 +1,7 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useParams } from 'react-router-dom';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
-import { LG_SCREEN_SIZE, LG_SCREEN_XL_SIZE, useMedia } from '../../../shared/hooks/useMedia';
+import { LG_SCREEN_SIZE, XL_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { BasicInfoSection, MediaSection, ViewerActions } from '../components';
 import ProfileInfoCarousel from '../components/Details/ProfileInfoCarousel';
 import SocialMediaSection from '../components/SocialMediaSection';
@@ -11,7 +11,8 @@ const PublicProfilePage = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data, isLoading, error } = usePublicProfile(slug!);
   const isDesktop = useMedia(LG_SCREEN_SIZE);
-  const isBigger = useMedia(LG_SCREEN_XL_SIZE);
+  const isDesktopXL = useMedia(XL_SCREEN_SIZE);
+
   // TODO - Verify Flow
   if (isLoading) return <p>Cargando perfil público...</p>;
   if (error || !data) return <p>Error al cargar el perfil</p>;
@@ -27,7 +28,7 @@ const PublicProfilePage = () => {
   const images = mergePictures();
   const hasImages = images.length > 0;
 
-  if (isDesktop && !isBigger) {
+  if (isDesktop && !isDesktopXL) {
     return (
       <article className="relative w-full flex flex-col gap-3">
         <BasicInfoSection data={basicInfo}></BasicInfoSection>
@@ -45,7 +46,7 @@ const PublicProfilePage = () => {
         <SocialMediaSection data={socialMedia}></SocialMediaSection>
       </article>
     );
-  } else if (isBigger) {
+  } else if (isDesktopXL) {
     return (
       <article className="relative w-full flex flex-col gap-3">
         <BasicInfoSection data={basicInfo} />
