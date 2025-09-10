@@ -1,4 +1,3 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import instagram from '../../../shared/icons/instagram.svg';
 import tikTok from '../../../shared/icons/tikTok.svg';
@@ -13,16 +12,13 @@ const SocialMediaSection = ({ data }: { data: ProfileSocialMedia }) => {
 
   if (!instaUrl && !tiktokUrl) return null;
   return (
-    <>
-      <Separator className="opacity-25 my-12" />
-      <article className="flex flex-col gap-4 items-center">
-        <h2 className="text-lg font-bold">{t('profile.page.socials')}:</h2>
-        <div className="w-full flex gap-4 items-center justify-center">
-          <SocialLink href={instaUrl} label="Instagram" iconSrc={instagram} />
-          <SocialLink href={tiktokUrl} label="TikTok" iconSrc={tikTok} />
-        </div>
-      </article>
-    </>
+    <article className="w-full flex flex-col gap-4 items-center lg:flex-row lg:justify-between">
+      <h2 className="text-lg font-bold">{t('profile.page.socials')}:</h2>
+      <div className={`w-full flex gap-4 items-center justify-center lg:justify-end`}>
+        <SocialLink href={instaUrl} label="Instagram" iconSrc={instagram} />
+        <SocialLink href={tiktokUrl} label="TikTok" iconSrc={tikTok} />
+      </div>
+    </article>
   );
 };
 

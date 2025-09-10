@@ -210,6 +210,7 @@
   "profile": {
     "page": {
       "videos": "Videos",
+      "no_videos": "No hay videos",
       "introduction_video": "Video de presentación",
       "showreel_video": "Videoreel",
       "socials": "Sociales",

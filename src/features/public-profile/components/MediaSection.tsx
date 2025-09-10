@@ -1,32 +1,24 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 import VideoPreviewCard from '../../../shared/components/Video/VideoPreviewCard';
 import type { Media } from '../../profile-edit/types/profile.types';
 
-const MediaSection = ({ data }: { data: Media }) => {
+const VideoSection = ({ data }: { data: Media }) => {
   const { t } = useTranslation();
-  const { headshotImageUrl, fullBodyImageUrl, otherPicturesUrl, introductionVideoUrl, showReelVideoUrl } = data;
+  const { introductionVideoUrl, showReelVideoUrl } = data;
 
-  const mergePictures = (): string[] => {
-    return [headshotImageUrl, fullBodyImageUrl, ...(otherPicturesUrl ?? [])].filter(
-      (u): u is string => typeof u === 'string' && u.trim().length > 0
-    );
-  };
-
-  const images = mergePictures();
-  const hasImages = images.length > 0;
   const hasVideos = Boolean(introductionVideoUrl || showReelVideoUrl);
 
   return (
     <article className="w-full flex flex-col gap-2">
-      <ImageCarousel images={hasImages ? images : null} />
-
-      {!hasVideos && <Separator className="opacity-25 my-12" />}
+      {!hasVideos && (
+        <div className="w-full">
+          <h2 className="font-bold text-xl mb-3">{t('profile.page.videos')}</h2>
+          <p className="text-[var(--color-secondary-grey)] font-base">{t('profile.page.no_videos')}</p>
+        </div>
+      )}
 
       {hasVideos && (
-        <article className="lg:hidden">
-          <Separator className="opacity-25 my-12" />
+        <article>
           <h2 className="font-bold text-xl mb-3">{t('profile.page.videos')}</h2>
           <div className="flex flex-col gap-4">
             {introductionVideoUrl && (
@@ -42,11 +34,10 @@ const MediaSection = ({ data }: { data: Media }) => {
               </div>
             )}
           </div>
-          <Separator className="opacity-25 my-12" />
         </article>
       )}
     </article>
   );
 };
 
-export default MediaSection;
+export default VideoSection;
