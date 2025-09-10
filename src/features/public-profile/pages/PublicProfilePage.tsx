@@ -12,8 +12,6 @@ const PublicProfilePage = () => {
   const { data, isLoading, error } = usePublicProfile(slug!);
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isBigger = useMedia(LG_SCREEN_XL_SIZE);
-  console.log(isBigger);
-
   // TODO - Verify Flow
   if (isLoading) return <p>Cargando perfil público...</p>;
   if (error || !data) return <p>Error al cargar el perfil</p>;
