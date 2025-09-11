@@ -31,19 +31,21 @@ const PublicProfilePage = () => {
   if (isDesktop && !isDesktopXL) {
     return (
       <article className="relative w-full flex flex-col gap-3">
-        <BasicInfoSection data={basicInfo}></BasicInfoSection>
-        <div className="relative flex flex-row gap-2 justify-center">
-          <div className="w-full">
+        <BasicInfoSection data={basicInfo} />
+        <div className="grid gap-10 grid-cols-[1.4fr_1fr] h-[538px] max-h-[538px] min-h-0">
+          <section className="min-w-0 min-h-0 h-full">
             <ImageCarousel images={hasImages ? images : null} />
-          </div>
-          <div className="flex-1">
-            <ProfileInfoCarousel profile={data}></ProfileInfoCarousel>
-          </div>
+          </section>
+          <aside className="min-w-0 min-h-0 h-full overflow-auto">
+            <ProfileInfoCarousel profile={data} className="h-full" />
+          </aside>
         </div>
+
+        {/* el resto de la página puede quedar como ya lo tengas */}
         <Separator className="opacity-25 my-12" />
-        <MediaSection data={media}></MediaSection>
+        <MediaSection data={media} />
         <Separator className="opacity-25 my-12" />
-        <SocialMediaSection data={socialMedia}></SocialMediaSection>
+        <SocialMediaSection data={socialMedia} />
       </article>
     );
   } else if (isDesktopXL) {

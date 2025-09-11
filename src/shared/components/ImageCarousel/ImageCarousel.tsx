@@ -3,9 +3,10 @@ import PLACEHOLDER_SVG from '../../../shared/icons/image_placeholder.svg';
 
 type Props = {
   images: string[] | null;
+  className?: string; // <-- NUEVO (por si lo quieres usar)
 };
 
-export default function ImageCarousel({ images }: Props) {
+export default function ImageCarousel({ images, className }: Props) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const finalImages = useMemo<string[]>(() => {
@@ -22,17 +23,18 @@ export default function ImageCarousel({ images }: Props) {
   }, [finalImages.length, selectedIndex]);
 
   const selectedImage = finalImages[selectedIndex];
-
-  const rightThumbIndices = useMemo(() => {
-    return finalImages.map((_, idx) => idx).slice(0, 3);
-  }, [finalImages]);
+  const rightThumbIndices = useMemo(() => finalImages.map((_, idx) => idx).slice(0, 3), [finalImages]);
 
   return (
-    <div className="w-full flex flex-col items-center gap-[10px] lg:flex-row lg:items-stretch lg:gap-4">
-      <div className="w-full aspect-[8/10] overflow-hidden rounded-xl shadow-md">
+    <div
+      className={`w-full h-full min-h-0 flex flex-col items-center gap-[10px] lg:flex-row lg:items-stretch lg:gap-4 ${className ?? ''}`}
+    >
+      {/* Imagen principal: en desktop llena el alto; sin deformar (cover recorta suave) */}
+      <div className="w-full aspect-[8/10] lg:aspect-auto lg:h-full overflow-hidden rounded-xl shadow-md">
         <img src={selectedImage} alt={`Imagen ${selectedIndex + 1}`} className="w-full h-full object-cover" />
       </div>
 
+      {/* Thumbs horizontales mobile */}
       <div className="flex gap-[8px] overflow-x-auto w-full lg:hidden">
         {finalImages.map((img, index) => (
           <button
@@ -49,7 +51,8 @@ export default function ImageCarousel({ images }: Props) {
         ))}
       </div>
 
-      <div className="hidden lg:grid lg:grid-rows-3 lg:gap-2 lg:self-stretch lg:max-w-[130px]">
+      {/* Thumbs verticales desktop (scrolleables si no entran todas) */}
+      <div className="hidden lg:flex lg:flex-col lg:gap-2 lg:self-stretch lg:min-h-0 lg:max-h-full lg:overflow-y-auto lg:w-[130px]">
         {rightThumbIndices.map((idx) => {
           const img = finalImages[idx];
           const selected = selectedIndex === idx;
@@ -61,7 +64,7 @@ export default function ImageCarousel({ images }: Props) {
               aria-label={`Seleccionar imagen ${idx + 1}`}
               type="button"
             >
-              <div className="w-full h-full">
+              <div className="w-full h-[120px]">
                 <img src={img} alt={`Miniatura ${idx + 1}`} className="w-full h-full object-cover" />
               </div>
             </button>
