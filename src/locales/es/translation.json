@@ -38,7 +38,9 @@
     "logout": "Salir"
   },
   "routes": {
+    "login": "Entrar",
     "profile": "Perfil",
+    "account": "Mi Cuenta",
     "talent-database": "Catálogo"
   },
   "role": {

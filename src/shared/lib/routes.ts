@@ -1,24 +1,29 @@
 export const ROUTES = {
   HOME: '/',
   ALL: '/*',
+  // Auth
   AUTH: '/auth',
   GOOGLE_OAUTH_SUCCESS: '/oauth2/success',
   RESET_PASSWORD: '/reset-password',
+  // Dashboard
   DASHBOARD: '/dashboard',
   PROFILE: '/dashboard/profile',
+  ACCOUNT: '/dashboard/account',
+  // Public
   PUBLIC_PROFILE: '/profile',
+  TALENT_DATABASE: '/talent-database',
 };
 
 export const USER_ROUTES = [
   {
     id: 1,
-    path: '/dashboard/profile',
-    name: 'routes.profile',
+    path: '/talent-database',
+    name: 'routes.talent-database',
   },
   {
     id: 2,
-    path: '/talent-database',
-    name: 'routes.talent-database',
+    path: '/dashboard/profile',
+    name: 'routes.profile',
   },
 ];
 
