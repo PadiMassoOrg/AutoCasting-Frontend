@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { useProfile } from '../../features/profile-edit/hooks/useProfile';
+import HilightLink from '../../shared/components/HilightLink/HilightLink';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import { ROUTES } from '../../shared/lib/routes';
 
@@ -8,31 +8,37 @@ const Navbar = () => {
   const { t } = useTranslation();
   const { data } = useProfile();
 
-  const toPublicProfile = () => {
-    window.location.href = ROUTES.PUBLIC_PROFILE + '/' + data?.publicSlug;
-  };
-
   return (
     <nav className="w-full h-14 px-10 flex flex-row items-center justify-between">
       <LinkLogo horizontal />
-      <ul className="flex flex-row gap-6">
-        <Link className="font-semibold text-sm" to={ROUTES.TALENT_DATABASE}>
-          {t('routes.talent-database')}
-        </Link>
+
+      <ul className="flex flex-row gap-6 items-center">
+        <li>
+          <HilightLink to={ROUTES.TALENT_DATABASE} label={t('routes.talent-database')} width={96} height={38} />
+        </li>
+
         {data ? (
-          <div className=" flex flex-row gap-6 font-semibold text-sm">
-            <Link className="font-semibold text-sm" to={ROUTES.PROFILE}>
-              {t('routes.profile')}
-            </Link>
-            <Link to={ROUTES.ACCOUNT}>{t('routes.account')}</Link>
-            <span onClick={toPublicProfile} className="cursor-pointer">
-              Publico
-            </span>
-          </div>
+          <>
+            <li>
+              <HilightLink to={ROUTES.PROFILE} label={t('routes.profile')} exact={false} width={72} height={34} />
+            </li>
+            <li>
+              <HilightLink to={ROUTES.ACCOUNT} label={t('routes.account')} exact={false} width={78} height={34} />
+            </li>
+            <li>
+              <HilightLink
+                to={ROUTES.PUBLIC_PROFILE + '/' + data?.publicSlug}
+                label={t('Publico')}
+                exact={false}
+                width={78}
+                height={34}
+              />
+            </li>
+          </>
         ) : (
-          <Link className="font-semibold text-sm" to={ROUTES.AUTH}>
-            {t('routes.login')}
-          </Link>
+          <li>
+            <HilightLink to={ROUTES.AUTH} label={t('routes.login')} width={62} height={30} />
+          </li>
         )}
       </ul>
     </nav>
