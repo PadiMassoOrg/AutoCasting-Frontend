@@ -6,7 +6,7 @@ type Props = {
   images: string[] | null;
   className?: string;
   isDesktop?: boolean; // LG
-  isDesktopXL?: boolean; // XL (sólo para decidir layout; la altura la maneja el padre)
+  isDesktopXL?: boolean; // XL
 };
 
 export default function ImageCarousel({ images, className, isDesktop, isDesktopXL }: Props) {
@@ -23,25 +23,32 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
 
   const selectedImage = finalImages[selectedIndex];
   const rightThumbIndices = useMemo(() => finalImages.map((_, i) => i).slice(0, 3), [finalImages]);
+
+  const isDesktopOnly = !!isDesktop && !isDesktopXL;
   const desktopLayout = !!isDesktop || !!isDesktopXL;
+
+  const gridCols = isDesktopOnly
+    ? 'grid-cols-[1fr_130px]' // LG
+    : 'grid-cols-[max-content_130px]'; // XL
+
+  const figureClass = desktopLayout
+    ? isDesktopOnly
+      ? 'w-full h-full'
+      : 'h-full [aspect-ratio:8/10]'
+    : 'w-full aspect-[8/10]';
+
+  // 👇 NUEVO: clases del wrapper según layout
+  const wrapperClass = desktopLayout
+    ? `grid items-stretch min-h-0 h-full ${gridCols} grid-rows-[1fr_auto] gap-x-4 gap-y-3`
+    : 'flex flex-col gap-3 w-full';
 
   return (
     <div className={`w-full ${desktopLayout ? 'h-full min-h-0' : 'h-auto'} ${className ?? ''}`}>
-      <div
-        className={
-          desktopLayout
-            ? 'grid items-stretch min-h-0 h-full grid-cols-[1fr_130px] grid-rows-[1fr_auto] gap-x-4 gap-y-3'
-            : 'flex flex-col gap-3'
-        }
-      >
-        {/* Izquierda (imagen seleccionada) */}
+      {/* ⬇️ usar wrapperClass en lugar de grid fijo */}
+      <div className={wrapperClass}>
+        {/* izquierda */}
         <div className={desktopLayout ? 'col-[1] row-[1] h-full min-h-0 flex flex-col' : 'flex flex-col gap-2'}>
-          <figure
-            className={[
-              'relative w-full overflow-hidden rounded-xl shadow-md',
-              desktopLayout ? 'h-full' : 'aspect-[8/10]',
-            ].join(' ')}
-          >
+          <figure className={`relative overflow-hidden rounded-xl shadow-md ${figureClass}`}>
             <img
               src={selectedImage}
               alt={`Imagen ${selectedIndex + 1}`}
@@ -52,45 +59,47 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
           {/* Thumbs horizontales SOLO mobile */}
           {!desktopLayout && (
             <div className="flex gap-2 overflow-x-auto w-full pb-1">
-              {finalImages.map((img, index) => (
+              {finalImages.map((img, i) => (
                 <button
-                  key={`${img}-${index}`}
-                  className={`cursor-pointer w-[120px] aspect-[8/10] flex-shrink-0 rounded-lg overflow-hidden border-2 ${
-                    selectedIndex === index ? 'border-blue-500' : 'border-transparent'
-                  }`}
-                  onClick={() => setSelectedIndex(index)}
-                  aria-label={`Seleccionar imagen ${index + 1}`}
+                  key={`thumb-m-${i}`}
                   type="button"
+                  onClick={() => setSelectedIndex(i)}
+                  aria-label={`Seleccionar imagen ${i + 1}`}
+                  className={`cursor-pointer w-[120px] aspect-[8/10] flex-shrink-0 rounded-lg overflow-hidden border-2 ${
+                    selectedIndex === i ? 'border-blue-500' : 'border-transparent'
+                  }`}
                 >
-                  <img src={img} alt={`Miniatura ${index + 1}`} className="w-full h-full object-cover" />
+                  <img src={img} alt={`Miniatura ${i + 1}`} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
           )}
         </div>
 
-        {/* Derecha (3 thumbs = misma altura que la imagen) */}
+        {/* derecha (solo desktop) */}
         {desktopLayout && (
           <div className="col-[2] row-[1] h-full min-h-0 overflow-hidden grid grid-rows-[repeat(3,minmax(0,1fr))] gap-4">
-            {rightThumbIndices.map((idx) => {
-              const img = finalImages[idx];
-              const selected = selectedIndex === idx;
-              return (
-                <button
-                  key={`${img}-${idx}`}
-                  className={`relative w-full h-full rounded-xl overflow-hidden border-2 ${selected ? 'border-blue-500' : 'border-transparent'}`}
-                  onClick={() => setSelectedIndex(idx)}
-                  aria-label={`Seleccionar imagen ${idx + 1}`}
-                  type="button"
-                >
-                  <img src={img} alt={`Miniatura ${idx + 1}`} className="absolute inset-0 w-full h-full object-cover" />
-                </button>
-              );
-            })}
+            {rightThumbIndices.map((idx) => (
+              <button
+                key={`thumb-d-${idx}`}
+                type="button"
+                onClick={() => setSelectedIndex(idx)}
+                aria-label={`Seleccionar imagen ${idx + 1}`}
+                className={`relative w-full h-full rounded-xl overflow-hidden border-2 ${
+                  selectedIndex === idx ? 'border-blue-500' : 'border-transparent'
+                }`}
+              >
+                <img
+                  src={finalImages[idx]}
+                  alt={`Miniatura ${idx + 1}`}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </button>
+            ))}
           </div>
         )}
 
-        {/* Botón: SOLO desktop (oculto en mobile) y ocupa toda la fila inferior */}
+        {/* botón sólo desktop */}
         {desktopLayout && (
           <div className="col-[1/-1] row-[2]">
             <Button variant="outline" className="w-full">
