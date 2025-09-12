@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import VideoPreviewCard from '../../../shared/components/Video/VideoPreviewCard';
+import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import type { Media } from '../../profile-edit/types/profile.types';
 
 const VideoSection = ({ data }: { data: Media }) => {
   const { t } = useTranslation();
   const { introductionVideoUrl, showReelVideoUrl } = data;
+  const isDesktop = useMedia(LG_SCREEN_SIZE);
 
   const hasVideos = Boolean(introductionVideoUrl || showReelVideoUrl);
 
@@ -20,6 +22,7 @@ const VideoSection = ({ data }: { data: Media }) => {
       {hasVideos && (
         <article>
           <h2 className="font-bold text-xl mb-3">{t('profile.page.videos')}</h2>
+          {}
           <div className="flex flex-col gap-4">
             {introductionVideoUrl && (
               <div className="flex flex-col gap-1">

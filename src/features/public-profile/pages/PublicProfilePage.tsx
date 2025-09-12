@@ -28,11 +28,13 @@ const PublicProfilePage = () => {
   const images = mergePictures();
   const hasImages = images.length > 0;
 
+  // Ver borde inferior del ProfileINfoCarousel even when scrollable
+
   if (isDesktop && !isDesktopXL) {
     return (
       <article className="relative w-full flex flex-col gap-3">
         <BasicInfoSection data={basicInfo} />
-        <div className="grid gap-10 grid-cols-[1.4fr_1fr] h-[538px] max-h-[538px] min-h-0">
+        <div className="grid gap-10 grid-cols-[1.4fr_1fr] h-[650px] max-h-[650px] min-h-0">
           <section className="min-w-0 min-h-0 h-full">
             <ImageCarousel images={hasImages ? images : null} />
           </section>
