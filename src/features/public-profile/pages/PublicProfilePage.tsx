@@ -55,31 +55,26 @@ const PublicProfilePage = () => {
         <div
           className="flex flex-col"
           style={{
-            // El bloque debe medir exactamente la pantalla menos navbar+margen, con mínimo 500
             height: `calc(100svh - ${NAVBAR}px - ${TOP_MARGIN})`,
             minHeight: '500px',
-            // ancho fijo de la tercera columna (Media)
             ['--media-col-w' as any]: '360px',
           }}
         >
           <BasicInfoSection data={basicInfo} />
-
           <div className="flex-1 min-h-0 grid gap-6 grid-cols-[max-content_minmax(260px,1fr)_var(--media-col-w)] items-stretch">
-            {/* Izquierda: su ancho sale del alto via aspect-ratio */}
             <div className="min-w-0 min-h-0 h-full">
               <ImageCarousel images={hasImages ? images : null} isDesktop isDesktopXL />
             </div>
-
-            {/* Centro: se agranda/achica y scrollea su contenido si hace falta */}
             <div className="min-w-0 min-h-0 h-full overflow-auto">
               <ProfileInfoCarousel profile={data} className="h-full" />
             </div>
-
-            {/* Derecha: ancho fijo (var(--media-col-w)) */}
-            <div className="min-w-0 min-h-0 h-full overflow-auto flex flex-col gap-5">
+            <div className="min-w-0 min-h-0 h-full overflow-auto flex flex-col gap-5 justify-between">
               <MediaSection data={media} />
-              <Separator className="opacity-25 my-6" />
-              <SocialMediaSection data={socialMedia} />
+              <div className="">
+                <Separator className="opacity-25 mb-6" />
+                <SocialMediaSection data={socialMedia} />
+                <Separator className="opacity-25 mt-6" />
+              </div>
             </div>
           </div>
         </div>
