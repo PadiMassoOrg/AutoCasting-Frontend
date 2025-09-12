@@ -1,12 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import VideoPreviewCard from '../../../shared/components/Video/VideoPreviewCard';
-import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import type { Media } from '../../profile-edit/types/profile.types';
 
 const VideoSection = ({ data }: { data: Media }) => {
   const { t } = useTranslation();
   const { introductionVideoUrl, showReelVideoUrl } = data;
-  const isDesktop = useMedia(LG_SCREEN_SIZE);
 
   const hasVideos = Boolean(introductionVideoUrl || showReelVideoUrl);
 
