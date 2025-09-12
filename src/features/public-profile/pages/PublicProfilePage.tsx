@@ -7,83 +7,87 @@ import ProfileInfoCarousel from '../components/Details/ProfileInfoCarousel';
 import SocialMediaSection from '../components/SocialMediaSection';
 import { usePublicProfile } from '../hooks/usePublicProfile';
 
+const NAVBAR = 70;
+const TOP_MARGIN = '5rem';
+
 const PublicProfilePage = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data, isLoading, error } = usePublicProfile(slug!);
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
 
-  // TODO - Verify Flow
   if (isLoading) return <p>Cargando perfil público...</p>;
   if (error || !data) return <p>Error al cargar el perfil</p>;
 
   const { basicInfo, socialMedia, media } = data;
 
-  const mergePictures = (): string[] => {
-    return [media.headshotImageUrl, media.fullBodyImageUrl, ...(media.otherPicturesUrl ?? [])].filter(
+  const mergePictures = (): string[] =>
+    [media.headshotImageUrl, media.fullBodyImageUrl, ...(media.otherPicturesUrl ?? [])].filter(
       (u): u is string => typeof u === 'string' && u.trim().length > 0
     );
-  };
 
   const images = mergePictures();
   const hasImages = images.length > 0;
-
-  // Ver borde inferior del ProfileINfoCarousel even when scrollable
 
   if (isDesktop && !isDesktopXL) {
     return (
       <article className="relative w-full flex flex-col gap-3">
         <BasicInfoSection data={basicInfo} />
-        <div className="grid gap-10 grid-cols-[1.4fr_1fr] h-[650px] max-h-[650px] min-h-0">
+        <div className="grid gap-10 grid-cols-[1.4fr_1fr] h-[700px] max-h-[700px] min-h-0">
           <section className="min-w-0 min-h-0 h-full">
-            <ImageCarousel images={hasImages ? images : null} />
+            <ImageCarousel images={hasImages ? images : null} isDesktop />
           </section>
           <aside className="min-w-0 min-h-0 h-full overflow-auto">
             <ProfileInfoCarousel profile={data} className="h-full" />
           </aside>
         </div>
-
-        {/* el resto de la página puede quedar como ya lo tengas */}
         <Separator className="opacity-25 my-12" />
         <MediaSection data={media} />
         <Separator className="opacity-25 my-12" />
         <SocialMediaSection data={socialMedia} />
       </article>
     );
-  } else if (isDesktopXL) {
+  }
+
+  if (isDesktopXL) {
     return (
-      <article className="relative w-full flex flex-col gap-3">
-        <BasicInfoSection data={basicInfo} />
-        <div className="grid gap-6 grid-cols-[minmax(0,1fr)_minmax(260px,1fr)_minmax(0,0.6fr)] items-start">
-          <div className="min-w-0">
-            <ImageCarousel images={hasImages ? images : null} />
-          </div>
-          <div className="min-w-0 lg:sticky lg:top-4">
-            <ProfileInfoCarousel profile={data} />
-          </div>
-          <div className="min-w-0 flex flex-col gap-5">
-            <MediaSection data={media} />
-            <Separator className="opacity-25 my-6" />
-            <SocialMediaSection data={socialMedia} />
+      <article className="relative w-full">
+        <div
+          className="flex flex-col max-h-[calc(100svh-var(--nav)-var(--top))]"
+          style={{ ['--nav' as any]: `${NAVBAR}px`, ['--top' as any]: TOP_MARGIN }}
+        >
+          <BasicInfoSection data={basicInfo} />
+          <div className="flex-1 min-h-0 grid gap-6 grid-cols-[minmax(0,1.5fr)_minmax(260px,0.9fr)_minmax(0,0.6fr)] items-stretch">
+            <div className="min-w-0 min-h-0 h-full">
+              <ImageCarousel images={hasImages ? images : null} isDesktop isDesktopXL />
+            </div>
+            <div className="min-w-0 min-h-0 h-full overflow-auto">
+              <ProfileInfoCarousel profile={data} className="h-full" />
+            </div>
+            <div className="min-w-0 min-h-0 h-full overflow-auto flex flex-col gap-5">
+              <MediaSection data={media} />
+              <Separator className="opacity-25 my-6" />
+              <SocialMediaSection data={socialMedia} />
+            </div>
           </div>
         </div>
       </article>
     );
-  } else {
-    return (
-      <div className="relative pt-3 pb-10 flex flex-col gap-3 justify-center">
-        <ViewerActions></ViewerActions>
-        <BasicInfoSection data={basicInfo}></BasicInfoSection>
-        <ImageCarousel images={hasImages ? images : null} />
-        <Separator className="opacity-25 my-12" />
-        <MediaSection data={media}></MediaSection>
-        <Separator className="opacity-25 my-12" />
-        <ProfileInfoCarousel profile={data}></ProfileInfoCarousel>
-        <Separator className="opacity-25 my-12" />
-        <SocialMediaSection data={socialMedia}></SocialMediaSection>
-      </div>
-    );
   }
+
+  return (
+    <div className="relative pt-3 pb-10 flex flex-col gap-3 justify-center">
+      <ViewerActions />
+      <BasicInfoSection data={basicInfo} />
+      <ImageCarousel images={hasImages ? images : null} />
+      <Separator className="opacity-25 my-12" />
+      <MediaSection data={media} />
+      <Separator className="opacity-25 my-12" />
+      <ProfileInfoCarousel profile={data} />
+      <Separator className="opacity-25 my-12" />
+      <SocialMediaSection data={socialMedia} />
+    </div>
+  );
 };
 
 export default PublicProfilePage;
