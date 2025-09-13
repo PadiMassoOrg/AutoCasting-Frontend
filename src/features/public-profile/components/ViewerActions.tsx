@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import message from '../../../shared/icons/message.svg';
@@ -7,13 +8,14 @@ import { whatsappLink } from '../../../shared/utils/phoneUtils';
 import { shareUrl } from '../../../shared/utils/shareUtils';
 import { usePublicProfile } from '../hooks/usePublicProfile';
 
-export default function ViewerActions() {
+type Props = { className?: string };
+
+export default function ViewerActions({ className }: Props) {
   const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
   const { data } = usePublicProfile(slug!);
 
   const url = isBrowser ? window.location.href : '';
-  // TODO - Definir Texts o Template
   const text = data?.basicInfo?.stageName
     ? t('profile.share.whatsapp_text', { name: data.basicInfo.stageName })
     : t('profile.share.whatsapp_text_fallback');
@@ -24,14 +26,13 @@ export default function ViewerActions() {
     await shareUrl({
       title: data?.basicInfo?.stageName ?? t('profile.share.profile_no_name'),
       url,
-      // TODO - Definir Toasts o como dar output al user
       onCopied: () => alert(t('general.copied')),
       onError: () => alert(t('general.error')),
     });
   };
 
   return (
-    <div className="w-full flex items-center justify-center gap-2">
+    <div className={clsx('flex items-center justify-center gap-2 lg:inline-flex ', className)}>
       <button
         type="button"
         onClick={handleShare}

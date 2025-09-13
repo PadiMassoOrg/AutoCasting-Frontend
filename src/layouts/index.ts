@@ -1,2 +1,3 @@
-import DashboardLayout from './DashboardLayout';
-export { DashboardLayout };
+import AuthenticationLayout from './AuthenticationLayout';
+import MainLayout from './MainLayout';
+export { AuthenticationLayout, MainLayout };

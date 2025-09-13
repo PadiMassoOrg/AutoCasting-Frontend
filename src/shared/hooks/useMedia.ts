@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 
+export const LG_SCREEN_SIZE = '(min-width: 1024px)';
+export const XL_SCREEN_SIZE = '(min-width: 1550px)';
+
 export function useMedia(query: string) {
   const [matches, setMatches] = useState<boolean>(() =>
     typeof window !== 'undefined' ? window.matchMedia(query).matches : false

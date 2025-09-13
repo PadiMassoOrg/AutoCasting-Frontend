@@ -15,7 +15,12 @@ export default function DesktopSidebar() {
   };
 
   return (
-    <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:h-screen md:w-[264px] shrink-0 bg-white p-6 border-r border-r-[var(--color-secondary-grey)] z-20">
+    <aside
+      className={`
+        hidden shrink-0 bg-white p-6 border-r border-r-[var(--color-secondary-grey)] z-20
+        lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:h-screen md:w-[264px]     
+        `}
+    >
       <LinkLogo path={ROUTES.DASHBOARD} />
       <div className="mt-8 space-y-4">
         {USER_ROUTES.map((item) => (

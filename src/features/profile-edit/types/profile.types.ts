@@ -1,4 +1,6 @@
+import type { DeepNullableExceptId } from '../../../shared/utils/typeUtils';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
+import type { ProfileProgress } from '../services/computeProfileProgress';
 
 export type BaseProfileResponse = {
   id: string;
@@ -108,21 +110,8 @@ export type BaseEducation = {
   graduationYear: string;
 };
 
-// Util: deep-nullable para todo MENOS la propiedad "id" (que queda requerida y no-nula).
-export type DeepNullableExceptId<T> = T extends (...args: any[]) => any
-  ? T
-  : T extends Array<infer U>
-    ? Array<DeepNullableExceptId<U>> | null
-    : T extends object
-      ? {
-          [K in keyof T]: K extends 'id'
-            ? NonNullable<T[K]> // id siempre requerido y no-nulo
-            : DeepNullableExceptId<T[K]> | null; // el resto puede ser null (y se transforma recursivamente)
-        }
-      : T | null;
-
 /* ======================
-   Export (DeepNullable)
+   Export & DeepNullable
    ====================== */
 export type Credit = BaseCredit;
 export type Education = BaseEducation;
@@ -132,5 +121,5 @@ export type ProfileSocialMedia = DeepNullableExceptId<BaseProfileSocialMedia>;
 export type Media = DeepNullableExceptId<BaseMedia>;
 export type Characteristics = DeepNullableExceptId<BaseCharacteristics>;
 
-export type ProfileResponse = BaseProfileResponse;
+export type ProfileResponse = BaseProfileResponse & { progress: ProfileProgress };
 export type PublicProfileResponse = BasePublicProfileResponse;

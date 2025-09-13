@@ -38,7 +38,10 @@
     "logout": "Salir"
   },
   "routes": {
-    "profile": "Perfil"
+    "login": "Entrar",
+    "profile": "Perfil",
+    "account": "Mi Cuenta",
+    "talent-database": "Catálogo"
   },
   "role": {
     "actor": "Actor",
@@ -209,10 +212,13 @@
   "profile": {
     "page": {
       "videos": "Videos",
+      "no_videos": "No hay videos",
       "introduction_video": "Video de presentación",
       "showreel_video": "Videoreel",
       "socials": "Sociales",
-      "profile": "Perfil"
+      "profile": "Perfil",
+      "edit_profile": "Editar Perfil",
+      "progress_title": "Perfil Completado"
     },
     "share": {
       "whatsapp_text": "Hola {{name}}, te escribo por tu perfil de AutoCasting.",
@@ -308,6 +314,11 @@
       "courseName_placeholder": "Ej. Lic. en Actuación",
       "graduationYear": "Fecha de finalización",
       "graduationYear_placeholder": "--"
+    }
+  },
+  "talent": {
+    "page": {
+      "title": "Catálogo"
     }
   }
 }

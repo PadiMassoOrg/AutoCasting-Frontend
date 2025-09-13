@@ -1,47 +1,104 @@
+import { Button } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import PLACEHOLDER_SVG from '../../../shared/icons/image_placeholder.svg';
 
 type Props = {
   images: string[] | null;
+  className?: string;
+  isDesktop?: boolean; // LG
+  isDesktopXL?: boolean; // XL
 };
 
-export default function ImageCarousel({ images }: Props) {
+export default function ImageCarousel({ images, className, isDesktop, isDesktopXL }: Props) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   const finalImages = useMemo<string[]>(() => {
-    if (!images || images.length === 0) {
-      return Array.from({ length: 4 }, () => PLACEHOLDER_SVG);
-    }
+    if (!images || images.length === 0) return Array.from({ length: 4 }, () => PLACEHOLDER_SVG);
     return images;
   }, [images]);
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
   useEffect(() => {
-    if (selectedIndex >= finalImages.length) {
-      setSelectedIndex(0);
-    }
+    if (selectedIndex >= finalImages.length) setSelectedIndex(0);
   }, [finalImages.length, selectedIndex]);
 
   const selectedImage = finalImages[selectedIndex];
+  const rightThumbIndices = useMemo(() => finalImages.map((_, i) => i).slice(0, 3), [finalImages]);
+
+  const isDesktopOnly = !!isDesktop && !isDesktopXL;
+  const desktopLayout = !!isDesktop || !!isDesktopXL;
+
+  const gridCols = isDesktopOnly ? 'grid-cols-[1fr_130px]' : 'grid-cols-[max-content_135px]';
+
+  const figureClass = desktopLayout
+    ? isDesktopOnly
+      ? 'w-full h-full'
+      : 'h-full [aspect-ratio:8/10]'
+    : 'w-full aspect-[8/10]';
+
+  const wrapperClass = desktopLayout
+    ? `grid items-stretch min-h-0 h-full ${gridCols} grid-rows-[1fr_auto] gap-x-4 gap-y-3`
+    : 'flex flex-col gap-3 w-full';
 
   return (
-    <div className="w-full flex flex-col items-center gap-[10px]">
-      <div className="w-full aspect-[8/10] overflow-hidden rounded-xl shadow-md">
-        <img src={selectedImage} alt={`Imagen ${selectedIndex + 1}`} className="w-full h-full object-cover" />
-      </div>
-      <div className="flex gap-[8px] overflow-x-auto w-full">
-        {finalImages.map((img, index) => (
-          <button
-            key={`${img}-${index}`}
-            className={`w-34 aspect-[8/10] flex-shrink-0 rounded-lg overflow-hidden border-2 ${
-              selectedIndex === index ? 'border-blue-500' : 'border-transparent'
-            }`}
-            onClick={() => setSelectedIndex(index)}
-            aria-label={`Seleccionar imagen ${index + 1}`}
-            type="button"
-          >
-            <img src={img} alt={`Miniatura ${index + 1}`} className="w-full h-full object-cover" />
-          </button>
-        ))}
+    <div className={`w-full ${desktopLayout ? 'h-full min-h-0' : 'h-auto'} ${className ?? ''}`}>
+      <div className={wrapperClass}>
+        <div className={desktopLayout ? 'col-[1] row-[1] h-full min-h-0 flex flex-col' : 'flex flex-col gap-2'}>
+          <figure className={`relative overflow-hidden rounded-xl shadow-md ${figureClass}`}>
+            <img
+              src={selectedImage}
+              alt={`Imagen ${selectedIndex + 1}`}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          </figure>
+
+          {!desktopLayout && (
+            <div className="flex gap-2 overflow-x-auto w-full pb-1">
+              {finalImages.map((img, i) => (
+                <button
+                  key={`thumb-m-${i}`}
+                  type="button"
+                  onClick={() => setSelectedIndex(i)}
+                  aria-label={`Seleccionar imagen ${i + 1}`}
+                  className={`cursor-pointer w-[120px] aspect-[8/10] flex-shrink-0 rounded-lg overflow-hidden border-2 ${
+                    selectedIndex === i ? 'border-blue-500' : 'border-transparent'
+                  }`}
+                >
+                  <img src={img} alt={`Miniatura ${i + 1}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {desktopLayout && (
+          <div className="col-[2] row-[1] h-full min-h-0 overflow-hidden grid grid-rows-[repeat(3,minmax(0,1fr))] gap-3">
+            {rightThumbIndices.map((idx) => (
+              <button
+                key={`thumb-d-${idx}`}
+                type="button"
+                onClick={() => setSelectedIndex(idx)}
+                aria-label={`Seleccionar imagen ${idx + 1}`}
+                className={`cursor-pointer relative w-full h-full rounded-xl overflow-hidden border-2 ${
+                  selectedIndex === idx ? 'border-blue-500' : 'border-transparent'
+                }`}
+              >
+                <img
+                  src={finalImages[idx]}
+                  alt={`Miniatura ${idx + 1}`}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        )}
+
+        {desktopLayout && (
+          <div className="col-[1/-1] row-[2]">
+            <Button variant="outline" className="w-full">
+              Ver Más Fotos
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

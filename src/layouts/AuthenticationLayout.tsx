@@ -8,7 +8,7 @@ export default function AuthenticationLayout({ children }: LayoutProps) {
       className="
         w-full min-h-dvh
         bg-[var(--color-primary-white)] lg:bg-slate-50
-        overflow-y-auto overscroll-contain  /* permite scroll si se necesita */
+        overflow-y-auto overscroll-contain
       "
       style={{
         paddingTop: 'env(safe-area-inset-top)',

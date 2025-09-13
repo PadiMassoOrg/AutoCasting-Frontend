@@ -1,0 +1,36 @@
+import { useTranslation } from 'react-i18next';
+import editIcon from '../../../../shared/icons/edit.svg';
+import blackViewIcon from '../../../../shared/icons/view.svg';
+import whiteEditIcon from '../../../../shared/icons/whiteEdit.svg';
+import type { ProfileProgress } from '../../services/computeProfileProgress';
+
+export function ProfileCompletionCard({ progress, isEdit }: { progress: ProfileProgress; isEdit: boolean }) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center rounded-full bg-white justify-center pr-2 pl-6 py-2 gap-3 border border-[var(--color-secondary-outline)] lg:hidden">
+      <article className="flex-1">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold">{t('profile.page.progress_title')}</h3>
+          <span className="text-sm font-bold">{progress.total}%</span>
+        </div>
+        <div className="mt-2 h-3 w-full rounded-full bg-white border border-[var(--color-secondary-outline)]">
+          <div
+            className="h-3 rounded-full ml-[-0.07rem] bg-lime-400 transition-all"
+            style={{ width: `${progress.total}%` }}
+          />
+        </div>
+      </article>
+      <span className="w-px h-9 bg-[var(--color-secondary-outline)]" />
+      <article className="flex items-center rounded-full bg-[var(--color-primary-light-grey)] p-1">
+        <div className="flex flex-row items-center">
+          <button className="w-8 h-8 rounded-full bg-black grid place-items-center cursor-pointer">
+            <img src={isEdit ? whiteEditIcon : editIcon} alt="" className="w-[15px] text-white" />
+          </button>
+          <button className="w-8 h-8 rounded-full grid place-items-center cursor-pointer">
+            <img src={blackViewIcon} alt="" className="w-[15px] text-white" />
+          </button>
+        </div>
+      </article>
+    </div>
+  );
+}

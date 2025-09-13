@@ -1,5 +1,6 @@
-import ViewerActions from './ViewerActions';
 import BasicInfoSection from './BasicInfoSection';
-import MediaSection from './MediaSection';
+import SocialMediaSection from './SocialMediaSection';
+import VideoSection from './VideoSection';
+import ViewerActions from './ViewerActions';
 
-export { ViewerActions, BasicInfoSection, MediaSection };
+export { BasicInfoSection, SocialMediaSection, VideoSection, ViewerActions };
