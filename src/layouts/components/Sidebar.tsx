@@ -1,3 +1,4 @@
+import { Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -38,7 +39,7 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated, publ
   ];
 
   return (
-    <div aria-modal="true" role="dialog" className="fixed inset-0 z-[100]">
+    <div aria-modal="true" role="dialog" className="fixed inset-0 z-[100] lg:hidden">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       <aside className="absolute inset-0 bg-white flex flex-col pt-5">
@@ -48,31 +49,31 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated, publ
             type="button"
             onClick={onClose}
             aria-label={t('common.close') || 'Cerrar'}
-            className="p-2 rounded-md hover:bg-black/5 text-2xl leading-none"
+            className="cursor-pointer p-2 rounded-md text-3xl leading-none"
           >
             ×
           </button>
         </header>
 
-        <nav className="px-8 py-6">
-          <ul className="flex flex-col gap-8">
-            {items.map((it) => (
-              <li key={it.to} onClick={onClose}>
-                <Link to={it.to} className="block text-5xl font-extrabold leading-none tracking-tight">
-                  {it.label}
-                </Link>
-              </li>
-            ))}
+        <nav className="px-8 py-6 w-full h-full">
+          <ul className="grid place-items-center w-full h-full">
+            <div className="w-full pl-[12%] flex flex-col gap-5">
+              {items.map((it) => (
+                <li key={it.to} onClick={onClose}>
+                  <Link to={it.to} className="block text-[28px] font-extrabold leading-none">
+                    {it.label}
+                  </Link>
+                </li>
+              ))}
+              <Separator className="opacity-20 my-4"></Separator>
+              {isAuthenticated && (
+                <li onClick={onLogout} className="cursor-pointer block text-lg font-bold">
+                  {t('general.logout')}
+                </li>
+              )}
+            </div>
           </ul>
         </nav>
-
-        {isAuthenticated && (
-          <div className="mt-auto border-t border-black/10 px-8 py-6">
-            <button type="button" onClick={onLogout} className="text-lg font-semibold">
-              {t('general.logout')}
-            </button>
-          </div>
-        )}
       </aside>
     </div>
   );
