@@ -4,7 +4,7 @@ import tikTok from '../../../shared/icons/tikTok.svg';
 import { normalizeExternalUrl } from '../../../shared/utils/urlUtils';
 import type { ProfileSocialMedia } from '../../profile-edit/types/profile.types';
 
-const SocialMediaSection = ({ data }: { data: ProfileSocialMedia }) => {
+const SocialMediaSection = ({ data, className }: { data: ProfileSocialMedia; className?: string }) => {
   const { t } = useTranslation();
 
   const instaUrl = normalizeExternalUrl(data.instagramUrl);
@@ -12,9 +12,9 @@ const SocialMediaSection = ({ data }: { data: ProfileSocialMedia }) => {
 
   if (!instaUrl && !tiktokUrl) return null;
   return (
-    <article className="w-full flex flex-col gap-4 items-center lg:flex-row lg:justify-between">
+    <article className={`w-full ${className ?? ''}`}>
       <h2 className="text-lg font-bold">{t('profile.page.socials')}:</h2>
-      <div className={`w-full flex gap-4 items-center justify-center lg:justify-end`}>
+      <div className={`flex gap-4 items-center`}>
         <SocialLink href={instaUrl} label="Instagram" iconSrc={instagram} />
         <SocialLink href={tiktokUrl} label="TikTok" iconSrc={tikTok} />
       </div>

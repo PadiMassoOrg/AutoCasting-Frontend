@@ -2,9 +2,8 @@ import { Separator } from 'autocasting-ui-library-padimasso';
 import { useParams } from 'react-router-dom';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 import { LG_SCREEN_SIZE, XL_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
-import { BasicInfoSection, MediaSection, ViewerActions } from '../components';
+import { BasicInfoSection, SocialMediaSection, VideoSection, ViewerActions } from '../components';
 import ProfileInfoCarousel from '../components/Details/ProfileInfoCarousel';
-import SocialMediaSection from '../components/SocialMediaSection';
 import { usePublicProfile } from '../hooks/usePublicProfile';
 
 const NAVBAR = 70;
@@ -42,9 +41,12 @@ const PublicProfilePage = () => {
           </aside>
         </div>
         <Separator className="opacity-25 my-12" />
-        <MediaSection data={media} />
+        <VideoSection data={media} />
         <Separator className="opacity-25 my-12" />
-        <SocialMediaSection data={socialMedia} />
+        <SocialMediaSection
+          data={socialMedia}
+          className="lg:w-full lg:flex lg:flex-row lg:items-center lg:justify-end lg:gap-4"
+        />
       </article>
     );
   }
@@ -57,7 +59,7 @@ const PublicProfilePage = () => {
           style={{
             height: `calc(100svh - ${NAVBAR}px - ${TOP_MARGIN})`,
             minHeight: '500px',
-            ['--media-col-w' as any]: '360px',
+            ['--media-col-w' as any]: '250px',
           }}
         >
           <BasicInfoSection data={basicInfo} />
@@ -69,10 +71,10 @@ const PublicProfilePage = () => {
               <ProfileInfoCarousel profile={data} className="h-full" />
             </div>
             <div className="min-w-0 min-h-0 h-full overflow-auto flex flex-col gap-5 justify-between">
-              <MediaSection data={media} />
+              <VideoSection data={media} />
               <div className="">
                 <Separator className="opacity-25 mb-6" />
-                <SocialMediaSection data={socialMedia} />
+                <SocialMediaSection data={socialMedia} className="flex flex-row items-center justify-between" />
                 <Separator className="opacity-25 mt-6" />
               </div>
             </div>
@@ -88,11 +90,11 @@ const PublicProfilePage = () => {
       <BasicInfoSection data={basicInfo} />
       <ImageCarousel images={hasImages ? images : null} />
       <Separator className="opacity-25 my-12" />
-      <MediaSection data={media} />
+      <VideoSection data={media} />
       <Separator className="opacity-25 my-12" />
       <ProfileInfoCarousel profile={data} />
       <Separator className="opacity-25 my-12" />
-      <SocialMediaSection data={socialMedia} />
+      <SocialMediaSection data={socialMedia} className="flex flex-col items-center gap-4" />
     </div>
   );
 };
