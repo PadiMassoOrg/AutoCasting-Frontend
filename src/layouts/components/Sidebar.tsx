@@ -69,7 +69,7 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated, publ
         {isAuthenticated && (
           <div className="mt-auto border-t border-black/10 px-8 py-6">
             <button type="button" onClick={onLogout} className="text-lg font-semibold">
-              {t('routes.logout') || 'Cerrar Sesión'}
+              {t('general.logout')}
             </button>
           </div>
         )}
