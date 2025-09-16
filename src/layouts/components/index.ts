@@ -1,3 +1,4 @@
-import DesktopSidebar from './DesktopSidebar';
+import AccountDropdown from './AccountDropdown';
 import Navbar from './Navbar';
-export { DesktopSidebar, Navbar as PublicNavbar };
+import Sidebar from './Sidebar';
+export { AccountDropdown, Navbar, Sidebar };

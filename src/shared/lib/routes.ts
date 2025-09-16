@@ -12,6 +12,8 @@ export const ROUTES = {
   // Public
   PUBLIC_PROFILE: '/profile',
   TALENT_DATABASE: '/talent-database',
+  SUPPORT: 'http://auto-casting.com/',
+  FAQ: 'http://auto-casting.com/',
 };
 
 export const USER_ROUTES = [
