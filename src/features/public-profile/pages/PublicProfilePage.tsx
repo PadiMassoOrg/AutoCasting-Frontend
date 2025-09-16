@@ -43,7 +43,6 @@ const PublicProfilePage = () => {
   if (isDesktop && !isDesktopXL) {
     return (
       <article className="relative w-full flex flex-col gap-3">
-        {isOwner && progress && <ProfileCompletionCard progress={progress} isEdit={false} />}
         <BasicInfoSection data={basicInfo} />
         <div className="grid gap-10 grid-cols-[1.4fr_1fr] h-[700px] max-h-[700px] min-h-0">
           <section className="min-w-0 min-h-0 h-full">
@@ -67,7 +66,6 @@ const PublicProfilePage = () => {
   if (isDesktopXL) {
     return (
       <article className="relative w-full">
-        {isOwner && progress && <ProfileCompletionCard progress={progress} isEdit={false} />}
         <div
           className="flex flex-col"
           style={{
@@ -100,7 +98,9 @@ const PublicProfilePage = () => {
 
   return (
     <div className="relative pt-3 pb-10 flex flex-col gap-3 justify-center">
-      {isOwner && progress && <ProfileCompletionCard progress={progress} isEdit={false} />}
+      <div className="mb-2 grid place-items-center">
+        {isOwner && progress && <ProfileCompletionCard progress={progress} isEdit={false} />}
+      </div>
       <ViewerActions />
       <BasicInfoSection data={basicInfo} />
       <ImageCarousel images={hasImages ? images : null} />

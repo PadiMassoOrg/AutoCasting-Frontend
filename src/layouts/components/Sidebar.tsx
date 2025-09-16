@@ -55,26 +55,42 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Pr
                     exact={false}
                   />
                 </li>
-                <li onClick={onClose}>
-                  <HilightLink
-                    to={ROUTES.PROFILE}
-                    label={t('routes.profile')}
-                    className="z-[150] block text-[28px] font-extrabold leading-none"
-                    width={200}
-                    height={55}
-                    exact={false}
-                  />
-                </li>
-                <li onClick={onClose}>
-                  <HilightLink
-                    to={ROUTES.ACCOUNT}
-                    label={t('routes.account')}
-                    className="z-[150] block text-[26px] font-extrabold leading-none"
-                    width={270}
-                    height={68}
-                    exact={false}
-                  />
-                </li>
+
+                {isAuthenticated ? (
+                  <>
+                    <li onClick={onClose}>
+                      <HilightLink
+                        to={ROUTES.PROFILE}
+                        label={t('routes.profile')}
+                        className="z-[150] block text-[28px] font-extrabold leading-none"
+                        width={200}
+                        height={55}
+                        exact={false}
+                      />
+                    </li>
+                    <li onClick={onClose}>
+                      <HilightLink
+                        to={ROUTES.ACCOUNT}
+                        label={t('routes.account')}
+                        className="z-[150] block text-[26px] font-extrabold leading-none"
+                        width={270}
+                        height={68}
+                        exact={false}
+                      />
+                    </li>
+                  </>
+                ) : (
+                  <li onClick={onClose}>
+                    <HilightLink
+                      to={ROUTES.AUTH}
+                      label={t('routes.login')}
+                      className="z-[150] block text-[26px] font-extrabold leading-none"
+                      width={270}
+                      height={68}
+                      exact={false}
+                    />
+                  </li>
+                )}
               </div>
               <Separator className="opacity-20 my-4" />
               <div className="text-[16px] font-semibold">
@@ -91,15 +107,17 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Pr
                   </a>
                 </li>
               </div>
-              <Separator className="opacity-20 my-4" />
               {isAuthenticated && (
-                <li
-                  onClick={onLogout}
-                  className="cursor-pointer text-[16px] font-semibold flex flex-row items-center gap-2"
-                >
-                  <ChevronRight></ChevronRight>
-                  {t('general.logout')}
-                </li>
+                <>
+                  <Separator className="opacity-20 my-4" />
+                  <li
+                    onClick={onLogout}
+                    className="cursor-pointer text-[16px] font-semibold flex flex-row items-center gap-2"
+                  >
+                    <ChevronRight></ChevronRight>
+                    {t('general.logout')}
+                  </li>
+                </>
               )}
             </div>
           </ul>

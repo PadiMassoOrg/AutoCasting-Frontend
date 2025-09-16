@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import editIcon from '../../../../shared/icons/edit.svg';
+import blackEditIcon from '../../../../shared/icons/edit.svg';
 import blackViewIcon from '../../../../shared/icons/view.svg';
 import whiteEditIcon from '../../../../shared/icons/whiteEdit.svg';
 import whiteViewIcon from '../../../../shared/icons/whiteView.svg';
@@ -24,13 +24,12 @@ export function ProfileCompletionCard({
   };
 
   const goPreview = () => {
-    if (publicSlug) {
-      window.location.href = `${ROUTES.PUBLIC_PROFILE}/${publicSlug}`;
-    }
+    console.log('hola');
+    if (publicSlug) navigate(`${ROUTES.PUBLIC_PROFILE}/${publicSlug}`);
   };
 
   return (
-    <div className="flex items-center rounded-full bg-white justify-center pr-2 pl-6 py-2 gap-3 border border-[var(--color-secondary-outline)] lg:max-w-[358px] ">
+    <div className="w-full flex items-center rounded-full bg-white justify-center pr-2 pl-6 py-2 gap-3 border border-[var(--color-secondary-outline)] max-w-[400px]">
       <article className="flex-1">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold">{t('profile.page.progress_title')}</h3>
@@ -47,12 +46,14 @@ export function ProfileCompletionCard({
       <article className="flex items-center rounded-full bg-[var(--color-primary-light-grey)] p-1">
         <div className="flex flex-row items-center">
           <button
+            type="button"
             onClick={goEdit}
             className={`w-8 h-8 grid place-items-center cursor-pointer ${isEdit ? 'rounded-full bg-black' : ''}`}
           >
-            <img src={isEdit ? whiteEditIcon : editIcon} alt="" className="w-[15px] text-white" />
+            <img src={isEdit ? whiteEditIcon : blackEditIcon} alt="" className="w-[15px] text-white" />
           </button>
           <button
+            type="button"
             onClick={goPreview}
             className={`w-8 h-8 grid place-items-center cursor-pointer ${!isEdit ? 'rounded-full bg-black' : ''}`}
           >

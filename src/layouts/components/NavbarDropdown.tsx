@@ -69,7 +69,7 @@ export default function NavbarDropdown({
           className={clsx(
             'absolute mt-3 z-50',
             alignClass,
-            'rounded-3xl bg-white shadow-md border border-black/5 px-7 py-4',
+            'rounded-3xl bg-white shadow-lg border border-black/5 px-7 py-4',
             className
           )}
           style={style}
