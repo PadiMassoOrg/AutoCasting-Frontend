@@ -19,13 +19,12 @@ export function ProfileCompletionCard({
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const goEdit = () => {
-    navigate(ROUTES.PROFILE);
-  };
-
-  const goPreview = () => {
-    console.log('hola');
-    if (publicSlug) navigate(`${ROUTES.PUBLIC_PROFILE}/${publicSlug}`);
+  const toggleRoute = () => {
+    if (isEdit) {
+      if (publicSlug) navigate(`${ROUTES.PUBLIC_PROFILE}/${publicSlug}`);
+    } else {
+      navigate(ROUTES.PROFILE);
+    }
   };
 
   return (
@@ -43,18 +42,19 @@ export function ProfileCompletionCard({
         </div>
       </article>
       <span className="w-px h-9 bg-[var(--color-secondary-outline)]" />
-      <article className="flex items-center rounded-full bg-[var(--color-primary-light-grey)] p-1">
+      <article
+        className="flex items-center rounded-full bg-[var(--color-primary-light-grey)] p-1"
+        onClick={toggleRoute}
+      >
         <div className="flex flex-row items-center">
           <button
             type="button"
-            onClick={goEdit}
             className={`w-8 h-8 grid place-items-center cursor-pointer ${isEdit ? 'rounded-full bg-black' : ''}`}
           >
             <img src={isEdit ? whiteEditIcon : blackEditIcon} alt="" className="w-[15px] text-white" />
           </button>
           <button
             type="button"
-            onClick={goPreview}
             className={`w-8 h-8 grid place-items-center cursor-pointer ${!isEdit ? 'rounded-full bg-black' : ''}`}
           >
             <img src={isEdit ? blackViewIcon : whiteViewIcon} alt="" className="w-[15px] text-white" />
