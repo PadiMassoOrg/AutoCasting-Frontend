@@ -1,7 +1,8 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { ChevronRight } from '../../shared/components/Chevron';
+import HilightLink from '../../shared/components/HilightLink/HilightLink'; // ⬅️ NUEVO
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import { ROUTES } from '../../shared/lib/routes';
 
@@ -13,7 +14,7 @@ type Props = {
   publicSlug?: string | null;
 };
 
-export default function Sidebar({ open, onClose, onLogout, isAuthenticated, publicSlug }: Props) {
+export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Props) {
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -26,22 +27,9 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated, publ
   }, [open]);
 
   if (!open) return null;
-
-  const items = [
-    { to: ROUTES.TALENT_DATABASE, label: t('routes.talent-database') },
-    ...(isAuthenticated
-      ? [
-          { to: ROUTES.PROFILE, label: t('routes.profile') },
-          { to: ROUTES.ACCOUNT, label: t('routes.account') },
-          { to: `${ROUTES.PUBLIC_PROFILE}/${publicSlug ?? ''}`, label: t('Publico') },
-        ]
-      : [{ to: ROUTES.AUTH, label: t('routes.login') }]),
-  ];
-
   return (
     <div aria-modal="true" role="dialog" className="fixed inset-0 z-[100] lg:hidden">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-
       <aside className="absolute inset-0 bg-white flex flex-col pt-5">
         <header className="h-14 px-5 flex items-center justify-between">
           <LinkLogo horizontal />
@@ -54,20 +42,59 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated, publ
             ×
           </button>
         </header>
-
-        <nav className="px-8 py-6 w-full h-full">
+        <nav className="w-[68%] h-full m-auto">
           <ul className="grid place-items-center w-full h-full">
-            <div className="w-full pl-[12%] flex flex-col gap-5">
-              {items.map((it) => (
-                <li key={it.to} onClick={onClose}>
-                  <Link to={it.to} className="block text-[28px] font-extrabold leading-none">
-                    {it.label}
-                  </Link>
+            <div className="w-full flex flex-col gap-6">
+              <div className="w-full flex flex-col gap-6 items-start">
+                <li onClick={onClose}>
+                  <HilightLink
+                    to={ROUTES.TALENT_DATABASE}
+                    label={t('routes.talent-database')}
+                    className="z-[150] block text-[28px] font-extrabold leading-none"
+                    width={250}
+                    height={65}
+                    exact={false}
+                  />
                 </li>
-              ))}
-              <Separator className="opacity-20 my-4"></Separator>
+                <li onClick={onClose}>
+                  <HilightLink
+                    to={ROUTES.PROFILE}
+                    label={t('routes.profile')}
+                    className="z-[150] block text-[28px] font-extrabold leading-none"
+                    width={200}
+                    height={55}
+                    exact={false}
+                  />
+                </li>
+                <li onClick={onClose}>
+                  <HilightLink
+                    to={ROUTES.ACCOUNT}
+                    label={t('routes.account')}
+                    className="z-[150] block text-[26px] font-extrabold leading-none"
+                    width={270}
+                    height={68}
+                    exact={false}
+                  />
+                </li>
+              </div>
+              <Separator className="opacity-20 my-4" />
+              <div className="text-[16px] font-semibold">
+                <li onClick={onClose} className="cursor-pointer flex flex-row items-center gap-2">
+                  <ChevronRight></ChevronRight>
+                  {t('routes.support')}
+                </li>
+                <li onClick={onClose} className="cursor-pointer flex flex-row items-center gap-2">
+                  <ChevronRight></ChevronRight>
+                  {t('routes.faq')}
+                </li>
+              </div>
+              <Separator className="opacity-20 my-4" />
               {isAuthenticated && (
-                <li onClick={onLogout} className="cursor-pointer block text-lg font-bold">
+                <li
+                  onClick={onLogout}
+                  className="cursor-pointer text-[16px] font-semibold flex flex-row items-center gap-2"
+                >
+                  <ChevronRight></ChevronRight>
                   {t('general.logout')}
                 </li>
               )}

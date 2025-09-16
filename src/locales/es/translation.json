@@ -42,7 +42,9 @@
     "login": "Entrar",
     "profile": "Perfil",
     "account": "Mi Cuenta",
-    "talent-database": "Catálogo"
+    "talent-database": "Catálogo",
+    "support": "Soporte Técnico",
+    "faq": "Preguntas Frecuentes"
   },
   "role": {
     "actor": "Actor",

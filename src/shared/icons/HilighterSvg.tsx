@@ -1,18 +1,12 @@
-// Wave.tsx
 import React from 'react';
 
 type Props = React.SVGProps<SVGSVGElement> & {
   width?: number | string;
   height?: number | string;
-  color?: string; // permite cambiar el fill
+  color?: string;
 };
 
-export default function HilighterSvg({
-  width = '100%', // controla desde afuera
-  height = 56,
-  color = '#AEFF00',
-  ...rest
-}: Props) {
+export default function HilighterSvg({ width = '100%', height = 56, color = '#AEFF00', ...rest }: Props) {
   return (
     <svg viewBox="0 0 126 56" width={width} height={height} preserveAspectRatio="xMidYMid meet" {...rest}>
       <path
