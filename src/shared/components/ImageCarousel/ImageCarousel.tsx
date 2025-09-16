@@ -1,6 +1,8 @@
 import { Button } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import PLACEHOLDER_SVG from '../../../shared/icons/image_placeholder.svg';
+import PhotoZoomOverlay from '../PhotoZoomOverlay/PhotoZoomOverlay';
 
 type Props = {
   images: string[] | null;
@@ -10,7 +12,12 @@ type Props = {
 };
 
 export default function ImageCarousel({ images, className, isDesktop, isDesktopXL }: Props) {
+  const { t } = useTranslation();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [zoomOpen, setZoomOpen] = useState(false);
+
+  const openZoom = () => setZoomOpen(true);
+  const closeZoom = () => setZoomOpen(false);
 
   const finalImages = useMemo<string[]>(() => {
     if (!images || images.length === 0) return Array.from({ length: 4 }, () => PLACEHOLDER_SVG);
@@ -43,7 +50,10 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
     <div className={`w-full ${desktopLayout ? 'h-full min-h-0' : 'h-auto'} ${className ?? ''}`}>
       <div className={wrapperClass}>
         <div className={desktopLayout ? 'col-[1] row-[1] h-full min-h-0 flex flex-col' : 'flex flex-col gap-2'}>
-          <figure className={`relative overflow-hidden rounded-xl shadow-md ${figureClass}`}>
+          <figure
+            className={`cursor-pointer relative overflow-hidden rounded-xl shadow-md ${figureClass}`}
+            onClick={openZoom}
+          >
             <img
               src={selectedImage}
               alt={`Imagen ${selectedIndex + 1}`}
@@ -86,7 +96,7 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
                   aria-label={`Seleccionar imagen ${idx + 1}`}
                   // alto exacto = (alto total - 2 gaps) / 3 ; ancho lo resuelve aspect-ratio
                   style={{ height: 'calc((100% - 2*var(--g)) / 3)' }}
-                  className={`relative aspect-[4/5] rounded-xl overflow-hidden border-2 flex-shrink-0 ${
+                  className={`cursor-pointer relative aspect-[4/5] rounded-xl overflow-hidden border-2 flex-shrink-0 ${
                     selected ? 'border-blue-500' : 'border-transparent'
                   }`}
                 >
@@ -99,11 +109,20 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
 
         {desktopLayout && (
           <div className="col-[1/-1] row-[2]">
-            <Button variant="outline" className="w-full">
-              Ver Más Fotos
+            <Button variant="outline" className="w-full" onClick={openZoom}>
+              {t('profile.media.more_photos')}
             </Button>
           </div>
         )}
+
+        {/* Overlay sin chrome */}
+        <PhotoZoomOverlay
+          open={zoomOpen}
+          images={finalImages}
+          initialIndex={selectedIndex}
+          onClose={closeZoom}
+          onIndexChange={setSelectedIndex}
+        />
       </div>
     </div>
   );
