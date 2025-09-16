@@ -67,9 +67,9 @@ export default function NavbarDropdown({
         <div
           role="menu"
           className={clsx(
-            'absolute mt-3 z-50',
+            'absolute mt-2 z-50',
             alignClass,
-            'rounded-3xl bg-white shadow-lg border border-black/5 px-7 py-4',
+            'rounded-3xl bg-white shadow-xl border border-black/5 px-7 py-4',
             className
           )}
           style={style}

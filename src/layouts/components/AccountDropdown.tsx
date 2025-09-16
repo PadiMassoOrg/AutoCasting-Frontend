@@ -19,7 +19,7 @@ export default function AccountDropdown({ onLogout }: { onLogout: () => void }) 
   return (
     <NavbarDropdown
       align="right"
-      itemClassName="font-extrabold text-[14px]"
+      itemClassName="font-semibold text-[14px] opacity-70 hover:opacity-100 transition-all duration-300"
       trigger={
         <div className="flex items-center gap-1 cursor-pointer">
           <HilightLink
