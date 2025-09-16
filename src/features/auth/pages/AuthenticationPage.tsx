@@ -19,10 +19,10 @@ export default function AuthenticationPage() {
 
   return (
     <AuthenticationLayout>
-      <div className="flex flex-row items-center gap-36 w-full h-full">
+      <div className="flex flex-row items-center gap-36 w-full">
         {/* Banner */}
-        <article className="hidden lg:flex flex-col gap-8 justify-center relative h-dvh">
-          <h2 className="font-extrabold text-5xl">
+        <article className="hidden lg:flex flex-col gap-8 justify-center relative">
+          <h2 className="font-extrabold text-4xl">
             ¡{t('auth.page.welcome')} <p className="break-after-all">{t('company.site')}!</p>
           </h2>
           <h2 className="text-neutral-600 opacity-65 font-normal text-lg">{t('auth.page.text_1')}</h2>
@@ -46,7 +46,7 @@ export default function AuthenticationPage() {
           </aside>
         </article>
         {/* Forms */}
-        <article className="w-full m-auto sm:max-w-md xl:max-w-lg lg:bg-white lg:p-6 lg:rounded-2xl lg:shadow-lg lg:h-full lg:min-h-[45rem] flex flex-col justify-center">
+        <article className="w-full h-full m-auto flex flex-col justify-center sm:max-w-md xl:max-w-lg lg:bg-white lg:px-8 lg:py-12 lg:rounded-2xl lg:shadow-lg ">
           <div className="flex flex-col gap-4 items-center pb-8">
             <LinkLogo></LinkLogo>
             <h2 className="font-bold text-2xl whitespace-nowrap">{t('company.header')}</h2>
