@@ -8,8 +8,8 @@ export default function MainLayout() {
       <div className="w-full mt-6">
         <Navbar></Navbar>
       </div>
-      <div className="w-full flex flex-col overflow-x-hidden items-center lg:pt-6">
-        <main className="w-full min-w-0 max-w-[1700px] p-4 lg:p-10 lg:pt-6" id="app-scroll-root">
+      <div className="w-full flex flex-col overflow-x-hidden items-center">
+        <main className="w-full min-w-0 max-w-[1650px] p-4 lg:px-6 lg:pt-6" id="app-scroll-root">
           {<Outlet />}
         </main>
       </div>

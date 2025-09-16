@@ -12,7 +12,7 @@ import { usePublicProfile } from '../hooks/usePublicProfile';
 
 const NAVBAR = 70;
 const TOP_MARGIN = '5rem';
-const FORCE_HEIGHT = '12rem';
+const FORCE_HEIGHT = '2rem';
 
 const PublicProfilePage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -70,20 +70,20 @@ const PublicProfilePage = () => {
         <div
           className="flex flex-col"
           style={{
-            height: `calc(100svh - ${NAVBAR}px - ${TOP_MARGIN} - ${FORCE_HEIGHT} )`,
+            height: `calc(100svh - ${NAVBAR}px - ${TOP_MARGIN})`,
             minHeight: '500px',
-            ['--media-col-w' as any]: '300px',
+            ['--media-col-w' as any]: '200px',
           }}
         >
           <BasicInfoSection data={basicInfo} />
-          <div className="flex-1 min-h-0 grid gap-6 grid-cols-[max-content_minmax(260px,1fr)_var(--media-col-w)] items-stretch">
+          <div className="flex-1 min-h-0 grid gap-8 grid-cols-[max-content_minmax(260px,1fr)_var(--media-col-w)] items-stretch">
             <div className="min-w-0 min-h-0 h-full">
               <ImageCarousel images={hasImages ? images : null} isDesktop isDesktopXL />
             </div>
             <div className="min-w-0 min-h-0 h-full overflow-auto">
               <ProfileInfoCarousel profile={data} className="h-full" />
             </div>
-            <div className="min-w-0 min-h-0 h-full overflow-auto flex flex-col gap-5 justify-between">
+            <div className="min-h-0 h-full overflow-auto flex flex-col justify-between">
               <VideoSection data={media} />
               <div className="">
                 <Separator className="opacity-25 mb-6" />
