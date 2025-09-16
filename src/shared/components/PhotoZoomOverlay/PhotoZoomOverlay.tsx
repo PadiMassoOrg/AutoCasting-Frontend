@@ -49,8 +49,21 @@ export default function PhotoZoomOverlay({ open, images, initialIndex = 0, onClo
   return createPortal(
     <div className="fixed inset-0 z-[1000]" role="dialog" aria-modal="true" onClick={onClose}>
       <div className="absolute inset-0 bg-black/80" />
-      <div className="relative z-10 flex items-center justify-center h-full px-4" onClick={(e) => e.stopPropagation()}>
-        <div className="relative w-[90%] h-[90%] max-w-[600px] max-h-[700px] m-auto rounded-3xl">
+      <div className="relative z-10 flex items-center justify-center h-full px-4">
+        <div
+          className="relative w-[90%] h-[90%] max-w-[600px] max-h-[700px] m-auto rounded-3xl"
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <button
+            type="button"
+            aria-label="Cerrar"
+            onClick={onClose}
+            className=" cursor-pointer absolute z-10 right-3 top-3 w-9 h-9 grid place-items-center rounded-full bg-black/50 text-white"
+          >
+            <span className="text-2xl leading-none mb-[10%]">×</span>
+          </button>
           <figure className="relative w-full h-full overflow-hidden rounded-2xl">
             <img
               src={current}
@@ -63,7 +76,10 @@ export default function PhotoZoomOverlay({ open, images, initialIndex = 0, onClo
               <>
                 <button
                   type="button"
-                  onClick={prev}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prev();
+                  }}
                   aria-label="Foto anterior"
                   className="absolute left-5 top-1/2 -translate-y-1/2 grid place-items-center w-8 h-8 rounded-full bg-white/95 hover:bg-white"
                 >
@@ -72,7 +88,10 @@ export default function PhotoZoomOverlay({ open, images, initialIndex = 0, onClo
 
                 <button
                   type="button"
-                  onClick={next}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    next();
+                  }}
                   aria-label="Foto siguiente"
                   className="absolute right-5 top-1/2 -translate-y-1/2 grid place-items-center w-8 h-8 rounded-full bg-white/95 hover:bg-white"
                 >

@@ -116,13 +116,7 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
         )}
 
         {/* Overlay sin chrome */}
-        <PhotoZoomOverlay
-          open={zoomOpen}
-          images={finalImages}
-          initialIndex={selectedIndex}
-          onClose={closeZoom}
-          onIndexChange={setSelectedIndex}
-        />
+        <PhotoZoomOverlay open={zoomOpen} images={finalImages} initialIndex={selectedIndex} onClose={closeZoom} />
       </div>
     </div>
   );
