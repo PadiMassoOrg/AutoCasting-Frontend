@@ -12,7 +12,6 @@ import { usePublicProfile } from '../hooks/usePublicProfile';
 
 const NAVBAR = 70;
 const TOP_MARGIN = '5rem';
-const FORCE_HEIGHT = '2rem';
 
 const PublicProfilePage = () => {
   const { slug } = useParams<{ slug: string }>();
