@@ -23,7 +23,6 @@ export default function InfoCarousel<K extends PillKeyBase, D>({
   getCount,
   t,
   className,
-  panelWrapperClassName = 'rounded-xl border border-[var(--color-secondary-outline)] py-6 px-7',
   defaultActive,
   translationPrefix,
 }: InfoCarouselProps<K, D>) {
@@ -41,8 +40,10 @@ export default function InfoCarousel<K extends PillKeyBase, D>({
   return (
     <section className={`w-full min-w-0 min-h-0 h-full flex flex-col gap-3 ${className ?? ''}`}>
       <Pills items={pills} value={active} onChange={setActive} />
-      <div className="w-full min-w-0 min-h-0 flex-1 overflow-auto">
-        <div className={panelWrapperClassName}>{ActivePanel?.(data)}</div>
+      <div className="h-full w-full min-w-0 min-h-0 flex-1 overflow-hidden rounded-xl">
+        <div className="h-full rounded-xl ring-1 ring-inset ring-[var(--color-secondary-outline)] bg-white">
+          <div className="h-full overflow-auto py-6 px-7">{ActivePanel?.(data)}</div>
+        </div>
       </div>
     </section>
   );

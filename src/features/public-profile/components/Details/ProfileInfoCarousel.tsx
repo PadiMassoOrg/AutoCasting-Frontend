@@ -24,7 +24,6 @@ export default function ProfileInfoCarousel({
       t={t}
       className={className}
       defaultActive="characteristics"
-      panelWrapperClassName=""
       translationPrefix="profile.pills"
     />
   );
