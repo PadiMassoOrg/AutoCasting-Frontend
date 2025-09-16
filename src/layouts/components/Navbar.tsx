@@ -6,7 +6,8 @@ import HilightLink from '../../shared/components/HilightLink/HilightLink';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import BurgerIcon from '../../shared/icons/burger.svg';
 import { ROUTES } from '../../shared/lib/routes';
-import Sidebar from './Sidebar'; // <-- importa el nuevo componente
+import AccountDropdown from './AccountDropdown';
+import Sidebar from './Sidebar';
 
 const Navbar = () => {
   const { t } = useTranslation();
@@ -25,46 +26,21 @@ const Navbar = () => {
         >
           <img src={BurgerIcon} alt="" className="w-7" />
         </button>
-
-        <ul className="hidden lg:flex flex-row gap-6 items-center">
-          <li>
-            <HilightLink to={ROUTES.TALENT_DATABASE} label={t('routes.talent-database')} width={96} height={38} />
-          </li>
-
+        <div className="hidden lg:flex flex-row gap-6 items-center">
+          <HilightLink to={ROUTES.TALENT_DATABASE} label={t('routes.talent-database')} width={96} height={38} />
           {data ? (
             <>
-              <li>
-                <HilightLink to={ROUTES.PROFILE} label={t('routes.profile')} exact={false} width={72} height={34} />
-              </li>
-              <li>
-                <HilightLink to={ROUTES.ACCOUNT} label={t('routes.account')} exact={false} width={78} height={34} />
-              </li>
-              <li>
-                <HilightLink
-                  to={ROUTES.PUBLIC_PROFILE + '/' + data?.publicSlug}
-                  label={t('Publico')}
-                  exact={false}
-                  width={78}
-                  height={34}
-                />
-              </li>
+              <HilightLink to={ROUTES.PROFILE} label={t('routes.profile')} exact={false} width={72} height={34} />
+
+              <AccountDropdown onLogout={logout} />
             </>
           ) : (
-            <li>
-              <HilightLink to={ROUTES.AUTH} label={t('routes.login')} width={62} height={30} />
-            </li>
+            <HilightLink to={ROUTES.AUTH} label={t('routes.login')} width={62} height={30} />
           )}
-        </ul>
+        </div>
       </nav>
 
-      {/* Sidebar móvil */}
-      <Sidebar
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        onLogout={() => logout()}
-        isAuthenticated={!!data}
-        publicSlug={data?.publicSlug}
-      />
+      <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} onLogout={() => logout()} isAuthenticated={!!data} />
     </>
   );
 };

@@ -11,7 +11,6 @@ type Props = {
   onClose: () => void;
   onLogout: () => void;
   isAuthenticated?: boolean;
-  publicSlug?: string | null;
 };
 
 export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Props) {
@@ -81,11 +80,15 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Pr
               <div className="text-[16px] font-semibold">
                 <li onClick={onClose} className="cursor-pointer flex flex-row items-center gap-2">
                   <ChevronRight></ChevronRight>
-                  {t('routes.support')}
+                  <a href={ROUTES.SUPPORT} target="_blank" rel="noopener noreferrer">
+                    {t('routes.support')}
+                  </a>
                 </li>
                 <li onClick={onClose} className="cursor-pointer flex flex-row items-center gap-2">
                   <ChevronRight></ChevronRight>
-                  {t('routes.faq')}
+                  <a href={ROUTES.FAQ} target="_blank" rel="noopener noreferrer">
+                    {t('routes.faq')}
+                  </a>
                 </li>
               </div>
               <Separator className="opacity-20 my-4" />

@@ -1,25 +1,24 @@
 import { clsx } from 'clsx';
-import { Link, useMatch, useResolvedPath } from 'react-router-dom';
+import { Link, useResolvedPath, useLocation, matchPath } from 'react-router-dom';
 import HilighterSvg from '../../icons/HilighterSvg';
 
-function HilightLink({
-  to,
-  label,
-  className,
-  exact = false,
-  width = 84,
-  height = 36,
-}: {
+type Props = {
   to: string;
   label: React.ReactNode;
   className?: string;
   exact?: boolean;
   width?: number;
   height?: number;
-}) {
+  activeFor?: string | string[];
+};
+
+function HilightLink({ to, label, className, exact = false, width = 84, height = 36, activeFor }: Props) {
   const resolved = useResolvedPath(to);
-  const match = useMatch({ path: resolved.pathname + (exact ? '' : '/*'), end: !!exact });
-  const active = !!match;
+  const location = useLocation();
+
+  const candidates = Array.isArray(activeFor) ? activeFor : activeFor ? [activeFor] : [resolved.pathname];
+
+  const active = candidates.some((p) => matchPath({ path: p + (exact ? '' : '/*'), end: !!exact }, location.pathname));
 
   return (
     <Link
