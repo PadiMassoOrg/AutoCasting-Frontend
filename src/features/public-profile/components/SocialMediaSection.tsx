@@ -10,13 +10,12 @@ const SocialMediaSection = ({ data, className }: { data: ProfileSocialMedia; cla
   const instaUrl = normalizeExternalUrl(data.instagramUrl);
   const tiktokUrl = normalizeExternalUrl(data.tikTokUrl);
 
-  if (!instaUrl && !tiktokUrl) return null;
   return (
     <article className={`w-full ${className ?? ''}`}>
       <h2 className="text-lg font-bold">{t('profile.page.socials')}:</h2>
       <div className={`flex gap-4 items-center`}>
-        <SocialLink href={instaUrl} label="Instagram" iconSrc={instagram} />
-        <SocialLink href={tiktokUrl} label="TikTok" iconSrc={tikTok} />
+        {instaUrl && <SocialLink href={instaUrl} label="Instagram" iconSrc={instagram} />}
+        {tiktokUrl && <SocialLink href={tiktokUrl} label="TikTok" iconSrc={tikTok} />}
       </div>
     </article>
   );

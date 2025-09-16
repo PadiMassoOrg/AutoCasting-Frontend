@@ -12,6 +12,7 @@ import { usePublicProfile } from '../hooks/usePublicProfile';
 
 const NAVBAR = 70;
 const TOP_MARGIN = '5rem';
+const FORCE_HEIGHT = '12rem';
 
 const PublicProfilePage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -69,9 +70,9 @@ const PublicProfilePage = () => {
         <div
           className="flex flex-col"
           style={{
-            height: `calc(100svh - ${NAVBAR}px - ${TOP_MARGIN})`,
+            height: `calc(100svh - ${NAVBAR}px - ${TOP_MARGIN} - ${FORCE_HEIGHT} )`,
             minHeight: '500px',
-            ['--media-col-w' as any]: '250px',
+            ['--media-col-w' as any]: '300px',
           }}
         >
           <BasicInfoSection data={basicInfo} />
