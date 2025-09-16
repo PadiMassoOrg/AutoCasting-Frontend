@@ -1,7 +1,11 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 import { LG_SCREEN_SIZE, XL_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
+import { ProfileCompletionCard } from '../../profile-edit/components/ProfileCompletionCard/ProfileCompletionCard';
+import { useProfile } from '../../profile-edit/hooks/useProfile';
+import { computeProfileProgress, type ProfileProgress } from '../../profile-edit/services/computeProfileProgress';
 import { BasicInfoSection, SocialMediaSection, VideoSection, ViewerActions } from '../components';
 import ProfileInfoCarousel from '../components/Details/ProfileInfoCarousel';
 import { usePublicProfile } from '../hooks/usePublicProfile';
@@ -11,10 +15,19 @@ const TOP_MARGIN = '5rem';
 
 const PublicProfilePage = () => {
   const { slug } = useParams<{ slug: string }>();
+  const { data: myProfile } = useProfile();
   const { data, isLoading, error } = usePublicProfile(slug!);
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
 
+  const isOwner = !!myProfile?.publicSlug && myProfile.publicSlug === slug;
+  const progress = useMemo<ProfileProgress | null>(() => {
+    if (!isOwner) return null;
+    const src = myProfile ?? data;
+    return computeProfileProgress(src);
+  }, [isOwner, myProfile, data]);
+
+  // TODO - Verify
   if (isLoading) return <p>Cargando perfil público...</p>;
   if (error || !data) return <p>Error al cargar el perfil</p>;
 
@@ -24,13 +37,13 @@ const PublicProfilePage = () => {
     [media.headshotImageUrl, media.fullBodyImageUrl, ...(media.otherPicturesUrl ?? [])].filter(
       (u): u is string => typeof u === 'string' && u.trim().length > 0
     );
-
   const images = mergePictures();
   const hasImages = images.length > 0;
 
   if (isDesktop && !isDesktopXL) {
     return (
       <article className="relative w-full flex flex-col gap-3">
+        {isOwner && progress && <ProfileCompletionCard progress={progress} isEdit={false} />}
         <BasicInfoSection data={basicInfo} />
         <div className="grid gap-10 grid-cols-[1.4fr_1fr] h-[700px] max-h-[700px] min-h-0">
           <section className="min-w-0 min-h-0 h-full">
@@ -54,6 +67,7 @@ const PublicProfilePage = () => {
   if (isDesktopXL) {
     return (
       <article className="relative w-full">
+        {isOwner && progress && <ProfileCompletionCard progress={progress} isEdit={false} />}
         <div
           className="flex flex-col"
           style={{
@@ -86,6 +100,7 @@ const PublicProfilePage = () => {
 
   return (
     <div className="relative pt-3 pb-10 flex flex-col gap-3 justify-center">
+      {isOwner && progress && <ProfileCompletionCard progress={progress} isEdit={false} />}
       <ViewerActions />
       <BasicInfoSection data={basicInfo} />
       <ImageCarousel images={hasImages ? images : null} />
