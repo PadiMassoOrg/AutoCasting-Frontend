@@ -6,7 +6,6 @@ import NavbarDropdown, { type MenuItem } from './NavbarDropdown';
 
 export default function AccountDropdown({ onLogout }: { onLogout: () => void }) {
   const { t } = useTranslation();
-
   const ACTIVE_FOR = [ROUTES.ACCOUNT, ROUTES.AUTH, ROUTES.SUPPORT, ROUTES.FAQ];
 
   const items: MenuItem[] = [
@@ -19,15 +18,22 @@ export default function AccountDropdown({ onLogout }: { onLogout: () => void }) 
 
   return (
     <NavbarDropdown
+      align="right"
       itemClassName="font-extrabold text-[14px]"
       trigger={
-        <div className="cursor-pointer flex flex-row items-center">
-          <HilightLink to={ROUTES.ACCOUNT} label={t('routes.account')} width={78} height={34} activeFor={ACTIVE_FOR} />
-          <ChevronUpDown open={false}></ChevronUpDown>
+        <div className="flex items-center gap-1 cursor-pointer">
+          <HilightLink
+            as="span"
+            to={ROUTES.ACCOUNT}
+            label={t('routes.account')}
+            width={78}
+            height={34}
+            activeFor={ACTIVE_FOR}
+          />
+          <ChevronUpDown open={false} />
         </div>
       }
       items={items}
-      align="right"
     />
   );
 }
