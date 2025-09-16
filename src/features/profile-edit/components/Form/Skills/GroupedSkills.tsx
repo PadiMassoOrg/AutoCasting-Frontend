@@ -63,7 +63,7 @@ function GroupedSkills({ skills }: { skills: SiteMetadataObject[] }) {
               aria-controls={`skills-${cat}`}
               onClick={() => setOpen((s) => ({ ...s, [cat]: !isOpen }))}
             >
-              <span className="font-semibold text-lg">{t(cat)}:</span>
+              <span className="font-semibold text-base">{t(cat)}:</span>
               <svg
                 className={`w-6 h-6 transition-transform ${isOpen ? 'rotate-180' : ''}`}
                 viewBox="0 0 24 24"
@@ -79,7 +79,7 @@ function GroupedSkills({ skills }: { skills: SiteMetadataObject[] }) {
                 {list.map((s) => (
                   <span
                     key={s.id}
-                    className="inline-flex items-center rounded-xl border border-[var(--color-secondary-outline)] px-3 py-1 text-base"
+                    className="inline-flex items-center rounded-xl border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px]"
                     title={s.stringCode}
                   >
                     {t(s.stringCode)}

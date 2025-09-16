@@ -203,6 +203,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         <FormSelectField
           id="tattoo"
           label={t('profile.characteristics.tattoo')}
+          labelClassName="font-semibold text-base"
           value={tattoo.value}
           onChange={tattoo.onChange}
           options={booleanOptions}
@@ -211,6 +212,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         <FormSelectField
           id="passport"
           label={t('profile.characteristics.passport')}
+          labelClassName="font-semibold text-base"
           value={passport.value}
           onChange={passport.onChange}
           options={booleanOptions}
@@ -219,6 +221,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
       <FormSelectField
         id="drivingLicense"
         label={t('profile.characteristics.drivingLicense')}
+        labelClassName="font-semibold text-base"
         value={drivingLicense.value}
         onChange={drivingLicense.onChange}
         options={booleanOptions}

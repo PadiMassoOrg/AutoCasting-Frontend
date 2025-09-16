@@ -74,7 +74,7 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
               aria-expanded={isOpen}
               aria-controls={`credits-${catKey}`}
             >
-              <span className="font-semibold text-lg">{t(catKey)}:</span>
+              <span className="font-semibold text-base">{t(catKey)}:</span>
               <Chevron open={isOpen} />
             </span>
 
@@ -85,12 +85,12 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
                     <div className="flex flex-row justify-between">
                       <div className="grow">
                         <div className="flex items-center justify-between gap-4">
-                          <h4 className="font-semibold text-base leading-snug">{c.projectName}</h4>
-                          <span className="shrink-0 rounded-lg border border-[var(--color-secondary-outline)] px-3 py-1 text-base font-light tracking-wide">
+                          <h4 className="font-semibold text-base lg:text-[14px] leading-snug">{c.projectName}</h4>
+                          <span className="shrink-0 rounded-lg border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px] font-light tracking-wide">
                             {c.year}
                           </span>
                         </div>
-                        <div className="mt-3 text-base font-light text-[var(--color-secondary-grey-fonts)]">
+                        <div className="mt-3 text-base lg:text-[14px] font-light text-[var(--color-secondary-grey-fonts)]">
                           {c.role}
                           {c.producerName ? ` — ${c.producerName}` : ''}
                         </div>
