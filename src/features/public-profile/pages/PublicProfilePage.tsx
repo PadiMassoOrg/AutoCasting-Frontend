@@ -67,12 +67,12 @@ const PublicProfilePage = () => {
     return (
       <article className="relative w-full">
         <div
-          className="flex flex-col"
+          className="flex flex-col gap-2"
           style={{
             height: `calc(100svh - ${NAVBAR}px - ${TOP_MARGIN})`,
             minHeight: '500px',
             maxHeight: '850px',
-            ['--media-col-w' as any]: '220px',
+            ['--media-col-w' as any]: '200px',
           }}
         >
           <BasicInfoSection data={basicInfo} />

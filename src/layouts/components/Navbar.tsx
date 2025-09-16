@@ -34,8 +34,8 @@ const Navbar = () => {
   const isEditMode = isOnProfileEdit;
 
   return (
-    <>
-      <nav className="w-full h-14 px-10 flex flex-row items-center justify-between">
+    <div>
+      <nav className="relative w-full h-14 px-10 flex flex-row items-center justify-between">
         <LinkLogo horizontal />
         <button
           type="button"
@@ -45,7 +45,7 @@ const Navbar = () => {
         >
           <img src={BurgerIcon} alt="" className="w-7" />
         </button>
-        <span className="hidden lg:block lg:min-w-[400px]">
+        <span className="hidden lg:block lg:absolute lg:w-[310px] lg:left-[50%] lg:translate-x-[-50%]">
           {shouldShowCard && progress && (
             <ProfileCompletionCard progress={progress} isEdit={isEditMode} publicSlug={myProfile.publicSlug} />
           )}
@@ -70,7 +70,7 @@ const Navbar = () => {
         onLogout={() => logout()}
         isAuthenticated={!!myProfile}
       />
-    </>
+    </div>
   );
 };
 
