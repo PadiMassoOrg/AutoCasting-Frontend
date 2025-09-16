@@ -71,11 +71,12 @@ const PublicProfilePage = () => {
           style={{
             height: `calc(100svh - ${NAVBAR}px - ${TOP_MARGIN})`,
             minHeight: '500px',
-            ['--media-col-w' as any]: '200px',
+            maxHeight: '850px',
+            ['--media-col-w' as any]: '220px',
           }}
         >
           <BasicInfoSection data={basicInfo} />
-          <div className="flex-1 min-h-0 grid gap-8 grid-cols-[max-content_minmax(260px,1fr)_var(--media-col-w)] items-stretch">
+          <div className="flex-1 min-h-0 grid gap-6 grid-cols-[max-content_minmax(260px,1fr)_var(--media-col-w)] items-stretch">
             <div className="min-w-0 min-h-0 h-full">
               <ImageCarousel images={hasImages ? images : null} isDesktop isDesktopXL />
             </div>
