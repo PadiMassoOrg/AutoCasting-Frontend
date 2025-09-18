@@ -12,8 +12,8 @@ export const ROUTES = {
   // Public
   PUBLIC_PROFILE: '/profile',
   TALENT_DATABASE: '/talent-database',
-  SUPPORT: 'http://auto-casting.com/',
-  FAQ: 'http://auto-casting.com/',
+  SUPPORT: 'https://autocasting.vercel.app/',
+  FAQ: 'https://autocasting.vercel.app/',
 };
 
 export const USER_ROUTES = [
