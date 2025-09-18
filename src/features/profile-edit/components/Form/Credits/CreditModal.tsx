@@ -74,7 +74,7 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
 
   const validateAndSave = async () => {
     const rawForSchema: CreditFormValues = {
-      productionType: form.productionTypeId || undefined,
+      productionType: form.productionTypeId,
       projectName: form.projectName,
       producerName: form.producerName,
       role: form.role,
