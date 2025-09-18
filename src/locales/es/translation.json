@@ -25,8 +25,16 @@
     }
   },
   "validation": {
+    "uuid_invalid": "Valor inválido",
+    "url_invalid": "Ingresa una URL válida",
     "required": "Campo obligatorio.",
-    "number": "Solo números"
+    "number": "Solo números",
+    "year_invalid": "Año inválido",
+    "year_out_of_range": "El año debe estar entre {{min}} y {{max}}",
+    "month_invalid": "Mes inválido",
+    "day_invalid": "Día inválido",
+    "type_image": "El archivo debe ser una imagen",
+    "max_size": "El archivo supera el tamaño máximo de {{mb}}MB"
   },
   "state": {
     "loading": "Cargando...",

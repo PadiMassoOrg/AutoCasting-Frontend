@@ -1,9 +1,9 @@
 import { GoogleButton } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import logo from '../../../../public/og-image.svg';
 import AuthenticationLayout from '../../../layouts/AuthenticationLayout';
 import { LinkLogo } from '../../../shared/components/LinkLogo';
+import logo from '../../../shared/icons/og-image.svg';
 import Resaltador from '../../../shared/lib/resaltador.svg';
 import { RegisterForm } from '../components';
 import LoginForm from '../components/LoginForm';
