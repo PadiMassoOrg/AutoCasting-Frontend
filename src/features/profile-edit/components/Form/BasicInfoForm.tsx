@@ -32,9 +32,10 @@ export default function BasicInfoForm({
   const { t, i18n } = useTranslation();
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
   const autosave = useBasicInfoAutosave();
+  const schema = useMemo(() => getBasicInfoSchema(t), [t]);
+
   const YEAR_END = new Date().getFullYear();
   const YEAR_START = YEAR_END - 80;
-  const schema = useMemo(() => getBasicInfoSchema(t, YEAR_START, YEAR_END), [t, YEAR_START, YEAR_END]);
 
   const [errors, setErrors] = useState<Errors>({});
 
@@ -74,16 +75,6 @@ export default function BasicInfoForm({
     600
   );
 
-  const validateBirth = (Y: string, M: string, D: string) => {
-    const r = schema.shape.birth.safeParse({ year: Y, month: M, day: D });
-    if (r.success) {
-      setErrors((e) => ({ ...e, birth: null }));
-    } else {
-      const msg = r.error.errors[0]?.message || t('validation.date_invalid');
-      setErrors((e) => ({ ...e, birth: { year: msg, month: msg, day: msg } }));
-    }
-  };
-
   const yearOptions = useMemo(
     () =>
       Array.from({ length: YEAR_END - YEAR_START + 1 }, (_, i) => {
@@ -112,8 +103,8 @@ export default function BasicInfoForm({
   );
 
   return (
-    <div className="w-full flex flex-col gap-5">
-      <h3 className="font-bold text-base">{t('profile.basic_info.basic_info')}</h3>
+    <div className="w-full flex flex-col gap-2">
+      <h3 className="font-bold text-base mb-2">{t('profile.basic_info.basic_info')}</h3>
 
       <FormInputField
         id="stageName"
@@ -148,11 +139,9 @@ export default function BasicInfoForm({
             value={birth.day}
             onChange={(e) => {
               onSelect((v) => birth.onDay(v))(e);
-              validateBirth(birth.year, birth.month, e.target.value);
             }}
             onBlur={(e) => {
               birth.onAnyBlur(e);
-              validateBirth(birth.year, birth.month, birth.day);
             }}
             options={birth.dayOptions}
             error={errors.birth?.day ?? undefined}
@@ -163,11 +152,9 @@ export default function BasicInfoForm({
             value={birth.month}
             onChange={(e) => {
               onSelect((v) => birth.onMonth(v))(e);
-              validateBirth(birth.year, e.target.value, birth.day);
             }}
             onBlur={(e) => {
               birth.onAnyBlur(e);
-              validateBirth(birth.year, birth.month, birth.day);
             }}
             options={monthOptions}
             error={errors.birth?.month ?? undefined}
@@ -178,11 +165,9 @@ export default function BasicInfoForm({
             value={birth.year}
             onChange={(e) => {
               onSelect((v) => birth.onYear(v))(e);
-              validateBirth(e.target.value, birth.month, birth.day);
             }}
             onBlur={(e) => {
               birth.onAnyBlur(e);
-              validateBirth(birth.year, birth.month, birth.day);
             }}
             options={yearOptions}
             error={errors.birth?.year ?? undefined}

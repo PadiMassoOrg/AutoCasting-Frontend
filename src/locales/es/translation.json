@@ -26,9 +26,11 @@
   },
   "validation": {
     "uuid_invalid": "Valor inválido",
+    "invalid": "Valor inválido",
     "url_invalid": "Ingresa una URL válida",
     "required": "Campo obligatorio.",
     "number": "Solo números",
+    "number_invalid": "Número inválido",
     "year_invalid": "Año inválido",
     "year_out_of_range": "El año debe estar entre {{min}} y {{max}}",
     "month_invalid": "Mes inválido",

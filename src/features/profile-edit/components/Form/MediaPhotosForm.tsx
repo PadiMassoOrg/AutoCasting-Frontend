@@ -241,9 +241,8 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             const isRemoved = removedOthers.has(i);
             const hasImg = otherHasImage(i);
             return (
-              <>
+              <div key={i}>
                 <UploadTile
-                  key={i}
                   value={
                     isRemoved || otherPending.has(i) ? undefined : withBust(others[i] as string | null, otherBust[i])
                   }
@@ -262,7 +261,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
                   className="md:min-w-51 max-w-51"
                 />
                 {errOther[i] && <span className="text-xs text-red-600 mt-1 block">{errOther[i]}</span>}
-              </>
+              </div>
             );
           })}
         </div>

@@ -1,8 +1,8 @@
 import { Button, FormInputField, FormSelectField, Separator } from 'autocasting-ui-library-padimasso';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
-import { creaditSchema } from '../../../schemas/profileSchema';
+import { getCreditSchema, type CreditFormKey, type CreditFormValues } from '../../../schemas/formSchema';
 import type { Credit } from '../../../types/profile.types';
 
 export type DraftCredit = {
@@ -23,6 +23,7 @@ type Props = {
 
 export default function CreditModal({ mode, initial, onSave, onCancel }: Props) {
   const { t } = useTranslation();
+  const creditSchema = useMemo(() => getCreditSchema(t), [t]);
   const productionTypeOptions = useCachedSiteMetadataOption('productionTypeOptions', t);
 
   const makeEmpty = (): DraftCredit => ({
@@ -32,10 +33,6 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
     role: '',
     year: '',
   });
-
-  // TODO - Verify Constraints and ZOD usage.
-  // Textos - Max 50 chars
-  // Año - 4 digits
 
   const makeFromInitial = (c?: Credit): DraftCredit =>
     c
@@ -50,7 +47,7 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
       : makeEmpty();
 
   const [form, setForm] = useState<DraftCredit>(() => (mode === 'edit' ? makeFromInitial(initial) : makeEmpty()));
-  const [errors, setErrors] = useState<Partial<Record<keyof DraftCredit, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<CreditFormKey, string>>>({});
 
   useEffect(() => {
     setForm(mode === 'edit' ? makeFromInitial(initial) : makeEmpty());
@@ -59,7 +56,15 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
 
   const onChange = <K extends keyof DraftCredit>(k: K, v: DraftCredit[K]) => {
     setForm((f) => ({ ...f, [k]: v }));
-    if (errors[k]) setErrors((e) => ({ ...e, [k]: undefined }));
+    const mapKey = ((): CreditFormKey | null => {
+      if (k === 'productionTypeId') return 'productionType';
+      if (k === 'projectName') return 'projectName';
+      if (k === 'producerName') return 'producerName';
+      if (k === 'role') return 'role';
+      if (k === 'year') return 'year';
+      return null;
+    })();
+    if (mapKey) setErrors((e) => ({ ...e, [mapKey]: undefined }));
   };
 
   const onYearChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -68,22 +73,32 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
   };
 
   const validateAndSave = async () => {
-    const parsed = creaditSchema.safeParse(form);
+    const rawForSchema: CreditFormValues = {
+      productionType: form.productionTypeId || undefined,
+      projectName: form.projectName,
+      producerName: form.producerName,
+      role: form.role,
+      year: form.year,
+    };
+
+    const parsed = creditSchema.safeParse(rawForSchema);
+
     if (!parsed.success) {
-      const fieldErrors: Partial<Record<keyof DraftCredit, string>> = {};
-      const flat = parsed.error.flatten().fieldErrors;
-      (Object.keys(flat) as (keyof DraftCredit)[]).forEach((k) => {
+      const flat = parsed.error.flatten().fieldErrors as Partial<Record<CreditFormKey, string[]>>;
+      const fieldErrors: Partial<Record<CreditFormKey, string>> = {};
+      (Object.keys(flat) as CreditFormKey[]).forEach((k) => {
         const msg = flat[k]?.[0];
         if (msg) fieldErrors[k] = msg;
       });
       setErrors(fieldErrors);
       return;
     }
-    await onSave(parsed.data);
+
+    await onSave({ ...form });
   };
 
   return (
-    <article className="flex flex-col gap-4">
+    <article className="flex flex-col gap-2">
       <FormSelectField
         id="productionType"
         label={t('profile.credits.production_type')}
@@ -93,8 +108,9 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
         value={form.productionTypeId}
         onChange={(e) => onChange('productionTypeId', e.target.value)}
         options={productionTypeOptions}
-        error={errors.productionTypeId}
+        error={errors.productionType}
       />
+
       <FormInputField
         id="projectName"
         label={t('profile.credits.project')}
@@ -105,6 +121,7 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
         onChange={(e) => onChange('projectName', e.target.value)}
         error={errors.projectName}
       />
+
       <FormInputField
         id="producerName"
         label={t('profile.credits.director')}
@@ -115,6 +132,7 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
         onChange={(e) => onChange('producerName', e.target.value)}
         error={errors.producerName}
       />
+
       <FormInputField
         id="role"
         label={t('profile.credits.role')}
@@ -125,6 +143,7 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
         onChange={(e) => onChange('role', e.target.value)}
         error={errors.role}
       />
+
       <FormInputField
         id="year"
         label={t('profile.credits.year')}
@@ -134,7 +153,8 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
         value={form.year}
         onChange={onYearChange}
         inputMode="numeric"
-        pattern="[0-9]*"
+        pattern="\d{4}"
+        maxLength={4}
         error={errors.year}
       />
 
