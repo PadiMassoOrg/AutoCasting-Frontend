@@ -13,7 +13,7 @@ const SocialMediaSection = ({ data, className }: { data: ProfileSocialMedia; cla
   return (
     <article className={`w-full ${className ?? ''}`}>
       <h2 className="text-base font-extrabold">{t('profile.page.socials')}:</h2>
-      <div className={`flex gap-4 items-center`}>
+      <div className={`flex gap-2 items-center`}>
         {instaUrl && <SocialLink href={instaUrl} label="Instagram" iconSrc={instagram} />}
         {tiktokUrl && <SocialLink href={tiktokUrl} label="TikTok" iconSrc={tikTok} />}
       </div>

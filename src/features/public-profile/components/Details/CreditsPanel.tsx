@@ -44,6 +44,7 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
     });
   }, [groups, t]);
 
+  if (!credits.length) return <h2 className="text-sm font-normal text-center">{t('general.no_data')}</h2>;
   return (
     <div className="flex flex-col gap-6" style={{ overflowAnchor: 'none' }}>
       {categories.map((catKey) => {

@@ -2,7 +2,7 @@ import type { TFunction } from 'i18next';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 
 export function formatCharacteristicValue(key: string, raw: unknown, t: TFunction) {
-  if (raw == null) return '-';
+  if (raw == null || raw.toString().length == 0) return '-';
   if (key === 'height') return `${raw} cm`;
   if (key === 'weight') return `${raw} kg`;
   if (key === 'hairColor' || key === 'eyeColor' || key === 'diet') {

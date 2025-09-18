@@ -86,9 +86,9 @@ const PublicProfilePage = () => {
             <div className="min-h-0 h-full overflow-auto flex flex-col justify-between">
               <VideoSection data={media} />
               <div className="">
-                <Separator className="opacity-25 mb-6" />
+                <Separator className="opacity-25 mb-4" />
                 <SocialMediaSection data={socialMedia} className="flex flex-row items-center justify-between" />
-                <Separator className="opacity-25 mt-6" />
+                <Separator className="opacity-25 mt-4" />
               </div>
             </div>
           </div>

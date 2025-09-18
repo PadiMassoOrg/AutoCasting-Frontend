@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Education } from '../../../profile-edit/types/profile.types';
 
 const EducationPanel = ({ education }: { education: Education[] }) => {
+  const { t } = useTranslation();
   const items = useMemo(() => {
     return [...education].sort((a, b) => {
       const ya = Number(a.graduationYear);
@@ -11,8 +13,7 @@ const EducationPanel = ({ education }: { education: Education[] }) => {
     });
   }, [education]);
 
-  if (!items.length) return null;
-
+  if (!items.length) return <h2 className="text-sm font-normal text-center">{t('general.no_data')}</h2>;
   return (
     <article className="flex flex-col gap-4">
       {items.map((e) => (

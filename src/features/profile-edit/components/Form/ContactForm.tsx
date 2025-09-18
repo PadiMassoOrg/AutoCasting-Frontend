@@ -32,7 +32,8 @@ export default function ContactForm({ data }: { data: ProfileContact }) {
       <FormInputField
         id="phoneNumber"
         label={t('profile.basic_info.whatsapp')}
-        labelClassName="font-semibold text-base"
+        labelClassName="font-semibold text-base hidden"
+        className="hidden"
         placeholder={t('general.placeholder.phoneNumber')}
         value={phoneNumber.value}
         onChange={phoneNumber.onChange}

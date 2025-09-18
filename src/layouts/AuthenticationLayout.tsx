@@ -11,7 +11,7 @@ export default function AuthenticationLayout({ children }: LayoutProps) {
         lg:w-[100dvw] lg:h-[100dvh] 
         overflow-hidden           
         overscroll-none          
-        bg-[var(--color-primary-white)] lg:bg-slate-50
+        bg-[var(--color-primary-white)] 
       `}
       style={{
         paddingTop: 'env(safe-area-inset-top)',

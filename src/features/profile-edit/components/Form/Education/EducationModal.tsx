@@ -27,6 +27,10 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
     graduationYear: '',
   });
 
+  // TODO - Verify Constraints and ZOD usage.
+  // Textos - Max 50 chars
+  // Año - 4 digits
+
   const makeFromInitial = (c?: Education): DraftEducation =>
     c
       ? {

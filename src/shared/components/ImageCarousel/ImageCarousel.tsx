@@ -50,10 +50,7 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
     <div className={`w-full ${desktopLayout ? 'h-full min-h-0' : 'h-auto'} ${className ?? ''}`}>
       <div className={wrapperClass}>
         <div className={desktopLayout ? 'col-[1] row-[1] h-full min-h-0 flex flex-col' : 'flex flex-col gap-2'}>
-          <figure
-            className={`cursor-pointer relative overflow-hidden rounded-xl shadow-md ${figureClass}`}
-            onClick={openZoom}
-          >
+          <figure className={`cursor-pointer relative overflow-hidden rounded-xl ${figureClass}`} onClick={openZoom}>
             <img
               src={selectedImage}
               alt={`Imagen ${selectedIndex + 1}`}
@@ -70,7 +67,7 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
                   onClick={() => setSelectedIndex(i)}
                   aria-label={`Seleccionar imagen ${i + 1}`}
                   className={`cursor-pointer w-[120px] aspect-[8/10] flex-shrink-0 rounded-lg overflow-hidden border-2 ${
-                    selectedIndex === i ? 'border-blue-500' : 'border-transparent'
+                    selectedIndex === i ? 'border-[var(--color-primary-greenyellow)]' : 'border-transparent'
                   }`}
                 >
                   <img src={img} alt={`Miniatura ${i + 1}`} className="w-full h-full object-cover" />
@@ -83,7 +80,7 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
         {desktopLayout && (
           <div
             className="col-[2] row-[1] h-full min-h-0 flex flex-col gap-3 items-stretch"
-            style={{ ['--g' as any]: '12px' }} // gap-3 = 12px
+            style={{ ['--g' as any]: '12px' }}
           >
             {rightThumbIndices.map((idx) => {
               const img = finalImages[idx];
@@ -94,7 +91,6 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
                   type="button"
                   onClick={() => setSelectedIndex(idx)}
                   aria-label={`Seleccionar imagen ${idx + 1}`}
-                  // alto exacto = (alto total - 2 gaps) / 3 ; ancho lo resuelve aspect-ratio
                   style={{ height: 'calc((100% - 2*var(--g)) / 3)' }}
                   className={`cursor-pointer relative aspect-[4/5] rounded-xl overflow-hidden border-2 flex-shrink-0 ${
                     selected ? 'border-blue-500' : 'border-transparent'

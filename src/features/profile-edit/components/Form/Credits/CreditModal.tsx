@@ -33,6 +33,10 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
     year: '',
   });
 
+  // TODO - Verify Constraints and ZOD usage.
+  // Textos - Max 50 chars
+  // Año - 4 digits
+
   const makeFromInitial = (c?: Credit): DraftCredit =>
     c
       ? {

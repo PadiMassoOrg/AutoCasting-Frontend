@@ -8,6 +8,7 @@
     "no": "No",
     "copied": "Copaiado con éxito",
     "logout": "Cerrar Sesión",
+    "no_data": "Sin información",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "select": "Seleccionar",
@@ -19,6 +20,7 @@
       "url": "URL",
       "headshot": "Primer Plano",
       "fullbody": "Cuerpo Entero",
+      "measure": "XL/90",
       "dash": "--"
     }
   },

@@ -22,7 +22,10 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
     { value: 'false', label: t('general.no') },
   ];
 
-  //TODO - Verify Constraints and ZOD usage.
+  // TODO - Verify Constraints and ZOD usage.
+  // height, weight  - 3 digit int
+  // busto, cintura, caderas - Num 3 digit o Text 15 char
+  // ropa - Num 3 digit o Text 15 char
   const heightCm = useCommittedInt(data.heightCm ?? null, (v) => autosave.immediate({ heightCm: v ?? undefined }), {
     min: 20,
     max: 500,
@@ -128,7 +131,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           id="chestCm"
           label={t('profile.characteristics.chest')}
           labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.dash')}
+          placeholder={t('general.placeholder.measure')}
           value={chestCm.value}
           onChange={chestCm.onChange}
           onBlur={chestCm.onBlur}
@@ -138,7 +141,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           id="waistCm"
           label={t('profile.characteristics.waist')}
           labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.dash')}
+          placeholder={t('general.placeholder.measure')}
           value={waistCm.value}
           onChange={waistCm.onChange}
           onBlur={waistCm.onBlur}
@@ -148,7 +151,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           id="hipCm"
           label={t('profile.characteristics.hip')}
           labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.dash')}
+          placeholder={t('general.placeholder.measure')}
           value={hipCm.value}
           onChange={hipCm.onChange}
           onBlur={hipCm.onBlur}
@@ -160,7 +163,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           id="shirtSize"
           label={t('profile.characteristics.shirt')}
           labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.dash')}
+          placeholder={t('general.placeholder.measure')}
           value={shirtSize.value}
           onChange={shirtSize.onChange}
           onBlur={shirtSize.onBlur}
@@ -170,7 +173,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           id="pantSize"
           label={t('profile.characteristics.pants')}
           labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.dash')}
+          placeholder={t('general.placeholder.measure')}
           value={pantSize.value}
           onChange={pantSize.onChange}
           onBlur={pantSize.onBlur}
@@ -182,7 +185,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           id="dressSize"
           label={t('profile.characteristics.dress')}
           labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.dash')}
+          placeholder={t('general.placeholder.measure')}
           value={dressSize.value}
           onChange={dressSize.onChange}
           onBlur={dressSize.onBlur}
@@ -192,7 +195,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           id="shoeSize"
           label={t('profile.characteristics.shoes')}
           labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.dash')}
+          placeholder={t('general.placeholder.measure')}
           value={shoeSize.value}
           onChange={shoeSize.onChange}
           onBlur={shoeSize.onBlur}
@@ -230,7 +233,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         id="dietOptionId"
         label={t('profile.characteristics.diet')}
         labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.dash')}
+        placeholder={t('general.placeholder.select')}
         value={diet.value}
         onChange={diet.onChange}
         onBlur={diet.onBlur}
