@@ -13,7 +13,7 @@ const Navbar = () => {
 
   return (
     <div className="w-full bg-[var(--color-primary-white)] flex flex-row items-center py-4">
-      <nav className="relative w-full px-14 flex flex-row items-center justify-between z-20">
+      <nav className="relative w-full px-6 lg:px-10 flex flex-row items-center justify-between z-20">
         <LinkLogo horizontal />
         <button
           type="button"
