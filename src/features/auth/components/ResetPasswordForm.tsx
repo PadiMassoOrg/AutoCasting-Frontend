@@ -37,7 +37,7 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto mt-20 space-y-4 p-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto mt-20 space-y-2 p-6">
       <FormInputField
         id="password"
         type="password"

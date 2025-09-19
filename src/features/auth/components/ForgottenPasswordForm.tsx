@@ -38,7 +38,7 @@ export default function ForgottenPasswordForm() {
   return (
     <article className="flex flex-col gap-6">
       <p className="text-base">{t('auth.forgotten_password.text')}</p>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
         <FormInputField
           id="email"
           placeholder={t('auth.login.email')}
