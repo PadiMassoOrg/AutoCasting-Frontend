@@ -24,7 +24,7 @@ const ResetPasswordPage = () => {
           className="
         w-full h-full m-auto flex flex-col bg-white max-w-lg
         lg:px-8 lg:py-20 lg:rounded-2xl lg:shadow-[0_0_8px_3px_rgba(0,0,0,0.06)]
-         "
+        "
         >
           <div className="flex flex-col gap-4 items-center pb-8">
             <LinkLogo></LinkLogo>
