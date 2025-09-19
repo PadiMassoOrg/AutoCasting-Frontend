@@ -51,7 +51,9 @@
     "logout": "Salir"
   },
   "routes": {
+    "home": "Inicio",
     "login": "Entrar",
+    "register": "Crear Perfil",
     "profile": "Perfil",
     "account": "Mi Cuenta",
     "access": "Acceso",
@@ -180,6 +182,67 @@
       "television_streaming": "Televisión / Streaming",
       "film": "Cine",
       "commercial": "Comercial"
+    }
+  },
+  "landing": {
+    "page": {
+      "header": "Conectá tu talento con tu próxima",
+      "header_hilight": "oportunidad",
+      "text": "Creá tu perfil, subí tus clips y compartí un solo link. Contacto directo con quienes contratan."
+    },
+    "services": {
+      "header": "¿Porqué auto-casting.com?",
+      "service1": {
+        "title": "Un solo link",
+        "description": "Tu talento, tus fotos, videos y datos en un perfil listo para compartir."
+      },
+      "service2": {
+        "title": "Sin intermediarios",
+        "description": "Productores, agencias y marcas te encuentran y te escriben al instante."
+      },
+      "service3": {
+        "title": "Pensado para vos",
+        "description": "Planes simples y económicos para que nadie quede afuera."
+      }
+    },
+    "tutorial": {
+      "header": "¿Cómo funciona?",
+      "step1": {
+        "title": "1. Creá tu perfil",
+        "description": "Subí tus fotos, videos y datos en minutos."
+      },
+      "step2": {
+        "title": "2. Compartí tu link",
+        "description": "Mandalo a quien quieras o usalo como tu carta de presentación."
+      },
+      "step3": {
+        "title": "3. Asegurá tu rol",
+        "description": "Productores, directores y agencias ven tu perfil y te contactan diréctamente."
+      }
+    },
+    "plan": {
+      "header": "Nuestros Planes",
+      "recommended": "Recomendado",
+      "free": {
+        "title": "Gratis",
+        "subtitle": "Gratis.",
+        "price": "$0",
+        "benefit1": "Lorem Ipsum",
+        "benefit2": "Lorem Ipsum",
+        "benefit3": "Lorem Ipsum",
+        "cta": "Elegir Plan Gratis",
+        "cta_2": "Lorem Ipsum"
+      },
+      "pro": {
+        "title": "Pro",
+        "subtitle": "Por usuario y por mes.",
+        "price": "$4,999.00",
+        "benefit1": "Lorem Ipsum",
+        "benefit2": "Lorem Ipsum",
+        "benefit3": "Lorem Ipsum",
+        "cta": "Elegir Plan Pro",
+        "cta_2": "Lorem Ipsum"
+      }
     }
   },
   "auth": {

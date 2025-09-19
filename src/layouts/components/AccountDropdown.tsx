@@ -10,8 +10,8 @@ export default function AccountDropdown({ onLogout }: { onLogout: () => void }) 
 
   const items: MenuItem[] = [
     { type: 'link', to: ROUTES.ACCOUNT, label: t('routes.access') },
-    { type: 'external', href: ROUTES.SUPPORT, label: t('routes.support') },
-    { type: 'external', href: ROUTES.FAQ, label: t('routes.faq') },
+    { type: 'link', to: ROUTES.SUPPORT, label: t('routes.support') },
+    { type: 'link', to: ROUTES.FAQ, label: t('routes.faq') },
     { type: 'separator' },
     { type: 'button', onClick: onLogout, label: t('general.logout') },
   ];

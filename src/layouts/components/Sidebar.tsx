@@ -96,7 +96,7 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Pr
               <div className="text-[16px] font-semibold">
                 <li onClick={onClose} className="cursor-pointer flex flex-row items-center gap-2">
                   <ChevronRight></ChevronRight>
-                  <a href={ROUTES.SUPPORT} target="_blank" rel="noopener noreferrer">
+                  <a href={ROUTES.SUPPORT} rel="noopener noreferrer">
                     {t('routes.support')}
                   </a>
                 </li>
