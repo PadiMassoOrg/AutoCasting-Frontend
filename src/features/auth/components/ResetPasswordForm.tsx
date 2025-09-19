@@ -37,7 +37,7 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto mt-20 space-y-2 p-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md mx-auto space-y-2">
       <FormInputField
         id="password"
         type="password"
@@ -53,7 +53,7 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
         error={errors.confirmPassword?.message}
       />
       <Button type="submit" className="w-full">
-        {resetPasswordMutation.isPending ? t('state.loading') : t('auth.login.submit')}
+        {resetPasswordMutation.isPending ? t('state.loading') : t('general.save')}
       </Button>
       {serverError && (
         <Label variant="error" className="pl-1">

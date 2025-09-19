@@ -1,11 +1,13 @@
 {
   "company": {
-    "site": "auto-casting.com",
+    "site": "autocasting",
     "header": "Tu Perfil Digital Actoral"
   },
   "general": {
     "yes": "Sí",
     "no": "No",
+    "accept": "Aceptar",
+    "save": "Guardar",
     "copied": "Copaiado con éxito",
     "logout": "Cerrar Sesión",
     "no_data": "Sin información",
@@ -274,9 +276,17 @@
     },
     "forgotten_password": {
       "text": "No te preocupes. Ingresá tu correo y te mandaremos un link para crear una nueva.",
-      "submit": "Enviar Link"
+      "submit": "Enviar Link",
+      "email_sent_title": "¡Link enviado!",
+      "email_sent_text": "Te mandamos un correo con el link para restablecer tu contraseña.",
+      "email_sent_text_2": "Revisá tu bandeja de entrada y, si no lo ves en unos minutos, chequeá la carpeta de spam."
     },
     "reset_password": {
+      "page": {
+        "title": "Creá una nueva contraseña",
+        "p": "¿No fuiste vos? Ignorá este mail. Tu contraseña no se modifica.",
+        "cta": "Restablecer Contraseña"
+      },
       "new": "Nueva contraseña",
       "repeat": "Repetir contraseña"
     },

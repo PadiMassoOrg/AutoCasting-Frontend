@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
+import { Button, FormInputField, Label, Separator } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ import { getForgottenPasswordSchema, type ForgottenPasswordValues } from '../sch
 
 export default function ForgottenPasswordForm() {
   const { closeModal } = useModal();
+  const { openModal } = useModal();
   const { t } = useTranslation();
   const forgotPasswordMutation = useForgotPasswordMutation();
 
@@ -22,11 +23,16 @@ export default function ForgottenPasswordForm() {
     resolver: zodResolver(getForgottenPasswordSchema()),
   });
 
+  const handleSuccessModal = () => {
+    openModal(<EmailSentModal />, t('auth.forgotten_password.email_sent_title'), 'lg');
+  };
+
   const onSubmit = (data: ForgottenPasswordValues) => {
     setServerError(null);
     forgotPasswordMutation.mutate(data, {
       onSuccess: () => {
         closeModal();
+        handleSuccessModal();
       },
       onError: (err: any) => {
         const message = err?.response?.data?.message || t('state.server_err');
@@ -38,7 +44,7 @@ export default function ForgottenPasswordForm() {
   return (
     <article className="flex flex-col gap-6">
       <p className="text-base">{t('auth.forgotten_password.text')}</p>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
+      <form onSubmit={handleSubmit(onSubmit)}>
         <FormInputField
           id="email"
           placeholder={t('auth.login.email')}
@@ -52,7 +58,7 @@ export default function ForgottenPasswordForm() {
             {serverError}
           </Label>
         )}
-        <hr className="opacity-20 mt-6 mb-10" />
+        <Separator className="opacity-20 mt-6 mb-10" />
         <div className="flex gap-2">
           <Button variant="outline" onClick={closeModal}>
             {t('buttons.cancel')}
@@ -63,3 +69,20 @@ export default function ForgottenPasswordForm() {
     </article>
   );
 }
+
+const EmailSentModal = () => {
+  const { t } = useTranslation();
+  const { closeModal } = useModal();
+  return (
+    <article className="flex flex-col gap-4">
+      <p className="text-base">{t('auth.forgotten_password.email_sent_text')}</p>
+      <p className="text-base">{t('auth.forgotten_password.email_sent_text_2')}</p>
+      <Separator className="opacity-20 my-6" />
+      <div className="flex gap-2 items-center">
+        <Button type="submit" onClick={closeModal}>
+          {t('general.accept')}
+        </Button>
+      </div>
+    </article>
+  );
+};

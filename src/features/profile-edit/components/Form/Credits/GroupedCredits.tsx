@@ -117,7 +117,6 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
   );
 }
 
-// TODO - Move Components
 function Chevron({ open }: { open: boolean }) {
   return (
     <svg
