@@ -82,14 +82,14 @@ export default function TutorialCarousel({ steps }: { steps: TutorialStep[] }) {
       {/* Panel */}
       <div className="w-full flex flex-col gap-4 px-3 min-h-[485px] max-h-[485px] ">
         <div className="flex flex-col gap-2">
-          <h3 className="text-xl font-extrabold">{t(`page.tutorial.${step.key}.title`)}</h3>
-          <p className="text-sm font-base">{t(`page.tutorial.${step.key}.description`)}</p>
+          <h3 className="text-xl font-extrabold">{t(`landing.tutorial.${step.key}.title`)}</h3>
+          <p className="text-sm font-base">{t(`landing.tutorial.${step.key}.description`)}</p>
         </div>
 
         <figure className={`overflow-hidden bg-transparent ${idx === 0 ? 'mr-[-36px]' : ''}`}>
           <img
             src={step.image}
-            alt={step.alt ?? t(`page.tutorial.${step.key}.title`)}
+            alt={step.alt ?? t(`landing.tutorial.${step.key}.title`)}
             className="w-full h-auto block object-cover"
             draggable={false}
           />

@@ -5,7 +5,7 @@ const ServicesSection = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="w-full h-full bg-[var(--color-secondary-offwhite)] min-h-[85vh] grid place-items-center lg:min-h-[55vh]">
+    <section className="w-full h-full bg-[var(--color-secondary-offwhite)] min-h-[70vh] grid place-items-center lg:min-h-[55vh]">
       <div className="w-[90%] max-w-[1450px] h-full py-15 flex flex-col gap-10 items-center lg:justify-center">
         {/* Title */}
         <h2 className="text-2xl font-bold lg:self-start lg:text-[40px]"> {t('landing.services.header')}</h2>

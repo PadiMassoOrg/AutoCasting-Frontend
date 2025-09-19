@@ -12,7 +12,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="w-full bg-[var(--color-primary-white)] flex flex-row items-center py-4">
+    <div className="w-full bg-[var(--color-primary-white)] flex flex-row items-center py-6">
       <nav className="relative w-full px-6 lg:px-10 flex flex-row items-center justify-between z-20">
         <LinkLogo horizontal />
         <button
