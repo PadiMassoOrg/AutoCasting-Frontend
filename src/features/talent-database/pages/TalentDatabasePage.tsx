@@ -115,7 +115,7 @@ export default function TalentDatabasePage() {
 
       <div className="w-full min-w-0 flex flex-col lg:flex-row gap-6">
         {/* Sidebar filtros Desktop */}
-        <aside className="hidden lg:block">
+        <aside className="hidden lg:block min-h-0">
           <TalentFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
         </aside>
 

@@ -57,7 +57,13 @@ export function TalentFilterBar({
   }, [stage]);
 
   return (
-    <aside className="w-full flex flex-col gap-4 items-center">
+    <aside
+      className="w-full
+        flex flex-col gap-2 items-stretch       
+        overflow-y-auto          
+        min-h-0               
+        [-webkit-overflow-scrolling:touch]"
+    >
       {/* Basic Info */}
       <FilterSection title={t('profile.basic_info.basic_info')}>
         <FormInputField
