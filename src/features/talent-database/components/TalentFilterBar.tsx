@@ -27,11 +27,9 @@ function toggleInArray(arr: string[] | undefined, id: string): string[] {
 export function TalentFilterBar({
   value,
   onChange,
-  onReset,
 }: {
   value: TalentFiltersQS;
   onChange: (v: TalentFiltersQS) => void;
-  onReset?: () => void;
 }) {
   const { t } = useTranslation();
 
@@ -50,7 +48,7 @@ export function TalentFilterBar({
     return Array.from(groups.entries());
   }, [skillsRaw]);
 
-  const [stage, setStage] = useState(value.stageName ?? '');
+  const [stage, _] = useState(value.stageName ?? '');
   useMemo(() => {
     const id = setTimeout(() => onChange({ ...value, stageName: stage || undefined }), 300);
     return () => clearTimeout(id);

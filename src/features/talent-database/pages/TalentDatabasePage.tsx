@@ -116,7 +116,7 @@ export default function TalentDatabasePage() {
       <div className="w-full min-w-0 flex flex-col lg:flex-row gap-6">
         {/* Sidebar filtros Desktop */}
         <aside className="hidden lg:block min-h-0">
-          <TalentFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
+          <TalentFilterBar value={filters} onChange={setFilters} />
         </aside>
 
         {/* Contenedor scrollable de cards (solo esto se refresca) */}
@@ -142,7 +142,6 @@ export default function TalentDatabasePage() {
         open={mobileOpen}
         onClose={() => setMobileOpen(false)}
         value={filters}
-        onApply={(next) => setFilters(next)}
         onReset={() => setFilters(initialFilters)}
       />
     </section>

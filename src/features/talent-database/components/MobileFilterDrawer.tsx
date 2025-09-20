@@ -1,5 +1,5 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TalentFiltersQS } from '../types/talent-database.types';
 import { TalentFilterBar } from './TalentFilterBar';
@@ -8,13 +8,11 @@ export function MobileFiltersDrawer({
   open,
   onClose,
   value,
-  onApply,
   onReset,
 }: {
   open: boolean;
   onClose: () => void;
   value: TalentFiltersQS;
-  onApply: (v: TalentFiltersQS) => void;
   onReset?: () => void;
 }) {
   const { t } = useTranslation();
@@ -32,25 +30,6 @@ export function MobileFiltersDrawer({
       document.body.style.overflow = prev;
     };
   }, [open]);
-
-  const selectedCount = useMemo(() => {
-    const isSet = (x: unknown) => x !== undefined && x !== '' && !(Array.isArray(x) && x.length === 0);
-    const singles = [
-      draft.stageName,
-      draft.genderId,
-      draft.hairColorId,
-      draft.eyeColorId,
-      draft.ageMin,
-      draft.ageMax,
-      draft.heightMinCm,
-      draft.heightMaxCm,
-      draft.tattoo,
-      draft.passport,
-      draft.drivingLicense,
-    ].filter(isSet).length;
-    const lists = (draft.professionId?.length ?? 0) + (draft.skillId?.length ?? 0);
-    return singles + (lists > 0 ? 1 : 0);
-  }, [draft]);
 
   if (!open) return null;
 
