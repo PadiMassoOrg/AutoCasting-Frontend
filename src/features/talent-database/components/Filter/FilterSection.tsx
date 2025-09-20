@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { ChevronUpDown } from '../../../shared/components/Chevron';
+import { ChevronUpDown } from '../../../../shared/components/Chevron';
 
 type Props = {
   title: string;
@@ -8,7 +8,7 @@ type Props = {
   defaultOpen?: boolean;
 };
 
-export function FilterSection({ title, children, defaultOpen = true }: Props) {
+export default function FilterSection({ title, children, defaultOpen = true }: Props) {
   const [open, setOpen] = useState(defaultOpen);
 
   useEffect(() => setOpen(defaultOpen), [defaultOpen]);

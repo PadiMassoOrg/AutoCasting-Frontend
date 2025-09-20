@@ -22,7 +22,9 @@
       "dash": "--",
       "min": "Min",
       "max": "Max"
-    }
+    },
+    "selections": "Selecciones",
+    "select_all": "Seleccionar Todas"
   },
   "validation": {
     "required": "Campo obligatorio.",

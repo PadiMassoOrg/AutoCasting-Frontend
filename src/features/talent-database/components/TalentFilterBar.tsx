@@ -8,8 +8,8 @@ import {
   useCachedSiteMetadataSlice,
 } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
-import { FilterSection } from '../components';
 import type { TalentFiltersQS } from '../types/talent-database.types';
+import { FilterSection, MultiSelectDropdown } from './Filter';
 
 type Tri = '' | 'true' | 'false';
 
@@ -66,8 +66,6 @@ export function TalentFilterBar({
           labelClassName="text-sm font-semibold"
           placeholder={t('general.placeholder.stage_name')}
         ></FormInputField>
-
-        {/* Rango etario */}
         <article className="flex flex-col gap-2">
           <label htmlFor="ageMin" className="text-sm font-semibold">
             {t('talent.filter.basic_info.age_range')}
@@ -77,8 +75,6 @@ export function TalentFilterBar({
             <FormInputField id="ageMax" placeholder={t('general.placeholder.max')} />
           </div>
         </article>
-
-        {/* Género */}
         <FormSelectField
           id="genderId"
           label={t('profile.basic_info.gender')}
@@ -86,75 +82,22 @@ export function TalentFilterBar({
           placeholder={t('general.placeholder.select')}
           options={genderOptions}
         />
-
-        {/* Profesiones + modo */}
-        <div className="mt-3">
-          <div className="mb-1 flex items-center justify-between">
-            <label className="text-xs font-semibold">{t('filters.professions', 'Profesión')}</label>
-            <div className="flex items-center gap-2 text-[11px]">
-              <label className="flex items-center gap-1">
-                <input
-                  type="radio"
-                  checked={(value.professionsMode ?? 'ANY') === 'ANY'}
-                  onChange={() => onChange({ ...value, professionsMode: 'ANY' })}
-                />{' '}
-                ANY
-              </label>
-              <label className="flex items-center gap-1">
-                <input
-                  type="radio"
-                  checked={value.professionsMode === 'ALL'}
-                  onChange={() => onChange({ ...value, professionsMode: 'ALL' })}
-                />{' '}
-                ALL
-              </label>
-            </div>
-          </div>
-
-          <div className="rounded-md border">
-            <div className="sticky top-0 bg-white/90 px-2 py-2 text-xs border-b flex items-center gap-2">
-              <button
-                type="button"
-                className="rounded border px-2 py-1"
-                onClick={() => onChange({ ...value, professionId: (professionsRaw ?? []).map((p) => p.id) })}
-              >
-                {t('filters.selectAll', 'Seleccionar Todas')}
-              </button>
-              <button
-                type="button"
-                className="rounded border px-2 py-1"
-                onClick={() => onChange({ ...value, professionId: undefined })}
-              >
-                {t('filters.clear', 'Limpiar')}
-              </button>
-              <span className="ml-auto text-neutral-500">
-                {value.professionId?.length ?? 0} {t('filters.selected', 'Selecciones')}
-              </span>
-            </div>
-            <div className="max-h-48 overflow-auto p-2 space-y-1">
-              {(professionsRaw ?? []).map((p) => {
-                const selected = (value.professionId ?? []).includes(p.id);
-                return (
-                  <label key={p.id} className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={selected}
-                      onChange={() =>
-                        onChange({
-                          ...value,
-                          professionId: toggleInArray(value.professionId, p.id),
-                        })
-                      }
-                    />
-                    {t(p.stringCode)}
-                  </label>
-                );
-              })}
-            </div>
-          </div>
+        <div className="w-full flex flex-col gap-1.5">
+          <label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</label>
+          <MultiSelectDropdown
+            options={professionsRaw ?? []}
+            getId={(p) => p.id}
+            getLabel={(p) => t(p.stringCode)}
+            selected={value.professionId ?? []}
+            onChange={(next) => onChange({ ...value, professionId: next.length ? next : undefined })}
+            i18n={{
+              selected: t('general.selections'),
+              selectAll: t('general.select_all'),
+            }}
+            maxPanelHeight="16rem"
+          />
         </div>
       </FilterSection>
-
       {/* Características */}
       <FilterSection title={t('filters.characteristics', 'Características')}>
         {/* Altura */}
