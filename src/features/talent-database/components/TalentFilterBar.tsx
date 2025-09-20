@@ -11,12 +11,6 @@ import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.t
 import type { TalentFiltersQS } from '../types/talent-database.types';
 import { BooleanRadioGroup, FilterSection, MultiSelectDropdown } from './Filter';
 
-function toggleInArray(arr: string[] | undefined, id: string): string[] {
-  const set = new Set(arr ?? []);
-  set.has(id) ? set.delete(id) : set.add(id);
-  return Array.from(set);
-}
-
 export function TalentFilterBar({
   value,
   onChange,
@@ -27,12 +21,11 @@ export function TalentFilterBar({
   const { t } = useTranslation();
 
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
-  const professionsRaw = useCachedSiteMetadataSlice('professions') as SiteMetadataObject[] | undefined;
+  const professionsRaw = useCachedSiteMetadataSlice('professions');
   const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
   const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye_color');
-  const dietOptions = useCachedSiteMetadataOption('dietOptions', t);
+  const skillsRaw = useCachedSiteMetadataSlice('skills');
 
-  const skillsRaw = useCachedSiteMetadataSlice('skills') as SiteMetadataObject[] | undefined;
   const skillsByCat = useMemo(() => {
     const groups = new Map<string, SiteMetadataObject[]>();
     (skillsRaw ?? []).forEach((s) => {
@@ -43,7 +36,18 @@ export function TalentFilterBar({
     return Array.from(groups.entries());
   }, [skillsRaw]);
 
+  const skillsCats = useMemo(
+    () =>
+      skillsByCat.map(([catCode, list]) => ({
+        catCode,
+        list,
+        idSet: new Set(list.map((s) => s.id)),
+      })),
+    [skillsByCat]
+  );
+
   const [stage, _] = useState(value.stageName ?? '');
+
   useMemo(() => {
     const id = setTimeout(() => onChange({ ...value, stageName: stage || undefined }), 300);
     return () => clearTimeout(id);
@@ -51,7 +55,7 @@ export function TalentFilterBar({
 
   return (
     <aside
-      className="w-full flex flex-col gap-3 items-stretch overflow-y-auto min-h-0 [-webkit-overflow-scrolling:touch]"
+      className="w-full flex flex-col items-stretch overflow-y-auto min-h-0 [-webkit-overflow-scrolling:touch]"
       style={{ maxHeight: 'calc(var(--app-vh, 1vh) * 100)' }}
     >
       {/* Basic Info */}
@@ -86,18 +90,15 @@ export function TalentFilterBar({
             getLabel={(p) => t(p.stringCode)}
             selected={value.professionId ?? []}
             onChange={(next) => onChange({ ...value, professionId: next.length ? next : undefined })}
-            i18n={{
-              selected: t('general.selections'),
-              selectAll: t('general.select_all'),
-            }}
             maxPanelHeight="16rem"
           />
         </div>
       </FilterSection>
+
       <Separator className="opacity-20"></Separator>
-      {/* Características */}
+
+      {/* Characteristics */}
       <FilterSection title={t('profile.characteristics.characteristics')}>
-        {/* Altura */}
         <article className="flex flex-col gap-2">
           <label htmlFor="heightMin" className="text-sm font-semibold">
             {t('talent.filter.characteristics.height')}
@@ -107,8 +108,6 @@ export function TalentFilterBar({
             <FormInputField id="heightMax" placeholder={t('general.placeholder.max')} />
           </div>
         </article>
-
-        {/* Colores */}
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('profile.characteristics.hairColor')}</label>
           <MultiSelectDropdown
@@ -118,7 +117,6 @@ export function TalentFilterBar({
             getLabel={(o) => o.label}
             selected={value.hairColorId}
             onChange={(id) => onChange({ ...value, hairColorId: id })}
-            i18n={{ selected: t('general.selections'), selectAll: t('general.clear') }}
             maxPanelHeight="16rem"
           />
         </div>
@@ -131,12 +129,9 @@ export function TalentFilterBar({
             getLabel={(o) => o.label}
             selected={value.eyeColorId}
             onChange={(id) => onChange({ ...value, eyeColorId: id })}
-            i18n={{ selected: t('general.selections'), selectAll: t('general.clear') }}
-            maxPanelHeight="16rem"
+            maxPanelHeight="1rem"
           />
         </div>
-
-        {/* Booleans */}
         <div className="grid grid-cols-1 gap-4">
           <BooleanRadioGroup
             key={'tattoo'}
@@ -161,93 +156,35 @@ export function TalentFilterBar({
           />
         </div>
       </FilterSection>
+
       <Separator className="opacity-20"></Separator>
-      {/* Habilidades */}
+
+      {/* Skills */}
       <FilterSection title={t('filters.skills', 'Habilidades')}>
-        <div className="mb-2 flex items-center justify-between">
-          <div className="text-xs font-semibold">{t('filters.matchMode', 'Modo')}</div>
-          <div className="flex items-center gap-2 text-[11px]">
-            <label className="flex items-center gap-1">
-              <input
-                type="radio"
-                checked={(value.skillsMode ?? 'ANY') === 'ANY'}
-                onChange={() => onChange({ ...value, skillsMode: 'ANY' })}
-              />{' '}
-              ANY
-            </label>
-            <label className="flex items-center gap-1">
-              <input
-                type="radio"
-                checked={value.skillsMode === 'ALL'}
-                onChange={() => onChange({ ...value, skillsMode: 'ALL' })}
-              />{' '}
-              ALL
-            </label>
-          </div>
-        </div>
+        {skillsCats.map(({ catCode, list, idSet }) => {
+          const selectedGlobal = value.skillId ?? [];
+          const selectedInCat = selectedGlobal.filter((id) => idSet.has(id));
 
-        <div className="space-y-3">
-          {skillsByCat.map(([catCode, list]) => (
-            <details key={catCode} className="rounded-md border">
-              <summary className="cursor-pointer select-none px-2 py-2 text-xs font-semibold">
-                {t(catCode)}
-                <span className="ml-2 text-[11px] text-neutral-500">
-                  {list.filter((s) => (value.skillId ?? []).includes(s.id)).length}{' '}
-                  {t('filters.selected', 'Selecciones')}
-                </span>
-              </summary>
+          const handleCatChange = (nextIds: string[]) => {
+            const rest = selectedGlobal.filter((id) => !idSet.has(id));
+            const merged = Array.from(new Set([...rest, ...nextIds]));
+            onChange({ ...value, skillId: merged.length ? merged : undefined });
+          };
 
-              <div className="border-t p-2">
-                <div className="mb-1 flex gap-2">
-                  <button
-                    type="button"
-                    className="rounded border px-2 py-1 text-xs"
-                    onClick={() =>
-                      onChange({
-                        ...value,
-                        skillId: Array.from(new Set([...(value.skillId ?? []), ...list.map((s) => s.id)])),
-                      })
-                    }
-                  >
-                    {t('filters.selectAll', 'Seleccionar Todas')}
-                  </button>
-                  <button
-                    type="button"
-                    className="rounded border px-2 py-1 text-xs"
-                    onClick={() =>
-                      onChange({
-                        ...value,
-                        skillId: (value.skillId ?? []).filter((id) => !list.find((s) => s.id === id)),
-                      })
-                    }
-                  >
-                    {t('filters.clear', 'Limpiar')}
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 gap-1">
-                  {list.map((s) => {
-                    const selected = (value.skillId ?? []).includes(s.id);
-                    return (
-                      <label key={s.id} className="flex items-center gap-2 text-sm">
-                        <input
-                          type="checkbox"
-                          checked={selected}
-                          onChange={() =>
-                            onChange({
-                              ...value,
-                              skillId: toggleInArray(value.skillId, s.id),
-                            })
-                          }
-                        />
-                        {t(s.stringCode)}
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-            </details>
-          ))}
-        </div>
+          return (
+            <div key={catCode} className="w-full flex flex-col gap-1.5">
+              <label className="text-sm font-semibold">{t(catCode)}</label>
+              <MultiSelectDropdown
+                options={list}
+                getId={(s) => s.id}
+                getLabel={(s) => t(s.stringCode)}
+                selected={selectedInCat}
+                onChange={handleCatChange}
+                maxPanelHeight="16rem"
+              />
+            </div>
+          );
+        })}
       </FilterSection>
     </aside>
   );

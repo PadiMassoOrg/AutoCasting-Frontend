@@ -10,9 +10,14 @@
     "accept": "Aceptar",
     "save": "Guardar",
     "clear": "Limpiar",
+    "reset": "Resetear",
+    "apply": "Aplicar",
     "copied": "Copaiado con éxito",
     "logout": "Cerrar Sesión",
     "no_data": "Sin información",
+    "selections": "Selecciones",
+    "select_all": "Seleccionar Todas",
+    "dash": "--",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "select": "Seleccionar",
@@ -29,10 +34,7 @@
       "min": "Min",
       "max": "Max",
       "measure": "XL/90"
-    },
-    "selections": "Selecciones",
-    "select_all": "Seleccionar Todas",
-    "dash": "--"
+    }
   },
   "validation": {
     "uuid_invalid": "Valor inválido",

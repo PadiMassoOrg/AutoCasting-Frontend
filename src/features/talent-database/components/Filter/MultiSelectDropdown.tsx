@@ -7,13 +7,12 @@ type BaseProps<T> = {
   options: T[];
   getId: (opt: T) => string;
   getLabel: (opt: T) => string;
-  i18n?: { selected?: string; selectAll?: string; clear?: string };
   maxPanelHeight?: string;
   className?: string;
 };
 
 type MultipleSelectProps = {
-  mode?: 'multiple'; // default
+  mode?: 'multiple';
   selected: string[];
   onChange: (next: string[]) => void;
 };
@@ -35,7 +34,6 @@ export default function MultiSelectDropdown<T>({
   options,
   getId,
   getLabel,
-  i18n = { selected: 'Selecciones', selectAll: 'Seleccionar Todas', clear: 'Limpiar' },
   maxPanelHeight = '16rem',
   className = '',
   ...rest
@@ -59,7 +57,6 @@ export default function MultiSelectDropdown<T>({
 
   const toggleAll = () => {
     if (single) {
-      // en single actuamos como "Limpiar"
       setSelected([]);
     } else {
       setSelected(allSelected ? [] : ids);
@@ -82,7 +79,7 @@ export default function MultiSelectDropdown<T>({
         {/* Header */}
         <button
           type="button"
-          className="relative w-full h-14 rounded-xl px-6 py-3 text-left bg-white"
+          className="cursor-pointer relative w-full h-14 rounded-xl px-6 py-3 text-left bg-white"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
@@ -90,7 +87,7 @@ export default function MultiSelectDropdown<T>({
             <div className="flex flex-col">
               {title && <span className="text-sm text-neutral-600">{title}</span>}
               <span className="text-sm">
-                {count} {i18n.selected}
+                {count} {t('general.selections')}
               </span>
             </div>
             <svg
@@ -114,26 +111,28 @@ export default function MultiSelectDropdown<T>({
             </div>
 
             <div className="px-6 py-3 flex flex-col gap-2" style={{ maxHeight: maxPanelHeight, overflow: 'auto' }}>
-              {/* Select All / Clear */}
-              <label className="flex items-center gap-3 text-sm font-semibold">
-                <input
-                  type="checkbox"
-                  className="size-6 rounded-lg accent-[var(--color-primary-black)]"
-                  checked={!single && allSelected}
-                  onChange={toggleAll}
-                />
-                <span>{single ? t('general.clear') : (i18n.selectAll ?? 'Seleccionar Todas')}</span>
-              </label>
+              {/* Select All */}
+              {!single && (
+                <label className="flex items-center gap-3 text-sm font-normal">
+                  <input
+                    type="checkbox"
+                    className="cursor-pointer size-6 rounded-lg accent-[var(--color-primary-black)]"
+                    checked={!single && allSelected}
+                    onChange={toggleAll}
+                  />
+                  <span>{t('general.select_all')}</span>
+                </label>
+              )}
 
               {/* Opciones */}
               {options.map((opt) => {
                 const id = getId(opt);
                 const checked = selectedIds.includes(id);
                 return (
-                  <label key={id} className="flex items-center gap-3 text-sm font-semibold">
+                  <label key={id} className="flex items-center gap-3 text-sm font-normal">
                     <input
                       type="checkbox"
-                      className="size-6 rounded-xl accent-[var(--color-primary-black)]"
+                      className="cursor-pointer size-6 rounded-xl accent-[var(--color-primary-black)]"
                       checked={checked}
                       onChange={() => toggleOne(id)}
                     />
