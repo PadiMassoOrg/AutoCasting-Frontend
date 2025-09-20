@@ -1,11 +1,11 @@
 import { Button } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import HilightLink from '../../../shared/components/HilightLink/HilightLink';
+import { LinkLogo } from '../../../shared/components/LinkLogo';
 import BurgerIcon from '../../../shared/icons/burger.svg';
 import { ROUTES } from '../../../shared/lib/routes';
 import Sidebar from './Sidebar';
-import { LinkLogo } from '../../../shared/components/LinkLogo';
-import HilightLink from '../../../shared/components/HilightLink/HilightLink';
 
 const Navbar = () => {
   const { t } = useTranslation();
@@ -27,7 +27,7 @@ const Navbar = () => {
           <HilightLink
             to={ROUTES.TALENT_DATABASE}
             label={t('routes.talent-database')}
-            className="text-base font-semibold"
+            className="text-base font-semibold text-nowrap"
           ></HilightLink>
           <HilightLink
             to={ROUTES.AUTH}

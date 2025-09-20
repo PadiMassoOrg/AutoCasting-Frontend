@@ -54,12 +54,12 @@
   },
   "routes": {
     "home": "Inicio",
-    "login": "Entrar",
+    "login": "Iniciar Sesión",
     "register": "Crear Perfil",
     "profile": "Perfil",
     "account": "Mi Cuenta",
     "access": "Acceso",
-    "talent-database": "Catálogo",
+    "talent-database": "Ver Catálogo",
     "support": "Soporte Técnico",
     "faq": "Preguntas Frecuentes"
   },
@@ -193,7 +193,7 @@
       "text": "Creá tu perfil, subí tus clips y compartí un solo link. Contacto directo con quienes contratan."
     },
     "services": {
-      "header": "¿Porqué auto-casting.com?",
+      "header": "¿Porqué autocasting?",
       "service1": {
         "title": "Un solo link",
         "description": "Tu talento, tus fotos, videos y datos en un perfil listo para compartir."
