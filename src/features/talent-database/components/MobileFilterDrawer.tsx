@@ -1,4 +1,6 @@
+import { Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { TalentFiltersQS } from '../types/talent-database.types';
 import { TalentFilterBar } from './TalentFilterBar';
 
@@ -15,6 +17,7 @@ export function MobileFiltersDrawer({
   onApply: (v: TalentFiltersQS) => void;
   onReset?: () => void;
 }) {
+  const { t } = useTranslation();
   const [draft, setDraft] = useState<TalentFiltersQS>(value);
 
   useEffect(() => {
@@ -55,58 +58,41 @@ export function MobileFiltersDrawer({
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
-      <div
+      <article
         className="
-          absolute inset-x-0 bottom-0 max-h-[85vh]
-          rounded-t-2xl bg-white shadow-xl
-          flex flex-col
+          absolute bottom-0 right-0
+          w-[90%] h-screen bg-white
+          flex flex-col p-6 gap-4
           animate-[slideUp_180ms_ease-out]
         "
         role="dialog"
         aria-modal="true"
       >
-        {/* handle */}
-        <div className="mx-auto mt-2 h-1.5 w-12 rounded-full bg-neutral-200" />
-        <header className="flex items-center justify-between px-4 py-3 border-b">
-          <h4 className="text-base font-semibold">Filtros</h4>
+        {/* Title */}
+        <header className="flex items-center justify-between">
+          <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
           <button
             type="button"
-            className="text-sm underline"
+            className="text-xs underline font-light"
             onClick={() => {
               setDraft({});
               onReset?.();
             }}
           >
-            Resetear
+            {t('talent.filter.reset')}
           </button>
         </header>
+        <Separator className="opacity-20 my-2"></Separator>
 
         {/* contenido scrollable */}
-        <div className="min-h-0 flex-1 overflow-auto px-3 py-3">
+        <div className="min-h-0 flex-1 overflow-auto">
           <TalentFilterBar
             value={draft}
             onChange={setDraft}
             // en mobile no aplicamos al cambiar; sólo previsualizamos en draft
           />
         </div>
-
-        {/* footer */}
-        <footer className="flex gap-3 p-3 border-t bg-white">
-          <button type="button" className="w-1/2 rounded-xl border px-4 py-2 text-sm" onClick={onClose}>
-            Cancelar
-          </button>
-          <button
-            type="button"
-            className="w-1/2 rounded-xl bg-black text-white px-4 py-2 text-sm"
-            onClick={() => {
-              onApply(draft);
-              onClose();
-            }}
-          >
-            Aplicar{selectedCount ? ` (${selectedCount})` : ''}
-          </button>
-        </footer>
-      </div>
+      </article>
 
       {/* keyframes inline */}
       <style>{`

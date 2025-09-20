@@ -323,6 +323,10 @@
   "talent": {
     "page": {
       "title": "Catálogo"
+    },
+    "filter": {
+      "title": "Filtros",
+      "reset": "Resetear Filtros"
     }
   }
 }

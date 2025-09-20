@@ -73,12 +73,6 @@ export function TalentFilterBar({
 
   return (
     <aside className="w-full lg:w-72 shrink-0 space-y-3">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold">{t('filters.title', 'Filtros')}</h3>
-        <button type="button" className="text-xs underline" onClick={() => onReset?.()}>
-          {t('filters.reset', 'Resetear filtros')}
-        </button>
-      </div>
 
       {/* Información básica */}
       <Section title={t('filters.basicInfo', 'Información Básica')}>
