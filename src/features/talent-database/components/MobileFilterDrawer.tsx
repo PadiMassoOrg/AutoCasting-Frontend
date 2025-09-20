@@ -61,7 +61,7 @@ export function MobileFiltersDrawer({
       <article
         className="
           absolute bottom-0 right-0
-          w-[90%] h-screen bg-white
+          w-[83%] h-screen bg-white
           flex flex-col p-6 gap-4
           animate-[slideUp_180ms_ease-out]
         "
@@ -82,16 +82,10 @@ export function MobileFiltersDrawer({
             {t('talent.filter.reset')}
           </button>
         </header>
-        <Separator className="opacity-20 my-2"></Separator>
+        <Separator className="opacity-20 my-4"></Separator>
 
-        {/* contenido scrollable */}
-        <div className="min-h-0 flex-1 overflow-auto">
-          <TalentFilterBar
-            value={draft}
-            onChange={setDraft}
-            // en mobile no aplicamos al cambiar; sólo previsualizamos en draft
-          />
-        </div>
+        {/* Content */}
+        <TalentFilterBar value={draft} onChange={setDraft} />
       </article>
 
       {/* keyframes inline */}

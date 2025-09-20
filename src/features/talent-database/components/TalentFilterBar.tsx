@@ -1,5 +1,6 @@
 'use client';
 
+import { FormInputField, FormSelectField } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -7,6 +8,7 @@ import {
   useCachedSiteMetadataSlice,
 } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
+import { FilterSection } from '../components';
 import type { TalentFiltersQS } from '../types/talent-database.types';
 
 type Tri = '' | 'true' | 'false';
@@ -22,23 +24,6 @@ function toggleInArray(arr: string[] | undefined, id: string): string[] {
   return Array.from(set);
 }
 
-function Section({
-  title,
-  children,
-  defaultOpen = true,
-}: {
-  title: string;
-  children: React.ReactNode;
-  defaultOpen?: boolean;
-}) {
-  return (
-    <details open={defaultOpen} className="rounded-xl border bg-white">
-      <summary className="cursor-pointer select-none px-4 py-3 text-sm font-semibold">{title}</summary>
-      <div className="px-4 pb-4 pt-2">{children}</div>
-    </details>
-  );
-}
-
 export function TalentFilterBar({
   value,
   onChange,
@@ -50,7 +35,7 @@ export function TalentFilterBar({
 }) {
   const { t } = useTranslation();
 
-  const genders = useCachedSiteMetadataOption('genderOptions', t);
+  const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
   const professionsRaw = useCachedSiteMetadataSlice('professions') as SiteMetadataObject[] | undefined;
   const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair');
   const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye');
@@ -72,61 +57,35 @@ export function TalentFilterBar({
   }, [stage]);
 
   return (
-    <aside className="w-full lg:w-72 shrink-0 space-y-3">
-
-      {/* Información básica */}
-      <Section title={t('filters.basicInfo', 'Información Básica')}>
-        {/* Nombre */}
-        <div className="space-y-2">
-          <label className="text-xs font-semibold">{t('filters.stageName', 'Nombre del Talento')}</label>
-          <input
-            value={stage}
-            onChange={(e) => setStage(e.target.value)}
-            placeholder={t('filters.stageName.placeholder', 'Ej: Ricardo Darín')}
-            className="w-full rounded-md border px-3 py-2 text-sm"
-          />
-        </div>
+    <aside className="w-full flex flex-col gap-4 items-center">
+      {/* Basic Info */}
+      <FilterSection title={t('profile.basic_info.basic_info')}>
+        <FormInputField
+          id={'stageName'}
+          label={t('talent.filter.basic_info.stage_name')}
+          labelClassName="text-sm font-semibold"
+          placeholder={t('general.placeholder.stage_name')}
+        ></FormInputField>
 
         {/* Rango etario */}
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <div>
-            <label className="text-xs font-semibold">{t('filters.ageMin', 'Mín')}</label>
-            <input
-              type="number"
-              min={0}
-              value={value.ageMin ?? ''}
-              onChange={(e) => onChange({ ...value, ageMin: parseNum((e.target as HTMLInputElement).valueAsNumber) })}
-              className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
-            />
+        <article className="flex flex-col gap-2">
+          <label htmlFor="ageMin" className="text-sm font-semibold">
+            {t('talent.filter.basic_info.age_range')}
+          </label>
+          <div className="flex flex-row gap-4">
+            <FormInputField id="ageMin" placeholder={t('general.placeholder.min')} />
+            <FormInputField id="ageMax" placeholder={t('general.placeholder.max')} />
           </div>
-          <div>
-            <label className="text-xs font-semibold">{t('filters.ageMax', 'Máx')}</label>
-            <input
-              type="number"
-              min={0}
-              value={value.ageMax ?? ''}
-              onChange={(e) => onChange({ ...value, ageMax: parseNum((e.target as HTMLInputElement).valueAsNumber) })}
-              className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
-            />
-          </div>
-        </div>
+        </article>
 
         {/* Género */}
-        <div className="mt-3">
-          <label className="text-xs font-semibold">{t('filters.gender', 'Género')}</label>
-          <select
-            value={value.genderId ?? ''}
-            onChange={(e) => onChange({ ...value, genderId: e.target.value || undefined })}
-            className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
-          >
-            <option value="">{t('filters.any', 'Seleccionar')}</option>
-            {genders.map((g) => (
-              <option key={g.value} value={g.value}>
-                {g.label}
-              </option>
-            ))}
-          </select>
-        </div>
+        <FormSelectField
+          id="genderId"
+          label={t('profile.basic_info.gender')}
+          labelClassName="font-semibold text-base"
+          placeholder={t('general.placeholder.select')}
+          options={genderOptions}
+        />
 
         {/* Profesiones + modo */}
         <div className="mt-3">
@@ -194,10 +153,10 @@ export function TalentFilterBar({
             </div>
           </div>
         </div>
-      </Section>
+      </FilterSection>
 
       {/* Características */}
-      <Section title={t('filters.characteristics', 'Características')}>
+      <FilterSection title={t('filters.characteristics', 'Características')}>
         {/* Altura */}
         <div className="grid grid-cols-2 gap-2">
           <div>
@@ -289,10 +248,10 @@ export function TalentFilterBar({
             );
           })}
         </div>
-      </Section>
+      </FilterSection>
 
       {/* Habilidades */}
-      <Section title={t('filters.skills', 'Habilidades')}>
+      <FilterSection title={t('filters.skills', 'Habilidades')}>
         <div className="mb-2 flex items-center justify-between">
           <div className="text-xs font-semibold">{t('filters.matchMode', 'Modo')}</div>
           <div className="flex items-center gap-2 text-[11px]">
@@ -377,7 +336,7 @@ export function TalentFilterBar({
             </details>
           ))}
         </div>
-      </Section>
+      </FilterSection>
     </aside>
   );
 }

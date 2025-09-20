@@ -19,7 +19,9 @@
       "url": "URL",
       "headshot": "Primer Plano",
       "fullbody": "Cuerpo Entero",
-      "dash": "--"
+      "dash": "--",
+      "min": "Min",
+      "max": "Max"
     }
   },
   "validation": {
@@ -326,7 +328,13 @@
     },
     "filter": {
       "title": "Filtros",
-      "reset": "Resetear Filtros"
+      "reset": "Resetear Filtros",
+      "basic_info": {
+        "stage_name": "Nombre del Talento",
+        "age_range": "Rango Etario",
+        "gender": "Género",
+        "profession": "Profesión"
+      }
     }
   }
 }
