@@ -1,7 +1,13 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { matchPath, useLocation, useParams } from 'react-router-dom';
 import { logout } from '../../features/auth/services/authService';
+import { ProfileCompletionCard } from '../../features/profile-edit/components/ProfileCompletionCard/ProfileCompletionCard';
 import { useProfile } from '../../features/profile-edit/hooks/useProfile';
+import {
+  computeProfileProgress,
+  type ProfileProgress,
+} from '../../features/profile-edit/services/computeProfileProgress';
 import HilightLink from '../../shared/components/HilightLink/HilightLink';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import BurgerIcon from '../../shared/icons/burger.svg';
@@ -11,12 +17,25 @@ import Sidebar from './Sidebar';
 
 const Navbar = () => {
   const { t } = useTranslation();
-  const { data } = useProfile();
+  const { data: myProfile } = useProfile();
+  const { slug } = useParams<{ slug: string }>();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const isOnProfileEdit = !!matchPath({ path: ROUTES.PROFILE + '/*', end: false }, location.pathname);
+  const isOwner = !!myProfile?.publicSlug && myProfile.publicSlug === slug;
+  const shouldShowCard = !!myProfile && (isOnProfileEdit || isOwner);
+
+  const progress = useMemo<ProfileProgress | null>(() => {
+    if (!shouldShowCard || !myProfile) return null;
+    return computeProfileProgress(myProfile);
+  }, [shouldShowCard, myProfile]);
+
+  const isEditMode = isOnProfileEdit;
+
   return (
-    <>
-      <nav className="w-full h-14 px-10 flex flex-row items-center justify-between">
+    <div>
+      <nav className="relative w-full h-14 px-10 flex flex-row items-center justify-between">
         <LinkLogo horizontal />
         <button
           type="button"
@@ -26,12 +45,17 @@ const Navbar = () => {
         >
           <img src={BurgerIcon} alt="" className="w-7" />
         </button>
+        <span className="hidden lg:block lg:absolute lg:w-[310px] lg:left-[50%] lg:translate-x-[-50%]">
+          {shouldShowCard && progress && (
+            <ProfileCompletionCard progress={progress} isEdit={isEditMode} publicSlug={myProfile.publicSlug} />
+          )}
+        </span>
+
         <div className="hidden lg:flex flex-row gap-6 items-center">
           <HilightLink to={ROUTES.TALENT_DATABASE} label={t('routes.talent-database')} width={96} height={38} />
-          {data ? (
+          {myProfile ? (
             <>
               <HilightLink to={ROUTES.PROFILE} label={t('routes.profile')} exact={false} width={72} height={34} />
-
               <AccountDropdown onLogout={logout} />
             </>
           ) : (
@@ -40,8 +64,13 @@ const Navbar = () => {
         </div>
       </nav>
 
-      <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} onLogout={() => logout()} isAuthenticated={!!data} />
-    </>
+      <Sidebar
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onLogout={() => logout()}
+        isAuthenticated={!!myProfile}
+      />
+    </div>
   );
 };
 

@@ -11,38 +11,19 @@ const ProfileInfoPanelSwitch = ({ activeKey, profile }: { activeKey: PillKey; pr
         id={`panel-characteristics`}
         aria-labelledby="tab-characteristics"
         hidden={activeKey !== 'characteristics'}
-        className="rounded-xl border border-[var(--color-secondary-outline)] py-6 px-7"
       >
         <CharacteristicsPanel data={profile.characteristics} />
       </div>
 
-      <div
-        role="tabpanel"
-        id={`panel-skills`}
-        aria-labelledby="tab-skills"
-        hidden={activeKey !== 'skills'}
-        className="rounded-xl border border-[var(--color-secondary-outline)] py-6 px-7"
-      >
+      <div role="tabpanel" id={`panel-skills`} aria-labelledby="tab-skills" hidden={activeKey !== 'skills'}>
         <SkillsPanel skills={profile.skills} />
       </div>
 
-      <div
-        role="tabpanel"
-        id={`panel-credits`}
-        aria-labelledby="tab-credits"
-        hidden={activeKey !== 'credits'}
-        className="rounded-xl border border-[var(--color-secondary-outline)] p-6"
-      >
+      <div role="tabpanel" id={`panel-credits`} aria-labelledby="tab-credits" hidden={activeKey !== 'credits'}>
         <CreditsPanel credits={profile.credits} />
       </div>
 
-      <div
-        role="tabpanel"
-        id={`panel-education`}
-        aria-labelledby="tab-education"
-        hidden={activeKey !== 'education'}
-        className="rounded-xl border border-[var(--color-secondary-outline)] py-6 px-7"
-      >
+      <div role="tabpanel" id={`panel-education`} aria-labelledby="tab-education" hidden={activeKey !== 'education'}>
         <EducationPanel education={profile.education} />
       </div>
     </>

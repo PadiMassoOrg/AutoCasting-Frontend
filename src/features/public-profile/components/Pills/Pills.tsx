@@ -79,7 +79,7 @@ export default function Pills<K extends string = string>({
                 id={`tab-${String(key)}`}
                 onClick={() => onChange(key)}
                 className={clsx(
-                  'bg-[var(--color-primary-light-grey)] text-base font-semibold cursor-pointer px-4 py-2',
+                  'bg-[var(--color-primary-light-grey)] text-base lg:text-[14px] font-semibold cursor-pointer px-4 py-2',
                   'snap-start whitespace-nowrap rounded-full',
                   selected && 'bg-black text-white'
                 )}

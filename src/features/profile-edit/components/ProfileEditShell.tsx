@@ -30,7 +30,13 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
 
   return (
     <section className="w-full min-w-0 flex flex-col gap-6">
-      <ProfileCompletionCard progress={profile.progress} isEdit></ProfileCompletionCard>
+      <div className="flex items-center justify-center w-full lg:hidden py-3">
+        <ProfileCompletionCard
+          progress={profile.progress}
+          isEdit
+          publicSlug={profile.publicSlug}
+        ></ProfileCompletionCard>
+      </div>
       <div className="lg:flex lg:flex-row lg:gap-4">
         <CarouselHeader items={items} active={outerIndex} onChange={(i) => setOuter(ORDER[i])} />
         <Separator className="opacity-20 my-9 lg:hidden" />

@@ -37,7 +37,7 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-3">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-0.5">
       <FormInputField
         id="name"
         placeholder={t('auth.register.name')}
@@ -62,7 +62,7 @@ export default function RegisterForm({ onSwitch }: { onSwitch: () => void }) {
         error={errors.password?.message}
         {...register('password')}
       />
-      <Button type="submit" className="mt-8 cursor-pointer">
+      <Button type="submit" className="mt-5 cursor-pointer">
         {registerMutation.isPending ? t('state.loading') : t('auth.register.submit')}
       </Button>
       {serverError && (

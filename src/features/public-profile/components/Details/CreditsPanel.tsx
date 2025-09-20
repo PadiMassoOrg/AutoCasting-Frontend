@@ -44,6 +44,7 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
     });
   }, [groups, t]);
 
+  if (!credits.length) return <h2 className="text-sm font-normal text-center">{t('general.no_data')}</h2>;
   return (
     <div className="flex flex-col gap-6" style={{ overflowAnchor: 'none' }}>
       {categories.map((catKey) => {
@@ -64,7 +65,7 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
               aria-expanded={isOpen}
               aria-controls={`credits-${catKey}`}
             >
-              <span className="font-semibold text-lg">{t(catKey)}:</span>
+              <span className="font-semibold text-base lg:text-[14px]">{t(catKey)}:</span>
               <ChevronUpDown open={isOpen} />
             </button>
 
@@ -74,12 +75,12 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
                 {list.map((c) => (
                   <div key={c.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3">
                     <div className="flex items-center justify-between gap-4">
-                      <h4 className="font-semibold text-base leading-snug">{c.projectName}</h4>
-                      <span className="shrink-0 rounded-lg border border-[var(--color-secondary-outline)] px-3 py-1 text-base font-light tracking-wide">
+                      <h4 className="font-semibold text-base lg:text-[14px] leading-snug">{c.projectName}</h4>
+                      <span className="shrink-0 rounded-lg border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px] font-light tracking-wide">
                         {c.year}
                       </span>
                     </div>
-                    <div className="mt-3 text-base font-light text-[var(--color-secondary-grey-fonts)]">
+                    <div className="mt-3 text-base lg:text-[14px] font-light text-[var(--color-secondary-grey-fonts)]">
                       {c.role}
                       {c.producerName ? ` — ${c.producerName}` : ''}
                     </div>

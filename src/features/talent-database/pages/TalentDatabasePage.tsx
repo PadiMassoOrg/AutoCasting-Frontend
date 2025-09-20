@@ -70,7 +70,6 @@ const TalentDatabasePage = () => {
     );
 
     io.observe(sentinelEl);
-    console.log(isFetchingNextPage);
     return () => io.disconnect();
   }, [fetchNextPage, hasNextPage, isFetchingNextPage, items.length, filters, pageSize]);
 

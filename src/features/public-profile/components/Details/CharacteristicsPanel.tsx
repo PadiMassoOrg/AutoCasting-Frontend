@@ -46,7 +46,7 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
   const dividerBefore = new Set(['hairColor', 'shirt']);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 lg:gap-2">
       {keys.map((key) => {
         const label = t(`profile.characteristics.${key}`);
         const raw = (data as any)?.[propMap[key]];
@@ -55,8 +55,8 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
           <React.Fragment key={key}>
             {dividerBefore.has(key) && <Separator className="opacity-20 my-1" />}
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-lg">{label}:</span>
-              <span className="inline-flex items-center rounded-xl border border-[var(--color-secondary-outline)] px-3 py-1 text-base">
+              <span className="font-semibold text-base lg:text-[14px]">{label}:</span>
+              <span className="inline-flex items-center rounded-xl border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px]">
                 {value}
               </span>
             </div>

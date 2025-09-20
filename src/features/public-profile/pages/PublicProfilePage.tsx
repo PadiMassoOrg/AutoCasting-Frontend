@@ -1,7 +1,11 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
+import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 import { LG_SCREEN_SIZE, XL_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
+import { ProfileCompletionCard } from '../../profile-edit/components/ProfileCompletionCard/ProfileCompletionCard';
+import { useProfile } from '../../profile-edit/hooks/useProfile';
+import { computeProfileProgress, type ProfileProgress } from '../../profile-edit/services/computeProfileProgress';
 import { BasicInfoSection, SocialMediaSection, VideoSection, ViewerActions } from '../components';
 import ProfileInfoCarousel from '../components/Details/ProfileInfoCarousel';
 import { usePublicProfile } from '../hooks/usePublicProfile';
@@ -11,10 +15,19 @@ const TOP_MARGIN = '5rem';
 
 const PublicProfilePage = () => {
   const { slug } = useParams<{ slug: string }>();
+  const { data: myProfile } = useProfile();
   const { data, isLoading, error } = usePublicProfile(slug!);
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
 
+  const isOwner = !!myProfile?.publicSlug && myProfile.publicSlug === slug;
+  const progress = useMemo<ProfileProgress | null>(() => {
+    if (!isOwner) return null;
+    const src = myProfile ?? data;
+    return computeProfileProgress(src);
+  }, [isOwner, myProfile, data]);
+
+  // TODO - Verify
   if (isLoading) return <p>Cargando perfil público...</p>;
   if (error || !data) return <p>Error al cargar el perfil</p>;
 
@@ -24,7 +37,6 @@ const PublicProfilePage = () => {
     [media.headshotImageUrl, media.fullBodyImageUrl, ...(media.otherPicturesUrl ?? [])].filter(
       (u): u is string => typeof u === 'string' && u.trim().length > 0
     );
-
   const images = mergePictures();
   const hasImages = images.length > 0;
 
@@ -55,11 +67,12 @@ const PublicProfilePage = () => {
     return (
       <article className="relative w-full">
         <div
-          className="flex flex-col"
+          className="flex flex-col gap-2"
           style={{
             height: `calc(100svh - ${NAVBAR}px - ${TOP_MARGIN})`,
             minHeight: '500px',
-            ['--media-col-w' as any]: '250px',
+            maxHeight: '850px',
+            ['--media-col-w' as any]: '200px',
           }}
         >
           <BasicInfoSection data={basicInfo} />
@@ -70,12 +83,12 @@ const PublicProfilePage = () => {
             <div className="min-w-0 min-h-0 h-full overflow-auto">
               <ProfileInfoCarousel profile={data} className="h-full" />
             </div>
-            <div className="min-w-0 min-h-0 h-full overflow-auto flex flex-col gap-5 justify-between">
+            <div className="min-h-0 h-full overflow-auto flex flex-col justify-between">
               <VideoSection data={media} />
               <div className="">
-                <Separator className="opacity-25 mb-6" />
+                <Separator className="opacity-25 mb-4" />
                 <SocialMediaSection data={socialMedia} className="flex flex-row items-center justify-between" />
-                <Separator className="opacity-25 mt-6" />
+                <Separator className="opacity-25 mt-4" />
               </div>
             </div>
           </div>
@@ -86,6 +99,9 @@ const PublicProfilePage = () => {
 
   return (
     <div className="relative pt-3 pb-10 flex flex-col gap-3 justify-center">
+      <div className="mb-2 grid place-items-center">
+        {isOwner && progress && <ProfileCompletionCard progress={progress} isEdit={false} />}
+      </div>
       <ViewerActions />
       <BasicInfoSection data={basicInfo} />
       <ImageCarousel images={hasImages ? images : null} />

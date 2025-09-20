@@ -1,13 +1,16 @@
 {
   "company": {
-    "site": "auto-casting.com",
+    "site": "autocasting",
     "header": "Tu Perfil Digital Actoral"
   },
   "general": {
     "yes": "Sí",
     "no": "No",
+    "accept": "Aceptar",
+    "save": "Guardar",
     "copied": "Copaiado con éxito",
     "logout": "Cerrar Sesión",
+    "no_data": "Sin información",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "select": "Seleccionar",
@@ -19,12 +22,23 @@
       "url": "URL",
       "headshot": "Primer Plano",
       "fullbody": "Cuerpo Entero",
+      "measure": "XL/90",
       "dash": "--"
     }
   },
   "validation": {
+    "uuid_invalid": "Valor inválido",
+    "invalid": "Valor inválido",
+    "url_invalid": "Ingresa una URL válida",
     "required": "Campo obligatorio.",
-    "number": "Solo números"
+    "number": "Solo números",
+    "number_invalid": "Número inválido",
+    "year_invalid": "Año inválido",
+    "year_out_of_range": "El año debe estar entre {{min}} y {{max}}",
+    "month_invalid": "Mes inválido",
+    "day_invalid": "Día inválido",
+    "type_image": "El archivo debe ser una imagen",
+    "max_size": "El archivo supera el tamaño máximo de {{mb}}MB"
   },
   "state": {
     "loading": "Cargando...",
@@ -39,11 +53,13 @@
     "logout": "Salir"
   },
   "routes": {
-    "login": "Entrar",
+    "home": "Inicio",
+    "login": "Iniciar Sesión",
+    "register": "Crear Perfil",
     "profile": "Perfil",
     "account": "Mi Cuenta",
     "access": "Acceso",
-    "talent-database": "Catálogo",
+    "talent-database": "Ver Catálogo",
     "support": "Soporte Técnico",
     "faq": "Preguntas Frecuentes"
   },
@@ -170,6 +186,67 @@
       "commercial": "Comercial"
     }
   },
+  "landing": {
+    "page": {
+      "header": "Conectá tu talento con tu próxima",
+      "header_hilight": "oportunidad",
+      "text": "Creá tu perfil, subí tus clips y compartí un solo link. Contacto directo con quienes contratan."
+    },
+    "services": {
+      "header": "¿Porqué autocasting?",
+      "service1": {
+        "title": "Un solo link",
+        "description": "Tu talento, tus fotos, videos y datos en un perfil listo para compartir."
+      },
+      "service2": {
+        "title": "Sin intermediarios",
+        "description": "Productores, agencias y marcas te encuentran y te escriben al instante."
+      },
+      "service3": {
+        "title": "Pensado para vos",
+        "description": "Planes simples y económicos para que nadie quede afuera."
+      }
+    },
+    "tutorial": {
+      "header": "¿Cómo funciona?",
+      "step1": {
+        "title": "1. Creá tu perfil",
+        "description": "Subí tus fotos, videos y datos en minutos."
+      },
+      "step2": {
+        "title": "2. Compartí tu link",
+        "description": "Mandalo a quien quieras o usalo como tu carta de presentación."
+      },
+      "step3": {
+        "title": "3. Asegurá tu rol",
+        "description": "Productores, directores y agencias ven tu perfil y te contactan diréctamente."
+      }
+    },
+    "plan": {
+      "header": "Nuestros Planes",
+      "recommended": "Recomendado",
+      "free": {
+        "title": "Gratis",
+        "subtitle": "Gratis.",
+        "price": "$0",
+        "benefit1": "Lorem Ipsum",
+        "benefit2": "Lorem Ipsum",
+        "benefit3": "Lorem Ipsum",
+        "cta": "Elegir Plan Gratis",
+        "cta_2": "Lorem Ipsum"
+      },
+      "pro": {
+        "title": "Pro",
+        "subtitle": "Por usuario y por mes.",
+        "price": "$4,999.00",
+        "benefit1": "Lorem Ipsum",
+        "benefit2": "Lorem Ipsum",
+        "benefit3": "Lorem Ipsum",
+        "cta": "Elegir Plan Pro",
+        "cta_2": "Lorem Ipsum"
+      }
+    }
+  },
   "auth": {
     "page": {
       "welcome": "Bienvenid@ a",
@@ -199,9 +276,17 @@
     },
     "forgotten_password": {
       "text": "No te preocupes. Ingresá tu correo y te mandaremos un link para crear una nueva.",
-      "submit": "Enviar Link"
+      "submit": "Enviar Link",
+      "email_sent_title": "¡Link enviado!",
+      "email_sent_text": "Te mandamos un correo con el link para restablecer tu contraseña.",
+      "email_sent_text_2": "Revisá tu bandeja de entrada y, si no lo ves en unos minutos, chequeá la carpeta de spam."
     },
     "reset_password": {
+      "page": {
+        "title": "Creá una nueva contraseña",
+        "p": "¿No fuiste vos? Ignorá este mail. Tu contraseña no se modifica.",
+        "cta": "Restablecer Contraseña"
+      },
       "new": "Nueva contraseña",
       "repeat": "Repetir contraseña"
     },
@@ -259,7 +344,8 @@
       "other": "Otras Fotos",
       "videos": "Videos",
       "introduction": "Video de Presentación",
-      "videoreel": "Videoreel"
+      "videoreel": "Videoreel",
+      "more_photos": "Ver más fotos"
     },
     "characteristics": {
       "characteristics": "Características",
