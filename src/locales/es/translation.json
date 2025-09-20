@@ -423,6 +423,9 @@
         "age_range": "Rango Etario",
         "gender": "Género",
         "profession": "Profesión"
+      },
+      "characteristics": {
+        "height": "Altura"
       }
     }
   }

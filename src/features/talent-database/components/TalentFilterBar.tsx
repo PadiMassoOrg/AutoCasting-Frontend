@@ -1,6 +1,6 @@
 'use client';
 
-import { FormInputField, FormSelectField } from 'autocasting-ui-library-padimasso';
+import { FormInputField, FormSelectField, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -35,8 +35,10 @@ export function TalentFilterBar({
 
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
   const professionsRaw = useCachedSiteMetadataSlice('professions') as SiteMetadataObject[] | undefined;
-  const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair');
-  const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye');
+  const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
+  const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye_color');
+  const dietOptions = useCachedSiteMetadataOption('dietOptions', t);
+
   const skillsRaw = useCachedSiteMetadataSlice('skills') as SiteMetadataObject[] | undefined;
   const skillsByCat = useMemo(() => {
     const groups = new Map<string, SiteMetadataObject[]>();
@@ -57,13 +59,13 @@ export function TalentFilterBar({
   return (
     <aside
       className="w-full
-        flex flex-col gap-2 items-stretch       
+        flex flex-col gap-3 items-stretch  
         overflow-y-auto          
         min-h-0               
         [-webkit-overflow-scrolling:touch]"
     >
       {/* Basic Info */}
-      <FilterSection title={t('profile.basic_info.basic_info')}>
+      <FilterSection title={t('profile.basic_info.basic_info')} defaultOpen>
         <FormInputField
           id={'stageName'}
           label={t('talent.filter.basic_info.stage_name')}
@@ -102,68 +104,26 @@ export function TalentFilterBar({
           />
         </div>
       </FilterSection>
+      <Separator className="opacity-20 my-2"></Separator>
       {/* Características */}
-      <FilterSection title={t('filters.characteristics', 'Características')}>
+      <FilterSection title={t('profile.characteristics.characteristics')}>
         {/* Altura */}
-        <div className="grid grid-cols-2 gap-2">
-          <div>
-            <label className="text-xs font-semibold">{t('filters.heightMin', 'Altura mín. (cm)')}</label>
-            <input
-              type="number"
-              min={0}
-              value={value.heightMinCm ?? ''}
-              onChange={(e) =>
-                onChange({ ...value, heightMinCm: parseNum((e.target as HTMLInputElement).valueAsNumber) })
-              }
-              className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
-            />
+        <article className="flex flex-col gap-2">
+          <label htmlFor="heightMin" className="text-sm font-semibold">
+            {t('talent.filter.characteristics.height')}
+          </label>
+          <div className="flex flex-row gap-4">
+            <FormInputField id="heightMin" placeholder={t('general.placeholder.min')} />
+            <FormInputField id="heightMax" placeholder={t('general.placeholder.max')} />
           </div>
-          <div>
-            <label className="text-xs font-semibold">{t('filters.heightMax', 'Altura máx. (cm)')}</label>
-            <input
-              type="number"
-              min={0}
-              value={value.heightMaxCm ?? ''}
-              onChange={(e) =>
-                onChange({ ...value, heightMaxCm: parseNum((e.target as HTMLInputElement).valueAsNumber) })
-              }
-              className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
-            />
-          </div>
-        </div>
+        </article>
 
         {/* Colores */}
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <div>
-            <label className="text-xs font-semibold">{t('filters.hair', 'Cabello')}</label>
-            <select
-              value={value.hairColorId ?? ''}
-              onChange={(e) => onChange({ ...value, hairColorId: e.target.value || undefined })}
-              className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
-            >
-              <option value="">{t('filters.any', 'Color')}</option>
-              {hairOptions.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="text-xs font-semibold">{t('filters.eyes', 'Ojos')}</label>
-            <select
-              value={value.eyeColorId ?? ''}
-              onChange={(e) => onChange({ ...value, eyeColorId: e.target.value || undefined })}
-              className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
-            >
-              <option value="">{t('filters.any', 'Color')}</option>
-              {eyeOptions.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="w-full flex flex-col gap-1.5">
+          <label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</label>
+        </div>
+        <div className="w-full flex flex-col gap-1.5">
+          <label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</label>
         </div>
 
         {/* Booleans triestado -> boolean | undefined */}
@@ -196,7 +156,7 @@ export function TalentFilterBar({
           })}
         </div>
       </FilterSection>
-
+      <Separator className="opacity-20 my-2"></Separator>
       {/* Habilidades */}
       <FilterSection title={t('filters.skills', 'Habilidades')}>
         <div className="mb-2 flex items-center justify-between">
