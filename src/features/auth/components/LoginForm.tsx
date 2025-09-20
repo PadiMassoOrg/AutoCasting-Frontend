@@ -38,7 +38,7 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-3">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-0.5">
       <FormInputField
         id="email"
         placeholder={t('auth.login.email')}
@@ -60,7 +60,7 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
           {t('auth.page.forgotten_pass')}
         </h2>
       </div>
-      <Button type="submit" className="mt-8 cursor-pointer">
+      <Button type="submit" className="mt-6 cursor-pointer">
         {loginMutation.isPending ? t('state.loading') : t('auth.login.submit')}
       </Button>
       {serverError && (

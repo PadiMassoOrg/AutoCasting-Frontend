@@ -4,11 +4,10 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useProfileMediaDelete } from '../../../supabase/media/hooks/useProfileMediaDelete';
 import { useProfileMediaPatch } from '../../../supabase/media/hooks/useProfileMediaPatch';
+import { fileSchema, OTHER_SLOTS, otherIndexSchema } from '../../schemas/mediaSchema';
 import { PROFILE_CACHE_KEY } from '../../services/profileService';
 import type { Media } from '../../types/profile.types';
 import UploadTile from '../UploadTile/UploadTile';
-
-const OTHER_SLOTS = 6;
 
 export default function MediaForm({ media, supabaseId }: { media: Media; supabaseId: string }) {
   const qc = useQueryClient();
@@ -29,12 +28,27 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
   const [removedHeadshot, setRemovedHeadshot] = useState(false);
   const [removedFullbody, setRemovedFullbody] = useState(false);
   const [removedOthers, setRemovedOthers] = useState<Set<number>>(new Set());
+  const [errHeadshot, setErrHeadshot] = useState<string | null>(null);
+  const [errFullbody, setErrFullbody] = useState<string | null>(null);
+  const [errOther, setErrOther] = useState<Record<number, string | null>>({});
 
   const others = liveMedia.otherPicturesUrl ?? [];
 
   const pick = (slot: 'headshot' | 'fullbody') => async (files: File[] | File) => {
     const file = Array.isArray(files) ? files[0] : files;
     if (!file) return;
+
+    const res = fileSchema(t).safeParse(file);
+    if (!res.success) {
+      const msg = res.error.errors[0]?.message ?? t('state.server_err');
+      if (slot === 'headshot') setErrHeadshot(msg);
+      else setErrFullbody(msg);
+      return;
+    }
+
+    if (slot === 'headshot') setErrHeadshot(null);
+    else setErrFullbody(null);
+
     const localUrl = await fileToDataUrl(file);
     setPreview((prev) => ({ ...prev, [slot]: localUrl }));
     setPending((prev) => new Set(prev).add(slot));
@@ -63,6 +77,23 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
   const pickOther = (index: number) => async (files: File[] | File) => {
     const file = Array.isArray(files) ? files[0] : files;
     if (!file) return;
+
+    const idxRes = otherIndexSchema(t).safeParse(index);
+    if (!idxRes.success) {
+      const msg = idxRes.error.errors[0]?.message ?? t('state.server_err');
+      setErrOther((m) => ({ ...m, [index]: msg }));
+      return;
+    }
+
+    const res = fileSchema(t).safeParse(file);
+    if (!res.success) {
+      const msg = res.error.errors[0]?.message ?? t('state.server_err');
+      setErrOther((m) => ({ ...m, [index]: msg }));
+      return;
+    }
+
+    setErrOther((m) => ({ ...m, [index]: null }));
+
     const localUrl = await fileToDataUrl(file);
     setOtherPreview((p) => ({ ...p, [index]: localUrl }));
     setOtherPending((p) => new Set(p).add(index));
@@ -72,10 +103,8 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
       {
         onSuccess: (updated) => {
           setLiveMedia(updated);
-          // limpiamos solo el preview del índice subido
           setOtherPreview((p) => ({ ...p, [index]: undefined }));
           setOtherBust((b) => ({ ...b, [index]: (b[index] ?? 0) + 1 }));
-          // si lo habíamos marcado como "removed", lo sacamos
           setRemovedOthers((s) => {
             if (!s.has(index)) return s;
             const n = new Set(s);
@@ -95,6 +124,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
   };
 
   const onDeleteHeadshot = async () => {
+    setErrHeadshot(null);
     const url = liveMedia.headshotImageUrl ?? undefined;
     setRemovedHeadshot(true);
     try {
@@ -109,6 +139,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
   };
 
   const onDeleteFullbody = async () => {
+    setErrFullbody(null);
     const url = liveMedia.fullBodyImageUrl ?? undefined;
     setRemovedFullbody(true);
     try {
@@ -123,6 +154,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
   };
 
   const onDeleteOther = async (index: number) => {
+    setErrOther((m) => ({ ...m, [index]: null }));
     const url = (liveMedia.otherPicturesUrl ?? [])[index] ?? undefined;
     setRemovedOthers((s) => new Set(s).add(index));
     setOtherPending((s) => new Set(s).add(index));
@@ -176,6 +208,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             onDeleteClick={onDeleteHeadshot}
             className="max-w-64"
           />
+          {errHeadshot && <span className="text-xs text-red-600 mt-1">{errHeadshot}</span>}
 
           <UploadTile
             label={t('general.placeholder.fullbody')}
@@ -197,6 +230,7 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             onDeleteClick={onDeleteFullbody}
             className="max-w-64"
           />
+          {errFullbody && <span className="text-xs text-red-600 mt-1">{errFullbody}</span>}
         </div>
       </div>
 
@@ -207,25 +241,27 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             const isRemoved = removedOthers.has(i);
             const hasImg = otherHasImage(i);
             return (
-              <UploadTile
-                key={i}
-                value={
-                  isRemoved || otherPending.has(i) ? undefined : withBust(others[i] as string | null, otherBust[i])
-                }
-                previewUrl={otherPreview[i] ?? null}
-                busy={otherPending.has(i)}
-                busyText={t('state.loading')}
-                bustKey={undefined}
-                onSelect={pickOther(i)}
-                accept="image/*"
-                maxSizeMB={8}
-                objectFit="cover"
-                aspectRatio="3 / 4"
-                multiple={false}
-                openOnClick={!hasImg}
-                onDeleteClick={() => onDeleteOther(i)}
-                className="md:min-w-51 max-w-51"
-              />
+              <div key={i}>
+                <UploadTile
+                  value={
+                    isRemoved || otherPending.has(i) ? undefined : withBust(others[i] as string | null, otherBust[i])
+                  }
+                  previewUrl={otherPreview[i] ?? null}
+                  busy={otherPending.has(i)}
+                  busyText={t('state.loading')}
+                  bustKey={undefined}
+                  onSelect={pickOther(i)}
+                  accept="image/*"
+                  maxSizeMB={8}
+                  objectFit="cover"
+                  aspectRatio="3 / 4"
+                  multiple={false}
+                  openOnClick={!hasImg}
+                  onDeleteClick={() => onDeleteOther(i)}
+                  className="md:min-w-51 max-w-51"
+                />
+                {errOther[i] && <span className="text-xs text-red-600 mt-1 block">{errOther[i]}</span>}
+              </div>
             );
           })}
         </div>
@@ -234,7 +270,6 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
   );
 }
 
-// TODO - Move Helpers
 const fileToDataUrl = (file: File) =>
   new Promise<string>((resolve, reject) => {
     const reader = new FileReader();

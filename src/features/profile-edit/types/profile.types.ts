@@ -74,9 +74,9 @@ export type BaseCharacteristics = {
   hairColorId: string;
   eyeColor: SiteMetadataObject;
   eyeColorId: string;
-  chestCm: number;
-  waistCm: number;
-  hipCm: number;
+  chestCm: number | string;
+  waistCm: number | string;
+  hipCm: number | string;
   shirtSize: string;
   pantSize: string;
   dressSize: string;

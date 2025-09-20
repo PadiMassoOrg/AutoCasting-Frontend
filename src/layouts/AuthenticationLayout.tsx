@@ -5,21 +5,24 @@ type LayoutProps = {
 export default function AuthenticationLayout({ children }: LayoutProps) {
   return (
     <div
-      className="
-        w-full min-h-dvh
-        bg-[var(--color-primary-white)] lg:bg-slate-50
-        overflow-y-auto overscroll-contain
-      "
+      className={`
+        fixed inset-0 z-0           
+        w-[100svw] h-[100svh]       
+        lg:w-[100dvw] lg:h-[100dvh] 
+        overflow-hidden           
+        overscroll-none          
+        bg-[var(--color-primary-white)] 
+      `}
       style={{
         paddingTop: 'env(safe-area-inset-top)',
         paddingBottom: 'env(safe-area-inset-bottom)',
         paddingLeft: 'env(safe-area-inset-left)',
         paddingRight: 'env(safe-area-inset-right)',
-        scrollbarGutter: 'stable',
+        scrollbarGutter: 'stable both-edges',
       }}
     >
-      <div className="flex min-h-dvh">
-        <div className="w-[95%] max-w-[1366px] mx-auto my-auto p-4">{children}</div>
+      <div className="w-full h-full grid place-items-center">
+        <div className="w-[95%] max-w-[1366px] p-6 lg:p-0">{children}</div>
       </div>
     </div>
   );

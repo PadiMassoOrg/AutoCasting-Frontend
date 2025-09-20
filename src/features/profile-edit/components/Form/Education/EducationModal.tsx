@@ -1,7 +1,7 @@
 import { Button, FormInputField, Separator } from 'autocasting-ui-library-padimasso';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { educationSchema } from '../../../schemas/profileSchema';
+import { getEducationSchema, type EducationFormKey, type EducationFormValues } from '../../../schemas/formSchema';
 import type { Education } from '../../../types/profile.types';
 
 export type DraftEducation = {
@@ -18,8 +18,11 @@ type Props = {
   onCancel: () => void;
 };
 
+const SCHEMA_KEYS = ['institution', 'courseName', 'graduationYear'] as const;
+
 const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
   const { t } = useTranslation();
+  const educationSchema = useMemo(() => getEducationSchema(t), [t]);
 
   const makeEmpty = (): DraftEducation => ({
     institution: '',
@@ -38,7 +41,7 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
       : makeEmpty();
 
   const [form, setForm] = useState<DraftEducation>(() => (mode === 'edit' ? makeFromInitial(initial) : makeEmpty()));
-  const [errors, setErrors] = useState<Partial<Record<keyof DraftEducation, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<EducationFormKey, string>>>({});
 
   useEffect(() => {
     setForm(mode === 'edit' ? makeFromInitial(initial) : makeEmpty());
@@ -47,7 +50,9 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
 
   const onChange = <K extends keyof DraftEducation>(k: K, v: DraftEducation[K]) => {
     setForm((f) => ({ ...f, [k]: v }));
-    if (errors[k]) setErrors((e) => ({ ...e, [k]: undefined }));
+    if ((SCHEMA_KEYS as readonly string[]).includes(k as string)) {
+      setErrors((e) => ({ ...e, [k as EducationFormKey]: undefined }));
+    }
   };
 
   const onYearChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -56,18 +61,26 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
   };
 
   const validateAndSave = async () => {
-    const parsed = educationSchema.safeParse(form);
+    const raw: EducationFormValues = {
+      institution: form.institution,
+      courseName: form.courseName,
+      graduationYear: form.graduationYear,
+    };
+
+    const parsed = educationSchema.safeParse(raw);
+
     if (!parsed.success) {
-      const fieldErrors: Partial<Record<keyof DraftEducation, string>> = {};
-      const flat = parsed.error.flatten().fieldErrors;
-      (Object.keys(flat) as (keyof DraftEducation)[]).forEach((k) => {
+      const flat = parsed.error.flatten().fieldErrors as Partial<Record<EducationFormKey, string[]>>;
+      const fieldErrors: Partial<Record<EducationFormKey, string>> = {};
+      (Object.keys(flat) as EducationFormKey[]).forEach((k) => {
         const msg = flat[k]?.[0];
         if (msg) fieldErrors[k] = msg;
       });
       setErrors(fieldErrors);
       return;
     }
-    await onSave(parsed.data);
+
+    await onSave({ ...form, ...parsed.data });
   };
 
   return (
@@ -82,6 +95,7 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
         onChange={(e) => onChange('institution', e.target.value)}
         error={errors.institution}
       />
+
       <FormInputField
         id="courseName"
         label={t('profile.education.courseName')}
@@ -90,8 +104,10 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
         placeholder={t('profile.education.courseName_placeholder')}
         value={form.courseName}
         onChange={(e) => onChange('courseName', e.target.value)}
+        // pattern="[A-Za-zÀ-ÿ0-9 ]*"
         error={errors.courseName}
       />
+
       <FormInputField
         id="graduationYear"
         label={t('profile.education.graduationYear')}
@@ -101,9 +117,11 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
         value={form.graduationYear}
         onChange={onYearChange}
         inputMode="numeric"
-        pattern="[0-9]*"
+        pattern="\d{4}"
+        maxLength={4}
         error={errors.graduationYear}
       />
+
       <Separator className="opacity-20 mb-6" />
 
       <div className="flex gap-2">

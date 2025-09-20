@@ -17,7 +17,6 @@ export default function DetailsInfoCarousel({ profile }: { profile: ProfileRespo
       getCount={getCount}
       t={t}
       defaultActive="characteristics"
-      panelWrapperClassName="rounded-xl border border-[var(--color-secondary-outline)] py-6 px-7"
       translationPrefix="profile.pills"
     />
   );

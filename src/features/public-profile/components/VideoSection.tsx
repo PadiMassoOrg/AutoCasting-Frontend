@@ -19,25 +19,25 @@ const VideoSection = ({ data }: { data: Media }) => {
     <article className="w-full flex flex-col gap-2">
       {!hasVideos && (
         <div className="w-full">
-          <h2 className="font-bold text-xl mb-3">{t('profile.page.videos')}</h2>
+          <h2 className="font-extrabold text-base mb-3">{t('profile.page.videos')}</h2>
           <p className="text-[var(--color-secondary-grey)] font-base">{t('profile.page.no_videos')}</p>
         </div>
       )}
 
       {hasVideos && (
         <article>
-          <h2 className="font-bold text-xl mb-3">{t('profile.page.videos')}</h2>
+          <h2 className="font-extrabold text-base mb-3">{t('profile.page.videos')}</h2>
           <div className={containerCls}>
             {introductionVideoUrl && (
               <div className={itemCls}>
                 <VideoPreviewCard videoUrl={introductionVideoUrl} />
-                <p className="font-semibold">{t('profile.page.introduction_video')}</p>
+                <p className="font-semibold text-base lg:text-[14px]">{t('profile.page.introduction_video')}</p>
               </div>
             )}
             {showReelVideoUrl && (
               <div className={itemCls}>
                 <VideoPreviewCard videoUrl={showReelVideoUrl} />
-                <p className="font-semibold">{t('profile.page.showreel_video')}</p>
+                <p className="font-semibold text-base lg:text-[14px]">{t('profile.page.showreel_video')}</p>
               </div>
             )}
           </div>

@@ -2,7 +2,7 @@ export const ROUTES = {
   HOME: '/',
   ALL: '/*',
   // Auth
-  AUTH: '/auth',
+  AUTH: '/authentication',
   GOOGLE_OAUTH_SUCCESS: '/oauth2/success',
   RESET_PASSWORD: '/reset-password',
   // Dashboard
@@ -12,8 +12,8 @@ export const ROUTES = {
   // Public
   PUBLIC_PROFILE: '/profile',
   TALENT_DATABASE: '/talent-database',
-  SUPPORT: 'http://auto-casting.com/',
-  FAQ: 'http://auto-casting.com/',
+  SUPPORT: '/',
+  FAQ: '/',
 };
 
 export const USER_ROUTES = [

@@ -1,5 +1,5 @@
 import { Button, FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   onSelect,
@@ -12,7 +12,15 @@ import { capitalize } from '../../../../shared/utils/textUtils';
 import { useCachedSiteMetadataOption } from '../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 import { useBasicInfoAutosave } from '../../hooks/autosaves';
+import { getBasicInfoSchema } from '../../schemas/basicInfoSchema';
 import type { ProfileBasicInfo } from '../../types/profile.types';
+
+type Errors = {
+  stageName?: string | null;
+  genderId?: string | null;
+  birth?: { year?: string | null; month?: string | null; day?: string | null } | null;
+  professions?: string | null;
+};
 
 export default function BasicInfoForm({
   data,
@@ -24,24 +32,48 @@ export default function BasicInfoForm({
   const { t, i18n } = useTranslation();
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
   const autosave = useBasicInfoAutosave();
-
-  const stageName = useCommittedText(data.stageName ?? '', (v) => autosave.immediate({ stageName: v }), {
-    trim: true,
-  });
-
-  const gender = useCommittedUuid(data.gender?.id ?? null, (id) => autosave.immediate({ genderId: id ?? undefined }), {
-    allowNull: true,
-  });
-
-  const birth = useIsoDateField(data.birthDate ?? '', (iso) => autosave.immediate({ birthDate: iso }), 600);
-
-  const professions = useToggleSet<string>(
-    (data.professions ?? []).map((p) => p.id),
-    (next) => autosave.immediate({ professionIds: next })
-  );
+  const schema = useMemo(() => getBasicInfoSchema(t), [t]);
 
   const YEAR_END = new Date().getFullYear();
   const YEAR_START = YEAR_END - 80;
+
+  const [errors, setErrors] = useState<Errors>({});
+
+  const stageName = useCommittedText(
+    data.stageName ?? '',
+    (v) => {
+      const r = schema.shape.stageName.safeParse(v);
+      setErrors((e) => ({
+        ...e,
+        stageName: r.success ? null : r.error.errors[0]?.message || t('validation.stage_name_required'),
+      }));
+      if (r.success) autosave.immediate({ stageName: v });
+    },
+    { trim: true }
+  );
+
+  const gender = useCommittedUuid(
+    data.gender?.id ?? null,
+    (id) => {
+      const raw = id ?? '';
+      const r = schema.shape.genderId.safeParse(raw);
+      setErrors((e) => ({
+        ...e,
+        genderId: r.success ? null : r.error.errors[0]?.message || t('validation.uuid_invalid'),
+      }));
+      if (r.success) autosave.immediate({ genderId: id ?? undefined });
+    },
+    { allowNull: true }
+  );
+
+  const birth = useIsoDateField(
+    data.birthDate ?? '',
+    (iso) => {
+      setErrors((e) => ({ ...e, birth: null }));
+      autosave.immediate({ birthDate: iso });
+    },
+    600
+  );
 
   const yearOptions = useMemo(
     () =>
@@ -60,9 +92,20 @@ export default function BasicInfoForm({
     }));
   }, [i18n.language]);
 
+  const [profErrors, setProfErrors] = useState<string | null>(null);
+  const professions = useToggleSet<string>(
+    (data.professions ?? []).map((p) => p.id),
+    (next) => {
+      const r = schema.shape.professions.safeParse(next);
+      setProfErrors(r.success ? null : r.error.errors[0]?.message || t('validation.profession_min'));
+      if (r.success) autosave.immediate({ professionIds: next });
+    }
+  );
+
   return (
-    <div className="w-full flex flex-col gap-5">
-      <h3 className="font-bold text-base">{t('profile.basic_info.basic_info')}</h3>
+    <div className="w-full flex flex-col gap-2">
+      <h3 className="font-bold text-base mb-2">{t('profile.basic_info.basic_info')}</h3>
+
       <FormInputField
         id="stageName"
         label={t('profile.basic_info.artistic_name')}
@@ -72,7 +115,9 @@ export default function BasicInfoForm({
         onChange={stageName.onChange}
         onBlur={stageName.onBlur}
         onKeyDown={stageName.onKeyDown}
+        error={errors.stageName ?? undefined}
       />
+
       <FormSelectField
         id="genderId"
         label={t('profile.basic_info.gender')}
@@ -82,7 +127,9 @@ export default function BasicInfoForm({
         onChange={gender.onChange}
         onBlur={gender.onBlur}
         options={genderOptions}
+        error={errors.genderId ?? undefined}
       />
+
       <div className="flex flex-col gap-2">
         <Label className="text-base font-semibold">{t('profile.basic_info.birth_date')}</Label>
         <div className="grid grid-cols-3 gap-2">
@@ -90,25 +137,40 @@ export default function BasicInfoForm({
             id="birth-day"
             placeholder={t('general.placeholder.day')}
             value={birth.day}
-            onChange={onSelect(birth.onDay)}
-            onBlur={birth.onAnyBlur}
+            onChange={(e) => {
+              onSelect((v) => birth.onDay(v))(e);
+            }}
+            onBlur={(e) => {
+              birth.onAnyBlur(e);
+            }}
             options={birth.dayOptions}
+            error={errors.birth?.day ?? undefined}
           />
           <FormSelectField
             id="birth-month"
             placeholder={t('general.placeholder.month')}
             value={birth.month}
-            onChange={onSelect(birth.onMonth)}
-            onBlur={birth.onAnyBlur}
+            onChange={(e) => {
+              onSelect((v) => birth.onMonth(v))(e);
+            }}
+            onBlur={(e) => {
+              birth.onAnyBlur(e);
+            }}
             options={monthOptions}
+            error={errors.birth?.month ?? undefined}
           />
           <FormSelectField
             id="birth-year"
             placeholder={t('general.placeholder.year')}
             value={birth.year}
-            onChange={onSelect(birth.onYear)}
-            onBlur={birth.onAnyBlur}
+            onChange={(e) => {
+              onSelect((v) => birth.onYear(v))(e);
+            }}
+            onBlur={(e) => {
+              birth.onAnyBlur(e);
+            }}
             options={yearOptions}
+            error={errors.birth?.year ?? undefined}
           />
         </div>
       </div>
@@ -133,6 +195,7 @@ export default function BasicInfoForm({
             );
           })}
         </div>
+        {profErrors && <span className="text-sm text-red-600">{profErrors}</span>}
       </div>
     </div>
   );

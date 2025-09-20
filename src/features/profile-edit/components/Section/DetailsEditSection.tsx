@@ -4,8 +4,7 @@ import DetailsInfoCarousel from '../Carousel/DetailsInfoCarousel/DetailsInfoCaro
 
 const DetailsEditSection = ({ profile }: { profile: ProfileResponse }) => {
   const { t } = useTranslation();
-  // TODO - Verify
-  if (!profile) return null;
+
   return (
     <article className="lg:flex lg:flex-col lg:gap-6">
       <h3 className="hidden lg:block text-2xl font-bold">{t('profile.pills.media')}</h3>
