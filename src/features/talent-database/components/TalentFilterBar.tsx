@@ -9,14 +9,7 @@ import {
 } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 import type { TalentFiltersQS } from '../types/talent-database.types';
-import { FilterSection, MultiSelectDropdown } from './Filter';
-
-type Tri = '' | 'true' | 'false';
-
-const boolToTri = (b: boolean | undefined): Tri => (b === undefined ? '' : b ? 'true' : 'false');
-const triToBool = (s: Tri): boolean | undefined => (s === '' ? undefined : s === 'true');
-
-const parseNum = (n: number): number | undefined => (Number.isNaN(n) ? undefined : n);
+import { BooleanRadioGroup, FilterSection, MultiSelectDropdown } from './Filter';
 
 function toggleInArray(arr: string[] | undefined, id: string): string[] {
   const set = new Set(arr ?? []);
@@ -58,11 +51,8 @@ export function TalentFilterBar({
 
   return (
     <aside
-      className="w-full
-        flex flex-col gap-3 items-stretch  
-        overflow-y-auto          
-        min-h-0               
-        [-webkit-overflow-scrolling:touch]"
+      className="w-full flex flex-col gap-3 items-stretch overflow-y-auto min-h-0 [-webkit-overflow-scrolling:touch]"
+      style={{ maxHeight: 'calc(var(--app-vh, 1vh) * 100)' }}
     >
       {/* Basic Info */}
       <FilterSection title={t('profile.basic_info.basic_info')} defaultOpen>
@@ -104,7 +94,7 @@ export function TalentFilterBar({
           />
         </div>
       </FilterSection>
-      <Separator className="opacity-20 my-2"></Separator>
+      <Separator className="opacity-20"></Separator>
       {/* Características */}
       <FilterSection title={t('profile.characteristics.characteristics')}>
         {/* Altura */}
@@ -120,43 +110,58 @@ export function TalentFilterBar({
 
         {/* Colores */}
         <div className="w-full flex flex-col gap-1.5">
-          <label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</label>
+          <label className="text-sm font-semibold">{t('profile.characteristics.hairColor')}</label>
+          <MultiSelectDropdown
+            mode="single"
+            options={hairOptions}
+            getId={(o) => o.value}
+            getLabel={(o) => o.label}
+            selected={value.hairColorId}
+            onChange={(id) => onChange({ ...value, hairColorId: id })}
+            i18n={{ selected: t('general.selections'), selectAll: t('general.clear') }}
+            maxPanelHeight="16rem"
+          />
         </div>
         <div className="w-full flex flex-col gap-1.5">
-          <label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</label>
+          <label className="text-sm font-semibold">{t('profile.characteristics.eyeColor')}</label>
+          <MultiSelectDropdown
+            mode="single"
+            options={eyeOptions}
+            getId={(o) => o.value}
+            getLabel={(o) => o.label}
+            selected={value.eyeColorId}
+            onChange={(id) => onChange({ ...value, eyeColorId: id })}
+            i18n={{ selected: t('general.selections'), selectAll: t('general.clear') }}
+            maxPanelHeight="16rem"
+          />
         </div>
 
-        {/* Booleans triestado -> boolean | undefined */}
-        <div className="mt-3 grid grid-cols-1 gap-2">
-          {[
-            { key: 'tattoo', label: t('filters.tattoo', 'Tatuajes') },
-            { key: 'passport', label: t('filters.passport', 'Pasaporte') },
-            { key: 'drivingLicense', label: t('filters.driving', 'Licencia de Conducir') },
-          ].map(({ key, label }) => {
-            const tri = boolToTri(value[key as keyof TalentFiltersQS] as boolean | undefined);
-            return (
-              <div key={key} className="grid grid-cols-[1fr,120px] items-center gap-2">
-                <label className="text-xs font-semibold">{label}</label>
-                <select
-                  className="rounded-md border px-2 py-2 text-sm"
-                  value={tri}
-                  onChange={(e) =>
-                    onChange({
-                      ...value,
-                      [key]: triToBool(e.target.value as Tri),
-                    } as TalentFiltersQS)
-                  }
-                >
-                  <option value="">{t('filters.any', 'Cualquiera')}</option>
-                  <option value="true">{t('filters.yes', 'Sí')}</option>
-                  <option value="false">{t('filters.no', 'No')}</option>
-                </select>
-              </div>
-            );
-          })}
+        {/* Booleans */}
+        <div className="grid grid-cols-1 gap-4">
+          <BooleanRadioGroup
+            key={'tattoo'}
+            name="tattoo"
+            label={t('profile.characteristics.tattoo')}
+            value={value.tattoo}
+            onChange={(next: boolean | undefined) => onChange({ ...value, tattoo: next })}
+          />
+          <BooleanRadioGroup
+            key={'passport'}
+            name="passport"
+            label={t('profile.characteristics.passport')}
+            value={value.passport}
+            onChange={(next: boolean | undefined) => onChange({ ...value, passport: next })}
+          />
+          <BooleanRadioGroup
+            key={'drivingLicense'}
+            name="drivingLicense"
+            label={t('profile.characteristics.drivingLicense')}
+            value={value.drivingLicense}
+            onChange={(next: boolean | undefined) => onChange({ ...value, drivingLicense: next })}
+          />
         </div>
       </FilterSection>
-      <Separator className="opacity-20 my-2"></Separator>
+      <Separator className="opacity-20"></Separator>
       {/* Habilidades */}
       <FilterSection title={t('filters.skills', 'Habilidades')}>
         <div className="mb-2 flex items-center justify-between">

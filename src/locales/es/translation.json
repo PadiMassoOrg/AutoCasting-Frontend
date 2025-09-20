@@ -6,14 +6,17 @@
   "general": {
     "yes": "Sí",
     "no": "No",
+    "any": "Cualquiera",
     "accept": "Aceptar",
     "save": "Guardar",
+    "clear": "Limpiar",
     "copied": "Copaiado con éxito",
     "logout": "Cerrar Sesión",
     "no_data": "Sin información",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "select": "Seleccionar",
+      "color": "Color",
       "day": "Día",
       "month": "Mes",
       "year": "Año",

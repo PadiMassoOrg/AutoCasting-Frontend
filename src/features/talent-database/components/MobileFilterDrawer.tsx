@@ -52,7 +52,7 @@ export function MobileFiltersDrawer({
           <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
           <button
             type="button"
-            className="text-xs underline font-light"
+            className="cursor-pointer text-xs underline font-light"
             onClick={() => {
               setDraft({});
               onReset?.();
@@ -61,7 +61,7 @@ export function MobileFiltersDrawer({
             {t('talent.filter.reset')}
           </button>
         </header>
-        <Separator className="opacity-20 my-4"></Separator>
+        <Separator className="opacity-20 mt-4"></Separator>
 
         {/* Content */}
         <TalentFilterBar value={draft} onChange={setDraft} />

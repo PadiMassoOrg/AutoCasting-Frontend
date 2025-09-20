@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 
+import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
 import { MobileFiltersDrawer, TalentCard } from '../components';
 import { TalentFilterBar } from '../components/TalentFilterBar';
 import { useTalentDatabase } from '../hooks/useTalentDatabase';
@@ -27,6 +28,7 @@ const initialFilters: TalentFiltersQS = {
 
 export default function TalentDatabasePage() {
   const { t } = useTranslation();
+  useViewportVhVar();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
 
@@ -100,15 +102,15 @@ export default function TalentDatabasePage() {
 
         <button
           type="button"
-          className="lg:hidden inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm bg-white"
+          className="cursor-pointer lg:hidden inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm bg-white"
           onClick={() => setMobileOpen(true)}
-          aria-label={t('filters.open', 'Abrir filtros')}
+          aria-label={t('talent.filters.open')}
         >
           {/* icono slider */}
           <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
             <path d="M3 6h18M6 12h12M10 18h4" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
           </svg>
-          {t('filters.title', 'Filtros')}
+          {t('talent.filter.title')}
           {selectedCount > 0 && <span className="ml-1 rounded-full border px-2 py-0.5 text-xs">{selectedCount}</span>}
         </button>
       </article>
