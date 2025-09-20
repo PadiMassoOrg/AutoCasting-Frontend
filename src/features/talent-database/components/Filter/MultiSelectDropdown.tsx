@@ -43,11 +43,11 @@ export default function MultiSelectDropdown<T>({
   };
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className={`w-full rounded-xl border border-[var(--color-secondary-outline)] bg-white ${className}`}>
       {/* Header */}
       <button
         type="button"
-        className="relative w-full h-14 rounded-xl border border-[var(--color-secondary-outline)] px-6 py-3 text-left bg-white"
+        className="relative w-full h-14 rounded-xl px-6 py-3 text-left bg-white"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
@@ -71,11 +71,13 @@ export default function MultiSelectDropdown<T>({
 
       {/* Panel */}
       <div
-        className={`grid transition-[grid-template-rows] duration-300 ease-out rounded-xl bg-white ${open ? 'border border-[var(--color-secondary-outline)] grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+        className={`grid transition-[grid-template-rows] duration-300 ease-out rounded-xl bg-white ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
       >
         <div className="overflow-hidden">
+          <div className="px-6">
+            <Separator className="opacity-20 mb-4"></Separator>
+          </div>
           <div className="px-6 py-3 flex flex-col gap-2" style={{ maxHeight: maxPanelHeight, overflow: 'auto' }}>
-            <Separator className="opacity-20 my-2"></Separator>
             {/* Select All */}
             <label className="flex items-center gap-3 text-sm font-semibold">
               <input
