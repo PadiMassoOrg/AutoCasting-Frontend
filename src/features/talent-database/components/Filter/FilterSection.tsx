@@ -6,14 +6,12 @@ type Props = {
   title: string;
   children: React.ReactNode;
   defaultOpen?: boolean;
+  count?: number;
 };
 
-export default function FilterSection({ title, children, defaultOpen = false }: Props) {
+export default function FilterSection({ title, children, defaultOpen = false, count = 0 }: Props) {
   const [open, setOpen] = useState(defaultOpen);
-
   useEffect(() => setOpen(defaultOpen), [defaultOpen]);
-
-  const toggleOpen = () => setOpen((v) => !v);
 
   return (
     <article className="w-full flex flex-col gap-2">
@@ -22,15 +20,25 @@ export default function FilterSection({ title, children, defaultOpen = false }: 
         role="button"
         tabIndex={0}
         aria-expanded={open}
-        onClick={toggleOpen}
+        onClick={() => setOpen((v) => !v)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            toggleOpen();
+            setOpen((v) => !v);
           }
         }}
       >
-        <h4 className="text-sm font-bold">{title}</h4>
+        <div className="flex items-center gap-2">
+          <h4 className="text-sm font-bold">{title}</h4>
+          {count > 0 && (
+            <span
+              aria-label={`${count} filtros activos`}
+              className="opacity-90 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--color-primary-black)] px-1.5 text-[10px] font-semibold text-white"
+            >
+              {count}
+            </span>
+          )}
+        </div>
         <ChevronUpDown open={open} />
       </div>
 

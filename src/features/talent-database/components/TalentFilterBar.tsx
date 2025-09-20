@@ -19,7 +19,6 @@ export function TalentFilterBar({
   onChange: (v: TalentFiltersQS) => void;
 }) {
   const { t } = useTranslation();
-
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
   const professionsRaw = useCachedSiteMetadataSlice('professions');
   const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
@@ -53,13 +52,44 @@ export function TalentFilterBar({
     return () => clearTimeout(id);
   }, [stage]);
 
+  const hasText = (s?: string | null) => !!s && s.trim().length > 0;
+  const hasAny = (arr?: unknown[]) => (arr?.length ?? 0) > 0;
+  const hasRange = (min?: number, max?: number) => min != null || max != null;
+
+  // Counts
+  const basicCount =
+    (hasText(value.stageName) ? 1 : 0) +
+    (hasRange(value.ageMin, value.ageMax) ? 1 : 0) +
+    (value.genderId ? 1 : 0) +
+    (hasAny(value.professionId) ? 1 : 0);
+
+  const characteristicsCount =
+    (hasRange(value.heightMinCm, value.heightMaxCm) ? 1 : 0) +
+    (value.hairColorId ? 1 : 0) +
+    (value.eyeColorId ? 1 : 0) +
+    (value.tattoo !== undefined ? 1 : 0) +
+    (value.passport !== undefined ? 1 : 0) +
+    (value.drivingLicense !== undefined ? 1 : 0);
+
+  const skillsCount = useMemo(() => {
+    const selected = value.skillId ?? [];
+    if (selected.length === 0) return 0;
+    const selectedSet = new Set(selected);
+    return skillsCats.reduce((acc, { idSet }) => {
+      for (const id of selectedSet) {
+        if (idSet.has(id)) return acc + 1;
+      }
+      return acc;
+    }, 0);
+  }, [skillsCats, value.skillId]);
+
   return (
     <aside
       className="w-full mt-2 flex flex-col items-stretch overflow-visible overflow-x-hidden"
       style={{ maxHeight: 'calc(var(--app-vh, 1vh) * 100)' }}
     >
       {/* Basic Info */}
-      <FilterSection title={t('profile.basic_info.basic_info')} defaultOpen>
+      <FilterSection title={t('profile.basic_info.basic_info')} defaultOpen count={basicCount}>
         <FormInputField
           id={'stageName'}
           label={t('talent.filter.basic_info.stage_name')}
@@ -98,7 +128,7 @@ export function TalentFilterBar({
       <Separator className="opacity-20 my-2"></Separator>
 
       {/* Characteristics */}
-      <FilterSection title={t('profile.characteristics.characteristics')}>
+      <FilterSection title={t('profile.characteristics.characteristics')} count={characteristicsCount}>
         <article className="flex flex-col gap-2">
           <label htmlFor="heightMin" className="text-sm font-semibold">
             {t('talent.filter.characteristics.height')}
@@ -160,7 +190,7 @@ export function TalentFilterBar({
       <Separator className="opacity-20 my-2"></Separator>
 
       {/* Skills */}
-      <FilterSection title={t('filters.skills', 'Habilidades')}>
+      <FilterSection title={t('filters.skills', 'Habilidades')} count={skillsCount}>
         {skillsCats.map(({ catCode, list, idSet }) => {
           const selectedGlobal = value.skillId ?? [];
           const selectedInCat = selectedGlobal.filter((id) => idSet.has(id));
