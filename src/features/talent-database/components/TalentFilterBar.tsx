@@ -85,11 +85,11 @@ export function TalentFilterBar({
 
   return (
     <aside
-      className="w-full mt-2 flex flex-col items-stretch overflow-visible overflow-x-hidden"
+      className="w-full flex flex-col items-stretch overflow-visible overflow-x-hidden"
       style={{ maxHeight: 'calc(var(--app-vh, 1vh) * 100)' }}
     >
       {/* Basic Info */}
-      <FilterSection title={t('profile.basic_info.basic_info')} defaultOpen count={basicCount}>
+      <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount}>
         <FormInputField
           id={'stageName'}
           label={t('talent.filter.basic_info.stage_name')}

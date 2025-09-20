@@ -66,7 +66,7 @@ export function MobileFiltersDrawer({
           </button>
         </header>
 
-        <Separator className="opacity-20" />
+        <Separator className="opacity-20 my-2" />
 
         {/* Contenido scrolleable; deja espacio al footer */}
         <div
@@ -75,9 +75,7 @@ export function MobileFiltersDrawer({
             paddingBottom: `calc(-${FOOTER_H}px + env(safe-area-inset-bottom, 0px))`,
           }}
         >
-          <div className="pt-4">
-            <TalentFilterBar value={draft} onChange={setDraft} />
-          </div>
+          <TalentFilterBar value={draft} onChange={setDraft} />
         </div>
 
         <div
