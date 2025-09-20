@@ -1,3 +1,4 @@
+// MobileFiltersDrawer.tsx
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,11 +12,13 @@ export function MobileFiltersDrawer({
   onClose,
   value,
   onReset,
+  onApply, // ⬅️ NUEVO
 }: {
   open: boolean;
   onClose: () => void;
   value: TalentFiltersQS;
   onReset?: () => void;
+  onApply: (v: TalentFiltersQS) => void;
 }) {
   const { t } = useTranslation();
   const [draft, setDraft] = useState<TalentFiltersQS>(value);
@@ -42,15 +45,8 @@ export function MobileFiltersDrawer({
       <article
         role="dialog"
         aria-modal="true"
-        className="
-          absolute bottom-0 right-0
-          w-[87%] bg-white
-          flex flex-col p-6 gap-0 overflow-hidden
-          animate-[slideUp_180ms_ease-out]
-        "
-        style={{
-          height: 'calc(var(--app-vh, 1dvh) * 100)',
-        }}
+        className="absolute bottom-0 right-0 w-[87%] bg-white flex flex-col p-6 gap-0 overflow-hidden animate-[slideUp_180ms_ease-out]"
+        style={{ height: 'calc(var(--app-vh, 1dvh) * 100)' }}
       >
         <header className="flex items-center justify-between pb-4">
           <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
@@ -68,21 +64,15 @@ export function MobileFiltersDrawer({
 
         <Separator className="opacity-20 my-2" />
 
-        {/* Contenido scrolleable; deja espacio al footer */}
         <div
           className="flex-1 min-h-0 overflow-y-auto [-webkit-overflow-scrolling:touch]"
-          style={{
-            paddingBottom: `calc(-${FOOTER_H}px + env(safe-area-inset-bottom, 0px))`,
-          }}
+          style={{ paddingBottom: `calc(-${FOOTER_H}px + env(safe-area-inset-bottom, 0px))` }}
         >
           <TalentFilterBar value={draft} onChange={setDraft} />
         </div>
 
         <div
-          className="
-            sticky bottom-0 left-0 right-0
-            bg-white pt-4
-          "
+          className="sticky bottom-0 left-0 right-0 bg-white pt-4"
           style={{ height: `calc(${FOOTER_H}px + env(safe-area-inset-bottom, 0px))` }}
         >
           <Separator className="opacity-20 mb-4" />
@@ -97,7 +87,15 @@ export function MobileFiltersDrawer({
             >
               {t('general.reset')}
             </Button>
-            <Button variant="primary" className="flex-1" onClick={onClose}>
+
+            <Button
+              variant="primary"
+              className="flex-1"
+              onClick={() => {
+                onApply(draft);
+                onClose();
+              }}
+            >
               {t('general.apply')}
             </Button>
           </div>

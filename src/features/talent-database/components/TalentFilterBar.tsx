@@ -45,6 +45,12 @@ export function TalentFilterBar({
     [skillsByCat]
   );
 
+  const genderOptionsWithUnspecified = useMemo(
+    () => [{ value: 'NULL', label: t('general.unspecified') }, ...genderOptions],
+    [genderOptions, t]
+  );
+
+  // Handlers
   const [stage, _] = useState(value.stageName ?? '');
 
   useMemo(() => {
@@ -52,15 +58,24 @@ export function TalentFilterBar({
     return () => clearTimeout(id);
   }, [stage]);
 
+  const parseNum = (s: string): number | undefined => {
+    if (s == null) return undefined;
+    const trimmed = s.trim();
+    if (trimmed === '') return undefined;
+    const n = Number(trimmed);
+    return Number.isFinite(n) ? n : undefined;
+  };
+
   const hasText = (s?: string | null) => !!s && s.trim().length > 0;
   const hasAny = (arr?: unknown[]) => (arr?.length ?? 0) > 0;
   const hasRange = (min?: number, max?: number) => min != null || max != null;
+  const genderActive = (value.genderIds ?? []).some((id) => id !== 'NULL');
 
   // Counts
   const basicCount =
     (hasText(value.stageName) ? 1 : 0) +
     (hasRange(value.ageMin, value.ageMax) ? 1 : 0) +
-    (value.genderId ? 1 : 0) +
+    (genderActive ? 1 : 0) +
     (hasAny(value.professionId) ? 1 : 0);
 
   const characteristicsCount =
@@ -88,21 +103,40 @@ export function TalentFilterBar({
       className="w-full flex flex-col items-stretch overflow-visible overflow-x-hidden"
       style={{ maxHeight: 'calc(var(--app-vh, 1vh) * 100)' }}
     >
-      {/* Basic Info */}
       <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount}>
         <FormInputField
-          id={'stageName'}
+          id="stageName"
           label={t('talent.filter.basic_info.stage_name')}
           labelClassName="text-sm font-semibold"
           placeholder={t('general.placeholder.stage_name')}
-        ></FormInputField>
+          value={value.stageName ?? ''}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange({ ...value, stageName: e.target.value || undefined })
+          }
+        />
         <article className="flex flex-col gap-2">
           <label htmlFor="ageMin" className="text-sm font-semibold">
             {t('talent.filter.basic_info.age_range')}
           </label>
           <div className="flex flex-row gap-4">
-            <FormInputField id="ageMin" placeholder={t('general.placeholder.min')} />
-            <FormInputField id="ageMax" placeholder={t('general.placeholder.max')} />
+            <FormInputField
+              id="ageMin"
+              inputMode="numeric"
+              placeholder={t('general.placeholder.min')}
+              value={value.ageMin ?? ''}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange({ ...value, ageMin: parseNum(e.target.value) })
+              }
+            />
+            <FormInputField
+              id="ageMax"
+              inputMode="numeric"
+              placeholder={t('general.placeholder.max')}
+              value={value.ageMax ?? ''}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange({ ...value, ageMax: parseNum(e.target.value) })
+              }
+            />
           </div>
         </article>
         <FormSelectField
@@ -110,7 +144,12 @@ export function TalentFilterBar({
           label={t('profile.basic_info.gender')}
           labelClassName="font-semibold text-base"
           placeholder={t('general.placeholder.select')}
-          options={genderOptions}
+          options={genderOptionsWithUnspecified}
+          value={value.genderIds ?? []}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            const v = e.target.value;
+            onChange({ ...value, genderIds: v ? [v] : undefined });
+          }}
         />
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</label>
@@ -125,17 +164,33 @@ export function TalentFilterBar({
         </div>
       </FilterSection>
 
-      <Separator className="opacity-20 my-2"></Separator>
+      <Separator className="opacity-20 my-2" />
 
-      {/* Characteristics */}
+      {/* ===== Características ===== */}
       <FilterSection title={t('profile.characteristics.characteristics')} count={characteristicsCount}>
         <article className="flex flex-col gap-2">
           <label htmlFor="heightMin" className="text-sm font-semibold">
             {t('talent.filter.characteristics.height')}
           </label>
           <div className="flex flex-row gap-4">
-            <FormInputField id="heightMin" placeholder={t('general.placeholder.min')} />
-            <FormInputField id="heightMax" placeholder={t('general.placeholder.max')} />
+            <FormInputField
+              id="heightMin"
+              inputMode="numeric"
+              placeholder={t('general.placeholder.min')}
+              value={value.heightMinCm ?? ''}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange({ ...value, heightMinCm: parseNum(e.target.value) })
+              }
+            />
+            <FormInputField
+              id="heightMax"
+              inputMode="numeric"
+              placeholder={t('general.placeholder.max')}
+              value={value.heightMaxCm ?? ''}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange({ ...value, heightMaxCm: parseNum(e.target.value) })
+              }
+            />
           </div>
         </article>
         <div className="w-full flex flex-col gap-1.5">
@@ -159,37 +214,34 @@ export function TalentFilterBar({
             getLabel={(o) => o.label}
             selected={value.eyeColorId}
             onChange={(id) => onChange({ ...value, eyeColorId: id })}
-            maxPanelHeight="1rem"
+            maxPanelHeight="16rem"
           />
         </div>
         <div className="grid grid-cols-1 gap-4">
           <BooleanRadioGroup
-            key={'tattoo'}
             name="tattoo"
             label={t('profile.characteristics.tattoo')}
             value={value.tattoo}
-            onChange={(next: boolean | undefined) => onChange({ ...value, tattoo: next })}
+            onChange={(next) => onChange({ ...value, tattoo: next })}
           />
           <BooleanRadioGroup
-            key={'passport'}
             name="passport"
             label={t('profile.characteristics.passport')}
             value={value.passport}
-            onChange={(next: boolean | undefined) => onChange({ ...value, passport: next })}
+            onChange={(next) => onChange({ ...value, passport: next })}
           />
           <BooleanRadioGroup
-            key={'drivingLicense'}
             name="drivingLicense"
             label={t('profile.characteristics.drivingLicense')}
             value={value.drivingLicense}
-            onChange={(next: boolean | undefined) => onChange({ ...value, drivingLicense: next })}
+            onChange={(next) => onChange({ ...value, drivingLicense: next })}
           />
         </div>
       </FilterSection>
 
-      <Separator className="opacity-20 my-2"></Separator>
+      <Separator className="opacity-20 my-2" />
 
-      {/* Skills */}
+      {/* ===== Skills ===== */}
       <FilterSection title={t('filters.skills', 'Habilidades')} count={skillsCount}>
         {skillsCats.map(({ catCode, list, idSet }) => {
           const selectedGlobal = value.skillId ?? [];

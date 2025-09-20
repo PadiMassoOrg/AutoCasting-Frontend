@@ -139,6 +139,9 @@ export default function TalentDatabasePage() {
         onClose={() => setMobileOpen(false)}
         value={filters}
         onReset={() => setFilters(initialFilters)}
+        onApply={(next) => {
+          setFilters(next);
+        }}
       />
     </section>
   );
