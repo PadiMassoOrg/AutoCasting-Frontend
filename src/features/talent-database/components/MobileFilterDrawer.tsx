@@ -44,16 +44,14 @@ export function MobileFiltersDrawer({
         aria-modal="true"
         className="
           absolute bottom-0 right-0
-          w-[83%] bg-white
+          w-[87%] bg-white
           flex flex-col p-6 gap-0 overflow-hidden
           animate-[slideUp_180ms_ease-out]
         "
         style={{
-          // altura real del viewport (usa 1dvh como fallback moderno)
           height: 'calc(var(--app-vh, 1dvh) * 100)',
         }}
       >
-        {/* Title */}
         <header className="flex items-center justify-between pb-4">
           <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
           <button

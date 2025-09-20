@@ -96,7 +96,6 @@ export default function TalentDatabasePage() {
 
   return (
     <section className="flex flex-col gap-5">
-      {/* Header: título + botón Filtros (solo mobile) */}
       <article className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
 
@@ -106,7 +105,6 @@ export default function TalentDatabasePage() {
           onClick={() => setMobileOpen(true)}
           aria-label={t('talent.filters.open')}
         >
-          {/* icono slider */}
           <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
             <path d="M3 6h18M6 12h12M10 18h4" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
           </svg>
@@ -116,12 +114,9 @@ export default function TalentDatabasePage() {
       </article>
 
       <div className="w-full min-w-0 flex flex-col lg:flex-row gap-6">
-        {/* Sidebar filtros Desktop */}
         <aside className="hidden lg:block min-h-0">
           <TalentFilterBar value={filters} onChange={setFilters} />
         </aside>
-
-        {/* Contenedor scrollable de cards (solo esto se refresca) */}
         <div ref={scrollRef} className="w-full overflow-auto rounded-xl bg-white/50 p-3 h-[70vh] lg:h-[75vh] border">
           <article className="grid gap-6 grid-cols-[repeat(auto-fit,minmax(280px,1fr))] auto-rows-auto sm:auto-rows-[408px]">
             {items.map((it) => (
@@ -129,7 +124,6 @@ export default function TalentDatabasePage() {
                 <TalentCard item={it} />
               </div>
             ))}
-            {/* Sentinel al final del grid */}
             <div ref={sentinelRef} className="col-span-full h-1" />
           </article>
 
