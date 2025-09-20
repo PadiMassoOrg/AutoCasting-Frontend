@@ -10,7 +10,7 @@ import type { TalentFiltersQS } from '../types/talent-database.types';
 
 const initialFilters: TalentFiltersQS = {
   stageName: '',
-  genderId: undefined,
+  genderIds: undefined,
   hairColorId: undefined,
   eyeColorId: undefined,
   ageMin: undefined,
@@ -48,7 +48,7 @@ export default function TalentDatabasePage() {
     const isSet = (x: unknown) => x !== undefined && x !== '' && !(Array.isArray(x) && x.length === 0);
     const singles = [
       filters.stageName,
-      filters.genderId,
+      filters.genderIds,
       filters.hairColorId,
       filters.eyeColorId,
       filters.ageMin,
