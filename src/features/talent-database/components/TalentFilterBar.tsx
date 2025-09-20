@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 import {
   useCachedSiteMetadataOption,
   useCachedSiteMetadataSlice,
-} from '../../../sitemetadata/hooks/useCachedSiteMetadata';
-import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
-import type { TalentFiltersQS } from '../../types/talent-database.types';
+} from '../../sitemetadata/hooks/useCachedSiteMetadata';
+import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
+import type { TalentFiltersQS } from '../types/talent-database.types';
 
 type Tri = '' | 'true' | 'false';
 

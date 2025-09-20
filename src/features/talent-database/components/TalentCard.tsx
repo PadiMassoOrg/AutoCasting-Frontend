@@ -1,10 +1,10 @@
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import imagePlaceholder from '../../../../shared/icons/image_placeholder.svg';
-import message from '../../../../shared/icons/message.svg';
-import { ROUTES } from '../../../../shared/lib/routes';
-import { whatsappLink } from '../../../../shared/utils/phoneUtils';
-import type { ProfileCardResponse } from '../../types/talent-database.types';
+import imagePlaceholder from '../../../shared/icons/image_placeholder.svg';
+import message from '../../../shared/icons/message.svg';
+import { ROUTES } from '../../../shared/lib/routes';
+import { whatsappLink } from '../../../shared/utils/phoneUtils';
+import type { ProfileCardResponse } from '../types/talent-database.types';
 
 export default function TalentCard({ item }: { item: ProfileCardResponse }) {
   const { t } = useTranslation();
