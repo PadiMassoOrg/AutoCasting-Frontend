@@ -24,13 +24,12 @@
       "fullbody": "Cuerpo Entero",
       "dash": "--",
       "min": "Min",
-      "max": "Max"
+      "max": "Max",
+      "measure": "XL/90"
     },
     "selections": "Selecciones",
     "select_all": "Seleccionar Todas",
-    "dash": "--",
-    "measure": "XL/90"
-    }
+    "dash": "--"
   },
   "validation": {
     "uuid_invalid": "Valor inválido",
