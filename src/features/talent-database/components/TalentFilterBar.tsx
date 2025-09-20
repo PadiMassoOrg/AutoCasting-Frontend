@@ -55,7 +55,7 @@ export function TalentFilterBar({
 
   return (
     <aside
-      className="w-full flex flex-col items-stretch overflow-y-auto min-h-0 [-webkit-overflow-scrolling:touch]"
+      className="w-full mt-2 flex flex-col items-stretch overflow-visible overflow-x-hidden"
       style={{ maxHeight: 'calc(var(--app-vh, 1vh) * 100)' }}
     >
       {/* Basic Info */}
@@ -95,7 +95,7 @@ export function TalentFilterBar({
         </div>
       </FilterSection>
 
-      <Separator className="opacity-20"></Separator>
+      <Separator className="opacity-20 my-2"></Separator>
 
       {/* Characteristics */}
       <FilterSection title={t('profile.characteristics.characteristics')}>
@@ -157,7 +157,7 @@ export function TalentFilterBar({
         </div>
       </FilterSection>
 
-      <Separator className="opacity-20"></Separator>
+      <Separator className="opacity-20 my-2"></Separator>
 
       {/* Skills */}
       <FilterSection title={t('filters.skills', 'Habilidades')}>
