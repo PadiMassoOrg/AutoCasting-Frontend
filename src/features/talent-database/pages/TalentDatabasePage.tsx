@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
+import filterIcon from '../../../shared/icons/filter.svg';
 import { MobileFiltersDrawer, TalentCard } from '../components';
 import { TalentFilterBar } from '../components/TalentFilterBar';
 import { useTalentDatabase } from '../hooks/useTalentDatabase';
@@ -65,7 +66,7 @@ export default function TalentDatabasePage() {
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
-  useScrollExitOnEdge(scrollRef);
+  useScrollExitOnEdge(scrollRef, { forwardLeftoverToWindow: true });
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0 });
@@ -99,15 +100,15 @@ export default function TalentDatabasePage() {
         <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
         <button
           type="button"
-          className="cursor-pointer lg:hidden inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm bg-white"
+          className="cursor-pointer lg:hidden inline-flex items-center gap-3"
           onClick={() => setMobileOpen(true)}
           aria-label={t('talent.filters.open')}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
-            <path d="M3 6h18M6 12h12M10 18h4" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
-          </svg>
-          {t('talent.filter.title')}
+          <h2 className="text-base font-semibold">{t('talent.filter.title')}</h2>
           {selectedCount > 0 && <span className="ml-1 rounded-full border px-2 py-0.5 text-xs">{selectedCount}</span>}
+          <span className="w-10 h-10 flex items-center justify-center bg-[var(--color-primary-light-grey)] rounded-lg">
+            <img src={filterIcon} alt="Filter bar" className="w-5 h-5" />
+          </span>
         </button>
       </article>
 

@@ -1,6 +1,7 @@
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import type { TalentFiltersQS } from '../types/talent-database.types';
 import { TalentFilterBar } from './TalentFilterBar';
 
@@ -21,6 +22,8 @@ export function MobileFiltersDrawer({
 }) {
   const { t } = useTranslation();
   const [draft, setDraft] = useState<TalentFiltersQS>(value);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  useScrollExitOnEdge(contentRef, { forwardLeftoverToWindow: false });
 
   useEffect(() => {
     if (open) setDraft(value);
@@ -55,7 +58,7 @@ export function MobileFiltersDrawer({
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       <article
-        className="fixed bottom-0 right-0 w-[87%] bg-white flex flex-col p-6 gap-0 overflow-hidden"
+        className="fixed bottom-0 right-0 w-[82%] bg-white flex flex-col p-6 gap-0 overflow-hidden"
         style={{ height: '100dvh' }}
         role="dialog"
         aria-modal="true"
@@ -77,8 +80,12 @@ export function MobileFiltersDrawer({
         <Separator className="opacity-20 my-2" />
 
         <div
-          className="flex-1 min-h-0 overflow-y-auto [-webkit-overflow-scrolling:touch]"
-          style={{ paddingBottom: `calc(-${FOOTER_H}px + env(safe-area-inset-bottom, 0px))` }}
+          ref={contentRef}
+          style={{
+            overscrollBehavior: 'contain', // no “arrastra” al fondo
+            paddingBottom: `calc(-${FOOTER_H}px + env(safe-area-inset-bottom, 0px))`,
+          }}
+          className="flex-1 min-h-0 overflow-y-auto scrollbar-hide [-webkit-overflow-scrolling:touch]"
         >
           <TalentFilterBar value={draft} onChange={setDraft} />
         </div>
