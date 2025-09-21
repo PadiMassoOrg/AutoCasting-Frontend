@@ -46,7 +46,7 @@ export function TalentFilterBar({
   );
 
   const genderOptionsWithUnspecified = useMemo(
-    () => [{ value: 'NULL', label: t('general.unspecified') }, ...genderOptions],
+    () => [{ value: 'NULL', label: t('general.any') }, ...genderOptions],
     [genderOptions, t]
   );
 
@@ -143,9 +143,8 @@ export function TalentFilterBar({
           id="genderId"
           label={t('profile.basic_info.gender')}
           labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.select')}
           options={genderOptionsWithUnspecified}
-          value={value.genderIds ?? []}
+          value={(value.genderIds && value.genderIds[0]) ?? 'NULL'}
           onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
             const v = e.target.value;
             onChange({ ...value, genderIds: v ? [v] : undefined });
