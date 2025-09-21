@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
+import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
 import { MobileFiltersDrawer, TalentCard } from '../components';
 import { TalentFilterBar } from '../components/TalentFilterBar';
@@ -62,8 +63,9 @@ export default function TalentDatabasePage() {
     return singles + listsCount;
   }, [filters]);
 
-  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+  useScrollExitOnEdge(scrollRef);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0 });
@@ -93,8 +95,8 @@ export default function TalentDatabasePage() {
   return (
     <section className="flex flex-col gap-5">
       <article className="flex items-center justify-between">
+        {/* Header */}
         <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
-
         <button
           type="button"
           className="cursor-pointer lg:hidden inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-sm bg-white"
@@ -110,10 +112,17 @@ export default function TalentDatabasePage() {
       </article>
 
       <div className="w-full min-w-0 flex flex-col lg:flex-row gap-6">
+        {/* Desktop Filters */}
         <aside className="hidden lg:block min-h-0">
           <TalentFilterBar value={filters} onChange={setFilters} />
         </aside>
-        <div ref={scrollRef} className="w-full overflow-auto rounded-xl bg-white/50 p-3 h-[70vh] lg:h-[75vh] border">
+
+        {/* Content */}
+        <div
+          ref={scrollRef}
+          style={{ overscrollBehavior: 'auto' }}
+          className="w-full overflow-auto h-[90vh] lg:h-[75vh] scrollbar-hide [-webkit-overflow-scrolling:touch]"
+        >
           <article className="grid gap-6 grid-cols-[repeat(auto-fit,minmax(280px,1fr))] auto-rows-auto sm:auto-rows-[408px]">
             {items.map((it) => (
               <div key={it.id} className="w-full h-full">
@@ -122,7 +131,6 @@ export default function TalentDatabasePage() {
             ))}
             <div ref={sentinelRef} className="col-span-full h-1" />
           </article>
-
           {isFetchingNextPage && <p className="py-3 text-center text-neutral-500">Cargando más…</p>}
           {!hasNextPage && items.length > 0 && (
             <p className="py-6 text-center text-neutral-400">No hay más resultados</p>
@@ -130,6 +138,7 @@ export default function TalentDatabasePage() {
         </div>
       </div>
 
+      {/* Mobile Filters */}
       <MobileFiltersDrawer
         open={mobileOpen}
         onClose={() => setMobileOpen(false)}
