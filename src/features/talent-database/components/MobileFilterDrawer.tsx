@@ -90,6 +90,7 @@ export function MobileFiltersDrawer({
           <Separator className="opacity-20 mb-4" />
           <div className="w-full flex flex-row items-center gap-4 pb-[env(safe-area-inset-bottom)]">
             <Button
+              type="button"
               variant="outline"
               className="flex-1"
               onClick={() => {
@@ -100,6 +101,7 @@ export function MobileFiltersDrawer({
               {t('general.reset')}
             </Button>
             <Button
+              type="button"
               variant="primary"
               className="flex-1"
               onClick={() => {

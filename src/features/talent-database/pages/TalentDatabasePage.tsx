@@ -9,7 +9,7 @@ import type { TalentFiltersQS } from '../types/talent-database.types';
 
 const initialFilters: TalentFiltersQS = {
   stageName: '',
-  genderIds: undefined,
+  genderIds: ['NULL'],
   hairColorId: undefined,
   eyeColorId: undefined,
   ageMin: undefined,
@@ -34,7 +34,6 @@ export default function TalentDatabasePage() {
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // fetch con tamaño según breakpoint
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useTalentDatabase(
     pageSize,
     filters
@@ -42,36 +41,34 @@ export default function TalentDatabasePage() {
 
   const items = useMemo(() => data?.pages.flatMap((p) => p.items) ?? [], [data]);
 
-  // contador simple de filtros activos (para badge del botón)
   const selectedCount = useMemo(() => {
     const isSet = (x: unknown) => x !== undefined && x !== '' && !(Array.isArray(x) && x.length === 0);
-    const singles = [
-      filters.stageName,
-      filters.genderIds,
-      filters.hairColorId,
-      filters.eyeColorId,
-      filters.ageMin,
-      filters.ageMax,
-      filters.heightMinCm,
-      filters.heightMaxCm,
-      filters.tattoo,
-      filters.passport,
-      filters.drivingLicense,
-    ].filter(isSet).length;
+    const genderActive = (filters.genderIds ?? []).some((id) => id !== 'NULL');
+    const singles =
+      [
+        filters.stageName,
+        filters.hairColorId,
+        filters.eyeColorId,
+        filters.ageMin,
+        filters.ageMax,
+        filters.heightMinCm,
+        filters.heightMaxCm,
+        filters.tattoo,
+        filters.passport,
+        filters.drivingLicense,
+      ].filter(isSet).length + (genderActive ? 1 : 0);
     const lists = (filters.professionId?.length ?? 0) + (filters.skillId?.length ?? 0);
-    return singles + (lists > 0 ? 1 : 0);
+    const listsCount = lists > 0 ? 1 : 0;
+    return singles + listsCount;
   }, [filters]);
 
-  // contenedor scrollable y sentinel
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  // reset scroll al cambiar filtros o pageSize (no refresca toda la página)
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: 0 });
   }, [filters, pageSize]);
 
-  // IntersectionObserver dentro del contenedor
   useEffect(() => {
     const rootEl = scrollRef.current;
     const sentinelEl = sentinelRef.current;
