@@ -1,4 +1,3 @@
-// MobileFiltersDrawer.tsx
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,13 +11,13 @@ export function MobileFiltersDrawer({
   onClose,
   value,
   onReset,
-  onApply, // ⬅️ NUEVO
+  onApply,
 }: {
   open: boolean;
   onClose: () => void;
   value: TalentFiltersQS;
   onReset?: () => void;
-  onApply: (v: TalentFiltersQS) => void;
+  onApply?: (next: TalentFiltersQS) => void;
 }) {
   const { t } = useTranslation();
   const [draft, setDraft] = useState<TalentFiltersQS>(value);
@@ -29,24 +28,37 @@ export function MobileFiltersDrawer({
 
   useEffect(() => {
     if (!open) return;
-    const prev = document.body.style.overflow;
+
+    const { scrollY } = window;
+    const prevHtml = document.documentElement.getAttribute('style') || '';
+    const prevBody = document.body.getAttribute('style') || '';
+
+    document.documentElement.style.overscrollBehavior = 'none';
+    document.documentElement.style.height = '100%';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
+
     return () => {
-      document.body.style.overflow = prev;
+      document.documentElement.setAttribute('style', prevHtml);
+      document.body.setAttribute('style', prevBody);
+      window.scrollTo(0, scrollY);
     };
   }, [open]);
 
   if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-50" style={{ overscrollBehavior: 'contain' }}>
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       <article
+        className="fixed bottom-0 right-0 w-[87%] bg-white flex flex-col p-6 gap-0 overflow-hidden"
+        style={{ height: '100dvh' }}
         role="dialog"
         aria-modal="true"
-        className="absolute bottom-0 right-0 w-[87%] bg-white flex flex-col p-6 gap-0 overflow-hidden animate-[slideUp_180ms_ease-out]"
-        style={{ height: 'calc(var(--app-vh, 1dvh) * 100)' }}
       >
         <header className="flex items-center justify-between pb-4">
           <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
@@ -87,12 +99,11 @@ export function MobileFiltersDrawer({
             >
               {t('general.reset')}
             </Button>
-
             <Button
               variant="primary"
               className="flex-1"
               onClick={() => {
-                onApply(draft);
+                onApply?.(draft);
                 onClose();
               }}
             >
@@ -102,10 +113,16 @@ export function MobileFiltersDrawer({
         </div>
       </article>
 
+      {/* Keyframes + fix de zoom iOS */}
       <style>{`
         @keyframes slideUp {
           from { transform: translateY(20px); opacity: 0; }
           to { transform: translateY(0); opacity: 1; }
+        }
+        /* 2) Evitar zoom al enfocar (iOS hace zoom si font-size < 16px) */
+        .mobile-filters :where(input, select, textarea) {
+          font-size: 16px !important;
+          -webkit-text-size-adjust: 100%;
         }
       `}</style>
     </div>

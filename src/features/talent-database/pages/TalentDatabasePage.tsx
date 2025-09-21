@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
-
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
 import { MobileFiltersDrawer, TalentCard } from '../components';
 import { TalentFilterBar } from '../components/TalentFilterBar';
@@ -27,8 +26,8 @@ const initialFilters: TalentFiltersQS = {
 };
 
 export default function TalentDatabasePage() {
-  const { t } = useTranslation();
   useViewportVhVar();
+  const { t } = useTranslation();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
 
