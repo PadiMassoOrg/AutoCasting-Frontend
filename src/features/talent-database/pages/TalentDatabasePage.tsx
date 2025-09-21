@@ -30,6 +30,7 @@ const initialFilters: TalentFiltersQS = {
 export default function TalentDatabasePage() {
   useViewportVhVar();
   const { t } = useTranslation();
+  const scrollRef = useRef<HTMLDivElement>(null);
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
 
@@ -64,16 +65,18 @@ export default function TalentDatabasePage() {
     return singles + listsCount;
   }, [filters]);
 
-  const scrollRef = useRef<HTMLDivElement>(null);
+  // contenedor scrolleable de la grilla de cards
+  const cardsScrollRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
-  useScrollExitOnEdge(scrollRef, { forwardLeftoverToWindow: true });
+  // cuando llega a su borde, el sobrante se forwardea a window
+  useScrollExitOnEdge(cardsScrollRef, { forwardTo: 'window' });
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: 0 });
+    cardsScrollRef.current?.scrollTo({ top: 0 });
   }, [filters, pageSize]);
 
   useEffect(() => {
-    const rootEl = scrollRef.current;
+    const rootEl = cardsScrollRef.current;
     const sentinelEl = sentinelRef.current;
     if (!rootEl || !sentinelEl) return;
 
@@ -115,12 +118,17 @@ export default function TalentDatabasePage() {
       <div className="w-full min-w-0 flex flex-col lg:flex-row gap-6">
         {/* Desktop Filters */}
         <aside className="hidden lg:block min-h-0">
-          <TalentFilterBar value={filters} onChange={setFilters} />
+          {/* En desktop, si querés que los dropdowns entreguen el leftover a la grilla de cards: */}
+          <TalentFilterBar
+            value={filters}
+            onChange={setFilters}
+            forwardScrollToRef={scrollRef as React.RefObject<HTMLElement | null>}
+          />
         </aside>
 
         {/* Content */}
         <div
-          ref={scrollRef}
+          ref={cardsScrollRef}
           style={{ overscrollBehavior: 'auto' }}
           className="w-full overflow-auto h-[90vh] lg:h-[75vh] scrollbar-hide [-webkit-overflow-scrolling:touch]"
         >
@@ -145,9 +153,7 @@ export default function TalentDatabasePage() {
         onClose={() => setMobileOpen(false)}
         value={filters}
         onReset={() => setFilters(initialFilters)}
-        onApply={(next) => {
-          setFilters(next);
-        }}
+        onApply={(next) => setFilters(next)}
       />
     </section>
   );

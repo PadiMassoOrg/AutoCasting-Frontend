@@ -1,20 +1,18 @@
-import { type RefObject, useEffect } from 'react';
+import { useEffect } from 'react';
 
 type Options = {
-  forwardLeftoverToWindow?: boolean;
+  forwardTo?: 'window' | React.RefObject<HTMLElement | null>;
 };
 
-export function useScrollExitOnEdge<E extends HTMLElement>(
-  ref: RefObject<E | null>,
-  { forwardLeftoverToWindow = true }: Options = {}
-) {
+export function useScrollExitOnEdge<E extends HTMLElement>(ref: React.RefObject<E | null>, opts: Options = {}) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
+    const forwardTarget = opts.forwardTo ?? 'window';
+
     const onWheel = (e: WheelEvent) => {
       const dy = e.deltaY;
-
       const maxUp = el.scrollTop;
       const maxDown = el.scrollHeight - el.clientHeight - el.scrollTop;
       const consume = Math.max(Math.min(dy, maxDown), -maxUp);
@@ -25,14 +23,18 @@ export function useScrollExitOnEdge<E extends HTMLElement>(
       }
 
       const leftover = dy - consume;
-
-      if (leftover !== 0 && forwardLeftoverToWindow) {
+      if (leftover !== 0) {
         e.preventDefault();
-        window.scrollBy({ top: leftover, behavior: 'auto' });
+        if (forwardTarget === 'window') {
+          window.scrollBy({ top: leftover, behavior: 'auto' });
+        } else {
+          const parentEl = forwardTarget.current;
+          if (parentEl) parentEl.scrollTop += leftover;
+        }
       }
     };
 
     el.addEventListener('wheel', onWheel, { passive: false } as AddEventListenerOptions);
     return () => el.removeEventListener('wheel', onWheel as EventListener);
-  }, [ref, forwardLeftoverToWindow]);
+  }, [ref, opts.forwardTo]);
 }

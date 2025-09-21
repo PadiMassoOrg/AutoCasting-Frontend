@@ -22,8 +22,9 @@ export function MobileFiltersDrawer({
 }) {
   const { t } = useTranslation();
   const [draft, setDraft] = useState<TalentFiltersQS>(value);
-  const contentRef = useRef<HTMLDivElement | null>(null);
-  useScrollExitOnEdge(contentRef, { forwardLeftoverToWindow: false });
+
+  const contentRef = useRef<HTMLDivElement>(null);
+  useScrollExitOnEdge(contentRef, { forwardTo: contentRef });
 
   useEffect(() => {
     if (open) setDraft(value);
@@ -53,6 +54,7 @@ export function MobileFiltersDrawer({
   }, [open]);
 
   if (!open) return null;
+
   return (
     <div className="fixed inset-0 z-50" style={{ overscrollBehavior: 'contain' }}>
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
@@ -82,12 +84,17 @@ export function MobileFiltersDrawer({
         <div
           ref={contentRef}
           style={{
-            overscrollBehavior: 'contain', // no “arrastra” al fondo
+            overscrollBehavior: 'contain',
             paddingBottom: `calc(-${FOOTER_H}px + env(safe-area-inset-bottom, 0px))`,
           }}
           className="flex-1 min-h-0 overflow-y-auto scrollbar-hide [-webkit-overflow-scrolling:touch]"
         >
-          <TalentFilterBar value={draft} onChange={setDraft} />
+          {/* Forwardea el leftover de los dropdowns al contenedor del drawer */}
+          <TalentFilterBar
+            value={draft}
+            onChange={setDraft}
+            forwardScrollToRef={contentRef as React.RefObject<HTMLElement | null>}
+          />
         </div>
 
         <div
@@ -122,13 +129,7 @@ export function MobileFiltersDrawer({
         </div>
       </article>
 
-      {/* Keyframes + fix de zoom iOS */}
       <style>{`
-        @keyframes slideUp {
-          from { transform: translateY(20px); opacity: 0; }
-          to { transform: translateY(0); opacity: 1; }
-        }
-        /* 2) Evitar zoom al enfocar (iOS hace zoom si font-size < 16px) */
         .mobile-filters :where(input, select, textarea) {
           font-size: 16px !important;
           -webkit-text-size-adjust: 100%;

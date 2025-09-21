@@ -9,14 +9,18 @@ import {
 } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 import type { TalentFiltersQS } from '../types/talent-database.types';
-import { BooleanRadioGroup, FilterSection, MultiSelectDropdown } from './Filter';
+import MultiSelectDropdown from './Filter/MultiSelectDropdown';
+import { BooleanRadioGroup, FilterSection } from './Filter';
 
 export function TalentFilterBar({
   value,
   onChange,
+  /** NUEVO: para que los MultiSelectDropdown forwardeen el scroll sobrante */
+  forwardScrollToRef,
 }: {
   value: TalentFiltersQS;
   onChange: (v: TalentFiltersQS) => void;
+  forwardScrollToRef?: React.RefObject<HTMLElement | null>;
 }) {
   const { t } = useTranslation();
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
@@ -52,7 +56,6 @@ export function TalentFilterBar({
 
   // Handlers
   const [stage, _] = useState(value.stageName ?? '');
-
   useMemo(() => {
     const id = setTimeout(() => onChange({ ...value, stageName: stage || undefined }), 300);
     return () => clearTimeout(id);
@@ -139,6 +142,7 @@ export function TalentFilterBar({
             />
           </div>
         </article>
+
         <FormSelectField
           id="genderId"
           label={t('profile.basic_info.gender')}
@@ -150,6 +154,7 @@ export function TalentFilterBar({
             onChange({ ...value, genderIds: v ? [v] : undefined });
           }}
         />
+
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</label>
           <MultiSelectDropdown
@@ -159,6 +164,7 @@ export function TalentFilterBar({
             selected={value.professionId ?? []}
             onChange={(next) => onChange({ ...value, professionId: next.length ? next : undefined })}
             maxPanelHeight="16rem"
+            forwardScrollToRef={forwardScrollToRef}
           />
         </div>
       </FilterSection>
@@ -192,6 +198,7 @@ export function TalentFilterBar({
             />
           </div>
         </article>
+
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('profile.characteristics.hairColor')}</label>
           <MultiSelectDropdown
@@ -202,8 +209,10 @@ export function TalentFilterBar({
             selected={value.hairColorId}
             onChange={(id) => onChange({ ...value, hairColorId: id })}
             maxPanelHeight="16rem"
+            forwardScrollToRef={forwardScrollToRef}
           />
         </div>
+
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('profile.characteristics.eyeColor')}</label>
           <MultiSelectDropdown
@@ -214,8 +223,10 @@ export function TalentFilterBar({
             selected={value.eyeColorId}
             onChange={(id) => onChange({ ...value, eyeColorId: id })}
             maxPanelHeight="16rem"
+            forwardScrollToRef={forwardScrollToRef}
           />
         </div>
+
         <div className="grid grid-cols-1 gap-4">
           <BooleanRadioGroup
             name="tattoo"
@@ -262,6 +273,7 @@ export function TalentFilterBar({
                 selected={selectedInCat}
                 onChange={handleCatChange}
                 maxPanelHeight="16rem"
+                forwardScrollToRef={forwardScrollToRef}
               />
             </div>
           );
