@@ -1,8 +1,7 @@
-'use client';
-
 import { FormInputField, FormSelectField, Separator } from 'autocasting-ui-library-padimasso';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useCommittedInt, useCommittedText } from '../../../shared/utils/formUtils';
 import {
   useCachedSiteMetadataOption,
   useCachedSiteMetadataSlice,
@@ -55,21 +54,7 @@ export function TalentFilterBar({
     [genderOptions, t]
   );
 
-  // Handlers
-  const [stage, _] = useState(value.stageName ?? '');
-  useMemo(() => {
-    const id = setTimeout(() => onChange({ ...value, stageName: stage || undefined }), 300);
-    return () => clearTimeout(id);
-  }, [stage]);
-
-  const parseNum = (s: string): number | undefined => {
-    if (s == null) return undefined;
-    const trimmed = s.trim();
-    if (trimmed === '') return undefined;
-    const n = Number(trimmed);
-    return Number.isFinite(n) ? n : undefined;
-  };
-
+  // ===== Helpers para contadores =====
   const hasText = (s?: string | null) => !!s && s.trim().length > 0;
   const hasAny = (arr?: unknown[]) => (arr?.length ?? 0) > 0;
   const hasRange = (min?: number, max?: number) => min != null || max != null;
@@ -80,7 +65,22 @@ export function TalentFilterBar({
     onReset?.();
   };
 
-  // Counts
+  // ======== Hooks de "commit on blur/enter" (sin debounce) ========
+  const stageName = useCommittedText(value.stageName ?? '', (v) => onChange({ ...value, stageName: v || undefined }));
+  const ageMin = useCommittedInt(value.ageMin ?? null, (v) => onChange({ ...value, ageMin: v ?? undefined }), {
+    allowNull: true,
+  });
+  const ageMax = useCommittedInt(value.ageMax ?? null, (v) => onChange({ ...value, ageMax: v ?? undefined }), {
+    allowNull: true,
+  });
+  const hMin = useCommittedInt(value.heightMinCm ?? null, (v) => onChange({ ...value, heightMinCm: v ?? undefined }), {
+    allowNull: true,
+  });
+  const hMax = useCommittedInt(value.heightMaxCm ?? null, (v) => onChange({ ...value, heightMaxCm: v ?? undefined }), {
+    allowNull: true,
+  });
+
+  // ======== Counts ========
   const basicCount =
     (hasText(value.stageName) ? 1 : 0) +
     (hasRange(value.ageMin, value.ageMax) ? 1 : 0) +
@@ -108,8 +108,8 @@ export function TalentFilterBar({
   }, [skillsCats, value.skillId]);
 
   return (
-    <aside className="w-full flex flex-col items-stretch overflow-visible overflow-x-hidden lg:max-w-[300px]">
-      {/* ===== Header ===== */}
+    <aside className="w-full flex flex-col items-stretch overflow-visible overflow-x-hidden lg:max-w-[350px]">
+      {/* Header */}
       <header className="flex items-center justify-between pb-4">
         <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
         <button type="button" className="cursor-pointer text-xs underline font-light" onClick={handleReset}>
@@ -118,18 +118,19 @@ export function TalentFilterBar({
       </header>
       <Separator className="opacity-20 my-4" />
 
-      {/* ===== Basic Info ===== */}
+      {/* Basic Info */}
       <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount}>
         <FormInputField
           id="stageName"
           label={t('talent.filter.basic_info.stage_name')}
           labelClassName="text-sm font-semibold"
           placeholder={t('general.placeholder.stage_name')}
-          value={value.stageName ?? ''}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            onChange({ ...value, stageName: e.target.value || undefined })
-          }
+          value={stageName.value}
+          onChange={stageName.onChange}
+          onBlur={stageName.onBlur}
+          onKeyDown={stageName.onKeyDown}
         />
+
         <article className="flex flex-col gap-2">
           <label htmlFor="ageMin" className="text-sm font-semibold">
             {t('talent.filter.basic_info.age_range')}
@@ -139,19 +140,21 @@ export function TalentFilterBar({
               id="ageMin"
               inputMode="numeric"
               placeholder={t('general.placeholder.min')}
-              value={value.ageMin ?? ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                onChange({ ...value, ageMin: parseNum(e.target.value) })
-              }
+              value={ageMin.value}
+              onChange={ageMin.onChange}
+              onBlur={ageMin.onBlur}
+              onKeyDown={ageMin.onKeyDown}
+              error={ageMin.error ?? undefined}
             />
             <FormInputField
               id="ageMax"
               inputMode="numeric"
               placeholder={t('general.placeholder.max')}
-              value={value.ageMax ?? ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                onChange({ ...value, ageMax: parseNum(e.target.value) })
-              }
+              value={ageMax.value}
+              onChange={ageMax.onChange}
+              onBlur={ageMax.onBlur}
+              onKeyDown={ageMax.onKeyDown}
+              error={ageMax.error ?? undefined}
             />
           </div>
         </article>
@@ -184,7 +187,7 @@ export function TalentFilterBar({
 
       <Separator className="opacity-20 my-2" />
 
-      {/* ===== Characteristics ===== */}
+      {/* Characteristics */}
       <FilterSection title={t('profile.characteristics.characteristics')} count={characteristicsCount}>
         <article className="flex flex-col gap-2">
           <label htmlFor="heightMin" className="text-sm font-semibold">
@@ -195,22 +198,25 @@ export function TalentFilterBar({
               id="heightMin"
               inputMode="numeric"
               placeholder={t('general.placeholder.min')}
-              value={value.heightMinCm ?? ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                onChange({ ...value, heightMinCm: parseNum(e.target.value) })
-              }
+              value={hMin.value}
+              onChange={hMin.onChange}
+              onBlur={hMin.onBlur}
+              onKeyDown={hMin.onKeyDown}
+              error={hMin.error ?? undefined}
             />
             <FormInputField
               id="heightMax"
               inputMode="numeric"
               placeholder={t('general.placeholder.max')}
-              value={value.heightMaxCm ?? ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                onChange({ ...value, heightMaxCm: parseNum(e.target.value) })
-              }
+              value={hMax.value}
+              onChange={hMax.onChange}
+              onBlur={hMax.onBlur}
+              onKeyDown={hMax.onKeyDown}
+              error={hMax.error ?? undefined}
             />
           </div>
         </article>
+
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('profile.characteristics.hairColor')}</label>
           <MultiSelectDropdown
@@ -224,6 +230,7 @@ export function TalentFilterBar({
             forwardScrollToRef={forwardScrollToRef}
           />
         </div>
+
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('profile.characteristics.eyeColor')}</label>
           <MultiSelectDropdown
@@ -237,6 +244,7 @@ export function TalentFilterBar({
             forwardScrollToRef={forwardScrollToRef}
           />
         </div>
+
         <div className="grid grid-cols-1 gap-4">
           <BooleanRadioGroup
             name="tattoo"
@@ -258,18 +266,21 @@ export function TalentFilterBar({
           />
         </div>
       </FilterSection>
+
       <Separator className="opacity-20 my-2" />
 
-      {/* ===== Skills ===== */}
+      {/* Skills */}
       <FilterSection title={t('filters.skills', 'Habilidades')} count={skillsCount}>
         {skillsCats.map(({ catCode, list, idSet }) => {
           const selectedGlobal = value.skillId ?? [];
           const selectedInCat = selectedGlobal.filter((id) => idSet.has(id));
+
           const handleCatChange = (nextIds: string[]) => {
             const rest = selectedGlobal.filter((id) => !idSet.has(id));
             const merged = Array.from(new Set([...rest, ...nextIds]));
             onChange({ ...value, skillId: merged.length ? merged : undefined });
           };
+
           return (
             <div key={catCode} className="w-full flex flex-col gap-1.5">
               <label className="text-sm font-semibold">{t(catCode)}</label>

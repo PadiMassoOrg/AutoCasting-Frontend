@@ -73,7 +73,6 @@ export function MobileFiltersDrawer({
           }}
           className="flex-1 min-h-0 overflow-y-auto scrollbar-hide [-webkit-overflow-scrolling:touch]"
         >
-          {/* Forwardea el leftover de los dropdowns al contenedor del drawer */}
           <TalentFilterBar
             value={draft}
             onChange={setDraft}

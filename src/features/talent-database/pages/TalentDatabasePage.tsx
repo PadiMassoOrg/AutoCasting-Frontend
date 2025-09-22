@@ -1,6 +1,6 @@
-// src/features/talent-database/pages/TalentDatabasePage.tsx
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
@@ -37,36 +37,23 @@ export default function TalentDatabasePage() {
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const debouncedFilters = useDebouncedValue(filters, 350);
+
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useTalentDatabase(
     pageSize,
-    filters
+    debouncedFilters
   );
+
   const items = useMemo(() => data?.pages.flatMap((p) => p.items) ?? [], [data]);
 
   const cardsScrollRef = useRef<HTMLDivElement>(null);
   const fetchLockRef = useRef(false);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
   const edgeOptions = useMemo(() => ({ forwardTo: isDesktop ? undefined : ('window' as const) }), [isDesktop]);
   useScrollExitOnEdge(cardsScrollRef, edgeOptions);
 
   useEffect(() => {
     cardsScrollRef.current?.scrollTo({ top: 0 });
-  }, [filters, pageSize]);
-
-  useEffect(() => {
-    const rootEl = cardsScrollRef.current;
-    const sentinelEl = sentinelRef.current;
-    if (!rootEl || !sentinelEl) return;
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) fetchNextPage();
-      },
-      { root: rootEl, rootMargin: '400px 0px', threshold: 0 }
-    );
-    io.observe(sentinelEl);
-    return () => io.disconnect();
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage, items.length, filters, pageSize]);
+  }, [debouncedFilters, pageSize]);
 
   const handleScroll = useCallback(() => {
     const el = cardsScrollRef.current;
@@ -90,10 +77,6 @@ export default function TalentDatabasePage() {
     return () => el.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
-  // TODO: Verify
-  if (isLoading) return <p>Cargando catálogo…</p>;
-  if (error || !data) return <p>Error al cargar el catálogo</p>;
-
   return (
     <section className="h-full min-h-0 flex flex-col">
       {/* Header mobile */}
@@ -113,36 +96,44 @@ export default function TalentDatabasePage() {
       </article>
 
       <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col lg:flex-row gap-6 overflow-hidden">
-        {/* Filters  */}
+        {/* Filters */}
         <aside className="hidden lg:flex lg:flex-col lg:w-[300px] min-h-0 overflow-hidden">
-          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-2">
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-4">
             <TalentFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
           </div>
         </aside>
 
-        {/* Cards  */}
+        {/* Cards */}
         <div
           ref={cardsScrollRef}
-          className="flex-1 min-h-0 w-full lg:pl-10 overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
+          className="flex-1 min-h-0 w-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
         >
           <h2 className="hidden lg:block text-2xl font-semibold mb-6">{t('talent.page.title')}</h2>
-
+          {error && <p className="py-6 text-center text-red-500">Error al cargar el catálogo</p>}
+          {isLoading && <p className="py-6 text-center text-red-500">Holis</p>}
           <article
             className="
-            grid gap-6 place-items-stretch
-            grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
-            sm:auto-rows-[408px]
-            lg:auto-rows-auto
-          "
+              grid gap-6 place-items-stretch
+              grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
+              sm:auto-rows-[408px]
+              lg:auto-rows-auto
+            "
           >
+            {isLoading && !data && (
+              <>
+                {Array.from({ length: pageSize }).map((_, i) => (
+                  <div key={`skeleton-${i}`} className="w-full h-full">
+                    <div className="animate-pulse w-full h-full bg-neutral-100 rounded-lg z-10" />
+                  </div>
+                ))}
+              </>
+            )}
             {items.map((it) => (
               <div key={it.id} className="w-full h-full">
                 <TalentCard item={it} />
               </div>
             ))}
-            <div ref={sentinelRef} className="col-span-full h-1" />
           </article>
-
           {isFetchingNextPage && <p className="py-3 text-center text-neutral-500">Cargando más…</p>}
           {!hasNextPage && items.length > 0 && (
             <p className="py-6 text-center text-neutral-400">No hay más resultados</p>

@@ -24,13 +24,12 @@ const TutorialSection = () => {
         <article className="hidden w-full relative lg:grid grid-cols-3 items-center gap-6">
           {steps.map((step, idx) => {
             return (
-              <div className="h-full px-6 py-10 rounded-[20px] bg-white/50 overflow-hidden">
+              <div key={step.key} className="h-full px-6 py-10 rounded-[20px] bg-white/50 overflow-hidden">
                 <div className="w-full flex flex-col gap-4 px-3">
                   <div className="flex flex-col gap-2">
                     <h3 className="text-xl font-extrabold">{t(`landing.tutorial.${step.key}.title`)}</h3>
                     <p className="text-sm font-base">{t(`landing.tutorial.${step.key}.description`)}</p>
                   </div>
-
                   <figure className={`overflow-hidden bg-transparent ${idx === 0 ? 'mr-[-36px]' : ''}`}>
                     <img
                       src={step.image}
