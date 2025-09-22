@@ -261,7 +261,7 @@ export function TalentFilterBar({
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1">
           <BooleanRadioGroup
             name="tattoo"
             label={t('profile.characteristics.tattoo')}

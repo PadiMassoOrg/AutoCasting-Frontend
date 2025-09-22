@@ -75,6 +75,7 @@ export default function BooleanRadioGroup({
           <label htmlFor={idNo}>{t('general.no')}</label>
         </div>
       </div>
+      <div className="min-h-[25px]" />
     </fieldset>
   );
 }
