@@ -37,6 +37,7 @@ export default function TalentDatabasePage() {
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Debounce SOLO al nivel de página (no en el FilterBar)
   const debouncedFilters = useDebouncedValue(filters, 350);
 
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useTalentDatabase(
@@ -51,6 +52,7 @@ export default function TalentDatabasePage() {
   const edgeOptions = useMemo(() => ({ forwardTo: isDesktop ? undefined : ('window' as const) }), [isDesktop]);
   useScrollExitOnEdge(cardsScrollRef, edgeOptions);
 
+  // reset scroll cuando cambian filtros (debounced) o pageSize
   useEffect(() => {
     cardsScrollRef.current?.scrollTo({ top: 0 });
   }, [debouncedFilters, pageSize]);
@@ -76,6 +78,9 @@ export default function TalentDatabasePage() {
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
+
+  const showInitialSkeletons = isLoading && (!data || items.length === 0);
+  const showEmptyState = !isLoading && !error && items.length === 0;
 
   return (
     <section className="h-full min-h-0 flex flex-col">
@@ -109,8 +114,10 @@ export default function TalentDatabasePage() {
           className="flex-1 min-h-0 w-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
         >
           <h2 className="hidden lg:block text-2xl font-semibold mb-6">{t('talent.page.title')}</h2>
+
+          {/* Mensajes de estado dentro del contenedor */}
           {error && <p className="py-6 text-center text-red-500">Error al cargar el catálogo</p>}
-          {isLoading && <p className="py-6 text-center text-red-500">Holis</p>}
+
           <article
             className="
               grid gap-6 place-items-stretch
@@ -119,21 +126,26 @@ export default function TalentDatabasePage() {
               lg:auto-rows-auto
             "
           >
-            {isLoading && !data && (
-              <>
-                {Array.from({ length: pageSize }).map((_, i) => (
-                  <div key={`skeleton-${i}`} className="w-full h-full">
-                    <div className="animate-pulse w-full h-full bg-neutral-100 rounded-lg z-10" />
-                  </div>
-                ))}
-              </>
-            )}
+            {/* Skeletons */}
+            {showInitialSkeletons &&
+              Array.from({ length: pageSize }).map((_, i) => (
+                <div key={`skeleton-${i}`} className="w-full h-full">
+                  <div className="animate-pulse w-full h-full bg-neutral-100 rounded-lg" />
+                </div>
+              ))}
+
+            {/* Cards */}
             {items.map((it) => (
               <div key={it.id} className="w-full h-full">
                 <TalentCard item={it} />
               </div>
             ))}
           </article>
+
+          {/* Empty state */}
+          {showEmptyState && <p className="py-6 text-center text-neutral-400">No se encontraron resultados</p>}
+
+          {/* Pagination*/}
           {isFetchingNextPage && <p className="py-3 text-center text-neutral-500">Cargando más…</p>}
           {!hasNextPage && items.length > 0 && (
             <p className="py-6 text-center text-neutral-400">No hay más resultados</p>
