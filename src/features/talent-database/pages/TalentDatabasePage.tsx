@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
@@ -8,6 +9,7 @@ import filterIcon from '../../../shared/icons/filter.svg';
 import { MobileFiltersDrawer, TalentCard } from '../components';
 import { TalentFilterBar } from '../components/TalentFilterBar';
 import { useTalentDatabase } from '../hooks/useTalentDatabase';
+import { TALENT_DATABASE_CACHE_KEY } from '../services/talentDatabaseService';
 import type { TalentFiltersQS } from '../types/talent-database.types';
 
 const initialFilters: TalentFiltersQS = {
@@ -32,6 +34,7 @@ const MAX_AUTOFILL_PAGES = 6;
 const SCROLL_EPS = 8;
 
 export default function TalentDatabasePage() {
+  const qc = useQueryClient();
   useViewportVhVar();
   const { t } = useTranslation();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
@@ -50,6 +53,11 @@ export default function TalentDatabasePage() {
   const autofillAttemptsRef = useRef(0);
   const edgeOptions = useMemo(() => ({ forwardTo: isDesktop ? undefined : ('window' as const) }), [isDesktop]);
   useScrollExitOnEdge(cardsScrollRef, edgeOptions);
+
+  useEffect(() => {
+    qc.cancelQueries({ queryKey: [TALENT_DATABASE_CACHE_KEY] });
+    qc.invalidateQueries({ queryKey: [TALENT_DATABASE_CACHE_KEY], refetchType: 'all' });
+  }, []);
 
   useEffect(() => {
     cardsScrollRef.current?.scrollTo({ top: 0 });

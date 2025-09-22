@@ -19,6 +19,5 @@ export function useTalentDatabase(size = 6, filters?: TalentFiltersQS) {
     staleTime: 0,
     gcTime: 5 * 60_000,
     retry: 1,
-    placeholderData: (prev) => prev,
   });
 }
