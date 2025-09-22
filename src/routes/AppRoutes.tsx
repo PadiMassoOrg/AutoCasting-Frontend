@@ -5,7 +5,7 @@ import MainSiteLayout from '../features/main-site/layout/MainSiteLayout';
 import MainSitePage from '../features/main-site/page/MainSitePage';
 import { PublicProfilePage } from '../features/public-profile/pages';
 import { TalentDatabasePage } from '../features/talent-database/pages';
-import { MainLayout } from '../layouts';
+import { MainLayout, ScrollContentLayout } from '../layouts';
 import { ScrollToTop } from '../shared/components/ScrollToTop/ScrollToTop';
 import { ROUTES } from '../shared/lib/routes';
 import ProtectedRoute from './ProtectedRoute';
@@ -26,6 +26,8 @@ export default function AppRoutes() {
         {/* Public */}
         <Route element={<MainLayout />}>
           <Route path="/profile/:slug" element={<PublicProfilePage />} />
+        </Route>
+        <Route element={<ScrollContentLayout />}>
           <Route path="/talent-database" element={<TalentDatabasePage />} />
         </Route>
         {/* Protected */}

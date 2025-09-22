@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { forwardRef, type HTMLAttributes, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { matchPath, useLocation, useParams } from 'react-router-dom';
 import { logout } from '../../features/auth/services/authService';
@@ -15,7 +15,9 @@ import { ROUTES } from '../../shared/lib/routes';
 import AccountDropdown from './AccountDropdown';
 import Sidebar from './Sidebar';
 
-const Navbar = () => {
+type NavbarProps = HTMLAttributes<HTMLElement>;
+
+const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className = '', ...props }, ref) {
   const { t } = useTranslation();
   const { data: myProfile } = useProfile();
   const { slug } = useParams<{ slug: string }>();
@@ -34,8 +36,8 @@ const Navbar = () => {
   const isEditMode = isOnProfileEdit;
 
   return (
-    <nav className="w-full h-full py-5">
-      <div className="h-full relative px-10 flex flex-row items-center justify-between">
+    <nav ref={ref} {...props} className={`w-full h-auto py-5 ${className}`}>
+      <div className="relative px-10 xl:px-30 flex flex-row items-center justify-between">
         <LinkLogo horizontal />
         <button
           type="button"
@@ -45,9 +47,10 @@ const Navbar = () => {
         >
           <img src={BurgerIcon} alt="" className="w-7" />
         </button>
-        <span className="hidden h-auto lg:block lg:absolute lg:w-[310px] lg:left-[50%] lg:translate-x-[-50%]">
+
+        <span className="hidden h-auto lg:block lg:absolute lg:w-[310px] lg:left-1/2 lg:-translate-x-1/2">
           {shouldShowCard && progress && (
-            <ProfileCompletionCard progress={progress} isEdit={isEditMode} publicSlug={myProfile.publicSlug} />
+            <ProfileCompletionCard progress={progress} isEdit={isEditMode} publicSlug={myProfile!.publicSlug} />
           )}
         </span>
 
@@ -72,6 +75,6 @@ const Navbar = () => {
       />
     </nav>
   );
-};
+});
 
 export default Navbar;

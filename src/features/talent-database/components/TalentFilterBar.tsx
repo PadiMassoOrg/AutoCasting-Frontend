@@ -108,10 +108,8 @@ export function TalentFilterBar({
   }, [skillsCats, value.skillId]);
 
   return (
-    <aside
-      className="w-full flex flex-col items-stretch overflow-visible overflow-x-hidden lg:max-w-[300px]"
-      style={{ maxHeight: 'calc(var(--app-vh, 1vh) * 100)' }}
-    >
+    <aside className="w-full flex flex-col items-stretch overflow-visible overflow-x-hidden lg:max-w-[300px]">
+      {/* ===== Header ===== */}
       <header className="flex items-center justify-between pb-4">
         <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
         <button type="button" className="cursor-pointer text-xs underline font-light" onClick={handleReset}>
@@ -119,6 +117,8 @@ export function TalentFilterBar({
         </button>
       </header>
       <Separator className="opacity-20 my-4" />
+
+      {/* ===== Basic Info ===== */}
       <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount}>
         <FormInputField
           id="stageName"
@@ -184,7 +184,7 @@ export function TalentFilterBar({
 
       <Separator className="opacity-20 my-2" />
 
-      {/* ===== Características ===== */}
+      {/* ===== Characteristics ===== */}
       <FilterSection title={t('profile.characteristics.characteristics')} count={characteristicsCount}>
         <article className="flex flex-col gap-2">
           <label htmlFor="heightMin" className="text-sm font-semibold">
@@ -211,7 +211,6 @@ export function TalentFilterBar({
             />
           </div>
         </article>
-
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('profile.characteristics.hairColor')}</label>
           <MultiSelectDropdown
@@ -225,7 +224,6 @@ export function TalentFilterBar({
             forwardScrollToRef={forwardScrollToRef}
           />
         </div>
-
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('profile.characteristics.eyeColor')}</label>
           <MultiSelectDropdown
@@ -239,7 +237,6 @@ export function TalentFilterBar({
             forwardScrollToRef={forwardScrollToRef}
           />
         </div>
-
         <div className="grid grid-cols-1 gap-4">
           <BooleanRadioGroup
             name="tattoo"
@@ -261,7 +258,6 @@ export function TalentFilterBar({
           />
         </div>
       </FilterSection>
-
       <Separator className="opacity-20 my-2" />
 
       {/* ===== Skills ===== */}
@@ -269,13 +265,11 @@ export function TalentFilterBar({
         {skillsCats.map(({ catCode, list, idSet }) => {
           const selectedGlobal = value.skillId ?? [];
           const selectedInCat = selectedGlobal.filter((id) => idSet.has(id));
-
           const handleCatChange = (nextIds: string[]) => {
             const rest = selectedGlobal.filter((id) => !idSet.has(id));
             const merged = Array.from(new Set([...rest, ...nextIds]));
             onChange({ ...value, skillId: merged.length ? merged : undefined });
           };
-
           return (
             <div key={catCode} className="w-full flex flex-col gap-1.5">
               <label className="text-sm font-semibold">{t(catCode)}</label>
