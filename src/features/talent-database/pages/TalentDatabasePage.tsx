@@ -1,5 +1,5 @@
 // src/features/talent-database/pages/TalentDatabasePage.tsx
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
@@ -44,6 +44,7 @@ export default function TalentDatabasePage() {
   const items = useMemo(() => data?.pages.flatMap((p) => p.items) ?? [], [data]);
 
   const cardsScrollRef = useRef<HTMLDivElement>(null);
+  const fetchLockRef = useRef(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const edgeOptions = useMemo(() => ({ forwardTo: isDesktop ? undefined : ('window' as const) }), [isDesktop]);
   useScrollExitOnEdge(cardsScrollRef, edgeOptions);
@@ -66,6 +67,28 @@ export default function TalentDatabasePage() {
     io.observe(sentinelEl);
     return () => io.disconnect();
   }, [fetchNextPage, hasNextPage, isFetchingNextPage, items.length, filters, pageSize]);
+
+  const handleScroll = useCallback(() => {
+    const el = cardsScrollRef.current;
+    if (!el || !hasNextPage || isFetchingNextPage || fetchLockRef.current) return;
+
+    const { scrollTop, clientHeight, scrollHeight } = el;
+    const reached75 = scrollTop + clientHeight >= scrollHeight * 0.75;
+
+    if (reached75) {
+      fetchLockRef.current = true;
+      fetchNextPage().finally(() => {
+        fetchLockRef.current = false;
+      });
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  useEffect(() => {
+    const el = cardsScrollRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   // TODO: Verify
   if (isLoading) return <p>Cargando catálogo…</p>;
