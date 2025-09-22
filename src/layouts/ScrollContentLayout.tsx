@@ -48,7 +48,7 @@ export default function ScrollContentLayout() {
           height: `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`,
         }}
       >
-        <main className="w-full min-w-0 h-full max-w-[1350px] mx-auto px-4 lg:px-6 pt-4 lg:pt-6">
+        <main className="w-full min-w-0 h-full max-w-[1650px] mx-auto px-4 lg:px-6 pt-4 lg:pt-6">
           <div className="h-full min-h-0">
             <Outlet />
           </div>
