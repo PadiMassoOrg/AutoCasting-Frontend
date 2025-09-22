@@ -98,12 +98,13 @@ export default function TalentDatabasePage() {
 
   return (
     <section className="flex flex-col gap-5">
-      <article className="flex items-center justify-between">
+      <article className="lg:hidden flex items-center justify-between">
+        
         {/* Header */}
         <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
         <button
           type="button"
-          className="cursor-pointer lg:hidden inline-flex items-center gap-3"
+          className="cursor-pointer inline-flex items-center gap-3"
           onClick={() => setMobileOpen(true)}
           aria-label={t('talent.filters.open')}
         >
@@ -115,7 +116,7 @@ export default function TalentDatabasePage() {
         </button>
       </article>
 
-      <div className="w-full min-w-0 flex flex-col lg:flex-row gap-6">
+      <div className="w-full min-w-0 flex flex-col lg:flex-row gap-6 lg:max-h-[850px]">
         {/* Desktop Filters */}
         <aside className="hidden lg:block min-h-0">
           {/* En desktop, si querés que los dropdowns entreguen el leftover a la grilla de cards: */}
@@ -130,9 +131,17 @@ export default function TalentDatabasePage() {
         <div
           ref={cardsScrollRef}
           style={{ overscrollBehavior: 'auto' }}
-          className="w-full overflow-auto h-[90vh] lg:h-[75vh] scrollbar-hide [-webkit-overflow-scrolling:touch]"
+          className="w-full lg:pl-10 overflow-auto h-[90vh] lg:h-[75vh] scrollbar-hide [-webkit-overflow-scrolling:touch]"
         >
-          <article className="grid gap-6 grid-cols-[repeat(auto-fit,minmax(280px,1fr))] auto-rows-auto sm:auto-rows-[408px]">
+          <h2 className="hidden lg:block text-2xl font-semibold mb-6">{t('talent.page.title')}</h2>
+          <article
+            className="
+              grid gap-6 place-items-stretch
+              grid-cols-[repeat(auto-fit,minmax(280px,1fr))] 
+              sm:auto-rows-[408px]                         
+              lg:auto-rows-auto                              
+            "
+          >
             {items.map((it) => (
               <div key={it.id} className="w-full h-full">
                 <TalentCard item={it} />

@@ -60,27 +60,11 @@ export function MobileFiltersDrawer({
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       <article
-        className="fixed bottom-0 right-0 w-[82%] bg-white flex flex-col p-6 gap-0 overflow-hidden"
+        className="lg:hidden fixed bottom-0 right-0 w-[82%] bg-white flex flex-col p-6 gap-0 overflow-hidden"
         style={{ height: '100dvh' }}
         role="dialog"
         aria-modal="true"
       >
-        <header className="flex items-center justify-between pb-4">
-          <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
-          <button
-            type="button"
-            className="cursor-pointer text-xs underline font-light"
-            onClick={() => {
-              setDraft({});
-              onReset?.();
-            }}
-          >
-            {t('talent.filter.reset')}
-          </button>
-        </header>
-
-        <Separator className="opacity-20 my-2" />
-
         <div
           ref={contentRef}
           style={{
@@ -93,6 +77,7 @@ export function MobileFiltersDrawer({
           <TalentFilterBar
             value={draft}
             onChange={setDraft}
+            onReset={onReset}
             forwardScrollToRef={contentRef as React.RefObject<HTMLElement | null>}
           />
         </div>

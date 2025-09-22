@@ -9,17 +9,18 @@ import {
 } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 import type { TalentFiltersQS } from '../types/talent-database.types';
-import MultiSelectDropdown from './Filter/MultiSelectDropdown';
 import { BooleanRadioGroup, FilterSection } from './Filter';
+import MultiSelectDropdown from './Filter/MultiSelectDropdown';
 
 export function TalentFilterBar({
   value,
   onChange,
-  /** NUEVO: para que los MultiSelectDropdown forwardeen el scroll sobrante */
+  onReset,
   forwardScrollToRef,
 }: {
   value: TalentFiltersQS;
   onChange: (v: TalentFiltersQS) => void;
+  onReset?: () => void;
   forwardScrollToRef?: React.RefObject<HTMLElement | null>;
 }) {
   const { t } = useTranslation();
@@ -74,6 +75,11 @@ export function TalentFilterBar({
   const hasRange = (min?: number, max?: number) => min != null || max != null;
   const genderActive = (value.genderIds ?? []).some((id) => id !== 'NULL');
 
+  const handleReset = () => {
+    onChange({});
+    onReset?.();
+  };
+
   // Counts
   const basicCount =
     (hasText(value.stageName) ? 1 : 0) +
@@ -103,9 +109,16 @@ export function TalentFilterBar({
 
   return (
     <aside
-      className="w-full flex flex-col items-stretch overflow-visible overflow-x-hidden"
+      className="w-full flex flex-col items-stretch overflow-visible overflow-x-hidden lg:max-w-[300px]"
       style={{ maxHeight: 'calc(var(--app-vh, 1vh) * 100)' }}
     >
+      <header className="flex items-center justify-between pb-4">
+        <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
+        <button type="button" className="cursor-pointer text-xs underline font-light" onClick={handleReset}>
+          {t('talent.filter.reset')}
+        </button>
+      </header>
+      <Separator className="opacity-20 my-4" />
       <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount}>
         <FormInputField
           id="stageName"

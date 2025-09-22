@@ -34,8 +34,8 @@ const Navbar = () => {
   const isEditMode = isOnProfileEdit;
 
   return (
-    <div>
-      <nav className="relative w-full h-14 px-10 flex flex-row items-center justify-between">
+    <nav className="w-full h-full py-5">
+      <div className="h-full relative px-10 flex flex-row items-center justify-between">
         <LinkLogo horizontal />
         <button
           type="button"
@@ -45,7 +45,7 @@ const Navbar = () => {
         >
           <img src={BurgerIcon} alt="" className="w-7" />
         </button>
-        <span className="hidden lg:block lg:absolute lg:w-[310px] lg:left-[50%] lg:translate-x-[-50%]">
+        <span className="hidden h-auto lg:block lg:absolute lg:w-[310px] lg:left-[50%] lg:translate-x-[-50%]">
           {shouldShowCard && progress && (
             <ProfileCompletionCard progress={progress} isEdit={isEditMode} publicSlug={myProfile.publicSlug} />
           )}
@@ -62,7 +62,7 @@ const Navbar = () => {
             <HilightLink to={ROUTES.AUTH} label={t('routes.login')} width={62} height={30} />
           )}
         </div>
-      </nav>
+      </div>
 
       <Sidebar
         open={menuOpen}
@@ -70,7 +70,7 @@ const Navbar = () => {
         onLogout={() => logout()}
         isAuthenticated={!!myProfile}
       />
-    </div>
+    </nav>
   );
 };
 
