@@ -28,33 +28,32 @@ const initialFilters: TalentFiltersQS = {
   skillsMode: 'ANY',
 };
 
+const MAX_AUTOFILL_PAGES = 6;
+const SCROLL_EPS = 8;
+
 export default function TalentDatabasePage() {
   useViewportVhVar();
   const { t } = useTranslation();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
-
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  // Debounce SOLO al nivel de página (no en el FilterBar)
   const debouncedFilters = useDebouncedValue(filters, 350);
-
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useTalentDatabase(
     pageSize,
     debouncedFilters
   );
-
   const items = useMemo(() => data?.pages.flatMap((p) => p.items) ?? [], [data]);
 
   const cardsScrollRef = useRef<HTMLDivElement>(null);
   const fetchLockRef = useRef(false);
+  const autofillAttemptsRef = useRef(0);
   const edgeOptions = useMemo(() => ({ forwardTo: isDesktop ? undefined : ('window' as const) }), [isDesktop]);
   useScrollExitOnEdge(cardsScrollRef, edgeOptions);
 
-  // reset scroll cuando cambian filtros (debounced) o pageSize
   useEffect(() => {
     cardsScrollRef.current?.scrollTo({ top: 0 });
+    autofillAttemptsRef.current = 0;
   }, [debouncedFilters, pageSize]);
 
   const handleScroll = useCallback(() => {
@@ -78,6 +77,61 @@ export default function TalentDatabasePage() {
     el.addEventListener('scroll', handleScroll, { passive: true });
     return () => el.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
+
+  useEffect(() => {
+    const el = cardsScrollRef.current;
+    if (!el) return;
+    if (isLoading || isFetchingNextPage) return;
+
+    const tryFill = () => {
+      const box = cardsScrollRef.current;
+      if (!box) return;
+
+      const hasScroll = box.scrollHeight > box.clientHeight + SCROLL_EPS;
+      if (hasScroll) {
+        autofillAttemptsRef.current = 0;
+        return;
+      }
+
+      if (!hasNextPage) {
+        autofillAttemptsRef.current = 0;
+        return;
+      }
+      if (autofillAttemptsRef.current >= MAX_AUTOFILL_PAGES) return;
+      autofillAttemptsRef.current += 1;
+      fetchNextPage().then(() => {
+        requestAnimationFrame(() => setTimeout(tryFill, 0));
+      });
+    };
+    tryFill();
+  }, [items.length, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
+
+  useEffect(() => {
+    const el = cardsScrollRef.current;
+    if (!el) return;
+
+    let resizeTimer: number | null = null;
+    const ro = new ResizeObserver(() => {
+      if (resizeTimer) window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        if (isLoading || isFetchingNextPage) return;
+        if (!hasNextPage) return;
+        const box = cardsScrollRef.current;
+        if (!box) return;
+        const hasScroll = box.scrollHeight > box.clientHeight + SCROLL_EPS;
+        if (!hasScroll) {
+          autofillAttemptsRef.current = 0;
+          fetchNextPage();
+        }
+      }, 80);
+    });
+
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      if (resizeTimer) window.clearTimeout(resizeTimer);
+    };
+  }, [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
   const showInitialSkeletons = isLoading && (!data || items.length === 0);
   const showEmptyState = !isLoading && !error && items.length === 0;
@@ -115,7 +169,6 @@ export default function TalentDatabasePage() {
         >
           <h2 className="hidden lg:block text-2xl font-semibold mb-6">{t('talent.page.title')}</h2>
 
-          {/* Mensajes de estado dentro del contenedor */}
           {error && <p className="py-6 text-center text-red-500">Error al cargar el catálogo</p>}
 
           <article
@@ -126,7 +179,6 @@ export default function TalentDatabasePage() {
               lg:auto-rows-auto
             "
           >
-            {/* Skeletons */}
             {showInitialSkeletons &&
               Array.from({ length: pageSize }).map((_, i) => (
                 <div key={`skeleton-${i}`} className="w-full h-full">
@@ -134,7 +186,6 @@ export default function TalentDatabasePage() {
                 </div>
               ))}
 
-            {/* Cards */}
             {items.map((it) => (
               <div key={it.id} className="w-full h-full">
                 <TalentCard item={it} />
@@ -142,13 +193,11 @@ export default function TalentDatabasePage() {
             ))}
           </article>
 
-          {/* Empty state */}
           {showEmptyState && <p className="py-6 text-center text-neutral-400">No se encontraron resultados</p>}
 
-          {/* Pagination*/}
           {isFetchingNextPage && <p className="py-3 text-center text-neutral-500">Cargando más…</p>}
           {!hasNextPage && items.length > 0 && (
-            <p className="py-6 text-center text-neutral-400">No hay más resultados</p>
+            <p className="py-18 text-center text-neutral-400">No hay más resultados</p>
           )}
         </div>
       </div>
