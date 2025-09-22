@@ -56,11 +56,11 @@ export function MobileFiltersDrawer({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50" style={{ overscrollBehavior: 'contain' }}>
+    <div className="lg:hidden fixed inset-0 z-50" style={{ overscrollBehavior: 'contain' }}>
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       <article
-        className="lg:hidden fixed bottom-0 right-0 w-[82%] bg-white flex flex-col p-6 gap-0 overflow-hidden"
+        className="fixed bottom-0 right-0 w-[82%] bg-white flex flex-col p-6 gap-0 overflow-hidden"
         style={{ height: '100dvh' }}
         role="dialog"
         aria-modal="true"
@@ -77,6 +77,7 @@ export function MobileFiltersDrawer({
             value={draft}
             onChange={setDraft}
             onReset={onReset}
+            onClose={onClose}
             forwardScrollToRef={contentRef as React.RefObject<HTMLElement | null>}
           />
         </div>

@@ -14,7 +14,7 @@ export default function FilterSection({ title, children, defaultOpen = false, co
   useEffect(() => setOpen(defaultOpen), [defaultOpen]);
 
   return (
-    <article className="w-full flex flex-col gap-2">
+    <article className="pt-6 w-full flex flex-col">
       <div
         className="flex items-center justify-between cursor-pointer select-none"
         role="button"
@@ -44,7 +44,7 @@ export default function FilterSection({ title, children, defaultOpen = false, co
 
       <div
         className={clsx(
-          'mt-3 grid transition-[grid-template-rows] duration-300 ease-out',
+          'pt-6 grid transition-[grid-template-rows] duration-300 ease-out',
           open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
         )}
       >

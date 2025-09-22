@@ -49,9 +49,7 @@ export default function ScrollContentLayout() {
         }}
       >
         <main className="w-full min-w-0 h-full max-w-[1650px] mx-auto px-4 lg:px-6 pt-4 lg:pt-6">
-          <div className="h-full min-h-0">
-            <Outlet />
-          </div>
+          <Outlet />
         </main>
       </div>
     </>

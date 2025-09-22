@@ -5,7 +5,7 @@ import { useProfile } from '../hooks/useProfile';
 const ProfileEditPage = () => {
   const { data, isLoading, error } = useProfile();
   const location = useLocation();
-  // TODO - Verify Data
+  // TODO - Crear components Loading y Error (Ver Figma)
   if (isLoading) return <p>Cargando perfil...</p>;
   if (error) return <p>Error al cargar el perfil</p>;
 

@@ -45,17 +45,6 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Pr
           <ul className="grid place-items-center w-full h-full">
             <div className="w-full flex flex-col gap-6">
               <div className="w-full flex flex-col gap-6 items-start">
-                <li onClick={onClose}>
-                  <HilightLink
-                    to={ROUTES.TALENT_DATABASE}
-                    label={t('routes.talent-database')}
-                    className="z-[150] block text-[28px] font-extrabold leading-none"
-                    width={250}
-                    height={65}
-                    exact={false}
-                  />
-                </li>
-
                 {isAuthenticated ? (
                   <>
                     <li onClick={onClose}>
@@ -72,7 +61,7 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Pr
                       <HilightLink
                         to={ROUTES.ACCOUNT}
                         label={t('routes.account')}
-                        className="z-[150] block text-[26px] font-extrabold leading-none"
+                        className="z-[150] block text-[28px] font-extrabold leading-none"
                         width={270}
                         height={68}
                         exact={false}
@@ -80,17 +69,39 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Pr
                     </li>
                   </>
                 ) : (
-                  <li onClick={onClose}>
-                    <HilightLink
-                      to={ROUTES.AUTH}
-                      label={t('routes.login')}
-                      className="z-[150] block text-[26px] font-extrabold leading-none"
-                      width={270}
-                      height={68}
-                      exact={false}
-                    />
-                  </li>
+                  <>
+                    <li onClick={onClose}>
+                      <HilightLink
+                        to={ROUTES.AUTH}
+                        label={t('routes.register')}
+                        className="z-[150] block text-[28px] font-extrabold leading-none"
+                        width={270}
+                        height={68}
+                        exact={false}
+                      />
+                    </li>
+                    <li onClick={onClose}>
+                      <HilightLink
+                        to={ROUTES.AUTH}
+                        label={t('routes.login')}
+                        className="z-[150] block text-[28px] font-extrabold leading-none"
+                        width={270}
+                        height={68}
+                        exact={false}
+                      />
+                    </li>
+                  </>
                 )}
+                <li onClick={onClose}>
+                  <HilightLink
+                    to={ROUTES.TALENT_DATABASE}
+                    label={t('routes.talent-database')}
+                    className="z-[150] block text-[28px] font-extrabold leading-none"
+                    width={250}
+                    height={65}
+                    exact={false}
+                  />
+                </li>
               </div>
               <Separator className="opacity-20 my-4" />
               <div className="text-[16px] font-semibold">

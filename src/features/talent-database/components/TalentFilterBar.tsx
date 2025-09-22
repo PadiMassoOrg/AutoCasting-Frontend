@@ -1,6 +1,7 @@
 import { FormInputField, FormSelectField, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useCommittedInt, useCommittedText } from '../../../shared/utils/formUtils';
 import {
   useCachedSiteMetadataOption,
@@ -15,14 +16,17 @@ export function TalentFilterBar({
   value,
   onChange,
   onReset,
+  onClose,
   forwardScrollToRef,
 }: {
   value: TalentFiltersQS;
   onChange: (v: TalentFiltersQS) => void;
   onReset?: () => void;
+  onClose?: () => void;
   forwardScrollToRef?: React.RefObject<HTMLElement | null>;
 }) {
   const { t } = useTranslation();
+  const isDesktop = useMedia(LG_SCREEN_SIZE);
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
   const professionsRaw = useCachedSiteMetadataSlice('professions');
   const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
@@ -112,11 +116,23 @@ export function TalentFilterBar({
       {/* Header */}
       <header className="flex items-center justify-between pb-4">
         <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
-        <button type="button" className="cursor-pointer text-xs underline font-light" onClick={handleReset}>
-          {t('talent.filter.reset')}
-        </button>
+
+        {isDesktop ? (
+          <button type="button" className="cursor-pointer text-xs underline font-light" onClick={handleReset}>
+            {t('talent.filter.reset')}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t('common.close') || 'Cerrar'}
+            className="cursor-pointer p-2 rounded-md text-3xl leading-none"
+          >
+            ×
+          </button>
+        )}
       </header>
-      <Separator className="opacity-20 my-4" />
+      <Separator className="opacity-20 mt-6" />
 
       {/* Basic Info */}
       <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount}>
@@ -185,7 +201,7 @@ export function TalentFilterBar({
         </div>
       </FilterSection>
 
-      <Separator className="opacity-20 my-2" />
+      <Separator className="opacity-20" />
 
       {/* Characteristics */}
       <FilterSection title={t('profile.characteristics.characteristics')} count={characteristicsCount}>
@@ -267,7 +283,7 @@ export function TalentFilterBar({
         </div>
       </FilterSection>
 
-      <Separator className="opacity-20 my-2" />
+      <Separator className="opacity-20" />
 
       {/* Skills */}
       <FilterSection title={t('filters.skills', 'Habilidades')} count={skillsCount}>

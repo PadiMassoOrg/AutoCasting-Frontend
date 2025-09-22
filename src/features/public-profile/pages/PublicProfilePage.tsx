@@ -27,7 +27,7 @@ const PublicProfilePage = () => {
     return computeProfileProgress(src);
   }, [isOwner, myProfile, data]);
 
-  // TODO - Verify
+  // TODO - Crear components Loading y Error (Ver Figma)
   if (isLoading) return <p>Cargando perfil público...</p>;
   if (error || !data) return <p>Error al cargar el perfil</p>;
 

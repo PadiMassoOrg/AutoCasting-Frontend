@@ -145,7 +145,7 @@ export default function TalentDatabasePage() {
   const showEmptyState = !isLoading && !error && items.length === 0;
 
   return (
-    <section className="h-full min-h-0 flex flex-col">
+    <section className="w-full h-full min-h-0 flex flex-col">
       {/* Header mobile */}
       <article className="lg:hidden flex items-center justify-between mb-3 shrink-0">
         <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>

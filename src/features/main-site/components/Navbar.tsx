@@ -1,11 +1,12 @@
 import { Button } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Sidebar } from '../../../layouts/components';
 import HilightLink from '../../../shared/components/HilightLink/HilightLink';
 import { LinkLogo } from '../../../shared/components/LinkLogo';
 import BurgerIcon from '../../../shared/icons/burger.svg';
 import { ROUTES } from '../../../shared/lib/routes';
-import Sidebar from './Sidebar';
+import { logout } from '../../auth/services/authService';
 
 const Navbar = () => {
   const { t } = useTranslation();
@@ -40,7 +41,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} onLogout={() => logout()} />
     </div>
   );
 };
