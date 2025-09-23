@@ -61,7 +61,8 @@ export default function Pills<K extends string = string>({
           ref={listRef}
           role="tablist"
           aria-label="pills"
-          className={clsx('flex-1 flex items-center gap-2 overflow-x-auto no-scrollbar snap-x', listClassName)}
+          // TODO Handle scrollbar hide on ""drag and scroll"" + Fade de lado derecho
+          className={clsx('flex-1 flex items-center gap-2 overflow-x-auto snap-x', listClassName)}
           tabIndex={0}
           onKeyDown={onKeyDown}
         >

@@ -6,14 +6,24 @@
   "general": {
     "yes": "Sí",
     "no": "No",
+    "all": "Todos",
+    "any": "Cualquiera",
     "accept": "Aceptar",
     "save": "Guardar",
+    "clear": "Limpiar",
+    "reset": "Resetear",
+    "apply": "Aplicar",
     "copied": "Copaiado con éxito",
     "logout": "Cerrar Sesión",
     "no_data": "Sin información",
+    "unspecified": "Sin especificar",
+    "selections": "Selecciones",
+    "select_all": "Seleccionar Todas",
+    "dash": "--",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "select": "Seleccionar",
+      "color": "Color",
       "day": "Día",
       "month": "Mes",
       "year": "Año",
@@ -22,8 +32,10 @@
       "url": "URL",
       "headshot": "Primer Plano",
       "fullbody": "Cuerpo Entero",
-      "measure": "XL/90",
-      "dash": "--"
+      "dash": "--",
+      "min": "Min",
+      "max": "Max",
+      "measure": "XL/90"
     }
   },
   "validation": {
@@ -41,6 +53,8 @@
     "max_size": "El archivo supera el tamaño máximo de {{mb}}MB"
   },
   "state": {
+    "no_results": "No se encontraron resultados.",
+    "no_more_results": "No hay más resultados.",
     "loading": "Cargando...",
     "server_err": "Ocurrió un error, intente nuevamente."
   },
@@ -54,12 +68,13 @@
   },
   "routes": {
     "home": "Inicio",
+    "go_home": "Ir al Inicio",
     "login": "Iniciar Sesión",
     "register": "Crear Perfil",
     "profile": "Perfil",
     "account": "Mi Cuenta",
     "access": "Acceso",
-    "talent-database": "Ver Catálogo",
+    "talent-database": "Catálogo",
     "support": "Soporte Técnico",
     "faq": "Preguntas Frecuentes"
   },
@@ -185,6 +200,11 @@
       "film": "Cine",
       "commercial": "Comercial"
     }
+  },
+  "error_page": {
+    "title": "¡Ups! Algo salió mal",
+    "description": "Estamos trabajando para solucionar el problema.",
+    "subtext": "Por favor, intentá de nuevo en unos minutos."
   },
   "landing": {
     "page": {
@@ -409,6 +429,19 @@
   "talent": {
     "page": {
       "title": "Catálogo"
+    },
+    "filter": {
+      "title": "Filtros",
+      "reset": "Resetear Filtros",
+      "basic_info": {
+        "stage_name": "Nombre del Talento",
+        "age_range": "Rango Etario",
+        "gender": "Género",
+        "profession": "Profesión"
+      },
+      "characteristics": {
+        "height": "Altura"
+      }
     }
   }
 }

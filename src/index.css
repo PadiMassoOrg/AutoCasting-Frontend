@@ -39,7 +39,7 @@
 
   /* General */
   body {
-    @apply bg-[var(--color-primary-white)] list-none;
+    @apply bg-[var(--color-primary-white)] list-none text-[var(--color-primary-black)];
     font-family: var(--font-inter);
   }
 }
@@ -53,6 +53,7 @@
   .scrollbar-hide {
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE 10+ */
+    overscroll-behavior: auto; /* Allows to keep scrolling when no more content */
   }
 
   .scrollbar-hide::-webkit-scrollbar {

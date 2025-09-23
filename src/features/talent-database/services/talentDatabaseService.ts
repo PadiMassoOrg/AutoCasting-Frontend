@@ -8,10 +8,11 @@ export const TALENT_DATABASE_CACHE_KEY = ['cache-talent-database'] as const;
 export const getTalentDatabase = async (
   page: number,
   size: number,
-  filters?: TalentFiltersQS
+  filters?: TalentFiltersQS,
+  opts?: { signal?: AbortSignal }
 ): Promise<SliceResponse<ProfileCardResponse>> => {
   const qs = buildQuery(page, size, filters);
-  const response = await api.get(`${API_ROUTES.TALENT_DATABASE}?${qs.toString()}`);
+  const response = await api.get(`${API_ROUTES.TALENT_DATABASE}?${qs.toString()}`, { signal: opts?.signal });
   return response.data;
 };
 
@@ -30,7 +31,13 @@ function buildQuery(page: number, size: number, filters?: TalentFiltersQS) {
   append('stageName', filters.stageName);
   append('ageMin', filters.ageMin);
   append('ageMax', filters.ageMax);
-  append('genderId', filters.genderId);
+
+  if (Array.isArray(filters.genderIds) && filters.genderIds.length > 0) {
+    filters.genderIds.forEach((token) => qs.append('genderId', token));
+  } else {
+    append('genderId', (filters as any).genderId);
+  }
+
   append('professionId', filters.professionId);
   append('professionsMode', filters.professionsMode);
   append('heightMinCm', filters.heightMinCm);

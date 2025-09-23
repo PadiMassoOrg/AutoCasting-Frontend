@@ -61,7 +61,7 @@ const LandingSection = () => {
         "
           >
             <div className="w-full font-extrabold leading-tight">
-              <h2 className="text-[36px] lg:text-[40px]">
+              <h2 className="text-[32px] lg:text-[40px]">
                 <span className="block lg:inline">{t('landing.page.header')} </span>
                 <span className="relative inline-block align-baseline">
                   <span ref={wordRef} className="relative z-10 whitespace-nowrap">
@@ -91,7 +91,7 @@ const LandingSection = () => {
         "
           >
             <Button variant="primary" asChild className="lg:w-auto">
-              <a href={ROUTES.AUTH} rel="noopener noreferrer">
+              <a href={ROUTES.AUTH_REGISTER} rel="noopener noreferrer">
                 {t('routes.register')}
               </a>
             </Button>

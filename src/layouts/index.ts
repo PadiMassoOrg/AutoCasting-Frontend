@@ -1,3 +1,4 @@
 import AuthenticationLayout from './AuthenticationLayout';
 import MainLayout from './MainLayout';
-export { AuthenticationLayout, MainLayout };
+import ScrollContentLayout from './ScrollContentLayout';
+export { AuthenticationLayout, MainLayout, ScrollContentLayout };

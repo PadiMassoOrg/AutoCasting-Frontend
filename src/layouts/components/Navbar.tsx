@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { forwardRef, type HTMLAttributes, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { matchPath, useLocation, useParams } from 'react-router-dom';
 import { logout } from '../../features/auth/services/authService';
@@ -15,7 +15,9 @@ import { ROUTES } from '../../shared/lib/routes';
 import AccountDropdown from './AccountDropdown';
 import Sidebar from './Sidebar';
 
-const Navbar = () => {
+type NavbarProps = HTMLAttributes<HTMLElement>;
+
+const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className = '', ...props }, ref) {
   const { t } = useTranslation();
   const { data: myProfile } = useProfile();
   const { slug } = useParams<{ slug: string }>();
@@ -34,9 +36,9 @@ const Navbar = () => {
   const isEditMode = isOnProfileEdit;
 
   return (
-    <div>
-      <nav className="relative w-full h-14 px-10 flex flex-row items-center justify-between">
-        <LinkLogo horizontal />
+    <nav ref={ref} {...props} className={`w-full h-auto py-5 z-50 ${className}`}>
+      <div className="relative px-10 2xl:px-30 flex flex-row items-center justify-between">
+        <LinkLogo horizontal path={ROUTES.HOME} />
         <button
           type="button"
           className="cursor-pointer lg:hidden"
@@ -45,9 +47,10 @@ const Navbar = () => {
         >
           <img src={BurgerIcon} alt="" className="w-7" />
         </button>
-        <span className="hidden lg:block lg:absolute lg:w-[310px] lg:left-[50%] lg:translate-x-[-50%]">
+
+        <span className="hidden h-auto lg:block lg:absolute lg:w-[310px] lg:left-1/2 lg:-translate-x-1/2">
           {shouldShowCard && progress && (
-            <ProfileCompletionCard progress={progress} isEdit={isEditMode} publicSlug={myProfile.publicSlug} />
+            <ProfileCompletionCard progress={progress} isEdit={isEditMode} publicSlug={myProfile!.publicSlug} />
           )}
         </span>
 
@@ -62,7 +65,7 @@ const Navbar = () => {
             <HilightLink to={ROUTES.AUTH} label={t('routes.login')} width={62} height={30} />
           )}
         </div>
-      </nav>
+      </div>
 
       <Sidebar
         open={menuOpen}
@@ -70,8 +73,8 @@ const Navbar = () => {
         onLogout={() => logout()}
         isAuthenticated={!!myProfile}
       />
-    </div>
+    </nav>
   );
-};
+});
 
 export default Navbar;

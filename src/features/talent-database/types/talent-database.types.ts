@@ -16,8 +16,8 @@ export type TalentFiltersQS = Partial<{
   stageName: string;
   ageMin: number;
   ageMax: number;
-  genderId: string;
-  professionId: string[]; // se serializa como ?professionId=a&professionId=b
+  genderIds: string[];
+  professionId: string[];
   professionsMode: MatchMode;
   heightMinCm: number;
   heightMaxCm: number;

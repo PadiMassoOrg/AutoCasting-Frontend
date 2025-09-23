@@ -249,7 +249,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
             <button
               type="button"
               className={clsx(
-                'w-7 h-7 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center',
+                'w-7 h-7 rounded-full bg-[var(--color-primary-light-grey)] grid place-items-center',
                 'sm:w-12 sm:h-12 ',
                 classes?.actionBtn
               )}
@@ -266,7 +266,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
             <button
               type="button"
               className={clsx(
-                'w-7 h-7 rounded-full bg-[var(--color-primary-light-grey)] text-black grid place-items-center',
+                'w-7 h-7 rounded-full bg-[var(--color-primary-light-grey)] grid place-items-center',
                 'sm:w-12 sm:h-12 ',
                 classes?.actionBtn
               )}

@@ -1,16 +1,20 @@
-'use client';
-
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
-import { TalentCard } from '../components/TalentCard';
+import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
+import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
+import filterIcon from '../../../shared/icons/filter.svg';
+import { MobileFiltersDrawer, TalentCard } from '../components';
 import { TalentFilterBar } from '../components/TalentFilterBar';
 import { useTalentDatabase } from '../hooks/useTalentDatabase';
+import { TALENT_DATABASE_CACHE_KEY } from '../services/talentDatabaseService';
 import type { TalentFiltersQS } from '../types/talent-database.types';
 
 const initialFilters: TalentFiltersQS = {
   stageName: '',
-  genderId: undefined,
+  genderIds: ['NULL'],
   hairColorId: undefined,
   eyeColorId: undefined,
   ageMin: undefined,
@@ -26,97 +30,204 @@ const initialFilters: TalentFiltersQS = {
   skillsMode: 'ANY',
 };
 
-const TalentDatabasePage = () => {
+const MAX_AUTOFILL_PAGES = 6;
+const SCROLL_EPS = 8;
+
+export default function TalentDatabasePage() {
+  const qc = useQueryClient();
+  useViewportVhVar();
   const { t } = useTranslation();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
-  const pageSize = isDesktop ? 6 : 3; // ← mobile 3, desktop 6
-
+  const pageSize = isDesktop ? 6 : 3;
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
-
-  // fetch con tamaño según breakpoint
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const debouncedFilters = useDebouncedValue(filters, 350);
   const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useTalentDatabase(
     pageSize,
-    filters
+    debouncedFilters
   );
-
   const items = useMemo(() => data?.pages.flatMap((p) => p.items) ?? [], [data]);
 
-  // contenedor scrollable y sentinel
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-  const sentinelRef = useRef<HTMLDivElement | null>(null);
-
-  // reset scroll al cambiar filtros o pageSize
+  const cardsScrollRef = useRef<HTMLDivElement>(null);
+  const fetchLockRef = useRef(false);
+  const scrollRootRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: 0 });
-  }, [filters, pageSize]);
+    scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
+  }, []);
+  const autofillAttemptsRef = useRef(0);
+  useScrollExitOnEdge(cardsScrollRef, { forwardTo: isDesktop ? cardsScrollRef : scrollRootRef });
 
-  // IntersectionObserver dentro del contenedor (no en body)
   useEffect(() => {
-    const rootEl = scrollRef.current;
-    const sentinelEl = sentinelRef.current;
-    if (!rootEl || !sentinelEl) return;
+    qc.cancelQueries({ queryKey: [TALENT_DATABASE_CACHE_KEY] });
+    qc.invalidateQueries({ queryKey: [TALENT_DATABASE_CACHE_KEY], refetchType: 'all' });
+  }, []);
 
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+  useEffect(() => {
+    cardsScrollRef.current?.scrollTo({ top: 0 });
+    autofillAttemptsRef.current = 0;
+  }, [debouncedFilters, pageSize]);
+
+  const handleScroll = useCallback(() => {
+    const el = cardsScrollRef.current;
+    if (!el || !hasNextPage || isFetchingNextPage || fetchLockRef.current) return;
+
+    const { scrollTop, clientHeight, scrollHeight } = el;
+    const reached75 = scrollTop + clientHeight >= scrollHeight * 0.75;
+
+    if (reached75) {
+      fetchLockRef.current = true;
+      fetchNextPage().finally(() => {
+        fetchLockRef.current = false;
+      });
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  useEffect(() => {
+    const el = cardsScrollRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
+
+  useEffect(() => {
+    const el = cardsScrollRef.current;
+    if (!el) return;
+    if (isLoading || isFetchingNextPage) return;
+
+    const tryFill = () => {
+      const box = cardsScrollRef.current;
+      if (!box) return;
+
+      const hasScroll = box.scrollHeight > box.clientHeight + SCROLL_EPS;
+      if (hasScroll) {
+        autofillAttemptsRef.current = 0;
+        return;
+      }
+
+      if (!hasNextPage) {
+        autofillAttemptsRef.current = 0;
+        return;
+      }
+      if (autofillAttemptsRef.current >= MAX_AUTOFILL_PAGES) return;
+      autofillAttemptsRef.current += 1;
+      fetchNextPage().then(() => {
+        requestAnimationFrame(() => setTimeout(tryFill, 0));
+      });
+    };
+    tryFill();
+  }, [items.length, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
+
+  useEffect(() => {
+    const el = cardsScrollRef.current;
+    if (!el) return;
+
+    let resizeTimer: number | null = null;
+    const ro = new ResizeObserver(() => {
+      if (resizeTimer) window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        if (isLoading || isFetchingNextPage) return;
+        if (!hasNextPage) return;
+        const box = cardsScrollRef.current;
+        if (!box) return;
+        const hasScroll = box.scrollHeight > box.clientHeight + SCROLL_EPS;
+        if (!hasScroll) {
+          autofillAttemptsRef.current = 0;
           fetchNextPage();
         }
-      },
-      {
-        root: rootEl, // ← observar dentro del contenedor
-        rootMargin: '400px 0px', // prefetch antes de llegar al fondo
-        threshold: 0,
-      }
-    );
+      }, 80);
+    });
 
-    io.observe(sentinelEl);
-    return () => io.disconnect();
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage, items.length, filters, pageSize]);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      if (resizeTimer) window.clearTimeout(resizeTimer);
+    };
+  }, [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
-  if (isLoading) return <p>Cargando catálogo…</p>;
-  if (error || !data) return <p>Error al cargar el catálogo</p>;
+  const showInitialSkeletons = isLoading && (!data || items.length === 0);
+  const showEmptyState = !isLoading && !error && items.length === 0;
 
   return (
-    <section className="flex flex-col gap-5">
-      <article className="flex flex-row items-center justify-between">
+    <section className="w-full h-full min-h-0 flex flex-col">
+      {/* Header mobile */}
+      <article className="lg:hidden flex items-center justify-between mb-3 shrink-0">
         <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
+        <button
+          type="button"
+          className="cursor-pointer inline-flex items-center gap-3"
+          onClick={() => setMobileOpen(true)}
+          aria-label={t('talent.filters.open')}
+        >
+          <h2 className="text-base font-semibold">{t('talent.filter.title')}</h2>
+          <span className="w-10 h-10 flex items-center justify-center bg-[var(--color-primary-light-grey)] rounded-lg">
+            <img src={filterIcon} alt="Filter bar" className="w-5 h-5" />
+          </span>
+        </button>
       </article>
 
-      <div className="w-full min-w-0 flex flex-col lg:flex-row gap-6">
-        {/* Filter bar a la izquierda (desktop) */}
-        <aside className="hidden lg:block">
-          <TalentFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
+      <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col lg:flex-row gap-6 overflow-hidden">
+        {/* Filters */}
+        <aside className="hidden lg:flex lg:flex-col lg:w-[300px] min-h-0 overflow-hidden">
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-4">
+            <TalentFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
+          </div>
         </aside>
 
-        {/* Contenedor scrollable de cards */}
+        {/* Cards */}
         <div
-          ref={scrollRef}
-          className="
-            w-full overflow-auto rounded-xl
-            bg-white/50
-            p-3
-            h-[70vh] lg:h-[75vh]      /* altura fija -> no crece el body */
-            border
-          "
+          ref={cardsScrollRef}
+          className="flex-1 min-h-0 w-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
         >
-          <article className="grid gap-6 grid-cols-[repeat(auto-fit,minmax(280px,1fr))] auto-rows-auto sm:auto-rows-[408px]">
-            {items.map((it) => (
-              <div key={it.id} className="w-full h-full">
-                <TalentCard item={it} />
-              </div>
-            ))}
-            {/* Sentinel al final del grid */}
-            <div ref={sentinelRef} className="col-span-full h-1" />
-          </article>
+          <h2 className="hidden lg:block text-2xl font-semibold mb-6">{t('talent.page.title')}</h2>
+          {error && (
+            <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
+          )}
+          {!error && (
+            <article
+              className="
+              grid gap-6 place-items-stretch
+              grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
+              sm:auto-rows-[408px]
+              lg:auto-rows-auto
+            "
+            >
+              {showInitialSkeletons &&
+                Array.from({ length: pageSize }).map((_, i) => (
+                  <div key={`skeleton-${i}`} className="w-full h-full">
+                    <div className="animate-pulse w-full h-full bg-neutral-100 rounded-lg" />
+                  </div>
+                ))}
 
-          {isFetchingNextPage && <p className="py-3 text-center text-neutral-500">Cargando más…</p>}
+              {items.map((it) => (
+                <div key={it.id} className="w-full h-full">
+                  <TalentCard item={it} />
+                </div>
+              ))}
+            </article>
+          )}
+
+          {/* State */}
+          {showEmptyState && (
+            <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">{t('state.no_results')}</p>
+          )}
+          {isFetchingNextPage && (
+            <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">{t('state.loading')}</p>
+          )}
           {!hasNextPage && items.length > 0 && (
-            <p className="py-6 text-center text-neutral-400">No hay más resultados</p>
+            <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">
+              {t('state.no_more_results')}
+            </p>
           )}
         </div>
       </div>
+
+      <MobileFiltersDrawer
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        value={filters}
+        onReset={() => setFilters(initialFilters)}
+        onApply={(next) => setFilters(next)}
+      />
     </section>
   );
-};
-
-export default TalentDatabasePage;
+}

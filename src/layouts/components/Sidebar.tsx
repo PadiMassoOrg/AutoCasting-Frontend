@@ -2,7 +2,7 @@ import { Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronRight } from '../../shared/components/Chevron';
-import HilightLink from '../../shared/components/HilightLink/HilightLink'; // ⬅️ NUEVO
+import HilightLink from '../../shared/components/HilightLink/HilightLink';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import { ROUTES } from '../../shared/lib/routes';
 
@@ -27,7 +27,7 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Pr
 
   if (!open) return null;
   return (
-    <div aria-modal="true" role="dialog" className="fixed inset-0 z-[100] lg:hidden">
+    <div aria-modal="true" role="dialog" className="fixed inset-0 z-100 lg:hidden">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <aside className="absolute inset-0 bg-white flex flex-col pt-5">
         <header className="h-14 px-5 flex items-center justify-between">
@@ -45,17 +45,6 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Pr
           <ul className="grid place-items-center w-full h-full">
             <div className="w-full flex flex-col gap-6">
               <div className="w-full flex flex-col gap-6 items-start">
-                <li onClick={onClose}>
-                  <HilightLink
-                    to={ROUTES.TALENT_DATABASE}
-                    label={t('routes.talent-database')}
-                    className="z-[150] block text-[28px] font-extrabold leading-none"
-                    width={250}
-                    height={65}
-                    exact={false}
-                  />
-                </li>
-
                 {isAuthenticated ? (
                   <>
                     <li onClick={onClose}>
@@ -72,7 +61,7 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Pr
                       <HilightLink
                         to={ROUTES.ACCOUNT}
                         label={t('routes.account')}
-                        className="z-[150] block text-[26px] font-extrabold leading-none"
+                        className="z-[150] block text-[28px] font-extrabold leading-none"
                         width={270}
                         height={68}
                         exact={false}
@@ -80,17 +69,39 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Pr
                     </li>
                   </>
                 ) : (
-                  <li onClick={onClose}>
-                    <HilightLink
-                      to={ROUTES.AUTH}
-                      label={t('routes.login')}
-                      className="z-[150] block text-[26px] font-extrabold leading-none"
-                      width={270}
-                      height={68}
-                      exact={false}
-                    />
-                  </li>
+                  <>
+                    <li onClick={onClose}>
+                      <HilightLink
+                        to={ROUTES.AUTH_REGISTER}
+                        label={t('routes.register')}
+                        className="z-[150] block text-[28px] font-extrabold leading-none"
+                        width={270}
+                        height={68}
+                        exact={false}
+                      />
+                    </li>
+                    <li onClick={onClose}>
+                      <HilightLink
+                        to={ROUTES.AUTH}
+                        label={t('routes.login')}
+                        className="z-[150] block text-[28px] font-extrabold leading-none"
+                        width={270}
+                        height={68}
+                        exact={false}
+                      />
+                    </li>
+                  </>
                 )}
+                <li onClick={onClose}>
+                  <HilightLink
+                    to={ROUTES.TALENT_DATABASE}
+                    label={t('routes.talent-database')}
+                    className="z-[150] block text-[28px] font-extrabold leading-none"
+                    width={250}
+                    height={65}
+                    exact={false}
+                  />
+                </li>
               </div>
               <Separator className="opacity-20 my-4" />
               <div className="text-[16px] font-semibold">

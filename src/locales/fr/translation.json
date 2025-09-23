@@ -1,0 +1,438 @@
+{
+  "company": {
+    "site": "autocasting",
+    "header": "Ton profil artistique en ligne"
+  },
+  "general": {
+    "yes": "Oui",
+    "no": "Non",
+    "any": "Indifférent",
+    "accept": "Accepter",
+    "save": "Enregistrer",
+    "clear": "Effacer",
+    "reset": "Réinitialiser",
+    "apply": "Appliquer",
+    "copied": "Copié avec succès",
+    "logout": "Se déconnecter",
+    "no_data": "Aucune information",
+    "unspecified": "Non spécifié",
+    "selections": "Sélections",
+    "select_all": "Tout sélectionner",
+    "dash": "--",
+    "placeholder": {
+      "stage_name": "Ricardo Darín",
+      "select": "Sélectionner",
+      "color": "Couleur",
+      "day": "Jour",
+      "month": "Mois",
+      "year": "Année",
+      "email": "E-mail",
+      "phoneNumber": "Numéro de téléphone",
+      "url": "URL",
+      "headshot": "Portrait",
+      "fullbody": "Plein pied",
+      "dash": "--",
+      "min": "Min",
+      "max": "Max",
+      "measure": "XL/90"
+    }
+  },
+  "validation": {
+    "uuid_invalid": "Valeur invalide",
+    "invalid": "Valeur invalide",
+    "url_invalid": "Entrez une URL valide",
+    "required": "Champ obligatoire.",
+    "number": "Chiffres uniquement",
+    "number_invalid": "Nombre invalide",
+    "year_invalid": "Année invalide",
+    "year_out_of_range": "L'année doit être comprise entre {{min}} et {{max}}",
+    "month_invalid": "Mois invalide",
+    "day_invalid": "Jour invalide",
+    "type_image": "Le fichier doit être une image",
+    "max_size": "Le fichier dépasse la taille maximale de {{mb}} Mo"
+  },
+  "state": {
+    "loading": "Chargement…",
+    "server_err": "Une erreur s'est produite. Veuillez réessayer."
+  },
+  "buttons": {
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer"
+  },
+  "dashboard": {
+    "logout": "Se déconnecter"
+  },
+  "routes": {
+    "home": "Accueil",
+    "login": "Se connecter",
+    "register": "Créer un profil",
+    "profile": "Profil",
+    "account": "Mon compte",
+    "access": "Accès",
+    "talent-database": "Catalogue",
+    "support": "Assistance technique",
+    "faq": "FAQ"
+  },
+  "role": {
+    "actor": "Acteur / Actrice",
+    "castinera": "Directeur/directrice de casting"
+  },
+  "plan": {
+    "free": "Gratuit",
+    "premium_actor_1": "Premium",
+    "premium_castinera": "Premium Casting"
+  },
+  "sitemetadata": {
+    "gender": {
+      "male": "Homme",
+      "female": "Femme",
+      "other": "Autre"
+    },
+    "category": {
+      "scenic": "Compétences scéniques (Espagne)",
+      "sport": "Sports",
+      "physical": "Compétences physiques",
+      "language": "Langues",
+      "accent": "Accents",
+      "hair_color": "Couleur de cheveux",
+      "eye_color": "Couleur des yeux"
+    },
+    "skill": {
+      "athletics": "Athlétisme",
+      "basketball": "Basket-ball",
+      "boxing": "Boxe",
+      "cycling": "Cyclisme",
+      "football": "Football",
+      "gymnastics": "Gymnastique",
+      "handball": "Handball",
+      "hockey": "Hockey",
+      "swimming": "Natation",
+      "padel": "Padel",
+      "rugby": "Rugby",
+      "tennis": "Tennis",
+      "volleyball": "Volley-ball",
+      "acrobatics": "Acrobatie",
+      "aerial_acrobatics": "Acrobatie aérienne",
+      "martial_arts": "Arts martiaux",
+      "capoeira": "Capoeira",
+      "stage_combat": "Combat scénique",
+      "contortion": "Contorsion",
+      "tightrope_slackline": "Fil de fer / Slackline",
+      "horseback_riding": "Équitation",
+      "climbing": "Escalade",
+      "stage_fencing": "Escrime scénique",
+      "juggling": "Jonglage",
+      "pantomime": "Pantomime",
+      "physical_theater": "Théâtre physique",
+      "parkour": "Parkour",
+      "skating": "Patinage",
+      "stunts": "Cascades",
+      "aerial_skills": "Compétences aériennes",
+      "harness_wirework": "Travail au harnais et aux câbles",
+      "stilts": "Échasses",
+      "german": "Allemand",
+      "chinese_mandarin": "Chinois (mandarin)",
+      "spanish_arg": "Espagnol (Argentine)",
+      "french": "Français",
+      "english": "Anglais",
+      "italian": "Italien",
+      "portuguese_br": "Portugais (Brésil)",
+      "russian": "Russe",
+      "spanish_es": "Espagnol (Espagne)",
+      "spanish_neutral": "Espagnol neutre",
+      "spanish_co": "Espagnol (Colombie)",
+      "spanish_ch": "Espagnol (Chili)",
+      "spanish_pe": "Espagnol (Pérou)",
+      "spanish_ve": "Espagnol (Venezuela)",
+      "english_us": "Anglais (É.-U.)",
+      "english_uk": "Anglais (R.-U.)"
+    },
+    "profession": {
+      "actor": "Acteur / Actrice",
+      "dancer": "Danseur / Danseuse",
+      "singer": "Chanteur / Chanteuse",
+      "influencer": "Influenceur / Influenceuse",
+      "model": "Mannequin",
+      "musician": "Musicien / Musicienne",
+      "standup": "Stand-up",
+      "voice_talent": "Artiste voix off"
+    },
+    "color": {
+      "black": "Noir",
+      "dark_brown": "Brun foncé",
+      "light_brown": "Brun clair",
+      "brown": "Brun",
+      "blonde": "Blond",
+      "dark_blonde": "Blond foncé",
+      "light_blonde": "Blond clair",
+      "red": "Roux",
+      "gray": "Gris",
+      "white": "Blanc",
+      "no_hair": "Sans cheveux",
+      "amber": "Ambre",
+      "hazel": "Noisette",
+      "blue": "Bleu",
+      "light_blue": "Bleu clair",
+      "green": "Vert",
+      "heterochromia": "Hétérochromie"
+    },
+    "diet": {
+      "omnivore": "Omnivore",
+      "flexitarian": "Flexitarien / Flexitarienne",
+      "vegetarian": "Végétarien / Végétarienne",
+      "lacto_ovo_vegetarian": "Végétarien lacto-ovo",
+      "vegan": "Végan",
+      "pescatarian": "Pescétarien / Pescétarienne",
+      "ketogenic": "Cétogène",
+      "gluten_free": "Sans gluten",
+      "lactose_free": "Sans lactose",
+      "kosher": "Casher",
+      "halal": "Halal"
+    },
+    "production_type": {
+      "theatre": "Théâtre",
+      "television_streaming": "Télévision / Streaming",
+      "film": "Cinéma",
+      "commercial": "Publicité"
+    }
+  },
+  "landing": {
+    "page": {
+      "header": "Connecte ton talent à ta prochaine",
+      "header_hilight": "opportunité",
+      "text": "Crée ton profil, mets en ligne tes extraits et partage un seul lien. Contact direct avec ceux qui recrutent."
+    },
+    "services": {
+      "header": "Pourquoi AutoCasting ?",
+      "service1": {
+        "title": "Un seul lien",
+        "description": "Ton talent, tes photos, vidéos et infos dans un profil prêt à partager."
+      },
+      "service2": {
+        "title": "Sans intermédiaires",
+        "description": "Producteurs, agences et marques te trouvent et t’écrivent instantanément."
+      },
+      "service3": {
+        "title": "Pensé pour toi",
+        "description": "Des offres simples et abordables pour que personne ne soit laissé de côté."
+      }
+    },
+    "tutorial": {
+      "header": "Comment ça marche ?",
+      "step1": {
+        "title": "1. Crée ton profil",
+        "description": "Mets en ligne tes photos, vidéos et infos en quelques minutes."
+      },
+      "step2": {
+        "title": "2. Partage ton lien",
+        "description": "Envoie-le à qui tu veux ou utilise-le comme carte de visite."
+      },
+      "step3": {
+        "title": "3. Assure ton rôle",
+        "description": "Producteurs, réalisateurs et agences consultent ton profil et te contactent directement."
+      }
+    },
+    "plan": {
+      "header": "Nos offres",
+      "recommended": "Recommandé",
+      "free": {
+        "title": "Gratuit",
+        "subtitle": "Gratuit.",
+        "price": "$0",
+        "benefit1": "Lorem Ipsum",
+        "benefit2": "Lorem Ipsum",
+        "benefit3": "Lorem Ipsum",
+        "cta": "Choisir l’offre Gratuite",
+        "cta_2": "Lorem Ipsum"
+      },
+      "pro": {
+        "title": "Pro",
+        "subtitle": "Par utilisateur et par mois.",
+        "price": "$4,999.00",
+        "benefit1": "Lorem Ipsum",
+        "benefit2": "Lorem Ipsum",
+        "benefit3": "Lorem Ipsum",
+        "cta": "Choisir l’offre Pro",
+        "cta_2": "Lorem Ipsum"
+      }
+    }
+  },
+  "auth": {
+    "page": {
+      "welcome": "Bienvenue sur",
+      "text_1": "Finis d’envoyer des CV lourds et de passer la journée à expédier des self-tapes par e-mail.",
+      "bullet_1": "Crée ton profil en <i>quelques secondes</i>.",
+      "bullet_2": "Mets en ligne tes meilleurs extraits et garde-le <i>toujours à jour</i>.",
+      "bullet_3": "Génère ton lien personnel et partage-le <i>où tu veux</i> (castings, agences, réseaux sociaux).",
+      "text_resaltador": "C’est ton talent, ton profil, ton lien !",
+      "or_login_with": "ou connecte-toi avec",
+      "forgotten_pass": "Mot de passe oublié ?",
+      "create_acc": "Tu n’as pas de compte ?",
+      "create_acc_cta": "Crée un compte ici",
+      "login_acc": "Tu as déjà un compte ?",
+      "login_acc_cta": "Connecte-toi ici"
+    },
+    "login": {
+      "google": "Se connecter avec Google",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "submit": "Se connecter"
+    },
+    "register": {
+      "name": "Nom",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "submit": "Créer un compte"
+    },
+    "forgotten_password": {
+      "text": "Pas d’inquiétude. Saisis ton e-mail et nous t’enverrons un lien pour en créer un nouveau.",
+      "submit": "Envoyer le lien",
+      "email_sent_title": "Lien envoyé !",
+      "email_sent_text": "Nous t’avons envoyé un e-mail avec le lien pour réinitialiser ton mot de passe.",
+      "email_sent_text_2": "Vérifie ta boîte de réception et, si tu ne le vois pas après quelques minutes, regarde dans les spams."
+    },
+    "reset_password": {
+      "page": {
+        "title": "Crée un nouveau mot de passe",
+        "p": "Ce n’était pas toi ? Ignore cet e-mail. Ton mot de passe ne sera pas modifié.",
+        "cta": "Réinitialiser le mot de passe"
+      },
+      "new": "Nouveau mot de passe",
+      "repeat": "Répéter le mot de passe"
+    },
+    "validation": {
+      "name_min": "Saisis un nom",
+      "email": "E-mail invalide",
+      "role": "Le rôle est requis",
+      "password_min": "Le mot de passe doit comporter au moins 6 caractères",
+      "password_missmatch": "Les mots de passe ne correspondent pas"
+    }
+  },
+  "profile": {
+    "page": {
+      "videos": "Vidéos",
+      "no_videos": "Aucune vidéo",
+      "introduction_video": "Vidéo de présentation",
+      "showreel_video": "Showreel",
+      "socials": "Réseaux",
+      "profile": "Profil",
+      "edit_profile": "Modifier le profil",
+      "progress_title": "Profil complété"
+    },
+    "share": {
+      "whatsapp_text": "Salut {{name}}, je te contacte pour ton profil AutoCasting.",
+      "whatsapp_text_fallback": "Salut, je te contacte pour ton profil AutoCasting.",
+      "profile_no_name": "Profil AutoCasting"
+    },
+    "pills": {
+      "profile": "Profil",
+      "media": "Médias",
+      "details": "Détails",
+      "characteristics": "Caractéristiques",
+      "skills": "Compétences ",
+      "credits": "Crédits",
+      "education": "Formation"
+    },
+    "basic_info": {
+      "basic_info": "Informations de base",
+      "artistic_name": "Nom de scène",
+      "gender": "Genre",
+      "birth_date": "Date de naissance",
+      "location": "Localisation",
+      "profession": "Profession",
+      "profession_label": "(Sélectionne jusqu’à 3) 0 sur 3 sélectionnées",
+      "contact": "Contact",
+      "email": "E-mail",
+      "whatsapp": "WhatsApp",
+      "social_media": "Réseaux sociaux",
+      "instagram": "Instagram",
+      "tikTok": "TikTok"
+    },
+    "media": {
+      "photos": "Photos",
+      "headshot_fullbody": "Portrait et plein pied",
+      "other": "Autres photos",
+      "videos": "Vidéos",
+      "introduction": "Vidéo de présentation",
+      "videoreel": "Showreel",
+      "more_photos": "Voir plus de photos"
+    },
+    "characteristics": {
+      "characteristics": "Caractéristiques",
+      "gender": "Genre",
+      "age": "Âge",
+      "location": "Localisation",
+      "height": "Taille",
+      "heightCm": "Taille (cm)",
+      "weight": "Poids",
+      "weightKg": "Poids (kg)",
+      "hairColor": "Cheveux",
+      "eyeColor": "Yeux",
+      "chest": "Poitrine",
+      "waist": "Tour de taille",
+      "hip": "Hanches",
+      "shirt": "Chemise",
+      "pants": "Pantalon",
+      "dress": "Robe",
+      "shoes": "Chaussures",
+      "tattoo": "Tatouages",
+      "passport": "Passeport",
+      "drivingLicense": "Permis de conduire",
+      "diet": "Régime"
+    },
+    "skills": {
+      "skills": "Compétences",
+      "add_new": "Ajouter une nouvelle compétence",
+      "add_new_subtitle": "Rechercher ou ajouter une compétence",
+      "add_new_placeholder": "Ajouter une compétence"
+    },
+    "credits": {
+      "credits": "Crédits",
+      "add_new": "Ajouter un crédit",
+      "edit": "Modifier le crédit",
+      "delete": "Supprimer le crédit",
+      "delete_confirm": "Tu es sur le point de supprimer",
+      "production_type": "Type de production",
+      "production_type_placeholder": "Ex. TV, Publicité, Cinéma…",
+      "project": "Nom du projet",
+      "project_placeholder": "Ex. Hamlet, Stranger Things…",
+      "director": "Réalisateur / Production",
+      "director_placeholder": "Ex. Steven Spielberg, Netflix…",
+      "role": "Rôle",
+      "role_placeholder": "Hamlet, Principal, Groupe…",
+      "year": "Année"
+    },
+    "education": {
+      "education": "Formation",
+      "add_new": "Ajouter une formation",
+      "edit": "Modifier la formation",
+      "delete": "Supprimer la formation",
+      "delete_confirm": "Tu es sur le point de supprimer",
+      "institution": "Établissement",
+      "institution_placeholder": "Nom de l’établissement",
+      "courseName": "Nom du cursus / Diplôme obtenu",
+      "courseName_placeholder": "Ex. Licence en arts dramatiques",
+      "graduationYear": "Date de fin",
+      "graduationYear_placeholder": "--"
+    }
+  },
+  "talent": {
+    "page": {
+      "title": "Catalogue"
+    },
+    "filter": {
+      "title": "Filtres",
+      "reset": "Réinitialiser les filtres",
+      "basic_info": {
+        "stage_name": "Nom du talent",
+        "age_range": "Tranche d’âge",
+        "gender": "Genre",
+        "profession": "Profession"
+      },
+      "characteristics": {
+        "height": "Taille"
+      }
+    }
+  }
+}

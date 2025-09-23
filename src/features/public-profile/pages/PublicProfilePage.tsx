@@ -2,6 +2,8 @@ import { Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
+import PageLoading from '../../../shared/components/PageLoading/PageLoading';
+import ServerError from '../../../shared/components/ServerError/ServerError';
 import { LG_SCREEN_SIZE, XL_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { ProfileCompletionCard } from '../../profile-edit/components/ProfileCompletionCard/ProfileCompletionCard';
 import { useProfile } from '../../profile-edit/hooks/useProfile';
@@ -27,9 +29,8 @@ const PublicProfilePage = () => {
     return computeProfileProgress(src);
   }, [isOwner, myProfile, data]);
 
-  // TODO - Verify
-  if (isLoading) return <p>Cargando perfil público...</p>;
-  if (error || !data) return <p>Error al cargar el perfil</p>;
+  if (isLoading) return <PageLoading></PageLoading>;
+  if (error || !data) return <ServerError></ServerError>;
 
   const { basicInfo, socialMedia, media } = data;
 

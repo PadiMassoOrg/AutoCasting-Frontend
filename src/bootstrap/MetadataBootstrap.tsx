@@ -40,7 +40,6 @@ export default function MetadataBootstrap() {
 
     check();
 
-    // Opcional: re-chequear cuando el tab vuelve a primer plano
     const onVis = () => {
       if (document.visibilityState === 'visible') check();
     };
