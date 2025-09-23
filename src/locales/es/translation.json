@@ -67,6 +67,7 @@
   },
   "routes": {
     "home": "Inicio",
+    "go_home": "Ir al Inicio",
     "login": "Iniciar Sesión",
     "register": "Crear Perfil",
     "profile": "Perfil",
@@ -198,6 +199,11 @@
       "film": "Cine",
       "commercial": "Comercial"
     }
+  },
+  "error_page": {
+    "title": "¡Ups! Algo salió mal",
+    "description": "Estamos trabajando para solucionar el problema.",
+    "subtext": "Por favor, intentá de nuevo en unos minutos."
   },
   "landing": {
     "page": {

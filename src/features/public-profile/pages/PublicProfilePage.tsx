@@ -2,6 +2,7 @@ import { Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
+import ServerError from '../../../shared/components/ServerError/ServerError';
 import { LG_SCREEN_SIZE, XL_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { ProfileCompletionCard } from '../../profile-edit/components/ProfileCompletionCard/ProfileCompletionCard';
 import { useProfile } from '../../profile-edit/hooks/useProfile';
@@ -29,7 +30,7 @@ const PublicProfilePage = () => {
 
   // TODO - Crear components Loading y Error (Ver Figma)
   if (isLoading) return <p>Cargando perfil público...</p>;
-  if (error || !data) return <p>Error al cargar el perfil</p>;
+  if (error || !data) return <ServerError></ServerError>;
 
   const { basicInfo, socialMedia, media } = data;
 
