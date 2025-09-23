@@ -50,9 +50,12 @@ export default function TalentDatabasePage() {
 
   const cardsScrollRef = useRef<HTMLDivElement>(null);
   const fetchLockRef = useRef(false);
+  const scrollRootRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
+  }, []);
   const autofillAttemptsRef = useRef(0);
-  const edgeOptions = useMemo(() => ({ forwardTo: isDesktop ? undefined : ('window' as const) }), [isDesktop]);
-  useScrollExitOnEdge(cardsScrollRef, edgeOptions);
+  useScrollExitOnEdge(cardsScrollRef, { forwardTo: isDesktop ? cardsScrollRef : scrollRootRef });
 
   useEffect(() => {
     qc.cancelQueries({ queryKey: [TALENT_DATABASE_CACHE_KEY] });
