@@ -114,7 +114,7 @@ export function TalentFilterBar({
   return (
     <aside className="w-full flex flex-col items-stretch overflow-visible overflow-x-hidden lg:max-w-[350px]">
       {/* Header */}
-      <header className="flex items-center justify-between pb-4">
+      <header className="flex items-center justify-between pb-2">
         <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
 
         {isDesktop ? (
@@ -135,7 +135,7 @@ export function TalentFilterBar({
       <Separator className="opacity-20 mt-6" />
 
       {/* Basic Info */}
-      <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount}>
+      <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <FormInputField
           id="stageName"
           label={t('talent.filter.basic_info.stage_name')}
