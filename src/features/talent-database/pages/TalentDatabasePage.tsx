@@ -176,9 +176,9 @@ export default function TalentDatabasePage() {
           className="flex-1 min-h-0 w-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
         >
           <h2 className="hidden lg:block text-2xl font-semibold mb-6">{t('talent.page.title')}</h2>
-
-          {error && <p className="py-6 text-center text-red-500">Error al cargar el catálogo</p>}
-
+          {error && (
+            <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
+          )}
           <article
             className="
               grid gap-6 place-items-stretch
@@ -201,11 +201,17 @@ export default function TalentDatabasePage() {
             ))}
           </article>
 
-          {showEmptyState && <p className="py-6 text-center text-neutral-400">No se encontraron resultados</p>}
-
-          {isFetchingNextPage && <p className="py-3 text-center text-neutral-500">Cargando más…</p>}
+          {/* State */}
+          {showEmptyState && (
+            <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">{t('state.no_results')}</p>
+          )}
+          {isFetchingNextPage && (
+            <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">{t('state.loading')}</p>
+          )}
           {!hasNextPage && items.length > 0 && (
-            <p className="py-18 text-center text-neutral-400">No hay más resultados</p>
+            <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">
+              {t('state.no_more_results')}
+            </p>
           )}
         </div>
       </div>

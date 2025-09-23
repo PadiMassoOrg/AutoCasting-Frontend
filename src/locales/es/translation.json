@@ -52,6 +52,8 @@
     "max_size": "El archivo supera el tamaño máximo de {{mb}}MB"
   },
   "state": {
+    "no_results": "No se encontraron resultados.",
+    "no_more_results": "No hay más resultados.",
     "loading": "Cargando...",
     "server_err": "Ocurrió un error, intente nuevamente."
   },

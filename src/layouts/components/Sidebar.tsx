@@ -2,7 +2,7 @@ import { Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronRight } from '../../shared/components/Chevron';
-import HilightLink from '../../shared/components/HilightLink/HilightLink'; // ⬅️ NUEVO
+import HilightLink from '../../shared/components/HilightLink/HilightLink';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import { ROUTES } from '../../shared/lib/routes';
 
