@@ -1,21 +1,26 @@
 import { Button } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import image from '../../icons/500.svg';
+import FixedViewportCenter from '../Structure/FixedViewportCenter';
 
 const ServerError = () => {
   const { t } = useTranslation();
   return (
-    <div className="w-full min-h-[75vh] grid place-items-center">
-      <div className="flex flex-col items-center gap-6">
+    <FixedViewportCenter avoid="#app-navbar">
+      <div className="flex flex-col items-center gap-12">
         <img src={image} alt="error" />
-        <div className="flex flex-col gap-2">
-          <h2 className=""> {t('error_page.title')}</h2>
-          <p className="">{t('error_page.description')}</p>
-          <p className="">{t('error_page.subtext')}</p>
+        <div className="flex flex-col gap-3 text-center">
+          <h2 className="font-semibold text-2xl"> {t('error_page.title')}</h2>
+          <div className="text-[16px] font-normal">
+            <p className="">{t('error_page.description')}</p>
+            <p className="">{t('error_page.subtext')}</p>
+          </div>
         </div>
-        <Button variant="primary">{t('routes.go_home')}</Button>
+        <Button variant="primary" className="max-w-[250px]">
+          {t('routes.go_home')}
+        </Button>
       </div>
-    </div>
+    </FixedViewportCenter>
   );
 };
 

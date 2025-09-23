@@ -33,7 +33,7 @@ function HilightLink({
   const active = candidates.some((p) => matchPath({ path: p + (exact ? '' : '/*'), end: !!exact }, location.pathname));
 
   const common = clsx(
-    'relative inline-flex items-center justify-center text-black px-1 font-bold text-base',
+    'relative inline-flex items-center justify-center px-1 font-bold text-base',
     'transition-colors',
     className
   );

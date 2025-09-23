@@ -39,7 +39,7 @@
 
   /* General */
   body {
-    @apply bg-[var(--color-primary-white)] list-none;
+    @apply bg-[var(--color-primary-white)] list-none text-[var(--color-primary-black)];
     font-family: var(--font-inter);
   }
 }
