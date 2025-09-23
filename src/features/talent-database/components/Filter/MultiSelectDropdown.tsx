@@ -1,6 +1,6 @@
+import { Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Separator } from 'autocasting-ui-library-padimasso';
 import { useScrollExitOnEdge } from '../../../../shared/hooks/useScrollExitOnEdge';
 
 type BaseProps<T> = {
@@ -65,9 +65,8 @@ export default function MultiSelectDropdown<T>({
     setSelected(Array.from(set));
   };
 
-  // panel scrolleable del dropdown
   const panelRef = useRef<HTMLDivElement>(null);
-  useScrollExitOnEdge(panelRef, { forwardTo: forwardScrollToRef ?? 'window' });
+  useScrollExitOnEdge(panelRef, { forwardTo: forwardScrollToRef! });
 
   return (
     <>

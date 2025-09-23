@@ -54,7 +54,7 @@ export function TalentFilterBar({
   );
 
   const genderOptionsWithUnspecified = useMemo(
-    () => [{ value: 'NULL', label: t('general.any') }, ...genderOptions],
+    () => [{ value: 'NULL', label: t('general.all') }, ...genderOptions],
     [genderOptions, t]
   );
 
@@ -112,7 +112,7 @@ export function TalentFilterBar({
   }, [skillsCats, value.skillId]);
 
   return (
-    <aside className="w-full flex flex-col items-stretch overflow-visible overflow-x-hidden lg:max-w-[350px] z-200">
+    <aside className="w-full flex flex-col items-stretch overflow-auto overflow-x-hidden lg:max-w-[350px] z-200">
       {/* Header */}
       <header className="flex items-center justify-between pb-2">
         <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
