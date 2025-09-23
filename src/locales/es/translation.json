@@ -91,6 +91,9 @@
     "gender": {
       "male": "Hombre",
       "female": "Mujer",
+      "male_trans": "Hombre Trans",
+      "female_trans": "Mujer Trans",
+      "non_binary": "No Binario",
       "other": "Otros"
     },
     "category": {
