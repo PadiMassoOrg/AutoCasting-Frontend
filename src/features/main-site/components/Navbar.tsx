@@ -1,6 +1,7 @@
 import { Button } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { AccountDropdown, Sidebar } from '../../../layouts/components';
 import HilightLink from '../../../shared/components/HilightLink/HilightLink';
 import { LinkLogo } from '../../../shared/components/LinkLogo';
@@ -45,7 +46,7 @@ const Navbar = () => {
                 className="text-base font-semibold text-nowrap"
               ></HilightLink>
               <Button variant="primary" asChild>
-                <a href={ROUTES.AUTH}>{t('routes.register')}</a>
+                <Link to={ROUTES.AUTH_REGISTER}>{t('routes.register')}</Link>
               </Button>
             </>
           )}

@@ -3,6 +3,7 @@ export const ROUTES = {
   ALL: '/*',
   // Auth
   AUTH: '/authentication',
+  AUTH_REGISTER: '/authentication?mode=register',
   GOOGLE_OAUTH_SUCCESS: '/oauth2/success',
   RESET_PASSWORD: '/reset-password',
   // Dashboard

@@ -22,15 +22,15 @@ const PublicProfilePage = () => {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
 
-  if (isLoading) return <PageLoading></PageLoading>;
-  if (error || !data) return <ServerError></ServerError>;
-
   const isOwner = !!myProfile?.publicSlug && myProfile.publicSlug === slug;
   const progress = useMemo<ProfileProgress | null>(() => {
     if (!isOwner) return null;
     const src = myProfile ?? data;
     return computeProfileProgress(src);
   }, [isOwner, myProfile, data]);
+
+  if (isLoading) return <PageLoading></PageLoading>;
+  if (error || !data) return <ServerError></ServerError>;
 
   const { basicInfo, socialMedia, media } = data;
 

@@ -37,8 +37,8 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
 
   return (
     <nav ref={ref} {...props} className={`w-full h-auto py-5 z-50 ${className}`}>
-      <div className="relative px-10 2xl:px-30 flex flex-row items-center justify-between z-50">
-        <LinkLogo horizontal />
+      <div className="relative px-10 2xl:px-30 flex flex-row items-center justify-between">
+        <LinkLogo horizontal path={ROUTES.HOME} />
         <button
           type="button"
           className="cursor-pointer lg:hidden"

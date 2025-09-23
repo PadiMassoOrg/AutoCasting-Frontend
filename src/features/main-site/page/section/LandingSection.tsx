@@ -91,7 +91,7 @@ const LandingSection = () => {
         "
           >
             <Button variant="primary" asChild className="lg:w-auto">
-              <a href={ROUTES.AUTH} rel="noopener noreferrer">
+              <a href={ROUTES.AUTH_REGISTER} rel="noopener noreferrer">
                 {t('routes.register')}
               </a>
             </Button>

@@ -179,27 +179,29 @@ export default function TalentDatabasePage() {
           {error && (
             <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
           )}
-          <article
-            className="
+          {!error && (
+            <article
+              className="
               grid gap-6 place-items-stretch
               grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
               sm:auto-rows-[408px]
               lg:auto-rows-auto
             "
-          >
-            {showInitialSkeletons &&
-              Array.from({ length: pageSize }).map((_, i) => (
-                <div key={`skeleton-${i}`} className="w-full h-full">
-                  <div className="animate-pulse w-full h-full bg-neutral-100 rounded-lg" />
+            >
+              {showInitialSkeletons &&
+                Array.from({ length: pageSize }).map((_, i) => (
+                  <div key={`skeleton-${i}`} className="w-full h-full">
+                    <div className="animate-pulse w-full h-full bg-neutral-100 rounded-lg" />
+                  </div>
+                ))}
+
+              {items.map((it) => (
+                <div key={it.id} className="w-full h-full">
+                  <TalentCard item={it} />
                 </div>
               ))}
-
-            {items.map((it) => (
-              <div key={it.id} className="w-full h-full">
-                <TalentCard item={it} />
-              </div>
-            ))}
-          </article>
+            </article>
+          )}
 
           {/* State */}
           {showEmptyState && (

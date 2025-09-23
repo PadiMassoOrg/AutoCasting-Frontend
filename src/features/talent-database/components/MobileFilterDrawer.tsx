@@ -56,7 +56,7 @@ export function MobileFiltersDrawer({
   if (!open) return null;
 
   return (
-    <div className="lg:hidden fixed inset-0 z-50" style={{ overscrollBehavior: 'contain' }}>
+    <div className="lg:hidden fixed inset-0 z-200" style={{ overscrollBehavior: 'contain' }}>
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       <article
