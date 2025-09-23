@@ -9,7 +9,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function FullscreenCenter({ zIndex = 40, lockBodyScroll = true, className, children }: Props) {
+export default function FullscreenCenter({ zIndex = 20, lockBodyScroll = true, className, children }: Props) {
   useViewportVhVar();
 
   useEffect(() => {
