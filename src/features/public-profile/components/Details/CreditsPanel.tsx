@@ -46,50 +46,53 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
 
   if (!credits.length) return <h2 className="text-sm font-normal text-center">{t('general.no_data')}</h2>;
   return (
-    <div className="flex flex-col gap-6" style={{ overflowAnchor: 'none' }}>
-      {categories.map((catKey) => {
+    <div className="flex flex-col" style={{ overflowAnchor: 'none' }}>
+      {categories.map((catKey, index) => {
         const list = groups[catKey];
         if (!list?.length) return null;
         const isOpen = open[catKey] ?? true;
+        let customClass = index === 0 ? 'pt-0 pb-6' : 'py-6';
         return (
-          <div key={catKey} className="w-full">
-            {/* Header colapsable */}
-            <button
-              type="button"
-              onClick={() => {
-                const y = window.scrollY;
-                setOpen((s) => ({ ...s, [catKey]: !isOpen }));
-                requestAnimationFrame(() => window.scrollTo({ top: y }));
-              }}
-              className="w-full flex items-center justify-between cursor-pointer"
-              aria-expanded={isOpen}
-              aria-controls={`credits-${catKey}`}
-            >
-              <span className="font-semibold text-base lg:text-[14px]">{t(catKey)}:</span>
-              <ChevronUpDown open={isOpen} />
-            </button>
+          <>
+            <div key={catKey} className={customClass}>
+              {/* Header colapsable */}
+              <button
+                type="button"
+                onClick={() => {
+                  const y = window.scrollY;
+                  setOpen((s) => ({ ...s, [catKey]: !isOpen }));
+                  requestAnimationFrame(() => window.scrollTo({ top: y }));
+                }}
+                className="w-full flex items-center justify-between cursor-pointer"
+                aria-expanded={isOpen}
+                aria-controls={`credits-${catKey}`}
+              >
+                <span className="font-semibold text-base lg:text-[14px]">{t(catKey)}:</span>
+                <ChevronUpDown open={isOpen} />
+              </button>
 
-            {/* Lista de Credits */}
-            {isOpen && (
-              <article id={`credits-${catKey}`} className="mt-3 flex flex-col gap-4">
-                {list.map((c) => (
-                  <div key={c.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3">
-                    <div className="flex items-center justify-between gap-4">
-                      <h4 className="font-semibold text-base lg:text-[14px] leading-snug">{c.projectName}</h4>
-                      <span className="shrink-0 rounded-lg border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px] font-light tracking-wide">
-                        {c.year}
-                      </span>
+              {/* Lista de Credits */}
+              {isOpen && (
+                <article id={`credits-${catKey}`} className="mt-3 flex flex-col gap-4">
+                  {list.map((c) => (
+                    <div key={c.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3">
+                      <div className="flex items-center justify-between gap-4">
+                        <h4 className="font-semibold text-base lg:text-[14px] leading-snug">{c.projectName}</h4>
+                        <span className="shrink-0 rounded-lg border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px] font-light tracking-wide">
+                          {c.year}
+                        </span>
+                      </div>
+                      <div className="mt-3 text-base lg:text-[14px] font-light text-[var(--color-secondary-grey-fonts)]">
+                        {c.role}
+                        {c.producerName ? ` — ${c.producerName}` : ''}
+                      </div>
                     </div>
-                    <div className="mt-3 text-base lg:text-[14px] font-light text-[var(--color-secondary-grey-fonts)]">
-                      {c.role}
-                      {c.producerName ? ` — ${c.producerName}` : ''}
-                    </div>
-                  </div>
-                ))}
-              </article>
-            )}
-            <Separator className="opacity-20 my-4" />
-          </div>
+                  ))}
+                </article>
+              )}
+            </div>
+            <Separator className="opacity-20" />
+          </>
         );
       })}
     </div>

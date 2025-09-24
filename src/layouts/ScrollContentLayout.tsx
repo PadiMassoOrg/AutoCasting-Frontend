@@ -1,6 +1,8 @@
 // ScrollContentLayout.tsx
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { MaintenanceBanner } from '../shared/components/MaintenanceBanner/MaintenanceBanner';
+import { LG_SCREEN_SIZE, useMedia } from '../shared/hooks/useMedia';
 import { useViewportVhVar } from '../shared/hooks/useViewportVhVar';
 import Navbar from './components/Navbar';
 
@@ -36,19 +38,29 @@ function useChromeBoxHeights() {
 export default function ScrollContentLayout() {
   useViewportVhVar();
   const { header, footer } = useChromeBoxHeights();
+  const isDesktop = useMedia(LG_SCREEN_SIZE);
 
   return (
     <>
-      <Navbar data-site-header />
+      <header data-site-header className="relative z-[40]">
+        <MaintenanceBanner />
+        <Navbar id="app-navbar" />
+      </header>
       <div
-        className="fixed inset-x-0 overflow-hidden"
-        style={{
-          top: `${header}px`,
-          bottom: `${footer}px`,
-          height: `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`,
-        }}
+        className={isDesktop ? 'fixed inset-x-0 overflow-hidden z-0' : ''}
+        style={
+          isDesktop
+            ? {
+                top: `${header}px`,
+                bottom: `${footer}px`,
+                height: `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`,
+              }
+            : undefined
+        }
       >
-        <main className="w-full min-w-0 h-full max-w-[1650px] mx-auto px-4 lg:px-6 pt-4 lg:pt-6">
+        <main
+          className={'w-full min-w-0 max-w-[1650px] mx-auto px-4 lg:px-6 pt-4 lg:pt-6 ' + (isDesktop ? 'h-full' : '')}
+        >
           <Outlet />
         </main>
       </div>

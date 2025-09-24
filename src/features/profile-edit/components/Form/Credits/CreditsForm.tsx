@@ -67,8 +67,10 @@ export default function CreditsForm({ data }: { data: Credit[] }) {
         <span className="text-3xl mb-1 font-extralight">+</span>
         <span className="text-base font-medium">{t('profile.credits.add_new')}</span>
       </Button>
-      <Separator className="opacity-20 my-2" />
-      {data?.length > 0 && <GroupedCredits data={data} onEdit={openEditModal} onDelete={openDeleteModal} />}
+      <div>
+        <Separator className="opacity-20 mt-6" />
+        {data?.length > 0 && <GroupedCredits data={data} onEdit={openEditModal} onDelete={openDeleteModal} />}
+      </div>
     </div>
   );
 }

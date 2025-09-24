@@ -1,5 +1,6 @@
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import type { TalentFiltersQS } from '../types/talent-database.types';
@@ -32,11 +33,9 @@ export function MobileFiltersDrawer({
 
   useEffect(() => {
     if (!open) return;
-
     const { scrollY } = window;
     const prevHtml = document.documentElement.getAttribute('style') || '';
     const prevBody = document.body.getAttribute('style') || '';
-
     document.documentElement.style.overscrollBehavior = 'none';
     document.documentElement.style.height = '100%';
     document.body.style.position = 'fixed';
@@ -45,7 +44,6 @@ export function MobileFiltersDrawer({
     document.body.style.right = '0';
     document.body.style.width = '100%';
     document.body.style.overflow = 'hidden';
-
     return () => {
       document.documentElement.setAttribute('style', prevHtml);
       document.body.setAttribute('style', prevBody);
@@ -55,7 +53,7 @@ export function MobileFiltersDrawer({
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div className="lg:hidden fixed inset-0 z-200" style={{ overscrollBehavior: 'contain' }}>
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
@@ -120,6 +118,7 @@ export function MobileFiltersDrawer({
           -webkit-text-size-adjust: 100%;
         }
       `}</style>
-    </div>
+    </div>,
+    document.body
   );
 }

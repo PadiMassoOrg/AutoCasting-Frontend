@@ -27,6 +27,18 @@ RewriteRule ^ - [L]
 RewriteRule ^ index.html [L]
 
 # --------------------------------------------------------------------
+# MAINTENANCE MESSAGE
+# --------------------------------------------------------------------
+<IfModule mod_headers.c>
+  <Files "index.html">
+    Header set Cache-Control "no-store, max-age=0"
+  </Files>
+  <Files "config.json">
+    Header set Cache-Control "no-store, max-age=0"
+  </Files>
+</IfModule>
+
+# --------------------------------------------------------------------
 # Compresión (Brotli / Deflate)
 # --------------------------------------------------------------------
 <IfModule mod_brotli.c>

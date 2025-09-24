@@ -112,7 +112,7 @@ export function TalentFilterBar({
   }, [skillsCats, value.skillId]);
 
   return (
-    <aside className="w-full flex flex-col items-stretch overflow-auto overflow-x-hidden lg:max-w-[350px] z-200">
+    <aside className="z-[300] w-full flex flex-col items-stretch overflow-auto overflow-x-hidden lg:max-w-[350px]">
       {/* Header */}
       <header className="flex items-center justify-between pb-2">
         <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
@@ -147,8 +147,8 @@ export function TalentFilterBar({
           onKeyDown={stageName.onKeyDown}
         />
 
-        <article className="flex flex-col gap-2">
-          <label htmlFor="ageMin" className="text-sm font-semibold">
+        <article className="flex flex-col">
+          <label htmlFor="ageMin" className="text-sm font-semibold mb-2">
             {t('talent.filter.basic_info.age_range')}
           </label>
           <div className="flex flex-row gap-4">
@@ -205,8 +205,8 @@ export function TalentFilterBar({
 
       {/* Characteristics */}
       <FilterSection title={t('profile.characteristics.characteristics')} count={characteristicsCount}>
-        <article className="flex flex-col gap-2">
-          <label htmlFor="heightMin" className="text-sm font-semibold">
+        <article className="flex flex-col">
+          <label htmlFor="heightMin" className="text-sm font-semibold mb-2">
             {t('talent.filter.characteristics.height')}
           </label>
           <div className="flex flex-row gap-4">

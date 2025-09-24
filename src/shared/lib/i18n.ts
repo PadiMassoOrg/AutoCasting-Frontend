@@ -4,6 +4,7 @@ import { initReactI18next } from 'react-i18next';
 
 i18n
   .use(initReactI18next)
+
   .use(resourcesToBackend((language: any, namespace: any) => import(`../../locales/${language}/${namespace}.json`)))
   .init({
     lng: 'es',
@@ -12,6 +13,20 @@ i18n
     defaultNS: 'translation',
     interpolation: {
       escapeValue: false,
+      format: (value, format, lng) => {
+        if (format === 'datetime' && value) {
+          try {
+            const d = new Date(value);
+            return new Intl.DateTimeFormat(lng ?? 'es', {
+              dateStyle: 'full',
+              timeStyle: 'short',
+            }).format(d);
+          } catch {
+            return String(value);
+          }
+        }
+        return value;
+      },
     },
   });
 

@@ -3,6 +3,10 @@
     "site": "autocasting",
     "header": "Tu Perfil Digital Actoral"
   },
+  "maintenance": {
+    "scheduled": "Entraremos en mantenimiento el {{date, datetime}}.",
+    "live": "Estamos en mantenimiento. Volvemos en unos minutos."
+  },
   "general": {
     "yes": "Sí",
     "no": "No",
@@ -91,6 +95,9 @@
     "gender": {
       "male": "Hombre",
       "female": "Mujer",
+      "male_trans": "Hombre Trans",
+      "female_trans": "Mujer Trans",
+      "non_binary": "No Binario",
       "other": "Otros"
     },
     "category": {

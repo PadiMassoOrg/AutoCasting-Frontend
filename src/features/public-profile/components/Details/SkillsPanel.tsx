@@ -42,42 +42,45 @@ export default function SkillsPanel({ skills }: Props) {
   }, [groups, t]);
   if (!skills.length) return <h2 className="text-sm font-normal text-center">{t('general.no_data')}</h2>;
   return (
-    <div className="flex flex-col gap-4" style={{ overflowAnchor: 'none' }}>
-      {categories.map((catKey) => {
+    <div className="flex flex-col" style={{ overflowAnchor: 'none' }}>
+      {categories.map((catKey, index) => {
         const list = groups[catKey];
         if (!list?.length) return null;
         const isOpen = open[catKey] ?? true;
+        let customClass = index === 0 ? 'pt-0 pb-6' : 'py-6';
         return (
-          <article key={catKey}>
-            <button
-              type="button"
-              onClick={() => {
-                const y = window.scrollY;
-                setOpen((s) => ({ ...s, [catKey]: !isOpen }));
-                requestAnimationFrame(() => window.scrollTo({ top: y }));
-              }}
-              className="w-full flex items-center justify-between cursor-pointer"
-              aria-expanded={isOpen}
-              aria-controls={`skills-${catKey}`}
-            >
-              <span className="font-semibold text-base lg:text-[14px]">{t(catKey)}:</span>
-              <ChevronUpDown open={isOpen} />
-            </button>
-            {isOpen && (
-              <article id={`skills-${catKey}`} className="mt-3 flex flex-wrap gap-2">
-                {list.map((s) => (
-                  <span
-                    key={s.id}
-                    className="inline-flex items-center rounded-xl border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px]"
-                    title={s.stringCode}
-                  >
-                    {t(s.stringCode)}
-                  </span>
-                ))}
-              </article>
-            )}
-            <Separator className="opacity-20 my-4" />
-          </article>
+          <>
+            <article key={catKey} className={customClass}>
+              <button
+                type="button"
+                onClick={() => {
+                  const y = window.scrollY;
+                  setOpen((s) => ({ ...s, [catKey]: !isOpen }));
+                  requestAnimationFrame(() => window.scrollTo({ top: y }));
+                }}
+                className="w-full flex items-center justify-between cursor-pointer"
+                aria-expanded={isOpen}
+                aria-controls={`skills-${catKey}`}
+              >
+                <span className="font-semibold text-base lg:text-[14px]">{t(catKey)}:</span>
+                <ChevronUpDown open={isOpen} />
+              </button>
+              {isOpen && (
+                <article id={`skills-${catKey}`} className="mt-3 flex flex-wrap gap-2">
+                  {list.map((s) => (
+                    <span
+                      key={s.id}
+                      className="inline-flex items-center rounded-xl border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px]"
+                      title={s.stringCode}
+                    >
+                      {t(s.stringCode)}
+                    </span>
+                  ))}
+                </article>
+              )}
+            </article>
+            <Separator className="opacity-20" />
+          </>
         );
       })}
     </div>

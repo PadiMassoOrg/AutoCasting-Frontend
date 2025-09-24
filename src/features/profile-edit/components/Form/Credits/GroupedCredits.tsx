@@ -56,61 +56,62 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
   if (!data?.length) return null;
 
   return (
-    <div className="flex flex-col gap-4" style={{ overflowAnchor: 'none' }}>
+    <div className="flex flex-col" style={{ overflowAnchor: 'none' }}>
       {categories.map((catKey) => {
         const list = groups[catKey];
         if (!list?.length) return null;
         const isOpen = open[catKey] ?? true;
 
         return (
-          <div key={catKey} className="w-full">
-            <span
-              onClick={() => {
-                const y = window.scrollY;
-                setOpen((s) => ({ ...s, [catKey]: !isOpen }));
-                requestAnimationFrame(() => window.scrollTo({ top: y }));
-              }}
-              className="w-full flex items-center justify-between cursor-pointer"
-              aria-expanded={isOpen}
-              aria-controls={`credits-${catKey}`}
-            >
-              <span className="font-semibold text-base">{t(catKey)}:</span>
-              <Chevron open={isOpen} />
-            </span>
+          <>
+            <div key={catKey} className="w-full py-6">
+              <span
+                onClick={() => {
+                  const y = window.scrollY;
+                  setOpen((s) => ({ ...s, [catKey]: !isOpen }));
+                  requestAnimationFrame(() => window.scrollTo({ top: y }));
+                }}
+                className="w-full flex items-center justify-between cursor-pointer"
+                aria-expanded={isOpen}
+                aria-controls={`credits-${catKey}`}
+              >
+                <span className="font-semibold text-base">{t(catKey)}:</span>
+                <Chevron open={isOpen} />
+              </span>
 
-            {isOpen && (
-              <article id={`credits-${catKey}`} className="mt-3 flex flex-col gap-4">
-                {list.map((c) => (
-                  <article key={c.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3">
-                    <div className="flex flex-row justify-between">
-                      <div className="grow">
-                        <div className="flex items-center justify-between gap-4">
-                          <h4 className="font-semibold text-base lg:text-[14px] leading-snug">{c.projectName}</h4>
-                          <span className="shrink-0 rounded-lg border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px] font-light tracking-wide">
-                            {c.year}
+              {isOpen && (
+                <article id={`credits-${catKey}`} className="mt-3 flex flex-col gap-4">
+                  {list.map((c) => (
+                    <article key={c.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3">
+                      <div className="flex flex-row justify-between">
+                        <div className="grow">
+                          <div className="flex items-center justify-between gap-4">
+                            <h4 className="font-semibold text-base lg:text-[14px] leading-snug">{c.projectName}</h4>
+                            <span className="shrink-0 rounded-lg border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px] font-light tracking-wide">
+                              {c.year}
+                            </span>
+                          </div>
+                          <div className="mt-3 text-base lg:text-[14px] font-light text-[var(--color-secondary-grey-fonts)]">
+                            {c.role}
+                            {c.producerName ? ` — ${c.producerName}` : ''}
+                          </div>
+                        </div>
+                        <div className="flex flex-col justify-around items-center ml-3 pl-3 border-l border-[var(--color-secondary-outline)]">
+                          <span onClick={() => onDelete(c)} className="cursor-pointer" aria-label="Delete">
+                            <img src={deleteIcon} alt="" className="w-5" />
+                          </span>
+                          <span onClick={() => onEdit(c)} className="cursor-pointer" aria-label="Edit">
+                            <img src={editIcon} alt="" className="w-5" />
                           </span>
                         </div>
-                        <div className="mt-3 text-base lg:text-[14px] font-light text-[var(--color-secondary-grey-fonts)]">
-                          {c.role}
-                          {c.producerName ? ` — ${c.producerName}` : ''}
-                        </div>
                       </div>
-                      <div className="flex flex-col justify-around items-center ml-3 pl-3 border-l border-[var(--color-secondary-outline)]">
-                        <span onClick={() => onDelete(c)} className="cursor-pointer" aria-label="Delete">
-                          <img src={deleteIcon} alt="" className="w-5" />
-                        </span>
-                        <span onClick={() => onEdit(c)} className="cursor-pointer" aria-label="Edit">
-                          <img src={editIcon} alt="" className="w-5" />
-                        </span>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </article>
-            )}
-
-            <Separator className="opacity-20 my-2" />
-          </div>
+                    </article>
+                  ))}
+                </article>
+              )}
+            </div>
+            <Separator className="opacity-20" />
+          </>
         );
       })}
     </div>

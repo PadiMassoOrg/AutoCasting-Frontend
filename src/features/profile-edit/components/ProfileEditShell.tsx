@@ -29,7 +29,7 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
   );
 
   return (
-    <section className="w-full min-w-0 flex flex-col gap-6">
+    <section className="w-full h-full min-w-0 flex flex-col gap-6">
       <div className="flex items-center justify-center w-full lg:hidden py-3">
         <ProfileCompletionCard
           progress={profile.progress}
@@ -37,11 +37,15 @@ export default function ProfileEditShell({ profile }: { profile: ProfileResponse
           publicSlug={profile.publicSlug}
         ></ProfileCompletionCard>
       </div>
-      <div className="lg:flex lg:flex-row lg:gap-4">
+      <div className="lg:flex lg:flex-row lg:gap-4 h-full min-h-0">
         <CarouselHeader items={items} active={outerIndex} onChange={(i) => setOuter(ORDER[i])} />
         <Separator className="opacity-20 my-9 lg:hidden" />
         {isDesktop ? (
-          <article className="w-full lg:pb-4 lg:py-6 lg:max-w-[590px] xl:max-w-[778px] lg:m-auto">
+          <article
+            className="w-full h-full lg:pb-4 lg:py-6 lg:max-w-[650px] xl:max-w-[778px] lg:m-auto
+                    min-h-0 overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]
+                    scrollbar-hide"
+          >
             <section className={outer === 'profile' ? 'block' : 'hidden'} aria-hidden={outer !== 'profile'}>
               <ProfileEditSection profile={profile} />
             </section>
