@@ -40,7 +40,7 @@ export default function ScrollContentLayout() {
 
   return (
     <>
-      <header data-site-header className="sticky top-0 z-[200]">
+      <header data-site-header className="sticky top-0 z-[40]">
         <MaintenanceBanner />
         <Navbar />
       </header>

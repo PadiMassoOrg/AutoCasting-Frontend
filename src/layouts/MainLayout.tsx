@@ -5,7 +5,7 @@ import Navbar from './components/Navbar';
 export default function MainLayout() {
   return (
     <>
-      <header data-site-header className="sticky top-0 z-[200]">
+      <header data-site-header className="sticky top-0 z-[40]">
         <MaintenanceBanner />
         <Navbar id="app-navbar"></Navbar>
       </header>
@@ -14,7 +14,6 @@ export default function MainLayout() {
           {<Outlet />}
         </main>
       </div>
-      {/* <Footer></Footer> */}
     </>
   );
 }

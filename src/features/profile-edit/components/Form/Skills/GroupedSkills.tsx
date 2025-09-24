@@ -48,48 +48,49 @@ function GroupedSkills({ skills }: { skills: SiteMetadataObject[] }) {
   if (categories.length === 0) return null;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col">
       {categories.map((cat) => {
         const list = groups[cat];
         if (!list?.length) return null;
         const isOpen = open[cat] ?? true;
 
         return (
-          <article key={cat}>
-            <button
-              type="button"
-              className="w-full flex items-center justify-between cursor-pointer"
-              aria-expanded={isOpen}
-              aria-controls={`skills-${cat}`}
-              onClick={() => setOpen((s) => ({ ...s, [cat]: !isOpen }))}
-            >
-              <span className="font-semibold text-base">{t(cat)}:</span>
-              <svg
-                className={`w-6 h-6 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden="true"
+          <>
+            <article key={cat} className="py-6">
+              <button
+                type="button"
+                className="w-full flex items-center justify-between cursor-pointer"
+                aria-expanded={isOpen}
+                aria-controls={`skills-${cat}`}
+                onClick={() => setOpen((s) => ({ ...s, [cat]: !isOpen }))}
               >
-                <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
-              </svg>
-            </button>
+                <span className="font-semibold text-base">{t(cat)}:</span>
+                <svg
+                  className={`w-6 h-6 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
+                </svg>
+              </button>
 
-            {isOpen && (
-              <div id={`skills-${cat}`} className="mt-3 flex flex-wrap gap-2">
-                {list.map((s) => (
-                  <span
-                    key={s.id}
-                    className="inline-flex items-center rounded-xl border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px]"
-                    title={s.stringCode}
-                  >
-                    {t(s.stringCode)}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            <Separator className="opacity-20 my-2" />
-          </article>
+              {isOpen && (
+                <div id={`skills-${cat}`} className="mt-3 flex flex-wrap gap-2">
+                  {list.map((s) => (
+                    <span
+                      key={s.id}
+                      className="inline-flex items-center rounded-xl border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px]"
+                      title={s.stringCode}
+                    >
+                      {t(s.stringCode)}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </article>
+            <Separator className="opacity-20" />
+          </>
         );
       })}
     </div>

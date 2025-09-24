@@ -44,8 +44,10 @@ export default function SkillsForm({ data }: { data: SiteMetadataObject[] }) {
         <span className="text-3xl mb-1 font-extralight">+</span>
         <span className="text-base font-medium">{t('profile.skills.add_new')}</span>
       </Button>
-      <Separator className="opacity-20 my-2" />
-      {skills.length > 0 && <GroupedSkills skills={skills} />}
+      <div>
+        <Separator className="opacity-20 mt-6" />
+        {skills.length > 0 && <GroupedSkills skills={skills} />}
+      </div>
     </div>
   );
 }
