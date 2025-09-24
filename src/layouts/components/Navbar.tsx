@@ -36,8 +36,8 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
   const isEditMode = isOnProfileEdit;
 
   return (
-    <nav ref={ref} {...props} className={`w-full h-auto py-5 z-50 ${className}`}>
-      <div className="relative px-10 2xl:px-30 flex flex-row items-center justify-between">
+    <nav ref={ref} {...props} className={`w-full bg-[var(--color-primary-white)] ${className}`}>
+      <div className="relative py-6 px-10 2xl:px-30 flex flex-row items-center justify-between bg-[var(--color-primary-white)]">
         <LinkLogo horizontal path={ROUTES.HOME} />
         <button
           type="button"

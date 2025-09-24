@@ -1,6 +1,7 @@
 // ScrollContentLayout.tsx
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { MaintenanceBanner } from '../shared/components/MaintenanceBanner/MaintenanceBanner';
 import { useViewportVhVar } from '../shared/hooks/useViewportVhVar';
 import Navbar from './components/Navbar';
 
@@ -39,7 +40,10 @@ export default function ScrollContentLayout() {
 
   return (
     <>
-      <Navbar data-site-header />
+      <header data-site-header className="sticky top-0 z-[200]">
+        <MaintenanceBanner />
+        <Navbar />
+      </header>
       <div
         className="fixed inset-x-0 overflow-hidden"
         style={{
