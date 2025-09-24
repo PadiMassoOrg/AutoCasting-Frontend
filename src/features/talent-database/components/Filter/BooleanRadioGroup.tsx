@@ -48,7 +48,7 @@ export default function BooleanRadioGroup({
             onChange={() => onChange(undefined)}
             className={inputBase}
           />
-          <label htmlFor={idAny}>{t('general.any')}</label>
+          <label htmlFor={idAny}>{t('general.all')}</label>
         </div>
 
         <div className={optionClassName}>
