@@ -10,7 +10,12 @@ const ProfileEditPage = () => {
 
   if (isLoading) return <PageLoading></PageLoading>;
   if (error || !data) return <ServerError></ServerError>;
-  if (data) return <ProfileEditShell profile={data} key={location.key} />;
+  if (data)
+    return (
+      <div className="h-full">
+        <ProfileEditShell profile={data} key={location.key} />
+      </div>
+    );
 };
 
 export default ProfileEditPage;

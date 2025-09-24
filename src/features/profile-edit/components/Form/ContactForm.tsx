@@ -28,18 +28,19 @@ export default function ContactForm({ data }: { data: ProfileContact }) {
         disabled
         autoComplete="email"
       />
-
-      <FormInputField
-        id="phoneNumber"
-        label={t('profile.basic_info.whatsapp')}
-        labelClassName="font-semibold text-base hidden"
-        className="hidden"
-        placeholder={t('general.placeholder.phoneNumber')}
-        value={phoneNumber.value}
-        onChange={phoneNumber.onChange}
-        onBlur={phoneNumber.onBlur}
-        onKeyDown={phoneNumber.onKeyDown}
-      />
+      <div className="hidden">
+        <FormInputField
+          id="phoneNumber"
+          label={t('profile.basic_info.whatsapp')}
+          labelClassName="font-semibold text-base hidden"
+          className="hidden"
+          placeholder={t('general.placeholder.phoneNumber')}
+          value={phoneNumber.value}
+          onChange={phoneNumber.onChange}
+          onBlur={phoneNumber.onBlur}
+          onKeyDown={phoneNumber.onKeyDown}
+        />
+      </div>
     </div>
   );
 }

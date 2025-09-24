@@ -37,7 +37,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
 
   return (
     <nav ref={ref} {...props} className={`w-full bg-[var(--color-primary-white)] ${className}`}>
-      <div className="relative py-6 px-10 2xl:px-30 flex flex-row items-center justify-between bg-[var(--color-primary-white)]">
+      <div className="relative py-4 px-10 2xl:px-30 flex flex-row items-center justify-between bg-[var(--color-primary-white)]">
         <LinkLogo horizontal path={ROUTES.HOME} />
         <button
           type="button"
