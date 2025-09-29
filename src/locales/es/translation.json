@@ -450,5 +450,15 @@
         "height": "Altura"
       }
     }
+  },
+  "account": {
+    "page": {
+      "title": "Mi Cuenta"
+    },
+    "menu": {
+      "access": "Acceso",
+      "support": "Soporte Técnico",
+      "faq": "Preguntas Frecuentes"
+    }
   }
 }

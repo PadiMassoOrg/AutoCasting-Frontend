@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import AuthenticationLayout from '../../../layouts/AuthenticationLayout';
+import NoNavigationLayout from '../../../layouts/NoNavigationLayout';
 import { LinkLogo } from '../../../shared/components/LinkLogo';
 import { ResetPasswordForm } from '../components';
 
@@ -19,7 +19,7 @@ const ResetPasswordPage = () => {
 
   if (token)
     return (
-      <AuthenticationLayout>
+      <NoNavigationLayout>
         <article
           className="
         w-full h-full m-auto flex flex-col bg-white max-w-lg
@@ -37,7 +37,7 @@ const ResetPasswordPage = () => {
             <ResetPasswordForm token={token}></ResetPasswordForm>
           </div>
         </article>
-      </AuthenticationLayout>
+      </NoNavigationLayout>
     );
 };
 

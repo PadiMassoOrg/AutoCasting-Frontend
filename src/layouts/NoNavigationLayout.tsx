@@ -2,7 +2,7 @@ type LayoutProps = {
   children: React.ReactNode;
 };
 
-export default function AuthenticationLayout({ children }: LayoutProps) {
+export default function NoNavigationLayout({ children }: LayoutProps) {
   return (
     <div
       className={`

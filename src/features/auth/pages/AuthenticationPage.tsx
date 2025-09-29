@@ -1,7 +1,7 @@
 import { GoogleButton } from 'autocasting-ui-library-padimasso';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import AuthenticationLayout from '../../../layouts/AuthenticationLayout';
+import NoNavigationLayout from '../../../layouts/NoNavigationLayout';
 import { LinkLogo } from '../../../shared/components/LinkLogo';
 import logo from '../../../shared/icons/og-image.svg';
 import Resaltador from '../../../shared/lib/resaltador.svg';
@@ -23,7 +23,7 @@ export default function AuthenticationPage() {
   const switchTo = (next: 'login' | 'register') => setSearchParams({ mode: next });
 
   return (
-    <AuthenticationLayout>
+    <NoNavigationLayout>
       <div className="flex flex-row items-center gap-36 w-full">
         {/* Banner */}
         <article className="hidden lg:flex flex-col relative pl-10 h-full justify-between">
@@ -78,6 +78,6 @@ export default function AuthenticationPage() {
           )}
         </article>
       </div>
-    </AuthenticationLayout>
+    </NoNavigationLayout>
   );
 }
