@@ -20,17 +20,26 @@ export default function AccountSideNav() {
           <ChevronRight></ChevronRight>
           <HilightLink label={t('account.menu.access')} to={ROUTES.ACCOUNT} className="text-[18px]"></HilightLink>
         </li>
-        <ul className="flex flex-col gap-4 text-[var(--color-secondary-disabled-grey)] text-sm font-semibold">
-          <Link className="cursor-pointer flex flex-row items-center gap-2" to={ROUTES.SUPPORT}>
+        <ul className="flex flex-col gap-4">
+          <Link
+            className="cursor-pointer flex flex-row items-center gap-2  text-[var(--color-secondary-disabled-grey)] text-sm font-semibold"
+            to={ROUTES.SUPPORT}
+          >
             <ChevronRight></ChevronRight>
             {t('routes.support')}
           </Link>
-          <Link className="cursor-pointer flex flex-row items-center gap-2" to={ROUTES.FAQ}>
+          <Link
+            className="cursor-pointer flex flex-row items-center gap-2  text-[var(--color-secondary-disabled-grey)] text-sm font-semibold"
+            to={ROUTES.FAQ}
+          >
             <ChevronRight></ChevronRight>
             {t('routes.faq')}
           </Link>
-          <Separator className="opacity-20 my-2" />
-          <li onClick={() => logout()} className="cursor-pointer flex flex-row items-center gap-2">
+          <Separator className="opacity-20 my-3" />
+          <li
+            onClick={() => logout()}
+            className="cursor-pointer flex flex-row items-center gap-2  text-[var(--color-secondary-disabled-grey)] text-sm font-semibold"
+          >
             <ChevronRight></ChevronRight>
             {t('general.logout')}
           </li>

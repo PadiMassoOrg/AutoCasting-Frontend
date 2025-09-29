@@ -1,14 +1,19 @@
-import { useTranslation } from 'react-i18next';
+import AccountSideNav from '../../../layouts/components/AccountSideNav';
 
 export default function AccountPanel() {
-  const { t } = useTranslation();
   return (
-    <article className="w-full flex flex-col gap-6">
-      {/* Título visible en mobile (sidebar está oculta) */}
-      <h1 className="mb-2 text-2xl font-bold lg:hidden">{t('account.menu.access')}</h1>
-      <h2>Hola</h2>
-      {/* Aquí tu formulario de email/contraseña */}
-      {/* ... */}
-    </article>
+    <section className="w-full h-full min-w-0 flex flex-col gap-6">
+      <div className="lg:flex lg:flex-row lg:gap-4 h-full min-h-0">
+        <AccountSideNav />
+        {/* Content */}
+        <article
+          className="w-full h-full lg:pb-4 lg:py-6 lg:max-w-[650px] xl:max-w-[778px] lg:m-auto
+        min-h-0 overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]
+        scrollbar-hide"
+        >
+          <h2>hola</h2>
+        </article>
+      </div>
+    </section>
   );
 }
