@@ -1,4 +1,4 @@
-import 'autocasting-ui-library-padimasso/dist/styles.css';
+import 'autocasting-ui-library-padimasso/styles.css';
 import './index.css';
 
 import React from 'react';
