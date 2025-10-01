@@ -65,7 +65,8 @@
   "buttons": {
     "cancel": "Cancelar",
     "save": "Guardar",
-    "delete": "Borrar"
+    "delete": "Borrar",
+    "understood": "Entendido"
   },
   "dashboard": {
     "logout": "Salir"
@@ -453,7 +454,20 @@
   },
   "account": {
     "page": {
-      "title": "Mi Cuenta"
+      "title": "Mi Cuenta",
+      "email_text": "Puede cambiar tu Email haciendo click en el ícono de Editar.",
+      "password_text": "Puedes cambiar tu contraseña haciendo click en el ícono de Editar.",
+      "warning_account_other": "Como te registraste con Google, tu email y contraseña se gestionan desde tu cuenta de Google.",
+      "change_pass_modal": {
+        "title": "Cambiar contraseña",
+        "actual_pass": "Contraseña actual",
+        "actual_pass_text": "Por seguridad, ingresá tu contraseña actual.",
+        "new_pass": "Nueva Contraseña",
+        "new_pass_text": "Usá al menos 8 caracteres con letras y números.",
+        "repeat_new_pass": "Repetir Nueva Contraseña",
+        "success": "Contraseña Actualizada",
+        "success_text": "Listo, cambiamos tu contraseña!"
+      }
     },
     "menu": {
       "access": "Acceso",

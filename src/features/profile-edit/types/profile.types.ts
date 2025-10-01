@@ -4,6 +4,7 @@ import type { ProfileProgress } from '../services/computeProfileProgress';
 
 export type BaseProfileResponse = {
   id: string;
+  userAccountProvider: string;
   roleStringCode: string;
   planStringCode: string;
   publicSlug: string;

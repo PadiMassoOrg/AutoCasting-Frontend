@@ -8,8 +8,7 @@ import { useForgotPasswordMutation } from '../hooks/useForgotPasswordMutation';
 import { getForgottenPasswordSchema, type ForgottenPasswordValues } from '../schemas/authSchema';
 
 export default function ForgottenPasswordForm() {
-  const { closeModal } = useModal();
-  const { openModal } = useModal();
+  const { openModal, closeModal } = useModal();
   const { t } = useTranslation();
   const forgotPasswordMutation = useForgotPasswordMutation();
 

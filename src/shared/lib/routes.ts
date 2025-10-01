@@ -43,6 +43,7 @@ export const API_ROUTES = {
   OAUTH_GOOGLE: '/oauth2/authorization/google',
   FORGOT_PASSWORD: '/auth/forgot-password',
   RESET_PASSWORD: '/auth/reset-password',
+  CHANGE_PASSWORD: '/auth/change-password',
   // Profile
   PROFILE: '/profile',
   BASIC_INFO: '/profile/basic-info',
