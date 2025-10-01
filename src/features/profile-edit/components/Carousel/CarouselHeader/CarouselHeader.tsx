@@ -74,7 +74,7 @@ export default function CarouselHeader({
 
       {/* VERTICAL */}
       <article className="hidden lg:relative lg:flex lg:flex-col lg:w-[264px] lg:h-full lg:gap-14 lg:py-6">
-        <span className="absolute top-0 right-0 h-full border-r-1 border-black/20"></span>
+        <span className="absolute top-0 right-0 h-[96%] border-r-1 border-black/20"></span>
         <div className="w-full">
           <h2 className="font-bold text-base">{t('profile.page.edit_profile')}</h2>
         </div>
