@@ -13,18 +13,18 @@ type SectionKey =
   | 'education';
 
 export const SECTION_WEIGHTS: Record<SectionKey, number> = {
-  basicInfo: 20,
-  contact: 7,
-  socialMedia: 6,
-  media: 25,
-  characteristics: 12,
-  skills: 12,
-  credits: 12,
-  education: 6,
+  basicInfo: 80, // Divided by 2
+  contact: 0,
+  socialMedia: 0,
+  media: 30,
+  characteristics: 30,
+  skills: 8,
+  credits: 1,
+  education: 1,
 };
 
-const SKILLS_FULL = 5;
-const CREDITS_FULL = 3;
+const SKILLS_FULL = 1;
+const CREDITS_FULL = 1;
 const EDU_FULL = 1;
 
 // ==== Tipos de salida ====
@@ -95,13 +95,11 @@ export function computeProfileProgress(profile: ProfileResponse): ProfileProgres
   if (socialsPresent === 0) missing.push({ section: 'socialMedia', key: 'any', i18nKey: 'progress.add_social' });
   put('socialMedia', pct(socialsPresent, 2), sections);
 
-  // --- media (25% cada uno) ---
+  // --- media (50% cada uno) ---
   const m = profile.media;
   const mediaFields: [keyof typeof m, string?][] = [
     ['headshotImageUrl', 'progress.add_headshot'],
     ['fullBodyImageUrl', 'progress.add_fullbody'],
-    ['introductionVideoUrl', 'progress.add_intro_video'],
-    ['showReelVideoUrl', 'progress.add_showreel'],
   ];
   const mediaFilled = mediaFields.filter(([k]) => filled(m?.[k]!)).length;
   mediaFields.forEach(([k, i18n]) => {
@@ -124,7 +122,8 @@ export function computeProfileProgress(profile: ProfileResponse): ProfileProgres
   charFields.forEach(([k, i18n]) => {
     if (!filled(ch?.[k]!)) missing.push({ section: 'characteristics', key: String(k), i18nKey: i18n });
   });
-  put('characteristics', pct(charFilled, charFields.length), sections);
+  // Todas menos: Camisa, Pantalon, Vestido, Calzado = 4.
+  put('characteristics', pct(charFilled, charFields.length - 4), sections);
 
   // --- skills (lineal hasta SKILLS_FULL) ---
   const skillsCount = (profile.skills as SiteMetadataObject[] | null)?.length ?? 0;

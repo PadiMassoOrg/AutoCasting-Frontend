@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 const MAX_MB = 8;
 const MAX_BYTES = MAX_MB * 1024 * 1024;
-export const OTHER_SLOTS = 6;
+export const OTHER_SLOTS = 3;
 
 export const fileSchema = (t: TFunction) =>
   z
