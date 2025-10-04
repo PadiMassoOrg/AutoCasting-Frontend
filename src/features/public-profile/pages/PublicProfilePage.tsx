@@ -45,8 +45,8 @@ const PublicProfilePage = () => {
     return (
       <article className="relative w-full flex flex-col gap-3">
         <BasicInfoSection data={basicInfo} />
-        <div className="grid gap-10 grid-cols-[1.4fr_1fr] h-[700px] max-h-[700px] min-h-0">
-          <section className="min-w-0 min-h-0 h-full">
+        <div className="grid gap-10 grid-cols-[1fr_1fr] h-[700px] max-h-[700px] min-h-0">
+          <section className="min-w-0 min-h-0">
             <ImageCarousel images={hasImages ? images : null} isDesktop />
           </section>
           <aside className="min-w-0 min-h-0 h-full overflow-auto">

@@ -34,7 +34,13 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
   const isDesktopOnly = !!isDesktop && !isDesktopXL;
   const desktopLayout = !!isDesktop || !!isDesktopXL;
 
-  const gridCols = isDesktopOnly ? 'grid-cols-[1fr_130px]' : 'grid-cols-[max-content_auto]';
+  // ✅ mostrar thumbs sólo si hay >1 imagen real en desktop
+  const realCount = images?.length ?? 0;
+  const showDesktopThumbs = desktopLayout && realCount > 1;
+
+  // === geometría ORIGINAL (sin cambios para la figura/contenedor) ===
+  const gridColsTwo = isDesktopOnly ? 'grid-cols-[1fr_130px]' : 'grid-cols-[max-content_auto]';
+  const gridCols = showDesktopThumbs ? gridColsTwo : 'grid-cols-1';
 
   const figureClass = desktopLayout
     ? isDesktopOnly
@@ -49,6 +55,7 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
   return (
     <div className={`w-full ${desktopLayout ? 'h-full min-h-0' : 'h-auto'} ${className ?? ''}`}>
       <div className={wrapperClass}>
+        {/* principal */}
         <div className={desktopLayout ? 'col-[1] row-[1] h-full min-h-0 flex flex-col' : 'flex flex-col gap-2'}>
           <figure className={`cursor-pointer relative overflow-hidden rounded-xl ${figureClass}`} onClick={openZoom}>
             <img
@@ -58,7 +65,8 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
             />
           </figure>
 
-          {!desktopLayout && (
+          {/* thumbs mobile (sin cambios) */}
+          {!desktopLayout && realCount > 1 && (
             <div className="flex gap-2 overflow-x-auto w-full pb-1">
               {finalImages.map((img, i) => (
                 <button
@@ -77,7 +85,8 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
           )}
         </div>
 
-        {desktopLayout && (
+        {/* ✅ thumbs desktop: HIDDEN si images.length === 1 */}
+        {showDesktopThumbs && (
           <div
             className="col-[2] row-[1] h-full min-h-0 flex flex-col gap-3 items-stretch"
             style={{ ['--g' as any]: '12px' }}
@@ -89,7 +98,7 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
                 <button
                   key={`thumb-d-${idx}`}
                   type="button"
-                  onClick={() => setSelectedIndex(idx)}
+                  onClick={() => setSelectedIndex(idx)} // (tu comportamiento original)
                   aria-label={`Seleccionar imagen ${idx + 1}`}
                   style={{ height: 'calc((100% - 2*var(--g)) / 3)' }}
                   className={`cursor-pointer relative aspect-[4/5] rounded-xl overflow-hidden border-2 flex-shrink-0 ${
@@ -103,15 +112,14 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
           </div>
         )}
 
-        {desktopLayout && (
-          <div className="col-[1/-1] row-[2]">
-            <Button variant="outline" className="w-full" onClick={openZoom}>
-              {t('profile.media.more_photos')}
-            </Button>
-          </div>
-        )}
+        {/* botón */}
+        <div className={desktopLayout ? 'col-[1/-1] row-[2]' : ''}>
+          <Button variant="outline" className="w-full" onClick={openZoom}>
+            {t('profile.media.more_photos')}
+          </Button>
+        </div>
 
-        {/* Overlay sin chrome */}
+        {/* Overlay */}
         <PhotoZoomOverlay open={zoomOpen} images={finalImages} initialIndex={selectedIndex} onClose={closeZoom} />
       </div>
     </div>
