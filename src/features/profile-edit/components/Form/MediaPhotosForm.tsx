@@ -62,7 +62,9 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
           setBust((prev) => ({ ...prev, [slot]: (prev[slot] ?? 0) + 1 }));
           if (slot === 'headshot') setRemovedHeadshot(false);
           if (slot === 'fullbody') setRemovedFullbody(false);
-          qc.setQueryData(PROFILE_CACHE_KEY, (prev: any) => (prev ? { ...prev, media: updated } : prev));
+          qc.setQueriesData({ queryKey: PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
+            prev ? { ...prev, media: updated } : prev
+          );
         },
         onSettled: () =>
           setPending((prev) => {
@@ -111,7 +113,9 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             n.delete(index);
             return n;
           });
-          qc.setQueryData(PROFILE_CACHE_KEY, (prev: any) => (prev ? { ...prev, media: updated } : prev));
+          qc.setQueriesData({ queryKey: PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
+            prev ? { ...prev, media: updated } : prev
+          );
         },
         onSettled: () =>
           setOtherPending((p) => {
@@ -132,7 +136,9 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
       setLiveMedia(updated);
       setPreview((p) => ({ ...p, headshot: undefined }));
       setRemovedHeadshot(false);
-      qc.setQueryData(PROFILE_CACHE_KEY, (prev: any) => (prev ? { ...prev, media: updated } : prev));
+      qc.setQueriesData({ queryKey: PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
+        prev ? { ...prev, media: updated } : prev
+      );
     } catch {
       setRemovedHeadshot(false);
     }
@@ -147,7 +153,9 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
       setLiveMedia(updated);
       setPreview((p) => ({ ...p, fullbody: undefined }));
       setRemovedFullbody(false);
-      qc.setQueryData(PROFILE_CACHE_KEY, (prev: any) => (prev ? { ...prev, media: updated } : prev));
+      qc.setQueriesData({ queryKey: PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
+        prev ? { ...prev, media: updated } : prev
+      );
     } catch {
       setRemovedFullbody(false);
     }
@@ -167,7 +175,9 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
         n.delete(index);
         return n;
       });
-      qc.setQueryData(PROFILE_CACHE_KEY, (prev: any) => (prev ? { ...prev, media: updated } : prev));
+      qc.setQueriesData({ queryKey: PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
+        prev ? { ...prev, media: updated } : prev
+      );
     } finally {
       setOtherPending((s) => {
         const n = new Set(s);

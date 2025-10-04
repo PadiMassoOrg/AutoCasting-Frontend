@@ -1,5 +1,5 @@
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
-import type { Credit, Education, ProfileResponse } from '../types/profile.types';
+import type { BaseCharacteristics, Credit, Education, ProfileResponse } from '../types/profile.types';
 
 // ==== Config fácil de editar ====
 type SectionKey =
@@ -26,6 +26,18 @@ export const SECTION_WEIGHTS: Record<SectionKey, number> = {
 const SKILLS_FULL = 1;
 const CREDITS_FULL = 1;
 const EDU_FULL = 1;
+
+type CharKey = keyof BaseCharacteristics;
+const CHARACTERISTICS_INCLUDED: CharKey[] = [
+  'heightCm',
+  'weightKg',
+  'chestCm',
+  'waistCm',
+  'hipCm',
+  'tattoo',
+  'passport',
+  'drivingLicense',
+];
 
 // ==== Tipos de salida ====
 export type SectionProgress = {
@@ -107,23 +119,14 @@ export function computeProfileProgress(profile: ProfileResponse): ProfileProgres
   });
   put('media', pct(mediaFilled, mediaFields.length), sections);
 
-  // --- characteristics (lineal sobre los más útiles) ---
-  const ch = profile.characteristics;
-  const charFields: [keyof typeof ch, string?][] = [
-    ['heightCm', 'progress.height'],
-    ['weightKg', 'progress.weight'],
-    ['hairColorId', 'progress.hair_color'],
-    ['eyeColorId', 'progress.eye_color'],
-    ['shirtSize', 'progress.shirt'],
-    ['pantSize', 'progress.pant'],
-    ['shoeSize', 'progress.shoe'],
-  ];
-  const charFilled = charFields.filter(([k]) => filled(ch?.[k]!)).length;
-  charFields.forEach(([k, i18n]) => {
-    if (!filled(ch?.[k]!)) missing.push({ section: 'characteristics', key: String(k), i18nKey: i18n });
+  // --- characteristics ---
+  const ch = profile.characteristics as Partial<BaseCharacteristics> | undefined;
+  const charKeys = CHARACTERISTICS_INCLUDED;
+  const charFilled = charKeys.filter((k) => filled(ch?.[k]!)).length;
+  charKeys.forEach((k) => {
+    if (!filled(ch?.[k]!)) missing.push({ section: 'characteristics', key: String(k) });
   });
-  // Todas menos: Camisa, Pantalon, Vestido, Calzado = 4.
-  put('characteristics', pct(charFilled, charFields.length - 4), sections);
+  put('characteristics', pct(charFilled, charKeys.length), sections);
 
   // --- skills (lineal hasta SKILLS_FULL) ---
   const skillsCount = (profile.skills as SiteMetadataObject[] | null)?.length ?? 0;
