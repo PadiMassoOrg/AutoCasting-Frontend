@@ -198,11 +198,14 @@ export default function TalentDatabasePage() {
                   </div>
                 ))}
 
-              {items.map((it) => (
-                <div key={it.id} className="w-full h-full">
-                  <TalentCard item={it} />
-                </div>
-              ))}
+              {items.map(
+                (it) =>
+                  it.headshotImageUrl && (
+                    <div key={it.id} className="w-full h-full">
+                      <TalentCard item={it} />
+                    </div>
+                  )
+              )}
             </article>
           )}
 

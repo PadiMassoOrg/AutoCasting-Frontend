@@ -107,15 +107,11 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Pr
               <div className="text-[16px] font-semibold">
                 <li onClick={onClose} className="cursor-pointer flex flex-row items-center gap-2">
                   <ChevronRight></ChevronRight>
-                  <a href={ROUTES.SUPPORT} rel="noopener noreferrer">
-                    {t('routes.support')}
-                  </a>
+                  <HilightLink to={ROUTES.SUPPORT} label={t('routes.support')}></HilightLink>
                 </li>
                 <li onClick={onClose} className="cursor-pointer flex flex-row items-center gap-2">
                   <ChevronRight></ChevronRight>
-                  <a href={ROUTES.FAQ} target="_blank" rel="noopener noreferrer">
-                    {t('routes.faq')}
-                  </a>
+                  <HilightLink to={ROUTES.FAQ} label={t('routes.faq')}></HilightLink>
                 </li>
               </div>
               {isAuthenticated && (

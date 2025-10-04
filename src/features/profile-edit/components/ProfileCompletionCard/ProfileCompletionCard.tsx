@@ -36,7 +36,7 @@ export function ProfileCompletionCard({
         </div>
         <div className="mt-2 h-3 w-full rounded-full bg-white border border-[var(--color-secondary-outline)]">
           <div
-            className="h-3 rounded-full ml-[-0.07rem] bg-lime-400 transition-all"
+            className="h-full w-full rounded-full  bg-lime-400  border-2 border-lime-400 transition-all"
             style={{ width: `${progress.total}%` }}
           />
         </div>

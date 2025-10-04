@@ -1,5 +1,3 @@
-/* src/styles/tailwind.css */
-
 /*
   Declara las capas antes de importar (requisito v4)
   ─────────────────────────────────────────────────── */
@@ -17,6 +15,9 @@
 /* 4. Cualquier personalización tuya:  */
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap');
 
+@source "./**/*.{ts,tsx,js,jsx,html}";
+@source "../node_modules/autocasting-ui-library-padimasso/**/*.{ts,tsx,js,jsx}";
+
 @layer base {
   :root {
     /* Primary Colors */
@@ -25,9 +26,9 @@
     --color-primary-light-grey: #f3f4f9;
     --color-primary-greenyellow: #aeff00;
     /* Secondary Colors */
-    --color-secondary-offwhite: #ebedfd;
+    --color-secondary-: #ebedfd;
     --color-secondary-outline: #e0e0e0;
-    --color-secondary-disabled-grey: #ebedfd;
+    --color-secondary-disabled-grey: #a1a3b2;
     --color-secondary-grey: #767680;
     --color-secondary-grey-fonts: #6c6e7c;
     /* Alert Colors */

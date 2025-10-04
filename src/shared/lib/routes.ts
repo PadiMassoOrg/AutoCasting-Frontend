@@ -13,8 +13,8 @@ export const ROUTES = {
   // Public
   PUBLIC_PROFILE: '/profile',
   TALENT_DATABASE: '/talent-database',
-  SUPPORT: '/',
-  FAQ: '/',
+  SUPPORT: '/dashboard/support',
+  FAQ: '/dashboard/faq',
 };
 
 export const USER_ROUTES = [
@@ -43,6 +43,7 @@ export const API_ROUTES = {
   OAUTH_GOOGLE: '/oauth2/authorization/google',
   FORGOT_PASSWORD: '/auth/forgot-password',
   RESET_PASSWORD: '/auth/reset-password',
+  CHANGE_PASSWORD: '/auth/change-password',
   // Profile
   PROFILE: '/profile',
   BASIC_INFO: '/profile/basic-info',

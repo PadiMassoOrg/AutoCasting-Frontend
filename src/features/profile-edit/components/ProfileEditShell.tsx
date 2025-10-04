@@ -1,4 +1,3 @@
-// src/features/profile/components/edit/ProfileEditShell.tsx
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
