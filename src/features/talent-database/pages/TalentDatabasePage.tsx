@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
@@ -33,7 +32,6 @@ const MAX_AUTOFILL_PAGES = 6;
 const SCROLL_EPS = 8;
 
 export default function TalentDatabasePage() {
-  const qc = useQueryClient();
   useViewportVhVar();
   const { t } = useTranslation();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
