@@ -194,7 +194,7 @@ export default function TalentDatabasePage() {
 
               {items.map(
                 (it) =>
-                  it.headshotImageUrl && (
+                  it.headshotImageUrl != null && (
                     <div key={it.id} className="w-full h-full">
                       <TalentCard item={it} />
                     </div>
