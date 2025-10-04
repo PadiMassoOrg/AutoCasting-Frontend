@@ -23,7 +23,7 @@ const ChangePasswordForm = () => {
   });
 
   const handleSuccessModal = () => {
-    openModal(<ChangePasswordSuccessModal />, t('account.page.change_pass_modal.success'), 'lg');
+    openModal(<ChangePasswordSuccessModal onClose={closeModal} />, t('account.page.change_pass_modal.success'), 'lg');
   };
 
   const onSubmit = async (data: ChangePasswordValues) => {
