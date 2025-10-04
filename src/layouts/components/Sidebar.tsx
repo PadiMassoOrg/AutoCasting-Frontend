@@ -30,7 +30,7 @@ export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Pr
     <div aria-modal="true" role="dialog" className="fixed inset-0 z-300 lg:hidden">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <aside className="absolute inset-0 bg-white flex flex-col pt-5">
-        <header className="h-14 px-5 flex items-center justify-between">
+        <header className="h-14 px-6 flex items-center justify-between">
           <LinkLogo horizontal />
           <button
             type="button"
