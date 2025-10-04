@@ -4,8 +4,5 @@ import type { ChangePasswordRequest } from '../types/account.types';
 export const useChangePasswordMutation = () => {
   return useMutation<void, any, ChangePasswordRequest>({
     mutationFn: changePassword,
-    onSuccess: () => {
-      console.log('Hola');
-    },
   });
 };
