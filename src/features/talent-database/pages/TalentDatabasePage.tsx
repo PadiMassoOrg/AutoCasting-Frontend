@@ -9,7 +9,6 @@ import filterIcon from '../../../shared/icons/filter.svg';
 import { MobileFiltersDrawer, TalentCard } from '../components';
 import { TalentFilterBar } from '../components/TalentFilterBar';
 import { useTalentDatabase } from '../hooks/useTalentDatabase';
-import { TALENT_DATABASE_CACHE_KEY } from '../services/talentDatabaseService';
 import type { TalentFiltersQS } from '../types/talent-database.types';
 
 const initialFilters: TalentFiltersQS = {
@@ -42,10 +41,12 @@ export default function TalentDatabasePage() {
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
   const [mobileOpen, setMobileOpen] = useState(false);
   const debouncedFilters = useDebouncedValue(filters, 350);
-  const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useTalentDatabase(
+
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isFetched, fetchStatus } = useTalentDatabase(
     pageSize,
     debouncedFilters
   );
+
   const items = useMemo(() => data?.pages.flatMap((p) => p.items) ?? [], [data]);
 
   const cardsScrollRef = useRef<HTMLDivElement>(null);
@@ -56,11 +57,6 @@ export default function TalentDatabasePage() {
   }, []);
   const autofillAttemptsRef = useRef(0);
   useScrollExitOnEdge(cardsScrollRef, { forwardTo: isDesktop ? cardsScrollRef : scrollRootRef });
-
-  useEffect(() => {
-    qc.cancelQueries({ queryKey: [TALENT_DATABASE_CACHE_KEY] });
-    qc.invalidateQueries({ queryKey: [TALENT_DATABASE_CACHE_KEY], refetchType: 'all' });
-  }, []);
 
   useEffect(() => {
     cardsScrollRef.current?.scrollTo({ top: 0 });
@@ -92,7 +88,7 @@ export default function TalentDatabasePage() {
   useEffect(() => {
     const el = cardsScrollRef.current;
     if (!el) return;
-    if (isLoading || isFetchingNextPage) return;
+    if (isFetched || isFetchingNextPage) return;
 
     const tryFill = () => {
       const box = cardsScrollRef.current;
@@ -115,7 +111,7 @@ export default function TalentDatabasePage() {
       });
     };
     tryFill();
-  }, [items.length, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
+  }, [items.length, isFetched, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
   useEffect(() => {
     const el = cardsScrollRef.current;
@@ -125,7 +121,7 @@ export default function TalentDatabasePage() {
     const ro = new ResizeObserver(() => {
       if (resizeTimer) window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
-        if (isLoading || isFetchingNextPage) return;
+        if (isFetched || isFetchingNextPage) return;
         if (!hasNextPage) return;
         const box = cardsScrollRef.current;
         if (!box) return;
@@ -142,10 +138,10 @@ export default function TalentDatabasePage() {
       ro.disconnect();
       if (resizeTimer) window.clearTimeout(resizeTimer);
     };
-  }, [isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
+  }, [isFetched, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
-  const showInitialSkeletons = isLoading && (!data || items.length === 0);
-  const showEmptyState = !isLoading && !error && items.length === 0;
+  const showInitialSkeletons = !isFetched || (fetchStatus === 'fetching' && !data);
+  const showEmptyState = isFetched && !error && items.length === 0;
 
   return (
     <section className="w-full h-full min-h-0 flex flex-col">
