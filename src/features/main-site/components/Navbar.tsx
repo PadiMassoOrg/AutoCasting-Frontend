@@ -53,12 +53,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      <Sidebar
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        onLogout={() => logout()}
-        isAuthenticated={!!myProfile}
-      />
+      <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} onLogout={() => logout()} />
     </div>
   );
 };

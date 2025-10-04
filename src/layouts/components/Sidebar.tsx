@@ -4,17 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { ChevronRight } from '../../shared/components/Chevron';
 import HilightLink from '../../shared/components/HilightLink/HilightLink';
 import { LinkLogo } from '../../shared/components/LinkLogo';
+import { getAuthToken } from '../../shared/lib/cookies';
 import { ROUTES } from '../../shared/lib/routes';
 
 type Props = {
   open: boolean;
   onClose: () => void;
   onLogout: () => void;
-  isAuthenticated?: boolean;
 };
 
-export default function Sidebar({ open, onClose, onLogout, isAuthenticated }: Props) {
+export default function Sidebar({ open, onClose, onLogout }: Props) {
   const { t } = useTranslation();
+  const isAuthenticated = getAuthToken() != null;
 
   useEffect(() => {
     if (!open) return;

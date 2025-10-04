@@ -23,7 +23,7 @@ function buildConfigUrl(): string {
   return `${base}/config.json?ts=${Date.now()}`;
 }
 
-function useAppConfig(pollMs = 3000) {
+function useAppConfig(pollMs = 900000) {
   const [cfg, setCfg] = useState<AppConfig | null>(null);
 
   async function load() {
