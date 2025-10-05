@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next';
+import { NavbarDropdown } from '.';
 import { ChevronUpDown } from '../../shared/components/Chevron';
 import HilightLink from '../../shared/components/HilightLink/HilightLink';
 import { ROUTES } from '../../shared/lib/routes';
-import NavbarDropdown, { type MenuItem } from './NavbarDropdown';
+import type { MenuItem } from './NavbarDropdown';
 
 export default function AccountDropdown({ onLogout }: { onLogout: () => void }) {
   const { t } = useTranslation();

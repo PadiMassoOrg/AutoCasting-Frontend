@@ -1,5 +1,6 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { logout } from '../../features/auth/services/authService';
 import { ChevronRight } from '../../shared/components/Chevron';
 import HilightLink from '../../shared/components/HilightLink/HilightLink';
@@ -20,7 +21,7 @@ export default function AccountSideNav() {
           <HilightLink label={t('account.menu.access')} to={ROUTES.ACCOUNT} className="text-[18px]"></HilightLink>
         </li>
         <ul className="flex flex-col gap-4">
-          {/* <Link
+          <Link
             className="cursor-pointer flex flex-row items-center gap-2  text-[var(--color-secondary-disabled-grey)] text-sm font-semibold"
             to={ROUTES.SUPPORT}
           >
@@ -33,7 +34,7 @@ export default function AccountSideNav() {
           >
             <ChevronRight></ChevronRight>
             {t('routes.faq')}
-          </Link> */}
+          </Link>
           <Separator className="opacity-20 my-3 mr-14" />
           <li
             onClick={() => logout()}

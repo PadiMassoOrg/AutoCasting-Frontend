@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { MaintenanceBanner } from '../shared/components/MaintenanceBanner/MaintenanceBanner';
-import Navbar from './components/Navbar';
+import { Navbar } from './components';
 
 export default function NavigationLayout() {
   return (

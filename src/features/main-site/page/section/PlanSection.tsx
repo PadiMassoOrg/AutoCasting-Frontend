@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import LogoIcon from '../../../../shared/icons/og-image.svg';
-import PlanCard from '../../components/UI/PlanCard';
+import { PlanCard } from '../../components/UI';
 
 const PlanSection = () => {
   const { t } = useTranslation();

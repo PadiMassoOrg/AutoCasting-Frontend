@@ -1,7 +1,7 @@
 import { FormInputField } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../context/ModalContext';
-import AccountSideNav from '../../../layouts/components/AccountSideNav';
+import { AccountSideNav } from '../../../layouts/components';
 import HilighterSvg from '../../../shared/icons/HilighterSvg';
 import { useProfile } from '../../profile-edit/hooks/useProfile';
 import ChangePasswordForm from '../components/ChangePasswordForm';
