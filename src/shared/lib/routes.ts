@@ -13,8 +13,10 @@ export const ROUTES = {
   // Public
   PUBLIC_PROFILE: '/profile',
   TALENT_DATABASE: '/talent-database',
-  SUPPORT: '/dashboard/support',
-  FAQ: '/dashboard/faq',
+  SUPPORT: '/support',
+  FAQ: '/faq',
+  TERMS: '/terms-and-conditions',
+  PRIVACY: '/privacy-policy',
 };
 
 export const USER_ROUTES = [

@@ -1,7 +1,8 @@
 {
   "company": {
     "site": "autocasting",
-    "header": "Tu Perfil Digital Actoral"
+    "header": "Tu Perfil Digital Actoral",
+    "trademark": "© 2025 Auto-Casting · Buenos Aires, AR"
   },
   "maintenance": {
     "scheduled": "Entraremos en mantenimiento el {{date, datetime}}.",
@@ -81,7 +82,9 @@
     "access": "Acceso",
     "talent-database": "Catálogo",
     "support": "Soporte Técnico",
-    "faq": "Preguntas Frecuentes"
+    "faq": "Preguntas Frecuentes",
+    "privacy": "Políticas de Privacidad",
+    "terms": "Términos y condiciones"
   },
   "role": {
     "actor": "Actor",
