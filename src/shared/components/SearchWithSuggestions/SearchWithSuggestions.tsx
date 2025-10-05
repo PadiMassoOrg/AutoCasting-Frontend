@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 type Suggestion = { id: string; text: string };
 
@@ -16,9 +17,15 @@ export default function SearchWithSuggestions({
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
+
   const wrapRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
+  // Posición del menú en viewport coords
+  const [menuPos, setMenuPos] = useState<{ top: number; left: number; width: number } | null>(null);
+
+  // Solo buscar por la parte de la skill (después de ":")
   const skillText = (s: Suggestion) => {
     const parts = s.text.split(':');
     return (parts.length > 1 ? parts.slice(1).join(':') : s.text).trim();
@@ -26,22 +33,67 @@ export default function SearchWithSuggestions({
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return [];
+    if (!q) return []; // no mostramos nada hasta que escribe
     return suggestions.filter((s) => skillText(s).toLowerCase().includes(q)).slice(0, 12);
   }, [query, suggestions]);
 
+  // Recalcula posición del menú anclado al input
+  const updateMenuPos = () => {
+    const el = inputRef.current;
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
+    const width = rect.width;
+    const gutter = 8;
+    const viewportH = window.innerHeight;
+
+    // Altura máxima (no “choca” el borde inferior del modal/viewport)
+    const maxH = 240; // ~max-h-60
+    let top = rect.bottom + gutter;
+
+    // Si no entra abajo, lo “flip” hacia arriba
+    if (top + maxH > viewportH - gutter) {
+      top = Math.max(gutter, rect.top - maxH - gutter);
+    }
+
+    setMenuPos({ top, left: rect.left, width });
+  };
+
+  // Abrimos/cerramos según query y actualizamos posición
+  useEffect(() => {
+    const hasQuery = query.trim().length > 0;
+    setOpen(hasQuery);
+    if (hasQuery) updateMenuPos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
+  // Click-away que contempla también el portal
   useEffect(() => {
     const onClickAway = (e: MouseEvent) => {
-      if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
+      const target = e.target as Node;
+      if (wrapRef.current?.contains(target)) return;
+      if (menuRef.current?.contains(target)) return;
+      setOpen(false);
     };
     window.addEventListener('mousedown', onClickAway);
     return () => window.removeEventListener('mousedown', onClickAway);
   }, []);
 
+  // Reposicionar en scroll/resize
+  useEffect(() => {
+    const onScrollOrResize = () => {
+      if (open) updateMenuPos();
+    };
+    window.addEventListener('scroll', onScrollOrResize, true);
+    window.addEventListener('resize', onScrollOrResize);
+    return () => {
+      window.removeEventListener('scroll', onScrollOrResize, true);
+      window.removeEventListener('resize', onScrollOrResize);
+    };
+  }, [open]);
+
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const hasQuery = query.trim().length > 0;
-    if (!open && hasQuery && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) setOpen(true);
-    if (!filtered.length) return;
+    if (!open || !filtered.length) return;
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -56,48 +108,38 @@ export default function SearchWithSuggestions({
         onSelect(pick.id);
         setQuery('');
         setOpen(false);
-        inputRef.current?.blur();
+        (document.activeElement as HTMLElement | null)?.blur?.();
       }
     } else if (e.key === 'Escape') {
       setOpen(false);
-      inputRef.current?.blur();
+      (document.activeElement as HTMLElement | null)?.blur?.();
     }
   };
 
-  return (
-    <div className="flex flex-col gap-2" ref={wrapRef}>
-      <label className="font-bold" htmlFor="skill-search">
-        {label}
-      </label>
-      <div className="relative">
-        <input
-          id="skill-search"
-          ref={inputRef}
-          value={query}
-          onChange={(e) => {
-            const q = e.target.value;
-            setQuery(q);
-            setOpen(q.trim().length > 0);
-          }}
-          onKeyDown={onKeyDown}
-          placeholder={placeholder}
-          className="w-full h-12 rounded-lg border-2 border-[var(--color-secondary-outline)] px-4 outline-none focus:border-[var(--color-primary-green)]"
-        />
-
-        {open && (
+  const dropdown =
+    open && menuPos
+      ? createPortal(
           <div
+            ref={menuRef}
+            style={{
+              position: 'fixed',
+              top: menuPos.top,
+              left: menuPos.left,
+              width: menuPos.width,
+              maxHeight: 310,
+              overflow: 'auto',
+              zIndex: 2147483647,
+            }}
             className="
-              absolute left-0 right-0 top-full mt-2
-              max-h-32 overflow-auto
-              rounded-lg border border-[var(--color-secondary-outline)]
-              bg-white shadow z-[999]
-            "
+            rounded-lg border border-[var(--color-secondary-outline)]
+            bg-white shadow
+          "
           >
             {filtered.map((s, i) => (
               <button
                 key={s.id}
                 type="button"
-                onMouseDown={(e) => e.preventDefault()}
+                onMouseDown={(e) => e.preventDefault()} // evita blur antes del click
                 onClick={() => {
                   onSelect(s.id);
                   setOpen(false);
@@ -111,8 +153,27 @@ export default function SearchWithSuggestions({
                 {s.text}
               </button>
             ))}
-          </div>
-        )}
+          </div>,
+          document.body
+        )
+      : null;
+
+  return (
+    <div className="flex flex-col gap-2" ref={wrapRef}>
+      <label className="font-bold" htmlFor="skill-search">
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          id="skill-search"
+          ref={inputRef}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={onKeyDown}
+          placeholder={placeholder}
+          className="w-full h-12 rounded-lg border-2 border-[var(--color-secondary-outline)] px-4 outline-none focus:border-[var(--color-primary-green)]"
+        />
+        {dropdown}
       </div>
     </div>
   );
