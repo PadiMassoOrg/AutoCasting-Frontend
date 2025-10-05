@@ -37,29 +37,39 @@ export default function TalentDatabasePage() {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const debouncedFilters = useDebouncedValue(filters, 350);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState<boolean>(() => {
+    const saved = localStorage.getItem('talentFiltersOpen');
+    return saved ? saved === '1' : true;
+  });
 
   const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isFetched, fetchStatus } = useTalentDatabase(
     pageSize,
     debouncedFilters
   );
-
   const items = useMemo(() => data?.pages.flatMap((p) => p.items) ?? [], [data]);
 
   const cardsScrollRef = useRef<HTMLDivElement>(null);
   const fetchLockRef = useRef(false);
   const scrollRootRef = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
     scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
   }, []);
+
   const autofillAttemptsRef = useRef(0);
+
   useScrollExitOnEdge(cardsScrollRef, { forwardTo: isDesktop ? cardsScrollRef : scrollRootRef });
 
   useEffect(() => {
     cardsScrollRef.current?.scrollTo({ top: 0 });
     autofillAttemptsRef.current = 0;
   }, [debouncedFilters, pageSize]);
+
+  useEffect(() => {
+    localStorage.setItem('talentFiltersOpen', filtersOpen ? '1' : '0');
+  }, [filtersOpen]);
 
   const handleScroll = useCallback(() => {
     const el = cardsScrollRef.current;
@@ -146,6 +156,7 @@ export default function TalentDatabasePage() {
       {/* Header mobile */}
       <article className="lg:hidden flex items-center justify-between mb-3 shrink-0">
         <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
+
         <button
           type="button"
           className="cursor-pointer inline-flex items-center gap-3"
@@ -161,18 +172,35 @@ export default function TalentDatabasePage() {
 
       <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col lg:flex-row gap-6 overflow-hidden">
         {/* Filters */}
-        <aside className="hidden lg:flex lg:flex-col lg:w-[300px] min-h-0 overflow-hidden">
-          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-4">
-            <TalentFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
-          </div>
-        </aside>
+        {isDesktop && filtersOpen && (
+          <aside className="hidden lg:flex lg:flex-col lg:w-[300px] min-h-0 overflow-hidden">
+            <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-4">
+              <TalentFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
+            </div>
+          </aside>
+        )}
 
         {/* Cards */}
         <div
           ref={cardsScrollRef}
           className="flex-1 min-h-0 w-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
         >
-          <h2 className="hidden lg:block text-2xl font-semibold mb-6">{t('talent.page.title')}</h2>
+          <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
+            <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
+            <button
+              type="button"
+              className="cursor-pointer inline-flex items-center gap-3"
+              onClick={() => setFiltersOpen((v) => !v)}
+              aria-pressed={filtersOpen}
+            >
+              <h2 className="text-sm font-light underline">
+                {filtersOpen ? t('talent.filter.hide') : t('talent.filter.show')}
+              </h2>
+              <span className="w-10 h-10 flex items-center justify-center bg-[var(--color-primary-light-grey)] rounded-lg">
+                <img src={filterIcon} alt="Filter bar" className="w-5 h-5" />
+              </span>
+            </button>
+          </div>
           {error && (
             <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
           )}

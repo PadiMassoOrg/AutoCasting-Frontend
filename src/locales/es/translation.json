@@ -441,6 +441,8 @@
     "filter": {
       "title": "Filtros",
       "reset": "Resetear Filtros",
+      "hide": "Ocultar Filtros",
+      "show": "Mostrar Filtros",
       "basic_info": {
         "stage_name": "Nombre del Talento",
         "age_range": "Rango Etario",
