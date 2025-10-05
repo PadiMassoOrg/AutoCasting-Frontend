@@ -33,11 +33,10 @@ export default function SearchWithSuggestions({
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) return []; // no mostramos nada hasta que escribe
+    if (!q) return [];
     return suggestions.filter((s) => skillText(s).toLowerCase().includes(q)).slice(0, 12);
   }, [query, suggestions]);
 
-  // Recalcula posición del menú anclado al input
   const updateMenuPos = () => {
     const el = inputRef.current;
     if (!el) return;
@@ -139,7 +138,7 @@ export default function SearchWithSuggestions({
               <button
                 key={s.id}
                 type="button"
-                onMouseDown={(e) => e.preventDefault()} // evita blur antes del click
+                onMouseDown={(e) => e.preventDefault()}
                 onClick={() => {
                   onSelect(s.id);
                   setOpen(false);

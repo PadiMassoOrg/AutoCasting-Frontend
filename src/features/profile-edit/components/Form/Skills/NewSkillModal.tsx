@@ -2,13 +2,13 @@ import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Chip } from '../../../../../shared/components/Chip/Chip';
+import SearchWithSuggestions from '../../../../../shared/components/SearchWithSuggestions/SearchWithSuggestions';
 import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
-import SearchWithSuggestions from '../../../../../shared/components/SearchWithSuggestions/SearchWithSuggestions';
 
 export function NewSkillModal({
   initial,
-  allOptions, // ✅ ahora usamos las opciones del hook obligado
+  allOptions,
   onSave,
   onCancel,
 }: {
@@ -18,15 +18,14 @@ export function NewSkillModal({
   onCancel: () => void;
 }) {
   const { t } = useTranslation();
-  const [draft, setDraft] = useState<SiteMetadataObject[]>(initial);
-
-  // cache crudo para recuperar categoryStringCode por id
+  const [draft, setDraft] = useState<SiteMetadataObject[]>([]);
   const rawList = (useCachedSiteMetadataSlice('skills') as SiteMetadataObject[] | undefined) ?? [];
   const rawById = useMemo(() => new Map(rawList.map((s) => [s.id, s])), [rawList]);
 
-  const used = useMemo(() => new Set(draft.map((s) => s.id)), [draft]);
+  const initialIds = useMemo(() => new Set(initial.map((s) => s.id)), [initial]);
+  const draftIds = useMemo(() => new Set(draft.map((s) => s.id)), [draft]);
+  const used = useMemo(() => new Set([...initialIds, ...draftIds]), [initialIds, draftIds]);
 
-  // Sugerencias: "Category: Label" (ambos traducidos si tenés t)
   const suggestions = useMemo(
     () =>
       allOptions
@@ -34,7 +33,7 @@ export function NewSkillModal({
         .map((o) => {
           const raw = rawById.get(o.value);
           const catLabel = raw?.categoryStringCode ? t(raw.categoryStringCode) : '';
-          const text = catLabel ? `${catLabel}: ${o.label}` : o.label;
+          const text = catLabel ? `${catLabel}: ${t(raw?.stringCode ?? o.label)}` : t(raw?.stringCode ?? o.label);
           return { id: o.value, text };
         }),
     [allOptions, used, rawById, t]
@@ -43,17 +42,17 @@ export function NewSkillModal({
   const addById = (id: string) => {
     if (used.has(id)) return;
     const raw = rawById.get(id);
-    if (raw) {
-      setDraft((prev) => [...prev, raw]);
-    } else {
-      // fallback por si falta en crudo
-      const opt = allOptions.find((o) => o.value === id);
-      if (!opt) return;
-      setDraft((prev) => [...prev, { id, stringCode: opt.label }]);
-    }
+    if (raw) setDraft((prev) => [...prev, raw]);
   };
 
   const remove = (id: string) => setDraft((prev) => prev.filter((s) => s.id !== id));
+
+  const handleSave = () => {
+    const mergedMap = new Map<string, SiteMetadataObject>();
+    initial.forEach((s) => mergedMap.set(s.id, s));
+    draft.forEach((s) => mergedMap.set(s.id, s));
+    onSave(Array.from(mergedMap.values()));
+  };
 
   return (
     <article className="flex flex-col gap-6">
@@ -67,7 +66,7 @@ export function NewSkillModal({
       {draft.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {draft.map((s) => (
-            <Chip key={s.id} label={s.stringCode} onRemove={() => remove(s.id)} t={t} />
+            <Chip key={s.id} label={t(s.stringCode)} onRemove={() => remove(s.id)} t={t} />
           ))}
         </div>
       )}
@@ -77,7 +76,7 @@ export function NewSkillModal({
         <Button variant="outline" onClick={onCancel}>
           {t('buttons.cancel')}
         </Button>
-        <Button onClick={() => onSave(draft)}>{t('buttons.save')}</Button>
+        <Button onClick={handleSave}>{t('buttons.save')}</Button>
       </div>
     </article>
   );
