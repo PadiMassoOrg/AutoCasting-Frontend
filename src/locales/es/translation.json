@@ -479,5 +479,9 @@
       "support": "Soporte Técnico",
       "faq": "Preguntas Frecuentes"
     }
+  },
+  "legal": {
+    "terms": "Términos y Condiciones",
+    "privacy": "Políticas de Privacidad"
   }
 }
