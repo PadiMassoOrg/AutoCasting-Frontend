@@ -1,5 +1,4 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
@@ -8,9 +7,8 @@ import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
 import filterIcon from '../../../shared/icons/filter.svg';
 import { MobileFiltersDrawer, TalentCard } from '../components';
 import { TalentFilterBar } from '../components/TalentFilterBar';
-import { useTalentDatabase } from '../hooks/useTalentDatabase';
-import { TALENT_DATABASE_CACHE_KEY } from '../services/talentDatabaseService';
-import type { TalentFiltersQS } from '../types/talent-database.types';
+import { getTalentDatabase } from '../services/talentDatabaseService';
+import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
 
 const initialFilters: TalentFiltersQS = {
   stageName: '',
@@ -35,50 +33,111 @@ const SCROLL_EPS = 8;
 
 export default function TalentDatabasePage() {
   useViewportVhVar();
-  const queryClient = useQueryClient();
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { useSuspense: false });
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
 
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
   const debouncedFilters = useDebouncedValue(filters, 350);
 
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [filtersOpen, setFiltersOpen] = useState<boolean>(() => {
-    const saved = localStorage.getItem('talentFiltersOpen');
-    return saved ? saved === '1' : true;
-  });
+  // Primer render sin debounce para disparar YA la primera llamada
+  const firstRenderRef = useRef(true);
+  useEffect(() => {
+    firstRenderRef.current = false;
+  }, []);
+  const effectiveFilters = firstRenderRef.current ? filters : debouncedFilters;
 
-  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isFetched, fetchStatus, status, refetch } =
-    useTalentDatabase(pageSize, debouncedFilters);
+  // ---- STATE de data (sin React Query) ----
+  const [items, setItems] = useState<ProfileCardResponse[]>([]);
+  const [page, setPage] = useState(0);
+  const [hasNext, setHasNext] = useState(true);
+  const [loading, setLoading] = useState(false); // true en carga inicial o siguiente página
+  const [error, setError] = useState<string | null>(null);
 
-  const items = useMemo(() => data?.pages.flatMap((p) => p.items) ?? [], [data]);
+  // refs utilitarias
+  const inflightRef = useRef<AbortController | null>(null);
+  const requestIdRef = useRef(0);
+  const fetchingNextRef = useRef(false);
 
   const cardsScrollRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
-  const fetchLockRef = useRef(false);
   const scrollRootRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    queryClient.removeQueries({ queryKey: [TALENT_DATABASE_CACHE_KEY], exact: false });
-    queryClient.invalidateQueries({ queryKey: [TALENT_DATABASE_CACHE_KEY], exact: false });
-  }, [queryClient]);
 
   useEffect(() => {
     scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
   }, []);
 
+  // Mantén tu behavior entre contenedores
   useScrollExitOnEdge(cardsScrollRef, { forwardTo: isDesktop ? cardsScrollRef : scrollRootRef });
 
+  // Resetea cuando cambian filtros o pageSize y trae página 0
   useEffect(() => {
     cardsScrollRef.current?.scrollTo({ top: 0 });
-  }, [debouncedFilters, pageSize]);
 
+    // Cancelar cualquier request en vuelo
+    inflightRef.current?.abort();
+    inflightRef.current = null;
+
+    // Reset de estado
+    setItems([]);
+    setPage(0);
+    setHasNext(true);
+    setError(null);
+
+    // Disparar primera página
+    fetchPage(0, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [effectiveFilters, pageSize]);
+
+  // Persistencia del toggle de filtros (tu lógica original)
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState<boolean>(() => {
+    const saved = localStorage.getItem('talentFiltersOpen');
+    return saved ? saved === '1' : true;
+  });
   useEffect(() => {
     localStorage.setItem('talentFiltersOpen', filtersOpen ? '1' : '0');
   }, [filtersOpen]);
 
-  // --------- INFINITE SCROLL: IntersectionObserver + rootMargin ----------
+  // ---- FETCH directo (network-only) ----
+  const fetchPage = useCallback(
+    async (p: number, replace = false) => {
+      if (fetchingNextRef.current) return;
+      fetchingNextRef.current = true;
+      setLoading(true);
+      setError(null);
+
+      const thisReqId = ++requestIdRef.current;
+      const ctrl = new AbortController();
+      inflightRef.current = ctrl;
+
+      try {
+        const res = await getTalentDatabase(p, pageSize, effectiveFilters, { signal: ctrl.signal });
+        // Si llegó fuera de orden, lo ignoramos
+        if (requestIdRef.current !== thisReqId) return;
+
+        // Seguridad extra: solo card con headshotImageUrl
+        const fresh = (res.items ?? []).filter((it) => !!it.headshotImageUrl);
+
+        setItems((prev) => (replace ? fresh : [...prev, ...fresh]));
+        setPage(res.page + 1);
+        setHasNext(!!res.hasNext);
+      } catch (e: any) {
+        if (e?.name === 'AbortError' || e?.name === 'CanceledError') {
+          // navegación/cambio rápido -> ignorar
+        } else {
+          setError('fetch_error');
+        }
+      } finally {
+        if (inflightRef.current === ctrl) inflightRef.current = null;
+        fetchingNextRef.current = false;
+        setLoading(false);
+      }
+    },
+    [effectiveFilters, pageSize]
+  );
+
+  // ---- IntersectionObserver para infinite scroll ----
   useEffect(() => {
     const root = cardsScrollRef.current;
     const target = sentinelRef.current;
@@ -88,44 +147,30 @@ export default function TalentDatabasePage() {
       (entries) => {
         const entry = entries[0];
         if (!entry.isIntersecting) return;
-        if (!hasNextPage || isFetchingNextPage || fetchLockRef.current) return;
-
-        fetchLockRef.current = true;
-        fetchNextPage().finally(() => {
-          fetchLockRef.current = false;
-        });
+        if (!hasNext || loading || fetchingNextRef.current) return;
+        fetchPage(page, false);
       },
-      {
-        root,
-        rootMargin: '600px 0px 800px 0px',
-        threshold: 0,
-      }
+      { root, rootMargin: '600px 0px 800px 0px', threshold: 0 }
     );
 
     io.observe(target);
     return () => io.disconnect();
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [hasNext, loading, page, fetchPage]);
 
-  // --------- AUTO-FILL INICIAL: rellena hasta que haya scroll o no haya más páginas ----------
+  // ---- Auto-fill inicial (si no hay scroll rellena hasta MAX_AUTOFILL_PAGES) ----
   useEffect(() => {
     const box = cardsScrollRef.current;
     if (!box) return;
 
     let cancelled = false;
-
     (async () => {
-      // Si aún no hay ítems y está en "fetching", esperamos la primera carga
-      if (items.length === 0 && fetchStatus === 'fetching') return;
-
       let tries = 0;
-      while (
-        !cancelled &&
-        hasNextPage &&
-        tries < MAX_AUTOFILL_PAGES &&
-        box.scrollHeight <= box.clientHeight + SCROLL_EPS
-      ) {
+      // Si no hay ítems y ya estamos cargando la primera, esperamos
+      if (items.length === 0 && loading) return;
+
+      while (!cancelled && hasNext && box.scrollHeight <= box.clientHeight + SCROLL_EPS && tries < MAX_AUTOFILL_PAGES) {
         tries += 1;
-        await fetchNextPage();
+        await fetchPage(page, false);
         await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
       }
     })();
@@ -133,51 +178,35 @@ export default function TalentDatabasePage() {
     return () => {
       cancelled = true;
     };
-  }, [debouncedFilters, pageSize, hasNextPage, fetchNextPage, fetchStatus, items.length]);
+  }, [items.length, hasNext, loading, fetchPage, page]);
 
-  // --------- ResizeObserver: si cambia tamaño y queda corto, trae más ----------
-  useEffect(() => {
-    const el = cardsScrollRef.current;
-    if (!el) return;
-
-    let resizeTimer: number | null = null;
-    const ro = new ResizeObserver(() => {
-      if (resizeTimer) window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(() => {
-        if (!hasNextPage || isFetchingNextPage) return;
-        const hasScroll = el.scrollHeight > el.clientHeight + SCROLL_EPS;
-        if (!hasScroll) {
-          fetchNextPage();
-        }
-      }, 100);
-    });
-
-    ro.observe(el);
-    return () => {
-      ro.disconnect();
-      if (resizeTimer) window.clearTimeout(resizeTimer);
-    };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  // Revalida cuando el tab vuelve visible (por si el usuario dejó abierta la página)
+  // Revalidar al volver a la pestaña (siempre info fresca)
   useEffect(() => {
     const onVis = () => {
-      if (!document.hidden) refetch();
+      if (document.hidden) return;
+      inflightRef.current?.abort();
+      setItems([]);
+      setPage(0);
+      setHasNext(true);
+      setError(null);
+      fetchPage(0, true);
     };
     document.addEventListener('visibilitychange', onVis);
     return () => document.removeEventListener('visibilitychange', onVis);
-  }, [refetch]);
+  }, [fetchPage]);
 
-  // --------- estados visuales ----------
-  const showInitialSkeletons = status === 'pending' || (fetchStatus === 'fetching' && items.length === 0);
-  const showEmptyState = status === 'success' && !error && items.length === 0;
+  // estados visuales
+  const showInitialSkeletons = items.length === 0 && loading && !error;
+  const showEmptyState = !loading && !error && items.length === 0;
+  const isFetchingNextPage = items.length > 0 && loading;
+
+  const gridItems = useMemo(() => items, [items]);
 
   return (
     <section className="w-full h-full min-h-0 flex flex-col">
       {/* Header mobile */}
       <article className="lg:hidden flex items-center justify-between mb-3 shrink-0">
         <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
-
         <button
           type="button"
           className="cursor-pointer inline-flex items-center gap-3"
@@ -229,11 +258,11 @@ export default function TalentDatabasePage() {
             <>
               <article
                 className="
-                grid gap-6 place-items-stretch
-                grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
-                sm:auto-rows-[408px]
-                lg:auto-rows-auto
-              "
+                  grid gap-6 place-items-stretch
+                  grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
+                  sm:auto-rows-[408px]
+                  lg:auto-rows-auto
+                "
               >
                 {showInitialSkeletons &&
                   Array.from({ length: pageSize }).map((_, i) => (
@@ -242,7 +271,7 @@ export default function TalentDatabasePage() {
                     </div>
                   ))}
 
-                {items.map((it) => (
+                {gridItems.map((it) => (
                   <div key={it.id} className="w-full h-full">
                     <TalentCard item={it} />
                   </div>
@@ -251,18 +280,19 @@ export default function TalentDatabasePage() {
                 {/* Sentinel para IO */}
                 <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
               </article>
+
               {/* Estados inferiores */}
               {showEmptyState && (
                 <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">
                   {t('state.no_results')}
                 </p>
               )}
-              {isFetchingNextPage && items.length > 0 && (
+              {isFetchingNextPage && (
                 <p className="py-10 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
                   {t('state.loading')}
                 </p>
               )}
-              {!hasNextPage && items.length > 0 && (
+              {!hasNext && gridItems.length > 0 && (
                 <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
                   {t('state.no_more_results')}
                 </p>

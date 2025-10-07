@@ -3,7 +3,7 @@ import { API_ROUTES } from '../../../shared/lib/routes';
 import type { SliceResponse } from '../../../shared/types/sliceResponse.types';
 import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
 
-export const TALENT_DATABASE_CACHE_KEY = ['cache-talent-database'] as const;
+export const TALENT_DATABASE_CACHE_KEY = 'cache-talent-database' as const;
 
 export const getTalentDatabase = async (
   page: number,
@@ -12,10 +12,15 @@ export const getTalentDatabase = async (
   opts?: { signal?: AbortSignal }
 ): Promise<SliceResponse<ProfileCardResponse>> => {
   const qs = buildQuery(page, size, filters);
+  // 👇 bust de caches intermedios (CDN/navegador)
+  qs.set('_', String(Date.now()));
+
   const response = await api.get(`${API_ROUTES.TALENT_DATABASE}?${qs.toString()}`, {
     signal: opts?.signal,
     headers: { 'Cache-Control': 'no-store' },
+    validateStatus: (s) => (s >= 200 && s < 300) || s === 204,
   });
+
   if (response.status === 204 || !response.data) {
     return { items: [], hasNext: false, page, size };
   }

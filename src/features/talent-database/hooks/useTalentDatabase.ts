@@ -17,7 +17,6 @@ export function useTalentDatabase(size = 6, filters?: TalentFiltersQS) {
       return data ?? { items: [], hasNext: false, page: pageParam as number, size };
     },
     getNextPageParam: (lastPage, allPages) => (lastPage.hasNext ? allPages.length : undefined),
-
     staleTime: 0,
     refetchOnMount: 'always',
     refetchOnReconnect: 'always',

@@ -28,13 +28,6 @@ export default function AccountSideNav() {
             <ChevronRight></ChevronRight>
             {t('routes.support')}
           </Link>
-          <Link
-            className="cursor-pointer flex flex-row items-center gap-2  text-[var(--color-secondary-disabled-grey)] text-sm font-semibold"
-            to={ROUTES.FAQ}
-          >
-            <ChevronRight></ChevronRight>
-            {t('routes.faq')}
-          </Link>
           <Separator className="opacity-20 my-3 mr-14" />
           <li
             onClick={() => logout()}

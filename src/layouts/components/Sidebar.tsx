@@ -46,6 +46,16 @@ export default function Sidebar({ open, onClose, onLogout }: Props) {
           <ul className="grid place-items-center w-full h-full">
             <div className="w-full flex flex-col gap-6">
               <div className="w-full flex flex-col gap-6 items-start">
+                <li onClick={onClose}>
+                  <HilightLink
+                    to={ROUTES.TALENT_DATABASE}
+                    label={t('routes.talent-database')}
+                    className="z-[150] block text-[28px] font-extrabold leading-none"
+                    width={250}
+                    height={65}
+                    exact={false}
+                  />
+                </li>
                 {isAuthenticated ? (
                   <>
                     <li onClick={onClose}>
@@ -93,26 +103,12 @@ export default function Sidebar({ open, onClose, onLogout }: Props) {
                     </li>
                   </>
                 )}
-                <li onClick={onClose}>
-                  <HilightLink
-                    to={ROUTES.TALENT_DATABASE}
-                    label={t('routes.talent-database')}
-                    className="z-[150] block text-[28px] font-extrabold leading-none"
-                    width={250}
-                    height={65}
-                    exact={false}
-                  />
-                </li>
               </div>
               <Separator className="opacity-20 my-4" />
               <div className="text-[16px] font-semibold">
                 <li onClick={onClose} className="cursor-pointer flex flex-row items-center gap-2">
                   <ChevronRight></ChevronRight>
                   <HilightLink to={ROUTES.SUPPORT} label={t('routes.support')}></HilightLink>
-                </li>
-                <li onClick={onClose} className="cursor-pointer flex flex-row items-center gap-2">
-                  <ChevronRight></ChevronRight>
-                  <HilightLink to={ROUTES.FAQ} label={t('routes.faq')}></HilightLink>
                 </li>
               </div>
               {isAuthenticated && (
