@@ -55,13 +55,7 @@ export default function TalentCard({ item }: { item: ProfileCardResponse }) {
             {professions?.reduce<JSX.Element[]>((acc, curr, index) => {
               const label = t(curr.stringCode ?? '');
               if (index === 0) return [<span key={curr.id}>{label}</span>];
-              return [
-                ...acc,
-                <span key={`sep-${index}`} className="mx-1">
-                  •
-                </span>,
-                <span key={curr.id}>{label}</span>,
-              ];
+              return [...acc.slice(-3), <span key={`sep-${index}`}>•</span>, <span key={curr.id}>{label}</span>];
             }, [])}
           </span>
 

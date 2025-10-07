@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
@@ -36,8 +36,10 @@ export default function TalentDatabasePage() {
   const { t } = useTranslation();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
+
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
   const debouncedFilters = useDebouncedValue(filters, 350);
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState<boolean>(() => {
     const saved = localStorage.getItem('talentFiltersOpen');
@@ -48,9 +50,11 @@ export default function TalentDatabasePage() {
     pageSize,
     debouncedFilters
   );
+
   const items = useMemo(() => data?.pages.flatMap((p) => p.items) ?? [], [data]);
 
   const cardsScrollRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
   const fetchLockRef = useRef(false);
   const scrollRootRef = useRef<HTMLElement | null>(null);
 
@@ -58,69 +62,79 @@ export default function TalentDatabasePage() {
     scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
   }, []);
 
-  const autofillAttemptsRef = useRef(0);
-
+  // Facilita el scroll entre contenedores (tu hook actual)
   useScrollExitOnEdge(cardsScrollRef, { forwardTo: isDesktop ? cardsScrollRef : scrollRootRef });
 
+  // Reset al cambiar filtros / tamaño de página
   useEffect(() => {
     cardsScrollRef.current?.scrollTo({ top: 0 });
-    autofillAttemptsRef.current = 0;
   }, [debouncedFilters, pageSize]);
 
+  // Persistencia del toggle de filtros
   useEffect(() => {
     localStorage.setItem('talentFiltersOpen', filtersOpen ? '1' : '0');
   }, [filtersOpen]);
 
-  const handleScroll = useCallback(() => {
-    const el = cardsScrollRef.current;
-    if (!el || !hasNextPage || isFetchingNextPage || fetchLockRef.current) return;
+  // --------- INFINITE SCROLL: IntersectionObserver + rootMargin ----------
+  useEffect(() => {
+    const root = cardsScrollRef.current;
+    const target = sentinelRef.current;
+    if (!root || !target) return;
 
-    const { scrollTop, clientHeight, scrollHeight } = el;
-    const reached75 = scrollTop + clientHeight >= scrollHeight * 0.75;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry.isIntersecting) return;
+        if (!hasNextPage || isFetchingNextPage || fetchLockRef.current) return;
 
-    if (reached75) {
-      fetchLockRef.current = true;
-      fetchNextPage().finally(() => {
-        fetchLockRef.current = false;
-      });
-    }
+        fetchLockRef.current = true;
+        fetchNextPage().finally(() => {
+          fetchLockRef.current = false;
+        });
+      },
+      {
+        root, // Observa dentro del contenedor scrolleable
+        rootMargin: '600px 0px 800px 0px', // prefetch antes de llegar al final
+        threshold: 0,
+      }
+    );
+
+    io.observe(target);
+    return () => io.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  // --------- AUTO-FILL INICIAL: rellena hasta que haya scroll o no haya más páginas ----------
   useEffect(() => {
-    const el = cardsScrollRef.current;
-    if (!el) return;
-    el.addEventListener('scroll', handleScroll, { passive: true });
-    return () => el.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+    const box = cardsScrollRef.current;
+    if (!box) return;
 
-  useEffect(() => {
-    const el = cardsScrollRef.current;
-    if (!el) return;
-    if (isFetched || isFetchingNextPage) return;
+    let cancelled = false;
 
-    const tryFill = () => {
-      const box = cardsScrollRef.current;
-      if (!box) return;
+    (async () => {
+      // Si aún no hay ítems y el estado está en "fetching",
+      // dejamos que la primera llamada complete antes de bombear.
+      if (items.length === 0 && fetchStatus === 'fetching') return;
 
-      const hasScroll = box.scrollHeight > box.clientHeight + SCROLL_EPS;
-      if (hasScroll) {
-        autofillAttemptsRef.current = 0;
-        return;
+      let tries = 0;
+      while (
+        !cancelled &&
+        hasNextPage &&
+        tries < MAX_AUTOFILL_PAGES &&
+        box.scrollHeight <= box.clientHeight + SCROLL_EPS
+      ) {
+        tries += 1;
+        await fetchNextPage();
+        // esperar al layout
+        await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
       }
+    })();
 
-      if (!hasNextPage) {
-        autofillAttemptsRef.current = 0;
-        return;
-      }
-      if (autofillAttemptsRef.current >= MAX_AUTOFILL_PAGES) return;
-      autofillAttemptsRef.current += 1;
-      fetchNextPage().then(() => {
-        requestAnimationFrame(() => setTimeout(tryFill, 0));
-      });
+    return () => {
+      cancelled = true;
     };
-    tryFill();
-  }, [items.length, isFetched, isFetchingNextPage, hasNextPage, fetchNextPage]);
+  }, [debouncedFilters, pageSize, hasNextPage, fetchNextPage, fetchStatus, items.length]);
 
+  // --------- ResizeObserver: si el contenedor cambia de tamaño y se queda corto, trae más ----------
   useEffect(() => {
     const el = cardsScrollRef.current;
     if (!el) return;
@@ -129,16 +143,12 @@ export default function TalentDatabasePage() {
     const ro = new ResizeObserver(() => {
       if (resizeTimer) window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
-        if (isFetched || isFetchingNextPage) return;
-        if (!hasNextPage) return;
-        const box = cardsScrollRef.current;
-        if (!box) return;
-        const hasScroll = box.scrollHeight > box.clientHeight + SCROLL_EPS;
+        if (!hasNextPage || isFetchingNextPage) return;
+        const hasScroll = el.scrollHeight > el.clientHeight + SCROLL_EPS;
         if (!hasScroll) {
-          autofillAttemptsRef.current = 0;
           fetchNextPage();
         }
-      }, 80);
+      }, 100);
     });
 
     ro.observe(el);
@@ -146,9 +156,10 @@ export default function TalentDatabasePage() {
       ro.disconnect();
       if (resizeTimer) window.clearTimeout(resizeTimer);
     };
-  }, [isFetched, isFetchingNextPage, hasNextPage, fetchNextPage]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const showInitialSkeletons = !isFetched || (fetchStatus === 'fetching' && !data);
+  // --------- estados visuales ----------
+  const showInitialSkeletons = fetchStatus === 'fetching' && items.length === 0;
   const showEmptyState = isFetched && !error && items.length === 0;
 
   return (
@@ -180,7 +191,7 @@ export default function TalentDatabasePage() {
           </aside>
         )}
 
-        {/* Cards */}
+        {/* Cards (scroller) */}
         <div
           ref={cardsScrollRef}
           className="flex-1 min-h-0 w-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
@@ -201,17 +212,19 @@ export default function TalentDatabasePage() {
               </span>
             </button>
           </div>
+
           {error && (
             <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
           )}
+
           {!error && (
             <article
               className="
-              grid gap-6 place-items-stretch
-              grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
-              sm:auto-rows-[408px]
-              lg:auto-rows-auto
-            "
+                grid gap-6 place-items-stretch
+                grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
+                sm:auto-rows-[408px]
+                lg:auto-rows-auto
+              "
             >
               {showInitialSkeletons &&
                 Array.from({ length: pageSize }).map((_, i) => (
@@ -225,24 +238,32 @@ export default function TalentDatabasePage() {
                   <TalentCard item={it} />
                 </div>
               ))}
+
+              {/* Sentinel para el IO: siempre al final */}
+              <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
             </article>
           )}
 
-          {/* State */}
+          {/* Estados inferiores (si hay pocos resultados también se ven) */}
           {showEmptyState && (
             <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">{t('state.no_results')}</p>
           )}
-          {isFetchingNextPage && (
-            <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">{t('state.loading')}</p>
+
+          {isFetchingNextPage && items.length > 0 && (
+            <p className="py-10 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
+              {t('state.loading')}
+            </p>
           )}
+
           {!hasNextPage && items.length > 0 && (
-            <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">
+            <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
               {t('state.no_more_results')}
             </p>
           )}
         </div>
       </div>
 
+      {/* Filtros móviles */}
       <MobileFiltersDrawer
         open={mobileOpen}
         onClose={() => setMobileOpen(false)}
