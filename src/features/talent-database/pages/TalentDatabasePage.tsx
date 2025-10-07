@@ -105,7 +105,8 @@ export default function TalentDatabasePage() {
       if (fetchingNextRef.current) return;
       fetchingNextRef.current = true;
       setLoading(true);
-      setError(null);
+      // Solo limpiamos error si es un reset (primera página)
+      if (replace) setError(null);
 
       const thisReqId = ++requestIdRef.current;
       const ctrl = new AbortController();
@@ -126,7 +127,9 @@ export default function TalentDatabasePage() {
         if (e?.name === 'AbortError' || e?.name === 'CanceledError') {
           // navegación/cambio rápido -> ignorar
         } else {
+          // Marcamos error y frenamos cualquier nuevo fetch (infinite scroll/autofill)
           setError('fetch_error');
+          setHasNext(false);
         }
       } finally {
         if (inflightRef.current === ctrl) inflightRef.current = null;
@@ -147,7 +150,7 @@ export default function TalentDatabasePage() {
       (entries) => {
         const entry = entries[0];
         if (!entry.isIntersecting) return;
-        if (!hasNext || loading || fetchingNextRef.current) return;
+        if (!hasNext || loading || fetchingNextRef.current || error) return;
         fetchPage(page, false);
       },
       { root, rootMargin: '600px 0px 800px 0px', threshold: 0 }
@@ -155,12 +158,12 @@ export default function TalentDatabasePage() {
 
     io.observe(target);
     return () => io.disconnect();
-  }, [hasNext, loading, page, fetchPage]);
+  }, [hasNext, loading, page, fetchPage, error]);
 
   // ---- Auto-fill inicial (si no hay scroll rellena hasta MAX_AUTOFILL_PAGES) ----
   useEffect(() => {
     const box = cardsScrollRef.current;
-    if (!box) return;
+    if (!box || error) return;
 
     let cancelled = false;
     (async () => {
@@ -178,12 +181,12 @@ export default function TalentDatabasePage() {
     return () => {
       cancelled = true;
     };
-  }, [items.length, hasNext, loading, fetchPage, page]);
+  }, [items.length, hasNext, loading, fetchPage, page, error]);
 
-  // Revalidar al volver a la pestaña (siempre info fresca)
+  // Revalidar al volver a la pestaña (solo si NO hay error)
   useEffect(() => {
     const onVis = () => {
-      if (document.hidden) return;
+      if (document.hidden || error) return;
       inflightRef.current?.abort();
       setItems([]);
       setPage(0);
@@ -193,7 +196,7 @@ export default function TalentDatabasePage() {
     };
     document.addEventListener('visibilitychange', onVis);
     return () => document.removeEventListener('visibilitychange', onVis);
-  }, [fetchPage]);
+  }, [fetchPage, error]);
 
   // estados visuales
   const showInitialSkeletons = items.length === 0 && loading && !error;
