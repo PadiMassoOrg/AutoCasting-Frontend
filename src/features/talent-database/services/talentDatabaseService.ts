@@ -12,7 +12,13 @@ export const getTalentDatabase = async (
   opts?: { signal?: AbortSignal }
 ): Promise<SliceResponse<ProfileCardResponse>> => {
   const qs = buildQuery(page, size, filters);
-  const response = await api.get(`${API_ROUTES.TALENT_DATABASE}?${qs.toString()}`, { signal: opts?.signal });
+  const response = await api.get(`${API_ROUTES.TALENT_DATABASE}?${qs.toString()}`, {
+    signal: opts?.signal,
+    headers: { 'Cache-Control': 'no-store' },
+  });
+  if (response.status === 204 || !response.data) {
+    return { items: [], hasNext: false, page, size };
+  }
   return response.data;
 };
 

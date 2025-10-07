@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
@@ -8,6 +9,7 @@ import filterIcon from '../../../shared/icons/filter.svg';
 import { MobileFiltersDrawer, TalentCard } from '../components';
 import { TalentFilterBar } from '../components/TalentFilterBar';
 import { useTalentDatabase } from '../hooks/useTalentDatabase';
+import { TALENT_DATABASE_CACHE_KEY } from '../services/talentDatabaseService';
 import type { TalentFiltersQS } from '../types/talent-database.types';
 
 const initialFilters: TalentFiltersQS = {
@@ -33,6 +35,7 @@ const SCROLL_EPS = 8;
 
 export default function TalentDatabasePage() {
   useViewportVhVar();
+  const queryClient = useQueryClient();
   const { t } = useTranslation();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
@@ -46,10 +49,8 @@ export default function TalentDatabasePage() {
     return saved ? saved === '1' : true;
   });
 
-  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isFetched, fetchStatus } = useTalentDatabase(
-    pageSize,
-    debouncedFilters
-  );
+  const { data, error, fetchNextPage, hasNextPage, isFetchingNextPage, isFetched, fetchStatus, status, refetch } =
+    useTalentDatabase(pageSize, debouncedFilters);
 
   const items = useMemo(() => data?.pages.flatMap((p) => p.items) ?? [], [data]);
 
@@ -59,18 +60,20 @@ export default function TalentDatabasePage() {
   const scrollRootRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
+    queryClient.removeQueries({ queryKey: [TALENT_DATABASE_CACHE_KEY], exact: false });
+    queryClient.invalidateQueries({ queryKey: [TALENT_DATABASE_CACHE_KEY], exact: false });
+  }, [queryClient]);
+
+  useEffect(() => {
     scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
   }, []);
 
-  // Facilita el scroll entre contenedores (tu hook actual)
   useScrollExitOnEdge(cardsScrollRef, { forwardTo: isDesktop ? cardsScrollRef : scrollRootRef });
 
-  // Reset al cambiar filtros / tamaño de página
   useEffect(() => {
     cardsScrollRef.current?.scrollTo({ top: 0 });
   }, [debouncedFilters, pageSize]);
 
-  // Persistencia del toggle de filtros
   useEffect(() => {
     localStorage.setItem('talentFiltersOpen', filtersOpen ? '1' : '0');
   }, [filtersOpen]);
@@ -93,8 +96,8 @@ export default function TalentDatabasePage() {
         });
       },
       {
-        root, // Observa dentro del contenedor scrolleable
-        rootMargin: '600px 0px 800px 0px', // prefetch antes de llegar al final
+        root,
+        rootMargin: '600px 0px 800px 0px',
         threshold: 0,
       }
     );
@@ -111,8 +114,7 @@ export default function TalentDatabasePage() {
     let cancelled = false;
 
     (async () => {
-      // Si aún no hay ítems y el estado está en "fetching",
-      // dejamos que la primera llamada complete antes de bombear.
+      // Si aún no hay ítems y está en "fetching", esperamos la primera carga
       if (items.length === 0 && fetchStatus === 'fetching') return;
 
       let tries = 0;
@@ -124,7 +126,6 @@ export default function TalentDatabasePage() {
       ) {
         tries += 1;
         await fetchNextPage();
-        // esperar al layout
         await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
       }
     })();
@@ -134,7 +135,7 @@ export default function TalentDatabasePage() {
     };
   }, [debouncedFilters, pageSize, hasNextPage, fetchNextPage, fetchStatus, items.length]);
 
-  // --------- ResizeObserver: si el contenedor cambia de tamaño y se queda corto, trae más ----------
+  // --------- ResizeObserver: si cambia tamaño y queda corto, trae más ----------
   useEffect(() => {
     const el = cardsScrollRef.current;
     if (!el) return;
@@ -158,9 +159,18 @@ export default function TalentDatabasePage() {
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  // Revalida cuando el tab vuelve visible (por si el usuario dejó abierta la página)
+  useEffect(() => {
+    const onVis = () => {
+      if (!document.hidden) refetch();
+    };
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, [refetch]);
+
   // --------- estados visuales ----------
-  const showInitialSkeletons = fetchStatus === 'fetching' && items.length === 0;
-  const showEmptyState = isFetched && !error && items.length === 0;
+  const showInitialSkeletons = status === 'pending' || (fetchStatus === 'fetching' && items.length === 0);
+  const showEmptyState = status === 'success' && !error && items.length === 0;
 
   return (
     <section className="w-full h-full min-h-0 flex flex-col">
@@ -213,52 +223,51 @@ export default function TalentDatabasePage() {
             </button>
           </div>
 
-          {error && (
+          {error ? (
             <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
-          )}
-
-          {!error && (
-            <article
-              className="
+          ) : (
+            <>
+              <article
+                className="
                 grid gap-6 place-items-stretch
                 grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
                 sm:auto-rows-[408px]
                 lg:auto-rows-auto
               "
-            >
-              {showInitialSkeletons &&
-                Array.from({ length: pageSize }).map((_, i) => (
-                  <div key={`skeleton-${i}`} className="w-full h-full">
-                    <div className="animate-pulse w-full h-full bg-neutral-100 rounded-lg" />
+              >
+                {showInitialSkeletons &&
+                  Array.from({ length: pageSize }).map((_, i) => (
+                    <div key={`skeleton-${i}`} className="w-full h-full">
+                      <div className="animate-pulse w-full h-full bg-neutral-100 rounded-lg" />
+                    </div>
+                  ))}
+
+                {items.map((it) => (
+                  <div key={it.id} className="w-full h-full">
+                    <TalentCard item={it} />
                   </div>
                 ))}
 
-              {items.map((it) => (
-                <div key={it.id} className="w-full h-full">
-                  <TalentCard item={it} />
-                </div>
-              ))}
-
-              {/* Sentinel para el IO: siempre al final */}
-              <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
-            </article>
-          )}
-
-          {/* Estados inferiores (si hay pocos resultados también se ven) */}
-          {showEmptyState && (
-            <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">{t('state.no_results')}</p>
-          )}
-
-          {isFetchingNextPage && items.length > 0 && (
-            <p className="py-10 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
-              {t('state.loading')}
-            </p>
-          )}
-
-          {!hasNextPage && items.length > 0 && (
-            <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
-              {t('state.no_more_results')}
-            </p>
+                {/* Sentinel para IO */}
+                <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
+              </article>
+              {/* Estados inferiores */}
+              {showEmptyState && (
+                <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">
+                  {t('state.no_results')}
+                </p>
+              )}
+              {isFetchingNextPage && items.length > 0 && (
+                <p className="py-10 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
+                  {t('state.loading')}
+                </p>
+              )}
+              {!hasNextPage && items.length > 0 && (
+                <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
+                  {t('state.no_more_results')}
+                </p>
+              )}
+            </>
           )}
         </div>
       </div>
