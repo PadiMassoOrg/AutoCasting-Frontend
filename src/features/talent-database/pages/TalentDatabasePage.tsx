@@ -11,10 +11,13 @@ import { getTalentDatabase } from '../services/talentDatabaseService';
 import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
 
 const initialFilters: TalentFiltersQS = {
+  includeNoHeadshot: undefined,
   stageName: '',
   genderIds: ['NULL'],
-  hairColorId: undefined,
-  eyeColorId: undefined,
+  hairColorIds: undefined,
+  hairColorIdsMode: 'ANY',
+  eyeColorIds: undefined,
+  eyeColorIdsMode: 'ANY',
   ageMin: undefined,
   ageMax: undefined,
   heightMinCm: undefined,
@@ -67,34 +70,26 @@ export default function TalentDatabasePage() {
     scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
   }, []);
 
-  // Mantén tu behavior entre contenedores
   useScrollExitOnEdge(cardsScrollRef, { forwardTo: isDesktop ? cardsScrollRef : scrollRootRef });
 
-  // Resetea cuando cambian filtros o pageSize y trae página 0
   useEffect(() => {
     cardsScrollRef.current?.scrollTo({ top: 0 });
-
-    // Cancelar cualquier request en vuelo
     inflightRef.current?.abort();
     inflightRef.current = null;
-
-    // Reset de estado
     setItems([]);
     setPage(0);
     setHasNext(true);
     setError(null);
-
-    // Disparar primera página
     fetchPage(0, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [effectiveFilters, pageSize]);
 
-  // Persistencia del toggle de filtros (tu lógica original)
   const [mobileOpen, setMobileOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState<boolean>(() => {
     const saved = localStorage.getItem('talentFiltersOpen');
     return saved ? saved === '1' : true;
   });
+
   useEffect(() => {
     localStorage.setItem('talentFiltersOpen', filtersOpen ? '1' : '0');
   }, [filtersOpen]);
@@ -105,7 +100,6 @@ export default function TalentDatabasePage() {
       if (fetchingNextRef.current) return;
       fetchingNextRef.current = true;
       setLoading(true);
-      // Solo limpiamos error si es un reset (primera página)
       if (replace) setError(null);
 
       const thisReqId = ++requestIdRef.current;
@@ -114,12 +108,8 @@ export default function TalentDatabasePage() {
 
       try {
         const res = await getTalentDatabase(p, pageSize, effectiveFilters, { signal: ctrl.signal });
-        // Si llegó fuera de orden, lo ignoramos
         if (requestIdRef.current !== thisReqId) return;
-
-        // Seguridad extra: solo card con headshotImageUrl
-        const fresh = (res.items ?? []).filter((it) => !!it.headshotImageUrl);
-
+        const fresh = res.items ?? [];
         setItems((prev) => (replace ? fresh : [...prev, ...fresh]));
         setPage(res.page + 1);
         setHasNext(!!res.hasNext);
@@ -168,7 +158,6 @@ export default function TalentDatabasePage() {
     let cancelled = false;
     (async () => {
       let tries = 0;
-      // Si no hay ítems y ya estamos cargando la primera, esperamos
       if (items.length === 0 && loading) return;
 
       while (!cancelled && hasNext && box.scrollHeight <= box.clientHeight + SCROLL_EPS && tries < MAX_AUTOFILL_PAGES) {
@@ -183,7 +172,6 @@ export default function TalentDatabasePage() {
     };
   }, [items.length, hasNext, loading, fetchPage, page, error]);
 
-  // Revalidar al volver a la pestaña (solo si NO hay error)
   useEffect(() => {
     const onVis = () => {
       if (document.hidden || error) return;

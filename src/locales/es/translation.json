@@ -446,6 +446,7 @@
       "reset": "Resetear Filtros",
       "hide": "Ocultar Filtros",
       "show": "Mostrar Filtros",
+      "include_no_headshot": "Incluir perfiles sin fotos",
       "basic_info": {
         "stage_name": "Nombre del Talento",
         "age_range": "Rango Etario",

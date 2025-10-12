@@ -12,9 +12,7 @@ export const getTalentDatabase = async (
   opts?: { signal?: AbortSignal }
 ): Promise<SliceResponse<ProfileCardResponse>> => {
   const qs = buildQuery(page, size, filters);
-  // 👇 bust de caches intermedios (CDN/navegador)
   qs.set('_', String(Date.now()));
-
   const response = await api.get(`${API_ROUTES.TALENT_DATABASE}?${qs.toString()}`, {
     signal: opts?.signal,
     headers: { 'Cache-Control': 'no-store' },
@@ -39,6 +37,7 @@ function buildQuery(page: number, size: number, filters?: TalentFiltersQS) {
     else qs.set(k, String(v));
   };
 
+  append('includeNoHeadshot', filters.includeNoHeadshot);
   append('stageName', filters.stageName);
   append('ageMin', filters.ageMin);
   append('ageMax', filters.ageMax);
@@ -53,8 +52,10 @@ function buildQuery(page: number, size: number, filters?: TalentFiltersQS) {
   append('professionsMode', filters.professionsMode);
   append('heightMinCm', filters.heightMinCm);
   append('heightMaxCm', filters.heightMaxCm);
-  append('hairColorId', filters.hairColorId);
-  append('eyeColorId', filters.eyeColorId);
+  append('hairColorId', filters.hairColorIds);
+  append('hairColorIdsMode', filters.hairColorIdsMode);
+  append('eyeColorId', filters.eyeColorIds);
+  append('eyeColorIdsMode', filters.eyeColorIdsMode);
   append('tattoo', filters.tattoo);
   append('passport', filters.passport);
   append('drivingLicense', filters.drivingLicense);

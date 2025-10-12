@@ -13,6 +13,7 @@ export type BaseProfileCard = {
 export type MatchMode = 'ANY' | 'ALL';
 
 export type TalentFiltersQS = Partial<{
+  includeNoHeadshot?: boolean;
   stageName: string;
   ageMin: number;
   ageMax: number;
@@ -21,9 +22,11 @@ export type TalentFiltersQS = Partial<{
   professionsMode: MatchMode;
   heightMinCm: number;
   heightMaxCm: number;
-  hairColorId: string;
-  eyeColorId: string;
-  tattoo: boolean; // undefined = cualquiera
+  hairColorIds: string[];
+  hairColorIdsMode: MatchMode;
+  eyeColorIds: string[];
+  eyeColorIdsMode: MatchMode;
+  tattoo: boolean;
   passport: boolean;
   drivingLicense: boolean;
   skillId: string[];
