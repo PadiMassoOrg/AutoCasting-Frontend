@@ -1,6 +1,7 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage } from '../features/auth/pages';
 
+import { useRouteTracking } from '../analytics/routeTracking';
 import MainSiteLayout from '../features/main-site/layout/MainSiteLayout';
 import { PrivacyPage, SupportPage, TermsPage } from '../features/main-site/page';
 import MainSitePage from '../features/main-site/page/MainSitePage';
@@ -12,9 +13,15 @@ import { ROUTES } from '../shared/lib/routes';
 import ProtectedRoute from './ProtectedRoute';
 import ProtectedRoutesLayout from './ProtectedRoutesLayout';
 
+function RouteTracker() {
+  useRouteTracking();
+  return null;
+}
+
 export default function AppRoutes() {
   return (
     <Router>
+      <RouteTracker />
       <ScrollToTop selector="#app-scroll-root" />
       <Routes>
         <Route element={<MainSiteLayout />}>

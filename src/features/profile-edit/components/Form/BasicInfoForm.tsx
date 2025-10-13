@@ -1,5 +1,5 @@
 import { Button, FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   onSelect,
@@ -13,10 +13,7 @@ import { useCachedSiteMetadataOption } from '../../../sitemetadata/hooks/useCach
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 import { useBasicInfoAutosave } from '../../hooks/autosaves';
 import { getBasicInfoSchema } from '../../schemas/basicInfoSchema';
-import { toLocationValue } from '../../services/locationApiService'; // <-- importa el mapper
-import type { LocationInput } from '../../types/location.types';
 import type { ProfileBasicInfo } from '../../types/profile.types';
-import LocationSearchInput from '../Location/LocationSearchInput';
 
 type Errors = {
   stageName?: string | null;
@@ -39,13 +36,8 @@ export default function BasicInfoForm({
   const YEAR_END = new Date().getFullYear();
   const YEAR_START = YEAR_END - 80;
 
-  const [locationDisplay, setLocationDisplay] = useState<string>(data.location?.display ?? '');
   const [profErrors, setProfErrors] = useState<string | null>(null);
   const [errors, setErrors] = useState<Errors>({});
-
-  useEffect(() => {
-    setLocationDisplay(data.location?.display ?? '');
-  }, [data.location?.display]);
 
   const stageName = useCommittedText(
     data.stageName ?? '',
@@ -99,13 +91,6 @@ export default function BasicInfoForm({
       label: capitalize(fmt.format(new Date(2000, i, 1))),
     }));
   }, [i18n.language]);
-
-  const handleLocationPick = (loc: LocationInput) => {
-    const value = toLocationValue(loc);
-    setLocationDisplay(value.display); // 1) mostrar selección al usuario
-    // autosave.immediate({ location: value }); // 2) guardar en backend
-    console.log(value.display);
-  };
 
   const professions = useToggleSet<string>(
     (data.professions ?? []).map((p) => p.id),
@@ -187,19 +172,6 @@ export default function BasicInfoForm({
             error={errors.birth?.year ?? undefined}
           />
         </div>
-      </div>
-
-      {/* Location */}
-      <div className="mb-[25px]">
-        <LocationSearchInput
-          label={t('profile.basic_info.location')}
-          placeholder={t('profile.basic_info.location_placeholder')}
-          onPick={handleLocationPick}
-          prefill={locationDisplay}
-          delayMs={2500}
-          minLength={4}
-          allowedCountries={['AR']}
-        />
       </div>
 
       {/* Profesión */}

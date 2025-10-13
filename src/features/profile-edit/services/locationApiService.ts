@@ -109,10 +109,9 @@ function mapProviderToLocationInput(props: Record<string, unknown> | undefined):
 
 /** Normaliza a valor listo para guardar/mostrar. */
 export function toLocationValue(loc: LocationInput): LocationValue {
+  const partsWhenNoSuburb = [loc.city, loc.state, loc.country].filter(Boolean).join(', ');
   const display =
-    loc.suburb && loc.suburb !== loc.city
-      ? `${loc.suburb}, ${loc.city}, ${loc.country}`
-      : `${loc.city}, ${loc.country}`;
+    loc.suburb && loc.suburb !== loc.city ? `${loc.suburb}, ${loc.city}, ${loc.country}` : partsWhenNoSuburb;
 
   return {
     display,
