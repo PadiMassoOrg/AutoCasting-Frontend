@@ -1,5 +1,5 @@
 import { Button, FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   onSelect,
@@ -13,6 +13,7 @@ import { useCachedSiteMetadataOption } from '../../../sitemetadata/hooks/useCach
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 import { useBasicInfoAutosave } from '../../hooks/autosaves';
 import { getBasicInfoSchema } from '../../schemas/basicInfoSchema';
+import { toLocationValue } from '../../services/locationApiService'; // <-- importa el mapper
 import type { LocationInput } from '../../types/location.types';
 import type { ProfileBasicInfo } from '../../types/profile.types';
 import LocationSearchInput from '../Location/LocationSearchInput';
@@ -35,11 +36,16 @@ export default function BasicInfoForm({
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
   const autosave = useBasicInfoAutosave();
   const schema = useMemo(() => getBasicInfoSchema(t), [t]);
-
   const YEAR_END = new Date().getFullYear();
   const YEAR_START = YEAR_END - 80;
 
+  const [locationDisplay, setLocationDisplay] = useState<string>(data.location?.display ?? '');
+  const [profErrors, setProfErrors] = useState<string | null>(null);
   const [errors, setErrors] = useState<Errors>({});
+
+  useEffect(() => {
+    setLocationDisplay(data.location?.display ?? '');
+  }, [data.location?.display]);
 
   const stageName = useCommittedText(
     data.stageName ?? '',
@@ -95,12 +101,12 @@ export default function BasicInfoForm({
   }, [i18n.language]);
 
   const handleLocationPick = (loc: LocationInput) => {
-    // TODO: aquí harás el POST al backend con loc
-    // p.ej. autosave.immediate({ location: loc }) o similar
-    console.log('picked:', loc);
+    const value = toLocationValue(loc);
+    setLocationDisplay(value.display); // 1) mostrar selección al usuario
+    // autosave.immediate({ location: value }); // 2) guardar en backend
+    console.log(value.display);
   };
 
-  const [profErrors, setProfErrors] = useState<string | null>(null);
   const professions = useToggleSet<string>(
     (data.professions ?? []).map((p) => p.id),
     (next) => {
@@ -185,7 +191,15 @@ export default function BasicInfoForm({
 
       {/* Location */}
       <div className="mb-[25px]">
-        <LocationSearchInput label="Ubicación" placeholder="Escribe tu ciudad o barrio…" onPick={handleLocationPick} />
+        <LocationSearchInput
+          label={t('profile.basic_info.location')}
+          placeholder={t('profile.basic_info.location_placeholder')}
+          onPick={handleLocationPick}
+          prefill={locationDisplay}
+          delayMs={2500}
+          minLength={4}
+          allowedCountries={['AR']}
+        />
       </div>
 
       {/* Profesión */}

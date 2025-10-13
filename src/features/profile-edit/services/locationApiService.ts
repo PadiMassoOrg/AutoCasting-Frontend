@@ -1,8 +1,5 @@
+// services/locationApiService.ts
 import type { LocationAPIResponse, LocationInput, LocationValue } from '../types/location.types';
-
-// .env (con Geoapify hoy, pero agnóstico):
-// VITE_LOCATION_API_BASE=https://api.geoapify.com/v1/geocode/autocomplete
-// VITE_LOCATION_API_KEY=xxxxx
 
 const API_KEY = import.meta.env.VITE_LOCATION_API_KEY as string;
 const RAW_BASE =
@@ -10,17 +7,18 @@ const RAW_BASE =
 const BASE = RAW_BASE.endsWith('/autocomplete') ? RAW_BASE : `${RAW_BASE.replace(/\/$/, '')}/autocomplete`;
 
 /**
- * Autocomplete de localidades/ciudades (sin calles) en **una sola** request.
- * - mínimo texto: 4 chars
- * - por defecto restringe a AR
+ * Autocomplete de localidades/ciudades.
+ * - 1 sola request (type=locality) → evita el 400 por tipos no permitidos
+ * - minLength recomendado: 4 (lo controla el componente)
+ * - countryCodes por defecto: ['AR']
  */
 export async function locationApiCityAutocomplete(
   text: string,
   opts?: {
     signal?: AbortSignal;
-    countryCodes?: string[]; // default ['AR']
-    lang?: string; // default 'es'
-    limit?: number; // default 8
+    countryCodes?: string[];
+    lang?: string;
+    limit?: number;
   }
 ): Promise<LocationInput[]> {
   if (!API_KEY) return [];
@@ -31,12 +29,12 @@ export async function locationApiCityAutocomplete(
   const limit = String(opts?.limit ?? 8);
   const countries = (opts?.countryCodes ?? ['AR']).map((c) => c.toLowerCase());
 
-  // Una sola request (sin `type`). Filtramos luego.
   const params = new URLSearchParams({
     text: q,
     apiKey: API_KEY,
     lang,
     limit,
+    type: 'locality', // <-- ÚNICA request, tipo permitido por Geoapify
     filter: `countrycode:${countries.join(',')}`,
   });
 
@@ -45,32 +43,15 @@ export async function locationApiCityAutocomplete(
     signal: opts?.signal,
     headers: { 'Cache-Control': 'no-store' },
   });
-
   if (!res.ok) return [];
 
   const data = (await res.json()) as LocationAPIResponse;
 
   return (
     (data.features ?? [])
-      // quedarnos solo con “city-like”: si no hay ningún campo de estos, lo descartamos
-      .filter((f) => {
-        const p = (f?.properties ?? {}) as Record<string, unknown>;
-        return Boolean(
-          p['city'] ||
-            p['town'] ||
-            p['village'] ||
-            p['locality'] ||
-            p['suburb'] ||
-            p['neighbourhood'] ||
-            p['district'] ||
-            p['quarter'] ||
-            p['municipality'] ||
-            p['name']
-        );
-      })
-      .map((f) => mapProviderToLocationInput(f.properties as Record<string, unknown>))
+      .map((f) => mapProviderToLocationInput(f?.properties as Record<string, unknown>))
       .filter((x): x is LocationInput => x != null)
-      // Dedupe por suburb|city|countryCode (si no hay suburb, usa vacío)
+      // Dedupe por suburb|city|countryCode
       .filter(uniqueBy((x) => `${(x.suburb ?? '').toLowerCase()}|${x.city.toLowerCase()}|${x.countryCode}`))
   );
 }
@@ -91,7 +72,6 @@ function mapProviderToLocationInput(props: Record<string, unknown> | undefined):
     str(props['municipality']) ||
     str(props['name']) ||
     '';
-
   if (!cityLike) return null;
 
   const suburbCandidate =
@@ -101,7 +81,6 @@ function mapProviderToLocationInput(props: Record<string, unknown> | undefined):
     str(props['locality']) ||
     str(props['district']) ||
     undefined;
-
   const suburb = suburbCandidate && suburbCandidate !== cityLike ? suburbCandidate : '';
 
   const state = str(props['state']) || '';
@@ -111,8 +90,8 @@ function mapProviderToLocationInput(props: Record<string, unknown> | undefined):
   const lon = num(props['lon']);
   const placeId = str(props['place_id']);
 
-  // Formato para dropdown: "suburb, city, country" (o "city, country" si no hay suburb)
-  const formatted = suburb ? `${suburb}, ${cityLike}, ${country}` : `${cityLike}, ${country}`;
+  // Formato para dropdown y para pintar en input: "suburb, city, country" o "city, country"
+  const formatted = suburb ? `${suburb}, ${cityLike}, ${country}` : `${cityLike}, ${state}, ${country}`;
 
   return {
     suburb,
@@ -149,7 +128,7 @@ export function toLocationValue(loc: LocationInput): LocationValue {
   };
 }
 
-/* ===== Utils ===== */
+/* Utils */
 function str(v: unknown): string | undefined {
   return typeof v === 'string' ? v : undefined;
 }

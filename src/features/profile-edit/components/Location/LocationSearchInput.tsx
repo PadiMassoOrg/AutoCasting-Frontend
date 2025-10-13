@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 import { locationApiCityAutocomplete } from '../../services/locationApiService';
 import type { LocationInput } from '../../types/location.types';
 
@@ -8,28 +9,43 @@ export default function LocationSearchInput({
   placeholder,
   onPick,
   minLength = 4,
-  delayMs = 5000, // ← 5s por defecto
+  delayMs = 5000,
   allowedCountries = ['AR'],
+  prefill,
 }: {
   label: string;
-  placeholder?: string;
+  placeholder: string;
   onPick: (loc: LocationInput) => void;
   minLength?: number;
   delayMs?: number;
   allowedCountries?: string[];
+  prefill?: string; // p.ej. "Palermo, Buenos Aires, Argentina"
 }) {
-  const [query, setQuery] = useState('');
+  const { t } = useTranslation();
+  const [query, setQuery] = useState(prefill ?? '');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
   const [items, setItems] = useState<LocationInput[]>([]);
   const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState(false);
+  const [error, setError] = useState(false);
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<number | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const skipNextEffect = useRef(false); // evita fetch al prellenar/programáticamente
+
+  // Mantener el input sincronizado con el backend sin disparar fetch
+  useEffect(() => {
+    if (prefill != null && prefill !== query) {
+      skipNextEffect.current = true;
+      setQuery(prefill);
+      setOpen(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefill]);
 
   const [menuPos, setMenuPos] = useState<{ top: number; left: number; width: number } | null>(null);
 
@@ -62,14 +78,20 @@ export default function LocationSearchInput({
     setMenuPos({ top, left: rect.left, width });
   };
 
-  // Debounce + cancelación + fetch (UNA request tras 5s sin teclear)
   useEffect(() => {
+    if (skipNextEffect.current) {
+      skipNextEffect.current = false;
+      return;
+    }
+
     const q = query.trim();
 
     if (q.length < minLength) {
       setOpen(false);
       setItems([]);
       setActive(0);
+      setLoading(false);
+      setError(false);
       if (timerRef.current) window.clearTimeout(timerRef.current);
       abortRef.current?.abort();
       return;
@@ -80,6 +102,9 @@ export default function LocationSearchInput({
 
     setLoading(true);
     setTouched(true);
+    setError(false);
+    setOpen(true);
+    updateMenuPos();
 
     timerRef.current = window.setTimeout(async () => {
       try {
@@ -92,14 +117,14 @@ export default function LocationSearchInput({
           limit: 8,
         });
         setItems(res);
-        setOpen(true);
         setActive(0);
         updateMenuPos();
+        setError(false);
       } catch {
         setItems([]);
-        setOpen(true);
         setActive(0);
         updateMenuPos();
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -147,8 +172,9 @@ export default function LocationSearchInput({
       e.preventDefault();
       const pick = suggestions[active];
       if (pick) {
+        skipNextEffect.current = true;
+        setQuery(pick.text);
         onPick(pick.loc);
-        setQuery('');
         setOpen(false);
         (document.activeElement as HTMLElement | null)?.blur?.();
       }
@@ -175,23 +201,32 @@ export default function LocationSearchInput({
             className="rounded-lg border border-[var(--color-secondary-outline)] bg-white shadow"
           >
             {loading && (
-              <div className="px-4 py-3 text-sm text-[var(--color-secondary-grey)]">Cargando sugerencias…</div>
+              <div className="px-4 py-3 text-sm text-[var(--color-secondary-grey)]">
+                {t('state.loading_suggestions')}
+              </div>
             )}
 
-            {!loading && suggestions.length === 0 && touched && (
-              <div className="px-4 py-3 text-sm text-[var(--color-secondary-grey)]">No hay sugerencias</div>
+            {!loading && error && (
+              <div className="px-4 py-3 text-sm text-[var(--color-secondary-grey)]">{t('state.server_err')}</div>
+            )}
+
+            {!loading && !error && suggestions.length === 0 && touched && (
+              <div className="px-4 py-3 text-sm text-[var(--color-secondary-grey)]">{t('state.no_results')}</div>
             )}
 
             {!loading &&
+              !error &&
               suggestions.map((s, i) => (
                 <button
                   key={`${s.id}-${s.text}`}
                   type="button"
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => {
+                    // Pintar selección en el input
+                    skipNextEffect.current = true;
+                    setQuery(s.text);
                     onPick(s.loc);
                     setOpen(false);
-                    setQuery('');
                   }}
                   onMouseEnter={() => setActive(i)}
                   className={`w-full text-left px-4 py-3 cursor-pointer ${
@@ -218,7 +253,7 @@ export default function LocationSearchInput({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder={placeholder ?? 'Ej. “Palermo”'}
+          placeholder={placeholder}
           className="w-full h-14 px-5 py-3 rounded-xl text-base placeholder:text-[var(--color-secondary-grey)] placeholder:font-normal placeholder:text-base border border-[var(--color-secondary-outline)] focus:outline-none focus:ring-0 focus:border-[var(--color-primary-black)] disabled:bg-[var(--color-secondary-offwhite)] disabled:cursor-not-allowed transition-colors"
         />
         {dropdown}

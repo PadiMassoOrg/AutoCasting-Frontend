@@ -32,7 +32,7 @@ export type LocationInput = {
   state: string;
   country: string;
   countryCode: string;
-  formatted?: string;
+  formatted: string;
   lat?: number;
   lon?: number;
   provider?: 'LOCATION_API';

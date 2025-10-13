@@ -61,6 +61,7 @@
     "no_results": "No se encontraron resultados.",
     "no_more_results": "No hay más resultados.",
     "loading": "Cargando...",
+    "loading_suggestions": "Cargando sugerencias...",
     "server_err": "Ocurrió un error, intente nuevamente."
   },
   "buttons": {
@@ -360,6 +361,7 @@
       "gender": "Género",
       "birth_date": "Fecha de Nacimiento",
       "location": "Locación",
+      "location_placeholder": "Escribe tu ciudad o barrio…",
       "profession": "Profesión",
       "profession_label": "(Selecciona hasta 3) 0 de 3 seleccionadas",
       "contact": "Contacto",
