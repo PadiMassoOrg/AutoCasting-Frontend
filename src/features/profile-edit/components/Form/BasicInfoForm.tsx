@@ -13,7 +13,9 @@ import { useCachedSiteMetadataOption } from '../../../sitemetadata/hooks/useCach
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 import { useBasicInfoAutosave } from '../../hooks/autosaves';
 import { getBasicInfoSchema } from '../../schemas/basicInfoSchema';
+import type { LocationInput } from '../../types/location.types';
 import type { ProfileBasicInfo } from '../../types/profile.types';
+import LocationSearchInput from '../Location/LocationSearchInput';
 
 type Errors = {
   stageName?: string | null;
@@ -92,6 +94,12 @@ export default function BasicInfoForm({
     }));
   }, [i18n.language]);
 
+  const handleLocationPick = (loc: LocationInput) => {
+    // TODO: aquí harás el POST al backend con loc
+    // p.ej. autosave.immediate({ location: loc }) o similar
+    console.log('picked:', loc);
+  };
+
   const [profErrors, setProfErrors] = useState<string | null>(null);
   const professions = useToggleSet<string>(
     (data.professions ?? []).map((p) => p.id),
@@ -131,7 +139,7 @@ export default function BasicInfoForm({
       />
 
       <div className="flex flex-col gap-2">
-        <Label className="text-base font-semibold">{t('profile.basic_info.birth_date')}</Label>
+        <Label className="text-sm font-semibold">{t('profile.basic_info.birth_date')}</Label>
         <div className="grid grid-cols-3 gap-2">
           <FormSelectField
             id="birth-day"
@@ -175,9 +183,14 @@ export default function BasicInfoForm({
         </div>
       </div>
 
+      {/* Location */}
+      <div className="mb-[25px]">
+        <LocationSearchInput label="Ubicación" placeholder="Escribe tu ciudad o barrio…" onPick={handleLocationPick} />
+      </div>
+
       {/* Profesión */}
       <div className="flex flex-col gap-2">
-        <Label className="text-base font-bold">{t('profile.basic_info.profession')}</Label>
+        <Label className="text-sm font-bold">{t('profile.basic_info.profession')}</Label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3 place-items-start">
           {professionsMeta.map((p) => {
             const active = professions.values.includes(p.id);

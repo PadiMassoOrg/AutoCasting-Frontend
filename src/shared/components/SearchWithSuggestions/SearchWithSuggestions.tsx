@@ -170,7 +170,7 @@ export default function SearchWithSuggestions({
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
-          className="w-full h-12 rounded-lg border-2 border-[var(--color-secondary-outline)] px-4 outline-none focus:border-[var(--color-primary-green)]"
+          className="w-full h-14 px-5 py-3 rounded-xl text-base placeholder:text-[var(--color-secondary-grey)] placeholder:font-light placeholder:text-sm border border-[var(--color-secondary-outline)] focus:outline-none focus:ring-0 focus:border-[var(--color-primary-black)] disabled:bg-[var(--color-secondary-offwhite)] disabled:cursor-not-allowed transition-colors"
         />
         {dropdown}
       </div>
