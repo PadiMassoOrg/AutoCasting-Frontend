@@ -41,7 +41,7 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
   }, [finalImages.length, selectedIndex]);
 
   const selectedImage = finalImages[selectedIndex];
-  const rightThumbIndices = useMemo(() => finalImages.map((_, i) => i).slice(1, 3), [finalImages]);
+  const rightThumbIndices = useMemo(() => finalImages.map((_, i) => i).slice(1, 4), [finalImages]);
 
   const isDesktopOnly = !!isDesktop && !isDesktopXL;
   const desktopLayout = !!isDesktop || !!isDesktopXL;

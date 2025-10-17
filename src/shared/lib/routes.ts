@@ -8,8 +8,8 @@ export const ROUTES = {
   RESET_PASSWORD: '/reset-password',
   // Dashboard
   DASHBOARD: '/dashboard',
-  PROFILE: '/dashboard/profile',
-  ACCOUNT: '/dashboard/account',
+  TALENT: '/dashboard/talent',
+  ACCOUNT: '/dashboard/talent/account',
   // Public
   PUBLIC_PROFILE: '/profile',
   TALENT_DATABASE: '/talent-database',
@@ -50,17 +50,17 @@ export const API_ROUTES = {
   CURRENT_LEGAL_DOCUMENT: '/legal/current',
   ACCEPT_LEGAL_DOCUMENT: '/legal/accept',
   // Profile
-  PROFILE: '/profile',
-  BASIC_INFO: '/profile/basic-info',
-  CONTACT: '/profile/contact',
-  SOCIAL_MEDIA: '/profile/social-media',
-  MEDIA: '/profile/media',
-  CHARACTERISTICS: '/profile/characteristics',
-  SKILLS: '/profile/skills',
+  TALENT_PROFILE: '/talent',
+  TALENT_BASIC_INFO: '/talent/basic-info',
+  TALENT_CONTACT: '/talent/contact',
+  TALENT_SOCIAL_MEDIA: '/talent/social-media',
+  TALENT_MEDIA: '/talent/media',
+  TALENT_CHARACTERISTICS: '/talent/characteristics',
+  TALENT_SKILLS: '/talent/skills',
   // Credits
   CREDIT: '/credit',
   // Education
   EDUCATION: '/education',
   // Talent Database
-  TALENT_DATABASE: '/profile/talent-database',
+  TALENT_DATABASE: '/talent/talent-database',
 };

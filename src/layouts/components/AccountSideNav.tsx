@@ -1,7 +1,7 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { logout } from '../../features/auth/services/authService';
+import { logout } from '../../features/app/auth/services/authService';
 import { ChevronRight } from '../../shared/components/Chevron';
 import HilightLink from '../../shared/components/HilightLink/HilightLink';
 import { ROUTES } from '../../shared/lib/routes';

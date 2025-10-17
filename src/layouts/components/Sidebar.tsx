@@ -60,7 +60,7 @@ export default function Sidebar({ open, onClose, onLogout }: Props) {
                   <>
                     <li onClick={onClose}>
                       <HilightLink
-                        to={ROUTES.PROFILE}
+                        to={ROUTES.TALENT}
                         label={t('routes.profile')}
                         className="z-[150] block text-[28px] font-extrabold leading-none"
                         width={200}

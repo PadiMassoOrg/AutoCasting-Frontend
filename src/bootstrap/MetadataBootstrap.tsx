@@ -3,7 +3,7 @@ import {
   fetchSiteMetadata,
   fetchSiteMetadataVersion,
   METADATA_CACHE_KEY,
-} from '../features/sitemetadata/services/siteMetadataService';
+} from '../features/app/sitemetadata/services/siteMetadataService';
 import { queryClient } from '../shared/lib/queryClient';
 
 const VERSION_KEY = 'pm-metadata-version';

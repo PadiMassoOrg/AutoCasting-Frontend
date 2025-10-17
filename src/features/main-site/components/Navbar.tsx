@@ -7,16 +7,16 @@ import HilightLink from '../../../shared/components/HilightLink/HilightLink';
 import { LinkLogo } from '../../../shared/components/LinkLogo';
 import BurgerIcon from '../../../shared/icons/burger.svg';
 import { ROUTES } from '../../../shared/lib/routes';
-import { logout } from '../../auth/services/authService';
-import { useProfile } from '../../profile-edit/hooks/useProfile';
+import { logout } from '../../app/auth/services/authService';
+import { useTalentProfile } from '../../app/talent/talent-profile-edit/hooks/useTalentProfile';
 
 const Navbar = () => {
   const { t } = useTranslation();
-  const { data: myProfile } = useProfile();
+  const { data: myProfile } = useTalentProfile();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="w-full bg-[var(--color-primary-white)] flex flex-row items-center py-6">
+    <div className="w-full bg-[var(--color-primary-white)] flex flex-row items-center py-4">
       <nav className="relative w-full px-6 lg:px-10 flex flex-row items-center justify-between z-20">
         <LinkLogo horizontal />
         <button
@@ -35,7 +35,7 @@ const Navbar = () => {
           ></HilightLink>
           {myProfile ? (
             <>
-              <HilightLink to={ROUTES.PROFILE} label={t('routes.profile')} exact={false} width={72} height={34} />
+              <HilightLink to={ROUTES.TALENT} label={t('routes.profile')} exact={false} width={72} height={34} />
               <AccountDropdown onLogout={logout} />
             </>
           ) : (

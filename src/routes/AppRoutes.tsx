@@ -1,12 +1,12 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage } from '../features/auth/pages';
 
 import { useRouteTracking } from '../analytics/routeTracking';
+import { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage } from '../features/app/auth/pages';
+import { PublicProfilePage } from '../features/app/public-profile/pages';
+import { TalentDatabasePage } from '../features/app/talent-database/pages';
 import MainSiteLayout from '../features/main-site/layout/MainSiteLayout';
 import { PrivacyPage, SupportPage, TermsPage } from '../features/main-site/page';
 import MainSitePage from '../features/main-site/page/MainSitePage';
-import { PublicProfilePage } from '../features/public-profile/pages';
-import { TalentDatabasePage } from '../features/talent-database/pages';
 import { MainLayout, ScrollContentLayout } from '../layouts';
 import { ScrollToTop } from '../shared/components/ScrollToTop/ScrollToTop';
 import { ROUTES } from '../shared/lib/routes';
