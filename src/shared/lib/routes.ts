@@ -13,8 +13,10 @@ export const ROUTES = {
   // Public
   PUBLIC_PROFILE: '/profile',
   TALENT_DATABASE: '/talent-database',
-  SUPPORT: '/dashboard/support',
-  FAQ: '/dashboard/faq',
+  SUPPORT: '/support',
+  FAQ: '/faq',
+  TERMS: '/terms-and-conditions',
+  PRIVACY: '/privacy-policy',
 };
 
 export const USER_ROUTES = [
@@ -44,6 +46,9 @@ export const API_ROUTES = {
   FORGOT_PASSWORD: '/auth/forgot-password',
   RESET_PASSWORD: '/auth/reset-password',
   CHANGE_PASSWORD: '/auth/change-password',
+  // Legal
+  CURRENT_LEGAL_DOCUMENT: '/legal/current',
+  ACCEPT_LEGAL_DOCUMENT: '/legal/accept',
   // Profile
   PROFILE: '/profile',
   BASIC_INFO: '/profile/basic-info',

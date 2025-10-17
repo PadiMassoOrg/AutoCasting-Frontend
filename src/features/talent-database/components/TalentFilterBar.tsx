@@ -93,8 +93,8 @@ export function TalentFilterBar({
 
   const characteristicsCount =
     (hasRange(value.heightMinCm, value.heightMaxCm) ? 1 : 0) +
-    (value.hairColorId ? 1 : 0) +
-    (value.eyeColorId ? 1 : 0) +
+    (hasAny(value.hairColorIds) ? 1 : 0) +
+    (hasAny(value.eyeColorIds) ? 1 : 0) +
     (value.tattoo !== undefined ? 1 : 0) +
     (value.passport !== undefined ? 1 : 0) +
     (value.drivingLicense !== undefined ? 1 : 0);
@@ -132,8 +132,22 @@ export function TalentFilterBar({
           </button>
         )}
       </header>
+      {/* Has Headshot Image */}
+      <label key={'hasHeadshot'} className="flex items-center gap-1 text-xs font-normal mt-6 cursor-pointer">
+        <input
+          type="checkbox"
+          className="cursor-pointer size-4 rounded-xl accent-[var(--color-primary-black)]"
+          checked={!!value.includeNoHeadshot}
+          onChange={(e) =>
+            onChange({
+              ...value,
+              includeNoHeadshot: e.target.checked ? true : undefined,
+            })
+          }
+        />
+        <span>{t('talent.filter.include_no_headshot')}</span>
+      </label>
       <Separator className="opacity-20 mt-6" />
-
       {/* Basic Info */}
       <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <FormInputField
@@ -236,12 +250,11 @@ export function TalentFilterBar({
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('profile.characteristics.hairColor')}</label>
           <MultiSelectDropdown
-            mode="single"
-            options={hairOptions}
+            options={hairOptions ?? []}
             getId={(o) => o.value}
             getLabel={(o) => o.label}
-            selected={value.hairColorId}
-            onChange={(id) => onChange({ ...value, hairColorId: id })}
+            selected={value.hairColorIds ?? []}
+            onChange={(next) => onChange({ ...value, hairColorIds: next.length ? next : undefined })}
             maxPanelHeight="16rem"
             forwardScrollToRef={forwardScrollToRef}
           />
@@ -250,12 +263,11 @@ export function TalentFilterBar({
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('profile.characteristics.eyeColor')}</label>
           <MultiSelectDropdown
-            mode="single"
-            options={eyeOptions}
+            options={eyeOptions ?? []}
             getId={(o) => o.value}
             getLabel={(o) => o.label}
-            selected={value.eyeColorId}
-            onChange={(id) => onChange({ ...value, eyeColorId: id })}
+            selected={value.eyeColorIds ?? []}
+            onChange={(next) => onChange({ ...value, eyeColorIds: next.length ? next : undefined })}
             maxPanelHeight="16rem"
             forwardScrollToRef={forwardScrollToRef}
           />

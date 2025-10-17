@@ -1,7 +1,8 @@
 {
   "company": {
     "site": "autocasting",
-    "header": "Tu Perfil Digital Actoral"
+    "header": "Tu Perfil Digital Actoral",
+    "trademark": "© 2025 Auto-Casting · Buenos Aires, AR"
   },
   "maintenance": {
     "scheduled": "Entraremos en mantenimiento el {{date, datetime}}.",
@@ -60,6 +61,7 @@
     "no_results": "No se encontraron resultados.",
     "no_more_results": "No hay más resultados.",
     "loading": "Cargando...",
+    "loading_suggestions": "Cargando sugerencias...",
     "server_err": "Ocurrió un error, intente nuevamente."
   },
   "buttons": {
@@ -67,9 +69,6 @@
     "save": "Guardar",
     "delete": "Borrar",
     "understood": "Entendido"
-  },
-  "dashboard": {
-    "logout": "Salir"
   },
   "routes": {
     "home": "Inicio",
@@ -81,7 +80,9 @@
     "access": "Acceso",
     "talent-database": "Catálogo",
     "support": "Soporte Técnico",
-    "faq": "Preguntas Frecuentes"
+    "faq": "Preguntas Frecuentes",
+    "privacy": "Políticas de Privacidad",
+    "terms": "Términos y condiciones"
   },
   "role": {
     "actor": "Actor",
@@ -326,6 +327,9 @@
       "password_missmatch": "Las contraseñas no coinciden"
     }
   },
+  "dashboard": {
+    "logout": "Salir"
+  },
   "profile": {
     "page": {
       "videos": "Videos",
@@ -357,6 +361,7 @@
       "gender": "Género",
       "birth_date": "Fecha de Nacimiento",
       "location": "Locación",
+      "location_placeholder": "Escribe tu ciudad o barrio…",
       "profession": "Profesión",
       "profession_label": "(Selecciona hasta 3) 0 de 3 seleccionadas",
       "contact": "Contacto",
@@ -441,6 +446,9 @@
     "filter": {
       "title": "Filtros",
       "reset": "Resetear Filtros",
+      "hide": "Ocultar Filtros",
+      "show": "Mostrar Filtros",
+      "include_no_headshot": "Incluir perfiles sin fotos",
       "basic_info": {
         "stage_name": "Nombre del Talento",
         "age_range": "Rango Etario",
@@ -474,5 +482,59 @@
       "support": "Soporte Técnico",
       "faq": "Preguntas Frecuentes"
     }
+  },
+  "legal": {
+    "terms": "Términos y Condiciones",
+    "privacy": "Políticas de Privacidad"
+  },
+  "support": {
+    "title": "Soporte Técnico",
+    "faq": [
+      {
+        "id": 1,
+        "q": "¿Qué es autocasting?",
+        "a": "autocasting es una plataforma que conecta a actores con productores, directores, agencias y empleadores. Los actores pueden crear su perfil con fotos, videos e información actualizada, y quienes buscan talento acceden a todo desde un solo lugar, sin pedir materiales por separado."
+      },
+      {
+        "id": 2,
+        "q": "¿Tiene costo usar autocasting?",
+        "a": "Por ahora no. En esta primera versión (MVP) el servicio es completamente gratuito tanto para actores como para productores, directores y empleadores."
+      },
+      {
+        "id": 3,
+        "q": "¿Qué puedo hacer si soy actor o actriz?",
+        "a": "Podés mostrar tu talento creando tu perfil con fotos, videos y toda tu información. Ese perfil lo compartís con un link único, y además queda visible para quienes buscan talento dentro de la plataforma."
+      },
+      {
+        "id": 4,
+        "q": "¿Qué puedo hacer si soy productor, director o empleador?",
+        "a": "Podés buscar y filtrar talentos con detalle (habilidades, idiomas, formación, etc.) y también crear tus propios castings o publicaciones de trabajo. Así llegás directamente a perfiles completos y actualizados, sin intermediarios."
+      },
+      {
+        "id": 5,
+        "q": "¿Cómo se guardan mis datos?",
+        "a": "La información que cargues se guarda automáticamente en tu perfil. Siempre vas a poder editarla y mantenerla actualizada."
+      },
+      {
+        "id": 6,
+        "q": "¿Quién puede ver mi perfil?",
+        "a": "Tu perfil es visible para los productores, directores y empleadores que usen autocasting, y también podés compartir tu link con quien quieras."
+      },
+      {
+        "id": 7,
+        "q": "¿Qué diferencia a autocasting de otras plataformas?",
+        "a": "autocasting reúne en un mismo lugar a actores y a quienes buscan talento. No hace falta mandar fotos, videos e info por separado: tu perfil ya tiene todo. Además, el buscador y el filtrado hacen mucho más fácil encontrar al talento indicado o la oportunidad correcta."
+      },
+      {
+        "id": 8,
+        "q": "¿Puedo usar autocasting si recién estoy empezando?",
+        "a": "¡Sí! autocasting está pensado tanto para actores que recién comienzan como para profesionales con experiencia."
+      },
+      {
+        "id": 9,
+        "q": "¿En qué países funciona? ",
+        "a": "autocasting es online y se puede usar desde cualquier lugar. La comunidad de talentos y oportunidades va a crecer a nivel internacional."
+      }
+    ]
   }
 }

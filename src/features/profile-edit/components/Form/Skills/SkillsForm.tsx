@@ -37,6 +37,14 @@ export default function SkillsForm({ data }: { data: SiteMetadataObject[] }) {
     );
   };
 
+  const handleRemoveSkill = (id: string) => {
+    setSkills((prev) => {
+      const next = prev.filter((s) => s.id !== id);
+      autosave.immediate({ skillIds: next.map((s) => s.id) });
+      return next;
+    });
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <h3 className="font-bold text-base">{t('profile.skills.skills')}</h3>
@@ -46,7 +54,7 @@ export default function SkillsForm({ data }: { data: SiteMetadataObject[] }) {
       </Button>
       <div>
         <Separator className="opacity-20 mt-6" />
-        {skills.length > 0 && <GroupedSkills skills={skills} />}
+        {skills.length > 0 && <GroupedSkills skills={skills} onRemove={handleRemoveSkill} />}
       </div>
     </div>
   );

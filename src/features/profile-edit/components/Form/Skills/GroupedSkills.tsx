@@ -1,6 +1,7 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Chip } from '../../../../../shared/components/Chip/Chip';
 import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
 
 const ORDER_KEYS = [
@@ -11,7 +12,7 @@ const ORDER_KEYS = [
   'sitemetadata.category.accent',
 ] as const;
 
-function GroupedSkills({ skills }: { skills: SiteMetadataObject[] }) {
+function GroupedSkills({ skills, onRemove }: { skills: SiteMetadataObject[]; onRemove?: (id: string) => void }) {
   const { t } = useTranslation();
   const [open, setOpen] = useState<Record<string, boolean>>({});
 
@@ -43,9 +44,7 @@ function GroupedSkills({ skills }: { skills: SiteMetadataObject[] }) {
     });
   }, [groups, t]);
 
-  if (!skills?.length) return null;
-  if (!allCategorized) return null;
-  if (categories.length === 0) return null;
+  if (!skills?.length || !allCategorized || categories.length === 0) return null;
 
   return (
     <div className="flex flex-col">
@@ -55,8 +54,8 @@ function GroupedSkills({ skills }: { skills: SiteMetadataObject[] }) {
         const isOpen = open[cat] ?? true;
 
         return (
-          <>
-            <article key={cat} className="py-6">
+          <div key={cat}>
+            <article className="py-6">
               <button
                 type="button"
                 className="w-full flex items-center justify-between cursor-pointer"
@@ -78,19 +77,15 @@ function GroupedSkills({ skills }: { skills: SiteMetadataObject[] }) {
               {isOpen && (
                 <div id={`skills-${cat}`} className="mt-3 flex flex-wrap gap-2">
                   {list.map((s) => (
-                    <span
-                      key={s.id}
-                      className="inline-flex items-center rounded-xl border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px]"
-                      title={s.stringCode}
-                    >
-                      {t(s.stringCode)}
-                    </span>
+                    <>
+                      <Chip label={s.stringCode} t={t} onRemove={() => onRemove && onRemove(s.id)}></Chip>
+                    </>
                   ))}
                 </div>
               )}
             </article>
             <Separator className="opacity-20" />
-          </>
+          </div>
         );
       })}
     </div>

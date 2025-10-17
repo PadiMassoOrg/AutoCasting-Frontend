@@ -1,2 +1,3 @@
+import PlanCard from './PlanCard';
 import TutorialCarousel from './TutorialCarousel';
-export { TutorialCarousel };
+export { PlanCard, TutorialCarousel };

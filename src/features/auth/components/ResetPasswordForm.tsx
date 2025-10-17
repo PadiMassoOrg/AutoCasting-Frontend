@@ -3,12 +3,18 @@ import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { useModal } from '../../../context/ModalContext';
+import { ROUTES } from '../../../shared/lib/routes';
+import ChangePasswordSuccessModal from '../../profile-account/components/ChangePasswordSuccessModal';
 import { useResetPasswordMutation } from '../hooks/useResetPasswordMutation';
 import { getResetPasswordSchema, type ResetPasswordValues } from '../schemas/authSchema';
 
 const ResetPasswordForm = ({ token }: { token: string }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const resetPasswordMutation = useResetPasswordMutation();
+  const { openModal, closeModal } = useModal();
 
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -20,6 +26,15 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
     resolver: zodResolver(getResetPasswordSchema()),
   });
 
+  const handleClose = () => {
+    closeModal();
+    navigate(ROUTES.AUTH);
+  };
+
+  const handleSuccessModal = () => {
+    openModal(<ChangePasswordSuccessModal onClose={handleClose} />, t('account.page.change_pass_modal.success'), 'lg');
+  };
+
   const onSubmit = async (data: ResetPasswordValues) => {
     setServerError(null);
     resetPasswordMutation.mutate(
@@ -28,6 +43,9 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
         newPassword: data.confirmPassword,
       },
       {
+        onSuccess: () => {
+          handleSuccessModal();
+        },
         onError: (err: any) => {
           const message = err?.response?.data?.message || t('state.server_err');
           setServerError(message);

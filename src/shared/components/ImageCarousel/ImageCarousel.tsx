@@ -13,10 +13,22 @@ type Props = {
 
 export default function ImageCarousel({ images, className, isDesktop, isDesktopXL }: Props) {
   const { t } = useTranslation();
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0); // imagen principal
   const [zoomOpen, setZoomOpen] = useState(false);
 
-  const openZoom = () => setZoomOpen(true);
+  // 👇 NUEVO: índice sólo para el overlay
+  const [overlayIndex, setOverlayIndex] = useState(0);
+
+  const openZoom = () => {
+    // abre en la imagen principal actual
+    setOverlayIndex(selectedIndex);
+    setZoomOpen(true);
+  };
+  const openZoomAt = (i: number) => {
+    // abre en la miniatura clickeada
+    setOverlayIndex(i);
+    setZoomOpen(true);
+  };
   const closeZoom = () => setZoomOpen(false);
 
   const finalImages = useMemo<string[]>(() => {
@@ -29,12 +41,16 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
   }, [finalImages.length, selectedIndex]);
 
   const selectedImage = finalImages[selectedIndex];
-  const rightThumbIndices = useMemo(() => finalImages.map((_, i) => i).slice(0, 3), [finalImages]);
+  const rightThumbIndices = useMemo(() => finalImages.map((_, i) => i).slice(1, 3), [finalImages]);
 
   const isDesktopOnly = !!isDesktop && !isDesktopXL;
   const desktopLayout = !!isDesktop || !!isDesktopXL;
 
-  const gridCols = isDesktopOnly ? 'grid-cols-[1fr_130px]' : 'grid-cols-[max-content_auto]';
+  const realCount = images?.length ?? 0;
+  const showDesktopThumbs = desktopLayout && realCount > 1;
+
+  const gridColsTwo = isDesktopOnly ? 'grid-cols-[1fr_130px]' : 'grid-cols-[max-content_auto]';
+  const gridCols = showDesktopThumbs ? gridColsTwo : 'grid-cols-1';
 
   const figureClass = desktopLayout
     ? isDesktopOnly
@@ -49,6 +65,7 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
   return (
     <div className={`w-full ${desktopLayout ? 'h-full min-h-0' : 'h-auto'} ${className ?? ''}`}>
       <div className={wrapperClass}>
+        {/* principal */}
         <div className={desktopLayout ? 'col-[1] row-[1] h-full min-h-0 flex flex-col' : 'flex flex-col gap-2'}>
           <figure className={`cursor-pointer relative overflow-hidden rounded-xl ${figureClass}`} onClick={openZoom}>
             <img
@@ -58,17 +75,16 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
             />
           </figure>
 
-          {!desktopLayout && (
+          {/* thumbs mobile */}
+          {!desktopLayout && realCount > 1 && (
             <div className="flex gap-2 overflow-x-auto w-full pb-1">
-              {finalImages.map((img, i) => (
+              {finalImages.slice(1).map((img, i) => (
                 <button
                   key={`thumb-m-${i}`}
                   type="button"
-                  onClick={() => setSelectedIndex(i)}
-                  aria-label={`Seleccionar imagen ${i + 1}`}
-                  className={`cursor-pointer w-[120px] aspect-[8/10] flex-shrink-0 rounded-lg overflow-hidden border-2 ${
-                    selectedIndex === i ? 'border-[var(--color-primary-greenyellow)]' : 'border-transparent'
-                  }`}
+                  onClick={() => openZoomAt(i)} // 👈 CAMBIO: abre overlay, NO setSelectedIndex
+                  aria-label={`Ver imagen ${i + 1}`}
+                  className="cursor-pointer w-[120px] aspect-[8/10] flex-shrink-0 rounded-lg overflow-hidden border-2 border-transparent"
                 >
                   <img src={img} alt={`Miniatura ${i + 1}`} className="w-full h-full object-cover" />
                 </button>
@@ -77,24 +93,22 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
           )}
         </div>
 
-        {desktopLayout && (
+        {/* thumbs desktop */}
+        {showDesktopThumbs && (
           <div
             className="col-[2] row-[1] h-full min-h-0 flex flex-col gap-3 items-stretch"
             style={{ ['--g' as any]: '12px' }}
           >
             {rightThumbIndices.map((idx) => {
               const img = finalImages[idx];
-              const selected = selectedIndex === idx;
               return (
                 <button
                   key={`thumb-d-${idx}`}
                   type="button"
-                  onClick={() => setSelectedIndex(idx)}
-                  aria-label={`Seleccionar imagen ${idx + 1}`}
+                  onClick={() => openZoomAt(idx)} // 👈 CAMBIO: abre overlay, NO cambia principal
+                  aria-label={`Ver imagen ${idx + 1}`}
                   style={{ height: 'calc((100% - 2*var(--g)) / 3)' }}
-                  className={`cursor-pointer relative aspect-[4/5] rounded-xl overflow-hidden border-2 flex-shrink-0 ${
-                    selected ? 'border-blue-500' : 'border-transparent'
-                  }`}
+                  className="cursor-pointer relative aspect-[4/5] rounded-xl overflow-hidden border-2 border-transparent flex-shrink-0"
                 >
                   <img src={img} alt={`Miniatura ${idx + 1}`} className="absolute inset-0 w-full h-full object-cover" />
                 </button>
@@ -103,16 +117,15 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
           </div>
         )}
 
-        {desktopLayout && (
-          <div className="col-[1/-1] row-[2]">
-            <Button variant="outline" className="w-full" onClick={openZoom}>
-              {t('profile.media.more_photos')}
-            </Button>
-          </div>
-        )}
+        {/* botón */}
+        <div className={desktopLayout ? 'col-[1/-1] row-[2]' : ''}>
+          <Button variant="outline" className="w-full" onClick={openZoom}>
+            {t('profile.media.more_photos')}
+          </Button>
+        </div>
 
-        {/* Overlay sin chrome */}
-        <PhotoZoomOverlay open={zoomOpen} images={finalImages} initialIndex={selectedIndex} onClose={closeZoom} />
+        {/* Overlay -> usa overlayIndex */}
+        <PhotoZoomOverlay open={zoomOpen} images={finalImages} initialIndex={overlayIndex} onClose={closeZoom} />
       </div>
     </div>
   );

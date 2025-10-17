@@ -1,6 +1,7 @@
 import type { DeepNullableExceptId } from '../../../shared/utils/typeUtils';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 import type { ProfileProgress } from '../services/computeProfileProgress';
+import type { LocationValue } from './location.types';
 
 export type BaseProfileResponse = {
   id: string;
@@ -44,6 +45,7 @@ export type BaseProfileBasicInfo = {
   birthDate: string;
   professions: SiteMetadataObject[];
   professionIds: string[];
+  location?: LocationValue | null;
 };
 
 export type BaseProfileContact = {

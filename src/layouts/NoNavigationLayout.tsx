@@ -9,7 +9,7 @@ export default function NoNavigationLayout({ children }: LayoutProps) {
         fixed inset-0 z-0           
         w-[100svw] h-[100svh]       
         lg:w-[100dvw] lg:h-[100dvh] 
-        overflow-hidden           
+        overflow-x-hidden           
         overscroll-none          
         bg-[var(--color-primary-white)] 
       `}

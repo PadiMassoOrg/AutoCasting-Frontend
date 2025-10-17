@@ -45,7 +45,10 @@ export function useProfileMediaPatch(profileId: string) {
       return updatedMedia;
     },
     onSuccess: (updatedMedia) => {
-      qc.setQueryData(PROFILE_CACHE_KEY, (prev: any) => (prev ? { ...prev, media: updatedMedia } : prev));
+      qc.setQueriesData({ queryKey: PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
+        prev ? { ...prev, media: updatedMedia } : prev
+      );
+      qc.invalidateQueries({ queryKey: PROFILE_CACHE_KEY, exact: false, refetchType: 'active' });
     },
   });
 }

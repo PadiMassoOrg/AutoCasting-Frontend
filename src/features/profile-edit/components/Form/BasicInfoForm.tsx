@@ -33,10 +33,10 @@ export default function BasicInfoForm({
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
   const autosave = useBasicInfoAutosave();
   const schema = useMemo(() => getBasicInfoSchema(t), [t]);
-
   const YEAR_END = new Date().getFullYear();
   const YEAR_START = YEAR_END - 80;
 
+  const [profErrors, setProfErrors] = useState<string | null>(null);
   const [errors, setErrors] = useState<Errors>({});
 
   const stageName = useCommittedText(
@@ -92,7 +92,6 @@ export default function BasicInfoForm({
     }));
   }, [i18n.language]);
 
-  const [profErrors, setProfErrors] = useState<string | null>(null);
   const professions = useToggleSet<string>(
     (data.professions ?? []).map((p) => p.id),
     (next) => {
@@ -131,7 +130,7 @@ export default function BasicInfoForm({
       />
 
       <div className="flex flex-col gap-2">
-        <Label className="text-base font-semibold">{t('profile.basic_info.birth_date')}</Label>
+        <Label className="text-sm font-semibold">{t('profile.basic_info.birth_date')}</Label>
         <div className="grid grid-cols-3 gap-2">
           <FormSelectField
             id="birth-day"
@@ -177,7 +176,7 @@ export default function BasicInfoForm({
 
       {/* Profesión */}
       <div className="flex flex-col gap-2">
-        <Label className="text-base font-bold">{t('profile.basic_info.profession')}</Label>
+        <Label className="text-sm font-bold">{t('profile.basic_info.profession')}</Label>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3 place-items-start">
           {professionsMeta.map((p) => {
             const active = professions.values.includes(p.id);

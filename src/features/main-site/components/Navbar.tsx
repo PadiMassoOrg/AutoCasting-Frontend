@@ -16,8 +16,8 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="w-full bg-[var(--color-primary-white)] flex flex-row items-center py-5">
-      <nav className="relative w-full px-6 lg:px-10 2xl:px-30 flex flex-row items-center justify-between z-20">
+    <div className="w-full bg-[var(--color-primary-white)] flex flex-row items-center py-6">
+      <nav className="relative w-full px-6 lg:px-10 flex flex-row items-center justify-between z-20">
         <LinkLogo horizontal />
         <button
           type="button"
@@ -53,12 +53,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      <Sidebar
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        onLogout={() => logout()}
-        isAuthenticated={!!myProfile}
-      />
+      <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} onLogout={() => logout()} />
     </div>
   );
 };

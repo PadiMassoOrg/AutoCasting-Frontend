@@ -1,11 +1,7 @@
 import { LandingSection, PlanSection, ServicesSection, TutorialSection } from './section';
 
 const MainSitePage = () => {
-  // Each section:
-  //   Container:       <section className="w-full bg-[var(--color-secondary-offwhite)] min-h-[85vh] grid place-items-center">
-  //   Sub-Container:   <div className="w-[90%] max-w-[1450px] h-full py-15 flex flex-col gap-10 items-center">
-  //   Title:           <h2 className="text-2xl font-bold"> {t('page.services.header')}</h2>
-
+  // Each section handles it's own layout.
   return (
     <main className="relative w-full flex flex-col items-center">
       <LandingSection></LandingSection>

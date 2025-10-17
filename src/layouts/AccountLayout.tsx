@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import AccountSideNav from './components/AccountSideNav';
+import { AccountSideNav } from './components';
 
 export default function AccountSectionLayout() {
   return (

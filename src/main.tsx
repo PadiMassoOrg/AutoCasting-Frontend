@@ -4,9 +4,9 @@ import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { AppRoutes } from './routes';
 
-import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import MetadataBootstrap from './bootstrap/MetadataBootstrap';
 import { LanguageProvider } from './context/LanguageContext';

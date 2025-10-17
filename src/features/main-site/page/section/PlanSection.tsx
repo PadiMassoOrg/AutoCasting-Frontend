@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import LogoIcon from '../../../../shared/icons/og-image.svg';
-import PlanCard from '../../components/UI/PlanCard';
+import { PlanCard } from '../../components/UI';
 
 const PlanSection = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="w-full relative bg-[var(--color-primary-white)] min-h-[85vh] grid place-items-center">
+    <section className="w-full relative bg-[var(--color-primary-white)] min-h-[82vh] grid place-items-center">
       <div className="relative max-w-[1450px] z-10 w-[90%] h-full py-15 flex flex-col gap-10 lg:gap-14 items-center">
         {/* Title */}
         <div className="flex flex-col gap-2 items-center">

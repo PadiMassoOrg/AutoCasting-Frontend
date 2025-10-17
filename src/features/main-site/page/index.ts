@@ -1,2 +1,5 @@
 import MainSitePage from './MainSitePage';
-export { MainSitePage as MainPage };
+import PrivacyPage from './PrivacyPage';
+import SupportPage from './SupportPage';
+import TermsPage from './TermsPage';
+export { MainSitePage as MainPage, PrivacyPage, SupportPage, TermsPage };

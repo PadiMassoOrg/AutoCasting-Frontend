@@ -3,7 +3,7 @@ import { API_ROUTES } from '../../../shared/lib/routes';
 import type { SliceResponse } from '../../../shared/types/sliceResponse.types';
 import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
 
-export const TALENT_DATABASE_CACHE_KEY = ['cache-talent-database'] as const;
+export const TALENT_DATABASE_CACHE_KEY = 'cache-talent-database' as const;
 
 export const getTalentDatabase = async (
   page: number,
@@ -12,7 +12,16 @@ export const getTalentDatabase = async (
   opts?: { signal?: AbortSignal }
 ): Promise<SliceResponse<ProfileCardResponse>> => {
   const qs = buildQuery(page, size, filters);
-  const response = await api.get(`${API_ROUTES.TALENT_DATABASE}?${qs.toString()}`, { signal: opts?.signal });
+  qs.set('_', String(Date.now()));
+  const response = await api.get(`${API_ROUTES.TALENT_DATABASE}?${qs.toString()}`, {
+    signal: opts?.signal,
+    headers: { 'Cache-Control': 'no-store' },
+    validateStatus: (s) => (s >= 200 && s < 300) || s === 204,
+  });
+
+  if (response.status === 204 || !response.data) {
+    return { items: [], hasNext: false, page, size };
+  }
   return response.data;
 };
 
@@ -28,6 +37,7 @@ function buildQuery(page: number, size: number, filters?: TalentFiltersQS) {
     else qs.set(k, String(v));
   };
 
+  append('includeNoHeadshot', filters.includeNoHeadshot);
   append('stageName', filters.stageName);
   append('ageMin', filters.ageMin);
   append('ageMax', filters.ageMax);
@@ -42,8 +52,10 @@ function buildQuery(page: number, size: number, filters?: TalentFiltersQS) {
   append('professionsMode', filters.professionsMode);
   append('heightMinCm', filters.heightMinCm);
   append('heightMaxCm', filters.heightMaxCm);
-  append('hairColorId', filters.hairColorId);
-  append('eyeColorId', filters.eyeColorId);
+  append('hairColorId', filters.hairColorIds);
+  append('hairColorIdsMode', filters.hairColorIdsMode);
+  append('eyeColorId', filters.eyeColorIds);
+  append('eyeColorIdsMode', filters.eyeColorIdsMode);
   append('tattoo', filters.tattoo);
   append('passport', filters.passport);
   append('drivingLicense', filters.drivingLicense);
