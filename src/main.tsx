@@ -5,13 +5,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
-import { AppRoutes } from './routes';
 
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
-import MetadataBootstrap from './bootstrap/MetadataBootstrap';
-import { LanguageProvider } from './context/LanguageContext';
-import { ModalProvider } from './context/ModalContext';
-import { queryClient } from './shared/lib/queryClient';
+import MetadataBootstrap from './app/bootstrap/MetadataBootstrap';
+import { LanguageProvider } from './app/context/LanguageContext';
+import { ModalProvider } from './app/context/ModalContext';
+import { AppRoutes } from './app/routes';
+import { queryClient } from './app/shared/lib/queryClient';
 
 const persister = createAsyncStoragePersister({
   storage: window.localStorage,
