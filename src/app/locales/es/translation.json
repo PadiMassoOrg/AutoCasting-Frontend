@@ -2,7 +2,9 @@
   "company": {
     "site": "autocasting",
     "header": "Tu Perfil Digital Actoral",
-    "trademark": "© 2025 Auto-Casting · Buenos Aires, AR"
+    "trademark": "© 2025 Auto-Casting · Buenos Aires, AR",
+    "linkedIn": "https://www.linkedin.com/feed/",
+    "instagram": "https://www.instagram.com/"
   },
   "maintenance": {
     "scheduled": "Entraremos en mantenimiento el {{date, datetime}}.",
@@ -74,16 +76,20 @@
     "home": "Inicio",
     "go_home": "Ir al Inicio",
     "login": "Iniciar Sesión",
-    "register": "Crear Perfil",
+    "register": "Crear Cuenta",
+    "logout": "Cerrar Sesión",
     "profile": "Perfil",
     "account": "Mi Cuenta",
+    "settings": "Herramientas",
     "access": "Acceso",
     "talent-database": "Catálogo",
     "productions": "Castings",
     "support": "Soporte Técnico",
     "faq": "Preguntas Frecuentes",
     "privacy": "Políticas de Privacidad",
-    "terms": "Términos y condiciones"
+    "terms": "Términos y condiciones",
+    "linkedIn": "LinkedIn",
+    "instagram": "Instagram"
   },
   "role": {
     "actor": "Actor",

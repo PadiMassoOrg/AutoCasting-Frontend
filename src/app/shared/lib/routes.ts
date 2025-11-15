@@ -17,6 +17,9 @@ export const ROUTES = {
   FAQ: '/faq',
   TERMS: '/terms-and-conditions',
   PRIVACY: '/privacy-policy',
+  // Company:
+  LINKEDIN_URL: 'https://www.linkedin.com/feed/',
+  INSTAGRAM_URL: 'https://www.instagram.com/',
 };
 
 export const USER_ROUTES = [

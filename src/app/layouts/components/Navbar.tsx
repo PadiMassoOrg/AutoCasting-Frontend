@@ -50,7 +50,12 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
             <img src={BurgerIcon} alt="" className="w-7" />
           </button>
         </div>
-        <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} onLogout={() => logout()} />
+        <Sidebar
+          open={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          onLogout={() => logout()}
+          isAuthenticated={isAuth != null}
+        />
 
         {/* Desktop */}
         <div className="hidden lg:flex flex-row items-center justify-between ">
