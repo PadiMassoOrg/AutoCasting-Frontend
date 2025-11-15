@@ -13,6 +13,7 @@ import LogoutIcon from '../../shared/icons/logout-red.svg';
 import AccountIcon from '../../shared/icons/profile.svg';
 import SettingsIcon from '../../shared/icons/settings.svg';
 import SwitcherIcon from '../../shared/icons/switcher-purple.svg';
+import Waves from '../../shared/icons/wave.svg';
 
 type Props = {
   open: boolean;
@@ -35,11 +36,11 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
 
   if (!open) return null;
   return (
-    <div aria-modal="true" role="dialog" className="fixed inset-0 z-300 lg:hidden">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <aside className="absolute inset-0 bg-white flex flex-col">
+    <div aria-modal="true" role="dialog" className="fixed inset-0 z-300 lg:hidden bg-[var(--color-secondary-white)]">
+      <img src={Waves} alt="" className="absolute bottom-0 left-0 w-full h-[11rem]" />
+      <aside className="absolute inset-0 flex flex-col">
         {/* Header */}
-        <header className="py-3 px-6 flex items-center justify-between border-[var(--color-secondary-outline)] border-b">
+        <header className="py-3 px-6 flex items-center justify-between border-[var(--color-secondary-outline)] border-b bg-white">
           <LinkLogo horizontal />
           <button
             type="button"
@@ -51,7 +52,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
           </button>
         </header>
         {/* Content */}
-        <nav className="w-[65%] h-full m-auto text-base font-semibold">
+        <nav className="w-[65%] h-full m-auto text-base font-semibold ">
           <div className="grid grid-rows-[3.5fr_1fr] place-items-center w-full h-full">
             <div className="w-full flex flex-col pt-10">
               {/* Public */}
