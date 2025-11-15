@@ -5,28 +5,39 @@ import { Link } from 'react-router-dom';
 import { logout } from '../../features/auth/services/authService';
 import HilightLink from '../../shared/components/HilightLink/HilightLink';
 import { LinkLogo } from '../../shared/components/LinkLogo';
-import BurgerIcon from '../../shared/icons/burger.svg';
-import CatalogoIcon from '../../shared/icons/catalogo.svg';
 import { getAuthToken } from '../../shared/lib/cookies';
 import { ROUTES } from '../../shared/lib/routes';
 import AccountDropdown from './AccountDropdown';
 import Sidebar from './Sidebar';
 
-type NavbarProps = HTMLAttributes<HTMLElement>;
+import BurgerIcon from '../../shared/icons/burger.svg';
+import CatalogoIcon from '../../shared/icons/catalogo.svg';
+import ClapperIcon from '../../shared/icons/clapper.svg';
+import SwitcherIcon from '../../shared/icons/switcher-purple.svg';
 
-const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className = '', ...props }, ref) {
+type NavbarVariant = 'icons' | 'icons-labels' | 'labels';
+type NavbarProps = HTMLAttributes<HTMLElement> & {
+  variant?: NavbarVariant;
+};
+
+const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className = '', variant, ...props }, ref) {
   const { t } = useTranslation();
   const isAuth = getAuthToken();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const effectiveVariant: NavbarVariant = variant ?? (isAuth ? 'icons' : 'icons-labels');
+
+  const showIcons = effectiveVariant !== 'labels';
+  const showLabels = effectiveVariant !== 'icons';
+
   return (
     <nav
       ref={ref}
       {...props}
-      className={`w-full bg-[var(--color-primary-white)] border-[var(--color-secondary-disabled-grey)] border-b ${className}`}
+      className={`w-full bg-[var(--color-primary-white)] border-[var(--color-secondary-outline)] border-b ${className}`}
     >
-      <div className="relative py-2 px-4 lg:px-8 bg-[var(--color-primary-white)]">
+      <div className="relative py-3 px-6 bg-[var(--color-primary-white)]">
         {/* Mobile */}
         <div className="lg:hidden w-full flex flex-row items-center justify-between">
           <LinkLogo horizontal path={ROUTES.HOME} />
@@ -44,23 +55,36 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
         {/* Desktop */}
         <div className="hidden lg:flex flex-row items-center justify-between ">
           {/* Left: Public */}
-          <div className="flex flex-row items-center gap-6">
+          <div className="flex flex-row items-center">
             <LinkLogo horizontal path={ROUTES.HOME} />
-            <Link to={ROUTES.TALENT_DATABASE}>
-              <span className="flex flex-row items-center gap-2">
-                <img src={CatalogoIcon} alt="" className="w-6" />
-                {t('routes.talent-database')}
-              </span>
-            </Link>
+            <div className="ml-16 flex flex-row items-center gap-6">
+              <Link to={ROUTES.TALENT_DATABASE}>
+                <span className="flex flex-row items-center gap-2">
+                  {showIcons && <img src={CatalogoIcon} alt="" className="w-6" />}
+                  {showLabels && t('routes.talent-database')}
+                </span>
+              </Link>
+              <Link to={ROUTES.TALENT_DATABASE}>
+                <span className="flex flex-row items-center gap-2">
+                  {showIcons && <img src={ClapperIcon} alt="" className="w-6" />}
+                  {showLabels && t('routes.productions')}
+                </span>
+              </Link>
+              {isAuth && (
+                <span className="flex flex-row items-center gap-2 cursor-pointer">
+                  {showIcons && <img src={SwitcherIcon} alt="" className="w-6" />}
+                </span>
+              )}
+            </div>
           </div>
           {/* Right: Authenticated */}
           <div className="flex flex-row gap-6 items-center text-nowrap">
             {!isAuth ? (
               <>
-                <Button asChild>
+                <Button asChild variant="primaryOutline" className="min-w-[145px]">
                   <Link to={ROUTES.AUTH}>{t('routes.login')}</Link>
                 </Button>
-                <Button asChild>
+                <Button asChild variant="primary" className="min-w-[145px]">
                   <Link to={ROUTES.AUTH_REGISTER}>{t('routes.register')}</Link>
                 </Button>
               </>

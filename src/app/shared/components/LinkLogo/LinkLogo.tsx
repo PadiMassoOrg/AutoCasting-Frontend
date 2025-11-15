@@ -14,7 +14,7 @@ const LinkLogo = ({ path = ROUTES.HOME, horizontal, className }: LinkLogoProps) 
   const { t } = useTranslation();
 
   const logo = (
-    <Logo text={t('company.site')} imageSrc={AC_LOGO} horizontal={horizontal} className={className} imageSize={60} />
+    <Logo text={t('company.site')} imageSrc={AC_LOGO} horizontal={horizontal} className={className} imageSize={50} />
   );
 
   return path ? <Link to={path}>{logo}</Link> : logo;
