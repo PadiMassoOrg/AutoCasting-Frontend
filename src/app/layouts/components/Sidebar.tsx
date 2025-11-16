@@ -40,7 +40,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
   if (!open) return null;
   return (
     <div aria-modal="true" role="dialog" className="fixed inset-0 z-300 lg:hidden bg-[var(--color-secondary-white)]">
-      <img src={Waves} alt="" className="absolute bottom-0 left-0 w-full h-[11rem]" />
+      <img src={Waves} alt="" className="absolute xs:hidden bottom-0 left-0 w-full h-[11rem]" />
       <aside className="absolute inset-0 flex flex-col">
         {/* Header */}
         <header className="py-3 px-6 flex items-center justify-between border-[var(--color-secondary-outline)] border-b bg-white">
