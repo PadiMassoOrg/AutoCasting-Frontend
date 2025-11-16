@@ -1,4 +1,3 @@
-// ScrollContentLayout.tsx
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { MaintenanceBanner } from '../shared/components/MaintenanceBanner/MaintenanceBanner';
@@ -11,12 +10,15 @@ export default function ScrollContentLayout() {
   const { header, footer } = useChromeBoxHeights();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
 
+  const contentHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
+
   return (
     <>
       <header data-site-header className="relative z-[40]">
         <MaintenanceBanner />
         <Navbar id="app-navbar" />
       </header>
+
       <div
         className={isDesktop ? 'fixed inset-x-0 overflow-hidden z-0' : ''}
         style={
@@ -24,12 +26,14 @@ export default function ScrollContentLayout() {
             ? {
                 top: `${header}px`,
                 bottom: `${footer}px`,
-                height: `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`,
+                height: contentHeight,
               }
-            : undefined
+            : {
+                height: contentHeight,
+              }
         }
       >
-        <main className={'w-full min-w-0 max-w-[1650px] mx-auto ' + (isDesktop ? 'h-full' : '')}>
+        <main className="w-full min-w-0 max-w-[1650px] mx-auto h-full">
           <Outlet />
         </main>
       </div>

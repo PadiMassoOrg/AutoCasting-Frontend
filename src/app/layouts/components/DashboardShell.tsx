@@ -10,7 +10,7 @@ export type DashboardSection<Key extends string = string> = {
   render: () => ReactNode;
 };
 
-type DashboardLayoutV2Props<Key extends string = string> = {
+type DashboardShellProps<Key extends string = string> = {
   title?: string;
   sections?: DashboardSection<Key>[];
   initialKey?: Key;
@@ -22,7 +22,7 @@ function DashboardShell<Key extends string = string>({
   sections,
   initialKey,
   children,
-}: DashboardLayoutV2Props<Key>) {
+}: DashboardShellProps<Key>) {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const hasSections = !!(sections && sections.length > 0);
 
@@ -56,7 +56,6 @@ function DashboardShell<Key extends string = string>({
     }
   };
 
-  // No Sections
   if (!hasSections) {
     return (
       <section className="w-full h-full min-h-0 flex flex-col">
@@ -72,17 +71,46 @@ function DashboardShell<Key extends string = string>({
     );
   }
 
-  // Sections
+  if (!isDesktop && mobileView === 'nav') {
+    return (
+      <section className="w-full h-full bg-[var(--color-secondary-white)]">
+        <div className="w-full max-w-[450px] mx-auto h-full flex flex-col px-4 gap-4">
+          {title && (
+            <h1 className="pt-4 text-xl font-semibold text-[var(--color-primary-black)] text-center">{title}</h1>
+          )}
+          <div className="flex-1 flex items-start justify-center pb-8">
+            <div className="w-full bg-[var(--color-primary-white)] rounded-3xl border border-[var(--color-secondary-outline)] shadow-sm overflow-hidden">
+              {sections!.map((item, index) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  onClick={() => handleSelect(item.key)}
+                  className={[
+                    'w-full flex items-center justify-between px-4 py-3 text-sm font-medium',
+                    index !== sections!.length - 1 && 'border-b border-[var(--color-secondary-outline)]',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                >
+                  <span>{item.label}</span>
+                  <span className="text-xl leading-none text-[var(--color-secondary-grey-fonts)]">›</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="w-full h-full min-h-0 flex flex-col lg:flex-row gap-0 bg-[var(--color-secondary-white)]">
-      {/* Desktop */}
       {isDesktop && (
         <aside className="hidden lg:block w-64 shrink-0 border-r border-[var(--color-secondary-outline)] bg-[var(--color-primary-white)]">
           <div className="h-full flex flex-col">
             {title && (
               <div className="px-4 pt-6 pb-4 text-sm font-semibold text-[var(--color-primary-black)]">{title}</div>
             )}
-
             <nav className="px-3 pb-6 flex flex-col gap-1.5">
               {sections!.map((item) => {
                 const selected = item.key === activeKey;
@@ -108,36 +136,8 @@ function DashboardShell<Key extends string = string>({
         </aside>
       )}
 
-      {/* Mobile */}
       <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
         <div className="w-full max-w-[1100px] mx-auto px-4 lg:px-8 py-6 lg:py-8">
-          {/* Sections */}
-          {!isDesktop && mobileView === 'nav' && (
-            <div className="w-full h-full flex flex-col items-center gap-4">
-              {title && <h1 className="text-xl font-semibold text-[var(--color-primary-black)]">{title}</h1>}
-
-              <div className="bg-[var(--color-primary-white)] rounded-3xl border border-[var(--color-secondary-outline)] shadow-sm overflow-hidden">
-                {sections!.map((item, index) => (
-                  <button
-                    key={item.key}
-                    type="button"
-                    onClick={() => handleSelect(item.key)}
-                    className={[
-                      'w-full flex items-center justify-between px-4 py-3 text-sm font-medium',
-                      index !== sections!.length - 1 && 'border-b border-[var(--color-secondary-outline)]',
-                    ]
-                      .filter(Boolean)
-                      .join(' ')}
-                  >
-                    <span>{item.label}</span>
-                    <span className="text-xl leading-none text-[var(--color-secondary-grey-fonts)]">›</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Mobile - Active Content */}
           {!isDesktop && mobileView === 'content' && currentSection && (
             <div className="flex flex-col gap-6">
               <button
@@ -152,10 +152,8 @@ function DashboardShell<Key extends string = string>({
             </div>
           )}
 
-          {/* Desktop - Active Content */}
           {isDesktop && currentSection && <>{currentSection.render()}</>}
 
-          {/* Contenido “extra” opcional debajo de todo */}
           {children}
         </div>
       </article>
