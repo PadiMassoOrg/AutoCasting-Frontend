@@ -17,17 +17,17 @@ export default function TalentProfileEditPage() {
   const sections: DashboardSection[] = [
     {
       key: 'basic',
-      label: t('profile.sidebar.basicInfo', { defaultValue: 'Información Básica' }),
+      label: t('profile.basic_info.basic_info'),
       render: () => <TalentProfileEditSection profile={data} />,
     },
     {
       key: 'media',
-      label: t('profile.sidebar.media', { defaultValue: 'Media' }),
+      label: t('profile.media.media'),
       render: () => <MediaEditSection media={data.media} supabaseId={data.id} />,
     },
     {
       key: 'details',
-      label: t('profile.sidebar.details', { defaultValue: 'Características' }),
+      label: t('profile.characteristics.characteristics'),
       render: () => <DetailsEditSection profile={data} />,
     },
   ];
