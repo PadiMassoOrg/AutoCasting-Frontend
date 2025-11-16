@@ -105,10 +105,8 @@ function DashboardShell<Key extends string = string>({
     <section className="w-full h-full min-h-0 flex flex-col lg:flex-row gap-0 bg-[var(--color-secondary-white)]">
       {isDesktop && (
         <aside className="hidden lg:block w-64 shrink-0 border-r border-[var(--color-secondary-outline)] bg-[var(--color-primary-white)]">
-          <div className="h-full flex flex-col">
-            {title && (
-              <div className="px-4 pt-6 pb-4 text-sm font-semibold text-[var(--color-primary-black)]">{title}</div>
-            )}
+          <div className="h-full flex flex-col py-2">
+            {title && <h2 className="px-4 pt-6 pb-4 text-lg font-bold text-[var(--color-primary-black)]">{title}</h2>}
             <nav className="px-3 pb-6 flex flex-col gap-1.5">
               {sections!.map((item) => {
                 const selected = item.key === activeKey;
@@ -118,10 +116,10 @@ function DashboardShell<Key extends string = string>({
                     type="button"
                     onClick={() => handleSelect(item.key)}
                     className={[
-                      'flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold cursor-pointer w-full text-left',
+                      'flex items-center gap-2 rounded-lg px-4 py-4 text-sm font-semibold cursor-pointer w-full text-left',
                       selected
-                        ? 'bg-[var(--color-secondary-)] text-[var(--color-primary-purple)]'
-                        : 'text-[var(--color-primary-black)] hover:bg-[var(--color-primary-light-grey)]',
+                        ? 'bg-[var(--color-secondary-white)] text-[var(--color-primary-purple)]'
+                        : 'text-[var(--color-primary-black)] hover:bg-[var(--color-secondary-white) hover:text-[var(--color-primary-purple)]',
                     ].join(' ')}
                   >
                     {item.icon && <span className="w-5 h-5">{item.icon}</span>}
