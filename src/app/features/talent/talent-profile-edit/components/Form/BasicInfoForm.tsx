@@ -103,7 +103,7 @@ export default function BasicInfoForm({
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <h3 className="font-bold text-base mb-2">{t('profile.basic_info.basic_info')}</h3>
+      <h3 className="hidden lg:block font-bold text-2xl mb-2">{t('profile.basic_info.basic_info')}</h3>
 
       <FormInputField
         id="stageName"

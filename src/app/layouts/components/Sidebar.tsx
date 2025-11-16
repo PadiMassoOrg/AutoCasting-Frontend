@@ -117,7 +117,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                         </Link>
                       </li>
                       <li onClick={onClose}>
-                        <Link to={ROUTES.ACCOUNT}>
+                        <Link to={ROUTES.SETTINGS}>
                           <span className="flex flex-row items-center gap-2">
                             <img src={SettingsIcon} alt="" className="w-7" />
                             {t('routes.settings')}

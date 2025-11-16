@@ -29,9 +29,7 @@ export default function ScrollContentLayout() {
             : undefined
         }
       >
-        <main
-          className={'w-full min-w-0 max-w-[1650px] mx-auto px-4 lg:px-6 pt-4 lg:pt-6 ' + (isDesktop ? 'h-full' : '')}
-        >
+        <main className={'w-full min-w-0 max-w-[1650px] mx-auto ' + (isDesktop ? 'h-full' : '')}>
           <Outlet />
         </main>
       </div>

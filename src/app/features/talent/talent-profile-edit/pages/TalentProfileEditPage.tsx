@@ -1,21 +1,36 @@
-import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { DashboardShell } from '../../../../layouts/components';
+import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
 import PageLoading from '../../../../shared/components/PageLoading/PageLoading';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
-import TalentProfileEditShell from '../components/TalentProfileEditShell';
+import { DetailsEditSection, MediaEditSection } from '../components/Section';
+import TalentProfileEditSection from '../components/Section/TalentProfileEditSection';
 import { useTalentProfile } from '../hooks/useTalentProfile';
 
-const TalentProfileEditPage = () => {
+export default function TalentProfileEditPage() {
+  const { t } = useTranslation();
   const { data, isPending, error } = useTalentProfile();
-  const location = useLocation();
 
-  if (isPending) return <PageLoading></PageLoading>;
-  if (error) return <ServerError></ServerError>;
-  if (data)
-    return (
-      <div className="h-full">
-        <TalentProfileEditShell profile={data} key={location.key} />
-      </div>
-    );
-};
+  if (isPending) return <PageLoading />;
+  if (error || !data) return <ServerError />;
 
-export default TalentProfileEditPage;
+  const sections: DashboardSection[] = [
+    {
+      key: 'basic',
+      label: t('profile.sidebar.basicInfo', { defaultValue: 'Información Básica' }),
+      render: () => <TalentProfileEditSection profile={data} />,
+    },
+    {
+      key: 'media',
+      label: t('profile.sidebar.media', { defaultValue: 'Media' }),
+      render: () => <MediaEditSection media={data.media} supabaseId={data.id} />,
+    },
+    {
+      key: 'details',
+      label: t('profile.sidebar.details', { defaultValue: 'Características' }),
+      render: () => <DetailsEditSection profile={data} />,
+    },
+  ];
+
+  return <DashboardShell title={t('profile.page.profile')} sections={sections} initialKey="basic" />;
+}

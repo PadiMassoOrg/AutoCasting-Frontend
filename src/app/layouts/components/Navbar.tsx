@@ -108,7 +108,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                     {showLabels && t('routes.profile')}
                   </span>
                 </Link>
-                <Link to={ROUTES.ACCOUNT}>
+                <Link to={ROUTES.SETTINGS}>
                   <span className="flex flex-row items-center gap-2">
                     {showIcons && <img src={SettingsIcon} alt="" className="w-6" />}
                     {showLabels && t('routes.settings')}
