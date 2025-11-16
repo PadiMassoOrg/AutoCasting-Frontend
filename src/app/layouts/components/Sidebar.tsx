@@ -5,8 +5,10 @@ import { Link } from 'react-router-dom';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import { ROUTES } from '../../shared/lib/routes';
 
+import { useUserMode } from '../../context/UserModeContext';
 import CatalogoIcon from '../../shared/icons/catalogo.svg';
 import ClapperIcon from '../../shared/icons/clapper.svg';
+import FileIcon from '../../shared/icons/file.svg';
 import InstagramIcon from '../../shared/icons/instagram-purple.svg';
 import LinkedInIcon from '../../shared/icons/linkedin-purple.svg';
 import LogoutIcon from '../../shared/icons/logout-red.svg';
@@ -24,6 +26,7 @@ type Props = {
 
 export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Props) {
   const { t } = useTranslation();
+  const { mode } = useUserMode();
 
   useEffect(() => {
     if (!open) return;
@@ -54,7 +57,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
         {/* Content */}
         <nav className="w-[65%] h-full m-auto text-base font-semibold ">
           <div className="grid grid-rows-[3.5fr_1fr] place-items-center w-full h-full">
-            <div className="w-full flex flex-col pt-10">
+            <div className="w-full flex flex-col pt-4">
               {/* Public */}
               <ul className="w-full flex flex-col gap-5">
                 <li onClick={onClose}>
@@ -94,24 +97,40 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                 </ul>
               ) : (
                 <ul className="w-full flex flex-col gap-6 font-semibold">
-                  <li onClick={onClose}>
-                    <Link to={ROUTES.TALENT}>
-                      <span className="flex flex-row items-center gap-2">
-                        <img src={AccountIcon} alt="" className="w-7" />
-                        {t('routes.profile')}
-                      </span>
-                    </Link>
-                  </li>
-                  <li onClick={onClose}>
-                    <Link to={ROUTES.ACCOUNT}>
-                      <span className="flex flex-row items-center gap-2">
-                        <img src={SettingsIcon} alt="" className="w-7" />
-                        {t('routes.settings')}
-                      </span>
-                    </Link>
-                  </li>
+                  {mode == 'talent' ? (
+                    <>
+                      {/* Talent */}
+                      <li onClick={onClose}>
+                        <Link to={ROUTES.TALENT_APPLIED_PRODUCTIONS}>
+                          <span className="flex flex-row items-center gap-2">
+                            <img src={FileIcon} alt="" className="w-7" />
+                            {t('routes.talent-applied-productions')}
+                          </span>
+                        </Link>
+                      </li>
+                      <li onClick={onClose}>
+                        <Link to={ROUTES.TALENT}>
+                          <span className="flex flex-row items-center gap-2">
+                            <img src={AccountIcon} alt="" className="w-7" />
+                            {t('routes.profile')}
+                          </span>
+                        </Link>
+                      </li>
+                      <li onClick={onClose}>
+                        <Link to={ROUTES.ACCOUNT}>
+                          <span className="flex flex-row items-center gap-2">
+                            <img src={SettingsIcon} alt="" className="w-7" />
+                            {t('routes.settings')}
+                          </span>
+                        </Link>
+                      </li>
+                    </>
+                  ) : (
+                    <>{/* Employer */}</>
+                  )}
                 </ul>
               )}
+              {/* Logout */}
               {isAuthenticated && (
                 <>
                   <Separator className="opacity-20 my-6" />

@@ -9,6 +9,7 @@ export const ROUTES = {
   // Dashboard
   DASHBOARD: '/dashboard',
   TALENT: '/dashboard/talent',
+  TALENT_APPLIED_PRODUCTIONS: '/dashboard/talent/mis-postulaciones',
   ACCOUNT: '/dashboard/talent/account',
   // Public
   PUBLIC_PROFILE: '/profile',
