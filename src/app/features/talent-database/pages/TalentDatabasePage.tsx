@@ -249,10 +249,10 @@ export default function TalentDatabasePage() {
             <>
               <article
                 className="
-                  grid gap-6 place-items-stretch
-                  grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
-                  sm:auto-rows-[408px]
-                  lg:auto-rows-auto
+                grid gap-6 place-items-stretch
+                grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
+                sm:auto-rows-[408px]
+                lg:auto-rows-auto
                 "
               >
                 {showInitialSkeletons &&
