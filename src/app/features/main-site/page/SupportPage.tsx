@@ -25,7 +25,7 @@ const SupportPage = () => {
   }, [faq]);
 
   return (
-    <section className="w-full relative bg-[var(--color-primary-white)] min-h-[70vh] grid place-items-center pb-16">
+    <section className="w-full relative bg-[var(--color-primary-white)] min-h-[70vh] grid place-items-center pb-16 pt-10">
       <div className="relative max-w-[1450px] z-10 w-[80%] h-full py-5 flex flex-col gap-10 lg:gap-14 items-center">
         {/* Title */}
         <div className="flex flex-col gap-2 items-center">

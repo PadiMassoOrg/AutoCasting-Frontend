@@ -3,17 +3,20 @@ import { forwardRef, type HTMLAttributes, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { logout } from '../../features/auth/services/authService';
-import HilightLink from '../../shared/components/HilightLink/HilightLink';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import { getAuthToken } from '../../shared/lib/cookies';
 import { ROUTES } from '../../shared/lib/routes';
-import AccountDropdown from './AccountDropdown';
 import Sidebar from './Sidebar';
 import UserModeSwitcher from './UserModeSwitcher';
 
+import { useUserMode } from '../../context/UserModeContext';
 import BurgerIcon from '../../shared/icons/burger.svg';
 import CatalogoIcon from '../../shared/icons/catalogo.svg';
 import ClapperIcon from '../../shared/icons/clapper.svg';
+import FileIcon from '../../shared/icons/file.svg';
+import LogoutIcon from '../../shared/icons/logout-red.svg';
+import ProfileIcon from '../../shared/icons/profile.svg';
+import SettingsIcon from '../../shared/icons/settings.svg';
 
 type NavbarVariant = 'icons' | 'icons-labels' | 'labels';
 type NavbarProps = HTMLAttributes<HTMLElement> & {
@@ -23,6 +26,7 @@ type NavbarProps = HTMLAttributes<HTMLElement> & {
 const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className = '', variant, ...props }, ref) {
   const { t } = useTranslation();
   const isAuth = getAuthToken();
+  const { mode } = useUserMode();
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -89,11 +93,39 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                   <Link to={ROUTES.AUTH_REGISTER}>{t('routes.register')}</Link>
                 </Button>
               </>
-            ) : (
+            ) : mode == 'talent' ? (
               <>
-                <HilightLink to={ROUTES.TALENT} label={t('routes.profile')} exact={false} width={72} height={34} />
-                <AccountDropdown onLogout={logout} />
+                {/* Talent */}
+                <Link to={ROUTES.TALENT_APPLIED_PRODUCTIONS}>
+                  <span className="flex flex-row items-center gap-2">
+                    {showIcons && <img src={FileIcon} alt="" className="w-6" />}
+                    {showLabels && t('routes.talent-applied-productions')}
+                  </span>
+                </Link>
+                <Link to={ROUTES.TALENT}>
+                  <span className="flex flex-row items-center gap-2">
+                    {showIcons && <img src={ProfileIcon} alt="" className="w-6" />}
+                    {showLabels && t('routes.profile')}
+                  </span>
+                </Link>
+                <Link to={ROUTES.ACCOUNT}>
+                  <span className="flex flex-row items-center gap-2">
+                    {showIcons && <img src={SettingsIcon} alt="" className="w-6" />}
+                    {showLabels && t('routes.settings')}
+                  </span>
+                </Link>
               </>
+            ) : (
+              <>{/* Employer */}</>
+            )}
+            {isAuth && (
+              <span
+                className="cursor-pointer flex flex-row items-center gap-2 text-[var(--color-alert-error)]"
+                onClick={logout}
+              >
+                <img src={LogoutIcon} alt="" className="w-7" />
+                {showLabels && t('routes.logout')}
+              </span>
             )}
           </div>
         </div>
