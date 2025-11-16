@@ -7,12 +7,14 @@ const TalentProfileEditSection = ({ profile }: { profile: TalentProfileResponse 
   const { data: professions = [] } = useSiteMetadataSlice('professions');
 
   return (
-    <article className="lg:flex lg:flex-col lg:gap-6">
-      <BasicInfoForm data={profile.basicInfo} professionsMeta={professions}></BasicInfoForm>
-      <Separator className="opacity-20 my-8" />
-      <ContactForm data={profile.contact}></ContactForm>
-      <Separator className="opacity-20 my-8" />
-      <SocialMediaForm data={profile.socialMedia}></SocialMediaForm>
+    <article className="lg:flex lg:flex-col lg:gap-6 bg-[var(--color-primary-white)] rounded-2xl border-[var(--color-secondary-outline)] border-1">
+      <div className="p-6">
+        <BasicInfoForm data={profile.basicInfo} professionsMeta={professions}></BasicInfoForm>
+        <Separator className="opacity-20 my-8" />
+        <ContactForm data={profile.contact}></ContactForm>
+        <Separator className="opacity-20 my-8" />
+        <SocialMediaForm data={profile.socialMedia}></SocialMediaForm>
+      </div>
     </article>
   );
 };

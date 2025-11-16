@@ -7,12 +7,13 @@ const MediaEditSection = ({ media, supabaseId }: { media: Media; supabaseId: str
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col gap-5">
-      <h3 className="hidden lg:block text-2xl font-bold">{t('profile.pills.media')}</h3>
-      <MediaPhotosForm media={media} supabaseId={supabaseId}></MediaPhotosForm>
-      <Separator className="opacity-20 my-8"></Separator>
-      <MediaVideosForm data={media}></MediaVideosForm>
-    </div>
+    <article className="lg:flex lg:flex-col lg:gap-6 bg-[var(--color-primary-white)] rounded-2xl border-[var(--color-secondary-outline)] border-1">
+      <div className="flex flex-col gap-5 p-6">
+        <MediaPhotosForm media={media} supabaseId={supabaseId}></MediaPhotosForm>
+        <Separator className="opacity-20 my-8"></Separator>
+        <MediaVideosForm data={media}></MediaVideosForm>
+      </div>
+    </article>
   );
 };
 

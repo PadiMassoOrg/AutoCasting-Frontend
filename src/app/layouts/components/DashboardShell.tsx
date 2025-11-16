@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import { ChevronLeft } from '../../shared/components/Chevron';
+import { ChevronLeft, ChevronRight } from '../../shared/components/Chevron';
 import { LG_SCREEN_SIZE, useMedia } from '../../shared/hooks/useMedia';
 
 export type DashboardSection<Key extends string = string> = {
@@ -74,29 +74,27 @@ function DashboardShell<Key extends string = string>({
   if (!isDesktop && mobileView === 'nav') {
     return (
       <section className="w-full h-full bg-[var(--color-secondary-white)]">
-        <div className="w-full max-w-[450px] mx-auto h-full flex flex-col px-4 gap-4">
+        <div className="w-full max-w-[500px] mx-auto h-full pt-12 px-6">
           {title && (
-            <h1 className="pt-4 text-xl font-semibold text-[var(--color-primary-black)] text-center">{title}</h1>
+            <h1 className="my-6 text-2xl font-semibold text-[var(--color-primary-black)] text-center">{title}</h1>
           )}
-          <div className="flex-1 flex items-start justify-center pb-8">
-            <div className="w-full bg-[var(--color-primary-white)] rounded-3xl border border-[var(--color-secondary-outline)] shadow-sm overflow-hidden">
-              {sections!.map((item, index) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  onClick={() => handleSelect(item.key)}
-                  className={[
-                    'w-full flex items-center justify-between px-4 py-3 text-sm font-medium',
-                    index !== sections!.length - 1 && 'border-b border-[var(--color-secondary-outline)]',
-                  ]
-                    .filter(Boolean)
-                    .join(' ')}
-                >
-                  <span>{item.label}</span>
-                  <span className="text-xl leading-none text-[var(--color-secondary-grey-fonts)]">›</span>
-                </button>
-              ))}
-            </div>
+          <div className="w-full bg-[var(--color-primary-white)] rounded-2xl border border-[var(--color-secondary-outline)] shadow-sm overflow-hidden">
+            {sections!.map((item, index) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => handleSelect(item.key)}
+                className={[
+                  'cursor-pointer w-full flex items-center justify-between px-6 py-4 text-sm font-medium',
+                  index !== sections!.length - 1 && 'border-b border-[var(--color-secondary-outline)]',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+              >
+                <span>{item.label}</span>
+                <ChevronRight />
+              </button>
+            ))}
           </div>
         </div>
       </section>
@@ -139,20 +137,27 @@ function DashboardShell<Key extends string = string>({
       <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
         <div className="w-full max-w-[1100px] mx-auto px-4 lg:px-8 py-6 lg:py-8">
           {!isDesktop && mobileView === 'content' && currentSection && (
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
               <button
                 type="button"
                 onClick={() => setMobileView('nav')}
                 className="cursor-pointer flex items-center gap-2"
               >
-                <ChevronLeft />
+                <span className="ml-[-6px]">
+                  <ChevronLeft />
+                </span>
                 <h2 className="text-lg font-semibold">{currentSection.label}</h2>
               </button>
               <div>{currentSection.render()}</div>
             </div>
           )}
 
-          {isDesktop && currentSection && <>{currentSection.render()}</>}
+          {isDesktop && currentSection && (
+            <div className="flex flex-col gap-4 max-w-[790px] m-auto">
+              <h2 className="text-lg font-semibold">{currentSection.label}</h2>
+              {currentSection.render()}
+            </div>
+          )}
 
           {children}
         </div>
