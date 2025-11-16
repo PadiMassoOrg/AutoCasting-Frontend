@@ -9,11 +9,11 @@ import { getAuthToken } from '../../shared/lib/cookies';
 import { ROUTES } from '../../shared/lib/routes';
 import AccountDropdown from './AccountDropdown';
 import Sidebar from './Sidebar';
+import UserModeSwitcher from './UserModeSwitcher';
 
 import BurgerIcon from '../../shared/icons/burger.svg';
 import CatalogoIcon from '../../shared/icons/catalogo.svg';
 import ClapperIcon from '../../shared/icons/clapper.svg';
-import SwitcherIcon from '../../shared/icons/switcher-purple.svg';
 
 type NavbarVariant = 'icons' | 'icons-labels' | 'labels';
 type NavbarProps = HTMLAttributes<HTMLElement> & {
@@ -75,11 +75,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                   {showLabels && t('routes.productions')}
                 </span>
               </Link>
-              {isAuth && (
-                <span className="flex flex-row items-center gap-2 cursor-pointer">
-                  {showIcons && <img src={SwitcherIcon} alt="" className="w-6" />}
-                </span>
-              )}
+              {isAuth && <UserModeSwitcher></UserModeSwitcher>}
             </div>
           </div>
           {/* Right: Authenticated */}

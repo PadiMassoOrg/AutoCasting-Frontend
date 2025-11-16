@@ -12,8 +12,8 @@ import LinkedInIcon from '../../shared/icons/linkedin-purple.svg';
 import LogoutIcon from '../../shared/icons/logout-red.svg';
 import AccountIcon from '../../shared/icons/profile.svg';
 import SettingsIcon from '../../shared/icons/settings.svg';
-import SwitcherIcon from '../../shared/icons/switcher-purple.svg';
 import Waves from '../../shared/icons/wave.svg';
+import UserModeSwitcher from './UserModeSwitcher';
 
 type Props = {
   open: boolean;
@@ -75,9 +75,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                 </li>
                 {isAuthenticated && (
                   <li onClick={onClose}>
-                    <span className="flex flex-row items-center gap-2 cursor-pointer">
-                      <img src={SwitcherIcon} alt="" className="w-7" />
-                    </span>
+                    <UserModeSwitcher showLabel />
                   </li>
                 )}
               </ul>

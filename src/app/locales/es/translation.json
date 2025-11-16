@@ -64,7 +64,9 @@
     "no_more_results": "No hay más resultados.",
     "loading": "Cargando...",
     "loading_suggestions": "Cargando sugerencias...",
-    "server_err": "Ocurrió un error, intente nuevamente."
+    "server_err": "Ocurrió un error, intente nuevamente.",
+    "switch_to_talent": "Cambiar a Talento",
+    "switch_to_employer": "Cambiar a Empleador"
   },
   "buttons": {
     "cancel": "Cancelar",

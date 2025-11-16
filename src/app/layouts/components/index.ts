@@ -3,4 +3,5 @@ import AccountSideNav from './AccountSideNav';
 import Navbar from './Navbar';
 import NavbarDropdown from './NavbarDropdown';
 import Sidebar from './Sidebar';
-export { AccountDropdown, AccountSideNav, Navbar, NavbarDropdown, Sidebar };
+import UserModeSwitcher from './UserModeSwitcher';
+export { AccountDropdown, AccountSideNav, Navbar, NavbarDropdown, Sidebar, UserModeSwitcher };
