@@ -6,7 +6,7 @@ import MainSitePage from '../features/main-site/page/MainSitePage';
 import { PublicProfilePage } from '../features/public-profile/pages';
 import { TalentDatabasePage } from '../features/talent-database/pages';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
-import { MainLayout } from '../layouts';
+import { MainLayout, ScrollContentLayout } from '../layouts';
 import { ScrollToTop } from '../shared/components/ScrollToTop/ScrollToTop';
 import { ROUTES } from '../shared/lib/routes';
 import ProtectedRoute from './ProtectedRoute';
@@ -39,7 +39,7 @@ export default function AppRoutes() {
         <Route element={<MainLayout />}>
           <Route path="/profile/:slug" element={<PublicProfilePage />} />
         </Route>
-        <Route element={<MainLayout />}>
+        <Route element={<ScrollContentLayout />}>
           <Route path={ROUTES.TALENT_DATABASE} element={<TalentDatabasePage />} />
         </Route>
         {/* Protected */}
