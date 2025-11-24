@@ -4,7 +4,7 @@ import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
-import filterIcon from '../../../shared/icons/filter.svg';
+import filterIcon from '../../../shared/icons/filter-purple.svg';
 import { MobileFiltersDrawer, TalentCard } from '../components';
 import { TalentFilterBar } from '../components/TalentFilterBar';
 import { getTalentDatabase } from '../services/talentDatabaseService';
@@ -186,21 +186,22 @@ export default function TalentDatabasePage() {
   return (
     <section className="w-full h-full min-h-0 bg-[var(--color-secondary-white)]">
       <div className="h-full w-full flex flex-col">
-        <article className="lg:hidden flex items-center justify-between mb-3 shrink-0">
+        {/* Mobile Filter Icon */}
+        <article className="lg:hidden flex items-center justify-between mb-3 shrink-0 p-5">
           <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
           <button
             type="button"
-            className="cursor-pointer inline-flex items-center gap-3"
+            className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
             onClick={() => setMobileOpen(true)}
             aria-label={t('talent.filters.open')}
           >
-            <h2 className="text-base font-semibold">{t('talent.filter.title')}</h2>
-            <span className="w-10 h-10 flex items-center justify-center bg-[var(--color-primary-light-grey)] rounded-lg">
+            <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
               <img src={filterIcon} alt="Filter bar" className="w-5 h-5" />
             </span>
           </button>
         </article>
 
+        {/* Filter Bar */}
         <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col lg:flex-row gap-6 overflow-hidden">
           {isDesktop && filtersOpen && (
             <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-[var(--color-primary-white)] border-r border-[var(--color-secondary-outline)]">
@@ -210,6 +211,7 @@ export default function TalentDatabasePage() {
             </aside>
           )}
 
+          {/* Content */}
           <div
             ref={cardsScrollRef}
             className="py-4 px-6 max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
@@ -225,7 +227,7 @@ export default function TalentDatabasePage() {
                 <h2 className="text-sm font-light underline">
                   {filtersOpen ? t('talent.filter.hide') : t('talent.filter.show')}
                 </h2>
-                <span className="w-10 h-10 flex items-center justify-center bg-[var(--color-primary-light-grey)] rounded-lg">
+                <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
                   <img src={filterIcon} alt="Filter bar" className="w-5 h-5" />
                 </span>
               </button>
