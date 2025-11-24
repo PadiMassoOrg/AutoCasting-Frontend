@@ -104,7 +104,7 @@ function DashboardShell<Key extends string = string>({
   return (
     <section className="w-full h-full min-h-0 flex flex-col lg:flex-row gap-0 bg-[var(--color-secondary-white)]">
       {isDesktop && (
-        <aside className="hidden lg:block w-64 shrink-0 border-r border-[var(--color-secondary-outline)] bg-[var(--color-primary-white)]">
+        <aside className="hidden lg:block w-[265px] shrink-0 border-r border-[var(--color-secondary-outline)] bg-[var(--color-primary-white)]">
           <div className="h-full flex flex-col py-2">
             {title && <h2 className="px-4 pt-6 pb-4 text-lg font-bold text-[var(--color-primary-black)]">{title}</h2>}
             <nav className="px-3 pb-6 flex flex-col gap-1.5">
