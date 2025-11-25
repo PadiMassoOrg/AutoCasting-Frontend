@@ -214,7 +214,7 @@ export default function TalentDatabasePage() {
           {/* Content */}
           <div
             ref={cardsScrollRef}
-            className="py-4 px-6 max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
+            className="py-4 px-6 lg:py-8 w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
           >
             <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
               <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
