@@ -1,10 +1,12 @@
 import { GoogleButton } from 'autocasting-ui-library-padimasso';
+import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import NoNavigationLayout from '../../../layouts/NoNavigationLayout';
 import { LinkLogo } from '../../../shared/components/LinkLogo';
 import logo from '../../../shared/icons/og-image.svg';
 import Resaltador from '../../../shared/lib/resaltador.svg';
+import { useCachedSiteMetadataSlice } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import { RegisterForm } from '../components';
 import LoginForm from '../components/LoginForm';
 import { useGoogleLoginMutation } from '../hooks/useGoogleLoginMutation';
@@ -12,12 +14,17 @@ import { useGoogleLoginMutation } from '../hooks/useGoogleLoginMutation';
 export default function AuthenticationPage() {
   const { t } = useTranslation();
   const googleLoginMutation = useGoogleLoginMutation();
-
+  const rolesRaw = useCachedSiteMetadataSlice('roles') ?? [];
   const [searchParams, setSearchParams] = useSearchParams();
   const mode = searchParams.get('mode') === 'register' ? 'register' : 'login';
+  const [selectedRoleCode, setSelectedRoleCode] = useState<'TALENT' | 'EMPLOYER'>('TALENT');
+
+  const selectedRole = useMemo(() => rolesRaw.find((r) => r.code === selectedRoleCode), [rolesRaw, selectedRoleCode]);
+  const selectedRoleId = selectedRole?.id ?? '';
 
   const handleGoogleLogin = () => {
-    googleLoginMutation.mutate({ role: 'ACTOR' });
+    if (!selectedRoleId) return;
+    googleLoginMutation.mutate({ role: selectedRoleId });
   };
 
   const switchTo = (next: 'login' | 'register') => setSearchParams({ mode: next });
@@ -28,7 +35,7 @@ export default function AuthenticationPage() {
         {/* Banner */}
         <article className="hidden lg:flex flex-col relative pl-10 h-full justify-between">
           <div className="flex flex-col gap-8">
-            <h2 className="font-extrabold text-4xl">
+            <h2 className="font-extravold text-4xl">
               ¡{t('auth.page.welcome')} <p className="break-after-all">{t('company.site')}!</p>
             </h2>
             <h2 className="text-neutral-600 opacity-65 font-normal text-lg">{t('auth.page.text_1')}</h2>
@@ -61,6 +68,36 @@ export default function AuthenticationPage() {
             <h2 className="font-bold text-2xl whitespace-nowrap">{t('company.header')}</h2>
           </div>
 
+          {/* Switcher de rol */}
+          {mode === 'register' && (
+            <div className="w-full mb-6">
+              <div className="grid grid-cols-2 rounded-xl border border-[var(--color-secondary-outline)] bg-[var(--color-primary-white)] overflow-hidden text-sm font-semibold">
+                <button
+                  type="button"
+                  className={`py-3 px-4 text-center cursor-pointer transition-colors ${
+                    selectedRoleCode === 'TALENT'
+                      ? 'bg-[var(--color-secondary-white)] text-[var(--color-primary-purple)] shadow-[0_0_0_1px_rgba(144,100,255,0.15)]'
+                      : 'bg-transparent text-[var(--color-primary-black)]'
+                  }`}
+                  onClick={() => setSelectedRoleCode('TALENT')}
+                >
+                  {t('auth.register.role_talent')}
+                </button>
+                <button
+                  type="button"
+                  className={`py-3 px-4 text-center cursor-pointer transition-colors ${
+                    selectedRoleCode === 'EMPLOYER'
+                      ? 'bg-[var(--color-secondary-white)] text-[var(--color-primary-purple)] shadow-[0_0_0_1px_rgba(144,100,255,0.15)]'
+                      : 'bg-transparent text-[var(--color-primary-black)]'
+                  }`}
+                  onClick={() => setSelectedRoleCode('EMPLOYER')}
+                >
+                  {t('auth.register.role_employer')}
+                </button>
+              </div>
+            </div>
+          )}
+
           <GoogleButton className="cursor-pointer" onClick={handleGoogleLogin}>
             {t('auth.login.google')}
           </GoogleButton>
@@ -74,7 +111,7 @@ export default function AuthenticationPage() {
           {mode === 'login' ? (
             <LoginForm onSwitch={() => switchTo('register')} />
           ) : (
-            <RegisterForm onSwitch={() => switchTo('login')} />
+            <RegisterForm onSwitch={() => switchTo('login')} role={selectedRoleId} />
           )}
         </article>
       </div>

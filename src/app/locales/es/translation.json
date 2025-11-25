@@ -95,8 +95,8 @@
     "instagram": "Instagram"
   },
   "role": {
-    "actor": "Actor",
-    "castinera": "Castinera"
+    "talent": "Talent",
+    "employer": "Employer"
   },
   "plan": {
     "free": "Free",
@@ -311,7 +311,9 @@
       "name": "Nombre",
       "email": "Email",
       "password": "Contraseña",
-      "submit": "Crear Cuenta"
+      "submit": "Crear Cuenta",
+      "role_talent": "Soy Talento",
+      "role_employer": "Busco Talento"
     },
     "forgotten_password": {
       "text": "No te preocupes. Ingresá tu correo y te mandaremos un link para crear una nueva.",
@@ -333,6 +335,7 @@
       "name_min": "Ingrese un nombre",
       "email": "Email inválido",
       "role": "El rol es requerido",
+      "plan": "El plan es requerido",
       "password_min": "La contraseña debe tener al menos 6 caracteres",
       "password_missmatch": "Las contraseñas no coinciden"
     }

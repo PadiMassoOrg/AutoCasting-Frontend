@@ -6,6 +6,8 @@ export type SiteMetadataObject = {
 
 export type SiteMetadataResponse = {
   version: string;
+  roles: RoleMetadataResponse[];
+  plans: PlanMetadataResponse[];
   skills: SiteMetadataObject[];
   professions: SiteMetadataObject[];
   genderOptions: SiteMetadataObject[];
@@ -16,4 +18,19 @@ export type SiteMetadataResponse = {
 
 export type SiteMetadataVersion = {
   version: string;
+};
+
+export type RoleMetadataResponse = {
+  id: string;
+  code: string;
+  nameStringCode: string;
+  description: string | null;
+};
+
+export type PlanMetadataResponse = {
+  id: string;
+  code: string;
+  nameStringCode: string;
+  description: string | null;
+  allowsCustomSlug: boolean;
 };

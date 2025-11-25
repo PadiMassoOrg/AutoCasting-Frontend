@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import i18next from 'i18next';
+import { z } from 'zod';
 
 export const getLoginSchema = () => {
   return z.object({
@@ -14,17 +14,14 @@ export const getLoginSchema = () => {
 
 export const getRegisterSchema = () => {
   return z.object({
-    name: z.string().min(1, {
-      message: i18next.t('auth.validation.name_min'),
-    }),
     email: z.string().email({
       message: i18next.t('auth.validation.email'),
     }),
     password: z.string().min(6, {
       message: i18next.t('auth.validation.password_min'),
     }),
-    role: z.enum(['ACTOR', 'CASTINERA'], {
-      required_error: i18next.t('auth.validation.role'),
+    role: z.string().min(1, {
+      message: i18next.t('auth.validation.role'),
     }),
   });
 };
