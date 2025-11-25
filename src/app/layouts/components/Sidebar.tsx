@@ -1,18 +1,24 @@
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, matchPath, useLocation } from 'react-router-dom';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import { ROUTES } from '../../shared/lib/routes';
 
+import clsx from 'clsx';
 import { useUserMode } from '../../context/UserModeContext';
+import CatalogoIconPurple from '../../shared/icons/catalogo-purple.svg';
 import CatalogoIcon from '../../shared/icons/catalogo.svg';
+import ClapperIconPurple from '../../shared/icons/clapper-purple.svg';
 import ClapperIcon from '../../shared/icons/clapper.svg';
+import FileIconPurple from '../../shared/icons/file-purple.svg';
 import FileIcon from '../../shared/icons/file.svg';
 import InstagramIcon from '../../shared/icons/instagram-purple.svg';
 import LinkedInIcon from '../../shared/icons/linkedin-purple.svg';
 import LogoutIcon from '../../shared/icons/logout-red.svg';
-import AccountIcon from '../../shared/icons/profile.svg';
+import ProfileIconPurple from '../../shared/icons/profile-purple.svg';
+import ProfileIcon from '../../shared/icons/profile.svg';
+import SettingsIconPurple from '../../shared/icons/settings-purple.svg';
 import SettingsIcon from '../../shared/icons/settings.svg';
 import Waves from '../../shared/icons/wave.svg';
 import UserModeSwitcher from './UserModeSwitcher';
@@ -27,6 +33,21 @@ type Props = {
 export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Props) {
   const { t } = useTranslation();
   const { mode } = useUserMode();
+  const location = useLocation();
+
+  const baseClass = 'p-3 flex flex-row items-center gap-2';
+  const activeClass =
+    'rounded-lg bg-[var(--color-primary-white)] shadow-sm text-[var(--color-primary-purple)] font-semibold';
+
+  const isRouteActive = (to: string) => !!matchPath({ path: to + '/*', end: false }, location.pathname);
+
+  // Public
+  const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
+  const activeProductions = isRouteActive(ROUTES.PRODUCTIONS);
+  // Private
+  const activeTalentProfile = isRouteActive(ROUTES.TALENT);
+  const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS);
+  const activeSettings = isRouteActive(ROUTES.SETTINGS);
 
   useEffect(() => {
     if (!open) return;
@@ -55,35 +76,35 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
           </button>
         </header>
         {/* Content */}
-        <nav className="w-[65%] h-full m-auto text-base font-semibold ">
+        <nav className="w-[70%] h-full m-auto text-base font-semibold pt-2">
           <div className="grid grid-rows-[3.5fr_1fr] place-items-center w-full h-full">
-            <div className="w-full flex flex-col pt-4">
+            <div className="w-full flex flex-col">
               {/* Public */}
-              <ul className="w-full flex flex-col gap-5">
+              <ul className="w-full flex flex-col gap-1">
                 <li onClick={onClose}>
                   <Link to={ROUTES.TALENT_DATABASE}>
-                    <span className="flex flex-row items-center gap-2">
-                      <img src={CatalogoIcon} alt="" className="w-7" />
+                    <span className={clsx(baseClass, activeTalentDatabase && activeClass)}>
+                      <img src={activeTalentDatabase ? CatalogoIconPurple : CatalogoIcon} alt="" className="w-7" />
                       {t('routes.talent-database')}
                     </span>
                   </Link>
                 </li>
                 <li onClick={onClose}>
-                  <Link to={ROUTES.TALENT_DATABASE}>
-                    <span className="flex flex-row items-center gap-2">
-                      <img src={ClapperIcon} alt="" className="w-7" />
+                  <Link to={ROUTES.PRODUCTIONS}>
+                    <span className={clsx(baseClass, activeProductions && activeClass)}>
+                      <img src={activeProductions ? ClapperIconPurple : ClapperIcon} alt="" className="w-7" />
                       {t('routes.productions')}
                     </span>
                   </Link>
                 </li>
                 {isAuthenticated && (
-                  <li onClick={onClose}>
+                  <li onClick={onClose} className="mt-1 p-3">
                     <UserModeSwitcher showLabel />
                   </li>
                 )}
               </ul>
 
-              <Separator className="opacity-20 my-6" />
+              <Separator className="opacity-20 my-3" />
 
               {/* Authenticated */}
               {!isAuthenticated ? (
@@ -96,30 +117,30 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                   </Button>
                 </ul>
               ) : (
-                <ul className="w-full flex flex-col gap-6 font-semibold">
+                <ul className="w-full flex flex-col font-semibold">
                   {mode == 'talent' ? (
                     <>
                       {/* Talent */}
                       <li onClick={onClose}>
                         <Link to={ROUTES.TALENT_APPLIED_PRODUCTIONS}>
-                          <span className="flex flex-row items-center gap-2">
-                            <img src={FileIcon} alt="" className="w-7" />
+                          <span className={clsx(baseClass, activeAppliedProductions && activeClass)}>
+                            <img src={activeAppliedProductions ? FileIconPurple : FileIcon} alt="" className="w-7" />
                             {t('routes.talent-applied-productions')}
                           </span>
                         </Link>
                       </li>
                       <li onClick={onClose}>
                         <Link to={ROUTES.TALENT}>
-                          <span className="flex flex-row items-center gap-2">
-                            <img src={AccountIcon} alt="" className="w-7" />
+                          <span className={clsx(baseClass, activeTalentProfile && activeClass)}>
+                            <img src={activeTalentProfile ? ProfileIconPurple : ProfileIcon} alt="" className="w-7" />
                             {t('routes.profile')}
                           </span>
                         </Link>
                       </li>
                       <li onClick={onClose}>
                         <Link to={ROUTES.SETTINGS}>
-                          <span className="flex flex-row items-center gap-2">
-                            <img src={SettingsIcon} alt="" className="w-7" />
+                          <span className={clsx(baseClass, activeSettings && activeClass)}>
+                            <img src={activeSettings ? SettingsIconPurple : SettingsIcon} alt="" className="w-7" />
                             {t('routes.settings')}
                           </span>
                         </Link>
@@ -133,11 +154,12 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
               {/* Logout */}
               {isAuthenticated && (
                 <>
-                  <Separator className="opacity-20 my-6" />
+                  <Separator className="opacity-20 my-3" />
                   <li
                     onClick={() => {
                       onLogout();
                     }}
+                    className="mt-1 px-3 py-1"
                   >
                     <span className="flex flex-row items-center gap-2 text-[var(--color-alert-error)]">
                       <img src={LogoutIcon} alt="" className="w-7" />
