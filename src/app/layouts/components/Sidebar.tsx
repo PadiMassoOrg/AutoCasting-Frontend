@@ -80,7 +80,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
           <div className="grid grid-rows-[3.5fr_1fr] place-items-center w-full h-full">
             <div className="w-full flex flex-col">
               {/* Public */}
-              <ul className="w-full flex flex-col gap-1">
+              <ul className="w-full flex flex-col">
                 <li onClick={onClose}>
                   <Link to={ROUTES.TALENT_DATABASE}>
                     <span className={clsx(baseClass, activeTalentDatabase && activeClass)}>
