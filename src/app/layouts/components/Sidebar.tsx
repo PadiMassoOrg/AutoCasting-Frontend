@@ -35,7 +35,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
   const { mode } = useUserMode();
   const location = useLocation();
 
-  const baseClass = 'p-3 flex flex-row items-center gap-2';
+  const baseClass = 'p-3 px-4 flex flex-row items-center gap-2';
   const activeClass =
     'rounded-lg bg-[var(--color-primary-white)] shadow-sm text-[var(--color-primary-purple)] font-semibold';
 
