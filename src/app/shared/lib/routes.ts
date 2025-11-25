@@ -16,6 +16,7 @@ export const ROUTES = {
   // Public
   PUBLIC_PROFILE: '/profile',
   TALENT_DATABASE: '/talent-database',
+  PRODUCTIONS: '/productions',
   SUPPORT: '/support',
   FAQ: '/faq',
   TERMS: '/terms-and-conditions',

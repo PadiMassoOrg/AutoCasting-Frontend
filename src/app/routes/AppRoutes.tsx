@@ -1,4 +1,5 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import DummyPage from '../features/_TEST_/dummy_page';
 import { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage } from '../features/auth/pages';
 import MainSiteLayout from '../features/main-site/layout/MainSiteLayout';
 import { PrivacyPage, SupportPage, TermsPage } from '../features/main-site/page';
@@ -51,6 +52,11 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        {/* _TEST_ */}
+        <Route element={<ScrollContentLayout />}>
+          <Route path={ROUTES.TALENT_APPLIED_PRODUCTIONS} element={<DummyPage />} />
+          <Route path={ROUTES.PRODUCTIONS} element={<DummyPage />} />
+        </Route>
       </Routes>
     </Router>
   );
