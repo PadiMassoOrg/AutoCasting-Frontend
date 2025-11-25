@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUserMode } from '../../context/UserModeContext';
-import SwitcherIcon from '../../shared/icons/switcher-purple.svg';
+import SwitcherIconPurple from '../../shared/icons/switcher-purple.svg';
+import SwitcherIcon from '../../shared/icons/switcher.svg';
 
 type ModeSwitcherProps = {
   showLabel?: boolean;
@@ -10,6 +12,7 @@ type ModeSwitcherProps = {
 function UserModeSwitcher({ showLabel = false, onAfterToggle }: ModeSwitcherProps) {
   const { t } = useTranslation();
   const { mode, toggleMode } = useUserMode();
+  const [hovered, setHovered] = useState(false);
 
   const modeLabel = mode === 'talent' ? t('state.switch_to_employer') : t('state.switch_to_talent');
 
@@ -20,11 +23,16 @@ function UserModeSwitcher({ showLabel = false, onAfterToggle }: ModeSwitcherProp
 
   return (
     <span
-      className="flex flex-row items-center gap-2 cursor-pointer text-[var(--color-primary-purple)]"
+      className={
+        `flex flex-row items-center gap-2 cursor-pointer transition-colors ` +
+        (hovered ? 'text-[var(--color-primary-purple)]' : 'text-[var(--color-primary-black)]')
+      }
       onClick={handleClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
-      <img src={SwitcherIcon} alt="" className="w-6" />
-      {showLabel && t(modeLabel)}
+      <img src={hovered ? SwitcherIconPurple : SwitcherIcon} alt="" className="w-6" />
+      {showLabel && modeLabel}
     </span>
   );
 }
