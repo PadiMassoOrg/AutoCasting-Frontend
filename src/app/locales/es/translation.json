@@ -289,11 +289,11 @@
   "auth": {
     "page": {
       "welcome": "Bienvenid@ a",
-      "text_1": "Basta de mandar CVs pesados y de pasarte el día enviando self-tapes por mail.",
-      "bullet_1": "Creá tu perfil en <i>segundos</i>.",
-      "bullet_2": "Subí tus mejores clips y mantenelo <i>siempre al día</i>.",
-      "bullet_3": "Generá tu link personal y compartilo <i>donde quieras</i> (castings, agencias, RRSS).",
-      "text_resaltador": "¡Es tu talento, tu perfil, tu link!",
+      "text_1": "Dejá atrás los mails, los archivos pesados y el desorden. Creá, descubrí y conectá con el mundo del casting desde un solo lugar.",
+      "bullet_1": "<i>Gestioná</i> tus proyectos y perfiles en segundos.",
+      "bullet_2": "<i>Compartí</i> tu trabajo o encontrá el talento ideal.",
+      "bullet_3": "Todo en una plataforma <i>pensada</i> para vos.",
+      "text_resaltador": "Ahora tus castings los gestionás vos.",
       "or_login_with": "o ingresá con",
       "forgotten_pass": "¿Olvidaste tu contraseña?",
       "create_acc": "¿No tienes una cuenta?",

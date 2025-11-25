@@ -5,7 +5,6 @@ import { useSearchParams } from 'react-router-dom';
 import NoNavigationLayout from '../../../layouts/NoNavigationLayout';
 import { LinkLogo } from '../../../shared/components/LinkLogo';
 import logo from '../../../shared/icons/og-image.svg';
-import Resaltador from '../../../shared/lib/resaltador.svg';
 import { useCachedSiteMetadataSlice } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import { RegisterForm } from '../components';
 import LoginForm from '../components/LoginForm';
@@ -34,12 +33,12 @@ export default function AuthenticationPage() {
       <div className="flex flex-row items-center gap-36 w-full">
         {/* Banner */}
         <article className="hidden lg:flex flex-col relative pl-10 h-full justify-between">
-          <div className="flex flex-col gap-8">
-            <h2 className="font-extravold text-4xl">
-              ¡{t('auth.page.welcome')} <p className="break-after-all">{t('company.site')}!</p>
+          <div className="flex flex-col gap-12">
+            <h2 className="font-extrabold text-4xl">
+              ¡{t('auth.page.welcome')} <span>{t('company.site')}!</span>
             </h2>
-            <h2 className="text-neutral-600 opacity-65 font-normal text-lg">{t('auth.page.text_1')}</h2>
-            <ul className="list-disc pl-5">
+            <h2 className="font-light text-lg">{t('auth.page.text_1')}</h2>
+            <ul className="list-disc pl-5 font-light">
               <li className="i18n" data-i18n="[html]content.body">
                 <Trans i18nKey="auth.page.bullet_1" components={{ i: <i /> }} />
               </li>
@@ -50,12 +49,9 @@ export default function AuthenticationPage() {
                 <Trans i18nKey="auth.page.bullet_3" components={{ i: <i /> }} />
               </li>
             </ul>
-            <div className="relative mt-12">
-              <h2 className="font-bold pl-6 z-[20] relative">{t('auth.page.text_resaltador')}</h2>
-              <img src={Resaltador} alt="higlight-text" className="absolute top-1/2 translate-y-[-55%] z-[0]" />
-            </div>
+            <h2 className="font-bold text-lg mt-8">{t('auth.page.text_resaltador')}</h2>
           </div>
-          <aside className="self-center mt-22 flex flex-col items-center gap-2">
+          <aside className="self-center mt-32 flex flex-col items-center gap-2">
             <img src={logo} alt="" className="w-14" />
             <p className="text-sm font-bold">{t('company.site')}</p>
           </aside>
