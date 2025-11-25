@@ -38,7 +38,7 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-0.5">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full">
       <FormInputField
         id="email"
         placeholder={t('auth.login.email')}
@@ -68,9 +68,10 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
           {serverError}
         </Label>
       )}
-      <div className="flex text-sm gap-2 mt-2">
+
+      <div className="flex text-sm font-light gap-2 mt-2">
         <h2>{t('auth.page.create_acc')}</h2>
-        <span className="font-bold cursor-pointer" onClick={onSwitch}>
+        <span className="font-semibold cursor-pointer text-[var(--color-primary-purple)]" onClick={onSwitch}>
           {t('auth.page.create_acc_cta')}
         </span>
       </div>

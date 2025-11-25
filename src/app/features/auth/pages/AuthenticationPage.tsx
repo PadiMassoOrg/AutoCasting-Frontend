@@ -62,21 +62,20 @@ export default function AuthenticationPage() {
         </article>
 
         {/* Forms */}
-        <article className="w-full h-full m-auto flex flex-col justify-center sm:max-w-md xl:max-w-lg lg:bg-white lg:px-8 lg:py-12 lg:rounded-2xl lg:shadow-[0_0_8px_3px_rgba(0,0,0,0.06)] ">
-          <div className="flex flex-col gap-4 items-center pb-8">
+        <article className="w-full h-full m-auto flex flex-col justify-center sm:max-w-md xl:max-w-lg lg:bg-white lg:px-8 lg:rounded-xl lg:shadow-[0_0_8px_3px_rgba(0,0,0,0.06)] lg:min-h-[720px]">
+          <div className="flex flex-col gap-4 items-center pb-6">
             <LinkLogo />
-            <h2 className="font-bold text-2xl whitespace-nowrap">{t('company.header')}</h2>
           </div>
 
-          {/* Switcher de rol */}
+          {/* Role Switcher */}
           {mode === 'register' && (
             <div className="w-full mb-6">
-              <div className="grid grid-cols-2 rounded-xl border border-[var(--color-secondary-outline)] bg-[var(--color-primary-white)] overflow-hidden text-sm font-semibold">
+              <div className="flex rounded-lg border border-[var(--color-secondary-outline)] bg-[var(--color-primary-white)] p-1 text-sm font-semibold">
                 <button
                   type="button"
-                  className={`py-3 px-4 text-center cursor-pointer transition-colors ${
+                  className={`flex-1 rounded-lg py-3 px-4 text-center cursor-pointer transition-colors ${
                     selectedRoleCode === 'TALENT'
-                      ? 'bg-[var(--color-secondary-white)] text-[var(--color-primary-purple)] shadow-[0_0_0_1px_rgba(144,100,255,0.15)]'
+                      ? 'bg-[var(--color-secondary-white)] text-[var(--color-primary-purple)]'
                       : 'bg-transparent text-[var(--color-primary-black)]'
                   }`}
                   onClick={() => setSelectedRoleCode('TALENT')}
@@ -85,9 +84,9 @@ export default function AuthenticationPage() {
                 </button>
                 <button
                   type="button"
-                  className={`py-3 px-4 text-center cursor-pointer transition-colors ${
+                  className={`flex-1 rounded-lg py-3 px-4 text-center cursor-pointer transition-colors ${
                     selectedRoleCode === 'EMPLOYER'
-                      ? 'bg-[var(--color-secondary-white)] text-[var(--color-primary-purple)] shadow-[0_0_0_1px_rgba(144,100,255,0.15)]'
+                      ? 'bg-[var(--color-secondary-white)] text-[var(--color-primary-purple)]'
                       : 'bg-transparent text-[var(--color-primary-black)]'
                   }`}
                   onClick={() => setSelectedRoleCode('EMPLOYER')}
@@ -102,7 +101,7 @@ export default function AuthenticationPage() {
             {t('auth.login.google')}
           </GoogleButton>
 
-          <div className="w-full relative flex justify-between items-center py-6">
+          <div className="w-full relative flex justify-between items-center py-4">
             <hr className="opacity-20 w-full" />
             <p className="text-sm mx-4 whitespace-nowrap">{t('auth.page.or_login_with')}</p>
             <hr className="opacity-20 w-full" />

@@ -1,7 +1,6 @@
 {
   "company": {
     "site": "autocasting",
-    "header": "Tu Perfil Digital Actoral",
     "trademark": "© 2025 Auto-Casting · Buenos Aires, AR",
     "linkedIn": "https://www.linkedin.com/feed/",
     "instagram": "https://www.instagram.com/"
@@ -26,6 +25,7 @@
     "unspecified": "Sin especificar",
     "selections": "Selecciones",
     "select_all": "Seleccionar Todas",
+    "and": "y",
     "dash": "--",
     "placeholder": {
       "stage_name": "Ricardo Darín",
@@ -299,7 +299,8 @@
       "create_acc": "¿No tienes una cuenta?",
       "create_acc_cta": "Crea una cuenta aquí",
       "login_acc": "¿Ya tienes una cuenta?",
-      "login_acc_cta": "Iniciá sesión aquí"
+      "login_acc_cta": "Iniciá sesión aquí",
+      "disclaimer_terms_1": "Al registrarte aceptás nuestros"
     },
     "login": {
       "google": "Iniciá sesión con Google",
@@ -499,7 +500,9 @@
   },
   "legal": {
     "terms": "Términos y Condiciones",
-    "privacy": "Políticas de Privacidad"
+    "privacy": "Políticas de Privacidad",
+    "short_terms": "Términos",
+    "short_privacy": "Políticas"
   },
   "support": {
     "title": "Soporte Técnico",
