@@ -1,17 +1,18 @@
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
+import { ContinueLaterButton } from '.';
 import { WizardStep } from '../../../shared/components/Wizard';
 import type { WizardStepProps } from '../../../shared/components/Wizard/WizardStep';
-import ArrowLeftIconPurple from '../../../shared/icons/arrow-long-left-purple.svg';
 import Logo from '../../../shared/icons/og-image.svg';
 import TickIconPurple from '../../../shared/icons/tick-2-purple.svg';
-import { logout } from '../../auth/services/authService';
 import type { ActiveMode } from '../../auth/types/auth.types';
 import { useUpdateOnboardingMutation } from '../hooks/useUpdateOnboardingMutation';
 
-type Props = WizardStepProps;
+type Props = WizardStepProps & {
+  onModeChosen?: () => void;
+};
 
-function ModeSelectorStep({ goNext }: Props) {
+function ModeSelectorStep({ onModeChosen }: Props) {
   const { t } = useTranslation();
   const { mutate: updateOnboarding } = useUpdateOnboardingMutation();
 
@@ -23,33 +24,30 @@ function ModeSelectorStep({ goNext }: Props) {
         employerOnboardingStatus: mode === 'EMPLOYER' ? 'IN_PROGRESS' : 'NOT_STARTED',
       },
       {
-        onSuccess: () => goNext?.(),
+        onSuccess: () => onModeChosen?.(),
       }
     );
   };
 
   return (
-    <section className="w-full">
+    <section className="w-full pb-6">
       <WizardStep>
-        {/* Header */}
-        <div className="flex flex-col items-center gap-4 mb-6">
-          <img src={Logo} className="w-14" />
-          <div className="text-center">
-            <h1 className="text-2xl font-bold mb-4">{t('onboarding.mode_selector.header')}</h1>
-            <p className="text-sm">{t('onboarding.mode_selector.subtitle')}</p>
+        <div className="flex min-h-[65vh] flex-col justify-between gap-10">
+          {/* Header */}
+          <div className="flex flex-col items-center gap-4 mb-6">
+            <img src={Logo} className="w-14" />
+            <div className="text-center">
+              <h1 className="text-2xl font-bold mb-4">{t('onboarding.mode_selector.header')}</h1>
+              <p className="text-sm">{t('onboarding.mode_selector.subtitle')}</p>
+            </div>
           </div>
+          <div className="w-full flex flex-col gap-6 items-center lg:flex-row lg:justify-center">
+            <ModeCard mode="TALENT" onContinue={() => handleContinue('TALENT')} />
+            <ModeCard mode="EMPLOYER" onContinue={() => handleContinue('EMPLOYER')} />
+          </div>
+          <div></div>
+          <ContinueLaterButton />
         </div>
-        <div className="w-full flex flex-col gap-6 items-center lg:flex-row lg:justify-center">
-          <ModeCard mode="TALENT" onContinue={() => handleContinue('TALENT')} />
-          <ModeCard mode="EMPLOYER" onContinue={() => handleContinue('EMPLOYER')} />
-        </div>
-        <button
-          onClick={logout}
-          className="w-full mb-6 mt-12 cursor-pointer text-base flex flex-row items-center justify-center gap-2 text-[var(--color-primary-purple)]"
-        >
-          <img src={ArrowLeftIconPurple} className="w-4" />
-          <span>{t('onboarding.mode_selector.go_back')}</span>
-        </button>
       </WizardStep>
     </section>
   );
@@ -65,7 +63,7 @@ const ModeCard = ({ mode, onContinue }: ModeCardProps) => {
   const modeKey = mode === 'TALENT' ? 'talent' : 'employer';
 
   return (
-    <div className="w-full max-w-[380px] bg-[var(--color-primary-white)] p-6 px-8 shadow-sm rounded-lg">
+    <div className="w-full max-w-[380px] bg-[var(--color-primary-white)] p-6 px-8 shadow-sm rounded-xl">
       <p className="mtext-base font-semibold text-[var(--color-primary-purple)] text-center">
         {t(`onboarding.mode_selector.${modeKey}.title`)}
       </p>

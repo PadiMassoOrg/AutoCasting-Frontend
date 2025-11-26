@@ -72,7 +72,9 @@
     "cancel": "Cancelar",
     "save": "Guardar",
     "delete": "Borrar",
-    "understood": "Entendido"
+    "understood": "Entendido",
+    "back": "Atras",
+    "next": "Siguiente"
   },
   "routes": {
     "home": "Inicio",
@@ -362,6 +364,16 @@
         "li_2": "Ver perfiles completos",
         "li_3": "Gestionar postulantes",
         "cta": "Continuar como Empleador"
+      }
+    },
+    "common": {
+      "of": "de"
+    },
+    "talent": {
+      "step1": {
+        "header": "Indicanos tu nombre",
+        "subtitle": "Así vamos armando tu perfil para que puedan encontrarte.",
+        "stage_name_label": "Nombre y apellido"
       }
     }
   },
