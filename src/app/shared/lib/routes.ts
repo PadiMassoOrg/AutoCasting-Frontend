@@ -57,6 +57,8 @@ export const API_ROUTES = {
   FORGOT_PASSWORD: '/auth/forgot-password',
   RESET_PASSWORD: '/auth/reset-password',
   CHANGE_PASSWORD: '/auth/change-password',
+  // Onboarding
+  USER_ONBOARDING: '/auth/onboarding',
   // Legal
   CURRENT_LEGAL_DOCUMENT: '/legal/current',
   ACCEPT_LEGAL_DOCUMENT: '/legal/accept',

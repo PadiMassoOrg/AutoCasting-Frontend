@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import DummyPage from '../features/_TEST_/dummy_page'; // tu Wizard por ahora
 import { useMeData } from '../features/auth/hooks/useMeData';
+import { OnboardingWizard } from '../features/onboarding/components';
 import AccountPage from '../features/talent/talent-profile-account/pages/AccountPage';
 import { TalentProfileEditPage } from '../features/talent/talent-profile-edit/pages';
 import { EmptyLayout, ScrollContentLayout } from '../layouts';
@@ -27,7 +27,7 @@ export default function ProtectedRoutesLayout() {
       {shouldShowWizard ? (
         <>
           <Route element={<EmptyLayout />}>
-            <Route path={ROUTES.DASHBOARD} element={<DummyPage />} />
+            <Route path={ROUTES.DASHBOARD} element={<OnboardingWizard />} />
           </Route>
           <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
         </>

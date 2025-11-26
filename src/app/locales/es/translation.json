@@ -342,6 +342,29 @@
       "password_missmatch": "Las contraseñas no coinciden"
     }
   },
+  "onboarding": {
+    "mode_selector": {
+      "header": "¿Cómo querés usar autocasting?",
+      "subtitle": "Elegí si querés crear tu cuenta como Talento o como Empleador.",
+      "go_back": "Salir y continuar mas tarde",
+      "talent": {
+        "title": "Soy Talento",
+        "header": "Quiero conseguir castings",
+        "li_1": "Ver castings disponibles",
+        "li_2": "Postularte con tu perfil",
+        "li_3": "Gestionar tus aplicaciones",
+        "cta": "Continuar como Talento"
+      },
+      "employer": {
+        "title": "Busco Talento",
+        "header": "Quiero publicar castings",
+        "li_1": "Crear castings en minutos",
+        "li_2": "Ver perfiles completos",
+        "li_3": "Gestionar postulantes",
+        "cta": "Continuar como Empleador"
+      }
+    }
+  },
   "dashboard": {
     "logout": "Salir"
   },
