@@ -1,2 +1,2 @@
-import { EmployerBasicInfoStep } from './EmployerBasicInfoStep';
+import EmployerBasicInfoStep from './EmployerBasicInfoStep';
 export { EmployerBasicInfoStep };

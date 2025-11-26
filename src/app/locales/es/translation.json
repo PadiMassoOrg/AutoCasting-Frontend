@@ -375,6 +375,15 @@
         "subtitle": "Así vamos armando tu perfil para que puedan encontrarte.",
         "stage_name_label": "Nombre y apellido"
       }
+    },
+    "employer": {
+      "step1": {
+        "header": "Completá tus datos antes de comenzar",
+        "subtitle": "Necesitamos esta info para validar tu cuenta y tus castings.",
+        "name_label": "Nombre de la empresa / productora / usuario",
+        "cuit_label": "CUIT / CUIL",
+        "cuit_disclaimer": "Lo usamos solo con fines de verificación. No lo compartimos con nadie."
+      }
     }
   },
   "dashboard": {
