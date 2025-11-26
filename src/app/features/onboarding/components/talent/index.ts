@@ -1,2 +1,3 @@
 import TalentBasicInfoStep from './TalentBasicInfoStep';
-export { TalentBasicInfoStep };
+import TalentMediaStep from './TalentMediaStep';
+export { TalentBasicInfoStep, TalentMediaStep };

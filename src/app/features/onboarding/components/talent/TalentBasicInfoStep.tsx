@@ -22,7 +22,7 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<TalentBasicInfoValues>({
     resolver: zodResolver(getTalentBasicInfoSchema(t)),
     mode: 'onChange',

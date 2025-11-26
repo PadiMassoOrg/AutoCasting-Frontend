@@ -374,6 +374,10 @@
         "header": "Indicanos tu nombre",
         "subtitle": "Así vamos armando tu perfil para que puedan encontrarte.",
         "stage_name_label": "Nombre y apellido"
+      },
+      "step2": {
+        "header": "Subí tu foto de perfil",
+        "subtitle": "Podés agregar tu foto de perfil o book. Después vas a poder subir más si querés."
       }
     },
     "employer": {

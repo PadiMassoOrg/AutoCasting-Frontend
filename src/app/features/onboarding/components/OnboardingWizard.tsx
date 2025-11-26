@@ -1,10 +1,9 @@
-// src/app/features/onboarding/components/OnboardingWizard.tsx
 import { useState } from 'react';
 import { Wizard } from '../../../shared/components/Wizard';
 import { useMeData } from '../../auth/hooks/useMeData';
 import { EmployerBasicInfoStep } from './employer';
 import ModeSelectorStep from './ModeSelectorStep';
-import { TalentBasicInfoStep } from './talent';
+import { TalentBasicInfoStep, TalentMediaStep } from './talent';
 
 function OnboardingWizard() {
   const { data: meData, isLoading } = useMeData();
@@ -24,12 +23,11 @@ function OnboardingWizard() {
     return (
       <Wizard key="talent-flow">
         <TalentBasicInfoStep onBackToModeSelector={() => setShowModeSelector(true)} />
-        {/* aquí luego irán TalentMediaStep, TalentConfirmStep */}
+        <TalentMediaStep></TalentMediaStep>
       </Wizard>
     );
   }
 
-  // 3) Flujo EMPLOYER
   if (meData.activeMode === 'EMPLOYER') {
     return (
       <Wizard key="employer-flow">

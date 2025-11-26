@@ -11,6 +11,8 @@ import { TalentProfileCompletionCard } from './TalentProfileCompletionCard/Talen
 type OuterKey = 'profile' | 'media' | 'details';
 const ORDER: OuterKey[] = ['profile', 'media', 'details'];
 
+//TODO: DELETE THIS FILE
+
 export default function TalentProfileEditShell({ profile }: { profile: TalentProfileResponse }) {
   const { t } = useTranslation();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
