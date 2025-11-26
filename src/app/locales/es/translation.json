@@ -74,7 +74,8 @@
     "delete": "Borrar",
     "understood": "Entendido",
     "back": "Atras",
-    "next": "Siguiente"
+    "next": "Siguiente",
+    "to_profile": "Ir a mi perfil"
   },
   "routes": {
     "home": "Inicio",
@@ -378,6 +379,10 @@
       "step2": {
         "header": "Subí tu foto de perfil",
         "subtitle": "Podés agregar tu foto de perfil o book. Después vas a poder subir más si querés."
+      },
+      "confirmation_step": {
+        "header": "¡Listo! Tu perfil empezó a tomar forma",
+        "subtitle": "Ahora podés completar tus datos, sumar videos y empezar a postularte a castings."
       }
     },
     "employer": {

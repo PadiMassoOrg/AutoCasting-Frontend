@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Wizard } from '../../../shared/components/Wizard';
+import { ROUTES } from '../../../shared/lib/routes';
 import { useMeData } from '../../auth/hooks/useMeData';
 import { EmployerBasicInfoStep } from './employer';
 import ModeSelectorStep from './ModeSelectorStep';
-import { TalentBasicInfoStep, TalentMediaStep } from './talent';
+import { TalentBasicInfoStep, TalentConfirmationStep, TalentMediaStep } from './talent';
 
 function OnboardingWizard() {
   const { data: meData, isLoading } = useMeData();
+  const navigate = useNavigate();
   const [showModeSelector, setShowModeSelector] = useState(false);
 
   if (isLoading || !meData) return null;
@@ -24,6 +27,7 @@ function OnboardingWizard() {
       <Wizard key="talent-flow">
         <TalentBasicInfoStep onBackToModeSelector={() => setShowModeSelector(true)} />
         <TalentMediaStep></TalentMediaStep>
+        <TalentConfirmationStep onGoToProfile={() => navigate(ROUTES.DASHBOARD)}></TalentConfirmationStep>
       </Wizard>
     );
   }
