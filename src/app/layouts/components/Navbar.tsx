@@ -53,7 +53,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
   // Private
   const activeTalentProfile = isRouteActive(ROUTES.TALENT);
   const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS);
-  const activeSettings = isRouteActive(ROUTES.SETTINGS);
+  const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS);
 
   return (
     <nav
@@ -140,7 +140,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                     {showLabels && t('routes.profile')}
                   </span>
                 </Link>
-                <Link to={ROUTES.SETTINGS}>
+                <Link to={ROUTES.TALENT_SETTINGS}>
                   <span className={clsx(baseClass, activeSettings && activeClass)}>
                     {showIcons && (
                       <img src={activeSettings ? SettingsIconPurple : SettingsIcon} alt="" className="w-6" />

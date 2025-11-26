@@ -300,7 +300,8 @@
       "create_acc_cta": "Crea una cuenta aquí",
       "login_acc": "¿Ya tienes una cuenta?",
       "login_acc_cta": "Iniciá sesión aquí",
-      "disclaimer_terms_1": "Al registrarte aceptás nuestros"
+      "disclaimer_terms_register": "Al registrarte aceptás nuestros",
+      "disclaimer_terms_login": "Al ingresar aceptás nuestros"
     },
     "login": {
       "google": "Iniciá sesión con Google",

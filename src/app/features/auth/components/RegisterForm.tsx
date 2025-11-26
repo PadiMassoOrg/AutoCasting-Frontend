@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -10,10 +10,9 @@ import { getRegisterSchema, type RegisterFormValues } from '../schemas/authSchem
 
 type RegisterFormProps = {
   onSwitch: () => void;
-  role: string;
 };
 
-export default function RegisterForm({ onSwitch, role }: RegisterFormProps) {
+export default function RegisterForm({ onSwitch }: RegisterFormProps) {
   const { t } = useTranslation();
   const registerMutation = useRegisterMutation();
 
@@ -23,21 +22,9 @@ export default function RegisterForm({ onSwitch, role }: RegisterFormProps) {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(getRegisterSchema()),
-    defaultValues: {
-      role,
-    },
   });
-
-  useEffect(() => {
-    if (role) {
-      setValue('role', role, { shouldValidate: true });
-    }
-  }, [role, setValue]);
-
-  const termsDisclaimer = `${t('auth.page.disclaimer_terms_1')} ${(<span className="text-[var(--color-primary-purple)]">{t('legal.short_terms')}</span>)} ${t('general.and')} ${t('legal.short_privacy')}`;
 
   const onSubmit = (data: RegisterFormValues) => {
     setServerError(null);
@@ -68,18 +55,18 @@ export default function RegisterForm({ onSwitch, role }: RegisterFormProps) {
         {...register('password')}
       />
 
-      <Button type="submit" className="cursor-pointer">
+      <Button type="submit" className="my-2 cursor-pointer">
         {registerMutation.isPending ? t('state.loading') : t('auth.register.submit')}
       </Button>
 
       {serverError && (
-        <div className="text-center">
+        <div className="text-center my-2">
           <Label variant="error">{serverError}</Label>
         </div>
       )}
 
-      <h2 className="my-4 text-sm font-light">
-        {t('auth.page.disclaimer_terms_1')}{' '}
+      <h2 className="mb-6 text-xs font-light text-center">
+        {t('auth.page.disclaimer_terms_register')}{' '}
         <Link to={ROUTES.TERMS} className="font-semibold text-[var(--color-primary-purple)]">
           {t('legal.short_terms')}
         </Link>{' '}
@@ -89,7 +76,7 @@ export default function RegisterForm({ onSwitch, role }: RegisterFormProps) {
         </Link>
       </h2>
 
-      <div className="flex text-sm font-light gap-2 mt-2">
+      <div className="flex text-sm font-light gap-2">
         <h2>{t('auth.page.login_acc')}</h2>
         <span className="font-semibold cursor-pointer text-[var(--color-primary-purple)]" onClick={onSwitch}>
           {t('auth.page.login_acc_cta')}

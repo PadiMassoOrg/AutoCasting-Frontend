@@ -11,8 +11,11 @@ export const ROUTES = {
   TALENT: '/dashboard/talent',
   TALENT_MEDIA: '/dashboard/talent/media',
   TALENT_DETAILS: '/dashboard/talent/details',
-  TALENT_APPLIED_PRODUCTIONS: '/dashboard/applied',
-  SETTINGS: '/dashboard/settings',
+  TALENT_APPLIED_PRODUCTIONS: '/dashboard/talent/applied',
+  TALENT_SETTINGS: '/dashboard/talent/settings',
+  EMPLOYER: '/dashboard/employer',
+  EMPLOYER_PRODUCTIONS: '/dashboard/employer/productions',
+  EMPLOYER_SETTINGS: '/dashboard/employer/settings',
   // Public
   PUBLIC_PROFILE: '/profile',
   TALENT_DATABASE: '/talent-database',
@@ -49,6 +52,7 @@ export const API_ROUTES = {
   // Authentication
   AUTH_LOGIN: '/auth/login',
   AUTH_REGISTER: '/auth/register',
+  AUTH_ME_DATA: '/auth/me',
   OAUTH_GOOGLE: '/oauth2/authorization/google',
   FORGOT_PASSWORD: '/auth/forgot-password',
   RESET_PASSWORD: '/auth/reset-password',

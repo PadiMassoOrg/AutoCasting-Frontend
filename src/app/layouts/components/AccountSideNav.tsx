@@ -18,7 +18,11 @@ export default function AccountSideNav() {
       <nav className="w-full h-full py-10 flex flex-col justify-between">
         <li className="cursor-pointer flex flex-row items-center gap-2">
           <ChevronRight></ChevronRight>
-          <HilightLink label={t('account.menu.access')} to={ROUTES.SETTINGS} className="text-[18px]"></HilightLink>
+          <HilightLink
+            label={t('account.menu.access')}
+            to={ROUTES.TALENT_SETTINGS}
+            className="text-[18px]"
+          ></HilightLink>
         </li>
         <ul className="flex flex-col gap-4">
           <Link

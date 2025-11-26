@@ -20,9 +20,6 @@ export const getRegisterSchema = () => {
     password: z.string().min(6, {
       message: i18next.t('auth.validation.password_min'),
     }),
-    role: z.string().min(1, {
-      message: i18next.t('auth.validation.role'),
-    }),
   });
 };
 

@@ -20,3 +20,15 @@ export type ResetPasswordRequest = {
 export type AuthenticationResponse = {
   token: string;
 };
+
+export type MeDataResponse = {
+  id: string;
+  email: string;
+  activeMode: ActiveMode;
+  talentOnboardingStatus: OnboardingStatus;
+  employerOnboardingStatus: OnboardingStatus;
+};
+
+export type ActiveMode = 'TALENT' | 'EMPLOYER' | null;
+
+export type OnboardingStatus = 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED';

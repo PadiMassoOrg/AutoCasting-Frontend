@@ -47,7 +47,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
   // Private
   const activeTalentProfile = isRouteActive(ROUTES.TALENT);
   const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS);
-  const activeSettings = isRouteActive(ROUTES.SETTINGS);
+  const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS);
 
   useEffect(() => {
     if (!open) return;
@@ -138,7 +138,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                         </Link>
                       </li>
                       <li onClick={onClose}>
-                        <Link to={ROUTES.SETTINGS}>
+                        <Link to={ROUTES.TALENT_SETTINGS}>
                           <span className={clsx(baseClass, activeSettings && activeClass)}>
                             <img src={activeSettings ? SettingsIconPurple : SettingsIcon} alt="" className="w-7" />
                             {t('routes.settings')}
