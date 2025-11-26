@@ -32,6 +32,12 @@ function isSingle(p: MultipleSelectProps | SingleSelectProps): p is SingleSelect
   return (p as SingleSelectProps).mode === 'single';
 }
 
+// clases para el “checkbox” custom
+const boxBase = 'flex items-center justify-center w-6 h-6 rounded-lg border-1 transition-colors shrink-0';
+const boxChecked =
+  'border-[var(--color-primary-purple)] text-[var(--color-primary-purple)] bg-[var(--color-secondary-white)]';
+const boxUnchecked = 'border-[var(--color-secondary-outline)] text-transparent bg-white';
+
 export default function MultiSelectDropdown<T>({
   title,
   options,
@@ -86,7 +92,9 @@ export default function MultiSelectDropdown<T>({
               </span>
             </div>
             <svg
-              className={`pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-transform ${open ? 'rotate-180' : ''}`}
+              className={`pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-transform ${
+                open ? 'rotate-180' : ''
+              }`}
               viewBox="0 0 24 24"
               fill="none"
               aria-hidden="true"
@@ -98,7 +106,9 @@ export default function MultiSelectDropdown<T>({
 
         {/* Panel */}
         <div
-          className={`grid transition-[grid-template-rows] duration-300 ease-out rounded-xl bg-white ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+          className={`grid transition-[grid-template-rows] duration-300 ease-out rounded-xl bg-white ${
+            open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+          }`}
         >
           <div className="overflow-hidden">
             <div className="px-6">
@@ -110,29 +120,47 @@ export default function MultiSelectDropdown<T>({
               style={{ maxHeight: maxPanelHeight, overflow: 'auto' }}
               className="px-6 py-3 flex flex-col gap-2"
             >
+              {/* Seleccionar todas */}
               {!single && (
-                <label className="flex items-center gap-3 text-sm font-normal">
-                  <input
-                    type="checkbox"
-                    className="cursor-pointer size-6 rounded-lg accent-[var(--color-primary-black)]"
-                    checked={allSelected}
-                    onChange={toggleAll}
-                  />
+                <label className="flex items-center gap-3 text-sm font-normal cursor-pointer">
+                  {/* input real, oculto visualmente */}
+                  <input type="checkbox" className="sr-only peer" checked={allSelected} onChange={toggleAll} />
+                  {/* caja custom */}
+                  <span className={`${boxBase} ${allSelected ? boxChecked : boxUnchecked}`}>
+                    <svg viewBox="0 0 20 20" className="w-5 h-5" aria-hidden="true">
+                      <polyline
+                        points="4 11 8 15 16 5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
                   <span>{t('general.select_all')}</span>
                 </label>
               )}
 
+              {/* Opciones */}
               {options.map((opt) => {
                 const id = getId(opt);
                 const checked = selectedIds.includes(id);
                 return (
-                  <label key={id} className="flex items-center gap-3 text-sm font-normal">
-                    <input
-                      type="checkbox"
-                      className="cursor-pointer size-6 rounded-xl accent-[var(--color-primary-black)]"
-                      checked={checked}
-                      onChange={() => toggleOne(id)}
-                    />
+                  <label key={id} className="flex items-center gap-3 text-sm font-normal cursor-pointer">
+                    <input type="checkbox" className="sr-only peer" checked={checked} onChange={() => toggleOne(id)} />
+                    <span className={`${boxBase} ${checked ? boxChecked : boxUnchecked}`}>
+                      <svg viewBox="0 0 20 20" className="w-5 h-5" aria-hidden="true">
+                        <polyline
+                          points="4 11 8 15 16 5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
                     <span>{getLabel(opt)}</span>
                   </label>
                 );

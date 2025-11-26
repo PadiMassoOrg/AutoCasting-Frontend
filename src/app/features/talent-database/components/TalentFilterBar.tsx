@@ -132,23 +132,8 @@ export function TalentFilterBar({
           </button>
         )}
       </header>
-      {/* Has Headshot Image */}
-      <label key={'hasHeadshot'} className="flex items-center gap-1 text-xs font-normal mt-6 cursor-pointer">
-        <input
-          type="checkbox"
-          className="cursor-pointer size-4 rounded-xl accent-[var(--color-primary-black)]"
-          checked={!!value.includeNoHeadshot}
-          onChange={(e) =>
-            onChange({
-              ...value,
-              includeNoHeadshot: e.target.checked ? true : undefined,
-            })
-          }
-        />
-        <span>{t('talent.filter.include_no_headshot')}</span>
-      </label>
-      <Separator className="opacity-20 mt-6" />
       {/* Basic Info */}
+      <Separator className="opacity-20 mt-12" />
       <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <FormInputField
           id="stageName"
