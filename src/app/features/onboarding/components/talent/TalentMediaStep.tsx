@@ -19,19 +19,14 @@ type Props = WizardStepProps & {
 
 function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progress = 0, onBackToModeSelector }: Props) {
   const { t } = useTranslation();
-
-  // 1) Traemos el perfil para tener el id y la media actual
   const { data: profile, isPending: profilePending } = useTalentProfile();
   const profileId = profile?.id!;
   const currentHeadshotUrl = profile?.media?.headshotImageUrl ?? null;
-
-  // 2) Hook de Supabase + patch backend ya existente
   const { mutate: uploadHeadshot, isPending: uploadPending } = useProfileMediaPatch(profileId);
 
-  // 3) Estado local sólo para UX del step
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [errHeadshot, setErrHeadshot] = useState<string | null>(null);
-  const [bust, setBust] = useState(0); // para bustear la cache de la imagen
+  const [bust, setBust] = useState(0);
 
   const canContinue = !uploadPending && (!!previewUrl || !!currentHeadshotUrl);
   const isBusy = uploadPending || profilePending || !profileId;
@@ -40,7 +35,6 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
     const file = Array.isArray(files) ? files[0] : files;
     if (!file) return;
 
-    // validación con tu schema existente
     const res = fileSchema(t).safeParse(file);
     if (!res.success) {
       const msg = res.error.errors[0]?.message ?? t('state.server_err');
@@ -56,7 +50,6 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
       { file, slot: 'headshot' },
       {
         onSuccess: () => {
-          // limpiamos el preview y bustemos la url remota
           setPreviewUrl(null);
           setBust((prev) => prev + 1);
         },
@@ -79,7 +72,6 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
     else goBack?.();
   };
 
-  // Mientras carga el perfil, no mostramos el step
   if (profilePending || !profileId) return null;
 
   const valueUrl = uploadPending || !currentHeadshotUrl ? undefined : withBust(currentHeadshotUrl, bust);
@@ -165,7 +157,6 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
 
 export default TalentMediaStep;
 
-// helpers iguales a los de MediaForm, pero simplificados a este step
 const fileToDataUrl = (file: File) =>
   new Promise<string>((resolve, reject) => {
     const reader = new FileReader();

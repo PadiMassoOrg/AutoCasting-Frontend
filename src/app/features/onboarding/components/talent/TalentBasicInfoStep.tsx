@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
@@ -8,6 +8,7 @@ import { WizardStep } from '../../../../shared/components/Wizard';
 import type { WizardStepProps } from '../../../../shared/components/Wizard/WizardStep';
 import Logo from '../../../../shared/icons/og-image.svg';
 import { usePatchTalentBasicInfoMutation } from '../../../talent/talent-profile-edit/hooks/usePatchTalentBasicInfoMutation';
+import { useTalentProfile } from '../../../talent/talent-profile-edit/hooks/useTalentProfile';
 import { type TalentBasicInfoValues, getTalentBasicInfoSchema } from '../../schemas/talentBasicInfoStepSchema';
 
 type Props = WizardStepProps & {
@@ -16,17 +17,29 @@ type Props = WizardStepProps & {
 
 function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, totalSteps = 1, progress = 0 }: Props) {
   const { t } = useTranslation();
+  const { data: profile, isPending: profilePending } = useTalentProfile();
   const { mutate: patchBasicInfo, isPending } = usePatchTalentBasicInfoMutation();
   const [serverError, setServerError] = useState<string | null>(null);
+  const savedStageName = profile?.basicInfo?.stageName ?? '';
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid, isSubmitting },
+    reset,
   } = useForm<TalentBasicInfoValues>({
     resolver: zodResolver(getTalentBasicInfoSchema(t)),
     mode: 'onChange',
+    defaultValues: {
+      stageName: '',
+    },
   });
+
+  useEffect(() => {
+    if (savedStageName) {
+      reset({ stageName: savedStageName });
+    }
+  }, [savedStageName, reset]);
 
   const onSubmit = (data: TalentBasicInfoValues) => {
     setServerError(null);
@@ -45,10 +58,13 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
     );
   };
 
+  if (profilePending && !profile) return null;
+
+  const isNextDisabled = !isValid || isSubmitting || isPending;
+
   return (
     <section className="w-full relative max-w-[400px]">
       <WizardStep>
-        {/* El FORM envuelve todo: contenido + botones inferiores */}
         <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-[70vh] flex-col justify-between gap-10">
           <div>
             {/* Header */}
@@ -72,7 +88,6 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
               </p>
             </div>
 
-            {/* Campo */}
             <div className="w-full mb-4 flex flex-col gap-4">
               <div className="text-center mb-4">
                 <h1 className="text-2xl font-semibold mb-3">{t('onboarding.talent.step1.header')}</h1>
@@ -96,14 +111,13 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
             )}
           </div>
 
-          {/* Zona inferior: botones + "Salir y continuar más tarde" */}
           <div>
             <div className="flex justify-between items-center gap-4 mb-6">
               <Button variant="outline" type="button" onClick={onBackToModeSelector}>
                 {t('buttons.back')}
               </Button>
-              <Button variant="primary" type="submit" disabled={isPending}>
-                {isPending ? t('state.loading') : t('buttons.next')}
+              <Button variant="primary" type="submit" disabled={isNextDisabled}>
+                {isPending || isSubmitting ? t('state.loading') : t('buttons.next')}
               </Button>
             </div>
             <ContinueLaterButton />
