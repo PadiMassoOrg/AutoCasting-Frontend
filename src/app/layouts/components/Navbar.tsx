@@ -14,10 +14,6 @@ import { useUserMode } from '../../context/UserModeContext';
 import BurgerIcon from '../../shared/icons/burger.svg';
 import CatalogoIconPurple from '../../shared/icons/catalogo-purple.svg';
 import CatalogoIcon from '../../shared/icons/catalogo.svg';
-import ClapperIconPurple from '../../shared/icons/clapper-purple.svg';
-import ClapperIcon from '../../shared/icons/clapper.svg';
-import FileIconPurple from '../../shared/icons/file-purple.svg';
-import FileIcon from '../../shared/icons/file.svg';
 import LogoutIcon from '../../shared/icons/logout-red.svg';
 import ProfileIconPurple from '../../shared/icons/profile-purple.svg';
 import ProfileIcon from '../../shared/icons/profile.svg';
@@ -101,14 +97,14 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                   {showLabels && t('routes.talent-database')}
                 </span>
               </Link>
-              <Link to={ROUTES.PRODUCTIONS}>
+              {/* <Link to={ROUTES.PRODUCTIONS}>
                 <span className={clsx(baseClass, activeProductions && activeClass)}>
                   {showIcons && (
                     <img src={activeProductions ? ClapperIconPurple : ClapperIcon} alt="" className="w-6" />
                   )}
                   {showLabels && t('routes.productions')}
                 </span>
-              </Link>
+              </Link> */}
               {isAuth && (
                 <span className="ml-2">
                   <UserModeSwitcher></UserModeSwitcher>
@@ -130,14 +126,14 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
             ) : mode == 'talent' ? (
               <>
                 {/* Talent */}
-                <Link to={ROUTES.TALENT_APPLIED_PRODUCTIONS}>
+                {/* <Link to={ROUTES.TALENT_APPLIED_PRODUCTIONS}>
                   <span className={clsx(baseClass, activeAppliedProductions && activeClass)}>
                     {showIcons && (
                       <img src={activeAppliedProductions ? FileIconPurple : FileIcon} alt="" className="w-6" />
                     )}
                     {showLabels && t('routes.talent-applied-productions')}
                   </span>
-                </Link>
+                </Link> */}
                 <Link to={ROUTES.TALENT}>
                   <span className={clsx(baseClass, activeTalentProfile && activeClass)}>
                     {showIcons && (

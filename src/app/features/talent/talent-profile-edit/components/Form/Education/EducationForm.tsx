@@ -1,8 +1,8 @@
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../../context/ModalContext';
-import deleteIcon from '../../../../../../shared/icons/delete.svg';
-import editIcon from '../../../../../../shared/icons/edit.svg';
+import deleteIcon from '../../../../../../shared/icons/delete-red.svg';
+import editIcon from '../../../../../../shared/icons/edit-purple.svg';
 import { useEducationAutosave, useEducationDeleteAutosave, useEducationPatchAutosave } from '../../../hooks/autosaves';
 import type { Education } from '../../../types/talentProfile.types';
 import EducationDeleteModal from './EducationDeleteModal';

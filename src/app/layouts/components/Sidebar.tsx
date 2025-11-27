@@ -9,10 +9,6 @@ import clsx from 'clsx';
 import { useUserMode } from '../../context/UserModeContext';
 import CatalogoIconPurple from '../../shared/icons/catalogo-purple.svg';
 import CatalogoIcon from '../../shared/icons/catalogo.svg';
-import ClapperIconPurple from '../../shared/icons/clapper-purple.svg';
-import ClapperIcon from '../../shared/icons/clapper.svg';
-import FileIconPurple from '../../shared/icons/file-purple.svg';
-import FileIcon from '../../shared/icons/file.svg';
 import InstagramIcon from '../../shared/icons/instagram-purple.svg';
 import LinkedInIcon from '../../shared/icons/linkedin-purple.svg';
 import LogoutIcon from '../../shared/icons/logout-red.svg';
@@ -89,14 +85,14 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                     </span>
                   </Link>
                 </li>
-                <li onClick={onClose}>
+                {/* <li onClick={onClose}>
                   <Link to={ROUTES.PRODUCTIONS}>
                     <span className={clsx(baseClass, activeProductions && activeClass)}>
                       <img src={activeProductions ? ClapperIconPurple : ClapperIcon} alt="" className="w-7" />
                       {t('routes.productions')}
                     </span>
                   </Link>
-                </li>
+                </li> */}
                 {isAuthenticated && (
                   <li onClick={onClose} className="mt-1 p-3">
                     <UserModeSwitcher showLabel />
@@ -121,14 +117,14 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                   {mode == 'talent' ? (
                     <>
                       {/* Talent */}
-                      <li onClick={onClose}>
+                      {/* <li onClick={onClose}>
                         <Link to={ROUTES.TALENT_APPLIED_PRODUCTIONS}>
                           <span className={clsx(baseClass, activeAppliedProductions && activeClass)}>
                             <img src={activeAppliedProductions ? FileIconPurple : FileIcon} alt="" className="w-7" />
                             {t('routes.talent-applied-productions')}
                           </span>
                         </Link>
-                      </li>
+                      </li> */}
                       <li onClick={onClose}>
                         <Link to={ROUTES.TALENT}>
                           <span className={clsx(baseClass, activeTalentProfile && activeClass)}>

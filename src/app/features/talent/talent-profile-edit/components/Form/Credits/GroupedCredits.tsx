@@ -1,8 +1,8 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import deleteIcon from '../../../../../../shared/icons/delete.svg';
-import editIcon from '../../../../../../shared/icons/edit.svg';
+import deleteIconRed from '../../../../../../shared/icons/delete-red.svg';
+import editIconPurple from '../../../../../../shared/icons/edit-purple.svg';
 import type { Credit } from '../../../types/talentProfile.types';
 
 const ORDER_KEYS = [
@@ -98,10 +98,10 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
                         </div>
                         <div className="flex flex-col justify-around items-center ml-3 pl-3 border-l border-[var(--color-secondary-outline)]">
                           <span onClick={() => onDelete(c)} className="cursor-pointer" aria-label="Delete">
-                            <img src={deleteIcon} alt="" className="w-5" />
+                            <img src={deleteIconRed} alt="" className="w-5" />
                           </span>
                           <span onClick={() => onEdit(c)} className="cursor-pointer" aria-label="Edit">
-                            <img src={editIcon} alt="" className="w-5" />
+                            <img src={editIconPurple} alt="" className="w-5" />
                           </span>
                         </div>
                       </div>
