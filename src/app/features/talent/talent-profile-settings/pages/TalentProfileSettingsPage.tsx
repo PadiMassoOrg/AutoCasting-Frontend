@@ -1,11 +1,8 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { DashboardShell } from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
-import { ChevronRight } from '../../../../shared/components/Chevron';
 import { ROUTES } from '../../../../shared/lib/routes';
-import { logout } from '../../../auth/services/authService';
 import { TalentSettingsSecuritySection } from '../components/Section';
 
 const TalentProfileSettingsPage = () => {

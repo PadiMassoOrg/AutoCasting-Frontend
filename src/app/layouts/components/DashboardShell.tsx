@@ -1,4 +1,5 @@
 // layouts/components/DashboardShell.tsx
+import { Separator } from 'autocasting-ui-library-padimasso';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight } from '../../shared/components/Chevron';
@@ -103,6 +104,9 @@ function DashboardShell<Key extends string = string>({
               </button>
             ))}
           </div>
+
+          {/* TODO: arreglar esto */}
+          <Separator className="opacity-0 my-20"></Separator>
 
           {bottomSection && <footer className="mt-10">{bottomSection}</footer>}
         </div>
