@@ -183,8 +183,6 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
 
   return (
     <div className="flex flex-col gap-2">
-      <h3 className="font-bold text-base mb-2">{t('profile.characteristics.characteristics')}</h3>
-
       <article className="h-full flex flex-row gap-4 items-center">
         <FormInputField
           id="heightCm"

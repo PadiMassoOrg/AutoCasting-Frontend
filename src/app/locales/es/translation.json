@@ -416,6 +416,7 @@
     },
     "pills": {
       "profile": "Perfil",
+      "basic_info": "Información Básica",
       "media": "Media",
       "details": "Detalles",
       "characteristics": "Características",

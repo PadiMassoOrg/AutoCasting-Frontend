@@ -1,5 +1,15 @@
-import DetailsEditSection from './DetailsEditSection';
-import MediaEditSection from './MediaEditSection';
-import TalentProfileEditSection from './TalentProfileEditSection';
+import TalentProfileBasicInfoEditSection from './TalentProfileBasicInfoEditSection';
+import TalentProfileCreditsEditSection from './TalentProfileCreditsEditSection';
+import TalentProfileDetailsEditSection from './TalentProfileDetailsEditSection';
+import TalentProfileEducationEditSection from './TalentProfileEducationEditSection';
+import TalentProfileMediaEditSection from './TalentProfileMediaEditSection';
+import TalentProfileSkillsEditSection from './TalentProfileSkillsEditSection';
 
-export { DetailsEditSection, MediaEditSection, TalentProfileEditSection as ProfileEditSection };
+export {
+  TalentProfileBasicInfoEditSection,
+  TalentProfileCreditsEditSection,
+  TalentProfileDetailsEditSection,
+  TalentProfileEducationEditSection,
+  TalentProfileMediaEditSection,
+  TalentProfileSkillsEditSection,
+};

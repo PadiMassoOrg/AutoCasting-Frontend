@@ -62,7 +62,6 @@ export default function CreditsForm({ data }: { data: Credit[] }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h3 className="font-bold text-base">{t('profile.credits.credits')}</h3>
       <Button onClick={openCreateModal} className="flex items-center justify-center gap-2">
         <span className="text-3xl mb-1 font-extralight">+</span>
         <span className="text-base font-medium">{t('profile.credits.add_new')}</span>

@@ -3,9 +3,15 @@ import { DashboardShell } from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
 import PageLoading from '../../../../shared/components/PageLoading/PageLoading';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
-import { DetailsEditSection, MediaEditSection } from '../components/Section';
-import TalentProfileEditSection from '../components/Section/TalentProfileEditSection';
+import TalentProfileBasicInfoEditSection from '../components/Section/TalentProfileBasicInfoEditSection';
 import { useTalentProfile } from '../hooks/useTalentProfile';
+import {
+  TalentProfileCreditsEditSection,
+  TalentProfileDetailsEditSection,
+  TalentProfileEducationEditSection,
+  TalentProfileMediaEditSection,
+  TalentProfileSkillsEditSection,
+} from '../components/Section';
 
 export default function TalentProfileEditPage() {
   const { t } = useTranslation();
@@ -17,18 +23,33 @@ export default function TalentProfileEditPage() {
   const sections: DashboardSection[] = [
     {
       key: 'basic',
-      label: t('profile.basic_info.basic_info'),
-      render: () => <TalentProfileEditSection profile={data} />,
+      label: t('profile.pills.basic_info'),
+      render: () => <TalentProfileBasicInfoEditSection profile={data} />,
     },
     {
       key: 'media',
-      label: t('profile.media.media'),
-      render: () => <MediaEditSection media={data.media} supabaseId={data.id} />,
+      label: t('profile.pills.media'),
+      render: () => <TalentProfileMediaEditSection media={data.media} supabaseId={data.id} />,
     },
     {
       key: 'details',
-      label: t('profile.characteristics.characteristics'),
-      render: () => <DetailsEditSection profile={data} />,
+      label: t('profile.pills.characteristics'),
+      render: () => <TalentProfileDetailsEditSection profile={data} />,
+    },
+    {
+      key: 'skills',
+      label: t('profile.pills.skills'),
+      render: () => <TalentProfileSkillsEditSection profile={data} />,
+    },
+    {
+      key: 'credits',
+      label: t('profile.pills.credits'),
+      render: () => <TalentProfileCreditsEditSection profile={data} />,
+    },
+    {
+      key: 'education',
+      label: t('profile.pills.education'),
+      render: () => <TalentProfileEducationEditSection profile={data} />,
     },
   ];
 
