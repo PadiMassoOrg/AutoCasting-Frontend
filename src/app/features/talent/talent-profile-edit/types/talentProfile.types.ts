@@ -70,6 +70,8 @@ export type BaseMedia = {
 export type BaseCharacteristics = {
   id: string;
   heightCm: number;
+  ethnicity: SiteMetadataObject;
+  ethnicityId: string;
   weightKg: number;
   hairColor: SiteMetadataObject;
   hairColorId: string;

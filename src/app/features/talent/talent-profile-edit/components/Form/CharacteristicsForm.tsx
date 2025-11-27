@@ -17,8 +17,10 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
   const autosave = useCharacteristicsAutosave();
 
   const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
+  const ethnicityOptions = useCachedSiteMetadataOption('ethnicityOptions', t);
   const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye_color');
   const dietOptions = useCachedSiteMetadataOption('dietOptions', t);
+
   const booleanOptions = [
     { value: 'true', label: t('general.yes') },
     { value: 'false', label: t('general.no') },
@@ -32,6 +34,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
       | 'weightKg'
       | 'hairColorId'
       | 'eyeColorId'
+      | 'ethnicityId'
       | 'dietOptionId'
       | 'chestCm'
       | 'waistCm'
@@ -43,13 +46,20 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
       string | null
     >
   >;
+
   const [errors, setErrors] = useState<Errs>({});
 
+  // ======================
+  // Altura / Peso
+  // ======================
   const heightCm = useCommittedInt(
     data.heightCm ?? null,
     (v) => {
       const r = schema.shape.heightCm.safeParse(v ?? '');
-      setErrors((e) => ({ ...e, heightCm: r.success ? null : r.error.errors[0]?.message || t('validation.invalid') }));
+      setErrors((e) => ({
+        ...e,
+        heightCm: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
+      }));
       if (r.success) autosave.immediate({ heightCm: r.data as number | undefined });
     },
     { allowNull: true }
@@ -59,12 +69,18 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
     data.weightKg ?? null,
     (v) => {
       const r = schema.shape.weightKg.safeParse(v ?? '');
-      setErrors((e) => ({ ...e, weightKg: r.success ? null : r.error.errors[0]?.message || t('validation.invalid') }));
+      setErrors((e) => ({
+        ...e,
+        weightKg: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
+      }));
       if (r.success) autosave.immediate({ weightKg: r.data as number | undefined });
     },
     { allowNull: true }
   );
 
+  // ======================
+  // Hair color
+  // ======================
   const hair = useCommittedUuid(
     data.hairColor?.id ?? null,
     (id) => {
@@ -79,6 +95,9 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
     { allowNull: true }
   );
 
+  // ======================
+  // Eye color
+  // ======================
   const eye = useCommittedUuid(
     data.eyeColor?.id ?? null,
     (id) => {
@@ -93,12 +112,37 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
     { allowNull: true }
   );
 
+  // ======================
+  // Ethnicity (mismo patrón que gender)
+  // ======================
+  const ethnicity = useCommittedUuid(
+    data.ethnicity?.id ?? null,
+    (id) => {
+      const raw = id ?? '';
+      const r = schema.shape.ethnicityId.safeParse(raw);
+      setErrors((e) => ({
+        ...e,
+        ethnicityId: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
+      }));
+      if (r.success) {
+        autosave.immediate({ ethnicityId: r.data as string | undefined });
+      }
+    },
+    { allowNull: true }
+  );
+
+  // ======================
+  // Medidas
+  // ======================
   const chestCm = useCommittedText(
     data.chestCm != null ? String(data.chestCm) : ((data as any).chestCm ?? ''),
     (v) => {
       const r = schema.shape.chestCm.safeParse(v);
-      setErrors((e) => ({ ...e, chestCm: r.success ? null : r.error.errors[0]?.message || t('validation.invalid') }));
-      if (r.success) autosave.immediate({ chestCm: r.data as any }); // number | string | undefined
+      setErrors((e) => ({
+        ...e,
+        chestCm: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
+      }));
+      if (r.success) autosave.immediate({ chestCm: r.data as any });
     },
     { trim: true }
   );
@@ -107,7 +151,10 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
     data.waistCm != null ? String(data.waistCm) : ((data as any).waistCm ?? ''),
     (v) => {
       const r = schema.shape.waistCm.safeParse(v);
-      setErrors((e) => ({ ...e, waistCm: r.success ? null : r.error.errors[0]?.message || t('validation.invalid') }));
+      setErrors((e) => ({
+        ...e,
+        waistCm: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
+      }));
       if (r.success) autosave.immediate({ waistCm: r.data as any });
     },
     { trim: true }
@@ -117,7 +164,10 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
     data.hipCm != null ? String(data.hipCm) : ((data as any).hipCm ?? ''),
     (v) => {
       const r = schema.shape.hipCm.safeParse(v);
-      setErrors((e) => ({ ...e, hipCm: r.success ? null : r.error.errors[0]?.message || t('validation.invalid') }));
+      setErrors((e) => ({
+        ...e,
+        hipCm: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
+      }));
       if (r.success) autosave.immediate({ hipCm: r.data as any });
     },
     { trim: true }
@@ -127,7 +177,10 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
     data.shirtSize ?? '',
     (v) => {
       const r = schema.shape.shirtSize.safeParse(v);
-      setErrors((e) => ({ ...e, shirtSize: r.success ? null : r.error.errors[0]?.message || t('validation.invalid') }));
+      setErrors((e) => ({
+        ...e,
+        shirtSize: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
+      }));
       if (r.success) autosave.immediate({ shirtSize: r.data as string | undefined });
     },
     { trim: true }
@@ -137,7 +190,10 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
     data.pantSize ?? '',
     (v) => {
       const r = schema.shape.pantSize.safeParse(v);
-      setErrors((e) => ({ ...e, pantSize: r.success ? null : r.error.errors[0]?.message || t('validation.invalid') }));
+      setErrors((e) => ({
+        ...e,
+        pantSize: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
+      }));
       if (r.success) autosave.immediate({ pantSize: r.data as string | undefined });
     },
     { trim: true }
@@ -147,7 +203,10 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
     data.dressSize ?? '',
     (v) => {
       const r = schema.shape.dressSize.safeParse(v);
-      setErrors((e) => ({ ...e, dressSize: r.success ? null : r.error.errors[0]?.message || t('validation.invalid') }));
+      setErrors((e) => ({
+        ...e,
+        dressSize: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
+      }));
       if (r.success) autosave.immediate({ dressSize: r.data as string | undefined });
     },
     { trim: true }
@@ -157,16 +216,25 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
     data.shoeSize ?? '',
     (v) => {
       const r = schema.shape.shoeSize.safeParse(v);
-      setErrors((e) => ({ ...e, shoeSize: r.success ? null : r.error.errors[0]?.message || t('validation.invalid') }));
+      setErrors((e) => ({
+        ...e,
+        shoeSize: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
+      }));
       if (r.success) autosave.immediate({ shoeSize: r.data as string | undefined });
     },
     { trim: true }
   );
 
+  // ======================
+  // Booleanos
+  // ======================
   const tattoo = useCommittedBoolean(data.tattoo, (v) => autosave.immediate({ tattoo: v }));
   const passport = useCommittedBoolean(data.passport, (v) => autosave.immediate({ passport: v }));
   const drivingLicense = useCommittedBoolean(data.drivingLicense, (v) => autosave.immediate({ drivingLicense: v }));
 
+  // ======================
+  // Diet
+  // ======================
   const diet = useCommittedUuid(
     data.dietOption?.id ?? null,
     (id) => {
@@ -183,6 +251,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
 
   return (
     <div className="flex flex-col gap-2">
+      {/* Altura / Peso */}
       <article className="h-full flex flex-row gap-4 items-center">
         <FormInputField
           id="heightCm"
@@ -208,6 +277,20 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         />
       </article>
 
+      {/* Ethnicity */}
+      <FormSelectField
+        id="ethnicityId"
+        label={t('profile.characteristics.ethnicity')}
+        labelClassName="font-semibold text-base"
+        placeholder={t('general.placeholder.select')}
+        value={ethnicity.value}
+        onChange={ethnicity.onChange}
+        onBlur={ethnicity.onBlur}
+        options={ethnicityOptions}
+        error={errors.ethnicityId ?? undefined}
+      />
+
+      {/* Hair color */}
       <FormSelectField
         id="hairColorId"
         label={t('profile.characteristics.hairColor')}
@@ -220,6 +303,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         error={errors.hairColorId ?? undefined}
       />
 
+      {/* Eye color */}
       <FormSelectField
         id="eyeColorId"
         label={t('profile.characteristics.eyeColor')}
@@ -232,6 +316,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         error={errors.eyeColorId ?? undefined}
       />
 
+      {/* Medidas */}
       <article className="flex flex-row gap-4 items-center">
         <FormInputField
           id="chestCm"
@@ -318,6 +403,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         />
       </article>
 
+      {/* Booleanos */}
       <article className="flex flex-row gap-4 items-center">
         <FormSelectField
           id="tattoo"
@@ -347,6 +433,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         options={booleanOptions}
       />
 
+      {/* Dieta */}
       <FormSelectField
         id="dietOptionId"
         label={t('profile.characteristics.diet')}
