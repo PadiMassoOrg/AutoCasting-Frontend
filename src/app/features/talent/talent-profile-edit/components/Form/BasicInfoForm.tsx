@@ -182,9 +182,12 @@ export default function BasicInfoForm({
               <Button
                 key={p.id}
                 onClick={() => professions.toggle(p.id)}
-                className={['whitespace-nowrap cursor-pointer', active ? 'bg-black text-white' : 'bg-gray-100'].join(
-                  ' '
-                )}
+                className={[
+                  'whitespace-nowrap cursor-pointer bg-transparent border-1',
+                  active
+                    ? 'bg-transparent text-[var(--color-primary-purple)] border--[var(--color-primary-purple)]'
+                    : 'text-[var(--color-secondary-grey-fonts)] border-[var(--color-secondary-outline)]',
+                ].join(' ')}
                 title={t(p.stringCode)}
               >
                 {t(p.stringCode)}
