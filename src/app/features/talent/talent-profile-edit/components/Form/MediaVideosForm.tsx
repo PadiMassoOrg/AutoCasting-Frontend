@@ -43,10 +43,9 @@ const MediaVideosForm = ({ data }: { data: Media }) => {
 
   return (
     <div className="w-full flex flex-col gap-5">
-      <h3 className="font-bold text-base">{t('profile.media.videos')}</h3>
-
       <FormInputField
         id="introduction"
+        labelClassName="font-semibold text-base"
         label={t('profile.media.introduction')}
         placeholder={t('general.placeholder.url')}
         value={introduction.value}

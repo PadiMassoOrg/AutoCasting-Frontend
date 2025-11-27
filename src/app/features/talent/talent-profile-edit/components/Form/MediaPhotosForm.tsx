@@ -194,87 +194,78 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
     !!otherPreview[i];
 
   return (
-    <article className="flex flex-col gap-7">
-      <div className="flex flex-col gap-2">
-        <Label className="text-base font-semibold">{t('profile.media.headshot_fullbody')}</Label>
-        <div className="flex flex-row items-center gap-2">
-          <UploadTile
-            label={t('general.placeholder.headshot')}
-            value={
-              removedHeadshot || pending.has('headshot')
-                ? undefined
-                : withBust(liveMedia.headshotImageUrl, bust.headshot)
-            }
-            previewUrl={preview.headshot ?? null}
-            onSelect={pick('headshot')}
-            disabled={pending.has('headshot')}
-            busy={pending.has('headshot')}
-            busyText={t('state.loading')}
-            bustKey={undefined}
-            accept="image/*"
-            maxSizeMB={8}
-            objectFit="cover"
-            openOnClick={!headshotHasImage}
-            onDeleteClick={onDeleteHeadshot}
-            className="max-w-64"
-          />
-          {errHeadshot && <span className="text-xs text-red-600 mt-1">{errHeadshot}</span>}
+    <article className="flex flex-col gap-2">
+      <Label className="text-base font-semibold">{t('profile.media.photos')}</Label>
 
-          <UploadTile
-            label={t('general.placeholder.fullbody')}
-            value={
-              removedFullbody || pending.has('fullbody')
-                ? undefined
-                : withBust(liveMedia.fullBodyImageUrl, bust.fullbody)
-            }
-            previewUrl={preview.fullbody ?? null}
-            onSelect={pick('fullbody')}
-            disabled={pending.has('fullbody')}
-            busy={pending.has('fullbody')}
-            busyText={t('state.loading')}
-            bustKey={undefined}
-            accept="image/*"
-            maxSizeMB={8}
-            objectFit="cover"
-            openOnClick={!fullbodyHasImage}
-            onDeleteClick={onDeleteFullbody}
-            className="max-w-64"
-          />
-          {errFullbody && <span className="text-xs text-red-600 mt-1">{errFullbody}</span>}
-        </div>
+      <div className="flex flex-row items-center gap-2">
+        <UploadTile
+          value={
+            removedHeadshot || pending.has('headshot') ? undefined : withBust(liveMedia.headshotImageUrl, bust.headshot)
+          }
+          previewUrl={preview.headshot ?? null}
+          onSelect={pick('headshot')}
+          disabled={pending.has('headshot')}
+          busy={pending.has('headshot')}
+          busyText={t('state.loading')}
+          bustKey={undefined}
+          accept="image/*"
+          maxSizeMB={8}
+          objectFit="cover"
+          openOnClick={!headshotHasImage}
+          onDeleteClick={onDeleteHeadshot}
+          className="max-w-64"
+        />
+        {errHeadshot && <span className="text-xs text-red-600 mt-1">{errHeadshot}</span>}
+
+        <UploadTile
+          value={
+            removedFullbody || pending.has('fullbody') ? undefined : withBust(liveMedia.fullBodyImageUrl, bust.fullbody)
+          }
+          previewUrl={preview.fullbody ?? null}
+          onSelect={pick('fullbody')}
+          disabled={pending.has('fullbody')}
+          busy={pending.has('fullbody')}
+          busyText={t('state.loading')}
+          bustKey={undefined}
+          accept="image/*"
+          maxSizeMB={8}
+          objectFit="cover"
+          openOnClick={!fullbodyHasImage}
+          onDeleteClick={onDeleteFullbody}
+          className="max-w-64"
+        />
+        {errFullbody && <span className="text-xs text-red-600 mt-1">{errFullbody}</span>}
       </div>
 
-      <div className="flex flex-col gap-2">
-        <Label className="text-base font-semibold">{t('profile.media.other')}</Label>
-        <div className="grid grid-cols-3 gap-2 md:grid-cols-[repeat(3,max-content)]">
-          {Array.from({ length: OTHER_SLOTS }, (_, i) => {
-            const isRemoved = removedOthers.has(i);
-            const hasImg = otherHasImage(i);
-            return (
-              <div key={i}>
-                <UploadTile
-                  value={
-                    isRemoved || otherPending.has(i) ? undefined : withBust(others[i] as string | null, otherBust[i])
-                  }
-                  previewUrl={otherPreview[i] ?? null}
-                  busy={otherPending.has(i)}
-                  busyText={t('state.loading')}
-                  bustKey={undefined}
-                  onSelect={pickOther(i)}
-                  accept="image/*"
-                  maxSizeMB={8}
-                  objectFit="cover"
-                  aspectRatio="3 / 4"
-                  multiple={false}
-                  openOnClick={!hasImg}
-                  onDeleteClick={() => onDeleteOther(i)}
-                  className="md:min-w-51 max-w-51"
-                />
-                {errOther[i] && <span className="text-xs text-red-600 mt-1 block">{errOther[i]}</span>}
-              </div>
-            );
-          })}
-        </div>
+      <div className="flex flex-row items-center gap-2">
+        {Array.from({ length: OTHER_SLOTS }, (_, i) => {
+          const isRemoved = removedOthers.has(i);
+          const hasImg = otherHasImage(i);
+          return (
+            <div key={i} className="w-full">
+              <UploadTile
+                value={
+                  isRemoved || otherPending.has(i) ? undefined : withBust(others[i] as string | null, otherBust[i])
+                }
+                previewUrl={otherPreview[i] ?? null}
+                onSelect={pickOther(i)}
+                disabled={pending.has('fullbody')}
+                busy={otherPending.has(i)}
+                busyText={t('state.loading')}
+                bustKey={undefined}
+                accept="image/*"
+                aspectRatio="3 / 4"
+                maxSizeMB={8}
+                objectFit="cover"
+                multiple={false}
+                openOnClick={!hasImg}
+                onDeleteClick={() => onDeleteOther(i)}
+                className="max-w-64"
+              />
+              {errOther[i] && <span className="text-xs text-red-600 mt-1 block">{errOther[i]}</span>}
+            </div>
+          );
+        })}
       </div>
     </article>
   );
