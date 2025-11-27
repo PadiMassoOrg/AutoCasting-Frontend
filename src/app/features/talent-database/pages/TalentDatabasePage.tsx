@@ -67,7 +67,10 @@ export default function TalentDatabasePage() {
     scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
   }, []);
 
-  useScrollExitOnEdge(cardsScrollRef, { forwardTo: isDesktop ? cardsScrollRef : scrollRootRef });
+  // ⬇️ IMPORTANTE: no forwardeamos al mismo elemento en desktop
+  useScrollExitOnEdge(cardsScrollRef, {
+    forwardTo: isDesktop ? cardsScrollRef : scrollRootRef,
+  });
 
   const fetchPage = useCallback(
     async (p: number, replace = false) => {
@@ -83,12 +86,14 @@ export default function TalentDatabasePage() {
       try {
         const res = await getTalentDatabase(p, pageSize, effectiveFilters, { signal: ctrl.signal });
         if (requestIdRef.current !== thisReqId) return;
+
         const fresh = res.items ?? [];
         setItems((prev) => (replace ? fresh : [...prev, ...fresh]));
         setPage(res.page + 1);
         setHasNext(!!res.hasNext);
       } catch (e: any) {
         if (e?.name === 'AbortError' || e?.name === 'CanceledError') {
+          // ignoramos cancelaciones
         } else {
           setError('fetch_error');
           setHasNext(false);

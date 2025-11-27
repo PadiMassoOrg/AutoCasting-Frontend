@@ -32,12 +32,6 @@ function isSingle(p: MultipleSelectProps | SingleSelectProps): p is SingleSelect
   return (p as SingleSelectProps).mode === 'single';
 }
 
-// clases para el “checkbox” custom
-const boxBase = 'flex items-center justify-center w-6 h-6 rounded-lg border-1 transition-colors shrink-0';
-const boxChecked =
-  'border-[var(--color-primary-purple)] text-[var(--color-primary-purple)] bg-[var(--color-secondary-white)]';
-const boxUnchecked = 'border-[var(--color-secondary-outline)] text-transparent bg-white';
-
 export default function MultiSelectDropdown<T>({
   title,
   options,
@@ -72,7 +66,11 @@ export default function MultiSelectDropdown<T>({
   };
 
   const panelRef = useRef<HTMLDivElement>(null);
-  useScrollExitOnEdge(panelRef, { forwardTo: forwardScrollToRef! });
+
+  // Si no nos pasan forwardScrollToRef, no hacemos nada especial
+  if (forwardScrollToRef) {
+    useScrollExitOnEdge(panelRef, { forwardTo: forwardScrollToRef });
+  }
 
   return (
     <>
@@ -120,18 +118,41 @@ export default function MultiSelectDropdown<T>({
               style={{ maxHeight: maxPanelHeight, overflow: 'auto' }}
               className="px-6 py-3 flex flex-col gap-2"
             >
-              {/* Seleccionar todas */}
+              {/* Select all (sólo en modo multiple) */}
               {!single && (
                 <label className="flex items-center gap-3 text-sm font-normal cursor-pointer">
-                  {/* input real, oculto visualmente */}
-                  <input type="checkbox" className="sr-only peer" checked={allSelected} onChange={toggleAll} />
-                  {/* caja custom */}
-                  <span className={`${boxBase} ${allSelected ? boxChecked : boxUnchecked}`}>
-                    <svg viewBox="0 0 20 20" className="w-5 h-5" aria-hidden="true">
-                      <polyline
-                        points="4 11 8 15 16 5"
+                  <span className="relative inline-flex items-center justify-center h-6 w-6">
+                    <input
+                      type="checkbox"
+                      checked={allSelected}
+                      onChange={toggleAll}
+                      className="
+                        peer
+                        h-6 w-6
+                        rounded-lg
+                        border
+                        border-[var(--color-secondary-outline)]
+                        appearance-none
+                        cursor-pointer
+                        checked:border-[var(--color-primary-purple)]
+                        checked:bg-[var(--color-primary-white)]
+                        transition-colors
+                      "
+                    />
+                    <svg
+                      viewBox="0 0 16 16"
+                      className="
+                        pointer-events-none
+                        absolute
+                        h-3 w-3
+                        opacity-0
+                        peer-checked:opacity-100
+                      "
+                    >
+                      <path
+                        d="M3 8.5L6.5 12L13 4"
                         fill="none"
-                        stroke="currentColor"
+                        stroke="var(--color-primary-purple)"
                         strokeWidth="2"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -148,13 +169,38 @@ export default function MultiSelectDropdown<T>({
                 const checked = selectedIds.includes(id);
                 return (
                   <label key={id} className="flex items-center gap-3 text-sm font-normal cursor-pointer">
-                    <input type="checkbox" className="sr-only peer" checked={checked} onChange={() => toggleOne(id)} />
-                    <span className={`${boxBase} ${checked ? boxChecked : boxUnchecked}`}>
-                      <svg viewBox="0 0 20 20" className="w-5 h-5" aria-hidden="true">
-                        <polyline
-                          points="4 11 8 15 16 5"
+                    <span className="relative inline-flex items-center justify-center h-6 w-6">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleOne(id)}
+                        className="
+                          peer
+                          h-6 w-6
+                          rounded-lg
+                          border
+                          border-[var(--color-secondary-outline)]
+                          appearance-none
+                          cursor-pointer
+                          checked:border-[var(--color-primary-purple)]
+                          checked:bg-[var(--color-primary-white)]
+                          transition-colors
+                        "
+                      />
+                      <svg
+                        viewBox="0 0 16 16"
+                        className="
+                          pointer-events-none
+                          absolute
+                          h-3 w-3
+                          opacity-0
+                          peer-checked:opacity-100
+                        "
+                      >
+                        <path
+                          d="M3 8.5L6.5 12L13 4"
                           fill="none"
-                          stroke="currentColor"
+                          stroke="var(--color-primary-purple)"
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"

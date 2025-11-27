@@ -58,7 +58,6 @@ export function TalentFilterBar({
     [genderOptions, t]
   );
 
-  // ===== Helpers para contadores =====
   const hasText = (s?: string | null) => !!s && s.trim().length > 0;
   const hasAny = (arr?: unknown[]) => (arr?.length ?? 0) > 0;
   const hasRange = (min?: number, max?: number) => min != null || max != null;
@@ -69,7 +68,6 @@ export function TalentFilterBar({
     onReset?.();
   };
 
-  // ======== Hooks de "commit on blur/enter" (sin debounce) ========
   const stageName = useCommittedText(value.stageName ?? '', (v) => onChange({ ...value, stageName: v || undefined }));
   const ageMin = useCommittedInt(value.ageMin ?? null, (v) => onChange({ ...value, ageMin: v ?? undefined }), {
     allowNull: true,
@@ -84,7 +82,6 @@ export function TalentFilterBar({
     allowNull: true,
   });
 
-  // ======== Counts ========
   const basicCount =
     (hasText(value.stageName) ? 1 : 0) +
     (hasRange(value.ageMin, value.ageMax) ? 1 : 0) +
@@ -113,7 +110,6 @@ export function TalentFilterBar({
 
   return (
     <aside className="z-[300] w-full flex flex-col items-stretch overflow-auto overflow-x-hidden lg:max-w-[350px]">
-      {/* Header */}
       <header className="flex items-center justify-between pb-2">
         <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
 
@@ -132,8 +128,9 @@ export function TalentFilterBar({
           </button>
         )}
       </header>
-      {/* Basic Info */}
+
       <Separator className="opacity-20 mt-12" />
+
       <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <FormInputField
           id="stageName"
@@ -202,7 +199,6 @@ export function TalentFilterBar({
 
       <Separator className="opacity-20" />
 
-      {/* Characteristics */}
       <FilterSection title={t('profile.characteristics.characteristics')} count={characteristicsCount}>
         <article className="flex flex-col">
           <label htmlFor="heightMin" className="text-sm font-semibold mb-2">
@@ -282,7 +278,6 @@ export function TalentFilterBar({
 
       <Separator className="opacity-20" />
 
-      {/* Skills */}
       <FilterSection title={t('filters.skills', 'Habilidades')} count={skillsCount}>
         {skillsCats.map(({ catCode, list, idSet }) => {
           const selectedGlobal = value.skillId ?? [];

@@ -32,30 +32,39 @@ export default function BooleanRadioGroup({
   const idYes = `${groupName}-yes`;
   const idNo = `${groupName}-no`;
 
-  const renderRadio = (checked: boolean) => (
-    <span className="cursor-pointer inline-flex items-center justify-center">
+  const renderRadioInput = (checked: boolean, props: React.InputHTMLAttributes<HTMLInputElement>) => (
+    <span className="relative inline-flex items-center justify-center h-6 w-6">
+      <input
+        {...props}
+        type="radio"
+        checked={checked}
+        className="
+          peer
+          h-6 w-6
+          rounded-full
+          border
+          border-[var(--color-secondary-outline)]
+          appearance-none
+          cursor-pointer
+          checked:border-[var(--color-primary-purple)]
+          bg-white
+          transition-colors
+        "
+      />
       <span
-        className={
-          'flex items-center justify-center h-6 w-6 rounded-full border ' +
-          (checked ? 'border-[var(--color-primary-purple)]' : 'border-[var(--color-secondary-outline)]')
-        }
-      >
-        <span
-          className={
-            'h-3 w-3 rounded-full transition-transform ' +
-            (checked ? 'bg-[var(--color-primary-purple)] scale-100' : 'bg-transparent')
-          }
-        />
-      </span>
+        className="
+          pointer-events-none
+          absolute
+          h-3 w-3
+          rounded-full
+          bg-[var(--color-primary-purple)]
+          scale-0
+          peer-checked:scale-100
+          transition-transform
+        "
+      />
     </span>
   );
-
-  // manejamos el click en el label, no en el input
-  const handleSelect = (next: boolean | undefined) => (e: React.MouseEvent) => {
-    e.preventDefault(); // evitamos que el navegador intente cambiar el radio por su cuenta
-    if (value === next) return;
-    onChange(next);
-  };
 
   return (
     <fieldset className={className}>
@@ -63,23 +72,32 @@ export default function BooleanRadioGroup({
 
       <div className="mt-2 pl-1 flex flex-col gap-2">
         {/* Cualquiera / Todos */}
-        <label htmlFor={idAny} className={optionClassName} onClick={handleSelect(undefined)}>
-          {renderRadio(tri === '')}
-          <input id={idAny} type="radio" name={groupName} checked={tri === ''} readOnly className="sr-only" />
+        <label htmlFor={idAny} className={optionClassName}>
+          {renderRadioInput(tri === '', {
+            id: idAny,
+            name: groupName,
+            onChange: () => onChange(undefined),
+          })}
           <span className="cursor-pointer select-none">{t('general.all')}</span>
         </label>
 
         {/* Sí */}
-        <label htmlFor={idYes} className={optionClassName} onClick={handleSelect(true)}>
-          {renderRadio(tri === 'true')}
-          <input id={idYes} type="radio" name={groupName} checked={tri === 'true'} readOnly className="sr-only" />
+        <label htmlFor={idYes} className={optionClassName}>
+          {renderRadioInput(tri === 'true', {
+            id: idYes,
+            name: groupName,
+            onChange: () => onChange(true),
+          })}
           <span className="cursor-pointer select-none">{t('general.yes')}</span>
         </label>
 
         {/* No */}
-        <label htmlFor={idNo} className={optionClassName} onClick={handleSelect(false)}>
-          {renderRadio(tri === 'false')}
-          <input id={idNo} type="radio" name={groupName} checked={tri === 'false'} readOnly className="sr-only" />
+        <label htmlFor={idNo} className={optionClassName}>
+          {renderRadioInput(tri === 'false', {
+            id: idNo,
+            name: groupName,
+            onChange: () => onChange(false),
+          })}
           <span className="cursor-pointer select-none">{t('general.no')}</span>
         </label>
       </div>
