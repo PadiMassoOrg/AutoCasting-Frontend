@@ -1,3 +1,4 @@
+// layouts/components/DashboardShell.tsx
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight } from '../../shared/components/Chevron';
@@ -15,6 +16,8 @@ type DashboardShellProps<Key extends string = string> = {
   sections?: DashboardSection<Key>[];
   initialKey?: Key;
   children?: ReactNode;
+  /** Slot para contenido fijo al fondo de la sidebar / menú (links, logout, etc.) */
+  bottomSection?: ReactNode;
 };
 
 function DashboardShell<Key extends string = string>({
@@ -22,6 +25,7 @@ function DashboardShell<Key extends string = string>({
   sections,
   initialKey,
   children,
+  bottomSection,
 }: DashboardShellProps<Key>) {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const hasSections = !!(sections && sections.length > 0);
@@ -56,6 +60,7 @@ function DashboardShell<Key extends string = string>({
     }
   };
 
+  // Sin secciones: layout simple
   if (!hasSections) {
     return (
       <section className="w-full h-full min-h-0 flex flex-col">
@@ -71,6 +76,7 @@ function DashboardShell<Key extends string = string>({
     );
   }
 
+  // Mobile – vista de navegación
   if (!isDesktop && mobileView === 'nav') {
     return (
       <section className="w-full h-full bg-[var(--color-secondary-white)]">
@@ -78,6 +84,7 @@ function DashboardShell<Key extends string = string>({
           {title && (
             <h1 className="my-6 text-2xl font-semibold text-[var(--color-primary-black)] text-center">{title}</h1>
           )}
+
           <div className="w-full bg-[var(--color-primary-white)] rounded-2xl border border-[var(--color-secondary-outline)] shadow-sm overflow-hidden">
             {sections!.map((item, index) => (
               <button
@@ -96,18 +103,22 @@ function DashboardShell<Key extends string = string>({
               </button>
             ))}
           </div>
+
+          {bottomSection && <footer className="mt-10">{bottomSection}</footer>}
         </div>
       </section>
     );
   }
 
+  // Desktop + mobile content
   return (
     <section className="w-full h-full min-h-0 flex flex-col lg:flex-row gap-0 bg-[var(--color-secondary-white)]">
       {isDesktop && (
         <aside className="hidden lg:block w-[265px] shrink-0 border-r border-[var(--color-secondary-outline)] bg-[var(--color-primary-white)]">
           <div className="h-full flex flex-col py-2">
             {title && <h2 className="px-4 pt-6 pb-4 text-lg font-bold text-[var(--color-primary-black)]">{title}</h2>}
-            <nav className="px-3 pb-6 flex flex-col gap-1.5">
+
+            <nav className="px-3 pb-4 flex flex-col gap-1.5">
               {sections!.map((item) => {
                 const selected = item.key === activeKey;
                 return (
@@ -119,7 +130,7 @@ function DashboardShell<Key extends string = string>({
                       'flex items-center gap-2 rounded-lg px-4 py-4 text-sm font-semibold cursor-pointer w-full text-left',
                       selected
                         ? 'bg-[var(--color-secondary-white)] text-[var(--color-primary-purple)]'
-                        : 'text-[var(--color-primary-black)] hover:bg-[var(--color-secondary-white) hover:text-[var(--color-primary-purple)]',
+                        : 'text-[var(--color-primary-black)] hover:bg-[var(--color-secondary-white)] hover:text-[var(--color-primary-purple)]',
                     ].join(' ')}
                   >
                     {item.icon && <span className="w-5 h-5">{item.icon}</span>}
@@ -128,6 +139,8 @@ function DashboardShell<Key extends string = string>({
                 );
               })}
             </nav>
+
+            {bottomSection && <footer className="mt-auto p-4">{bottomSection}</footer>}
           </div>
         </aside>
       )}

@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useMeData } from '../features/auth/hooks/useMeData';
 import { OnboardingWizard } from '../features/onboarding/components';
-import AccountPage from '../features/talent/talent-profile-account/pages/AccountPage';
 import { TalentProfileEditPage } from '../features/talent/talent-profile-edit/pages';
+import { TalentProfileSettingsPage } from '../features/talent/talent-profile-settings/pages';
 import { EmptyLayout, ScrollContentLayout } from '../layouts';
 import { ROUTES } from '../shared/lib/routes';
 
@@ -36,7 +36,7 @@ export default function ProtectedRoutesLayout() {
           <Route element={<ScrollContentLayout />}>
             <Route path={ROUTES.DASHBOARD} element={<Navigate to={effectiveDashboardRoute} replace />} />
             <Route path={ROUTES.TALENT} element={<TalentProfileEditPage />} />
-            <Route path={ROUTES.TALENT_SETTINGS} element={<AccountPage />} />
+            <Route path={ROUTES.TALENT_SETTINGS} element={<TalentProfileSettingsPage />} />
           </Route>
 
           <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />

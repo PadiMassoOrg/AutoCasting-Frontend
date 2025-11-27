@@ -23,7 +23,11 @@ const ChangePasswordForm = () => {
   });
 
   const handleSuccessModal = () => {
-    openModal(<ChangePasswordSuccessModal onClose={closeModal} />, t('account.page.change_pass_modal.success'), 'lg');
+    openModal(
+      <ChangePasswordSuccessModal onClose={closeModal} />,
+      t('settings.page.account.change_pass_modal.success'),
+      'lg'
+    );
   };
 
   const onSubmit = async (data: ChangePasswordValues) => {
@@ -51,7 +55,7 @@ const ChangePasswordForm = () => {
       <FormInputField
         id="oldPassword"
         type="password"
-        label={t('account.page.change_pass_modal.actual_pass')}
+        label={t('settings.page.account.change_pass_modal.actual_pass')}
         labelClassName="font-semibold"
         placeholder={t('********')}
         {...register('oldPassword')}
@@ -60,7 +64,7 @@ const ChangePasswordForm = () => {
       <FormInputField
         id="password"
         type="password"
-        label={t('account.page.change_pass_modal.new_pass')}
+        label={t('settings.page.account.change_pass_modal.new_pass')}
         labelClassName="font-semibold"
         placeholder={t('********')}
         {...register('newPassword')}
@@ -70,7 +74,7 @@ const ChangePasswordForm = () => {
         id="confirmPassword"
         type="password"
         placeholder={t('********')}
-        label={t('account.page.change_pass_modal.repeat_new_pass')}
+        label={t('settings.page.account.change_pass_modal.repeat_new_pass')}
         labelClassName="font-semibold"
         {...register('confirmPassword')}
         error={errors.confirmPassword?.message}
