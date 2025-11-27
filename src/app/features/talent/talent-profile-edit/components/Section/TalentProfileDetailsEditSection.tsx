@@ -1,12 +1,12 @@
-import { ProfileEditSection } from '../../../../../shared/components/Section';
+import { DashboardSection } from '../../../../../layouts/components';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';
 import { CharacteristicsForm } from '../Form';
 
 const TalentProfileDetailsEditSection = ({ profile }: { profile: TalentProfileResponse }) => {
   return (
-    <ProfileEditSection>
+    <DashboardSection>
       <CharacteristicsForm data={profile.characteristics}></CharacteristicsForm>
-    </ProfileEditSection>
+    </DashboardSection>
   );
 };
 

@@ -1,12 +1,12 @@
 import type { ReactNode } from 'react';
 
-type ProfileEditSectionProps = {
+type DashboardSectionProps = {
   children: ReactNode;
   className?: string;
   contentClassName?: string;
 };
 
-const ProfileEditSection = ({ children, className = '', contentClassName = 'p-6' }: ProfileEditSectionProps) => {
+const DashboardSection = ({ children, className = '', contentClassName = 'p-6' }: DashboardSectionProps) => {
   return (
     <article
       className={
@@ -20,4 +20,4 @@ const ProfileEditSection = ({ children, className = '', contentClassName = 'p-6'
   );
 };
 
-export default ProfileEditSection;
+export default DashboardSection;
