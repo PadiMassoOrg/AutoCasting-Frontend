@@ -115,6 +115,16 @@
       "non_binary": "No Binario",
       "other": "Otros"
     },
+    "ethnicity": {
+      "afro_descendant": "Afrodescendiente",
+      "asian": "Asiática / Asiático",
+      "white_caucasian": "Blanca / Caucásica",
+      "indigenous_native": "Indígena / Originaria",
+      "latino_hispanic": "Latina / Latino / Hispana / Hispano",
+      "middle_east_north_africa": "Medio Oriente / Norte de África",
+      "mixed": "Mixta / Mestiza",
+      "prefer_not_to_say": "Prefiero no especificar"
+    },
     "category": {
       "scenic": "Habilidades España",
       "sport": "Deportes",
@@ -453,6 +463,7 @@
     "characteristics": {
       "characteristics": "Características",
       "gender": "Género",
+      "ethnicity": "Origen Étnico",
       "age": "Edad",
       "location": "Locación",
       "height": "Estatura",

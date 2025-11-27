@@ -48,6 +48,12 @@ function buildQuery(page: number, size: number, filters?: TalentFiltersQS) {
     append('genderId', (filters as any).genderId);
   }
 
+  if (Array.isArray(filters.ethnicityIds) && filters.ethnicityIds.length > 0) {
+    filters.ethnicityIds.forEach((token) => qs.append('ethnicityId', token));
+  } else {
+    append('ethnicityId', (filters as any).ethnicityId);
+  }
+
   append('professionId', filters.professionId);
   append('professionsMode', filters.professionsMode);
   append('heightMinCm', filters.heightMinCm);

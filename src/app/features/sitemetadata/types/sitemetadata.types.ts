@@ -11,6 +11,7 @@ export type SiteMetadataResponse = {
   skills: SiteMetadataObject[];
   professions: SiteMetadataObject[];
   genderOptions: SiteMetadataObject[];
+  ethnicityOptions: SiteMetadataObject[];
   colorOptions: SiteMetadataObject[];
   dietOptions: SiteMetadataObject[];
   productionTypeOptions: SiteMetadataObject[];

@@ -14,6 +14,7 @@ const initialFilters: TalentFiltersQS = {
   includeNoHeadshot: undefined,
   stageName: '',
   genderIds: ['NULL'],
+  ethnicityIds: ['NULL'],
   hairColorIds: undefined,
   hairColorIdsMode: 'ANY',
   eyeColorIds: undefined,
