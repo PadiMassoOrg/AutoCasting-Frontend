@@ -33,10 +33,12 @@ export async function patchBasicInfo(payload: BasicInfoPatchRequest): Promise<Ta
   const { data } = await api.patch(API_ROUTES.TALENT_BASIC_INFO, body);
   return data;
 }
+
 export async function patchContact(payload: ContactPatchRequest): Promise<TalentProfileContact> {
   const { data } = await api.patch(API_ROUTES.TALENT_CONTACT, payload);
   return data;
 }
+
 export async function patchSocialMedia(payload: SocialMediaPatchRequest): Promise<TalentProfileSocialMedia> {
   const { data } = await api.patch(API_ROUTES.TALENT_SOCIAL_MEDIA, payload);
   return data;

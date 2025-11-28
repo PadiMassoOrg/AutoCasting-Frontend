@@ -6,7 +6,6 @@ import EducationForm from './Education/EducationForm';
 import MediaPhotosForm from './MediaPhotosForm';
 import MediaVideosForm from './MediaVideosForm';
 import SkillsForm from './Skills/SkillsForm';
-import SocialMediaForm from './SocialMediaForm';
 
 export {
   BasicInfoForm,
@@ -17,5 +16,4 @@ export {
   MediaPhotosForm,
   MediaVideosForm,
   SkillsForm,
-  SocialMediaForm,
 };

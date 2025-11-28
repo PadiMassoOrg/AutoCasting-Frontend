@@ -52,10 +52,10 @@ export type BaseProfileContact = {
   phoneNumber: string;
 };
 
-export type BaseProfileSocialMedia = {
-  id: string;
-  instagramUrl: string;
-  tikTokUrl: string;
+export type SocialMediaLink = {
+  optionId: string;
+  stringCode: string;
+  url: string;
 };
 
 export type BaseMedia = {
@@ -120,7 +120,7 @@ export type Credit = BaseCredit;
 export type Education = BaseEducation;
 export type TalentProfileBasicInfo = DeepNullableExceptId<BaseProfileBasicInfo>;
 export type TalentProfileContact = DeepNullableExceptId<BaseProfileContact>;
-export type TalentProfileSocialMedia = DeepNullableExceptId<BaseProfileSocialMedia>;
+export type TalentProfileSocialMedia = { links: SocialMediaLink[] };
 export type Media = DeepNullableExceptId<BaseMedia>;
 export type Characteristics = DeepNullableExceptId<BaseCharacteristics>;
 

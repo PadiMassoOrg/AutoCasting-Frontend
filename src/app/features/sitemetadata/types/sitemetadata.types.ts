@@ -15,6 +15,7 @@ export type SiteMetadataResponse = {
   colorOptions: SiteMetadataObject[];
   dietOptions: SiteMetadataObject[];
   productionTypeOptions: SiteMetadataObject[];
+  socialMediaOptions: SiteMetadataObject[];
 };
 
 export type SiteMetadataVersion = {
