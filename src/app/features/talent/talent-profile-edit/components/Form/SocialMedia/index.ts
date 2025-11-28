@@ -1,5 +1,4 @@
-import ExistingSocialMediaRow from './ExistingSocialMediaRow';
-import NewSocialMediaRow from './NewSocialMediaRow';
 import SocialMediaForm from './SocialMediaForm';
+import SocialMediaRow from './SocialMediaRow';
 
-export { ExistingSocialMediaRow, NewSocialMediaRow, SocialMediaForm };
+export { SocialMediaForm, SocialMediaRow };

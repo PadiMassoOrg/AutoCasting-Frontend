@@ -7,13 +7,13 @@ import vimeo from '../../../../../../shared/icons/vimeo.svg';
 import xIcon from '../../../../../../shared/icons/x.svg';
 
 export const SOCIAL_MEDIA_ICON_BY_CODE: Record<string, string> = {
-  'sitemetadata.social.instagram': instagram,
-  'sitemetadata.social.tiktok': tikTok,
-  'sitemetadata.social.linkedin': linkedin,
-  'sitemetadata.social.x': xIcon,
-  'sitemetadata.social.vimeo': vimeo,
-  'sitemetadata.social.imdb': imdb,
-  'sitemetadata.social.behance': behance,
+  'sitemetadata.social_media.instagram': instagram,
+  'sitemetadata.social_media.tiktok': tikTok,
+  'sitemetadata.social_media.linkedin': linkedin,
+  'sitemetadata.social_media.x': xIcon,
+  'sitemetadata.social_media.vimeo': vimeo,
+  'sitemetadata.social_media.imdb': imdb,
+  'sitemetadata.social_media.behance': behance,
 };
 
 export function getSocialMediaIcon(stringCode: string | undefined): string | undefined {

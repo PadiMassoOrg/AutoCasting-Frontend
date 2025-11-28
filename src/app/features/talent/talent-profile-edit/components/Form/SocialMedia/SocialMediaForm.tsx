@@ -3,61 +3,79 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSiteMetadataSlice } from '../../../../../sitemetadata/hooks/useSiteMetadataSlice';
 import type { TalentProfileSocialMedia } from '../../../types/talentProfile.types';
-import ExistingSocialMediaRow from './ExistingSocialMediaRow';
-import NewSocialMediaRow from './NewSocialMediaRow';
+import SocialMediaRow from './SocialMediaRow';
 
 type SocialMediaFormProps = {
   data: TalentProfileSocialMedia;
+};
+
+export type LinkState = {
+  optionId: string;
+  url: string | null;
 };
 
 export default function SocialMediaForm({ data }: SocialMediaFormProps) {
   const { t } = useTranslation();
   const { data: allOptions = [] } = useSiteMetadataSlice('socialMediaOptions');
 
-  const usedIds = useMemo(() => new Set(data.links.map((i) => i.optionId)), [data.links]);
-
-  const [showNewRow, setShowNewRow] = useState(false);
-  const [pendingOptionId, setPendingOptionId] = useState<string | null>(null);
-
-  const availableForNew = useMemo(() => {
-    const base = allOptions.filter((opt) => !usedIds.has(opt.id));
-    if (pendingOptionId) {
-      return base.filter((opt) => opt.id !== pendingOptionId);
-    }
-    return base;
-  }, [allOptions, usedIds, pendingOptionId]);
+  const [links, setLinks] = useState<LinkState[]>(data.links ?? []);
 
   useEffect(() => {
-    if (availableForNew.length === 0) {
-      setShowNewRow(false);
-      setPendingOptionId(null);
-    }
-  }, [availableForNew.length]);
+    setLinks(data.links ?? []);
+  }, [data.links]);
+
+  const usedIds = useMemo(() => new Set(links.map((l) => l.optionId)), [links]);
+
+  const initialUrlsById = useMemo(() => {
+    const map: Record<string, string | null> = {};
+    (data.links ?? []).forEach((l) => {
+      map[l.optionId] = l.url ?? null;
+    });
+    return map;
+  }, [data.links]);
+
+  const freeOptions = useMemo(() => allOptions.filter((opt) => !usedIds.has(opt.id)), [allOptions, usedIds]);
+
+  const handleChangeRow = (index: number, next: LinkState) => {
+    setLinks((prev) => prev.map((item, i) => (i === index ? next : item)));
+  };
+
+  const handleDeleteRow = (index: number) => {
+    setLinks((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleAddRow = () => {
+    if (freeOptions.length === 0) return;
+    const firstFree = freeOptions[0];
+
+    setLinks((prev) => [
+      ...prev,
+      {
+        optionId: firstFree.id,
+        url: null,
+      },
+    ]);
+  };
 
   return (
     <div className="w-full flex flex-col gap-5">
       <h3 className="font-bold text-base">{t('profile.basic_info.social_media')}</h3>
 
-      {data.links.map((link) => {
-        const opt = allOptions.find((o) => o.id === link.optionId);
-        return <ExistingSocialMediaRow />;
-      })}
+      {links.map((link, index) => (
+        <SocialMediaRow
+          key={`${link.optionId}-${index}`}
+          allOptions={allOptions}
+          usedOptionIds={usedIds}
+          value={link}
+          onChange={(next) => handleChangeRow(index, next)}
+          onDelete={() => handleDeleteRow(index)}
+          initialUrlsById={initialUrlsById}
+        />
+      ))}
 
-      {showNewRow && availableForNew.length > 0 && <NewSocialMediaRow />}
-
-      {!showNewRow && (
-        <Button
-          type="button"
-          className="mt-2 self-start"
-          disabled={availableForNew.length === 0}
-          onClick={() => {
-            setShowNewRow(true);
-            setPendingOptionId((prev) => prev ?? availableForNew[0]?.id ?? null);
-          }}
-        >
-          + {t('profile.basic_info.add_social_media')}
-        </Button>
-      )}
+      <Button type="button" className="mt-2 self-start" disabled={freeOptions.length === 0} onClick={handleAddRow}>
+        + {t('profile.basic_info.add_social_media')}
+      </Button>
     </div>
   );
 }
