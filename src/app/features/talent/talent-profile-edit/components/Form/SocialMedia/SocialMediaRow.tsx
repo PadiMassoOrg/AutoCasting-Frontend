@@ -16,11 +16,9 @@ type SocialMediaIconSelectProps = {
 
 const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: SocialMediaIconSelectProps) => {
   const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const optionsForThisRow = useMemo(
-    () => allOptions.filter((opt) => !usedOptionIds.has(opt.id) || opt.id === value),
-    [allOptions, usedOptionIds, value]
-  );
+  const optionsForThisRow = allOptions.filter((opt) => !usedOptionIds.has(opt.id) || opt.id === value);
 
   const selectedOption =
     optionsForThisRow.find((o) => o.id === value) ??
@@ -30,8 +28,25 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
 
   const selectedIcon = selectedOption ? getSocialMediaIcon(selectedOption.stringCode) : undefined;
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!containerRef.current) return;
+      if (!containerRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [open]);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       <button
         type="button"
         className="flex items-center justify-center gap-2 rounded-lg cursor-pointer"

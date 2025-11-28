@@ -18,10 +18,37 @@ export default function SocialMediaForm({ data }: SocialMediaFormProps) {
   const { t } = useTranslation();
   const { data: allOptions = [] } = useSiteMetadataSlice('socialMediaOptions');
 
-  const [links, setLinks] = useState<LinkState[]>(data.links ?? []);
+  const [links, setLinks] = useState<LinkState[]>(() => data.links ?? []);
 
   useEffect(() => {
-    setLinks(data.links ?? []);
+    if (!data.links) return;
+
+    setLinks((prev) => {
+      const serverLinks = data.links ?? [];
+      const serverById = new Map<string, string | null>(serverLinks.map((l) => [l.optionId, l.url ?? null]));
+
+      const ordered: LinkState[] = [];
+      prev.forEach((l) => {
+        if (serverById.has(l.optionId)) {
+          ordered.push({
+            optionId: l.optionId,
+            url: serverById.get(l.optionId) ?? null,
+          });
+        }
+      });
+
+      const existingIds = new Set(ordered.map((l) => l.optionId));
+      serverLinks.forEach((l) => {
+        if (!existingIds.has(l.optionId)) {
+          ordered.push({
+            optionId: l.optionId,
+            url: l.url ?? null,
+          });
+        }
+      });
+
+      return ordered;
+    });
   }, [data.links]);
 
   const usedIds = useMemo(() => new Set(links.map((l) => l.optionId)), [links]);
@@ -73,8 +100,13 @@ export default function SocialMediaForm({ data }: SocialMediaFormProps) {
         />
       ))}
 
-      <Button type="button" className="mt-2 self-start" disabled={freeOptions.length === 0} onClick={handleAddRow}>
-        + {t('profile.basic_info.add_social_media')}
+      <Button
+        type="button"
+        className="mt-2 self-start lg:max-w-[250px]"
+        variant={freeOptions.length === 0 ? 'disabled' : 'primary'}
+        onClick={handleAddRow}
+      >
+        {t('profile.basic_info.add_social_media')}
       </Button>
     </div>
   );
