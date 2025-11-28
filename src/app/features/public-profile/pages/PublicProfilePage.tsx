@@ -1,16 +1,12 @@
+// src/features/public-profile/pages/PublicProfilePage.tsx
 import { Separator } from 'autocasting-ui-library-padimasso';
-import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 import PageLoading from '../../../shared/components/PageLoading/PageLoading';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { LG_SCREEN_SIZE, useMedia, XL_SCREEN_SIZE } from '../../../shared/hooks/useMedia';
-import { TalentProfileCompletionCard } from '../../talent/talent-profile-edit/components/TalentProfileCompletionCard/TalentProfileCompletionCard';
+import { TalentProfileModeToggle } from '../../talent/talent-profile-edit/components';
 import { useTalentProfile } from '../../talent/talent-profile-edit/hooks/useTalentProfile';
-import {
-  computeProfileProgress,
-  type ProfileProgress,
-} from '../../talent/talent-profile-edit/services/computeProfileProgress';
 import { BasicInfoSection, SocialMediaSection, VideoSection, ViewerActions } from '../components';
 import ProfileInfoCarousel from '../components/Details/ProfileInfoCarousel';
 import { usePublicProfile } from '../hooks/usePublicProfile';
@@ -26,14 +22,9 @@ const PublicProfilePage = () => {
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
 
   const isOwner = !!myProfile?.publicSlug && myProfile.publicSlug === slug;
-  const progress = useMemo<ProfileProgress | null>(() => {
-    if (!isOwner) return null;
-    const src = myProfile ?? data;
-    return computeProfileProgress(src);
-  }, [isOwner, myProfile, data]);
 
-  if (isLoading || !data) return <PageLoading></PageLoading>;
-  if (error) return <ServerError></ServerError>;
+  if (isLoading || !data) return <PageLoading />;
+  if (error) return <ServerError />;
 
   const { basicInfo, socialMedia, media } = data;
 
@@ -102,10 +93,7 @@ const PublicProfilePage = () => {
   }
 
   return (
-    <div className="relative pt-3 pb-10 flex flex-col gap-3 justify-center">
-      <div className="mb-2 grid place-items-center">
-        {isOwner && progress && <TalentProfileCompletionCard progress={progress} isEdit={false} />}
-      </div>
+    <div className="relative pt-3 pb-24 flex flex-col gap-3">
       <ViewerActions />
       <BasicInfoSection data={basicInfo} />
       <ImageCarousel images={hasImages ? images : null} />
@@ -115,6 +103,8 @@ const PublicProfilePage = () => {
       <ProfileInfoCarousel profile={data} />
       <Separator className="opacity-25 my-12" />
       <SocialMediaSection data={socialMedia} className="flex flex-col items-center gap-4" />
+
+      {isOwner && <TalentProfileModeToggle isEdit={false} publicSlug={myProfile?.publicSlug ?? slug} />}
     </div>
   );
 };

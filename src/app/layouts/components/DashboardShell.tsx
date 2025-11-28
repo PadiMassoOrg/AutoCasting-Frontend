@@ -81,7 +81,7 @@ function DashboardShell<Key extends string = string>({
   if (!isDesktop && mobileView === 'nav') {
     return (
       <section className="w-full h-full bg-[var(--color-secondary-white)]">
-        <div className="w-full max-w-[500px] mx-auto h-full pt-12 px-6">
+        <div className="w-full max-w-[500px] mx-auto h-full pt-2 px-6">
           {title && (
             <h1 className="my-6 text-2xl font-semibold text-[var(--color-primary-black)] text-center">{title}</h1>
           )}
