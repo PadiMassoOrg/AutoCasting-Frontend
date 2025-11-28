@@ -1,4 +1,3 @@
-import { FormInputField } from 'autocasting-ui-library-padimasso';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DeleteIconRed from '../../../../../../shared/icons/delete-red.svg';
@@ -35,17 +34,24 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
     <div className="relative">
       <button
         type="button"
-        className="w-8 h-8 rounded-md bg-[var(--color-primary-light-grey)] flex items-center justify-center cursor-pointer"
+        className="flex items-center justify-center gap-2 rounded-lg cursor-pointer"
         onClick={() => setOpen((prev) => !prev)}
       >
         {selectedIcon && <img src={selectedIcon} alt="" className="w-5 h-5" />}
+        <svg className="w-3 h-3" viewBox="0 0 10 6" aria-hidden="true">
+          <path
+            d="M1 1l4 4 4-4"
+            stroke="currentColor"
+            strokeWidth="1.2"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </button>
 
       {open && (
-        <div
-          className="absolute z-20 mt-2 p-2 rounded-lg bg-white shadow-lg border border-[var(--color-primary-light-grey)] flex gap-2 flex-wrap"
-          onMouseLeave={() => setOpen(false)}
-        >
+        <div className="absolute z-20 mt-2 p-2 rounded-lg bg-white shadow-lg border border-[var(--color-primary-light-grey)] flex gap-2 flex-wrap">
           {optionsForThisRow.map((opt) => {
             const icon = getSocialMediaIcon(opt.stringCode);
             return (
@@ -109,20 +115,17 @@ const SocialMediaRow = ({
   const selectedOption =
     optionsForThisRow.find((o) => o.id === value.optionId) ?? allOptions.find((o) => o.id === value.optionId) ?? null;
 
-  if (!selectedOption) {
-    return null;
-  }
+  if (!selectedOption) return null;
 
   const commitUrl = () => {
     const result = schema.shape.url.safeParse(url);
     setError(result.success ? null : (result.error.errors[0]?.message ?? t('validation.url_invalid')));
-
     if (!result.success) return;
 
     const trimmed = url.trim();
     const nextUrl = trimmed === '' ? null : trimmed;
-
     const currentOptionId = selectedOption.id;
+
     const payload: { links: { optionId: string; url: string | null }[] } = {
       links: [],
     };
@@ -166,10 +169,12 @@ const SocialMediaRow = ({
     if (nextOptionId === value.optionId) return;
 
     previousOptionIdRef.current = value.optionId;
+
     const previousPersistedUrl = initialUrlsById[nextOptionId] ?? null;
 
     setUrl(previousPersistedUrl ?? '');
     setError(null);
+
     onChange({
       optionId: nextOptionId,
       url: previousPersistedUrl,
@@ -190,33 +195,38 @@ const SocialMediaRow = ({
   };
 
   return (
-    <div className="flex items-center gap-3 w-full">
-      <div className="flex items-center gap-3 flex-1 rounded-2xl border border-[var(--color-primary-light-grey)] px-4 py-2">
-        {/* Icon-only dropdown */}
-        <SocialMediaIconSelect
-          allOptions={allOptions}
-          usedOptionIds={usedOptionIds}
-          value={value.optionId}
-          onChange={handleChangeOption}
-        />
+    <div className="flex items-center gap-2 w-full">
+      <div className="flex-1">
+        <div className="flex items-center gap-3 w-full rounded-2xl border border-[var(--color-primary-light-grey)] px-5 h-14 py-3">
+          <SocialMediaIconSelect
+            allOptions={allOptions}
+            usedOptionIds={usedOptionIds}
+            value={value.optionId}
+            onChange={handleChangeOption}
+          />
 
-        {/* Separador vertical */}
-        <div className="w-px h-6 bg-[var(--color-primary-light-grey)]" />
+          <div className="w-px h-6 bg-[var(--color-primary-light-grey)]" />
 
-        {/* Input URL */}
-        <FormInputField
-          id={`social-url-${value.optionId}`}
-          className="flex-1 border-none shadow-none focus:ring-0 focus:outline-none"
-          placeholder={t('general.placeholder.url')}
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
-          error={error ?? undefined}
-        />
+          <input
+            id={`social-url-${value.optionId}`}
+            className="flex-1 min-w-0 text-sm text-[var(--color-primary-text)] placeholder:text-[var(--color-primary-grey)] border-none outline-none focus:outline-none focus:ring-0"
+            placeholder={t('general.placeholder.url')}
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+          />
+        </div>
+
+        {error && <p className="mt-1 pl-2 text-sm text-[var(--color-alert-error)]">{error}</p>}
       </div>
 
-      <img src={DeleteIconRed} onClick={handleDelete} className="cursor-pointer" alt={t('general.delete')} />
+      <img
+        src={DeleteIconRed}
+        onClick={handleDelete}
+        className="cursor-pointer self-center w-[17px]"
+        alt={t('general.delete')}
+      />
     </div>
   );
 };
