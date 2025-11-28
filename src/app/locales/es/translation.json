@@ -231,6 +231,15 @@
       "television_streaming": "Televisión / Streaming",
       "film": "Cine",
       "commercial": "Comercial"
+    },
+    "social_media": {
+      "instagram": "instagram",
+      "tiktok": "tikTok",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "vimeo": "Vimeo",
+      "imdb": "imdb",
+      "behance": "Behance"
     }
   },
   "error_page": {

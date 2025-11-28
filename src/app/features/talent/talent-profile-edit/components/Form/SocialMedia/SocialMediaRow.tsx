@@ -16,6 +16,7 @@ type SocialMediaIconSelectProps = {
 
 const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: SocialMediaIconSelectProps) => {
   const [open, setOpen] = useState(false);
+  const [openUpwards, setOpenUpwards] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const optionsForThisRow = allOptions.filter((opt) => !usedOptionIds.has(opt.id) || opt.id === value);
@@ -27,6 +28,19 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
     null;
 
   const selectedIcon = selectedOption ? getSocialMediaIcon(selectedOption.stringCode) : undefined;
+
+  const toggleOpen = () => {
+    setOpen((prev) => {
+      const next = !prev;
+      if (next && containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const estimatedDropdownHeight = 200;
+        setOpenUpwards(spaceBelow < estimatedDropdownHeight);
+      }
+      return next;
+    });
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -50,7 +64,7 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
       <button
         type="button"
         className="flex items-center justify-center gap-2 rounded-lg cursor-pointer"
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={toggleOpen}
       >
         {selectedIcon && <img src={selectedIcon} alt="" className="w-5 h-5" />}
         <svg className="w-3 h-3" viewBox="0 0 10 6" aria-hidden="true">
@@ -66,7 +80,11 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
       </button>
 
       {open && (
-        <div className="absolute z-20 mt-2 p-2 rounded-lg bg-white shadow-lg border border-[var(--color-primary-light-grey)] flex gap-2 flex-wrap">
+        <div
+          className={`absolute z-20 p-2 rounded-lg bg-white shadow-lg border border-[var(--color-primary-light-grey)] flex gap-2 flex-wrap ${
+            openUpwards ? 'bottom-full mb-2' : 'mt-2'
+          }`}
+        >
           {optionsForThisRow.map((opt) => {
             const icon = getSocialMediaIcon(opt.stringCode);
             return (
@@ -220,7 +238,7 @@ const SocialMediaRow = ({
             onChange={handleChangeOption}
           />
 
-          <div className="w-px h-6 bg-[var(--color-primary-light-grey)]" />
+          <div className="w-px h-8 bg-[var(--color-primary-light-grey)]" />
 
           <input
             id={`social-url-${value.optionId}`}
