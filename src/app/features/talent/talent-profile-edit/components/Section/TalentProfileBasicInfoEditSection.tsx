@@ -7,7 +7,6 @@ import { SocialMediaForm } from '../Form/SocialMedia';
 
 const TalentProfileBasicInfoEditSection = ({ profile }: { profile: TalentProfileResponse }) => {
   const { data: professions = [] } = useSiteMetadataSlice('professions');
-  console.log(profile);
   return (
     <DashboardSection>
       <BasicInfoForm data={profile.basicInfo} professionsMeta={professions} />
