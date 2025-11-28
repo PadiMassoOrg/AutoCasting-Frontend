@@ -32,7 +32,7 @@ export default function TalentProfileModeToggle({ isEdit, publicSlug, className 
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-50 bg-white flex justify-center pointer-events-none ${className ?? ''}`}
+      className={`fixed inset-x-0 bottom-0 z-[50] bg-white flex justify-center pointer-events-none ${className ?? ''}`}
     >
       <div className="pointer-events-auto w-full max-w-[460px] p-3">
         <article className="w-full p-1 rounded-lg border border-[var(--color-secondary-outline)] shadow-sm flex items-center">

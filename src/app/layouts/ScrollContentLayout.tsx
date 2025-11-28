@@ -14,7 +14,7 @@ export default function ScrollContentLayout() {
 
   return (
     <>
-      <header data-site-header className="relative z-[40]">
+      <header data-site-header className="relative z-[80]">
         <MaintenanceBanner />
         <Navbar id="app-navbar" />
       </header>
