@@ -22,15 +22,17 @@ const TalentSettingsSecuritySection = () => {
     <DashboardSection>
       <div className="flex flex-col">
         {!isAutocastingAccount() && (
-          <div className="flex flex-col py-10 mb-2">
-            <p className="mt-[-1.3rem] pl-2 text-[14px] font-light">{t('account.page.warning_account_other')}</p>
+          <div className="flex flex-col py-6 mb-2">
+            <p className="mt-[-1.3rem] pl-2 text-[14px] font-light">
+              {t('settings.page.account.warning_account_other')}
+            </p>
           </div>
         )}
         <div className="flex flex-col gap-4">
           <div>
             <FormInputField
               id="email"
-              label={t('Email de Acceso')}
+              label={t('auth.login.email')}
               labelClassName="text-[14px] font-semibold text-start"
               value={data?.contact.email as string}
               disabled
@@ -43,7 +45,7 @@ const TalentSettingsSecuritySection = () => {
           <div>
             <FormInputField
               id="password"
-              label={t('Password')}
+              label={t('auth.login.password')}
               placeholder={t('********')}
               labelClassName="text-[14px] font-semibold text-start"
               readOnly

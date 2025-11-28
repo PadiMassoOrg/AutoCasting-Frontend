@@ -32,7 +32,11 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
   };
 
   const handleSuccessModal = () => {
-    openModal(<ChangePasswordSuccessModal onClose={handleClose} />, t('account.page.change_pass_modal.success'), 'lg');
+    openModal(
+      <ChangePasswordSuccessModal onClose={handleClose} />,
+      t('settings.page.account.change_pass_modal.success'),
+      'lg'
+    );
   };
 
   const onSubmit = async (data: ResetPasswordValues) => {

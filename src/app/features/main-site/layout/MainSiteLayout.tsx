@@ -4,13 +4,13 @@ import PublicFooter from '../components/PublicFooter';
 
 const MainSiteLayout = () => {
   return (
-    <>
+    <main className="relative">
       <Navbar></Navbar>
       <main className="w-full overflow-hidden min-h-[75vh]" id="app-scroll-root">
         {<Outlet />}
       </main>
       <PublicFooter></PublicFooter>
-    </>
+    </main>
   );
 };
 
