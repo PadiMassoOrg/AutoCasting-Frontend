@@ -35,15 +35,21 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
   const activeClass =
     'rounded-lg bg-[var(--color-primary-white)] shadow-sm text-[var(--color-primary-purple)] font-semibold';
 
-  const isRouteActive = (to: string) => !!matchPath({ path: to + '/*', end: false }, location.pathname);
+  const isRouteActive = (to: string, exact = false) => {
+    if (exact) {
+      return location.pathname === to;
+    }
+    return !!matchPath({ path: to + '/*', end: false }, location.pathname);
+  };
 
   // Public
   const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
   const activeProductions = isRouteActive(ROUTES.PRODUCTIONS);
+
   // Private
-  const activeTalentProfile = isRouteActive(ROUTES.TALENT);
-  const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS);
-  const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS);
+  const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
+  const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS, true);
+  const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
 
   useEffect(() => {
     if (!open) return;
