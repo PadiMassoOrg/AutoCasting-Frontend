@@ -10,10 +10,10 @@ const BasicInfoSection = ({ data }: { data: TalentProfileBasicInfo }) => {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
 
   return (
-    <article className="flex flex-col w-full gap-3 mb-4 lg:gap-0">
+    <article className="flex flex-col w-full gap-2 mb-4 lg:gap-0">
       {isDesktop ? (
-        <div className="flex items-center gap-6">
-          <h2 className="text-[40px] font-bold">{stageName}</h2>
+        <div className="flex items-center gap-10">
+          <h2 className="text-[42px] font-bold">{stageName}</h2>
           <ViewerActions className="shrink-0" />
         </div>
       ) : (
@@ -22,8 +22,8 @@ const BasicInfoSection = ({ data }: { data: TalentProfileBasicInfo }) => {
 
       <span
         className={`
-        flex gap-1 items-center justify-center flex-wrap font-semibold text-sm text-[var(--color-secondary-grey)] text-nowrap
-        lg:justify-start lg:ml-1
+        flex gap-1 items-center justify-center flex-wrap font-normal text-sm text-[var(--color-secondary-grey)] text-nowrap
+        lg:justify-start lg:ml-1 lg:mt-1
         `}
       >
         {professions?.reduce<JSX.Element[]>((acc, curr, index) => {

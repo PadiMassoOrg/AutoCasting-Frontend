@@ -93,7 +93,7 @@ const PublicProfilePage = () => {
   }
 
   return (
-    <div className="relative pt-3 pb-24 flex flex-col gap-3">
+    <div className="relative pt-3 pb-24 flex flex-col gap-6">
       <ViewerActions />
       <BasicInfoSection data={basicInfo} />
       <ImageCarousel images={hasImages ? images : null} />
