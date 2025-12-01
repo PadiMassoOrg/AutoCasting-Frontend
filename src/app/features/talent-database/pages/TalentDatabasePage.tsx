@@ -276,7 +276,7 @@ export default function TalentDatabasePage() {
 
                   {gridItems.map((it) => (
                     <div key={it.id} className="w-full h-full">
-                      <TalentCard item={it} onClick={() => handleOpenDetails(it)} />
+                      <TalentCard item={it} onClick={isDesktop ? () => handleOpenDetails(it) : undefined} />{' '}
                     </div>
                   ))}
 
@@ -311,14 +311,16 @@ export default function TalentDatabasePage() {
           onApply={(next) => setFilters(next)}
         />
 
-        <PublicProfileDetailsView
-          open={detailsOpen && !!selectedProfile}
-          onClose={() => {
-            setDetailsOpen(false);
-            setSelectedProfile(null);
-          }}
-          profile={selectedProfile ?? undefined}
-        />
+        {isDesktop && (
+          <PublicProfileDetailsView
+            open={detailsOpen && !!selectedProfile}
+            onClose={() => {
+              setDetailsOpen(false);
+              setSelectedProfile(null);
+            }}
+            profile={selectedProfile ?? null}
+          />
+        )}
       </div>
     </section>
   );
