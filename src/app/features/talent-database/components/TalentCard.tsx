@@ -54,7 +54,7 @@ export default function TalentCard({ item, onClick }: Props) {
             {professions?.reduce<JSX.Element[]>((acc, curr, index) => {
               const label = t(curr.stringCode ?? '');
               if (index === 0) return [<span key={curr.id}>{label}</span>];
-              return [...acc, <span key={`sep-${index}`}>•</span>, <span key={curr.id}>{label}</span>];
+              return [...acc.slice(-1), <span key={`sep-${index}`}>•</span>, <span key={curr.id}>{label}</span>];
             }, [])}
           </span>
         </div>
