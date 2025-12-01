@@ -1,24 +1,18 @@
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../../../app/shared/lib/routes';
-import { whatsappLink } from '../../../../app/shared/utils/phoneUtils';
 import imagePlaceholder from '../../../shared/icons/image_placeholder.svg';
 import type { ProfileCardResponse } from '../types/talent-database.types';
 
 export default function TalentCard({ item }: { item: ProfileCardResponse }) {
   const { t } = useTranslation();
-  const { publicSlug, stageName, email, phoneNumber, headshotImageUrl, professions } = item;
+  const { publicSlug, stageName, headshotImageUrl, professions } = item;
 
   const toPublicProfile = () => {
     window.location.href = ROUTES.PUBLIC_PROFILE + '/' + publicSlug;
   };
 
   const img = headshotImageUrl || imagePlaceholder;
-  const text = stageName
-    ? t('profile.share.whatsapp_text', { name: stageName })
-    : t('profile.share.whatsapp_text_fallback');
-  const waUrl = phoneNumber ? whatsappLink(phoneNumber, text) : null;
-  const mailtoUrl = email ? `mailto:${email}` : null;
 
   return (
     <article
