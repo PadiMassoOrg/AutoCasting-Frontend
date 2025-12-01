@@ -32,7 +32,7 @@ const SocialMediaSection = ({ data, className }: Props) => {
   if (items.length === 0) return null;
 
   return (
-    <article className={`w-full ${className ?? ''}`}>
+    <article className={`${className ?? ''}`}>
       <ButtonRow items={items} />
     </article>
   );

@@ -8,7 +8,7 @@ import openIconPurple from '../../../shared/icons/open-purple.svg';
 import ProfileInfoCarousel from '../../public-profile/components/Details/ProfileInfoCarousel';
 import VideoSection from '../../public-profile/components/VideoSection';
 import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
-import { SocialMediaSection, ViewerActions } from '../components';
+import { ProfileShareActions, SocialMediaSection } from '../components';
 
 type Props = {
   open: boolean;
@@ -72,9 +72,9 @@ export default function PublicProfileDetailsView({ open, onClose, profile }: Pro
   return (
     <DetailsView open={open} onClose={onClose} headerLeft={headerLeft} headerRight={headerRight}>
       <div className="flex flex-col gap-6">
-        <div className="w-full flex flex-row items-center justify-between self-center">
-          <ViewerActions></ViewerActions>
-          <SocialMediaSection data={socialMedia} className="mt-8" />
+        <div className="w-full flex flex-row items-center justify-between">
+          <ProfileShareActions data={profile}></ProfileShareActions>
+          <SocialMediaSection data={socialMedia} />
         </div>
         <ImageCarousel images={images.length > 0 ? images : null} isDesktop isDesktopXL />
         <Separator className="opacity-20 my-4"></Separator>

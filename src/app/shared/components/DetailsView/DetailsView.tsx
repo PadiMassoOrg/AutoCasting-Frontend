@@ -53,7 +53,7 @@ export default function DetailsView({
         </header>
 
         {/* Body scrolleable */}
-        <div className="flex-1 min-h-0 overflow-auto p-6">{children}</div>
+        <div className="flex-1 min-h-0 overflow-auto px-8 py-10">{children}</div>
       </aside>
     </div>
   );
