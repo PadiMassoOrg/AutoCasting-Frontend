@@ -1,4 +1,3 @@
-// src/features/public-profile/pages/PublicProfilePage.tsx
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useParams } from 'react-router-dom';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
@@ -38,7 +37,7 @@ const PublicProfilePage = () => {
   if (isDesktop && !isDesktopXL) {
     return (
       <article className="relative w-full flex flex-col gap-2">
-        <BasicInfoSection data={myProfile!} isOwner={isOwner} />
+        <BasicInfoSection data={myProfile!} />
         <div className="grid gap-10 grid-cols-[1fr_1fr] h-[690px] max-h-[690px] min-h-0">
           <section className="min-w-0 min-h-0">
             <ImageCarousel images={hasImages ? images : null} isDesktop />
@@ -66,7 +65,7 @@ const PublicProfilePage = () => {
             ['--media-col-w' as any]: '200px',
           }}
         >
-          <BasicInfoSection data={myProfile!} isOwner={isOwner} />
+          <BasicInfoSection data={myProfile!} />
           <div className="flex-1 min-h-0 grid gap-6 grid-cols-[max-content_minmax(260px,1fr)_var(--media-col-w)] items-stretch">
             <div className="min-w-0 min-h-0 h-full">
               <ImageCarousel images={hasImages ? images : null} isDesktop isDesktopXL />
@@ -86,7 +85,7 @@ const PublicProfilePage = () => {
   return (
     <div className="relative pt-3 pb-24 flex flex-col gap-4">
       <ViewerActions />
-      <BasicInfoSection data={myProfile!} isOwner={isOwner} />
+      <BasicInfoSection data={myProfile!} />
       <ImageCarousel images={hasImages ? images : null} />
       <SocialMediaSection data={socialMedia} className="mt-8" />
       <Separator className="opacity-25 my-10" />
