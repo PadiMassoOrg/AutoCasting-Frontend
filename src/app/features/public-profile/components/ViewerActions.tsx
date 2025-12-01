@@ -1,7 +1,7 @@
-import clsx from 'clsx';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import ButtonRow from '../../../shared/components/ButtonRow/ButtonRow';
 import copyLinkIcon from '../../../shared/icons/copy-link.svg';
 import emailIcon from '../../../shared/icons/message.svg';
 import whatsappIcon from '../../../shared/icons/whatsapp.svg';
@@ -35,16 +35,15 @@ export default function ViewerActions({ className }: Props) {
     });
   };
 
-  const actions: React.ReactNode[] = [];
+  const items: React.ReactNode[] = [];
 
   if (waUrl) {
-    actions.push(
+    items.push(
       <a
         key="wa"
         href={waUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center justify-center cursor-pointer"
         aria-label={t('profile.share.whatsapp')}
         title="WhatsApp"
       >
@@ -54,25 +53,18 @@ export default function ViewerActions({ className }: Props) {
   }
 
   if (mailtoUrl) {
-    actions.push(
-      <a
-        key="email"
-        href={mailtoUrl}
-        className="flex items-center justify-center cursor-pointer"
-        aria-label={t('profile.share.email')}
-        title="Email"
-      >
+    items.push(
+      <a key="email" href={mailtoUrl} aria-label={t('profile.share.email')} title="Email">
         <img src={emailIcon} alt="" className="w-5" />
       </a>
     );
   }
 
-  actions.push(
+  items.push(
     <button
       key="link"
       type="button"
       onClick={handleShare}
-      className="flex items-center justify-center cursor-pointer"
       aria-label={t('profile.share.share_profile')}
       title={t('profile.share.share_profile')}
     >
@@ -80,18 +72,7 @@ export default function ViewerActions({ className }: Props) {
     </button>
   );
 
-  if (actions.length === 0) return null;
+  if (items.length === 0) return null;
 
-  return (
-    <div className={clsx('flex items-center justify-center', className)}>
-      <div className="inline-flex items-center rounded-lg bg-white shadow-sm py-2 px-4">
-        {actions.map((node, index) => (
-          <React.Fragment key={index}>
-            {index > 0 && <div className="w-px h-8 mx-4 bg-[var(--color-secondary-outline)]" />}
-            {node}
-          </React.Fragment>
-        ))}
-      </div>
-    </div>
-  );
+  return <ButtonRow items={items} className={className} />;
 }
