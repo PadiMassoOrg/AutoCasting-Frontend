@@ -5,6 +5,9 @@ import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
 import filterIcon from '../../../shared/icons/filter-purple.svg';
+import { PublicProfileDetailsView } from '../../public-profile/pages';
+import { getPublicProfile } from '../../public-profile/services/publicProfileService';
+import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
 import { MobileFiltersDrawer, TalentCard } from '../components';
 import { TalentFilterBar } from '../components/TalentFilterBar';
 import { getTalentDatabase } from '../services/talentDatabaseService';
@@ -55,6 +58,8 @@ export default function TalentDatabasePage() {
   const [hasNext, setHasNext] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedProfile, setSelectedProfile] = useState<TalentPublicProfileResponse | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const inflightRef = useRef<AbortController | null>(null);
   const requestIdRef = useRef(0);
@@ -183,6 +188,17 @@ export default function TalentDatabasePage() {
     return () => document.removeEventListener('visibilitychange', onVis);
   }, [fetchPage, error]);
 
+  const handleOpenDetails = useCallback(async (card: ProfileCardResponse) => {
+    try {
+      // Usa tu servicio real que devuelve TalentPublicProfileResponse
+      const full = await getPublicProfile(card.publicSlug);
+      setSelectedProfile(full);
+      setDetailsOpen(true);
+    } catch (e) {
+      console.error('Error loading profile details', e);
+    }
+  }, []);
+
   const showInitialSkeletons = items.length === 0 && loading && !error;
   const showEmptyState = !loading && !error && items.length === 0;
   const isFetchingNextPage = items.length > 0 && loading;
@@ -260,7 +276,7 @@ export default function TalentDatabasePage() {
 
                   {gridItems.map((it) => (
                     <div key={it.id} className="w-full h-full">
-                      <TalentCard item={it} />
+                      <TalentCard item={it} onClick={() => handleOpenDetails(it)} />
                     </div>
                   ))}
 
@@ -293,6 +309,15 @@ export default function TalentDatabasePage() {
           value={filters}
           onReset={() => setFilters(initialFilters)}
           onApply={(next) => setFilters(next)}
+        />
+
+        <PublicProfileDetailsView
+          open={detailsOpen && !!selectedProfile}
+          onClose={() => {
+            setDetailsOpen(false);
+            setSelectedProfile(null);
+          }}
+          profile={selectedProfile ?? undefined}
         />
       </div>
     </section>

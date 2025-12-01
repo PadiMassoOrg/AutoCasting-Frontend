@@ -20,7 +20,7 @@ export default function ScrollContentLayout() {
       </header>
 
       <div
-        className={isDesktop ? 'fixed inset-x-0 overflow-hidden z-0' : ''}
+        className={isDesktop ? 'fixed inset-x-0 overflow-hidden z-[100]' : ''}
         style={
           isDesktop
             ? {

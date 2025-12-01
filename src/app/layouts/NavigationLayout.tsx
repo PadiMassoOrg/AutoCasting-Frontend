@@ -1,4 +1,3 @@
-// src/layouts/NavigationLayout.tsx
 import { Outlet } from 'react-router-dom';
 import { MaintenanceBanner } from '../shared/components/MaintenanceBanner/MaintenanceBanner';
 import { Navbar } from './components';

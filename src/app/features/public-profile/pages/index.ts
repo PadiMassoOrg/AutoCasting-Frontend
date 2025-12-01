@@ -1,2 +1,3 @@
+import PublicProfileDetailsView from './PublicProfileDetailsView';
 import PublicProfilePage from './PublicProfilePage';
-export { PublicProfilePage };
+export { PublicProfileDetailsView, PublicProfilePage };
