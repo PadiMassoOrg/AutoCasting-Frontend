@@ -62,18 +62,28 @@ const PublicProfilePage = () => {
             height: `calc(100svh - ${NAVBAR}px - ${TOP_MARGIN})`,
             minHeight: '500px',
             maxHeight: '850px',
-            ['--media-col-w' as any]: '200px',
           }}
         >
           <BasicInfoSection data={myProfile!} />
-          <div className="flex-1 min-h-0 grid gap-6 grid-cols-[max-content_minmax(260px,1fr)_var(--media-col-w)] items-stretch">
-            <div className="min-w-0 min-h-0 h-full">
+
+          {/* 
+            Col 1: ocupa todo lo que sobra  -> minmax(260px, 1fr)
+            Col 2: auto con tope de 500px   -> minmax(260, 500px)
+            Col 3: auto con tope de 280px    ->  minmax(260px, 280)
+          */}
+          <div className="flex-1 min-h-0 grid gap-6 grid-cols-[minmax(260px,1fr)_minmax(260px,474px)_minmax(260px,280px)] items-stretch">
+            {/* Fotos */}
+            <div className="min-w-0 h-full min-h-0">
               <ImageCarousel images={hasImages ? images : null} isDesktop isDesktopXL />
             </div>
-            <div className="min-w-0 min-h-0 h-full overflow-auto">
+
+            {/* Profile info (se auto–ajusta, máx 500px por el grid) */}
+            <div className="min-w-0 h-full min-h-0 overflow-auto">
               <ProfileInfoCarousel profile={data} className="h-full" />
             </div>
-            <div className="min-h-0 h-full overflow-auto flex flex-col justify-between">
+
+            {/* Videos (columna fija de 350px) */}
+            <div className="min-w-0 h-full min-h-0 overflow-auto flex flex-col">
               <VideoSection data={media} />
             </div>
           </div>
