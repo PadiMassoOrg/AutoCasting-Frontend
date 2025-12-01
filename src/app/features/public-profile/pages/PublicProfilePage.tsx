@@ -37,9 +37,9 @@ const PublicProfilePage = () => {
 
   if (isDesktop && !isDesktopXL) {
     return (
-      <article className="relative w-full flex flex-col gap-3">
+      <article className="relative w-full flex flex-col gap-2">
         <BasicInfoSection data={basicInfo} />
-        <div className="grid gap-10 grid-cols-[1fr_1fr] h-[700px] max-h-[700px] min-h-0">
+        <div className="grid gap-10 grid-cols-[1fr_1fr] h-[690px] max-h-[690px] min-h-0">
           <section className="min-w-0 min-h-0">
             <ImageCarousel images={hasImages ? images : null} isDesktop />
           </section>
@@ -93,7 +93,7 @@ const PublicProfilePage = () => {
   }
 
   return (
-    <div className="relative pt-3 pb-24 flex flex-col gap-6">
+    <div className="relative pt-3 pb-24 flex flex-col gap-4">
       <ViewerActions />
       <BasicInfoSection data={basicInfo} />
       <ImageCarousel images={hasImages ? images : null} />

@@ -10,7 +10,7 @@ const BasicInfoSection = ({ data }: { data: TalentProfileBasicInfo }) => {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
 
   return (
-    <article className="flex flex-col w-full gap-2 mb-4 lg:gap-0">
+    <article className="flex flex-col w-full gap-1 mb-4 lg:gap-0">
       {isDesktop ? (
         <div className="flex items-center gap-10">
           <h2 className="text-[42px] font-bold">{stageName}</h2>
