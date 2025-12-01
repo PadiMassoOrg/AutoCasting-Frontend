@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import PLACEHOLDER_SVG from '../../../shared/icons/image_placeholder.svg';
 
 type Props = {
@@ -10,28 +9,16 @@ type Props = {
 };
 
 export default function ImageCarousel({ images, className, isDesktop, isDesktopXL }: Props) {
-  const { t } = useTranslation();
-  const [selectedIndex, setSelectedIndex] = useState(0); // imagen principal
-  const [zoomOpen, setZoomOpen] = useState(false);
-
-  // 👇 NUEVO: índice sólo para el overlay
-  const [overlayIndex, setOverlayIndex] = useState(0);
-
-  const openZoom = () => {
-    // abre en la imagen principal actual
-    setOverlayIndex(selectedIndex);
-    setZoomOpen(true);
-  };
-  const openZoomAt = (i: number) => {
-    // abre en la miniatura clickeada
-    setOverlayIndex(i);
-    setZoomOpen(true);
-  };
-  const closeZoom = () => setZoomOpen(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   const finalImages = useMemo<string[]>(() => {
-    if (!images || images.length === 0) return Array.from({ length: 4 }, () => PLACEHOLDER_SVG);
-    return images;
+    const MAX_SLOTS = 4;
+    const base = (images ?? []).filter((src) => typeof src === 'string' && src.trim().length > 0).slice(0, MAX_SLOTS);
+    const missing = MAX_SLOTS - base.length;
+    if (missing <= 0) {
+      return base;
+    }
+    return [...base, ...Array.from({ length: missing }, () => PLACEHOLDER_SVG)];
   }, [images]);
 
   useEffect(() => {
@@ -40,22 +27,17 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
 
   const selectedImage = finalImages[selectedIndex];
   const rightThumbIndices = useMemo(() => finalImages.map((_, i) => i).slice(1, 4), [finalImages]);
-
   const isDesktopOnly = !!isDesktop && !isDesktopXL;
   const desktopLayout = !!isDesktop || !!isDesktopXL;
-
-  const realCount = images?.length ?? 0;
-  const showDesktopThumbs = desktopLayout && realCount > 1;
+  const showDesktopThumbs = desktopLayout && finalImages.length > 1;
 
   const gridColsTwo = isDesktopOnly ? 'grid-cols-[1fr_130px]' : 'grid-cols-[max-content_auto]';
   const gridCols = showDesktopThumbs ? gridColsTwo : 'grid-cols-1';
-
   const figureClass = desktopLayout
     ? isDesktopOnly
       ? 'w-full h-full'
       : 'h-full [aspect-ratio:8/10]'
     : 'w-full aspect-[8/10]';
-
   const wrapperClass = desktopLayout
     ? `grid items-stretch min-h-0 h-full ${gridCols} grid-rows-[1fr_auto] gap-3`
     : 'flex flex-col gap-3 w-full';
@@ -65,7 +47,7 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
       <div className={wrapperClass}>
         {/* principal */}
         <div className={desktopLayout ? 'col-[1] row-[1] h-full min-h-0 flex flex-col' : 'flex flex-col gap-2'}>
-          <figure className={`relative overflow-hidden rounded-xl ${figureClass}`} onClick={openZoom}>
+          <figure className={`relative overflow-hidden rounded-xl ${figureClass}`}>
             <img
               src={selectedImage}
               alt={`Imagen ${selectedIndex + 1}`}
@@ -73,8 +55,7 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
             />
           </figure>
 
-          {/* thumbs mobile */}
-          {!desktopLayout && realCount > 1 && (
+          {!desktopLayout && finalImages.length > 1 && (
             <div className="flex gap-2 overflow-x-auto w-full">
               {finalImages.slice(1).map((img, i) => (
                 <button
@@ -90,10 +71,9 @@ export default function ImageCarousel({ images, className, isDesktop, isDesktopX
           )}
         </div>
 
-        {/* thumbs desktop */}
         {showDesktopThumbs && (
           <div
-            className="col-[2] row-[1] h-full min-h-0 flex flex-col gap-2 items-stretch"
+            className="col-[2] row-[1] h-full min-h-0 flex flex-col gap-2 items-stretch justify-center"
             style={{ ['--g' as any]: '12px' }}
           >
             {rightThumbIndices.map((idx) => {
