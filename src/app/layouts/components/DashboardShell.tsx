@@ -2,6 +2,7 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
+import { TalentProfileModeToggle } from '../../features/talent/talent-profile-edit/components';
 import { ChevronLeft, ChevronRight } from '../../shared/components/Chevron';
 import { LG_SCREEN_SIZE, useMedia } from '../../shared/hooks/useMedia';
 
@@ -149,7 +150,7 @@ function DashboardShell<Key extends string = string>({
         </aside>
       )}
 
-      <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
+      <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch] pt-8">
         <div className="w-full max-w-[1100px] mx-auto px-4 lg:px-8 py-6 lg:py-8">
           {!isDesktop && mobileView === 'content' && currentSection && (
             <div className="flex flex-col gap-4">
@@ -166,14 +167,14 @@ function DashboardShell<Key extends string = string>({
               <div>{currentSection.render()}</div>
             </div>
           )}
-
           {isDesktop && currentSection && (
             <div className="flex flex-col gap-4 max-w-[790px] m-auto">
-              <h2 className="text-lg font-semibold">{currentSection.label}</h2>
+              <h2 className="text-lg font-semibold grow">{currentSection.label}</h2>
+
               {currentSection.render()}
             </div>
           )}
-
+          <TalentProfileModeToggle isOnlyButtons></TalentProfileModeToggle>
           {children}
         </div>
       </article>

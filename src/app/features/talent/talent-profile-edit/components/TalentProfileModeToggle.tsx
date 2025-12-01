@@ -11,9 +11,10 @@ import { useTalentProfile } from '../hooks/useTalentProfile';
 
 type Props = {
   className?: string;
+  isOnlyButtons?: boolean;
 };
 
-export default function TalentProfileModeToggle({ className }: Props) {
+export default function TalentProfileModeToggle({ className, isOnlyButtons }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,7 +26,7 @@ export default function TalentProfileModeToggle({ className }: Props) {
   if (!myProfile) return null;
 
   // --- Detectar modo según la URL actual ---
-  const inEditRoute = !!matchPath({ path: ROUTES.TALENT + '/*', end: false }, location.pathname);
+  const inEditRoute = !!matchPath({ path: ROUTES.TALENT, end: true }, location.pathname);
   const inPublicRoute = !!matchPath({ path: ROUTES.PUBLIC_PROFILE + '/*', end: false }, location.pathname);
 
   if (!inEditRoute && !inPublicRoute) {
@@ -62,48 +63,12 @@ export default function TalentProfileModeToggle({ className }: Props) {
   const viewActive = mode === 'view';
 
   // ===========================
-  // Layout DESKTOP: inline, sólo iconos
-  // ===========================
-  if (isDesktop) {
-    return (
-      <div className={clsx('inline-flex items-center gap-2', className)}>
-        <button
-          type="button"
-          onClick={goPreview}
-          disabled={!canPreview}
-          className={clsx(
-            'w-9 h-9 rounded-full flex items-center justify-center border border-[var(--color-secondary-outline)] cursor-pointer',
-            viewActive && 'bg-[var(--color-secondary-white)] border-[var(--color-primary-purple)]'
-          )}
-          aria-label={t('profile.page.view_profile')}
-        >
-          <img src={viewActive ? purpleViewIcon : blackViewIcon} alt="" className="w-[18px] h-[18px]" />
-        </button>
-
-        <button
-          type="button"
-          onClick={goEdit}
-          className={clsx(
-            'w-9 h-9 rounded-full flex items-center justify-center border border-[var(--color-secondary-outline)] cursor-pointer',
-            editActive && 'bg-[var(--color-secondary-white)] border-[var(--color-primary-purple)]'
-          )}
-          aria-label={t('profile.page.edit_profile')}
-        >
-          <img src={editActive ? purpleEditIcon : blackEditIcon} alt="" className="w-[18px] h-[18px]" />
-        </button>
-      </div>
-    );
-  }
-
-  // ===========================
   // Layout MOBILE: barra fija abajo con texto
   // ===========================
-  return (
-    <div
-      className={clsx('fixed inset-x-0 bottom-0 z-[50] bg-white flex justify-center pointer-events-none', className)}
-    >
-      <div className="pointer-events-auto w-full max-w-[460px] p-3">
-        <article className="w-full p-1 rounded-lg border border-[var(--color-secondary-outline)] shadow-sm flex items-center">
+  if (isOnlyButtons) {
+    return (
+      <div className="fixed z-[200] top-22 right-[32%] w-full max-w-[300px] bg-[var(--color-primary-white)]">
+        <article className="w-full p-1 rounded-lg border border-[var(--color-secondary-outline)] shadow-lg flex items-center">
           <button
             type="button"
             onClick={goPreview}
@@ -137,6 +102,49 @@ export default function TalentProfileModeToggle({ className }: Props) {
           </button>
         </article>
       </div>
-    </div>
-  );
+    );
+  }
+
+  if (!isDesktop)
+    return (
+      <div
+        className={clsx('fixed inset-x-0 bottom-0 z-[50] bg-white flex justify-center pointer-events-none', className)}
+      >
+        <div className="pointer-events-auto w-full max-w-[460px] p-3">
+          <article className="w-full p-1 rounded-lg border border-[var(--color-secondary-outline)] shadow-sm flex items-center">
+            <button
+              type="button"
+              onClick={goPreview}
+              disabled={!canPreview}
+              className={clsx(
+                'cursor-pointer w-full h-10 rounded-lg flex items-center justify-center gap-2 flex-1 text-sm font-semibold',
+                viewActive
+                  ? 'bg-[var(--color-secondary-white)] text-[var(--color-primary-purple)] shadow-xs'
+                  : 'bg-transparent text-black',
+                !canPreview && 'opacity-60 cursor-not-allowed'
+              )}
+            >
+              <img src={viewActive ? purpleViewIcon : blackViewIcon} alt="" className="w-[16px] h-[16px]" />
+              <span>{t('profile.page.view_profile')}</span>
+            </button>
+
+            <div className="w-px h-8 mx-1 self-center bg-[var(--color-secondary-outline)]" />
+
+            <button
+              type="button"
+              onClick={goEdit}
+              className={clsx(
+                'cursor-pointer w-full h-10 rounded-lg flex items-center justify-center gap-2 flex-1 text-sm font-semibold',
+                editActive
+                  ? 'bg-[var(--color-secondary-white)] text-[var(--color-primary-purple)] shadow-xs'
+                  : 'bg-transparent text-black'
+              )}
+            >
+              <img src={editActive ? purpleEditIcon : blackEditIcon} alt="" className="w-[16px] h-[16px]" />
+              <span>{t('profile.page.edit_profile')}</span>
+            </button>
+          </article>
+        </div>
+      </div>
+    );
 }
