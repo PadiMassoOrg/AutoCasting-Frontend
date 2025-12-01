@@ -16,10 +16,10 @@ const VideoSection = ({ data }: { data: Media }) => {
   const itemCls = useGrid ? 'flex flex-col gap-1' : 'flex flex-col gap-1';
 
   return (
-    <article className="w-full flex flex-col gap-2 bg-[var(--color-primary-white)] rounded-lg border-[var(--color-secondary-outline)] border">
+    <article className="w-full h-full flex flex-col gap-2 bg-[var(--color-primary-white)] rounded-lg border-[var(--color-secondary-outline)] border">
       {!hasVideos && (
         <div className="w-full p-4">
-          <p className="text-[var(--color-secondary-grey)] font-base">{t('profile.page.no_videos')}</p>
+          <p className="text-[var(--color-secondary-grey)] font-base text-center">{t('profile.page.no_videos')}.</p>
         </div>
       )}
 
