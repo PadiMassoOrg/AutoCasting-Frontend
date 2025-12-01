@@ -1,10 +1,8 @@
-// src/features/talent/talent-profile-edit/pages/TalentProfileEditPage.tsx
 import { useTranslation } from 'react-i18next';
 import { DashboardShell } from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
 import PageLoading from '../../../../shared/components/PageLoading/PageLoading';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
-import { LG_SCREEN_SIZE, useMedia } from '../../../../shared/hooks/useMedia';
 import { TalentProfileModeToggle } from '../components';
 import {
   TalentProfileCreditsEditSection,
@@ -17,7 +15,6 @@ import TalentProfileBasicInfoEditSection from '../components/Section/TalentProfi
 import { useTalentProfile } from '../hooks/useTalentProfile';
 
 export default function TalentProfileEditPage() {
-  const isDesktop = useMedia(LG_SCREEN_SIZE);
   const { t } = useTranslation();
   const { data, isPending, error } = useTalentProfile();
 
@@ -62,8 +59,7 @@ export default function TalentProfileEditPage() {
       <div className="flex-1 min-h-0">
         <DashboardShell title={t('profile.page.profile')} sections={sections} initialKey="basic" />
       </div>
-
-      {!isDesktop && <TalentProfileModeToggle isEdit publicSlug={data.publicSlug} />}
+      <TalentProfileModeToggle></TalentProfileModeToggle>
     </div>
   );
 }

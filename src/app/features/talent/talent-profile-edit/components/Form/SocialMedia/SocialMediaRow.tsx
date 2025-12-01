@@ -35,7 +35,7 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
       if (next && containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
         const spaceBelow = window.innerHeight - rect.bottom;
-        const estimatedDropdownHeight = 250;
+        const estimatedDropdownHeight = 350;
         setOpenUpwards(spaceBelow < estimatedDropdownHeight);
       }
       return next;

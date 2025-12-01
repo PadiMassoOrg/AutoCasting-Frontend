@@ -92,7 +92,7 @@ const PublicProfilePage = () => {
       <ProfileInfoCarousel profile={data} />
       <Separator className="opacity-25 my-10" />
       <VideoSection data={media} />
-      {isOwner && <TalentProfileModeToggle isEdit={false} publicSlug={myProfile?.publicSlug ?? slug} />}
+      <TalentProfileModeToggle />
     </div>
   );
 };
