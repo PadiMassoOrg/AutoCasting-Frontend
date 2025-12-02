@@ -169,12 +169,11 @@ function DashboardShell<Key extends string = string>({
           )}
           {isDesktop && currentSection && (
             <div className="flex flex-col gap-4 max-w-[790px] m-auto">
+              <TalentProfileModeToggle visible></TalentProfileModeToggle>
               <h2 className="text-lg font-semibold grow">{currentSection.label}</h2>
-
               {currentSection.render()}
             </div>
           )}
-          <TalentProfileModeToggle visible></TalentProfileModeToggle>
           {children}
         </div>
       </article>
