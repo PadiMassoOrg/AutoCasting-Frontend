@@ -5,18 +5,30 @@ import { TalentProfileEditPage } from '../features/talent/talent-profile-edit/pa
 import { TalentProfileSettingsPage } from '../features/talent/talent-profile-settings/pages';
 import { EmptyLayout, ScrollContentLayout } from '../layouts';
 import { ROUTES } from '../shared/lib/routes';
+import { getAuthToken } from '../shared/lib/cookies';
+import { jwtDecoder } from '../shared/utils/jwtDecoder';
 
 export default function ProtectedRoutesLayout() {
   const { data: meData, isLoading } = useMeData();
+  const jwt = getAuthToken();
+  const decoded = jwt ? jwtDecoder(jwt) : null;
+  const publicSlug = decoded?.publicSlug;
 
   if (isLoading || !meData) {
     return null;
   }
 
-  const effectiveDashboardRoute = meData.activeMode === 'EMPLOYER' ? ROUTES.EMPLOYER : ROUTES.TALENT;
+  const effectiveDashboardRoute =
+    meData.activeMode === 'EMPLOYER'
+      ? ROUTES.EMPLOYER
+      : publicSlug
+        ? `${ROUTES.PUBLIC_PROFILE}/${publicSlug}`
+        : ROUTES.TALENT;
+
   const needsInitialWizard = meData.activeMode === null;
   const needsTalentWizard = meData.activeMode === 'TALENT' && meData.talentOnboardingStatus !== 'COMPLETED';
   const needsEmployerWizard = meData.activeMode === 'EMPLOYER' && meData.employerOnboardingStatus !== 'COMPLETED';
+
   const shouldShowWizard = needsInitialWizard || needsTalentWizard || needsEmployerWizard;
 
   return (
@@ -35,7 +47,6 @@ export default function ProtectedRoutesLayout() {
             <Route path={ROUTES.TALENT} element={<TalentProfileEditPage />} />
             <Route path={ROUTES.TALENT_SETTINGS} element={<TalentProfileSettingsPage />} />
           </Route>
-
           <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
         </>
       )}

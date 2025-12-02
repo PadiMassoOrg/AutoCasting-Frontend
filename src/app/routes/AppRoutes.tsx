@@ -38,7 +38,7 @@ export default function AppRoutes() {
           <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
         </Route>
         <Route element={<MainLayout />}>
-          <Route path="/profile/:slug" element={<PublicProfilePage />} />
+          <Route path={ROUTES.PUBLIC_PROFILE + '/:slug'} element={<PublicProfilePage />} />
         </Route>
         <Route element={<ScrollContentLayout />}>
           <Route path={ROUTES.TALENT_DATABASE} element={<TalentDatabasePage />} />

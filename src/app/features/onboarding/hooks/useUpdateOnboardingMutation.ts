@@ -11,6 +11,7 @@ export const useUpdateOnboardingMutation = () => {
     mutationFn: (payload: UserOnboardingRequest) => patchUserOnboarding(payload),
     onSuccess: (data) => {
       queryClient.setQueryData(ME_DATA_CACHE_KEY, data);
+      queryClient.invalidateQueries({ queryKey: ME_DATA_CACHE_KEY });
     },
   });
 };

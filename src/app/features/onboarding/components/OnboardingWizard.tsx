@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Wizard } from '../../../shared/components/Wizard';
+import { getAuthToken } from '../../../shared/lib/cookies';
 import { ROUTES } from '../../../shared/lib/routes';
+import { jwtDecoder } from '../../../shared/utils/jwtDecoder';
 import { useMeData } from '../../auth/hooks/useMeData';
 import { EmployerBasicInfoStep } from './employer';
 import ModeSelectorStep from './ModeSelectorStep';
 import { TalentBasicInfoStep, TalentConfirmationStep, TalentMediaStep } from './talent';
 
 function OnboardingWizard() {
-  const { data: meData, isLoading } = useMeData();
   const navigate = useNavigate();
+  const { data: meData, isLoading } = useMeData();
+  const jwt = getAuthToken();
   const [showModeSelector, setShowModeSelector] = useState(false);
+  const decoded = jwtDecoder(jwt!);
 
   if (isLoading || !meData) return null;
 
@@ -27,7 +31,9 @@ function OnboardingWizard() {
       <Wizard key="talent-flow">
         <TalentBasicInfoStep onBackToModeSelector={() => setShowModeSelector(true)} />
         <TalentMediaStep></TalentMediaStep>
-        <TalentConfirmationStep onGoToProfile={() => navigate(ROUTES.DASHBOARD)}></TalentConfirmationStep>
+        <TalentConfirmationStep
+          onGoToProfile={() => navigate(`${ROUTES.PUBLIC_PROFILE}/${decoded?.publicSlug}`)}
+        ></TalentConfirmationStep>
       </Wizard>
     );
   }
