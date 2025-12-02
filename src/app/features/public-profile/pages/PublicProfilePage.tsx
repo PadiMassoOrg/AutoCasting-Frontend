@@ -1,25 +1,27 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
+import { useParams } from 'react-router-dom';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 import PageLoading from '../../../shared/components/PageLoading/PageLoading';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { LG_SCREEN_SIZE, useMedia, XL_SCREEN_SIZE } from '../../../shared/hooks/useMedia';
 import { TalentProfileModeToggle } from '../../talent/talent-profile-edit/components';
-import { useTalentProfile } from '../../talent/talent-profile-edit/hooks/useTalentProfile';
 import { BasicInfoSection, SocialMediaSection, VideoSection, ViewerActions } from '../components';
 import ProfileInfoCarousel from '../components/Details/ProfileInfoCarousel';
+import { usePublicProfile } from '../hooks/usePublicProfile';
 
 const NAVBAR = 70;
 const TOP_MARGIN = '5rem';
 
 const PublicProfilePage = () => {
-  const { data: myProfile, isLoading, error } = useTalentProfile();
+  const { slug } = useParams<{ slug: string }>();
+  const { data, isLoading, error } = usePublicProfile(slug!);
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
 
-  if (isLoading || !myProfile) return <PageLoading />;
+  if (isLoading || !data) return <PageLoading />;
   if (error) return <ServerError />;
 
-  const { socialMedia, media } = myProfile;
+  const { socialMedia, media } = data;
 
   const mergePictures = (): string[] =>
     [media.headshotImageUrl, media.fullBodyImageUrl, ...(media.otherPicturesUrl ?? [])].filter(
@@ -31,13 +33,13 @@ const PublicProfilePage = () => {
   if (isDesktop && !isDesktopXL) {
     return (
       <article className="relative w-full flex flex-col gap-2">
-        <BasicInfoSection data={myProfile!} />
+        <BasicInfoSection data={data} />
         <div className="grid gap-10 grid-cols-[1fr_1fr] h-[690px] max-h-[690px] min-h-0">
           <section className="min-w-0 min-h-0">
             <ImageCarousel images={hasImages ? images : null} isDesktop />
           </section>
           <aside className="min-w-0 min-h-0 h-full overflow-auto">
-            <ProfileInfoCarousel profile={myProfile} className="h-full" />
+            <ProfileInfoCarousel profile={data} className="h-full" />
           </aside>
         </div>
         <Separator className="opacity-25 my-12" />
@@ -58,7 +60,7 @@ const PublicProfilePage = () => {
             maxHeight: '850px',
           }}
         >
-          <BasicInfoSection data={myProfile!} />
+          <BasicInfoSection data={data} />
 
           {/* 
             Col 1: ocupa todo lo que sobra  -> minmax(260px, 1fr)
@@ -73,7 +75,7 @@ const PublicProfilePage = () => {
 
             {/* Profile info (se auto–ajusta, máx 500px por el grid) */}
             <div className="min-w-0 h-full min-h-0 overflow-auto">
-              <ProfileInfoCarousel profile={myProfile} className="h-full" />
+              <ProfileInfoCarousel profile={data} className="h-full" />
             </div>
 
             {/* Videos (columna fija de 350px) */}
@@ -89,11 +91,11 @@ const PublicProfilePage = () => {
   return (
     <div className="relative pt-3 pb-24 flex flex-col gap-4">
       <ViewerActions />
-      <BasicInfoSection data={myProfile!} />
+      <BasicInfoSection data={data} />
       <ImageCarousel images={hasImages ? images : null} />
       <SocialMediaSection data={socialMedia} className="mt-8" />
       <Separator className="opacity-25 my-10" />
-      <ProfileInfoCarousel profile={myProfile} />
+      <ProfileInfoCarousel profile={data} />
       <Separator className="opacity-25 my-10" />
       <VideoSection data={media} />
       <TalentProfileModeToggle />

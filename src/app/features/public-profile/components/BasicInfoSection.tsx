@@ -2,11 +2,11 @@ import { type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { TalentProfileModeToggle } from '../../talent/talent-profile-edit/components';
-import type { TalentProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
+import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
 import SocialMediaSection from './SocialMediaSection';
 import ViewerActions from './ViewerActions';
 
-const BasicInfoSection = ({ data }: { data: TalentProfileResponse }) => {
+const BasicInfoSection = ({ data }: { data: TalentPublicProfileResponse }) => {
   const { t } = useTranslation();
   const { basicInfo, socialMedia } = data;
   const isDesktop = useMedia(LG_SCREEN_SIZE);
