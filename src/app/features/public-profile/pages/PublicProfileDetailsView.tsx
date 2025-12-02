@@ -2,6 +2,7 @@ import { Separator } from 'autocasting-ui-library-padimasso';
 import type { JSX } from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import DetailsView from '../../../shared/components/DetailsView/DetailsView';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 import openIconPurple from '../../../shared/icons/open-purple.svg';
@@ -64,9 +65,9 @@ export default function PublicProfileDetailsView({ open, onClose, profile }: Pro
   const url = `${window.location.origin}/profile/${profile.publicSlug}`;
 
   const headerRight = (
-    <a aria-label={t('profile.share.share_profile')} className="cursor-pointer" target="_blank" href={url}>
+    <Link aria-label={t('profile.share.share_profile')} className="cursor-pointer" to={url}>
       <img src={openIconPurple} alt="" className="w-[19px]" />
-    </a>
+    </Link>
   );
 
   return (
