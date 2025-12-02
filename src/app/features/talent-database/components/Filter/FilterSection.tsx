@@ -33,7 +33,7 @@ export default function FilterSection({ title, children, defaultOpen = false, co
           {count > 0 && (
             <span
               aria-label={`${count} filtros activos`}
-              className="opacity-90 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--color-primary-black)] px-1.5 text-[10px] font-semibold text-white"
+              className="opacity-90 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--color-primary-purple)] px-1.5 text-[10px] font-semibold text-white"
             >
               {count}
             </span>
