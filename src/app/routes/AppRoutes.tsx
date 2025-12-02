@@ -7,7 +7,7 @@ import MainSitePage from '../features/main-site/page/MainSitePage';
 import { PublicProfilePage } from '../features/public-profile/pages';
 import { TalentDatabasePage } from '../features/talent-database/pages';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
-import { MainLayout, ScrollContentLayout } from '../layouts';
+import { NavigationLayout, ScrollContentLayout } from '../layouts';
 import { ScrollToTop } from '../shared/components/ScrollToTop/ScrollToTop';
 import { ROUTES } from '../shared/lib/routes';
 import ProtectedRoute from './ProtectedRoute';
@@ -37,7 +37,7 @@ export default function AppRoutes() {
           <Route path={ROUTES.TERMS} element={<TermsPage />} />
           <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
         </Route>
-        <Route element={<MainLayout />}>
+        <Route element={<NavigationLayout />}>
           <Route path={ROUTES.PUBLIC_PROFILE + '/:slug'} element={<PublicProfilePage />} />
         </Route>
         <Route element={<ScrollContentLayout />}>

@@ -45,7 +45,6 @@ const PublicProfilePage = () => {
         <Separator className="opacity-25 my-12" />
         <VideoSection data={media} />
         <Separator className="opacity-25 my-12" />
-        <TalentProfileModeToggle visible />
       </article>
     );
   }
@@ -85,7 +84,6 @@ const PublicProfilePage = () => {
             </div>
           </div>
         </div>
-        <TalentProfileModeToggle visible />
       </article>
     );
   }

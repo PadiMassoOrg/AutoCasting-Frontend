@@ -19,6 +19,9 @@ import ProfileIconPurple from '../../shared/icons/profile-purple.svg';
 import ProfileIcon from '../../shared/icons/profile.svg';
 import SettingsIconPurple from '../../shared/icons/settings-purple.svg';
 import SettingsIcon from '../../shared/icons/settings.svg';
+import ViewIconPurple from '../../shared/icons/view-purple.svg';
+import ViewIcon from '../../shared/icons/view.svg';
+import { jwtDecoder } from '../../shared/utils/jwtDecoder';
 
 type NavbarVariant = 'icons' | 'icons-labels' | 'labels';
 type NavbarProps = HTMLAttributes<HTMLElement> & {
@@ -30,6 +33,8 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
   const location = useLocation();
   const isAuth = getAuthToken();
   const { mode } = useUserMode();
+  const jwt = jwtDecoder(isAuth!);
+  const profileUrl = `${ROUTES.PUBLIC_PROFILE}/${jwt?.publicSlug}`;
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -54,6 +59,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
 
   // Private
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
+  const activePublicProfile = isRouteActive(profileUrl, true);
   const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS, true);
   const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
 
@@ -124,7 +130,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                 </Button>
               </>
             ) : mode == 'talent' ? (
-              <>
+              <div className="flex flex-row gap-2 items-center h-full">
                 {/* Talent */}
                 {/* <Link to={ROUTES.TALENT_APPLIED_PRODUCTIONS}>
                   <span className={clsx(baseClass, activeAppliedProductions && activeClass)}>
@@ -134,6 +140,12 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                     {showLabels && t('routes.talent-applied-productions')}
                   </span>
                 </Link> */}
+                <Link to={profileUrl}>
+                  <span className={clsx(baseClass, activePublicProfile && activeClass)}>
+                    {showIcons && <img src={activePublicProfile ? ViewIconPurple : ViewIcon} alt="" className="w-6" />}
+                    {showLabels && t('routes.profile')}
+                  </span>
+                </Link>
                 <Link to={ROUTES.TALENT}>
                   <span className={clsx(baseClass, activeTalentProfile && activeClass)}>
                     {showIcons && (
@@ -150,7 +162,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                     {showLabels && t('routes.settings')}
                   </span>
                 </Link>
-              </>
+              </div>
             ) : (
               <>{/* Employer */}</>
             )}

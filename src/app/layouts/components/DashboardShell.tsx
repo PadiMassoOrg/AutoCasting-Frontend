@@ -2,7 +2,6 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import { TalentProfileModeToggle } from '../../features/talent/talent-profile-edit/components';
 import { ChevronLeft, ChevronRight } from '../../shared/components/Chevron';
 import { LG_SCREEN_SIZE, useMedia } from '../../shared/hooks/useMedia';
 
@@ -169,7 +168,6 @@ function DashboardShell<Key extends string = string>({
           )}
           {isDesktop && currentSection && (
             <div className="flex flex-col gap-4 max-w-[790px] m-auto">
-              <TalentProfileModeToggle visible></TalentProfileModeToggle>
               <h2 className="text-lg font-semibold grow">{currentSection.label}</h2>
               {currentSection.render()}
             </div>

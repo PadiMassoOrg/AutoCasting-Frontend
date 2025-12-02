@@ -11,10 +11,9 @@ import { useTalentProfile } from '../hooks/useTalentProfile';
 
 type Props = {
   className?: string;
-  visible?: boolean;
 };
 
-export default function TalentProfileModeToggle({ className, visible }: Props) {
+export default function TalentProfileModeToggle({ className }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
@@ -63,50 +62,7 @@ export default function TalentProfileModeToggle({ className, visible }: Props) {
   const viewActive = mode === 'view';
 
   // ===========================
-  // Layout DESKTOP:
-  // ===========================
-  if (visible) {
-    return (
-      <div className="fixed z-[200] top-22 right-[32%] w-full max-w-[300px] bg-[var(--color-primary-white)]">
-        <article className="w-full p-1 rounded-lg border border-[var(--color-secondary-outline)] shadow-lg flex items-center">
-          <button
-            type="button"
-            onClick={goPreview}
-            disabled={!canPreview}
-            className={clsx(
-              'cursor-pointer w-full h-10 rounded-lg flex items-center justify-center gap-2 flex-1 text-sm font-semibold',
-              viewActive
-                ? 'bg-[var(--color-secondary-white)] text-[var(--color-primary-purple)] shadow-xs'
-                : 'bg-transparent text-black',
-              !canPreview && 'opacity-60 cursor-not-allowed'
-            )}
-          >
-            <img src={viewActive ? purpleViewIcon : blackViewIcon} alt="" className="w-[16px] h-[16px]" />
-            <span>{t('profile.page.view_profile')}</span>
-          </button>
-
-          <div className="w-px h-8 mx-1 self-center bg-[var(--color-secondary-outline)]" />
-
-          <button
-            type="button"
-            onClick={goEdit}
-            className={clsx(
-              'cursor-pointer w-full h-10 rounded-lg flex items-center justify-center gap-2 flex-1 text-sm font-semibold',
-              editActive
-                ? 'bg-[var(--color-secondary-white)] text-[var(--color-primary-purple)] shadow-xs'
-                : 'bg-transparent text-black'
-            )}
-          >
-            <img src={editActive ? purpleEditIcon : blackEditIcon} alt="" className="w-[16px] h-[16px]" />
-            <span>{t('profile.page.edit_profile')}</span>
-          </button>
-        </article>
-      </div>
-    );
-  }
-
-  // ===========================
-  // Layout MOBILE: barra fija abajo con texto
+  // Layout MOBILE: Solo funciona en MOBILE
   // ===========================
   if (!isDesktop)
     return (
