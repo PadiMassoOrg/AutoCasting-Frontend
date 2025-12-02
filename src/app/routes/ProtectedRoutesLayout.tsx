@@ -14,12 +14,9 @@ export default function ProtectedRoutesLayout() {
   }
 
   const effectiveDashboardRoute = meData.activeMode === 'EMPLOYER' ? ROUTES.EMPLOYER : ROUTES.TALENT;
-
   const needsInitialWizard = meData.activeMode === null;
   const needsTalentWizard = meData.activeMode === 'TALENT' && meData.talentOnboardingStatus !== 'COMPLETED';
-
   const needsEmployerWizard = meData.activeMode === 'EMPLOYER' && meData.employerOnboardingStatus !== 'COMPLETED';
-
   const shouldShowWizard = needsInitialWizard || needsTalentWizard || needsEmployerWizard;
 
   return (
