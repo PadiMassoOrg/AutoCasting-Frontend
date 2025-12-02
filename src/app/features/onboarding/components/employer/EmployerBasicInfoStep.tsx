@@ -15,7 +15,6 @@ type Props = WizardStepProps & {
 function EmployerBasicInfoStep({
   onBackToModeSelector,
   goNext,
-  goBack,
   stepIndex = 0,
   totalSteps = 1,
   progress = 0,
@@ -31,7 +30,7 @@ function EmployerBasicInfoStep({
     mode: 'onChange',
   });
 
-  const onSubmit = (data: EmployerBasicInfoValues) => {
+  const onSubmit = (_data: EmployerBasicInfoValues) => {
     // aquí luego irá la mutation al backend con data.stageName
     // por ahora solo avanzamos
     goNext?.();

@@ -44,11 +44,11 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
 
   // Public
   const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
-  const activeProductions = isRouteActive(ROUTES.PRODUCTIONS);
+  //const activeProductions = isRouteActive(ROUTES.PRODUCTIONS);
 
   // Private
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
-  const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS, true);
+  //const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS, true);
   const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
 
   useEffect(() => {

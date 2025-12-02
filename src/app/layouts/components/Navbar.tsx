@@ -55,12 +55,12 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
 
   // Public
   const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
-  const activeProductions = isRouteActive(ROUTES.PRODUCTIONS);
+  //const activeProductions = isRouteActive(ROUTES.PRODUCTIONS);
 
   // Private
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
   const activePublicProfile = isRouteActive(profileUrl, true);
-  const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS, true);
+  //const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS, true);
   const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
 
   return (
