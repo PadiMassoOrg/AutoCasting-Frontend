@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../../context/ModalContext';
 import { ROUTES } from '../../../shared/lib/routes';
-import ChangePasswordSuccessModal from '../../talent/talent-profile-account/components/ChangePasswordSuccessModal';
+import ChangePasswordSuccessModal from '../../talent/talent-profile-settings/components/ChangePasswordSuccessModal';
 import { useResetPasswordMutation } from '../hooks/useResetPasswordMutation';
 import { getResetPasswordSchema, type ResetPasswordValues } from '../schemas/authSchema';
 
@@ -32,7 +32,11 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
   };
 
   const handleSuccessModal = () => {
-    openModal(<ChangePasswordSuccessModal onClose={handleClose} />, t('account.page.change_pass_modal.success'), 'lg');
+    openModal(
+      <ChangePasswordSuccessModal onClose={handleClose} />,
+      t('settings.page.account.change_pass_modal.success'),
+      'lg'
+    );
   };
 
   const onSubmit = async (data: ResetPasswordValues) => {

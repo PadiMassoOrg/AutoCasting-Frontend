@@ -14,7 +14,7 @@ const GoogleAuthSuccessPage = () => {
     const token = searchParams.get('token');
     if (token) {
       setAuthToken(token);
-      navigate(ROUTES.DASHBOARD);
+      navigate(ROUTES.DASHBOARD, { replace: true });
     } else {
       navigate(`${ROUTES.AUTH}?error=oauth_failed`);
     }

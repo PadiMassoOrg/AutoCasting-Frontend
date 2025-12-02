@@ -1,8 +1,10 @@
-import clsx from 'clsx';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import message from '../../../shared/icons/message.svg';
-import share from '../../../shared/icons/share.svg';
+import ButtonRow from '../../../shared/components/ButtonRow/ButtonRow';
+import copyLinkIcon from '../../../shared/icons/copy-link.svg';
+import emailIcon from '../../../shared/icons/message.svg';
+import whatsappIcon from '../../../shared/icons/whatsapp.svg';
 import { isBrowser } from '../../../shared/utils/domUtils';
 import { whatsappLink } from '../../../shared/utils/phoneUtils';
 import { shareUrl } from '../../../shared/utils/shareUtils';
@@ -16,9 +18,11 @@ export default function ViewerActions({ className }: Props) {
   const { data } = usePublicProfile(slug!);
 
   const url = isBrowser ? window.location.href : '';
+
   const text = data?.basicInfo?.stageName
     ? t('profile.share.whatsapp_text', { name: data.basicInfo.stageName })
     : t('profile.share.whatsapp_text_fallback');
+
   const waUrl = data?.contact?.phoneNumber ? whatsappLink(data.contact.phoneNumber, text) : null;
   const mailtoUrl = data?.contact?.email ? `mailto:${data.contact.email}` : null;
 
@@ -31,49 +35,44 @@ export default function ViewerActions({ className }: Props) {
     });
   };
 
-  return (
-    <div className={clsx('flex items-center justify-center gap-2 lg:inline-flex ', className)}>
-      <button
-        type="button"
-        onClick={handleShare}
-        className="bg-[var(--color-primary-light-grey)] rounded-md p-3 flex items-center justify-center cursor-pointer"
-        aria-label={t('profile.share.share_profile')}
-        title={t('profile.share.share_profile')}
-      >
-        <img src={share} alt="" className="w-5" />
-      </button>
+  const items: React.ReactNode[] = [];
 
-      {waUrl ? (
-        <a
-          href={waUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-[var(--color-primary-light-grey)] rounded-md p-3 flex items-center justify-center cursor-pointer"
-          aria-label={t('profile.share.whatsapp')}
-          title="WhatsApp"
-        >
-          <img src={message} alt="" className="w-5" />
-        </a>
-      ) : mailtoUrl ? (
-        <a
-          href={mailtoUrl}
-          className="bg-[var(--color-primary-light-grey)] rounded-md p-3 flex items-center justify-center cursor-pointer"
-          aria-label={t('profile.share.email')}
-          title="Email"
-        >
-          <img src={message} alt="" className="w-5" />
-        </a>
-      ) : (
-        <button
-          type="button"
-          disabled
-          className="bg-[var(--color-primary-light-grey)] rounded-md p-3 flex items-center justify-center opacity-50 cursor-not-allowed"
-          title={t('profile.share.no_contact')}
-          aria-label={t('profile.share.no_contact')}
-        >
-          <img src={message} alt="" className="w-5" />
-        </button>
-      )}
-    </div>
+  if (waUrl) {
+    items.push(
+      <a
+        key="wa"
+        href={waUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={t('profile.share.whatsapp')}
+        title="WhatsApp"
+      >
+        <img src={whatsappIcon} alt="" className="w-5" />
+      </a>
+    );
+  }
+
+  if (mailtoUrl) {
+    items.push(
+      <a key="email" href={mailtoUrl} aria-label={t('profile.share.email')} title="Email">
+        <img src={emailIcon} alt="" className="w-5" />
+      </a>
+    );
+  }
+
+  items.push(
+    <button
+      key="link"
+      type="button"
+      onClick={handleShare}
+      aria-label={t('profile.share.share_profile')}
+      title={t('profile.share.share_profile')}
+    >
+      <img src={copyLinkIcon} alt="" className="w-5" />
+    </button>
   );
+
+  if (items.length === 0) return null;
+
+  return <ButtonRow items={items} className={className} />;
 }

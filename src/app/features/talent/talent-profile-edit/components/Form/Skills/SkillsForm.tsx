@@ -47,7 +47,6 @@ export default function SkillsForm({ data }: { data: SiteMetadataObject[] }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h3 className="font-bold text-base">{t('profile.skills.skills')}</h3>
       <Button onClick={handleOpenModal} className="flex flex-row items-center justify-center gap-2">
         <span className="text-3xl mb-1 font-extralight">+</span>
         <span className="text-base font-medium">{t('profile.skills.add_new')}</span>

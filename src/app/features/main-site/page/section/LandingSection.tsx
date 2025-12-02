@@ -39,11 +39,11 @@ const LandingSection = () => {
   const xShiftPx = box.h * 0;
 
   return (
-    <section className="relative max-w-[1450px] min-h-[85vh] grid place-items-center">
+    <section className="relative w-full min-h-[85vh] grid place-items-center">
       <div
         className="
       w-[85%] gap-8
-      lg:w-[90%] lg:grid lg:grid-cols-2
+      lg:w-[90%] lg:grid lg:grid-cols-2 lg:max-w-[1400px]
       lg:items-start lg:gap-x-8
     "
       >
@@ -109,7 +109,7 @@ const LandingSection = () => {
         </article>
       </div>
       {/* WAVES */}
-      <div className="hidden lg:block z-[-5] pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-0 w-[100vw] max-w-[3000px]">
+      <div className="hidden lg:block z-[-5] pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-0 w-full max-w-[3000px]">
         {/* Onda inferior (100%) */}
         <div className="w-full z-[-5] absolute bottom-0 left-0">
           <svg

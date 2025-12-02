@@ -16,9 +16,8 @@ export default function ContactForm({ data }: { data: TalentProfileContact }) {
   });
 
   return (
-    <div className="w-full flex flex-col gap-5">
+    <div className="w-full flex flex-col gap-2">
       <h3 className="font-bold text-base">{t('profile.basic_info.contact')}</h3>
-
       <FormInputField
         id="email"
         label={t('profile.basic_info.email')}
@@ -28,19 +27,16 @@ export default function ContactForm({ data }: { data: TalentProfileContact }) {
         disabled
         autoComplete="email"
       />
-      <div className="hidden">
-        <FormInputField
-          id="phoneNumber"
-          label={t('profile.basic_info.whatsapp')}
-          labelClassName="font-semibold text-base hidden"
-          className="hidden"
-          placeholder={t('general.placeholder.phoneNumber')}
-          value={phoneNumber.value}
-          onChange={phoneNumber.onChange}
-          onBlur={phoneNumber.onBlur}
-          onKeyDown={phoneNumber.onKeyDown}
-        />
-      </div>
+      <FormInputField
+        id="phoneNumber"
+        label={t('profile.basic_info.whatsapp')}
+        labelClassName="font-semibold text-base"
+        placeholder={t('general.placeholder.phoneNumber')}
+        value={phoneNumber.value}
+        onChange={phoneNumber.onChange}
+        onBlur={phoneNumber.onBlur}
+        onKeyDown={phoneNumber.onKeyDown}
+      />
     </div>
   );
 }

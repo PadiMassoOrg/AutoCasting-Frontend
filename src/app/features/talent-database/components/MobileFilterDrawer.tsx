@@ -2,7 +2,6 @@ import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
-import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import type { TalentFiltersQS } from '../types/talent-database.types';
 import { TalentFilterBar } from './TalentFilterBar';
 
@@ -25,12 +24,12 @@ export function MobileFiltersDrawer({
   const [draft, setDraft] = useState<TalentFiltersQS>(value);
 
   const contentRef = useRef<HTMLDivElement>(null);
-  useScrollExitOnEdge(contentRef, { forwardTo: contentRef });
 
   useEffect(() => {
     if (open) setDraft(value);
   }, [open, value]);
 
+  // body-lock para evitar scroll de fondo mientras el drawer está abierto
   useEffect(() => {
     if (!open) return;
     const { scrollY } = window;

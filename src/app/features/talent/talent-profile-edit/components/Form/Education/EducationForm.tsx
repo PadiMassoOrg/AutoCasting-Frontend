@@ -1,8 +1,8 @@
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../../context/ModalContext';
-import deleteIcon from '../../../../../../shared/icons/delete.svg';
-import editIcon from '../../../../../../shared/icons/edit.svg';
+import deleteIcon from '../../../../../../shared/icons/delete-red.svg';
+import editIcon from '../../../../../../shared/icons/edit-purple.svg';
 import { useEducationAutosave, useEducationDeleteAutosave, useEducationPatchAutosave } from '../../../hooks/autosaves';
 import type { Education } from '../../../types/talentProfile.types';
 import EducationDeleteModal from './EducationDeleteModal';
@@ -64,7 +64,6 @@ export default function EducationForm({ data }: { data: Education[] }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h3 className="font-bold text-base">{t('profile.education.education')}</h3>
       <Button onClick={openCreateModal} className="flex items-center justify-center gap-2">
         <span className="text-3xl mb-1 font-extralight">+</span>
         <span className="text-base font-medium">{t('profile.education.add_new')}</span>

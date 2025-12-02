@@ -66,7 +66,11 @@ export default function MultiSelectDropdown<T>({
   };
 
   const panelRef = useRef<HTMLDivElement>(null);
-  useScrollExitOnEdge(panelRef, { forwardTo: forwardScrollToRef! });
+
+  // Si no nos pasan forwardScrollToRef, no hacemos nada especial
+  if (forwardScrollToRef) {
+    useScrollExitOnEdge(panelRef, { forwardTo: forwardScrollToRef });
+  }
 
   return (
     <>
@@ -86,7 +90,9 @@ export default function MultiSelectDropdown<T>({
               </span>
             </div>
             <svg
-              className={`pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-transform ${open ? 'rotate-180' : ''}`}
+              className={`pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-transform ${
+                open ? 'rotate-180' : ''
+              }`}
               viewBox="0 0 24 24"
               fill="none"
               aria-hidden="true"
@@ -98,7 +104,9 @@ export default function MultiSelectDropdown<T>({
 
         {/* Panel */}
         <div
-          className={`grid transition-[grid-template-rows] duration-300 ease-out rounded-xl bg-white ${open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+          className={`grid transition-[grid-template-rows] duration-300 ease-out rounded-xl bg-white ${
+            open ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+          }`}
         >
           <div className="overflow-hidden">
             <div className="px-6">
@@ -110,29 +118,95 @@ export default function MultiSelectDropdown<T>({
               style={{ maxHeight: maxPanelHeight, overflow: 'auto' }}
               className="px-6 py-3 flex flex-col gap-2"
             >
+              {/* Select all (sólo en modo multiple) */}
               {!single && (
-                <label className="flex items-center gap-3 text-sm font-normal">
-                  <input
-                    type="checkbox"
-                    className="cursor-pointer size-6 rounded-lg accent-[var(--color-primary-black)]"
-                    checked={allSelected}
-                    onChange={toggleAll}
-                  />
+                <label className="flex items-center gap-3 text-sm font-normal cursor-pointer">
+                  <span className="relative inline-flex items-center justify-center h-6 w-6">
+                    <input
+                      type="checkbox"
+                      checked={allSelected}
+                      onChange={toggleAll}
+                      className="
+                        peer
+                        h-6 w-6
+                        rounded-lg
+                        border
+                        border-[var(--color-secondary-outline)]
+                        appearance-none
+                        cursor-pointer
+                        checked:border-[var(--color-primary-purple)]
+                        checked:bg-[var(--color-primary-white)]
+                        transition-colors
+                      "
+                    />
+                    <svg
+                      viewBox="0 0 16 16"
+                      className="
+                        pointer-events-none
+                        absolute
+                        h-3 w-3
+                        opacity-0
+                        peer-checked:opacity-100
+                      "
+                    >
+                      <path
+                        d="M3 8.5L6.5 12L13 4"
+                        fill="none"
+                        stroke="var(--color-primary-purple)"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
                   <span>{t('general.select_all')}</span>
                 </label>
               )}
 
+              {/* Opciones */}
               {options.map((opt) => {
                 const id = getId(opt);
                 const checked = selectedIds.includes(id);
                 return (
-                  <label key={id} className="flex items-center gap-3 text-sm font-normal">
-                    <input
-                      type="checkbox"
-                      className="cursor-pointer size-6 rounded-xl accent-[var(--color-primary-black)]"
-                      checked={checked}
-                      onChange={() => toggleOne(id)}
-                    />
+                  <label key={id} className="flex items-center gap-3 text-sm font-normal cursor-pointer">
+                    <span className="relative inline-flex items-center justify-center h-6 w-6">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleOne(id)}
+                        className="
+                          peer
+                          h-6 w-6
+                          rounded-lg
+                          border
+                          border-[var(--color-secondary-outline)]
+                          appearance-none
+                          cursor-pointer
+                          checked:border-[var(--color-primary-purple)]
+                          checked:bg-[var(--color-primary-white)]
+                          transition-colors
+                        "
+                      />
+                      <svg
+                        viewBox="0 0 16 16"
+                        className="
+                          pointer-events-none
+                          absolute
+                          h-3 w-3
+                          opacity-0
+                          peer-checked:opacity-100
+                        "
+                      >
+                        <path
+                          d="M3 8.5L6.5 12L13 4"
+                          fill="none"
+                          stroke="var(--color-primary-purple)"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
                     <span>{getLabel(opt)}</span>
                   </label>
                 );

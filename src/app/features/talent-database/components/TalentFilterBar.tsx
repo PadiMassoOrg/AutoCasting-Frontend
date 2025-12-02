@@ -28,6 +28,7 @@ export function TalentFilterBar({
   const { t } = useTranslation();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
+  const ethnicityOptions = useCachedSiteMetadataOption('ethnicityOptions', t);
   const professionsRaw = useCachedSiteMetadataSlice('professions');
   const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
   const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye_color');
@@ -58,18 +59,22 @@ export function TalentFilterBar({
     [genderOptions, t]
   );
 
-  // ===== Helpers para contadores =====
+  const ethnicityOptionsWithUnspecified = useMemo(
+    () => [{ value: 'NULL', label: t('general.all') }, ...ethnicityOptions],
+    [ethnicityOptions, t]
+  );
+
   const hasText = (s?: string | null) => !!s && s.trim().length > 0;
   const hasAny = (arr?: unknown[]) => (arr?.length ?? 0) > 0;
   const hasRange = (min?: number, max?: number) => min != null || max != null;
   const genderActive = (value.genderIds ?? []).some((id) => id !== 'NULL');
+  const ethnicityActive = (value.ethnicityIds ?? []).some((id) => id !== 'NULL');
 
   const handleReset = () => {
     onChange({});
     onReset?.();
   };
 
-  // ======== Hooks de "commit on blur/enter" (sin debounce) ========
   const stageName = useCommittedText(value.stageName ?? '', (v) => onChange({ ...value, stageName: v || undefined }));
   const ageMin = useCommittedInt(value.ageMin ?? null, (v) => onChange({ ...value, ageMin: v ?? undefined }), {
     allowNull: true,
@@ -84,11 +89,11 @@ export function TalentFilterBar({
     allowNull: true,
   });
 
-  // ======== Counts ========
   const basicCount =
     (hasText(value.stageName) ? 1 : 0) +
     (hasRange(value.ageMin, value.ageMax) ? 1 : 0) +
     (genderActive ? 1 : 0) +
+    (ethnicityActive ? 1 : 0) +
     (hasAny(value.professionId) ? 1 : 0);
 
   const characteristicsCount =
@@ -112,8 +117,7 @@ export function TalentFilterBar({
   }, [skillsCats, value.skillId]);
 
   return (
-    <aside className="z-[300] w-full flex flex-col items-stretch overflow-auto overflow-x-hidden lg:max-w-[350px]">
-      {/* Header */}
+    <aside className="z-[300] w-full flex flex-col items-stretch overflow-auto overflow-x-hidden lg:max-w-[350px] bg-[var(--primary-color-white)]">
       <header className="flex items-center justify-between pb-2">
         <h4 className="text-[14px] font-semibold">{t('talent.filter.title')}</h4>
 
@@ -132,23 +136,9 @@ export function TalentFilterBar({
           </button>
         )}
       </header>
-      {/* Has Headshot Image */}
-      <label key={'hasHeadshot'} className="flex items-center gap-1 text-xs font-normal mt-6 cursor-pointer">
-        <input
-          type="checkbox"
-          className="cursor-pointer size-4 rounded-xl accent-[var(--color-primary-black)]"
-          checked={!!value.includeNoHeadshot}
-          onChange={(e) =>
-            onChange({
-              ...value,
-              includeNoHeadshot: e.target.checked ? true : undefined,
-            })
-          }
-        />
-        <span>{t('talent.filter.include_no_headshot')}</span>
-      </label>
-      <Separator className="opacity-20 mt-6" />
-      {/* Basic Info */}
+
+      <Separator className="opacity-20 mt-12" />
+
       <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <FormInputField
           id="stageName"
@@ -217,7 +207,6 @@ export function TalentFilterBar({
 
       <Separator className="opacity-20" />
 
-      {/* Characteristics */}
       <FilterSection title={t('profile.characteristics.characteristics')} count={characteristicsCount}>
         <article className="flex flex-col">
           <label htmlFor="heightMin" className="text-sm font-semibold mb-2">
@@ -246,6 +235,18 @@ export function TalentFilterBar({
             />
           </div>
         </article>
+
+        <FormSelectField
+          id="ethnicityId"
+          label={t('profile.characteristics.ethnicity')}
+          labelClassName="font-semibold text-base"
+          options={ethnicityOptionsWithUnspecified}
+          value={(value.ethnicityIds && value.ethnicityIds[0]) ?? 'NULL'}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            const v = e.target.value;
+            onChange({ ...value, ethnicityIds: v ? [v] : undefined });
+          }}
+        />
 
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('profile.characteristics.hairColor')}</label>
@@ -297,7 +298,6 @@ export function TalentFilterBar({
 
       <Separator className="opacity-20" />
 
-      {/* Skills */}
       <FilterSection title={t('filters.skills', 'Habilidades')} count={skillsCount}>
         {skillsCats.map(({ catCode, list, idSet }) => {
           const selectedGlobal = value.skillId ?? [];

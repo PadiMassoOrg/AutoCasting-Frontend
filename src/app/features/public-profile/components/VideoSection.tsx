@@ -12,36 +12,32 @@ const VideoSection = ({ data }: { data: Media }) => {
   const hasVideos = Boolean(introductionVideoUrl || showReelVideoUrl);
   const useGrid = isDesktop && !isDesktopXL;
 
-  const containerCls = useGrid ? 'grid grid-cols-4 gap-6 items-start' : 'flex flex-col gap-4';
+  const containerCls = useGrid ? 'grid grid-cols-4 gap-6 items-start p-6' : 'flex flex-col gap-4 p-6';
   const itemCls = useGrid ? 'flex flex-col gap-1' : 'flex flex-col gap-1';
 
   return (
-    <article className="w-full flex flex-col gap-2">
+    <article className="w-full h-full flex flex-col gap-2 bg-[var(--color-primary-white)] rounded-lg border-[var(--color-secondary-outline)] border">
       {!hasVideos && (
-        <div className="w-full">
-          <h2 className="font-extrabold text-base mb-3">{t('profile.page.videos')}</h2>
-          <p className="text-[var(--color-secondary-grey)] font-base">{t('profile.page.no_videos')}</p>
+        <div className="w-full p-4">
+          <p className="text-[var(--color-secondary-grey)] font-base text-center">{t('profile.page.no_videos')}.</p>
         </div>
       )}
 
       {hasVideos && (
-        <article>
-          <h2 className="font-extrabold text-base mb-3">{t('profile.page.videos')}</h2>
-          <div className={containerCls}>
-            {introductionVideoUrl && (
-              <div className={itemCls}>
-                <VideoPreviewCard videoUrl={introductionVideoUrl} />
-                <p className="font-semibold text-base lg:text-[14px]">{t('profile.page.introduction_video')}</p>
-              </div>
-            )}
-            {showReelVideoUrl && (
-              <div className={itemCls}>
-                <VideoPreviewCard videoUrl={showReelVideoUrl} />
-                <p className="font-semibold text-base lg:text-[14px]">{t('profile.page.showreel_video')}</p>
-              </div>
-            )}
-          </div>
-        </article>
+        <div className={containerCls}>
+          {introductionVideoUrl && (
+            <div className={itemCls}>
+              <VideoPreviewCard videoUrl={introductionVideoUrl} />
+              <p className="font-semibold text-base lg:text-[14px]">{t('profile.page.introduction_video')}</p>
+            </div>
+          )}
+          {showReelVideoUrl && (
+            <div className={itemCls}>
+              <VideoPreviewCard videoUrl={showReelVideoUrl} />
+              <p className="font-semibold text-base lg:text-[14px]">{t('profile.page.showreel_video')}</p>
+            </div>
+          )}
+        </div>
       )}
     </article>
   );

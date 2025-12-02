@@ -1,40 +1,41 @@
-import { useTranslation } from 'react-i18next';
-import instagram from '../../../shared/icons/instagram.svg';
-import tikTok from '../../../shared/icons/tikTok.svg';
+import ButtonRow from '../../../shared/components/ButtonRow/ButtonRow';
 import { normalizeExternalUrl } from '../../../shared/utils/urlUtils';
+import { getSocialMediaIcon } from '../../talent/talent-profile-edit/components/Form/SocialMedia/SocialMediaIconMapper';
 import type { TalentProfileSocialMedia } from '../../talent/talent-profile-edit/types/talentProfile.types';
 
-const SocialMediaSection = ({ data, className }: { data: TalentProfileSocialMedia; className?: string }) => {
-  const { t } = useTranslation();
+type Props = {
+  data: TalentProfileSocialMedia;
+  className?: string;
+};
 
-  const instaUrl = normalizeExternalUrl(data.instagramUrl);
-  const tiktokUrl = normalizeExternalUrl(data.tikTokUrl);
+const SocialMediaSection = ({ data, className }: Props) => {
+  const items =
+    data.links
+      ?.filter((link) => !!link.url && link.url.trim().length > 0)
+      .map((link) => {
+        const href = normalizeExternalUrl(link.url);
+        if (!href) return null;
+
+        const iconSrc = getSocialMediaIcon(link.stringCode);
+        if (!iconSrc) return null;
+
+        const label = link.stringCode;
+
+        return (
+          <a key={link.optionId} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} title={label}>
+            <img src={iconSrc} alt="" className="w-5 h-5" />
+          </a>
+        );
+      })
+      .filter(Boolean) ?? [];
+
+  if (items.length === 0) return null;
 
   return (
-    <article className={`w-full ${className ?? ''}`}>
-      <h2 className="text-base font-extrabold">{t('profile.page.socials')}:</h2>
-      <div className={`flex gap-2 items-center`}>
-        {instaUrl && <SocialLink href={instaUrl} label="Instagram" iconSrc={instagram} />}
-        {tiktokUrl && <SocialLink href={tiktokUrl} label="TikTok" iconSrc={tikTok} />}
-      </div>
+    <article className={`${className ?? ''}`}>
+      <ButtonRow items={items} />
     </article>
   );
 };
 
 export default SocialMediaSection;
-
-function SocialLink({ href, label, iconSrc }: { href: string | null; label: string; iconSrc: string }) {
-  if (!href) return null;
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={label}
-      className="bg-[var(--color-primary-light-grey)] hover:opacity-90 transition rounded-md p-4 flex items-center justify-center w-12 h-12"
-      title={label}
-    >
-      <img src={iconSrc} alt="" className="w-5 h-5" />
-    </a>
-  );
-}

@@ -4,14 +4,13 @@ import type {
   BaseEducation,
   BaseProfileBasicInfo,
   BaseProfileContact,
-  BaseProfileSocialMedia,
 } from './talentProfile.types';
 
 export type BasicInfoPatchRequest = Partial<BaseProfileBasicInfo>;
 export type ContactPatchRequest = Partial<BaseProfileContact>;
-export type SocialMediaPatchRequest = Partial<BaseProfileSocialMedia>;
+export type SocialMediaLinkPatchRequest = { optionId: string; url: string | null };
 export type CharacteristicsPatchRequest = Partial<BaseCharacteristics>;
-export type SkillsPatchRequest = { skillIds: string[] };
+export type SocialMediaPatchRequest = { links: SocialMediaLinkPatchRequest[] };
 export type CreditRequest = Partial<BaseCredit>;
 export type EducationRequest = Partial<BaseEducation>;
 

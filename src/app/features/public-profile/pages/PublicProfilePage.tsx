@@ -1,16 +1,10 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
-import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 import PageLoading from '../../../shared/components/PageLoading/PageLoading';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { LG_SCREEN_SIZE, useMedia, XL_SCREEN_SIZE } from '../../../shared/hooks/useMedia';
-import { TalentProfileCompletionCard } from '../../talent/talent-profile-edit/components/TalentProfileCompletionCard/TalentProfileCompletionCard';
-import { useTalentProfile } from '../../talent/talent-profile-edit/hooks/useTalentProfile';
-import {
-  computeProfileProgress,
-  type ProfileProgress,
-} from '../../talent/talent-profile-edit/services/computeProfileProgress';
+import { TalentProfileModeToggle } from '../../talent/talent-profile-edit/components';
 import { BasicInfoSection, SocialMediaSection, VideoSection, ViewerActions } from '../components';
 import ProfileInfoCarousel from '../components/Details/ProfileInfoCarousel';
 import { usePublicProfile } from '../hooks/usePublicProfile';
@@ -20,22 +14,14 @@ const TOP_MARGIN = '5rem';
 
 const PublicProfilePage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { data: myProfile } = useTalentProfile();
   const { data, isLoading, error } = usePublicProfile(slug!);
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
 
-  const isOwner = !!myProfile?.publicSlug && myProfile.publicSlug === slug;
-  const progress = useMemo<ProfileProgress | null>(() => {
-    if (!isOwner) return null;
-    const src = myProfile ?? data;
-    return computeProfileProgress(src);
-  }, [isOwner, myProfile, data]);
+  if (isLoading || !data) return <PageLoading />;
+  if (error) return <ServerError />;
 
-  if (isLoading || !data) return <PageLoading></PageLoading>;
-  if (error) return <ServerError></ServerError>;
-
-  const { basicInfo, socialMedia, media } = data;
+  const { socialMedia, media } = data;
 
   const mergePictures = (): string[] =>
     [media.headshotImageUrl, media.fullBodyImageUrl, ...(media.otherPicturesUrl ?? [])].filter(
@@ -46,9 +32,9 @@ const PublicProfilePage = () => {
 
   if (isDesktop && !isDesktopXL) {
     return (
-      <article className="relative w-full flex flex-col gap-3">
-        <BasicInfoSection data={basicInfo} />
-        <div className="grid gap-10 grid-cols-[1fr_1fr] h-[700px] max-h-[700px] min-h-0">
+      <article className="relative w-full flex flex-col gap-2">
+        <BasicInfoSection data={data} />
+        <div className="grid gap-10 grid-cols-[1fr_1fr] h-[690px] max-h-[690px] min-h-0">
           <section className="min-w-0 min-h-0">
             <ImageCarousel images={hasImages ? images : null} isDesktop />
           </section>
@@ -59,10 +45,6 @@ const PublicProfilePage = () => {
         <Separator className="opacity-25 my-12" />
         <VideoSection data={media} />
         <Separator className="opacity-25 my-12" />
-        <SocialMediaSection
-          data={socialMedia}
-          className="lg:w-full lg:flex lg:flex-row lg:items-center lg:justify-end lg:gap-4"
-        />
       </article>
     );
   }
@@ -76,24 +58,29 @@ const PublicProfilePage = () => {
             height: `calc(100svh - ${NAVBAR}px - ${TOP_MARGIN})`,
             minHeight: '500px',
             maxHeight: '850px',
-            ['--media-col-w' as any]: '200px',
           }}
         >
-          <BasicInfoSection data={basicInfo} />
-          <div className="flex-1 min-h-0 grid gap-6 grid-cols-[max-content_minmax(260px,1fr)_var(--media-col-w)] items-stretch">
-            <div className="min-w-0 min-h-0 h-full">
+          <BasicInfoSection data={data} />
+
+          {/* 
+            Col 1: ocupa todo lo que sobra  -> minmax(260px, 1fr)
+            Col 2: auto con tope de 500px   -> minmax(260, 500px)
+            Col 3: auto con tope de 280px    ->  minmax(260px, 280)
+          */}
+          <div className="flex-1 min-h-0 grid gap-6 grid-cols-[minmax(260px,1fr)_minmax(260px,474px)_minmax(260px,280px)] items-stretch">
+            {/* Fotos */}
+            <div className="min-w-0 h-full min-h-0">
               <ImageCarousel images={hasImages ? images : null} isDesktop isDesktopXL />
             </div>
-            <div className="min-w-0 min-h-0 h-full overflow-auto">
+
+            {/* Profile info (se auto–ajusta, máx 500px por el grid) */}
+            <div className="min-w-0 h-full min-h-0 overflow-auto">
               <ProfileInfoCarousel profile={data} className="h-full" />
             </div>
-            <div className="min-h-0 h-full overflow-auto flex flex-col justify-between">
+
+            {/* Videos (columna fija de 350px) */}
+            <div className="min-w-0 h-full min-h-0 overflow-auto flex flex-col">
               <VideoSection data={media} />
-              <div className="">
-                <Separator className="opacity-25 mb-4" />
-                <SocialMediaSection data={socialMedia} className="flex flex-row items-center justify-between" />
-                <Separator className="opacity-25 mt-4" />
-              </div>
             </div>
           </div>
         </div>
@@ -102,19 +89,16 @@ const PublicProfilePage = () => {
   }
 
   return (
-    <div className="relative pt-3 pb-10 flex flex-col gap-3 justify-center">
-      <div className="mb-2 grid place-items-center">
-        {isOwner && progress && <TalentProfileCompletionCard progress={progress} isEdit={false} />}
-      </div>
+    <div className="relative pt-3 pb-24 flex flex-col gap-4">
       <ViewerActions />
-      <BasicInfoSection data={basicInfo} />
+      <BasicInfoSection data={data} />
       <ImageCarousel images={hasImages ? images : null} />
-      <Separator className="opacity-25 my-12" />
-      <VideoSection data={media} />
-      <Separator className="opacity-25 my-12" />
+      <SocialMediaSection data={socialMedia} className="mt-8" />
+      <Separator className="opacity-25 my-10" />
       <ProfileInfoCarousel profile={data} />
-      <Separator className="opacity-25 my-12" />
-      <SocialMediaSection data={socialMedia} className="flex flex-col items-center gap-4" />
+      <Separator className="opacity-25 my-10" />
+      <VideoSection data={media} />
+      <TalentProfileModeToggle />
     </div>
   );
 };

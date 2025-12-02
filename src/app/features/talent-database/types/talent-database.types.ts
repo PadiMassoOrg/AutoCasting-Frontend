@@ -18,6 +18,7 @@ export type TalentFiltersQS = Partial<{
   ageMin: number;
   ageMax: number;
   genderIds: string[];
+  ethnicityIds: string[];
   professionId: string[];
   professionsMode: MatchMode;
   heightMinCm: number;

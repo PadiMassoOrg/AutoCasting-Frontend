@@ -22,7 +22,7 @@ export default function NoNavigationLayout({ children }: LayoutProps) {
       }}
     >
       <div className="w-full h-full grid place-items-center">
-        <div className="w-[95%] max-w-[1366px] p-6 lg:p-0">{children}</div>
+        <div className="w-[95%] max-w-[1366px] p-4 lg:p-0">{children}</div>
       </div>
     </div>
   );

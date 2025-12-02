@@ -12,7 +12,7 @@ export const useLoginMutation = () => {
     mutationFn: login,
     onSuccess: (data: AuthenticationResponse) => {
       setAuthToken(data.token);
-      navigate(ROUTES.DASHBOARD);
+      navigate(ROUTES.DASHBOARD, { replace: true });
     },
   });
 };

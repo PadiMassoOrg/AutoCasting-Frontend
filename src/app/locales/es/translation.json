@@ -1,8 +1,9 @@
 {
   "company": {
     "site": "autocasting",
-    "header": "Tu Perfil Digital Actoral",
-    "trademark": "© 2025 Auto-Casting · Buenos Aires, AR"
+    "trademark": "© 2025 Auto-Casting · Buenos Aires, AR",
+    "linkedIn": "https://www.linkedin.com/feed/",
+    "instagram": "https://www.instagram.com/"
   },
   "maintenance": {
     "scheduled": "Entraremos en mantenimiento el {{date, datetime}}.",
@@ -24,6 +25,7 @@
     "unspecified": "Sin especificar",
     "selections": "Selecciones",
     "select_all": "Seleccionar Todas",
+    "and": "y",
     "dash": "--",
     "placeholder": {
       "stage_name": "Ricardo Darín",
@@ -62,31 +64,42 @@
     "no_more_results": "No hay más resultados.",
     "loading": "Cargando...",
     "loading_suggestions": "Cargando sugerencias...",
-    "server_err": "Ocurrió un error, intente nuevamente."
+    "server_err": "Ocurrió un error, intente nuevamente.",
+    "switch_to_talent": "Cambiar a Talento",
+    "switch_to_employer": "Cambiar a Empleador"
   },
   "buttons": {
     "cancel": "Cancelar",
     "save": "Guardar",
     "delete": "Borrar",
-    "understood": "Entendido"
+    "understood": "Entendido",
+    "back": "Atras",
+    "next": "Siguiente",
+    "to_profile": "Ir a mi perfil"
   },
   "routes": {
     "home": "Inicio",
     "go_home": "Ir al Inicio",
     "login": "Iniciar Sesión",
-    "register": "Crear Perfil",
+    "register": "Crear Cuenta",
+    "logout": "Cerrar Sesión",
     "profile": "Perfil",
     "account": "Mi Cuenta",
+    "settings": "Herramientas",
     "access": "Acceso",
     "talent-database": "Catálogo",
+    "talent-applied-productions": "Mis Postulaciones",
+    "productions": "Castings",
     "support": "Soporte Técnico",
     "faq": "Preguntas Frecuentes",
     "privacy": "Políticas de Privacidad",
-    "terms": "Términos y condiciones"
+    "terms": "Términos y condiciones",
+    "linkedIn": "LinkedIn",
+    "instagram": "Instagram"
   },
   "role": {
-    "actor": "Actor",
-    "castinera": "Castinera"
+    "talent": "Talent",
+    "employer": "Employer"
   },
   "plan": {
     "free": "Free",
@@ -101,6 +114,16 @@
       "female_trans": "Mujer Trans",
       "non_binary": "No Binario",
       "other": "Otros"
+    },
+    "ethnicity": {
+      "afro_descendant": "Afrodescendiente",
+      "asian": "Asiática / Asiático",
+      "white_caucasian": "Blanca / Caucásica",
+      "indigenous_native": "Indígena / Originaria",
+      "latino_hispanic": "Latina / Latino / Hispana / Hispano",
+      "middle_east_north_africa": "Medio Oriente / Norte de África",
+      "mixed": "Mixta / Mestiza",
+      "prefer_not_to_say": "Prefiero no especificar"
     },
     "category": {
       "scenic": "Habilidades España",
@@ -208,6 +231,15 @@
       "television_streaming": "Televisión / Streaming",
       "film": "Cine",
       "commercial": "Comercial"
+    },
+    "social_media": {
+      "instagram": "instagram",
+      "tiktok": "tikTok",
+      "linkedin": "LinkedIn",
+      "x": "X",
+      "vimeo": "Vimeo",
+      "imdb": "imdb",
+      "behance": "Behance"
     }
   },
   "error_page": {
@@ -279,17 +311,19 @@
   "auth": {
     "page": {
       "welcome": "Bienvenid@ a",
-      "text_1": "Basta de mandar CVs pesados y de pasarte el día enviando self-tapes por mail.",
-      "bullet_1": "Creá tu perfil en <i>segundos</i>.",
-      "bullet_2": "Subí tus mejores clips y mantenelo <i>siempre al día</i>.",
-      "bullet_3": "Generá tu link personal y compartilo <i>donde quieras</i> (castings, agencias, RRSS).",
-      "text_resaltador": "¡Es tu talento, tu perfil, tu link!",
+      "text_1": "Dejá atrás los mails, los archivos pesados y el desorden. Creá, descubrí y conectá con el mundo del casting desde un solo lugar.",
+      "bullet_1": "<i>Gestioná</i> tus proyectos y perfiles en segundos.",
+      "bullet_2": "<i>Compartí</i> tu trabajo o encontrá el talento ideal.",
+      "bullet_3": "Todo en una plataforma <i>pensada</i> para vos.",
+      "text_resaltador": "Ahora tus castings los gestionás vos.",
       "or_login_with": "o ingresá con",
       "forgotten_pass": "¿Olvidaste tu contraseña?",
       "create_acc": "¿No tienes una cuenta?",
       "create_acc_cta": "Crea una cuenta aquí",
       "login_acc": "¿Ya tienes una cuenta?",
-      "login_acc_cta": "Iniciá sesión aquí"
+      "login_acc_cta": "Iniciá sesión aquí",
+      "disclaimer_terms_register": "Al registrarte aceptás nuestros",
+      "disclaimer_terms_login": "Al ingresar aceptás nuestros"
     },
     "login": {
       "google": "Iniciá sesión con Google",
@@ -301,7 +335,9 @@
       "name": "Nombre",
       "email": "Email",
       "password": "Contraseña",
-      "submit": "Crear Cuenta"
+      "submit": "Crear Cuenta",
+      "role_talent": "Soy Talento",
+      "role_employer": "Busco Talento"
     },
     "forgotten_password": {
       "text": "No te preocupes. Ingresá tu correo y te mandaremos un link para crear una nueva.",
@@ -323,8 +359,59 @@
       "name_min": "Ingrese un nombre",
       "email": "Email inválido",
       "role": "El rol es requerido",
+      "plan": "El plan es requerido",
       "password_min": "La contraseña debe tener al menos 6 caracteres",
       "password_missmatch": "Las contraseñas no coinciden"
+    }
+  },
+  "onboarding": {
+    "mode_selector": {
+      "header": "¿Cómo querés usar autocasting?",
+      "subtitle": "Elegí si querés crear tu cuenta como Talento o como Empleador.",
+      "go_back": "Salir y continuar mas tarde",
+      "talent": {
+        "title": "Soy Talento",
+        "header": "Quiero conseguir castings",
+        "li_1": "Ver castings disponibles",
+        "li_2": "Postularte con tu perfil",
+        "li_3": "Gestionar tus aplicaciones",
+        "cta": "Continuar como Talento"
+      },
+      "employer": {
+        "title": "Busco Talento",
+        "header": "Quiero publicar castings",
+        "li_1": "Crear castings en minutos",
+        "li_2": "Ver perfiles completos",
+        "li_3": "Gestionar postulantes",
+        "cta": "Continuar como Empleador"
+      }
+    },
+    "common": {
+      "of": "de"
+    },
+    "talent": {
+      "step1": {
+        "header": "Indicanos tu nombre",
+        "subtitle": "Así vamos armando tu perfil para que puedan encontrarte.",
+        "stage_name_label": "Nombre y apellido"
+      },
+      "step2": {
+        "header": "Subí tu foto de perfil",
+        "subtitle": "Podés agregar tu foto de perfil o book. Después vas a poder subir más si querés."
+      },
+      "confirmation_step": {
+        "header": "¡Listo! Tu perfil empezó a tomar forma",
+        "subtitle": "Ahora podés completar tus datos, sumar videos y empezar a postularte a castings."
+      }
+    },
+    "employer": {
+      "step1": {
+        "header": "Completá tus datos antes de comenzar",
+        "subtitle": "Necesitamos esta info para validar tu cuenta y tus castings.",
+        "name_label": "Nombre de la empresa / productora / usuario",
+        "cuit_label": "CUIT / CUIL",
+        "cuit_disclaimer": "Lo usamos solo con fines de verificación. No lo compartimos con nadie."
+      }
     }
   },
   "dashboard": {
@@ -339,6 +426,7 @@
       "socials": "Sociales",
       "profile": "Perfil",
       "edit_profile": "Editar Perfil",
+      "view_profile": "Ver Perfil",
       "progress_title": "Perfil Completado"
     },
     "share": {
@@ -348,6 +436,7 @@
     },
     "pills": {
       "profile": "Perfil",
+      "basic_info": "Información Básica",
       "media": "Media",
       "details": "Detalles",
       "characteristics": "Características",
@@ -368,10 +457,12 @@
       "email": "Email",
       "whatsapp": "Whatsapp",
       "social_media": "Redes Sociales",
+      "add_social_media": "Agregar Red Social",
       "instagram": "Instagram",
       "tikTok": "TikTok"
     },
     "media": {
+      "media": "Media",
       "photos": "Fotos",
       "headshot_fullbody": "Primer Plano y Cuerpo Entero",
       "other": "Otras Fotos",
@@ -383,6 +474,7 @@
     "characteristics": {
       "characteristics": "Características",
       "gender": "Género",
+      "ethnicity": "Origen Étnico",
       "age": "Edad",
       "location": "Locación",
       "height": "Estatura",
@@ -460,21 +552,31 @@
       }
     }
   },
-  "account": {
+  "settings": {
+    "pills": {
+      "security": "Seguridad",
+      "subscriptions": "Subscripciones"
+    },
     "page": {
-      "title": "Mi Cuenta",
-      "email_text": "Puede cambiar tu Email haciendo click en el ícono de Editar.",
-      "password_text": "Puedes cambiar tu contraseña haciendo click en el ícono de Editar.",
-      "warning_account_other": "Como te registraste con Google, tu email y contraseña se gestionan desde tu cuenta de Google.",
-      "change_pass_modal": {
-        "title": "Cambiar contraseña",
-        "actual_pass": "Contraseña actual",
-        "actual_pass_text": "Por seguridad, ingresá tu contraseña actual.",
-        "new_pass": "Nueva Contraseña",
-        "new_pass_text": "Usá al menos 8 caracteres con letras y números.",
-        "repeat_new_pass": "Repetir Nueva Contraseña",
-        "success": "Contraseña Actualizada",
-        "success_text": "Listo, cambiamos tu contraseña!"
+      "title": "Herramientas",
+      "account": {
+        "title": "Mi Cuenta",
+        "email_text": "Puede cambiar tu Email haciendo click en el ícono de Editar.",
+        "password_text": "Puedes cambiar tu contraseña haciendo click en el ícono de Editar.",
+        "warning_account_other": "Como te registraste con Google, tu email y contraseña se gestionan desde tu cuenta de Google.",
+        "change_pass_modal": {
+          "title": "Cambiar contraseña",
+          "actual_pass": "Contraseña actual",
+          "actual_pass_text": "Por seguridad, ingresá tu contraseña actual.",
+          "new_pass": "Nueva Contraseña",
+          "new_pass_text": "Usá al menos 8 caracteres con letras y números.",
+          "repeat_new_pass": "Repetir Nueva Contraseña",
+          "success": "Contraseña Actualizada",
+          "success_text": "Listo, cambiamos tu contraseña!"
+        }
+      },
+      "subscriptions": {
+        "title": "Subscripciones"
       }
     },
     "menu": {
@@ -485,7 +587,9 @@
   },
   "legal": {
     "terms": "Términos y Condiciones",
-    "privacy": "Políticas de Privacidad"
+    "privacy": "Políticas de Privacidad",
+    "short_terms": "Términos",
+    "short_privacy": "Políticas"
   },
   "support": {
     "title": "Soporte Técnico",

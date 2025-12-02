@@ -47,18 +47,25 @@ export const getCharacteristicsSchema = (t: TFunction) =>
   z.object({
     heightCm: buildOptionalInt20to300(t),
     weightKg: buildOptionalInt20to300(t),
+
     hairColorId: buildOptionalUuid(t),
     eyeColorId: buildOptionalUuid(t),
+
+    ethnicityId: buildOptionalUuid(t),
+
     chestCm: buildMeasureNumOrText(t),
     waistCm: buildMeasureNumOrText(t),
     hipCm: buildMeasureNumOrText(t),
+
     shirtSize: buildSizeOrTextOptional(t),
     pantSize: buildSizeOrTextOptional(t),
     dressSize: buildSizeOrTextOptional(t),
     shoeSize: buildSizeOrTextOptional(t),
+
     tattoo: z.union([z.boolean(), z.enum(['true', 'false']).transform((v) => v === 'true')]).optional(),
     passport: z.union([z.boolean(), z.enum(['true', 'false']).transform((v) => v === 'true')]).optional(),
     drivingLicense: z.union([z.boolean(), z.enum(['true', 'false']).transform((v) => v === 'true')]).optional(),
+
     dietOptionId: buildOptionalUuid(t),
   });
 

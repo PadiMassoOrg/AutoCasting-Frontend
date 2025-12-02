@@ -1,75 +1,183 @@
-import { forwardRef, type HTMLAttributes, useMemo, useState } from 'react';
+import { Button } from 'autocasting-ui-library-padimasso';
+import { forwardRef, type HTMLAttributes, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { matchPath, useLocation, useParams } from 'react-router-dom';
+import { Link, matchPath, useLocation } from 'react-router-dom';
 import { logout } from '../../features/auth/services/authService';
-import { TalentProfileCompletionCard } from '../../features/talent/talent-profile-edit/components/TalentProfileCompletionCard/TalentProfileCompletionCard';
-import { useTalentProfile } from '../../features/talent/talent-profile-edit/hooks/useTalentProfile';
-import {
-  computeProfileProgress,
-  type ProfileProgress,
-} from '../../features/talent/talent-profile-edit/services/computeProfileProgress';
-import HilightLink from '../../shared/components/HilightLink/HilightLink';
 import { LinkLogo } from '../../shared/components/LinkLogo';
-import BurgerIcon from '../../shared/icons/burger.svg';
 import { getAuthToken } from '../../shared/lib/cookies';
 import { ROUTES } from '../../shared/lib/routes';
-import AccountDropdown from './AccountDropdown';
 import Sidebar from './Sidebar';
+import UserModeSwitcher from './UserModeSwitcher';
 
-type NavbarProps = HTMLAttributes<HTMLElement>;
+import clsx from 'clsx';
+import { useUserMode } from '../../context/UserModeContext';
+import BurgerIcon from '../../shared/icons/burger.svg';
+import CatalogoIconPurple from '../../shared/icons/catalogo-purple.svg';
+import CatalogoIcon from '../../shared/icons/catalogo.svg';
+import LogoutIcon from '../../shared/icons/logout-red.svg';
+import ProfileIconPurple from '../../shared/icons/profile-purple.svg';
+import ProfileIcon from '../../shared/icons/profile.svg';
+import SettingsIconPurple from '../../shared/icons/settings-purple.svg';
+import SettingsIcon from '../../shared/icons/settings.svg';
+import ViewIconPurple from '../../shared/icons/view-purple.svg';
+import ViewIcon from '../../shared/icons/view.svg';
+import { jwtDecoder } from '../../shared/utils/jwtDecoder';
 
-const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className = '', ...props }, ref) {
+type NavbarVariant = 'icons' | 'icons-labels' | 'labels';
+type NavbarProps = HTMLAttributes<HTMLElement> & {
+  variant?: NavbarVariant;
+};
+
+const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className = '', variant, ...props }, ref) {
   const { t } = useTranslation();
-  const { data: myProfile } = useTalentProfile();
-
-  const { slug } = useParams<{ slug: string }>();
   const location = useLocation();
+  const isAuth = getAuthToken();
+  const { mode } = useUserMode();
+  const jwt = jwtDecoder(isAuth!);
+  const profileUrl = `${ROUTES.PUBLIC_PROFILE}/${jwt?.publicSlug}`;
+
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const isOnProfileEdit = !!matchPath({ path: ROUTES.TALENT + '/*', end: false }, location.pathname);
-  const isOwner = !!myProfile?.publicSlug && myProfile.publicSlug === slug;
-  const shouldShowCard = !!myProfile && (isOnProfileEdit || isOwner);
+  const effectiveVariant: NavbarVariant = variant ?? (isAuth ? 'icons' : 'icons-labels');
+  const showIcons = effectiveVariant !== 'labels';
+  const showLabels = effectiveVariant !== 'icons';
 
-  const progress = useMemo<ProfileProgress | null>(() => {
-    if (!shouldShowCard || !myProfile) return null;
-    return computeProfileProgress(myProfile);
-  }, [shouldShowCard, myProfile]);
+  const baseClass = 'p-2 px-3 flex flex-row items-center gap-2';
+  const activeClass =
+    'rounded-lg bg-[var(--color-secondary-white-nav)] shadow-sm text-[var(--color-primary-purple)] font-semibold';
 
-  const isEditMode = isOnProfileEdit;
+  const isRouteActive = (to: string, exact = false) => {
+    if (exact) {
+      return location.pathname === to;
+    }
+    return !!matchPath({ path: to + '/*', end: false }, location.pathname);
+  };
+
+  // Public
+  const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
+  const activeProductions = isRouteActive(ROUTES.PRODUCTIONS);
+
+  // Private
+  const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
+  const activePublicProfile = isRouteActive(profileUrl, true);
+  const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS, true);
+  const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
 
   return (
-    <nav ref={ref} {...props} className={`w-full bg-[var(--color-primary-white)] ${className}`}>
-      <div className="relative py-4 px-6 lg:px-10 flex flex-row items-center justify-between bg-[var(--color-primary-white)]">
-        <LinkLogo horizontal path={ROUTES.HOME} />
-        <button
-          type="button"
-          className="cursor-pointer lg:hidden"
-          onClick={() => setMenuOpen(true)}
-          aria-label="Abrir menú"
-        >
-          <img src={BurgerIcon} alt="" className="w-7" />
-        </button>
+    <nav
+      ref={ref}
+      {...props}
+      className={`w-full bg-[var(--color-primary-white)] border-[var(--color-secondary-outline)] border-b ${className}`}
+    >
+      <div className="relative py-3 px-6 bg-[var(--color-primary-white)]">
+        {/* Mobile */}
+        <div className="lg:hidden w-full flex flex-row items-center justify-between">
+          <LinkLogo horizontal path={ROUTES.HOME} />
+          <button
+            type="button"
+            className="cursor-pointer lg:hidden"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Abrir menú"
+          >
+            <img src={BurgerIcon} alt="" className="w-7" />
+          </button>
+        </div>
+        <Sidebar
+          open={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          onLogout={() => logout()}
+          isAuthenticated={isAuth != null}
+        />
 
-        <span className="hidden h-auto lg:block lg:absolute lg:w-[310px] lg:left-1/2 lg:-translate-x-1/2">
-          {shouldShowCard && progress && (
-            <TalentProfileCompletionCard progress={progress} isEdit={isEditMode} publicSlug={myProfile!.publicSlug} />
-          )}
-        </span>
-
-        <div className="hidden lg:flex flex-row gap-6 items-center">
-          <HilightLink to={ROUTES.TALENT_DATABASE} label={t('routes.talent-database')} width={96} height={38} />
-          {getAuthToken() != null ? (
-            <>
-              <HilightLink to={ROUTES.TALENT} label={t('routes.profile')} exact={false} width={72} height={34} />
-              <AccountDropdown onLogout={logout} />
-            </>
-          ) : (
-            <HilightLink to={ROUTES.AUTH} label={t('routes.login')} width={62} height={30} />
-          )}
+        {/* Desktop */}
+        <div className="hidden lg:flex flex-row items-center justify-between ">
+          {/* Left: Public */}
+          <div className="flex flex-row items-center">
+            <LinkLogo horizontal path={ROUTES.HOME} />
+            <div className="ml-16 flex flex-row items-center gap-2">
+              <Link to={ROUTES.TALENT_DATABASE}>
+                <span className={clsx(baseClass, activeTalentDatabase && activeClass)}>
+                  {showIcons && (
+                    <img src={activeTalentDatabase ? CatalogoIconPurple : CatalogoIcon} alt="" className="w-6" />
+                  )}
+                  {showLabels && t('routes.talent-database')}
+                </span>
+              </Link>
+              {/* <Link to={ROUTES.PRODUCTIONS}>
+                <span className={clsx(baseClass, activeProductions && activeClass)}>
+                  {showIcons && (
+                    <img src={activeProductions ? ClapperIconPurple : ClapperIcon} alt="" className="w-6" />
+                  )}
+                  {showLabels && t('routes.productions')}
+                </span>
+              </Link> */}
+              {isAuth && (
+                <span className="ml-2">
+                  <UserModeSwitcher></UserModeSwitcher>
+                </span>
+              )}
+            </div>
+          </div>
+          {/* Right: Authenticated */}
+          <div className="flex flex-row gap-2 items-center text-nowrap">
+            {!isAuth ? (
+              <>
+                <Button asChild variant="primaryOutline" className="min-w-[145px]">
+                  <Link to={ROUTES.AUTH}>{t('routes.login')}</Link>
+                </Button>
+                <Button asChild variant="primary" className="min-w-[145px]">
+                  <Link to={ROUTES.AUTH_REGISTER}>{t('routes.register')}</Link>
+                </Button>
+              </>
+            ) : mode == 'talent' ? (
+              <div className="flex flex-row gap-2 items-center h-full">
+                {/* Talent */}
+                {/* <Link to={ROUTES.TALENT_APPLIED_PRODUCTIONS}>
+                  <span className={clsx(baseClass, activeAppliedProductions && activeClass)}>
+                    {showIcons && (
+                      <img src={activeAppliedProductions ? FileIconPurple : FileIcon} alt="" className="w-6" />
+                    )}
+                    {showLabels && t('routes.talent-applied-productions')}
+                  </span>
+                </Link> */}
+                <Link to={profileUrl}>
+                  <span className={clsx(baseClass, activePublicProfile && activeClass)}>
+                    {showIcons && <img src={activePublicProfile ? ViewIconPurple : ViewIcon} alt="" className="w-6" />}
+                    {showLabels && t('routes.profile')}
+                  </span>
+                </Link>
+                <Link to={ROUTES.TALENT}>
+                  <span className={clsx(baseClass, activeTalentProfile && activeClass)}>
+                    {showIcons && (
+                      <img src={activeTalentProfile ? ProfileIconPurple : ProfileIcon} alt="" className="w-6" />
+                    )}
+                    {showLabels && t('routes.profile')}
+                  </span>
+                </Link>
+                <Link to={ROUTES.TALENT_SETTINGS}>
+                  <span className={clsx(baseClass, activeSettings && activeClass)}>
+                    {showIcons && (
+                      <img src={activeSettings ? SettingsIconPurple : SettingsIcon} alt="" className="w-6" />
+                    )}
+                    {showLabels && t('routes.settings')}
+                  </span>
+                </Link>
+              </div>
+            ) : (
+              <>{/* Employer */}</>
+            )}
+            {isAuth && (
+              <span
+                className="ml-2 cursor-pointer flex flex-row items-center gap-2 text-[var(--color-alert-error)]"
+                onClick={logout}
+              >
+                <img src={LogoutIcon} alt="" className="w-7" />
+                {showLabels && t('routes.logout')}
+              </span>
+            )}
+          </div>
         </div>
       </div>
-
-      <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} onLogout={() => logout()} />
     </nav>
   );
 });

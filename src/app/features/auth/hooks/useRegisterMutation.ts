@@ -10,9 +10,9 @@ export const useRegisterMutation = () => {
 
   return useMutation<AuthenticationResponse, any, RegisterRequest>({
     mutationFn: register,
-    onSuccess: (data) => {
+    onSuccess: (data: AuthenticationResponse) => {
       setAuthToken(data.token);
-      navigate(ROUTES.DASHBOARD);
+      navigate(ROUTES.DASHBOARD, { replace: true });
     },
   });
 };

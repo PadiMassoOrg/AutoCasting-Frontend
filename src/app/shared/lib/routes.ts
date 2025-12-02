@@ -9,14 +9,24 @@ export const ROUTES = {
   // Dashboard
   DASHBOARD: '/dashboard',
   TALENT: '/dashboard/talent',
-  ACCOUNT: '/dashboard/talent/account',
+  TALENT_MEDIA: '/dashboard/talent/media',
+  TALENT_DETAILS: '/dashboard/talent/details',
+  TALENT_APPLIED_PRODUCTIONS: '/dashboard/talent/applied',
+  TALENT_SETTINGS: '/dashboard/talent/settings',
+  EMPLOYER: '/dashboard/employer',
+  EMPLOYER_PRODUCTIONS: '/dashboard/employer/productions',
+  EMPLOYER_SETTINGS: '/dashboard/employer/settings',
   // Public
   PUBLIC_PROFILE: '/profile',
   TALENT_DATABASE: '/talent-database',
+  PRODUCTIONS: '/productions',
   SUPPORT: '/support',
   FAQ: '/faq',
   TERMS: '/terms-and-conditions',
   PRIVACY: '/privacy-policy',
+  // Company:
+  LINKEDIN_URL: 'https://www.linkedin.com/feed/',
+  INSTAGRAM_URL: 'https://www.instagram.com/',
 };
 
 export const USER_ROUTES = [
@@ -42,10 +52,13 @@ export const API_ROUTES = {
   // Authentication
   AUTH_LOGIN: '/auth/login',
   AUTH_REGISTER: '/auth/register',
+  AUTH_ME_DATA: '/auth/me',
   OAUTH_GOOGLE: '/oauth2/authorization/google',
   FORGOT_PASSWORD: '/auth/forgot-password',
   RESET_PASSWORD: '/auth/reset-password',
   CHANGE_PASSWORD: '/auth/change-password',
+  // Onboarding
+  USER_ONBOARDING: '/auth/onboarding',
   // Legal
   CURRENT_LEGAL_DOCUMENT: '/legal/current',
   ACCEPT_LEGAL_DOCUMENT: '/legal/accept',
