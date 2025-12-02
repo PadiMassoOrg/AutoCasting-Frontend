@@ -174,7 +174,7 @@ function DashboardShell<Key extends string = string>({
               {currentSection.render()}
             </div>
           )}
-          <TalentProfileModeToggle isOnlyButtons></TalentProfileModeToggle>
+          <TalentProfileModeToggle visible></TalentProfileModeToggle>
           {children}
         </div>
       </article>

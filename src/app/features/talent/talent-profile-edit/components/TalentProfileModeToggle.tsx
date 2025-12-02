@@ -11,10 +11,10 @@ import { useTalentProfile } from '../hooks/useTalentProfile';
 
 type Props = {
   className?: string;
-  isOnlyButtons?: boolean;
+  visible?: boolean;
 };
 
-export default function TalentProfileModeToggle({ className, isOnlyButtons }: Props) {
+export default function TalentProfileModeToggle({ className, visible }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
@@ -63,9 +63,9 @@ export default function TalentProfileModeToggle({ className, isOnlyButtons }: Pr
   const viewActive = mode === 'view';
 
   // ===========================
-  // Layout MOBILE: barra fija abajo con texto
+  // Layout DESKTOP:
   // ===========================
-  if (isOnlyButtons) {
+  if (visible) {
     return (
       <div className="fixed z-[200] top-22 right-[32%] w-full max-w-[300px] bg-[var(--color-primary-white)]">
         <article className="w-full p-1 rounded-lg border border-[var(--color-secondary-outline)] shadow-lg flex items-center">
@@ -105,6 +105,9 @@ export default function TalentProfileModeToggle({ className, isOnlyButtons }: Pr
     );
   }
 
+  // ===========================
+  // Layout MOBILE: barra fija abajo con texto
+  // ===========================
   if (!isDesktop)
     return (
       <div
