@@ -12,13 +12,7 @@ type Props = WizardStepProps & {
   onBackToModeSelector: () => void;
 };
 
-function EmployerBasicInfoStep({
-  onBackToModeSelector,
-  goNext,
-  stepIndex = 0,
-  totalSteps = 1,
-  progress = 0,
-}: Props) {
+function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, totalSteps = 1, progress = 0 }: Props) {
   const { t } = useTranslation();
 
   const {
