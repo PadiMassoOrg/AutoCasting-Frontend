@@ -13,11 +13,12 @@ const TOP_MARGIN = '5rem';
 
 const PublicProfilePage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { data, error } = usePublicProfile(slug!);
+  const { data, error, isLoading } = usePublicProfile(slug!);
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
 
-  if (error || !data) return <ServerError />;
+  if (isLoading || !data) return null;
+  if (error) return <ServerError />;
 
   const { socialMedia, media } = data!;
 

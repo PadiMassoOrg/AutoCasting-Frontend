@@ -15,9 +15,10 @@ import { useTalentProfile } from '../hooks/useTalentProfile';
 
 export default function TalentProfileEditPage() {
   const { t } = useTranslation();
-  const { data, error } = useTalentProfile();
+  const { data, error, isLoading } = useTalentProfile();
 
-  if (error || !data) return <ServerError />;
+  if (isLoading || !data) return null;
+  if (error) return <ServerError />;
 
   const sections: DashboardSection[] = [
     {
