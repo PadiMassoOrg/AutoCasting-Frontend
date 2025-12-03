@@ -1,8 +1,7 @@
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../../context/ModalContext';
-import deleteIcon from '../../../../../../shared/icons/delete-red.svg';
-import editIcon from '../../../../../../shared/icons/edit-purple.svg';
+import { Icon } from '../../../../../../shared/components/Icon/Icon';
 import { useEducationAutosave, useEducationDeleteAutosave, useEducationPatchAutosave } from '../../../hooks/autosaves';
 import type { Education } from '../../../types/talentProfile.types';
 import EducationDeleteModal from './EducationDeleteModal';
@@ -88,12 +87,8 @@ export default function EducationForm({ data }: { data: Education[] }) {
                   </div>
                 </div>
                 <div className="flex flex-col justify-around items-center ml-3 pl-3 border-l border-[var(--color-secondary-outline)]">
-                  <span onClick={() => openDeleteModal(e)} className="cursor-pointer" aria-label="Delete">
-                    <img src={deleteIcon} alt="" className="w-5" />
-                  </span>
-                  <span onClick={() => openEditModal(e)} className="cursor-pointer" aria-label="Edit">
-                    <img src={editIcon} alt="" className="w-5" />
-                  </span>
+                  <Icon name="delete" variant="danger" size={20} onClick={() => openDeleteModal(e)} />
+                  <Icon name="edit" variant="primary" size={20} onClick={() => openEditModal(e)} />
                 </div>
               </div>
             </article>

@@ -2,9 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import ButtonRow from '../../../shared/components/ButtonRow/ButtonRow';
-import copyLinkIcon from '../../../shared/icons/copy-link.svg';
-import emailIcon from '../../../shared/icons/message.svg';
-import whatsappIcon from '../../../shared/icons/whatsapp.svg';
+import { Icon } from '../../../shared/components/Icon/Icon';
 import { isBrowser } from '../../../shared/utils/domUtils';
 import { whatsappLink } from '../../../shared/utils/phoneUtils';
 import { shareUrl } from '../../../shared/utils/shareUtils';
@@ -47,7 +45,7 @@ export default function ViewerActions({ className }: Props) {
         aria-label={t('profile.share.whatsapp')}
         title="WhatsApp"
       >
-        <img src={whatsappIcon} alt="" className="w-5" />
+        <Icon name="whatsapp" size={18} />
       </a>
     );
   }
@@ -55,22 +53,12 @@ export default function ViewerActions({ className }: Props) {
   if (mailtoUrl) {
     items.push(
       <a key="email" href={mailtoUrl} aria-label={t('profile.share.email')} title="Email">
-        <img src={emailIcon} alt="" className="w-5" />
+        <Icon name="mail" size={18} />
       </a>
     );
   }
 
-  items.push(
-    <button
-      key="link"
-      type="button"
-      onClick={handleShare}
-      aria-label={t('profile.share.share_profile')}
-      title={t('profile.share.share_profile')}
-    >
-      <img src={copyLinkIcon} alt="" className="w-5" />
-    </button>
-  );
+  items.push(<Icon name="copyLink" size={18} onClick={handleShare} />);
 
   if (items.length === 0) return null;
 

@@ -1,11 +1,8 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { matchPath, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Icon } from '../../../../shared/components/Icon/Icon';
 import { LG_SCREEN_SIZE, useMedia } from '../../../../shared/hooks/useMedia';
-import purpleEditIcon from '../../../../shared/icons/edit-purple.svg';
-import blackEditIcon from '../../../../shared/icons/edit.svg';
-import purpleViewIcon from '../../../../shared/icons/view-purple.svg';
-import blackViewIcon from '../../../../shared/icons/view.svg';
 import { ROUTES } from '../../../../shared/lib/routes';
 import { useTalentProfile } from '../hooks/useTalentProfile';
 
@@ -83,7 +80,7 @@ export default function TalentProfileModeToggle({ className }: Props) {
                 !canPreview && 'opacity-60 cursor-not-allowed'
               )}
             >
-              <img src={viewActive ? purpleViewIcon : blackViewIcon} alt="" className="w-[16px] h-[16px]" />
+              <Icon name="view" variant={viewActive ? 'primary' : 'default'} size={18} />
               <span>{t('profile.page.view_profile')}</span>
             </button>
 
@@ -99,7 +96,7 @@ export default function TalentProfileModeToggle({ className }: Props) {
                   : 'bg-transparent text-black'
               )}
             >
-              <img src={editActive ? purpleEditIcon : blackEditIcon} alt="" className="w-[16px] h-[16px]" />
+              <Icon name="edit" variant={editActive ? 'primary' : 'default'} size={17} />
               <span>{t('profile.page.edit_profile')}</span>
             </button>
           </article>

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUserMode } from '../../context/UserModeContext';
-import SwitcherIconPurple from '../../shared/icons/switcher-purple.svg';
-import SwitcherIcon from '../../shared/icons/switcher.svg';
+import { Icon } from '../../shared/components/Icon/Icon';
 
 type ModeSwitcherProps = {
   showLabel?: boolean;
@@ -31,7 +30,7 @@ function UserModeSwitcher({ showLabel = false, onAfterToggle }: ModeSwitcherProp
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <img src={hovered ? SwitcherIconPurple : SwitcherIcon} alt="" className="w-6" />
+      <Icon name="switcher" variant={`${hovered ? 'primary' : 'default'}`} />
       {showLabel && modeLabel}
     </span>
   );

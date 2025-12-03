@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import LogoIcon from '../../../../shared/icons/og-image.svg';
+import { Icon } from '../../../../shared/components/Icon/Icon';
 import { PlanCard } from '../../components/UI';
 
 const PlanSection = () => {
@@ -10,7 +10,7 @@ const PlanSection = () => {
       <div className="relative max-w-[1450px] z-10 w-[90%] h-full py-15 flex flex-col gap-10 lg:gap-14 items-center">
         {/* Title */}
         <div className="flex flex-col gap-2 items-center">
-          <img src={LogoIcon} width={70} height={81} alt="" />
+          <Icon name="ogIcon" className="w-18"></Icon>
           <h2 className="text-2xl font-bold lg:text-[40px]">{t('landing.plan.header')}</h2>
         </div>
 

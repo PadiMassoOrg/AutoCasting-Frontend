@@ -4,8 +4,8 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import DetailsView from '../../../shared/components/DetailsView/DetailsView';
+import { Icon } from '../../../shared/components/Icon/Icon';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
-import openIconPurple from '../../../shared/icons/open-purple.svg';
 import ProfileInfoCarousel from '../../public-profile/components/Details/ProfileInfoCarousel';
 import VideoSection from '../../public-profile/components/VideoSection';
 import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
@@ -66,7 +66,7 @@ export default function PublicProfileDetailsView({ open, onClose, profile }: Pro
 
   const headerRight = (
     <Link aria-label={t('profile.share.share_profile')} className="cursor-pointer" to={url}>
-      <img src={openIconPurple} alt="" className="w-[19px]" />
+      <Icon name="open" variant="primary" size={18} />
     </Link>
   );
 

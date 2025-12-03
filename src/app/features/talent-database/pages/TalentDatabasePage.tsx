@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Icon } from '../../../shared/components/Icon/Icon';
 import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
-import filterIcon from '../../../shared/icons/filter-purple.svg';
 import { PublicProfileDetailsView } from '../../public-profile/pages';
 import { getPublicProfile } from '../../public-profile/services/publicProfileService';
 import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
@@ -218,7 +218,7 @@ export default function TalentDatabasePage() {
             aria-label={t('talent.filters.open')}
           >
             <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
-              <img src={filterIcon} alt="Filter bar" className="w-5 h-5" />
+              <Icon name="filter" variant="primary" size={20} />
             </span>
           </button>
         </article>
@@ -250,7 +250,7 @@ export default function TalentDatabasePage() {
                   {filtersOpen ? t('talent.filter.hide') : t('talent.filter.show')}
                 </h2>
                 <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
-                  <img src={filterIcon} alt="Filter bar" className="w-5 h-5" />
+                  <Icon name="filter" variant="primary" size={18} />
                 </span>
               </button>
             </div>

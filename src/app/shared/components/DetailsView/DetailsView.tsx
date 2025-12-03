@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { type ReactNode, useEffect } from 'react';
 
-import closeIcon from '../../icons/cross-small.svg';
+import { Icon } from '../Icon/Icon';
 
 type DetailsViewProps = {
   open: boolean;
@@ -46,9 +46,9 @@ export default function DetailsView({
         {/* Header */}
         <header className="flex items-center justify-between p-5 border-b border-[var(--color-secondary-outline)] bg-[var(--color-primary-white)]">
           {navigation}
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-4">
             {headerRight}
-            <img src={closeIcon} className="w-[15px] cursor-pointer" onClick={onClose}></img>
+            <Icon name="burgerClose" onClick={onClose} size={20} />
           </div>
         </header>
 

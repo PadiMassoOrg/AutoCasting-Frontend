@@ -22,6 +22,8 @@ import EditIconPurple from '../../icons/edit-purple.svg';
 import EditIcon from '../../icons/edit.svg';
 import FileIconPurple from '../../icons/file-purple.svg';
 import FileIcon from '../../icons/file.svg';
+import FilterIconPurple from '../../icons/filter-purple.svg';
+import FilterIcon from '../../icons/filter.svg';
 import ImdbIconPurple from '../../icons/imdb-purple.svg';
 import ImdbIcon from '../../icons/imdb.svg';
 import InstagramIconPurple from '../../icons/instagram-purple.svg';
@@ -31,6 +33,7 @@ import LinkedInIcon from '../../icons/linkedin.svg';
 import LogoutIconRed from '../../icons/logout-red.svg';
 import MailIconPurple from '../../icons/message-purple.svg';
 import MailIcon from '../../icons/message.svg';
+import OGIcon from '../../icons/og-image.svg';
 import OpenIconPurple from '../../icons/open-purple.svg';
 import OpenIcon from '../../icons/open.svg';
 import ProfileIconPurple from '../../icons/profile-purple.svg';
@@ -52,6 +55,7 @@ import XIconPurple from '../../icons/x-purple.svg';
 import XIcon from '../../icons/x.svg';
 
 export type IconName =
+  | 'ogIcon'
   | 'switcher'
   | 'tick'
   | 'view'
@@ -63,6 +67,7 @@ export type IconName =
   | 'copyLink'
   | 'clapper'
   | 'file'
+  | 'filter'
   | 'profile'
   | 'settings'
   | 'cross'
@@ -193,6 +198,13 @@ const ICONS: Record<IconName, BaseIconConfig> = {
   linkedin: {
     default: LinkedInIcon,
     primary: LinkedInIconPurple,
+  },
+  ogIcon: {
+    default: OGIcon,
+  },
+  filter: {
+    default: FilterIcon,
+    primary: FilterIconPurple,
   },
 };
 
