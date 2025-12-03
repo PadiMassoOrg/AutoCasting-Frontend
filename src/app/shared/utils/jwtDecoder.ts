@@ -1,11 +1,12 @@
 export type AutocastingJwtPayload = {
-  sub: string;
-  roles?: string[];
   role?: string;
-  publicSlug?: string;
-  exp?: number;
-  iat?: number;
-  iss?: string;
+  roles?: string[];
+  talentProfileSlug?: string;
+  employerProfileSlug?: string;
+  sub: string;
+  iss: string;
+  iat: number;
+  exp: number;
 };
 
 function base64UrlDecode(input: string): string {

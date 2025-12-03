@@ -17,7 +17,7 @@ const PublicProfilePage = () => {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
 
-  if (error) return <ServerError />;
+  if (error || !data) return <ServerError />;
 
   const { socialMedia, media } = data!;
 
@@ -91,7 +91,7 @@ const PublicProfilePage = () => {
       <ViewerActions />
       <BasicInfoSection data={data} />
       <ImageCarousel images={hasImages ? images : null} />
-      <SocialMediaSection data={socialMedia} className="mt-8" />
+      <SocialMediaSection data={socialMedia} />
       <Separator className="opacity-25 my-10" />
       <ProfileInfoCarousel profile={data} />
       <Separator className="opacity-25 my-10" />

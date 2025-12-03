@@ -13,36 +13,46 @@ function OnboardingWizard() {
   const navigate = useNavigate();
   const { data: meData, isLoading } = useMeData();
   const jwt = getAuthToken();
-  const [showModeSelector, setShowModeSelector] = useState(false);
-  const decoded = jwtDecoder(jwt!);
+  const decoded = jwt ? jwtDecoder(jwt) : null;
+  const talentProfileSlug = decoded?.talentProfileSlug;
+  const [currentFlow, setCurrentFlow] = useState<'MODE' | 'TALENT' | 'EMPLOYER'>('MODE');
 
   if (isLoading || !meData) return null;
 
-  if (!meData.activeMode || showModeSelector) {
+  if (currentFlow === 'MODE') {
     return (
       <Wizard key="mode-selector">
-        <ModeSelectorStep onModeChosen={() => setShowModeSelector(false)} />
+        <ModeSelectorStep
+          onModeChosen={(mode) => {
+            if (mode === 'TALENT') {
+              setCurrentFlow('TALENT');
+            } else if (mode === 'EMPLOYER') {
+              setCurrentFlow('EMPLOYER');
+            }
+          }}
+        />
       </Wizard>
     );
   }
 
-  if (meData.activeMode === 'TALENT') {
+  if (currentFlow === 'TALENT') {
     return (
       <Wizard key="talent-flow">
-        <TalentBasicInfoStep onBackToModeSelector={() => setShowModeSelector(true)} />
-        <TalentMediaStep></TalentMediaStep>
+        <TalentBasicInfoStep onBackToModeSelector={() => setCurrentFlow('MODE')} />
+        <TalentMediaStep />
         <TalentConfirmationStep
-          onGoToProfile={() => navigate(`${ROUTES.PUBLIC_PROFILE}/${decoded?.publicSlug}`)}
-        ></TalentConfirmationStep>
+          onGoToProfile={() =>
+            navigate(talentProfileSlug ? `${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}` : ROUTES.TALENT)
+          }
+        />
       </Wizard>
     );
   }
 
-  if (meData.activeMode === 'EMPLOYER') {
+  if (currentFlow === 'EMPLOYER') {
     return (
       <Wizard key="employer-flow">
-        <EmployerBasicInfoStep onBackToModeSelector={() => setShowModeSelector(true)} />
-        {/* aquí luego irán EmployerMediaStep, EmployerConfirmStep */}
+        <EmployerBasicInfoStep onBackToModeSelector={() => setCurrentFlow('MODE')} />
       </Wizard>
     );
   }

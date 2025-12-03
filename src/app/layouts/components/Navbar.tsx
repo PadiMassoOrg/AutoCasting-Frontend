@@ -24,8 +24,9 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
   const location = useLocation();
   const isAuth = getAuthToken();
   const { mode } = useUserMode();
-  const jwt = jwtDecoder(isAuth!);
-  const profileUrl = `${ROUTES.PUBLIC_PROFILE}/${jwt?.publicSlug}`;
+  const jwt = isAuth ? jwtDecoder(isAuth) : null;
+  const talentProfileSlug = jwt?.talentProfileSlug;
+  const profileUrl = talentProfileSlug ? `${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}` : ROUTES.TALENT;
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -44,14 +45,9 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
     return !!matchPath({ path: to + '/*', end: false }, location.pathname);
   };
 
-  // Public
   const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
-  //const activeProductions = isRouteActive(ROUTES.PRODUCTIONS);
-
-  // Private
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
   const activePublicProfile = isRouteActive(profileUrl, true);
-  //const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS, true);
   const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
 
   return (
@@ -61,7 +57,6 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
       className={`w-full bg-[var(--color-primary-white)] border-[var(--color-secondary-outline)] border-b ${className}`}
     >
       <div className="relative py-3 px-6 bg-[var(--color-primary-white)]">
-        {/* Mobile */}
         <div className="lg:hidden w-full flex flex-row items-center justify-between">
           <LinkLogo horizontal path={ROUTES.HOME} />
           <button
@@ -70,7 +65,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
             onClick={() => setMenuOpen(true)}
             aria-label="Abrir menú"
           >
-            <Icon name={'burger'} />
+            <Icon name="burger" />
           </button>
         </div>
         <Sidebar
@@ -80,9 +75,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
           isAuthenticated={isAuth != null}
         />
 
-        {/* Desktop */}
         <div className="hidden lg:flex flex-row items-center justify-between ">
-          {/* Left: Public */}
           <div className="flex flex-row items-center">
             <LinkLogo horizontal path={ROUTES.HOME} />
             <div className="ml-16 flex flex-row items-center gap-2">
@@ -92,14 +85,6 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                   {showLabels && t('routes.talent-database')}
                 </span>
               </Link>
-              {/* <Link to={ROUTES.PRODUCTIONS}>
-                <span className={clsx(baseClass, activeProductions && activeClass)}>
-                  {showIcons && (
-                    <img src={activeProductions ? ClapperIconPurple : ClapperIcon} alt="" className="w-6" />
-                  )}
-                  {showLabels && t('routes.productions')}
-                </span>
-              </Link> */}
               {isAuth && (
                 <span className="ml-2">
                   <UserModeSwitcher></UserModeSwitcher>
@@ -107,7 +92,6 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
               )}
             </div>
           </div>
-          {/* Right: Authenticated */}
           <div className="flex flex-row gap-2 items-center text-nowrap">
             {!isAuth ? (
               <>
@@ -120,15 +104,6 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
               </>
             ) : mode == 'talent' ? (
               <div className="flex flex-row gap-2 items-center h-full">
-                {/* Talent */}
-                {/* <Link to={ROUTES.TALENT_APPLIED_PRODUCTIONS}>
-                  <span className={clsx(baseClass, activeAppliedProductions && activeClass)}>
-                    {showIcons && (
-                      <img src={activeAppliedProductions ? FileIconPurple : FileIcon} alt="" className="w-6" />
-                    )}
-                    {showLabels && t('routes.talent-applied-productions')}
-                  </span>
-                </Link> */}
                 <Link to={profileUrl}>
                   <span className={clsx(baseClass, activePublicProfile && activeClass)}>
                     {showIcons && <Icon name="view" variant={activePublicProfile ? 'primary' : 'default'} />}
@@ -156,7 +131,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                 </Link>
               </div>
             ) : (
-              <>{/* Employer */}</>
+              <></>
             )}
             {isAuth && (
               <span

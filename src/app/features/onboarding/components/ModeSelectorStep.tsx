@@ -1,29 +1,73 @@
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { ContinueLaterButton } from '.';
 import { Icon } from '../../../shared/components/Icon/Icon';
 import { WizardStep } from '../../../shared/components/Wizard';
 import type { WizardStepProps } from '../../../shared/components/Wizard/WizardStep';
 import type { ActiveMode } from '../../auth/types/auth.types';
 import { useUpdateOnboardingMutation } from '../hooks/useUpdateOnboardingMutation';
+import { useMeData } from '../../auth/hooks/useMeData';
+import { useUserMode } from '../../../context/UserModeContext';
+import { getAuthToken } from '../../../shared/lib/cookies';
+import { jwtDecoder } from '../../../shared/utils/jwtDecoder';
+import { ROUTES } from '../../../shared/lib/routes';
 
 type Props = WizardStepProps & {
-  onModeChosen?: () => void;
+  onModeChosen?: (mode: ActiveMode) => void;
 };
 
 function ModeSelectorStep({ onModeChosen }: Props) {
   const { t } = useTranslation();
+  const { data: meData } = useMeData();
   const { mutate: updateOnboarding } = useUpdateOnboardingMutation();
+  const { setMode } = useUserMode();
+  const navigate = useNavigate();
+
+  const token = getAuthToken();
+  const decoded = token ? jwtDecoder(token) : null;
+  const talentProfileSlug = decoded?.talentProfileSlug;
 
   const handleContinue = (mode: ActiveMode) => {
+    if (!meData) return;
+
+    let talentOnboardingStatus = meData.talentOnboardingStatus;
+    let employerOnboardingStatus = meData.employerOnboardingStatus;
+
+    if (mode === 'TALENT' && talentOnboardingStatus === 'NOT_STARTED') {
+      talentOnboardingStatus = 'IN_PROGRESS';
+    }
+
+    if (mode === 'EMPLOYER' && employerOnboardingStatus === 'NOT_STARTED') {
+      employerOnboardingStatus = 'IN_PROGRESS';
+    }
+
+    const nextActiveMode = mode;
+
     updateOnboarding(
       {
-        activeMode: mode,
-        talentOnboardingStatus: mode === 'TALENT' ? 'IN_PROGRESS' : 'NOT_STARTED',
-        employerOnboardingStatus: mode === 'EMPLOYER' ? 'IN_PROGRESS' : 'NOT_STARTED',
+        activeMode: nextActiveMode,
+        talentOnboardingStatus,
+        employerOnboardingStatus,
       },
       {
-        onSuccess: () => onModeChosen?.(),
+        onSuccess: () => {
+          if (nextActiveMode === 'TALENT') {
+            setMode('talent');
+            if (talentOnboardingStatus === 'COMPLETED') {
+              navigate(talentProfileSlug ? `${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}` : ROUTES.TALENT);
+              return;
+            }
+          } else if (nextActiveMode === 'EMPLOYER') {
+            setMode('employer');
+            if (employerOnboardingStatus === 'COMPLETED') {
+              navigate(ROUTES.EMPLOYER);
+              return;
+            }
+          }
+
+          onModeChosen?.(mode);
+        },
       }
     );
   };
@@ -32,7 +76,6 @@ function ModeSelectorStep({ onModeChosen }: Props) {
     <section className="w-full pb-6">
       <WizardStep>
         <div className="flex min-h-[65vh] flex-col justify-between gap-10">
-          {/* Header */}
           <div className="flex flex-col items-center gap-4 mb-6">
             <Icon name="ogIcon" className="w-16" />
             <div className="text-center">

@@ -1,5 +1,5 @@
 import api from '../../../shared/lib/axios';
-import { clearAuthToken } from '../../../shared/lib/cookies';
+import { clearAuthToken, getAuthToken } from '../../../shared/lib/cookies';
 import { queryClient } from '../../../shared/lib/queryClient';
 import { API_ROUTES, ROUTES } from '../../../shared/lib/routes';
 import { TALENT_PROFILE_CACHE_KEY } from '../../talent/talent-profile-edit/services/talentProfileService';
@@ -25,8 +25,23 @@ export const login = async (data: LoginRequest): Promise<AuthenticationResponse>
 };
 
 export const meData = async (): Promise<MeDataResponse> => {
-  const response = await api.get(API_ROUTES.AUTH_ME_DATA);
-  return response.data;
+  const token = getAuthToken();
+  if (!token) {
+    throw new Error('NO_TOKEN');
+  }
+
+  try {
+    const { data } = await api.get<MeDataResponse>(API_ROUTES.AUTH_ME_DATA);
+    return data;
+  } catch (error: any) {
+    const status = error?.response?.status;
+
+    if (status === 401 || status === 403 || status === 409) {
+      logout();
+    }
+
+    throw error;
+  }
 };
 
 export const googleLogin = async () => {

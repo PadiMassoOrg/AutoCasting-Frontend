@@ -11,7 +11,7 @@ export default function ProtectedRoutesLayout() {
   const { data: meData, isLoading } = useMeData();
   const jwt = getAuthToken();
   const decoded = jwt ? jwtDecoder(jwt) : null;
-  const publicSlug = decoded?.publicSlug;
+  const talentProfileSlug = decoded?.talentProfileSlug;
 
   if (isLoading || !meData) {
     return null;
@@ -20,8 +20,8 @@ export default function ProtectedRoutesLayout() {
   const effectiveDashboardRoute =
     meData.activeMode === 'EMPLOYER'
       ? ROUTES.EMPLOYER
-      : publicSlug
-        ? `${ROUTES.PUBLIC_PROFILE}/${publicSlug}`
+      : talentProfileSlug
+        ? `${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}`
         : ROUTES.TALENT;
 
   return (
