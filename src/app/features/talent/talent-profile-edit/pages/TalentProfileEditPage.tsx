@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { DashboardShell } from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
-import PageLoading from '../../../../shared/components/PageLoading/PageLoading';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { TalentProfileModeToggle } from '../components';
 import {
@@ -16,9 +15,8 @@ import { useTalentProfile } from '../hooks/useTalentProfile';
 
 export default function TalentProfileEditPage() {
   const { t } = useTranslation();
-  const { data, isPending, error } = useTalentProfile();
+  const { data, error } = useTalentProfile();
 
-  if (isPending) return <PageLoading />;
   if (error || !data) return <ServerError />;
 
   const sections: DashboardSection[] = [

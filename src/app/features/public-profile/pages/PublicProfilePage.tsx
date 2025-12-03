@@ -1,7 +1,6 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useParams } from 'react-router-dom';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
-import PageLoading from '../../../shared/components/PageLoading/PageLoading';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { LG_SCREEN_SIZE, useMedia, XL_SCREEN_SIZE } from '../../../shared/hooks/useMedia';
 import { TalentProfileModeToggle } from '../../talent/talent-profile-edit/components';
@@ -14,14 +13,13 @@ const TOP_MARGIN = '5rem';
 
 const PublicProfilePage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { data, isLoading, error } = usePublicProfile(slug!);
+  const { data, error } = usePublicProfile(slug!);
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
 
-  if (isLoading || !data) return <PageLoading />;
   if (error) return <ServerError />;
 
-  const { socialMedia, media } = data;
+  const { socialMedia, media } = data!;
 
   const mergePictures = (): string[] =>
     [media.headshotImageUrl, media.fullBodyImageUrl, ...(media.otherPicturesUrl ?? [])].filter(
