@@ -150,7 +150,7 @@ function DashboardShell<Key extends string = string>({
       )}
 
       <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch] pt-8">
-        <div className="w-full max-w-[1100px] mx-auto px-4 lg:px-8 py-6 lg:py-8">
+        <div className="w-full max-w-[1100px] mx-auto px-4 lg:px-8 lg:py-5 pb-6">
           {!isDesktop && mobileView === 'content' && currentSection && (
             <div className="flex flex-col gap-4">
               <button
