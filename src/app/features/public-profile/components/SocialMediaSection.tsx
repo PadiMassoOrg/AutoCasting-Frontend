@@ -22,8 +22,16 @@ const SocialMediaSection = ({ data }: Props) => {
         const label = link.stringCode;
 
         return (
-          <a key={link.optionId} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} title={label}>
-            <Icon name={iconName} size={16} />
+          <a
+            key={link.optionId}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={label}
+            title={label}
+            className="w-full h-full"
+          >
+            <Icon name={iconName} size={18} />
           </a>
         );
       })

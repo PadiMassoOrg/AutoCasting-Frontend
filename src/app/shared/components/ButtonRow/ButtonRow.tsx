@@ -12,11 +12,16 @@ export default function ButtonRow({ items, className, innerClassName }: ButtonRo
 
   return (
     <div className={clsx('flex items-center justify-center', className)}>
-      <div className={clsx('inline-flex items-center rounded-lg bg-white shadow-sm py-2 px-4', innerClassName)}>
+      <div
+        className={clsx(
+          'inline-flex items-center justify-center rounded-lg bg-white shadow-sm h-11 px-4',
+          innerClassName
+        )}
+      >
         {items.map((item, index) => (
           <React.Fragment key={index}>
-            {index > 0 && <div className="w-px min-h-7 mx-4 bg-[var(--color-secondary-outline)]" />}
-            <div className="flex items-center justify-center cursor-pointer">{item}</div>
+            {index > 0 && <div className="w-px h-7 mx-4 bg-[var(--color-secondary-outline)]" />}
+            <div className="flex items-center justify-center">{item}</div>
           </React.Fragment>
         ))}
       </div>
