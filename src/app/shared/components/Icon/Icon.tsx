@@ -101,12 +101,10 @@ const ICONS: Record<IconName, BaseIconConfig> = {
     default: TickIcon,
     primary: TickIconPurple,
   },
-
   view: {
     default: ViewIcon,
     primary: ViewIconPurple,
   },
-
   open: {
     default: OpenIcon,
     primary: OpenIconPurple,
@@ -214,15 +212,19 @@ export type IconProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
   size?: number;
 };
 
-export function Icon({ name, variant = 'default', size, className, alt = '', ...rest }: IconProps) {
+export function Icon({ name, variant = 'default', size = 24, className, alt = '', style, ...rest }: IconProps) {
   const config = ICONS[name];
 
   const src = (variant === 'primary' && config.primary) || (variant === 'danger' && config.danger) || config.default;
 
-  const styleSize = size ? { width: size, height: size } : undefined;
+  const finalStyle = {
+    width: size,
+    height: size,
+    ...style,
+  };
 
-  const baseClassName = 'cursor-pointer w-6';
+  const baseClassName = 'inline-block cursor-pointer';
   const finalClassName = className ? `${baseClassName} ${className}` : baseClassName;
 
-  return <img src={src} alt={alt} className={finalClassName} style={styleSize} {...rest} />;
+  return <img src={src} alt={alt} className={finalClassName} style={finalStyle} {...rest} />;
 }

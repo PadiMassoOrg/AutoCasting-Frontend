@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import DeleteIconRed from '../../../../../../shared/icons/delete-red.svg';
+import { Icon } from '../../../../../../shared/components/Icon/Icon';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
 import { useSocialMediaAutosave } from '../../../hooks/autosaves';
 import { getSocialMediaSchema } from '../../../schemas/socialMediaSchema';
 import type { LinkState } from './SocialMediaForm';
-import { getSocialMediaIcon } from './SocialMediaIconMapper';
+import { getSocialMediaIconName } from './SocialMediaIconMapper';
 
 type SocialMediaIconSelectProps = {
   allOptions: SiteMetadataObject[];
@@ -27,7 +27,7 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
     optionsForThisRow[0] ??
     null;
 
-  const selectedIcon = selectedOption ? getSocialMediaIcon(selectedOption.stringCode) : undefined;
+  const selectedIcon = selectedOption ? getSocialMediaIconName(selectedOption.stringCode) : undefined;
 
   const toggleOpen = () => {
     setOpen((prev) => {
@@ -66,7 +66,7 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
         className="flex items-center justify-center gap-2 rounded-lg cursor-pointer"
         onClick={toggleOpen}
       >
-        {selectedIcon && <img src={selectedIcon} alt="" className="w-5 h-5" />}
+        {selectedIcon && <Icon name={selectedIcon} size={16} />}
         <svg className="w-3 h-3" viewBox="0 0 10 6" aria-hidden="true">
           <path
             d="M1 1l4 4 4-4"
@@ -86,7 +86,7 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
           }`}
         >
           {optionsForThisRow.map((opt) => {
-            const icon = getSocialMediaIcon(opt.stringCode);
+            const icon = getSocialMediaIconName(opt.stringCode);
             return (
               <button
                 key={opt.id}
@@ -100,7 +100,7 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
                 }}
                 title={opt.stringCode}
               >
-                {icon && <img src={icon} alt="" className="w-5 h-5" />}
+                {icon && <Icon name={icon} size={16} />}
               </button>
             );
           })}
@@ -254,12 +254,7 @@ const SocialMediaRow = ({
         {error && <p className="mt-1 pl-2 text-sm text-[var(--color-alert-error)]">{error}</p>}
       </div>
 
-      <img
-        src={DeleteIconRed}
-        onClick={handleDelete}
-        className="cursor-pointer self-center w-[17px]"
-        alt={t('general.delete')}
-      />
+      <Icon name="delete" variant="danger" onClick={handleDelete} className="self-center" size={20} />
     </div>
   );
 };
