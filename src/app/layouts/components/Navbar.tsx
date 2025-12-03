@@ -11,16 +11,7 @@ import UserModeSwitcher from './UserModeSwitcher';
 
 import clsx from 'clsx';
 import { useUserMode } from '../../context/UserModeContext';
-import BurgerIcon from '../../shared/icons/burger.svg';
-import CatalogoIconPurple from '../../shared/icons/catalogo-purple.svg';
-import CatalogoIcon from '../../shared/icons/catalogo.svg';
-import LogoutIcon from '../../shared/icons/logout-red.svg';
-import ProfileIconPurple from '../../shared/icons/profile-purple.svg';
-import ProfileIcon from '../../shared/icons/profile.svg';
-import SettingsIconPurple from '../../shared/icons/settings-purple.svg';
-import SettingsIcon from '../../shared/icons/settings.svg';
-import ViewIconPurple from '../../shared/icons/view-purple.svg';
-import ViewIcon from '../../shared/icons/view.svg';
+import { Icon } from '../../shared/components/Icon/Icon';
 import { jwtDecoder } from '../../shared/utils/jwtDecoder';
 
 type NavbarVariant = 'icons' | 'icons-labels' | 'labels';
@@ -79,7 +70,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
             onClick={() => setMenuOpen(true)}
             aria-label="Abrir menú"
           >
-            <img src={BurgerIcon} alt="" className="w-7" />
+            <Icon className="w-7" name={'burger'} />
           </button>
         </div>
         <Sidebar
@@ -98,7 +89,12 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
               <Link to={ROUTES.TALENT_DATABASE}>
                 <span className={clsx(baseClass, activeTalentDatabase && activeClass)}>
                   {showIcons && (
-                    <img src={activeTalentDatabase ? CatalogoIconPurple : CatalogoIcon} alt="" className="w-6" />
+                    <Icon
+                      name="catalog"
+                      variant={activeTalentDatabase ? 'primary' : 'default'}
+                      size={24}
+                      className="w-6"
+                    />
                   )}
                   {showLabels && t('routes.talent-database')}
                 </span>
@@ -142,14 +138,26 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                 </Link> */}
                 <Link to={profileUrl}>
                   <span className={clsx(baseClass, activePublicProfile && activeClass)}>
-                    {showIcons && <img src={activePublicProfile ? ViewIconPurple : ViewIcon} alt="" className="w-6" />}
+                    {showIcons && (
+                      <Icon
+                        name="view"
+                        variant={activePublicProfile ? 'primary' : 'default'}
+                        size={24}
+                        className="w-6"
+                      />
+                    )}
                     {showLabels && t('routes.profile')}
                   </span>
                 </Link>
                 <Link to={ROUTES.TALENT}>
                   <span className={clsx(baseClass, activeTalentProfile && activeClass)}>
                     {showIcons && (
-                      <img src={activeTalentProfile ? ProfileIconPurple : ProfileIcon} alt="" className="w-6" />
+                      <Icon
+                        name="profile"
+                        variant={activeTalentProfile ? 'primary' : 'default'}
+                        size={24}
+                        className="w-6"
+                      />
                     )}
                     {showLabels && t('routes.profile')}
                   </span>
@@ -157,7 +165,12 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                 <Link to={ROUTES.TALENT_SETTINGS}>
                   <span className={clsx(baseClass, activeSettings && activeClass)}>
                     {showIcons && (
-                      <img src={activeSettings ? SettingsIconPurple : SettingsIcon} alt="" className="w-6" />
+                      <Icon
+                        name="settings"
+                        variant={activeSettings ? 'primary' : 'default'}
+                        size={24}
+                        className="w-6"
+                      />
                     )}
                     {showLabels && t('routes.settings')}
                   </span>
@@ -171,8 +184,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                 className="ml-2 cursor-pointer flex flex-row items-center gap-2 text-[var(--color-alert-error)]"
                 onClick={logout}
               >
-                <img src={LogoutIcon} alt="" className="w-7" />
-                {showLabels && t('routes.logout')}
+                <Icon name="logout" variant="danger" size={24} className="w-6" /> {showLabels && t('routes.logout')}
               </span>
             )}
           </div>
