@@ -202,12 +202,15 @@ export type IconProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
   size?: number;
 };
 
-export function Icon({ name, variant = 'default', size, className = '', alt = '', ...rest }: IconProps) {
+export function Icon({ name, variant = 'default', size, className, alt = '', ...rest }: IconProps) {
   const config = ICONS[name];
 
   const src = (variant === 'primary' && config.primary) || (variant === 'danger' && config.danger) || config.default;
 
   const styleSize = size ? { width: size, height: size } : undefined;
 
-  return <img src={src} alt={alt} className={className} style={styleSize} {...rest} />;
+  const baseClassName = 'cursor-pointer w-6';
+  const finalClassName = className ? `${baseClassName} ${className}` : baseClassName;
+
+  return <img src={src} alt={alt} className={finalClassName} style={styleSize} {...rest} />;
 }

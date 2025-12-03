@@ -70,7 +70,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
             onClick={() => setMenuOpen(true)}
             aria-label="Abrir menú"
           >
-            <Icon className="w-7" name={'burger'} />
+            <Icon name={'burger'} />
           </button>
         </div>
         <Sidebar
@@ -88,14 +88,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
             <div className="ml-16 flex flex-row items-center gap-2">
               <Link to={ROUTES.TALENT_DATABASE}>
                 <span className={clsx(baseClass, activeTalentDatabase && activeClass)}>
-                  {showIcons && (
-                    <Icon
-                      name="catalog"
-                      variant={activeTalentDatabase ? 'primary' : 'default'}
-                      size={24}
-                      className="w-6"
-                    />
-                  )}
+                  {showIcons && <Icon name="catalog" variant={activeTalentDatabase ? 'primary' : 'default'} />}
                   {showLabels && t('routes.talent-database')}
                 </span>
               </Link>
@@ -138,14 +131,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                 </Link> */}
                 <Link to={profileUrl}>
                   <span className={clsx(baseClass, activePublicProfile && activeClass)}>
-                    {showIcons && (
-                      <Icon
-                        name="view"
-                        variant={activePublicProfile ? 'primary' : 'default'}
-                        size={24}
-                        className="w-6"
-                      />
-                    )}
+                    {showIcons && <Icon name="view" variant={activePublicProfile ? 'primary' : 'default'} />}
                     {showLabels && t('routes.profile')}
                   </span>
                 </Link>
@@ -164,14 +150,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                 </Link>
                 <Link to={ROUTES.TALENT_SETTINGS}>
                   <span className={clsx(baseClass, activeSettings && activeClass)}>
-                    {showIcons && (
-                      <Icon
-                        name="settings"
-                        variant={activeSettings ? 'primary' : 'default'}
-                        size={24}
-                        className="w-6"
-                      />
-                    )}
+                    {showIcons && <Icon name="settings" variant={activeSettings ? 'primary' : 'default'} />}
                     {showLabels && t('routes.settings')}
                   </span>
                 </Link>
@@ -184,7 +163,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                 className="ml-2 cursor-pointer flex flex-row items-center gap-2 text-[var(--color-alert-error)]"
                 onClick={logout}
               >
-                <Icon name="logout" variant="danger" size={24} className="w-6" /> {showLabels && t('routes.logout')}
+                <Icon name="logout" variant="danger" /> {showLabels && t('routes.logout')}
               </span>
             )}
           </div>

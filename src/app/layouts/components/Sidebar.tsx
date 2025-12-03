@@ -7,15 +7,7 @@ import { ROUTES } from '../../shared/lib/routes';
 
 import clsx from 'clsx';
 import { useUserMode } from '../../context/UserModeContext';
-import CatalogoIconPurple from '../../shared/icons/catalogo-purple.svg';
-import CatalogoIcon from '../../shared/icons/catalogo.svg';
-import InstagramIcon from '../../shared/icons/instagram-purple.svg';
-import LinkedInIcon from '../../shared/icons/linkedin-purple.svg';
-import LogoutIcon from '../../shared/icons/logout-red.svg';
-import ProfileIconPurple from '../../shared/icons/profile-purple.svg';
-import ProfileIcon from '../../shared/icons/profile.svg';
-import SettingsIconPurple from '../../shared/icons/settings-purple.svg';
-import SettingsIcon from '../../shared/icons/settings.svg';
+import { Icon } from '../../shared/components/Icon/Icon';
 import Waves from '../../shared/icons/wave.svg';
 import UserModeSwitcher from './UserModeSwitcher';
 
@@ -62,20 +54,13 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
 
   if (!open) return null;
   return (
-    <div aria-modal="true" role="dialog" className="fixed inset-0 z-[300] lg:hidden bg-[var(--color-secondary-white)]">
+    <div aria-modal="true" role="dialog" className="fixed inset-0 z-[400] lg:hidden bg-[var(--color-secondary-white)]">
       <img src={Waves} alt="" className="absolute xs:hidden bottom-0 left-0 w-full h-[11rem]" />
       <aside className="absolute inset-0 flex flex-col">
         {/* Header */}
         <header className="py-3 px-6 flex items-center justify-between border-[var(--color-secondary-outline)] border-b bg-white">
           <LinkLogo horizontal />
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={t('common.close') || 'Cerrar'}
-            className="cursor-pointer p-2 rounded-md text-3xl leading-none"
-          >
-            ×
-          </button>
+          <Icon onClick={onClose} name="burgerClose" className="cursor-pointer w-6" />
         </header>
         {/* Content */}
         <nav className="w-[70%] h-full m-auto text-base font-semibold pt-2">
@@ -86,7 +71,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                 <li onClick={onClose}>
                   <Link to={ROUTES.TALENT_DATABASE}>
                     <span className={clsx(baseClass, activeTalentDatabase && activeClass)}>
-                      <img src={activeTalentDatabase ? CatalogoIconPurple : CatalogoIcon} alt="" className="w-7" />
+                      <Icon name="catalog" variant={activeTalentDatabase ? 'primary' : 'default'} />{' '}
                       {t('routes.talent-database')}
                     </span>
                   </Link>
@@ -100,13 +85,13 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                   </Link>
                 </li> */}
                 {isAuthenticated && (
-                  <li onClick={onClose} className="mt-1 p-3">
+                  <li onClick={onClose} className="mt-1 p-3 px-4">
                     <UserModeSwitcher showLabel />
                   </li>
                 )}
               </ul>
 
-              <Separator className="opacity-20 my-3" />
+              <Separator className={`opacity-20 ${!isAuthenticated ? 'my-10' : 'my-3'}`} />
 
               {/* Authenticated */}
               {!isAuthenticated ? (
@@ -134,7 +119,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                       <li onClick={onClose}>
                         <Link to={ROUTES.TALENT}>
                           <span className={clsx(baseClass, activeTalentProfile && activeClass)}>
-                            <img src={activeTalentProfile ? ProfileIconPurple : ProfileIcon} alt="" className="w-7" />
+                            <Icon name="view" variant={activeTalentProfile ? 'primary' : 'default'} />{' '}
                             {t('routes.profile')}
                           </span>
                         </Link>
@@ -142,7 +127,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                       <li onClick={onClose}>
                         <Link to={ROUTES.TALENT_SETTINGS}>
                           <span className={clsx(baseClass, activeSettings && activeClass)}>
-                            <img src={activeSettings ? SettingsIconPurple : SettingsIcon} alt="" className="w-7" />
+                            <Icon name="settings" variant={activeSettings ? 'primary' : 'default'} />{' '}
                             {t('routes.settings')}
                           </span>
                         </Link>
@@ -163,9 +148,8 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                     }}
                     className="mt-1 px-3 py-1"
                   >
-                    <span className="flex flex-row items-center gap-2 text-[var(--color-alert-error)]">
-                      <img src={LogoutIcon} alt="" className="w-7" />
-                      {t('routes.logout')}
+                    <span className="cursor-pointer flex flex-row items-center gap-2 text-[var(--color-alert-error)]">
+                      <Icon name="logout" variant="danger" /> {t('routes.logout')}
                     </span>
                   </li>
                 </>
@@ -193,7 +177,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                     aria-label={t('routes.linkedIn')}
                     title="LinkedIn"
                   >
-                    <img src={LinkedInIcon} alt="" className="w-6" />
+                    <Icon name={'linkedin'} variant="primary" />
                   </a>
                 </li>
                 <li onClick={onClose}>
@@ -205,7 +189,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                     aria-label={t('routes.instagram')}
                     title="Instagram"
                   >
-                    <img src={InstagramIcon} alt="" className="w-6" />
+                    <Icon name={'instagram'} variant="primary" />
                   </a>
                 </li>
               </ul>
