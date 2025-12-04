@@ -94,7 +94,7 @@ function EmployerMediaStep({
             </div>
 
             {/* Progress */}
-            <div className="flex flex-col gap-1 mb-2">
+            <div className="flex flex-col gap-1">
               <div className="w-full h-[9px] rounded-full bg-[var(--color-secondary-offwhite)] overflow-hidden">
                 <div
                   className="h-[9px] bg-[var(--color-primary-purple)] transition-all"
@@ -107,15 +107,14 @@ function EmployerMediaStep({
             </div>
 
             {/* Contenido central */}
-            <div className="w-full mb-4 flex flex-col gap-2">
+            <div className="w-full mb-4 flex flex-col">
               <div className="text-center">
-                <h1 className="text-2xl font-semibold mb-1">{t('onboarding.employer.step2.header')}</h1>
+                <h1 className="text-2xl font-semibold my-1">{t('onboarding.employer.step2.header')}</h1>
                 <p className="text-sm">{t('onboarding.employer.step2.subtitle')}</p>
               </div>
 
-              <div className="flex justify-center">
+              <div className="max-w-[165px] w-full self-center my-10 lg:max-w-[300px] lg:items-center">
                 <UploadTile
-                  label={t('general.placeholder.headshot')}
                   value={valueUrl}
                   previewUrl={previewUrl}
                   onSelect={handleSelect}
@@ -129,7 +128,7 @@ function EmployerMediaStep({
                   aspectRatio="3 / 4"
                   multiple={false}
                   openOnClick={!tileBusy}
-                  className="max-w-[260px] w-full"
+                  className="w-full h-full"
                 />
               </div>
 

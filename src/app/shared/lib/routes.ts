@@ -79,4 +79,5 @@ export const API_ROUTES = {
   // Employer Profile
   EMPLOYER_PROFILE: '/employer',
   EMPLOYER_BASIC_INFO: '/employer/basic-info',
+  EMPLOYER_SOCIAL_MEDIA: '/employer/social-media',
 };

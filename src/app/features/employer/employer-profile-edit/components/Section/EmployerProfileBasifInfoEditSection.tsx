@@ -1,11 +1,11 @@
 import { DashboardSection } from '../../../../../layouts/components';
-import type { EmployerProfileBasicInfo } from '../../types/employerProfile.types';
+import type { EmployerProfileResponse } from '../../types/employerProfile.types';
 import { EmployerBasicInfoForm } from '../Form';
 
-const EmployerProfileBasicInfoEditSection = ({ data }: { data: EmployerProfileBasicInfo }) => {
+const EmployerProfileBasicInfoEditSection = ({ data }: { data: EmployerProfileResponse }) => {
   return (
     <DashboardSection>
-      <EmployerBasicInfoForm data={data} />
+      <EmployerBasicInfoForm data={data.basicInfo} profileId={data.id} />
     </DashboardSection>
   );
 };

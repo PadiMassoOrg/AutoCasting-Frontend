@@ -196,8 +196,9 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
   return (
     <article className="flex flex-col gap-2">
       <Label className="text-base font-semibold">{t('profile.media.photos')}</Label>
-      <div className="flex flex-col lg:flex-row items-center lg:w-full gap-2">
-        <div className="max-w-[550px] lg:w-full flex flex-row gap-2">
+
+      <div className="w-full max-w-[550px] grid grid-cols-2 gap-2 lg:max-w-none lg:grid-cols-4">
+        <div className="w-full aspect-[3/4]">
           <UploadTile
             value={
               removedHeadshot || pending.has('headshot')
@@ -215,10 +216,12 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             objectFit="cover"
             openOnClick={!headshotHasImage}
             onDeleteClick={onDeleteHeadshot}
-            className="w-full"
+            className="w-full h-full"
           />
           {errHeadshot && <span className="text-xs text-red-600">{errHeadshot}</span>}
+        </div>
 
+        <div className="w-full aspect-[3/4]">
           <UploadTile
             value={
               removedFullbody || pending.has('fullbody')
@@ -236,43 +239,39 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             objectFit="cover"
             openOnClick={!fullbodyHasImage}
             onDeleteClick={onDeleteFullbody}
-            className="w-full"
+            className="w-full h-full"
           />
           {errFullbody && <span className="text-xs text-red-600">{errFullbody}</span>}
         </div>
 
-        {/* OTRAS FOTOS */}
-        <div className="w-full max-w-[550px] lg:h-full flex flex-row gap-2">
-          {Array.from({ length: OTHER_SLOTS }, (_, i) => {
-            const isRemoved = removedOthers.has(i);
-            const hasImg = otherHasImage(i);
+        {Array.from({ length: OTHER_SLOTS }, (_, i) => {
+          const isRemoved = removedOthers.has(i);
+          const hasImg = otherHasImage(i);
 
-            return (
-              <div key={i} className="w-full">
-                <UploadTile
-                  value={
-                    isRemoved || otherPending.has(i) ? undefined : withBust(others[i] as string | null, otherBust[i])
-                  }
-                  previewUrl={otherPreview[i] ?? null}
-                  onSelect={pickOther(i)}
-                  disabled={otherPending.has(i)}
-                  busy={otherPending.has(i)}
-                  busyText={t('state.loading')}
-                  bustKey={undefined}
-                  accept="image/*"
-                  aspectRatio="3 / 4"
-                  maxSizeMB={8}
-                  objectFit="cover"
-                  multiple={false}
-                  openOnClick={!hasImg}
-                  onDeleteClick={() => onDeleteOther(i)}
-                  className="w-full"
-                />
-                {errOther[i] && <span className="text-xs text-red-600 block">{errOther[i]}</span>}
-              </div>
-            );
-          })}
-        </div>
+          return (
+            <div key={i} className="w-full aspect-[3/4]">
+              <UploadTile
+                value={
+                  isRemoved || otherPending.has(i) ? undefined : withBust(others[i] as string | null, otherBust[i])
+                }
+                previewUrl={otherPreview[i] ?? null}
+                onSelect={pickOther(i)}
+                disabled={otherPending.has(i)}
+                busy={otherPending.has(i)}
+                busyText={t('state.loading')}
+                bustKey={undefined}
+                accept="image/*"
+                maxSizeMB={8}
+                objectFit="cover"
+                multiple={false}
+                openOnClick={!hasImg}
+                onDeleteClick={() => onDeleteOther(i)}
+                className="w-full h-full"
+              />
+              {errOther[i] && <span className="text-xs text-red-600 block">{errOther[i]}</span>}
+            </div>
+          );
+        })}
       </div>
     </article>
   );

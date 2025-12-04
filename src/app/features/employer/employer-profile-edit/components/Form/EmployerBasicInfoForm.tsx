@@ -1,8 +1,13 @@
-import { FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
+import { FormInputField, FormSelectField, Label, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useEmployerLogoPatch } from '../../../../../integrations/supabase/media/hooks/useEmployerLogoPatch';
 import { useCommittedText, useCommittedUuid } from '../../../../../shared/utils/formUtils';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
+import { SocialMediaForm } from '../../../../talent/talent-profile-edit/components/Form/SocialMedia';
+import UploadTile from '../../../../talent/talent-profile-edit/components/UploadTile/UploadTile';
+import { fileSchema } from '../../../../talent/talent-profile-edit/schemas/mediaSchema';
+import type { ProfileSocialMedia } from '../../../../talent/talent-profile-edit/types/talentProfile.types';
 import { useEmployerBasicInfoAutosave } from '../../hooks/autosaves';
 import { getEmployerBasicInfoSchema } from '../../schemas/employerBasicInfoSchema';
 import type { EmployerProfileBasicInfo } from '../../types/employerProfile.types';
@@ -15,19 +20,26 @@ type Errors = {
   address?: string | null;
   websiteUrl?: string | null;
   about?: string | null;
+  imageUrl?: string | null;
 };
 
 type Props = {
   data: EmployerProfileBasicInfo;
+  profileId: string;
 };
 
-export default function EmployerBasicInfoForm({ data }: Props) {
+export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   const { t } = useTranslation();
   const autosave = useEmployerBasicInfoAutosave();
   const schema = useMemo(() => getEmployerBasicInfoSchema(t), [t]);
   const companyTypeOptions = useCachedSiteMetadataOption('companyTypeOptions', t);
 
   const [errors, setErrors] = useState<Errors>({});
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [errImage, setErrImage] = useState<string | null>(null);
+  const [bust, setBust] = useState(0);
+
+  const { mutate: uploadLogo, isPending: uploadPending } = useEmployerLogoPatch(profileId);
 
   const companyName = useCommittedText(
     data.companyName ?? '',
@@ -120,43 +132,122 @@ export default function EmployerBasicInfoForm({ data }: Props) {
     { trim: true }
   );
 
+  const handleSelectLogo = async (files: File[] | File) => {
+    const file = Array.isArray(files) ? files[0] : files;
+    if (!file) return;
+
+    const res = fileSchema(t).safeParse(file);
+    if (!res.success) {
+      const msg = res.error.errors[0]?.message ?? t('state.server_err');
+      setErrImage(msg);
+      setErrors((e) => ({ ...e, imageUrl: msg }));
+      return;
+    }
+
+    setErrImage(null);
+    setErrors((e) => ({ ...e, imageUrl: null }));
+
+    const localUrl = await fileToDataUrl(file);
+    setPreviewUrl(localUrl);
+
+    uploadLogo(
+      { file },
+      {
+        onSuccess: () => {
+          setPreviewUrl(null);
+          setBust((prev) => prev + 1);
+        },
+        onError: (err: unknown) => {
+          const anyErr = err as any;
+          const msg = anyErr?.response?.data?.message || anyErr?.message || t('state.server_err');
+          setErrImage(msg);
+          setErrors((e) => ({ ...e, imageUrl: msg }));
+        },
+      }
+    );
+  };
+
+  const handleDeleteLogo = () => {
+    setPreviewUrl(null);
+    setErrImage(null);
+    setErrors((e) => ({ ...e, imageUrl: null }));
+    autosave.immediate({ imageUrl: null });
+    setBust((prev) => prev + 1);
+  };
+
+  const logoUrl = uploadPending ? undefined : withBust(data.imageUrl ?? null, bust);
+  const isLogoBusy = uploadPending;
+
+  const socialMediaData: ProfileSocialMedia = data.socialMedia as ProfileSocialMedia;
+
   return (
-    <div className="w-full flex flex-col gap-3">
-      <FormInputField
-        id="companyName"
-        label={t('employer_profile.basic_info.company_name')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.company_name')}
-        value={companyName.value}
-        onChange={companyName.onChange}
-        onBlur={companyName.onBlur}
-        onKeyDown={companyName.onKeyDown}
-        error={errors.companyName ?? undefined}
-      />
+    <div className="w-full flex flex-col gap-1">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-center lg:gap-20">
+        <div className="flex flex-col gap-1">
+          <FormInputField
+            id="companyName"
+            label={t('employer_profile.basic_info.company_name')}
+            labelClassName="font-semibold text-base"
+            placeholder={t('general.placeholder.company_name')}
+            value={companyName.value}
+            onChange={companyName.onChange}
+            onBlur={companyName.onBlur}
+            onKeyDown={companyName.onKeyDown}
+            error={errors.companyName ?? undefined}
+          />
 
-      <FormInputField
-        id="taxNumber"
-        label={t('employer_profile.basic_info.tax_number')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.tax_number')}
-        value={taxNumber.value}
-        onChange={taxNumber.onChange}
-        onBlur={taxNumber.onBlur}
-        onKeyDown={taxNumber.onKeyDown}
-        error={errors.taxNumber ?? undefined}
-      />
+          <FormInputField
+            id="taxNumber"
+            label={t('employer_profile.basic_info.tax_number')}
+            labelClassName="font-semibold text-base"
+            placeholder={t('general.placeholder.tax_number')}
+            value={taxNumber.value}
+            onChange={taxNumber.onChange}
+            onBlur={taxNumber.onBlur}
+            onKeyDown={taxNumber.onKeyDown}
+            error={errors.taxNumber ?? undefined}
+          />
 
-      <FormSelectField
-        id="companyTypeId"
-        label={t('employer_profile.basic_info.company_type')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.select')}
-        value={companyType.value}
-        onChange={companyType.onChange}
-        onBlur={companyType.onBlur}
-        options={companyTypeOptions}
-        error={errors.companyTypeId ?? undefined}
-      />
+          <FormSelectField
+            id="companyTypeId"
+            label={t('employer_profile.basic_info.company_type')}
+            labelClassName="font-semibold text-base"
+            placeholder={t('general.placeholder.select')}
+            value={companyType.value}
+            onChange={companyType.onChange}
+            onBlur={companyType.onBlur}
+            options={companyTypeOptions}
+            error={errors.companyTypeId ?? undefined}
+          />
+        </div>
+
+        <div className="flex flex-col gap-2 items-start lg:items-center">
+          <Label className="text-sm font-semibold self-start">{t('employer_profile.basic_info.image')}</Label>
+          <div className="w-[210px] aspect-[3/4]">
+            <UploadTile
+              value={logoUrl}
+              previewUrl={previewUrl}
+              onSelect={handleSelectLogo}
+              onDeleteClick={handleDeleteLogo}
+              disabled={isLogoBusy}
+              busy={isLogoBusy}
+              busyText={t('state.loading')}
+              accept="image/*"
+              maxSizeMB={8}
+              objectFit="cover"
+              multiple={false}
+              openOnClick={!isLogoBusy}
+              className="w-full h-full"
+            />
+          </div>
+
+          {errImage ? (
+            <span className="text-xs text-red-600 max-h-[25px]">{errImage}</span>
+          ) : (
+            <div className="min-h-[25px]" />
+          )}
+        </div>
+      </div>
 
       <FormInputField
         id="companyEmail"
@@ -205,6 +296,24 @@ export default function EmployerBasicInfoForm({ data }: Props) {
         />
         {errors.about && <span className="text-sm text-red-600">{errors.about}</span>}
       </div>
+
+      <Separator className="opacity-20 my-8" />
+
+      <SocialMediaForm data={socialMediaData} />
     </div>
   );
 }
+
+const fileToDataUrl = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+const withBust = (url: string | null | undefined, bust?: number): string | undefined => {
+  if (!url) return undefined;
+  if (!bust) return url;
+  return url.includes('?') ? `${url}&b=${bust}` : `${url}?b=${bust}`;
+};

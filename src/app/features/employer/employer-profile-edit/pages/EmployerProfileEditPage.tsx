@@ -15,7 +15,7 @@ const EmployerProfileEditPage = () => {
     <div className="relative h-full flex flex-col">
       <div className="flex-1 min-h-0">
         <DashboardShell title={t('profile.page.profile')}>
-          <EmployerProfileBasicInfoEditSection data={data.basicInfo}></EmployerProfileBasicInfoEditSection>
+          <EmployerProfileBasicInfoEditSection data={data}></EmployerProfileBasicInfoEditSection>
         </DashboardShell>
       </div>
     </div>

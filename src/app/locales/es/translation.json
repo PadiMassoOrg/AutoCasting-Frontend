@@ -563,7 +563,8 @@
       "company_email": "Email",
       "address": "Dirección",
       "websiteUrl": "Sitio web",
-      "about": "Descripción (opcional)"
+      "about": "Descripción (opcional)",
+      "image": "Foto/Logo"
     }
   },
   "talent": {
