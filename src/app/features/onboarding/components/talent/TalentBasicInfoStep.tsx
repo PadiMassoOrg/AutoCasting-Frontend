@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
 import { WizardStep } from '../../../../shared/components/Wizard';
 import type { WizardStepProps } from '../../../../shared/components/Wizard/WizardStep';
-import Logo from '../../../../shared/icons/og-image.svg';
 import { usePatchTalentBasicInfoMutation } from '../../../talent/talent-profile-edit/hooks/usePatchTalentBasicInfoMutation';
 import { useTalentProfile } from '../../../talent/talent-profile-edit/hooks/useTalentProfile';
 import { type TalentBasicInfoValues, getTalentBasicInfoSchema } from '../../schemas/talentBasicInfoStepSchema';
@@ -96,7 +95,7 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
               <FormInputField
                 id="stageName"
                 type="text"
-                placeholder={t('onboarding.talent.step1.stage_name_label')}
+                placeholder={t('general.placeholder.stage_name')}
                 className="bg-[var(--color-primary-white)]"
                 {...register('stageName')}
                 error={errors.stageName?.message}

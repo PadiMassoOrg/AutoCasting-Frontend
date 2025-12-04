@@ -6,9 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
 import { WizardStep } from '../../../../shared/components/Wizard';
 import type { WizardStepProps } from '../../../../shared/components/Wizard/WizardStep';
-import Logo from '../../../../shared/icons/og-image.svg';
-import { usePatchEmployerBasicInfoMutation } from '../../../employer/employer-profile-edit/hooks/usePatchEmployerBasicInfoMutation';
 import { useEmployerProfile } from '../../../employer/employer-profile-edit/hooks/useEmployerProfile';
+import { usePatchEmployerBasicInfoMutation } from '../../../employer/employer-profile-edit/hooks/usePatchEmployerBasicInfoMutation';
 import { type EmployerBasicInfoValues, getEmployerBasicInfoSchema } from '../../schemas/emplyoerBasicInfoStepSchema';
 
 type Props = WizardStepProps & {
@@ -106,7 +105,7 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
               <FormInputField
                 id="companyName"
                 type="text"
-                placeholder={t('onboarding.employer.step1.companyName_label')}
+                placeholder={t('general.placeholder.company_name')}
                 className="bg-[var(--color-primary-white)]"
                 {...register('companyName')}
                 error={errors.companyName?.message}
@@ -116,7 +115,7 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
                 <FormInputField
                   id="taxNumber"
                   type="text"
-                  placeholder={t('onboarding.employer.step1.taxNumber_label')}
+                  placeholder={t('general.placeholder.tax_number')}
                   className="bg-[var(--color-primary-white)]"
                   {...register('taxNumber')}
                   error={errors.taxNumber?.message}
