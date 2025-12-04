@@ -7,6 +7,7 @@ import SocialMediaRow from './SocialMediaRow';
 
 type SocialMediaFormProps = {
   data: ProfileSocialMedia;
+  onSaveLinks: (payload: SocialMediaLinksPayload) => void;
 };
 
 export type LinkState = {
@@ -14,7 +15,11 @@ export type LinkState = {
   url: string | null;
 };
 
-export default function SocialMediaForm({ data }: SocialMediaFormProps) {
+export type SocialMediaLinksPayload = {
+  links: { optionId: string; url: string | null }[];
+};
+
+export default function SocialMediaForm({ data, onSaveLinks }: SocialMediaFormProps) {
   const { t } = useTranslation();
   const { data: allOptions = [] } = useSiteMetadataSlice('socialMediaOptions');
 
@@ -97,6 +102,7 @@ export default function SocialMediaForm({ data }: SocialMediaFormProps) {
           onChange={(next) => handleChangeRow(index, next)}
           onDelete={() => handleDeleteRow(index)}
           initialUrlsById={initialUrlsById}
+          onSaveLinks={onSaveLinks}
         />
       ))}
 

@@ -8,7 +8,7 @@ import { SocialMediaForm } from '../../../../talent/talent-profile-edit/componen
 import UploadTile from '../../../../talent/talent-profile-edit/components/UploadTile/UploadTile';
 import { fileSchema } from '../../../../talent/talent-profile-edit/schemas/mediaSchema';
 import type { ProfileSocialMedia } from '../../../../talent/talent-profile-edit/types/talentProfile.types';
-import { useEmployerBasicInfoAutosave } from '../../hooks/autosaves';
+import { useEmployerBasicInfoAutosave, useEmployerSocialMediaAutosave } from '../../hooks/autosaves';
 import { getEmployerBasicInfoSchema } from '../../schemas/employerBasicInfoSchema';
 import type { EmployerProfileBasicInfo } from '../../types/employerProfile.types';
 
@@ -31,6 +31,7 @@ type Props = {
 export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   const { t } = useTranslation();
   const autosave = useEmployerBasicInfoAutosave();
+  const socialMediaAutosave = useEmployerSocialMediaAutosave();
   const schema = useMemo(() => getEmployerBasicInfoSchema(t), [t]);
   const companyTypeOptions = useCachedSiteMetadataOption('companyTypeOptions', t);
 
@@ -178,7 +179,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   const logoUrl = uploadPending ? undefined : withBust(data.imageUrl ?? null, bust);
   const isLogoBusy = uploadPending;
 
-  const socialMediaData: ProfileSocialMedia = data.socialMedia as ProfileSocialMedia;
+  const socialMediaData: ProfileSocialMedia = (data.socialMedia ?? { links: [] }) as ProfileSocialMedia;
 
   return (
     <div className="w-full flex flex-col gap-1">
@@ -292,14 +293,16 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
           className="w-full min-h-[135px] rounded-md border border-[var(--color-secondary-outline)] px-3 py-2 text-sm"
           placeholder={t('general.placeholder.about')}
           value={about.value}
-          onBlur={about.onBlur}
+          onChange={(e) => about.onChange(e as any)}
+          onBlur={(e) => about.onBlur(e as any)}
+          onKeyDown={(e) => about.onKeyDown(e as any)}
         />
         {errors.about && <span className="text-sm text-red-600">{errors.about}</span>}
       </div>
 
       <Separator className="opacity-20 my-8" />
 
-      <SocialMediaForm data={socialMediaData} />
+      <SocialMediaForm data={socialMediaData} onSaveLinks={(payload) => socialMediaAutosave.immediate(payload)} />
     </div>
   );
 }

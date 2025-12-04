@@ -23,7 +23,7 @@ export async function patchEmployerBasicInfo(
   return data;
 }
 
-export async function patchSocialMedia(payload: SocialMediaPatchRequest): Promise<ProfileSocialMedia> {
-  const { data } = await api.patch(API_ROUTES.EMPLOYER_BASIC_INFO, payload);
+export async function patchEmployerSocialMedia(payload: SocialMediaPatchRequest): Promise<ProfileSocialMedia> {
+  const { data } = await api.patch(API_ROUTES.EMPLOYER_SOCIAL_MEDIA, payload);
   return data;
 }

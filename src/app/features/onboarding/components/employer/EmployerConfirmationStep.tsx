@@ -14,7 +14,7 @@ type Props = WizardStepProps & {
 
 function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progress = 100, onGoToProfile }: Props) {
   const { t } = useTranslation();
-  const { data: meData, isLoading } = useMeData();
+  const { data: meData } = useMeData();
   const { mutate: updateOnboarding, isPending } = useUpdateOnboardingMutation();
   const [serverError, setServerError] = useState<string | null>(null);
 
