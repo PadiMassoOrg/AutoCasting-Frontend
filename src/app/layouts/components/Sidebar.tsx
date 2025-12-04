@@ -37,11 +37,12 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
   // Public
   const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
   //const activeProductions = isRouteActive(ROUTES.PRODUCTIONS);
-
-  // Private
+  // Talent
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
   //const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS, true);
   const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
+  // Employer
+  const activeEmployerProfile = isRouteActive(ROUTES.EMPLOYER, true);
 
   useEffect(() => {
     if (!open) return;
@@ -85,8 +86,8 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                   </Link>
                 </li> */}
                 {isAuthenticated && (
-                  <li onClick={onClose} className="mt-1 p-3 px-4">
-                    <UserModeSwitcher showLabel />
+                  <li className="mt-1 p-3 px-4">
+                    <UserModeSwitcher showLabel onAfterToggle={onClose} />
                   </li>
                 )}
               </ul>
@@ -107,7 +108,6 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                 <ul className="w-full flex flex-col font-semibold">
                   {mode == 'talent' ? (
                     <>
-                      {/* Talent */}
                       {/* <li onClick={onClose}>
                         <Link to={ROUTES.TALENT_APPLIED_PRODUCTIONS}>
                           <span className={clsx(baseClass, activeAppliedProductions && activeClass)}>
@@ -134,7 +134,16 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                       </li>
                     </>
                   ) : (
-                    <>{/* Employer */}</>
+                    <>
+                      <li onClick={onClose}>
+                        <Link to={ROUTES.EMPLOYER}>
+                          <span className={clsx(baseClass, activeEmployerProfile && activeClass)}>
+                            <Icon name="view" variant={activeEmployerProfile ? 'primary' : 'default'} />{' '}
+                            {t('routes.profile')}
+                          </span>
+                        </Link>
+                      </li>
+                    </>
                   )}
                 </ul>
               )}

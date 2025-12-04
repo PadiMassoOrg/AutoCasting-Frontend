@@ -45,10 +45,14 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
     return !!matchPath({ path: to + '/*', end: false }, location.pathname);
   };
 
+  // Public
   const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
+  // Talent
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
   const activePublicProfile = isRouteActive(profileUrl, true);
   const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
+  // Employer
+  const activeEmployerProfile = isRouteActive(ROUTES.EMPLOYER, true);
 
   return (
     <nav
@@ -131,7 +135,21 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                 </Link>
               </div>
             ) : (
-              <></>
+              <div className="flex flex-row gap-2 items-center h-full">
+                <Link to={ROUTES.EMPLOYER}>
+                  <span className={clsx(baseClass, activeEmployerProfile && activeClass)}>
+                    {showIcons && (
+                      <Icon
+                        name="profile"
+                        variant={activeEmployerProfile ? 'primary' : 'default'}
+                        size={24}
+                        className="w-6"
+                      />
+                    )}
+                    {showLabels && t('routes.profile')}
+                  </span>
+                </Link>
+              </div>
             )}
             {isAuth && (
               <span

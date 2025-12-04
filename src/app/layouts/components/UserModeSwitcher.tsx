@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useUserMode } from '../../context/UserModeContext';
 import { useMeData } from '../../features/auth/hooks/useMeData';
 import type { ActiveMode } from '../../features/auth/types/auth.types';
 import { useUpdateOnboardingMutation } from '../../features/onboarding/hooks/useUpdateOnboardingMutation';
 import { Icon } from '../../shared/components/Icon/Icon';
+import { getAuthToken } from '../../shared/lib/cookies';
+import { ROUTES } from '../../shared/lib/routes';
+import { jwtDecoder } from '../../shared/utils/jwtDecoder';
 
 type ModeSwitcherProps = {
   showLabel?: boolean;
@@ -17,6 +21,11 @@ function UserModeSwitcher({ showLabel = false, onAfterToggle }: ModeSwitcherProp
   const { mode, setMode } = useUserMode();
   const [hovered, setHovered] = useState(false);
   const { mutate: updateOnboarding, isPending } = useUpdateOnboardingMutation();
+  const navigate = useNavigate();
+
+  const token = getAuthToken();
+  const decoded = token ? jwtDecoder(token) : null;
+  const talentProfileSlug = decoded?.talentProfileSlug;
 
   const modeLabel = mode === 'talent' ? t('state.switch_to_employer') : t('state.switch_to_talent');
 
@@ -46,6 +55,17 @@ function UserModeSwitcher({ showLabel = false, onAfterToggle }: ModeSwitcherProp
       {
         onSuccess: () => {
           setMode(nextMode);
+
+          if (nextActiveMode === 'TALENT') {
+            if (talentProfileSlug) {
+              navigate(`${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}`);
+            } else {
+              navigate(ROUTES.TALENT);
+            }
+          } else {
+            navigate(ROUTES.DASHBOARD);
+          }
+
           onAfterToggle?.();
         },
       }
