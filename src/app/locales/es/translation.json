@@ -42,7 +42,12 @@
       "dash": "--",
       "min": "Min",
       "max": "Max",
-      "measure": "XL/90"
+      "measure": "XL/90",
+      "address": "Dirección",
+      "website": "“www.tuempresa.com”",
+      "about": "Escribir algo aquí...",
+      "company_name": "Ej. “Producciones Pérez”, “Luna Pérez Casting”",
+      "tax_number": "Ej. “20-12345678-3”"
     }
   },
   "validation": {
@@ -240,6 +245,17 @@
       "vimeo": "Vimeo",
       "imdb": "imdb",
       "behance": "Behance"
+    },
+    "company_type": {
+      "producer": "Productora",
+      "director": "Director / Directora",
+      "agent": "Castinera / Agente de casting",
+      "talent_agency": "Agencia de talentos",
+      "publicity_agency": "Agencia publicitaria",
+      "content_creator": "Creador / Productor de contenido digital",
+      "company": "Marca / Empresa",
+      "theater_company": "Compañía teatral",
+      "institution": "Escuela / Academia"
     }
   },
   "error_page": {
@@ -537,6 +553,17 @@
       "courseName_placeholder": "Ej. Lic. en Actuación",
       "graduationYear": "Fecha de finalización",
       "graduationYear_placeholder": "--"
+    }
+  },
+  "employer_profile": {
+    "basic_info": {
+      "company_name": "Nombre del perfil o compañía",
+      "tax_number": "CUIT / CUIL",
+      "company_type": "Tipo de Entidad",
+      "company_email": "Email",
+      "address": "Dirección",
+      "websiteUrl": "Sitio web",
+      "about": "Descripción (opcional)"
     }
   },
   "talent": {
