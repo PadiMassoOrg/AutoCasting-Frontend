@@ -2,11 +2,11 @@ import { Button } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSiteMetadataSlice } from '../../../../../sitemetadata/hooks/useSiteMetadataSlice';
-import type { TalentProfileSocialMedia } from '../../../types/talentProfile.types';
+import type { ProfileSocialMedia } from '../../../types/talentProfile.types';
 import SocialMediaRow from './SocialMediaRow';
 
 type SocialMediaFormProps = {
-  data: TalentProfileSocialMedia;
+  data: ProfileSocialMedia;
 };
 
 export type LinkState = {

@@ -49,6 +49,8 @@ export const API_ROUTES = {
   // Site Metadata
   SITEMETADATA: '/sitemetadata',
   SITEMETADATA_VERSION: '/sitemetadata/version',
+  // Talent Database
+  TALENT_DATABASE: '/talent/talent-database',
   // Authentication
   AUTH_LOGIN: '/auth/login',
   AUTH_REGISTER: '/auth/register',
@@ -62,7 +64,7 @@ export const API_ROUTES = {
   // Legal
   CURRENT_LEGAL_DOCUMENT: '/legal/current',
   ACCEPT_LEGAL_DOCUMENT: '/legal/accept',
-  // Profile
+  // Talent Profile
   TALENT_PROFILE: '/talent',
   TALENT_BASIC_INFO: '/talent/basic-info',
   TALENT_CONTACT: '/talent/contact',
@@ -74,6 +76,7 @@ export const API_ROUTES = {
   CREDIT: '/credit',
   // Education
   EDUCATION: '/education',
-  // Talent Database
-  TALENT_DATABASE: '/talent/talent-database',
+  // Employer Profile
+  EMPLOYER_PROFILE: '/employer',
+  EMPLOYER_BASIC_INFO: '/employer/basic-info',
 };

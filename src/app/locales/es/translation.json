@@ -408,9 +408,17 @@
       "step1": {
         "header": "Completá tus datos antes de comenzar",
         "subtitle": "Necesitamos esta info para validar tu cuenta y tus castings.",
-        "name_label": "Nombre de la empresa / productora / usuario",
-        "cuit_label": "CUIT / CUIL",
-        "cuit_disclaimer": "Lo usamos solo con fines de verificación. No lo compartimos con nadie."
+        "companyName_label": "Nombre de la empresa / productora / usuario",
+        "taxNumber_label": "CUIT / CUIL",
+        "tax_disclaimer": "Lo usamos solo con fines de verificación. No lo compartimos con nadie."
+      },
+      "step2": {
+        "header": "Subí tu logo o foto",
+        "subtitle": "Podés cargar el logo de tu empresa, productora o una foto tuya si trabajás de manera independiente."
+      },
+      "confirmation_step": {
+        "header": "¡Listo! Tu cuenta ya está configurada",
+        "subtitle": "Ahora podés crear tus castings, recibir postulaciones y gestionar todo desde tu panel."
       }
     }
   },

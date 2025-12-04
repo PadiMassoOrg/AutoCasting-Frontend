@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useMeData } from '../features/auth/hooks/useMeData';
+import { EmployerProfileEditPage } from '../features/employer/employer-profile-edit/pages';
 import { TalentProfileEditPage } from '../features/talent/talent-profile-edit/pages';
 import { TalentProfileSettingsPage } from '../features/talent/talent-profile-settings/pages';
 import { ScrollContentLayout } from '../layouts';
@@ -28,8 +29,11 @@ export default function ProtectedRoutesLayout() {
     <Routes>
       <Route element={<ScrollContentLayout />}>
         <Route path={ROUTES.DASHBOARD} element={<Navigate to={effectiveDashboardRoute} replace />} />
+        {/* Talent */}
         <Route path={ROUTES.TALENT} element={<TalentProfileEditPage />} />
         <Route path={ROUTES.TALENT_SETTINGS} element={<TalentProfileSettingsPage />} />
+        {/* Employer */}
+        <Route path={ROUTES.EMPLOYER} element={<EmployerProfileEditPage />} />
       </Route>
       <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
     </Routes>

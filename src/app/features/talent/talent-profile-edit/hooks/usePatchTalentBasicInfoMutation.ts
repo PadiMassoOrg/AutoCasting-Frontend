@@ -1,5 +1,3 @@
-// src/app/features/talent/talent-profile-edit/hooks/usePatchBasicInfoMutation.ts
-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { patchBasicInfo, TALENT_PROFILE_CACHE_KEY } from '../services/talentProfileService';
 import type { BasicInfoPatchRequest } from '../types/requests';

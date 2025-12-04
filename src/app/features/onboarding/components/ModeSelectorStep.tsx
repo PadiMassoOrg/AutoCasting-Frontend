@@ -73,11 +73,10 @@ function ModeSelectorStep({ onModeChosen }: Props) {
   };
 
   return (
-    <section className="w-full pb-6">
+    <section className="w-full pb-6 pt-4">
       <WizardStep>
         <div className="flex min-h-[65vh] flex-col justify-between gap-10">
-          <div className="flex flex-col items-center gap-4 mb-6">
-            <Icon name="ogIcon" className="w-16" />
+          <div className="flex flex-col items-center gap-4">
             <div className="text-center">
               <h1 className="text-2xl font-bold mb-4">{t('onboarding.mode_selector.header')}</h1>
               <p className="text-sm">{t('onboarding.mode_selector.subtitle')}</p>

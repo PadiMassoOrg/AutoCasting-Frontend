@@ -10,7 +10,7 @@ export type TalentBaseProfileResponse = {
   publicSlug: string;
   basicInfo: TalentProfileBasicInfo;
   contact: TalentProfileContact;
-  socialMedia: TalentProfileSocialMedia;
+  socialMedia: ProfileSocialMedia;
   media: Media;
   characteristics: Characteristics;
   skills: Array<SiteMetadataObject>;
@@ -25,7 +25,7 @@ export type TalentBasePublicProfileResponse = {
   publicSlug: string;
   basicInfo: TalentProfileBasicInfo;
   contact: TalentProfileContact;
-  socialMedia: TalentProfileSocialMedia;
+  socialMedia: ProfileSocialMedia;
   media: Media;
   characteristics: Characteristics;
   skills: Array<SiteMetadataObject>;
@@ -120,7 +120,7 @@ export type Credit = BaseCredit;
 export type Education = BaseEducation;
 export type TalentProfileBasicInfo = DeepNullableExceptId<BaseProfileBasicInfo>;
 export type TalentProfileContact = DeepNullableExceptId<BaseProfileContact>;
-export type TalentProfileSocialMedia = { links: SocialMediaLink[] };
+export type ProfileSocialMedia = { links: SocialMediaLink[] };
 export type Media = DeepNullableExceptId<BaseMedia>;
 export type Characteristics = DeepNullableExceptId<BaseCharacteristics>;
 

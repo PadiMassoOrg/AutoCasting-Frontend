@@ -2,10 +2,10 @@ import ButtonRow from '../../../shared/components/ButtonRow/ButtonRow';
 import { Icon } from '../../../shared/components/Icon/Icon';
 import { normalizeExternalUrl } from '../../../shared/utils/urlUtils';
 import { getSocialMediaIconName } from '../../talent/talent-profile-edit/components/Form/SocialMedia/SocialMediaIconMapper';
-import type { TalentProfileSocialMedia } from '../../talent/talent-profile-edit/types/talentProfile.types';
+import type { ProfileSocialMedia } from '../../talent/talent-profile-edit/types/talentProfile.types';
 
 type Props = {
-  data: TalentProfileSocialMedia;
+  data: ProfileSocialMedia;
 };
 
 const SocialMediaSection = ({ data }: Props) => {

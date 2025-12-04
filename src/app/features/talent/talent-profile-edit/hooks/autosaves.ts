@@ -30,10 +30,10 @@ import type {
   Credit,
   Education,
   Media,
+  ProfileSocialMedia,
   TalentProfileBasicInfo,
   TalentProfileContact,
   TalentProfileResponse,
-  TalentProfileSocialMedia,
 } from '../types/talentProfile.types';
 import { useSectionAutosave } from './useSectionAutoSave';
 
@@ -58,7 +58,7 @@ export function useContactAutosave() {
 }
 
 export function useSocialMediaAutosave() {
-  return useSectionAutosave<SocialMediaPatchRequest, TalentProfileSocialMedia>({
+  return useSectionAutosave<SocialMediaPatchRequest, ProfileSocialMedia>({
     mutationFn: patchSocialMedia,
     delay: 400,
     onSuccessUpdate: (prev: TalentProfileResponse, updated) => ({ ...prev, socialMedia: updated }),
