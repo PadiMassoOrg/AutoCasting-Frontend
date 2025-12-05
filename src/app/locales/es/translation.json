@@ -488,6 +488,7 @@
     "media": {
       "media": "Media",
       "photos": "Fotos",
+      "must_have_one_photo": "DECIDIR TRADUCCION",
       "headshot_fullbody": "Primer Plano y Cuerpo Entero",
       "other": "Otras Fotos",
       "videos": "Videos",

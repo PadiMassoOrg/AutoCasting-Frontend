@@ -31,8 +31,32 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
   const [errHeadshot, setErrHeadshot] = useState<string | null>(null);
   const [errFullbody, setErrFullbody] = useState<string | null>(null);
   const [errOther, setErrOther] = useState<Record<number, string | null>>({});
+  const [globalError, setGlobalError] = useState<string | null>(null);
 
   const others = liveMedia.otherPicturesUrl ?? [];
+
+  const headshotHasImage = (!removedHeadshot && !!liveMedia.headshotImageUrl) || !!preview.headshot;
+  const fullbodyHasImage = (!removedFullbody && !!liveMedia.fullBodyImageUrl) || !!preview.fullbody;
+  const otherHasImage = (i: number) =>
+    (!removedOthers.has(i) && typeof others[i] === 'string' && (others[i] as string).trim().length > 0) ||
+    !!otherPreview[i];
+
+  const totalImages = (() => {
+    let count = 0;
+    if (headshotHasImage) count++;
+    if (fullbodyHasImage) count++;
+    for (let i = 0; i < OTHER_SLOTS; i++) {
+      if (otherHasImage(i)) count++;
+    }
+    return count;
+  })();
+
+  const showGlobalError = (msg: string) => {
+    setGlobalError(msg);
+    setTimeout(() => {
+      setGlobalError((current) => (current === msg ? null : current));
+    }, 3500);
+  };
 
   const pick = (slot: 'headshot' | 'fullbody') => async (files: File[] | File) => {
     const file = Array.isArray(files) ? files[0] : files;
@@ -128,6 +152,10 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
   };
 
   const onDeleteHeadshot = async () => {
+    if (totalImages <= 1) {
+      showGlobalError(t('profile.media.must_have_one_photo'));
+      return;
+    }
     setErrHeadshot(null);
     const url = liveMedia.headshotImageUrl ?? undefined;
     setRemovedHeadshot(true);
@@ -145,6 +173,10 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
   };
 
   const onDeleteFullbody = async () => {
+    if (totalImages <= 1) {
+      showGlobalError(t('profile.media.must_have_one_photo'));
+      return;
+    }
     setErrFullbody(null);
     const url = liveMedia.fullBodyImageUrl ?? undefined;
     setRemovedFullbody(true);
@@ -162,6 +194,10 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
   };
 
   const onDeleteOther = async (index: number) => {
+    if (totalImages <= 1) {
+      showGlobalError(t('profile.media.must_have_one_photo'));
+      return;
+    }
     setErrOther((m) => ({ ...m, [index]: null }));
     const url = (liveMedia.otherPicturesUrl ?? [])[index] ?? undefined;
     setRemovedOthers((s) => new Set(s).add(index));
@@ -186,12 +222,6 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
       });
     }
   };
-
-  const headshotHasImage = (!removedHeadshot && !!liveMedia.headshotImageUrl) || !!preview.headshot;
-  const fullbodyHasImage = (!removedFullbody && !!liveMedia.fullBodyImageUrl) || !!preview.fullbody;
-  const otherHasImage = (i: number) =>
-    (!removedOthers.has(i) && typeof others[i] === 'string' && (others[i] as string).trim().length > 0) ||
-    !!otherPreview[i];
 
   return (
     <article className="flex flex-col gap-2">
@@ -218,7 +248,11 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             onDeleteClick={onDeleteHeadshot}
             className="w-full h-full"
           />
-          {errHeadshot && <span className="text-xs text-red-600">{errHeadshot}</span>}
+          {!errHeadshot ? (
+            <div className="min-h-[25px]" />
+          ) : (
+            <span className="min-h-[25px] text-xs text-red-600">{errHeadshot}</span>
+          )}
         </div>
 
         <div className="w-full aspect-[3/4]">
@@ -241,7 +275,11 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
             onDeleteClick={onDeleteFullbody}
             className="w-full h-full"
           />
-          {errFullbody && <span className="text-xs text-red-600">{errFullbody}</span>}
+          {!errFullbody ? (
+            <div className="min-h-[25px]" />
+          ) : (
+            <span className="min-h-[25px] text-xs text-red-600">{errFullbody}</span>
+          )}
         </div>
 
         {Array.from({ length: OTHER_SLOTS }, (_, i) => {
@@ -268,11 +306,21 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
                 onDeleteClick={() => onDeleteOther(i)}
                 className="w-full h-full"
               />
-              {errOther[i] && <span className="text-xs text-red-600 block">{errOther[i]}</span>}
+              {!errOther[i] ? (
+                <div className="min-h-[25px]" />
+              ) : (
+                <span className="min-h-[25px] text-xs text-red-600">{errOther[i]}</span>
+              )}
             </div>
           );
         })}
       </div>
+
+      {globalError ? (
+        <span className="min-h-[20px] text-xs text-red-600">{globalError}</span>
+      ) : (
+        <div className="min-h-[20px]" />
+      )}
     </article>
   );
 }

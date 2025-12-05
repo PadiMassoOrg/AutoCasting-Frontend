@@ -7,7 +7,7 @@ const TalentProfileMediaEditSection = ({ media, supabaseId }: { media: Media; su
   return (
     <DashboardSection>
       <MediaPhotosForm media={media} supabaseId={supabaseId} />
-      <Separator className="opacity-20 my-8" />
+      <Separator className="opacity-20 mb-12" />
       <MediaVideosForm data={media} />
     </DashboardSection>
   );
