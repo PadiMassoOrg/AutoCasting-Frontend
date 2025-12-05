@@ -4,6 +4,7 @@ import { matchPath, useLocation, useNavigate, useParams } from 'react-router-dom
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { LG_SCREEN_SIZE, useMedia } from '../../../../shared/hooks/useMedia';
 import { ROUTES } from '../../../../shared/lib/routes';
+import { useMeData } from '../../../auth/hooks/useMeData';
 import { useTalentProfile } from '../hooks/useTalentProfile';
 
 type Props = {
@@ -15,17 +16,18 @@ export default function TalentProfileModeToggle({ className }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
   const { slug } = useParams<{ slug: string }>();
+  const { data: meData } = useMeData();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const { data: myProfile } = useTalentProfile();
 
   // Si todavía no tenemos perfil, no renderizamos nada
-  if (!myProfile) return null;
+  if (!myProfile || meData?.activeMode !== 'TALENT') return null;
 
   // --- Detectar modo según la URL actual ---
   const inEditRoute = !!matchPath({ path: ROUTES.TALENT, end: true }, location.pathname);
   const inPublicRoute = !!matchPath({ path: ROUTES.PUBLIC_PROFILE + '/*', end: false }, location.pathname);
 
-  if (!inEditRoute && !inPublicRoute) {
+  if (!inEditRoute && !inPublicRoute && meData?.activeMode !== 'TALENT') {
     // No estamos ni en /dashboard/talent ni en /profile/...
     return null;
   }
@@ -37,7 +39,7 @@ export default function TalentProfileModeToggle({ className }: Props) {
     mode === 'edit' || // si estoy en /dashboard/talent soy el dueño
     (!!slug && myProfile.publicSlug === slug); // si estoy en /profile/:slug y coincide
 
-  if (!isOwner) return null;
+  if (!isOwner || meData?.activeMode !== 'TALENT') return null;
 
   // --- Datos comunes ---
   const hasPublicSlug = !!myProfile.publicSlug;
@@ -61,7 +63,7 @@ export default function TalentProfileModeToggle({ className }: Props) {
   // ===========================
   // Layout MOBILE: Solo funciona en MOBILE
   // ===========================
-  if (!isDesktop)
+  if (!isDesktop && meData?.activeMode === 'TALENT')
     return (
       <div
         className={clsx('fixed inset-x-0 bottom-0 z-[20] bg-white flex justify-center pointer-events-none', className)}
