@@ -1,8 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import clsx from 'clsx';
 import React, { forwardRef, useCallback, useRef, useState, type ChangeEvent, type DragEvent } from 'react';
-import deleteIcon from '../../../../../shared/icons/delete.svg';
-import editIcon from '../../../../../shared/icons/edit.svg';
+import { Icon } from '../Icon/Icon';
 
 export type UploadTileClasses = Partial<{
   root: string;
@@ -242,7 +240,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
       {hasImage && !busy && (
         <div
           className={clsx(
-            'absolute left-0 right-0 bottom-0 px-3 py-2 sm:px-5 sm:py-3 bg-black/45 z-10 pointer-events-auto',
+            'absolute left-0 right-0 bottom-0 px-3 py-2 lg:px-4 lg:py-2 bg-black/45 z-10 pointer-events-auto',
             roundedClassName,
             classes?.actionsBar
           )}
@@ -253,8 +251,8 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
             <button
               type="button"
               className={clsx(
-                'w-7 h-7 rounded-full bg-[var(--color-primary-light-grey)] grid place-items-center',
-                'sm:w-12 sm:h-12',
+                'w-12 h-12 rounded-full bg-[var(--color-primary-light-grey)] grid place-items-center',
+                'lg:w-10 lg:h-10',
                 classes?.actionBtn
               )}
               style={{ cursor: 'pointer' }}
@@ -265,13 +263,13 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
                 else openDialog();
               }}
             >
-              <img src={editIcon} className="w-[10px] h-[10px] sm:w-auto sm:h-auto" />
+              <Icon name="edit" variant="default" size={16} />
             </button>
             <button
               type="button"
               className={clsx(
-                'w-7 h-7 rounded-full bg-[var(--color-primary-light-grey)] grid place-items-center',
-                'sm:w-12 sm:h-12',
+                'w-12 h-12 rounded-full bg-[var(--color-primary-light-grey)] grid place-items-center',
+                'lg:w-10 lg:h-10',
                 classes?.actionBtn
               )}
               style={{ cursor: 'pointer' }}
@@ -282,7 +280,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
                 else onClear?.();
               }}
             >
-              <img src={deleteIcon} className="w-[10px] h-[10px] sm:w-auto sm:h-auto" />
+              <Icon name="delete" variant="default" size={16} />
             </button>
           </div>
         </div>

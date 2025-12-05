@@ -6,7 +6,7 @@ import { WizardStep } from '../../../../shared/components/Wizard';
 import type { WizardStepProps } from '../../../../shared/components/Wizard/WizardStep';
 
 import { useProfileMediaPatch } from '../../../../integrations/supabase/media/hooks/useProfileMediaPatch';
-import UploadTile from '../../../talent/talent-profile-edit/components/UploadTile/UploadTile';
+import UploadTile from '../../../../shared/components/UploadTile/UploadTile';
 import { useTalentProfile } from '../../../talent/talent-profile-edit/hooks/useTalentProfile';
 import { fileSchema } from '../../../talent/talent-profile-edit/schemas/mediaSchema';
 
@@ -24,8 +24,11 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [errHeadshot, setErrHeadshot] = useState<string | null>(null);
   const [bust, setBust] = useState(0);
+  const [isDeleted, setIsDeleted] = useState(false);
 
-  const canContinue = !uploadPending && (!!previewUrl || !!currentHeadshotUrl);
+  const effectiveHeadshotUrl = isDeleted ? null : currentHeadshotUrl;
+
+  const canContinue = !uploadPending && (!!previewUrl || !!effectiveHeadshotUrl);
   const isBusy = uploadPending || profilePending || !profileId;
 
   const handleSelect = async (files: File[] | File) => {
@@ -39,6 +42,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
       return;
     }
     setErrHeadshot(null);
+    setIsDeleted(false);
 
     const localUrl = await fileToDataUrl(file);
     setPreviewUrl(localUrl);
@@ -58,6 +62,12 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
     );
   };
 
+  const handleDelete = () => {
+    setPreviewUrl(null);
+    setErrHeadshot(null);
+    setIsDeleted(true);
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!canContinue) return;
@@ -71,7 +81,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
 
   if (profilePending || !profileId) return null;
 
-  const valueUrl = uploadPending || !currentHeadshotUrl ? undefined : withBust(currentHeadshotUrl, bust);
+  const valueUrl = uploadPending || !effectiveHeadshotUrl ? undefined : withBust(effectiveHeadshotUrl, bust);
   const tileBusy = uploadPending || profilePending;
 
   return (
@@ -79,14 +89,12 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
       <WizardStep>
         <form onSubmit={handleSubmit} className="flex lg:min-h-[70vh] flex-col justify-between gap-2">
           <div>
-            {/* Header */}
             <div className="w-full flex flex-col items-center gap-4 mb-4">
               <button className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]">
                 {t('onboarding.mode_selector.talent.title')}
               </button>
             </div>
 
-            {/* Progress */}
             <div className="flex flex-col gap-1 mb-2">
               <div className="w-full h-[9px] rounded-full bg-[var(--color-secondary-offwhite)] overflow-hidden">
                 <div
@@ -99,7 +107,6 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
               </p>
             </div>
 
-            {/* Contenido central */}
             <div className="w-full flex flex-col">
               <div className="text-center">
                 <h1 className="text-2xl font-semibold my-1">{t('onboarding.talent.step2.header')}</h1>
@@ -111,6 +118,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
                   value={valueUrl}
                   previewUrl={previewUrl}
                   onSelect={handleSelect}
+                  onDeleteClick={handleDelete}
                   disabled={isBusy}
                   busy={tileBusy}
                   busyText={t('state.loading')}

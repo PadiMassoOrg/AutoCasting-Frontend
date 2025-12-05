@@ -6,8 +6,8 @@ import { WizardStep } from '../../../../shared/components/Wizard';
 import type { WizardStepProps } from '../../../../shared/components/Wizard/WizardStep';
 
 import { useEmployerLogoPatch } from '../../../../integrations/supabase/media/hooks/useEmployerLogoPatch';
+import UploadTile from '../../../../shared/components/UploadTile/UploadTile';
 import { useEmployerProfile } from '../../../employer/employer-profile-edit/hooks/useEmployerProfile';
-import UploadTile from '../../../talent/talent-profile-edit/components/UploadTile/UploadTile';
 import { fileSchema } from '../../../talent/talent-profile-edit/schemas/mediaSchema';
 
 type Props = WizardStepProps & {
@@ -31,8 +31,11 @@ function EmployerMediaStep({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [errImage, setErrImage] = useState<string | null>(null);
   const [bust, setBust] = useState(0);
+  const [isDeleted, setIsDeleted] = useState(false);
 
-  const canContinue = !uploadPending && (!!previewUrl || !!currentImageUrl);
+  const effectiveImageUrl = isDeleted ? null : currentImageUrl;
+
+  const canContinue = !uploadPending && (!!previewUrl || !!effectiveImageUrl);
   const isBusy = uploadPending || profilePending || !profileId;
 
   const handleSelect = async (files: File[] | File) => {
@@ -46,6 +49,7 @@ function EmployerMediaStep({
       return;
     }
     setErrImage(null);
+    setIsDeleted(false);
 
     const localUrl = await fileToDataUrl(file);
     setPreviewUrl(localUrl);
@@ -65,6 +69,12 @@ function EmployerMediaStep({
     );
   };
 
+  const handleDelete = () => {
+    setPreviewUrl(null);
+    setErrImage(null);
+    setIsDeleted(true);
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!canContinue) return;
@@ -78,7 +88,7 @@ function EmployerMediaStep({
 
   if (profilePending || !profileId) return null;
 
-  const valueUrl = uploadPending || !currentImageUrl ? undefined : withBust(currentImageUrl, bust);
+  const valueUrl = uploadPending || !effectiveImageUrl ? undefined : withBust(effectiveImageUrl, bust);
   const tileBusy = uploadPending || profilePending;
 
   return (
@@ -86,14 +96,12 @@ function EmployerMediaStep({
       <WizardStep>
         <form onSubmit={handleSubmit} className="flex lg:min-h-[70vh] flex-col justify-between gap-2">
           <div>
-            {/* Header */}
             <div className="w-full flex flex-col items-center gap-4 mb-4">
               <button className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]">
                 {t('onboarding.mode_selector.employer.title')}
               </button>
             </div>
 
-            {/* Progress */}
             <div className="flex flex-col gap-1">
               <div className="w-full h-[9px] rounded-full bg-[var(--color-secondary-offwhite)] overflow-hidden">
                 <div
@@ -106,7 +114,6 @@ function EmployerMediaStep({
               </p>
             </div>
 
-            {/* Contenido central */}
             <div className="w-full mb-4 flex flex-col">
               <div className="text-center">
                 <h1 className="text-2xl font-semibold my-1">{t('onboarding.employer.step2.header')}</h1>
@@ -118,6 +125,7 @@ function EmployerMediaStep({
                   value={valueUrl}
                   previewUrl={previewUrl}
                   onSelect={handleSelect}
+                  onDeleteClick={handleDelete}
                   disabled={isBusy}
                   busy={tileBusy}
                   busyText={t('state.loading')}

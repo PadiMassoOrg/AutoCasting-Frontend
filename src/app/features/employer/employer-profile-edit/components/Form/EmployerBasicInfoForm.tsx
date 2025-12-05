@@ -5,12 +5,12 @@ import { useEmployerLogoPatch } from '../../../../../integrations/supabase/media
 import { useCommittedText, useCommittedUuid } from '../../../../../shared/utils/formUtils';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { SocialMediaForm } from '../../../../talent/talent-profile-edit/components/Form/SocialMedia';
-import UploadTile from '../../../../talent/talent-profile-edit/components/UploadTile/UploadTile';
 import { fileSchema } from '../../../../talent/talent-profile-edit/schemas/mediaSchema';
 import type { ProfileSocialMedia } from '../../../../talent/talent-profile-edit/types/talentProfile.types';
 import { useEmployerBasicInfoAutosave, useEmployerSocialMediaAutosave } from '../../hooks/autosaves';
 import { getEmployerBasicInfoSchema } from '../../schemas/employerBasicInfoSchema';
 import type { EmployerProfileBasicInfo } from '../../types/employerProfile.types';
+import UploadTile from '../../../../../shared/components/UploadTile/UploadTile';
 
 type Errors = {
   companyName?: string | null;
