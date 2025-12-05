@@ -13,10 +13,10 @@ import type {
 import type {
   Characteristics,
   Media,
+  ProfileSocialMedia,
   TalentProfileBasicInfo,
   TalentProfileContact,
   TalentProfileResponse,
-  TalentProfileSocialMedia,
 } from '../types/talentProfile.types';
 
 export const TALENT_PROFILE_CACHE_KEY = ['cache-profile'] as const;
@@ -39,7 +39,7 @@ export async function patchContact(payload: ContactPatchRequest): Promise<Talent
   return data;
 }
 
-export async function patchSocialMedia(payload: SocialMediaPatchRequest): Promise<TalentProfileSocialMedia> {
+export async function patchSocialMedia(payload: SocialMediaPatchRequest): Promise<ProfileSocialMedia> {
   const { data } = await api.patch(API_ROUTES.TALENT_SOCIAL_MEDIA, payload);
   return data;
 }

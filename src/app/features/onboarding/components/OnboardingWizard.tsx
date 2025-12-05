@@ -5,7 +5,7 @@ import { getAuthToken } from '../../../shared/lib/cookies';
 import { ROUTES } from '../../../shared/lib/routes';
 import { jwtDecoder } from '../../../shared/utils/jwtDecoder';
 import { useMeData } from '../../auth/hooks/useMeData';
-import { EmployerBasicInfoStep } from './employer';
+import { EmployerBasicInfoStep, EmployerConfirmationStep, EmployerMediaStep } from './employer';
 import ModeSelectorStep from './ModeSelectorStep';
 import { TalentBasicInfoStep, TalentConfirmationStep, TalentMediaStep } from './talent';
 
@@ -53,6 +53,8 @@ function OnboardingWizard() {
     return (
       <Wizard key="employer-flow">
         <EmployerBasicInfoStep onBackToModeSelector={() => setCurrentFlow('MODE')} />
+        <EmployerMediaStep />
+        <EmployerConfirmationStep onGoToProfile={() => navigate(ROUTES.EMPLOYER)} />
       </Wizard>
     );
   }

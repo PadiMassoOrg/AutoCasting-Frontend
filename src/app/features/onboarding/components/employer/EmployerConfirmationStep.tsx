@@ -1,5 +1,3 @@
-// src/app/features/onboarding/components/talent/TalentConfirmationStep.tsx
-
 import { Button, Label } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +12,7 @@ type Props = WizardStepProps & {
   onGoToProfile: () => void;
 };
 
-function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progress = 100, onGoToProfile }: Props) {
+function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progress = 100, onGoToProfile }: Props) {
   const { t } = useTranslation();
   const { data: meData } = useMeData();
   const { mutate: updateOnboarding, isPending } = useUpdateOnboardingMutation();
@@ -25,9 +23,9 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
 
     updateOnboarding(
       {
-        activeMode: 'TALENT',
-        talentOnboardingStatus: 'COMPLETED',
-        employerOnboardingStatus: meData?.employerOnboardingStatus,
+        activeMode: 'EMPLOYER',
+        talentOnboardingStatus: meData?.talentOnboardingStatus,
+        employerOnboardingStatus: 'COMPLETED',
       },
       {
         onSuccess: () => {
@@ -50,7 +48,7 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
             <div className="w-full flex flex-col items-center gap-4 mb-6">
               <img src={Logo} className="w-14" />
               <button className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]">
-                {t('onboarding.mode_selector.talent.title')}
+                {t('onboarding.mode_selector.employer.title')}
               </button>
             </div>
 
@@ -69,8 +67,8 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
 
             {/* Contenido principal */}
             <div className="text-center">
-              <h1 className="text-2xl font-semibold mb-3">{t('onboarding.talent.confirmation_step.header')}</h1>
-              <p className="text-sm">{t('onboarding.talent.confirmation_step.subtitle')}</p>
+              <h1 className="text-2xl font-semibold mb-3">{t('onboarding.employer.confirmation_step.header')}</h1>
+              <p className="text-sm">{t('onboarding.employer.confirmation_step.subtitle')}</p>
             </div>
 
             {serverError && (
@@ -99,4 +97,4 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
   );
 }
 
-export default TalentConfirmationStep;
+export default EmployerConfirmationStep;

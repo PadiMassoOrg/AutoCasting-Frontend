@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
 import { WizardStep } from '../../../../shared/components/Wizard';
 import type { WizardStepProps } from '../../../../shared/components/Wizard/WizardStep';
-import Logo from '../../../../shared/icons/og-image.svg';
 import { usePatchTalentBasicInfoMutation } from '../../../talent/talent-profile-edit/hooks/usePatchTalentBasicInfoMutation';
 import { useTalentProfile } from '../../../talent/talent-profile-edit/hooks/useTalentProfile';
 import { type TalentBasicInfoValues, getTalentBasicInfoSchema } from '../../schemas/talentBasicInfoStepSchema';
@@ -69,7 +68,6 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
           <div>
             {/* Header */}
             <div className="w-full flex flex-col items-center gap-4 mb-6">
-              <img src={Logo} className="w-14" />
               <button className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]">
                 {t('onboarding.mode_selector.talent.title')}
               </button>
@@ -97,7 +95,7 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
               <FormInputField
                 id="stageName"
                 type="text"
-                placeholder={t('onboarding.talent.step1.stage_name_label')}
+                placeholder={t('general.placeholder.stage_name')}
                 className="bg-[var(--color-primary-white)]"
                 {...register('stageName')}
                 error={errors.stageName?.message}

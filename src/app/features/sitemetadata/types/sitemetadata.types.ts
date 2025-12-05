@@ -16,6 +16,7 @@ export type SiteMetadataResponse = {
   dietOptions: SiteMetadataObject[];
   productionTypeOptions: SiteMetadataObject[];
   socialMediaOptions: SiteMetadataObject[];
+  companyTypeOptions: SiteMetadataObject[];
 };
 
 export type SiteMetadataVersion = {

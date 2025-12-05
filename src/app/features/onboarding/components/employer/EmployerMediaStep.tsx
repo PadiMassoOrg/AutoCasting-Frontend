@@ -5,27 +5,34 @@ import { ContinueLaterButton } from '..';
 import { WizardStep } from '../../../../shared/components/Wizard';
 import type { WizardStepProps } from '../../../../shared/components/Wizard/WizardStep';
 
-import { useProfileMediaPatch } from '../../../../integrations/supabase/media/hooks/useProfileMediaPatch';
+import { useEmployerLogoPatch } from '../../../../integrations/supabase/media/hooks/useEmployerLogoPatch';
+import { useEmployerProfile } from '../../../employer/employer-profile-edit/hooks/useEmployerProfile';
 import UploadTile from '../../../talent/talent-profile-edit/components/UploadTile/UploadTile';
-import { useTalentProfile } from '../../../talent/talent-profile-edit/hooks/useTalentProfile';
 import { fileSchema } from '../../../talent/talent-profile-edit/schemas/mediaSchema';
 
 type Props = WizardStepProps & {
   onBackToModeSelector?: () => void;
 };
 
-function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progress = 0, onBackToModeSelector }: Props) {
+function EmployerMediaStep({
+  goNext,
+  goBack,
+  stepIndex = 1,
+  totalSteps = 3,
+  progress = 0,
+  onBackToModeSelector,
+}: Props) {
   const { t } = useTranslation();
-  const { data: profile, isPending: profilePending } = useTalentProfile();
+  const { data: profile, isPending: profilePending } = useEmployerProfile();
   const profileId = profile?.id!;
-  const currentHeadshotUrl = profile?.media?.headshotImageUrl ?? null;
-  const { mutate: uploadHeadshot, isPending: uploadPending } = useProfileMediaPatch(profileId);
+  const currentImageUrl = profile?.basicInfo?.imageUrl ?? null;
+  const { mutate: uploadLogo, isPending: uploadPending } = useEmployerLogoPatch(profileId);
 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [errHeadshot, setErrHeadshot] = useState<string | null>(null);
+  const [errImage, setErrImage] = useState<string | null>(null);
   const [bust, setBust] = useState(0);
 
-  const canContinue = !uploadPending && (!!previewUrl || !!currentHeadshotUrl);
+  const canContinue = !uploadPending && (!!previewUrl || !!currentImageUrl);
   const isBusy = uploadPending || profilePending || !profileId;
 
   const handleSelect = async (files: File[] | File) => {
@@ -35,16 +42,16 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
     const res = fileSchema(t).safeParse(file);
     if (!res.success) {
       const msg = res.error.errors[0]?.message ?? t('state.server_err');
-      setErrHeadshot(msg);
+      setErrImage(msg);
       return;
     }
-    setErrHeadshot(null);
+    setErrImage(null);
 
     const localUrl = await fileToDataUrl(file);
     setPreviewUrl(localUrl);
 
-    uploadHeadshot(
-      { file, slot: 'headshot' },
+    uploadLogo(
+      { file },
       {
         onSuccess: () => {
           setPreviewUrl(null);
@@ -52,7 +59,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
         },
         onError: (err: any) => {
           const msg = err?.response?.data?.message || err?.message || t('state.server_err');
-          setErrHeadshot(msg);
+          setErrImage(msg);
         },
       }
     );
@@ -71,7 +78,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
 
   if (profilePending || !profileId) return null;
 
-  const valueUrl = uploadPending || !currentHeadshotUrl ? undefined : withBust(currentHeadshotUrl, bust);
+  const valueUrl = uploadPending || !currentImageUrl ? undefined : withBust(currentImageUrl, bust);
   const tileBusy = uploadPending || profilePending;
 
   return (
@@ -82,12 +89,12 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
             {/* Header */}
             <div className="w-full flex flex-col items-center gap-4 mb-4">
               <button className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]">
-                {t('onboarding.mode_selector.talent.title')}
+                {t('onboarding.mode_selector.employer.title')}
               </button>
             </div>
 
             {/* Progress */}
-            <div className="flex flex-col gap-1 mb-2">
+            <div className="flex flex-col gap-1">
               <div className="w-full h-[9px] rounded-full bg-[var(--color-secondary-offwhite)] overflow-hidden">
                 <div
                   className="h-[9px] bg-[var(--color-primary-purple)] transition-all"
@@ -100,10 +107,10 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
             </div>
 
             {/* Contenido central */}
-            <div className="w-full flex flex-col">
+            <div className="w-full mb-4 flex flex-col">
               <div className="text-center">
-                <h1 className="text-2xl font-semibold my-1">{t('onboarding.talent.step2.header')}</h1>
-                <p className="text-sm">{t('onboarding.talent.step2.subtitle')}</p>
+                <h1 className="text-2xl font-semibold my-1">{t('onboarding.employer.step2.header')}</h1>
+                <p className="text-sm">{t('onboarding.employer.step2.subtitle')}</p>
               </div>
 
               <div className="max-w-[165px] w-full self-center my-10 lg:max-w-[300px] lg:items-center">
@@ -125,9 +132,9 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
                 />
               </div>
 
-              {errHeadshot && (
+              {errImage && (
                 <Label variant="error" className="pl-1">
-                  {errHeadshot}
+                  {errImage}
                 </Label>
               )}
             </div>
@@ -150,7 +157,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
   );
 }
 
-export default TalentMediaStep;
+export default EmployerMediaStep;
 
 const fileToDataUrl = (file: File) =>
   new Promise<string>((resolve, reject) => {

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import clsx from 'clsx';
 import React, { forwardRef, useCallback, useRef, useState, type ChangeEvent, type DragEvent } from 'react';
 import deleteIcon from '../../../../../shared/icons/delete.svg';
@@ -79,7 +80,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
     className,
     classes,
     style,
-    aspectRatio = '3 / 4',
+    aspectRatio,
     roundedClassName = DEFAULT_ROUNDED,
     dashed = true,
     objectFit = 'cover',
@@ -141,6 +142,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
     e.preventDefault();
     if (!disabled) setDragOver(true);
   };
+
   const onDragLeave = () => setDragOver(false);
 
   const baseBorder = dashed ? 'border-1 border-dashed' : 'border';
@@ -150,16 +152,18 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
   const hasImage = Boolean(displayUrl);
   const rootClickable = !disabled && !busy && !hasImage;
 
+  const mergedStyle = aspectRatio ? { ...style, aspectRatio } : style;
+
   return (
     <div
       ref={ref}
       className={clsx(
-        'relative w-full select-none focus:outline-none overflow-hidden',
+        'relative w-full h-full select-none focus:outline-none overflow-hidden',
         rootClickable ? 'cursor-pointer' : 'cursor-default',
         classes?.root,
         className
       )}
-      style={{ ...style, aspectRatio }}
+      style={mergedStyle}
       role={rootClickable ? 'button' : undefined}
       aria-label={ariaLabel}
       aria-disabled={disabled || undefined}
@@ -238,7 +242,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
       {hasImage && !busy && (
         <div
           className={clsx(
-            'absolute left-0 right-0 bottom-0 px-3 py-2 sm:px-5 sm:py-3   bg-black/45 z-10 pointer-events-auto',
+            'absolute left-0 right-0 bottom-0 px-3 py-2 sm:px-5 sm:py-3 bg-black/45 z-10 pointer-events-auto',
             roundedClassName,
             classes?.actionsBar
           )}
@@ -250,7 +254,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
               type="button"
               className={clsx(
                 'w-7 h-7 rounded-full bg-[var(--color-primary-light-grey)] grid place-items-center',
-                'sm:w-12 sm:h-12 ',
+                'sm:w-12 sm:h-12',
                 classes?.actionBtn
               )}
               style={{ cursor: 'pointer' }}
@@ -267,7 +271,7 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
               type="button"
               className={clsx(
                 'w-7 h-7 rounded-full bg-[var(--color-primary-light-grey)] grid place-items-center',
-                'sm:w-12 sm:h-12 ',
+                'sm:w-12 sm:h-12',
                 classes?.actionBtn
               )}
               style={{ cursor: 'pointer' }}

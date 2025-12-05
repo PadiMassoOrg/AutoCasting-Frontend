@@ -1,2 +1,4 @@
 import EmployerBasicInfoStep from './EmployerBasicInfoStep';
-export { EmployerBasicInfoStep };
+import EmployerConfirmationStep from './EmployerConfirmationStep';
+import EmployerMediaStep from './EmployerMediaStep';
+export { EmployerBasicInfoStep, EmployerConfirmationStep, EmployerMediaStep };

@@ -64,7 +64,7 @@ function DashboardShell<Key extends string = string>({
   // Sin secciones: layout simple
   if (!hasSections) {
     return (
-      <section className="w-full h-full min-h-0 flex flex-col">
+      <section className="w-full h-full min-h-0 flex flex-col bg-[var(--color-secondary-white)]">
         <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
           <div className="w-full max-w-[1100px] mx-auto px-4 lg:px-8 py-6 lg:py-8">
             {title && (

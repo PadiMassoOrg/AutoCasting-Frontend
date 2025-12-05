@@ -2,9 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../../../../../shared/components/Icon/Icon';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
-import { useSocialMediaAutosave } from '../../../hooks/autosaves';
 import { getSocialMediaSchema } from '../../../schemas/socialMediaSchema';
-import type { LinkState } from './SocialMediaForm';
+import type { LinkState, SocialMediaLinksPayload } from './SocialMediaForm';
 import { getSocialMediaIconName } from './SocialMediaIconMapper';
 
 type SocialMediaIconSelectProps = {
@@ -117,6 +116,7 @@ type SocialMediaRowProps = {
   onChange: (next: LinkState) => void;
   onDelete: () => void;
   initialUrlsById: Record<string, string | null>;
+  onSaveLinks: (payload: SocialMediaLinksPayload) => void;
 };
 
 const SocialMediaRow = ({
@@ -126,9 +126,9 @@ const SocialMediaRow = ({
   onChange,
   onDelete,
   initialUrlsById,
+  onSaveLinks,
 }: SocialMediaRowProps) => {
   const { t } = useTranslation();
-  const autosave = useSocialMediaAutosave();
   const schema = useMemo(() => getSocialMediaSchema(t), [t]);
 
   const [error, setError] = useState<string | null>(null);
@@ -159,7 +159,7 @@ const SocialMediaRow = ({
     const nextUrl = trimmed === '' ? null : trimmed;
     const currentOptionId = selectedOption.id;
 
-    const payload: { links: { optionId: string; url: string | null }[] } = {
+    const payload: SocialMediaLinksPayload = {
       links: [],
     };
 
@@ -176,7 +176,7 @@ const SocialMediaRow = ({
     });
 
     if (payload.links.length > 0) {
-      autosave.immediate(payload);
+      onSaveLinks(payload);
     }
 
     previousOptionIdRef.current = currentOptionId;
@@ -215,7 +215,7 @@ const SocialMediaRow = ({
   };
 
   const handleDelete = () => {
-    autosave.immediate({
+    onSaveLinks({
       links: [
         {
           optionId: selectedOption.id,
