@@ -21,6 +21,7 @@ export default function SkillsForm({ data }: { data: SiteMetadataObject[] }) {
   const skillOptions = useCachedSiteMetadataOption('skills', t);
 
   const handleOpenModal = () => {
+    console.log('Handle Modal');
     openModal(
       <NewSkillModal
         initial={skills}
@@ -53,7 +54,7 @@ export default function SkillsForm({ data }: { data: SiteMetadataObject[] }) {
       </Button>
       <div>
         <Separator className="opacity-20 mt-6" />
-        {skills.length > 0 && <GroupedSkills skills={skills} onRemove={handleRemoveSkill} />}
+        {skills.length > 0 && <GroupedSkills skills={skills} onRemove={handleRemoveSkill} key={'hola'} />}
       </div>
     </div>
   );

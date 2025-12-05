@@ -62,8 +62,8 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
         const isOpen = open[catKey] ?? true;
 
         return (
-          <>
-            <div key={catKey} className="w-full py-6">
+          <div key={catKey}>
+            <div className="w-full py-6">
               <span
                 onClick={() => {
                   const y = window.scrollY;
@@ -106,7 +106,7 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
               )}
             </div>
             <Separator className="opacity-20" />
-          </>
+          </div>
         );
       })}
     </div>
