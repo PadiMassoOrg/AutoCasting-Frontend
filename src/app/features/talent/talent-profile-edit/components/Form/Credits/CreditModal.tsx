@@ -98,7 +98,7 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
   };
 
   return (
-    <article className="flex flex-col gap-2">
+    <article className="flex flex-col">
       <FormSelectField
         id="productionType"
         label={t('profile.credits.production_type')}
