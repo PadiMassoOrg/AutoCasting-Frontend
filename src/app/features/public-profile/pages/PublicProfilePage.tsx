@@ -92,7 +92,9 @@ const PublicProfilePage = () => {
       <ViewerActions />
       <BasicInfoSection data={data} />
       <ImageCarousel images={hasImages ? images : null} />
-      <SocialMediaSection data={socialMedia} />
+      <div className="flex flex-col items-center justify-center mt-12">
+        <SocialMediaSection data={socialMedia} />
+      </div>
       <Separator className="opacity-25 my-10" />
       <ProfileInfoCarousel profile={data} />
       <Separator className="opacity-25 my-10" />
