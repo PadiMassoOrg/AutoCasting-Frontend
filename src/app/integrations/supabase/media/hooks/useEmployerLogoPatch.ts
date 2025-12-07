@@ -4,6 +4,7 @@ import {
   patchEmployerBasicInfo,
 } from '../../../../features/employer/employer-profile-edit/services/employerProfileService';
 import type { EmployerProfileBasicInfo } from '../../../../features/employer/employer-profile-edit/types/employerProfile.types';
+import { SUPABASE } from '../../constants';
 import { uploadPublic } from '../lib/profile-media';
 
 type MutationArgs = { file: File };
@@ -18,7 +19,7 @@ function getExt(name: string, type?: string) {
 function buildStorageKey(profileId: string, file: File) {
   const ext = getExt(file.name, file.type);
   const ts = Date.now();
-  return `employers/${profileId}/logo/${ts}.${ext}`;
+  return `${SUPABASE.EMPLOYER_BUCKET}/${profileId}/${SUPABASE.LOGO}/${ts}.${ext}`;
 }
 
 export function useEmployerLogoPatch(profileId: string) {

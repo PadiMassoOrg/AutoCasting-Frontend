@@ -3,6 +3,7 @@ import {
   patchMedia,
   TALENT_PROFILE_CACHE_KEY,
 } from '../../../../features/talent/talent-profile-edit/services/talentProfileService';
+import { SUPABASE } from '../../constants';
 import { cleanupOldSlotFiles, uploadPublic } from '../lib/profile-media';
 
 type Slot = 'headshot' | 'fullbody' | 'other';
@@ -18,7 +19,7 @@ function getExt(name: string, type?: string) {
 function buildStorageKey(profileId: string, slot: Slot, file: File) {
   const ext = getExt(file.name, file.type);
   const ts = Date.now();
-  return `profiles/${profileId}/media/${slot}/${ts}.${ext}`;
+  return `${SUPABASE.TALENT_BUCKET}/${profileId}/${SUPABASE.MEDIA}/${slot}/${ts}.${ext}`;
 }
 
 export function useProfileMediaPatch(profileId: string) {
