@@ -4,10 +4,16 @@ import {
   TALENT_PROFILE_CACHE_KEY,
 } from '../../../../features/talent/talent-profile-edit/services/talentProfileService';
 import { SUPABASE } from '../../constants';
-import { cleanupOldSlotFiles, uploadPublic } from '../lib/profile-media';
+import { uploadPublic, removeByPublicUrl } from '../lib/profile-media';
 
 type Slot = 'headshot' | 'fullbody' | 'other';
-type MutationArgs = { file: File; slot: 'headshot' | 'fullbody' } | { file: File; slot: 'other'; index: number };
+
+type BaseArgs = {
+  file: File;
+  previousUrl?: string | null;
+};
+
+type MutationArgs = (BaseArgs & { slot: 'headshot' | 'fullbody' }) | (BaseArgs & { slot: 'other'; index: number });
 
 function getExt(name: string, type?: string) {
   const byName = name?.split('.').pop();
@@ -27,7 +33,7 @@ export function useProfileMediaPatch(profileId: string) {
 
   return useMutation({
     mutationFn: async (args: MutationArgs) => {
-      const { file, slot } = args;
+      const { file, slot, previousUrl } = args;
       if (!file.type.startsWith('image/')) throw new Error('Formato no soportado');
       if (file.size > 8 * 1024 * 1024) throw new Error('Máximo 8MB');
 
@@ -43,9 +49,15 @@ export function useProfileMediaPatch(profileId: string) {
       }
 
       const updatedMedia = await patchMedia(payload);
-      if (slot !== 'other') {
-        await cleanupOldSlotFiles(profileId, slot, key);
+
+      if (previousUrl) {
+        try {
+          await removeByPublicUrl(previousUrl);
+        } catch (e) {
+          console.error('Error removing previous media file', e);
+        }
       }
+
       return updatedMedia;
     },
     onSuccess: (updatedMedia) => {

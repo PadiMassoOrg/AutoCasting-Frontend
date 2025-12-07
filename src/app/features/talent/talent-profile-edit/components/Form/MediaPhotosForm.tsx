@@ -9,7 +9,7 @@ import { fileSchema, OTHER_SLOTS, otherIndexSchema } from '../../schemas/mediaSc
 import { TALENT_PROFILE_CACHE_KEY } from '../../services/talentProfileService';
 import type { Media } from '../../types/talentProfile.types';
 
-export default function MediaForm({ media, supabaseId }: { media: Media; supabaseId: string }) {
+export default function MediaPhotosForm({ media, supabaseId }: { media: Media; supabaseId: string }) {
   const qc = useQueryClient();
   const { t } = useTranslation();
   const { mutate: upload } = useProfileMediaPatch(supabaseId);
@@ -77,8 +77,11 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
     setPreview((prev) => ({ ...prev, [slot]: localUrl }));
     setPending((prev) => new Set(prev).add(slot));
 
+    const previousUrl =
+      slot === 'headshot' ? (liveMedia.headshotImageUrl ?? undefined) : (liveMedia.fullBodyImageUrl ?? undefined);
+
     upload(
-      { file, slot },
+      { file, slot, previousUrl },
       {
         onSuccess: (updated) => {
           setLiveMedia(updated);
@@ -124,8 +127,10 @@ export default function MediaForm({ media, supabaseId }: { media: Media; supabas
     setOtherPreview((p) => ({ ...p, [index]: localUrl }));
     setOtherPending((p) => new Set(p).add(index));
 
+    const previousUrl = (liveMedia.otherPicturesUrl ?? [])[index] ?? undefined;
+
     upload(
-      { file, slot: 'other', index },
+      { file, slot: 'other', index, previousUrl },
       {
         onSuccess: (updated) => {
           setLiveMedia(updated);
