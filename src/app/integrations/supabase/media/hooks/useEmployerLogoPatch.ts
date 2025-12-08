@@ -5,9 +5,9 @@ import {
 } from '../../../../features/employer/employer-profile-edit/services/employerProfileService';
 import type { EmployerProfileBasicInfo } from '../../../../features/employer/employer-profile-edit/types/employerProfile.types';
 import { SUPABASE } from '../../constants';
-import { uploadPublic } from '../lib/profile-media';
+import { uploadPublic, removeByPublicUrl } from '../lib/profile-media';
 
-type MutationArgs = { file: File };
+type MutationArgs = { file: File; previousUrl?: string | null };
 
 function getExt(name: string, type?: string) {
   const byName = name?.split('.').pop();
@@ -26,7 +26,7 @@ export function useEmployerLogoPatch(profileId: string) {
   const qc = useQueryClient();
 
   return useMutation<EmployerProfileBasicInfo, unknown, MutationArgs>({
-    mutationFn: async ({ file }) => {
+    mutationFn: async ({ file, previousUrl }) => {
       if (!file.type.startsWith('image/')) throw new Error('Formato no soportado');
       if (file.size > 8 * 1024 * 1024) throw new Error('Máximo 8MB');
 
@@ -34,6 +34,14 @@ export function useEmployerLogoPatch(profileId: string) {
       const { publicUrl } = await uploadPublic(key, file);
 
       const updated = await patchEmployerBasicInfo({ imageUrl: publicUrl });
+
+      if (previousUrl) {
+        try {
+          await removeByPublicUrl(previousUrl);
+        } catch (e) {
+          console.error('Error removing previous employer logo', e);
+        }
+      }
 
       return updated;
     },

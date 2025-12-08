@@ -2,6 +2,7 @@ import { FormInputField, FormSelectField, Label, Separator } from 'autocasting-u
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useEmployerLogoPatch } from '../../../../../integrations/supabase/media/hooks/useEmployerLogoPatch';
+import UploadTile from '../../../../../shared/components/UploadTile/UploadTile';
 import { useCommittedText, useCommittedUuid } from '../../../../../shared/utils/formUtils';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { SocialMediaForm } from '../../../../talent/talent-profile-edit/components/Form/SocialMedia';
@@ -10,7 +11,6 @@ import type { ProfileSocialMedia } from '../../../../talent/talent-profile-edit/
 import { useEmployerBasicInfoAutosave, useEmployerSocialMediaAutosave } from '../../hooks/autosaves';
 import { getEmployerBasicInfoSchema } from '../../schemas/employerBasicInfoSchema';
 import type { EmployerProfileBasicInfo } from '../../types/employerProfile.types';
-import UploadTile from '../../../../../shared/components/UploadTile/UploadTile';
 
 type Errors = {
   companyName?: string | null;
@@ -41,6 +41,8 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   const [bust, setBust] = useState(0);
 
   const { mutate: uploadLogo, isPending: uploadPending } = useEmployerLogoPatch(profileId);
+
+  const currentLogoUrl = data.imageUrl ?? null;
 
   const companyName = useCommittedText(
     data.companyName ?? '',
@@ -152,7 +154,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
     setPreviewUrl(localUrl);
 
     uploadLogo(
-      { file },
+      { file, previousUrl: currentLogoUrl ?? undefined },
       {
         onSuccess: () => {
           setPreviewUrl(null);
@@ -176,7 +178,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
     setBust((prev) => prev + 1);
   };
 
-  const logoUrl = uploadPending ? undefined : withBust(data.imageUrl ?? null, bust);
+  const logoUrl = uploadPending ? undefined : withBust(currentLogoUrl, bust);
   const isLogoBusy = uploadPending;
 
   const socialMediaData: ProfileSocialMedia = (data.socialMedia ?? { links: [] }) as ProfileSocialMedia;

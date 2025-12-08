@@ -55,7 +55,7 @@ function EmployerMediaStep({
     setPreviewUrl(localUrl);
 
     uploadLogo(
-      { file },
+      { file, previousUrl: currentImageUrl ?? undefined },
       {
         onSuccess: () => {
           setPreviewUrl(null);
