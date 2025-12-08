@@ -48,7 +48,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
     setPreviewUrl(localUrl);
 
     uploadHeadshot(
-      { file, slot: 'headshot' },
+      { file, slot: 'headshot', previousUrl: currentHeadshotUrl ?? undefined },
       {
         onSuccess: () => {
           setPreviewUrl(null);
