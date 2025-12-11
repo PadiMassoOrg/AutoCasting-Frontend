@@ -47,6 +47,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
 
   // Public
   const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
+  const activeCastingDatabase = isRouteActive(ROUTES.CASTING_DATABASE);
   // Talent
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
   const activePublicProfile = isRouteActive(profileUrl, true);
@@ -87,6 +88,12 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                 <span className={clsx(baseClass, activeTalentDatabase && activeClass)}>
                   {showIcons && <Icon name="catalog" variant={activeTalentDatabase ? 'primary' : 'default'} />}
                   {showLabels && t('routes.talent-database')}
+                </span>
+              </Link>
+              <Link to={ROUTES.CASTING_DATABASE}>
+                <span className={clsx(baseClass, activeCastingDatabase && activeClass)}>
+                  {showIcons && <Icon name="clapper" variant={activeCastingDatabase ? 'primary' : 'default'} />}
+                  {showLabels && t('routes.casting-database')}
                 </span>
               </Link>
               {isAuth && (

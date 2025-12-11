@@ -1,15 +1,16 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import DummyPage from '../features/_TEST_/dummy_page';
+import { useMeData } from '../features/auth/hooks/useMeData';
 import { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage } from '../features/auth/pages';
+import CastingDatabasePage from '../features/casting-database/pages/CastingDatabasePage';
 import MainSiteLayout from '../features/main-site/layout/MainSiteLayout';
 import { PrivacyPage, SupportPage, TermsPage } from '../features/main-site/page';
 import MainSitePage from '../features/main-site/page/MainSitePage';
+import { OnboardingWizard } from '../features/onboarding/components';
 import { PublicProfilePage } from '../features/public-profile/pages';
 import { TalentDatabasePage } from '../features/talent-database/pages';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
 import { EmptyLayout, NavigationLayout, ScrollContentLayout } from '../layouts';
-import { OnboardingWizard } from '../features/onboarding/components';
-import { useMeData } from '../features/auth/hooks/useMeData';
 import { ScrollToTop } from '../shared/components/ScrollToTop/ScrollToTop';
 import { getAuthToken } from '../shared/lib/cookies';
 import { ROUTES } from '../shared/lib/routes';
@@ -68,6 +69,7 @@ function AppRoutesContent() {
       </Route>
       <Route element={<ScrollContentLayout />}>
         <Route path={ROUTES.TALENT_DATABASE} element={<TalentDatabasePage />} />
+        <Route path={ROUTES.CASTING_DATABASE} element={<CastingDatabasePage />} />
       </Route>
       <Route
         path={ROUTES.ALL}
