@@ -1,2 +1,2 @@
-import CastingCard from './CastingCard';
-export { CastingCard };
+import CastingRolePublicCard from './CastingRolePublicCard';
+export { CastingRolePublicCard };

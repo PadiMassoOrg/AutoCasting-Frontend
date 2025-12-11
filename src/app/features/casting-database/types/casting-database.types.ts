@@ -1,14 +1,23 @@
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 
-export type BaseCastingCard = {
+export type BaseCastingRolePublicCard = {
   id: string;
-  title: string;
-  creationDate: string;
-  applicationDeadline: string;
+  name: string;
+  employerCompanyName: string;
   projectType: SiteMetadataObject;
+  castingModality: SiteMetadataObject;
+  location: string;
+  shootingStartDate: string;
+  shootingEndDate: string;
+  professions: SiteMetadataObject[];
+  roleType: SiteMetadataObject;
+  gender: SiteMetadataObject;
+  ageMin: Number;
+  ageMax: Number;
+  defaultCode: String;
 };
 
 /* ======================
    Export & DeepNullable
    ====================== */
-export type CastingCardResponse = BaseCastingCard;
+export type CastingRolePublicCardResponse = BaseCastingRolePublicCard;

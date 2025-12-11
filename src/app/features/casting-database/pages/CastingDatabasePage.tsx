@@ -2,9 +2,9 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
-import { CastingCard } from '../components';
-import { CASTING_CARDS_MOCK } from '../mock';
-import type { CastingCardResponse } from '../types/casting-database.types';
+import { CastingRolePublicCard } from '../components';
+import { CASTING_ROLE_PUBLIC_CARDS_MOCK } from '../mock/casting-card-mock';
+import type { CastingRolePublicCardResponse } from '../types/casting-database.types';
 
 const CastingDatabasePage = () => {
   useViewportVhVar();
@@ -12,7 +12,7 @@ const CastingDatabasePage = () => {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
 
-  const [items, setItems] = useState<CastingCardResponse[]>(CASTING_CARDS_MOCK);
+  const [items, setItems] = useState<CastingRolePublicCardResponse[]>(CASTING_ROLE_PUBLIC_CARDS_MOCK);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -51,7 +51,7 @@ const CastingDatabasePage = () => {
 
                 {gridItems.map((it) => (
                   <div key={it.id} className="w-full h-full">
-                    <CastingCard item={it} />
+                    <CastingRolePublicCard item={it} />
                   </div>
                 ))}
               </article>
