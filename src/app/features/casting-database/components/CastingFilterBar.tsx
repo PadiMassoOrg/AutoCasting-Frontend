@@ -2,7 +2,7 @@ import { FormInputField, FormSelectField, Separator } from 'autocasting-ui-libra
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
-import { useCommittedInt, useCommittedText } from '../../../shared/utils/formUtils';
+import { useCommittedInt } from '../../../shared/utils/formUtils';
 import {
   useCachedSiteMetadataOption,
   useCachedSiteMetadataSlice,
@@ -65,7 +65,6 @@ export function CastingFilterBar({
     [ethnicityOptions, t]
   );
 
-  const hasText = (s?: string | null) => !!s && s.trim().length > 0;
   const hasAny = (arr?: unknown[]) => (arr?.length ?? 0) > 0;
   const hasRange = (min?: number, max?: number) => min != null || max != null;
   const genderActive = (value.genderIds ?? []).some((id) => id !== 'NULL');
@@ -75,8 +74,6 @@ export function CastingFilterBar({
     onChange({});
     onReset?.();
   };
-
-  const roleName = useCommittedText(value.roleName ?? '', (v) => onChange({ ...value, roleName: v || undefined }));
 
   const ageMin = useCommittedInt(value.ageMin ?? null, (v) => onChange({ ...value, ageMin: v ?? undefined }), {
     allowNull: true,
@@ -92,14 +89,11 @@ export function CastingFilterBar({
   });
 
   const basicCount =
-    (hasText(value.roleName) ? 1 : 0) +
     (hasRange(value.ageMin, value.ageMax) ? 1 : 0) +
     (genderActive ? 1 : 0) +
     (ethnicityActive ? 1 : 0) +
     (hasAny(value.professionId) ? 1 : 0) +
-    (hasAny(value.projectTypeIds) ? 1 : 0) +
-    (hasAny(value.castingModalityIds) ? 1 : 0) +
-    (hasText(value.locationText) ? 1 : 0);
+    (hasAny(value.projectTypeIds) ? 1 : 0);
 
   const characteristicsCount =
     (hasRange(value.heightMinCm, value.heightMaxCm) ? 1 : 0) +
