@@ -20,6 +20,7 @@ export const ROUTES = {
   PUBLIC_PROFILE: '/profile',
   TALENT_DATABASE: '/talent-database',
   CASTING_DATABASE: '/casting-database',
+  PUBLIC_CASTING: '/casting',
   PRODUCTIONS: '/productions',
   SUPPORT: '/support',
   FAQ: '/faq',

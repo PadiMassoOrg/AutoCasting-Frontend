@@ -1,3 +1,5 @@
+import type { CastingResponse } from '../../employer/employer-castings/types/employerCastings.types';
+
 export const CASTING_ROLE_PUBLIC_CARDS_MOCK = [
   {
     id: 'role-id-1',
@@ -132,3 +134,76 @@ export const CASTING_ROLE_PUBLIC_CARDS_MOCK = [
     defaultCode: 'C-12347',
   },
 ];
+
+export const PUBLIC_CASTING_MOCK: CastingResponse = {
+  id: '648a58e5-4383-4907-83b2-7e78f1d13acb',
+  defaultCode: 'C-648A58E5',
+
+  castingStatus: {
+    id: 'd025ae16-a0c6-49b4-861e-b657dec9a5ca',
+    stringCode: 'sitemetadata.casting_status.draft',
+    categoryStringCode: 'sitemetadata.casting_status',
+  },
+
+  castingBasicInfo: {
+    id: 'a05a10c3-d907-4773-92ca-9c0c89c12865',
+    sectionStatus: {
+      id: '56dccf06-edc6-498d-99c7-0010fb8755a3',
+      stringCode: 'sitemetadata.casting_section_status.not_started',
+      categoryStringCode: 'sitemetadata.casting_section_status',
+    },
+    title: null,
+    projectType: null,
+    location: null,
+    castingModality: null,
+    castingModalityText: null,
+    applicationDeadline: null,
+    hasWardrobeFitting: false,
+    wardrobeFittingText: null,
+    shootingStartDate: null,
+    shootingEndDate: null,
+    description: null,
+  },
+
+  castingRoles: {
+    id: '9850e544-cccc-42a2-a7d6-aa0be64896a2',
+    sectionStatus: {
+      id: '56dccf06-edc6-498d-99c7-0010fb8755a3',
+      stringCode: 'sitemetadata.casting_section_status.not_started',
+      categoryStringCode: 'sitemetadata.casting_section_status',
+    },
+    generalNotes: null,
+    roles: [],
+  },
+
+  castingActing: {
+    id: '486e4330-ebaa-418a-819c-b8465691ad22',
+    sectionStatus: {
+      id: '56dccf06-edc6-498d-99c7-0010fb8755a3',
+      stringCode: 'sitemetadata.casting_section_status.not_started',
+      categoryStringCode: 'sitemetadata.casting_section_status',
+    },
+    actingMode: {
+      id: '102ddc33-a772-42d1-95e1-416e9538b1f4',
+      stringCode: 'sitemetadata.acting_mode.none',
+      categoryStringCode: 'sitemetadata.acting_mode',
+    },
+    requirements: [],
+  },
+
+  castingRemuneration: {
+    id: '2c9fd8f1-bd08-4aa2-92b4-d52a39e25850',
+    sectionStatus: {
+      id: '56dccf06-edc6-498d-99c7-0010fb8755a3',
+      stringCode: 'sitemetadata.casting_section_status.not_started',
+      categoryStringCode: 'sitemetadata.casting_section_status',
+    },
+    compensationType: {
+      id: '387153b3-9995-42f5-b913-52f9dad84a4c',
+      stringCode: 'sitemetadata.compensation_type.unpaid',
+      categoryStringCode: 'sitemetadata.compensation_type',
+    },
+    paySameForAllRoles: true,
+    remunerations: [],
+  },
+};

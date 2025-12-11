@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../../shared/components/Icon/Icon';
 import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
@@ -6,6 +6,7 @@ import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
 import { CastingFilterBar, CastingMobileFiltersDrawer, CastingRolePublicCard } from '../components';
+import { CASTING_ROLE_PUBLIC_CARDS_MOCK } from '../mock/casting-card-mock';
 import { getCastingDatabase } from '../services/castingDatabaseService';
 import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';
 
@@ -186,7 +187,8 @@ const CastingDatabasePage = () => {
   const showEmptyState = !loading && !error && items.length === 0;
   const isFetchingNextPage = items.length > 0 && loading;
 
-  const listItems = useMemo(() => items, [items]);
+  // const listItems = useMemo(() => items, [items]);
+  const listItems = CASTING_ROLE_PUBLIC_CARDS_MOCK;
 
   return (
     <section className="w-full h-full min-h-0 bg-[var(--color-secondary-white)]">

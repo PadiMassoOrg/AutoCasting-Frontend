@@ -7,6 +7,7 @@ import MainSiteLayout from '../features/main-site/layout/MainSiteLayout';
 import { PrivacyPage, SupportPage, TermsPage } from '../features/main-site/page';
 import MainSitePage from '../features/main-site/page/MainSitePage';
 import { OnboardingWizard } from '../features/onboarding/components';
+import { PublicCastingPage } from '../features/public-casting/pages';
 import { PublicProfilePage } from '../features/public-profile/pages';
 import { TalentDatabasePage } from '../features/talent-database/pages';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
@@ -66,6 +67,7 @@ function AppRoutesContent() {
       </Route>
       <Route element={<NavigationLayout />}>
         <Route path={ROUTES.PUBLIC_PROFILE + '/:slug'} element={<PublicProfilePage />} />
+        <Route path={ROUTES.PUBLIC_CASTING + '/:slug'} element={<PublicCastingPage />} />
       </Route>
       <Route element={<ScrollContentLayout />}>
         <Route path={ROUTES.TALENT_DATABASE} element={<TalentDatabasePage />} />
