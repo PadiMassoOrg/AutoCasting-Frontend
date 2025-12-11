@@ -34,7 +34,6 @@ export function CastingFilterBar({
   const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye_color');
   const skillsRaw = useCachedSiteMetadataSlice('skills');
   const projectTypesRaw = useCachedSiteMetadataSlice('projectTypeOptions');
-  const castingModalitiesRaw = useCachedSiteMetadataSlice('castingModalityOptions');
 
   const skillsByCat = useMemo(() => {
     const groups = new Map<string, SiteMetadataObject[]>();
@@ -91,10 +90,6 @@ export function CastingFilterBar({
   const hMax = useCommittedInt(value.heightMaxCm ?? null, (v) => onChange({ ...value, heightMaxCm: v ?? undefined }), {
     allowNull: true,
   });
-
-  const locationText = useCommittedText(value.locationText ?? '', (v) =>
-    onChange({ ...value, locationText: v || undefined })
-  );
 
   const basicCount =
     (hasText(value.roleName) ? 1 : 0) +
