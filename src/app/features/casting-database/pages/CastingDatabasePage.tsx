@@ -47,14 +47,7 @@ const CastingDatabasePage = () => {
             <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
           ) : (
             <>
-              <article
-                className="
-                    grid gap-6 place-items-stretch
-                    grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
-                    sm:auto-rows-[408px]
-                    lg:auto-rows-auto
-                  "
-              >
+              <article className="flex flex-col gap-10">
                 {gridItems.map((it) => (
                   <div key={it.id} className="w-full h-full">
                     <CastingRolePublicCard item={it} />
