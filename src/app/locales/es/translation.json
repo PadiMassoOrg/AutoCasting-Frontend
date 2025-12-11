@@ -590,6 +590,11 @@
       }
     }
   },
+  "casting-database": {
+    "page": {
+      "title": "Castings"
+    }
+  },
   "settings": {
     "pills": {
       "security": "Seguridad",
