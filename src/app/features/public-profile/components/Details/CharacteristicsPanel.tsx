@@ -1,6 +1,7 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Chip } from '../../../../shared/components/Chip/Chip';
 import type { Characteristics } from '../../../talent/talent-profile-edit/types/talentProfile.types';
 import { formatCharacteristicValue } from '../../utils/publicProfileUtils';
 
@@ -56,9 +57,7 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
             {dividerBefore.has(key) && <Separator className="opacity-20 my-1" />}
             <div className="flex items-center justify-between">
               <span className="font-semibold text-base lg:text-[14px]">{label}:</span>
-              <span className="inline-flex items-center rounded-xl border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px]">
-                {value}
-              </span>
+              <Chip label={value} t={t} />
             </div>
           </React.Fragment>
         );

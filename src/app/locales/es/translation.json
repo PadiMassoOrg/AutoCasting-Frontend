@@ -27,6 +27,7 @@
     "select_all": "Seleccionar Todas",
     "and": "y",
     "dash": "--",
+    "years": " años",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "select": "Seleccionar",
@@ -80,7 +81,8 @@
     "understood": "Entendido",
     "back": "Atras",
     "next": "Siguiente",
-    "to_profile": "Ir a mi perfil"
+    "to_profile": "Ir a mi perfil",
+    "view_details": "Ver Detailles"
   },
   "routes": {
     "home": "Inicio",
@@ -257,6 +259,67 @@
       "company": "Marca / Empresa",
       "theater_company": "Compañía teatral",
       "institution": "Escuela / Academia"
+    },
+    "casting_status": {
+      "draft": "Borrador",
+      "closed": "Cerrado",
+      "published": "Publicado",
+      "paused": "Pausado",
+      "archived": "Archivado"
+    },
+    "casting_section_status": {
+      "not_started": "Sin completar",
+      "in_progress": "En progreso",
+      "completed": "Completado"
+    },
+    "project_type": {
+      "digital_content": "Contenido digital / RRSS",
+      "short_film": "Cortometraje",
+      "documentary": "Documental",
+      "feature_film": "Largometraje",
+      "musical": "Musical",
+      "theatre_play": "Obra teatral",
+      "student_project": "Proyecto estudiantil / Universitario",
+      "commercial": "Publicidad",
+      "music_video": "Videoclip",
+      "other": "Otro"
+    },
+    "casting_modality": {
+      "on_site": "Casting: Presencial",
+      "autocasting": "Casting: Autocasting"
+    },
+    "role_type": {
+      "lead": "Protagónico",
+      "secondary": "Secundario",
+      "extra": "Extra / Figurante",
+      "voice": "Voz en off / Locución",
+      "host": "Presentador / Host",
+      "creator": "Creador / Influencer",
+      "guest": "Participante / Invitado",
+      "other": "Otro"
+    },
+    "acting_mode": {
+      "general": "Actings general para todos los roles",
+      "per_role": "Seleccionar actings para cada rol",
+      "none": "Sin actings requeridos"
+    },
+    "compensation_type": {
+      "paid": "Remunerado",
+      "collaborative": "Colaborativo (o Proyecto cooperativo)",
+      "unpaid": "Sin remuneración"
+    },
+    "pay_rate_type": {
+      "fixed": "Tarifa fija",
+      "per_hour": "Por hora",
+      "per_day": "Por día",
+      "per_week": "Por semana",
+      "per_month": "Por mes",
+      "per_season": "Por temporada / función",
+      "to_be_agreed": "A convenir"
+    },
+    "currency": {
+      "ars": "ARS",
+      "usd": "USD"
     }
   },
   "error_page": {

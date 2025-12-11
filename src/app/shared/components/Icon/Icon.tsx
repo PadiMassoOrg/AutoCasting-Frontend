@@ -8,6 +8,8 @@ import BurgerCloseIconPurple from '../../icons/burger-close-purple.svg';
 import BurgerCloseIcon from '../../icons/burger-close.svg';
 import BurgerIconPurple from '../../icons/burger-purple.svg';
 import BurgerIcon from '../../icons/burger.svg';
+import CalendarIconPurple from '../../icons/calendar-purple.svg';
+import CalendarIcon from '../../icons/calendar.svg';
 import CatalogIconPurple from '../../icons/catalogo-purple.svg';
 import CatalogIcon from '../../icons/catalogo.svg';
 import ClapperIconPurple from '../../icons/clapper-purple.svg';
@@ -30,6 +32,8 @@ import InstagramIconPurple from '../../icons/instagram-purple.svg';
 import InstagramIcon from '../../icons/instagram.svg';
 import LinkedInIconPurple from '../../icons/linkedin-purple.svg';
 import LinkedInIcon from '../../icons/linkedin.svg';
+import LocationIconPurple from '../../icons/location-purple.svg';
+import LocationIcon from '../../icons/location.svg';
 import LogoutIconRed from '../../icons/logout-red.svg';
 import MailIconPurple from '../../icons/message-purple.svg';
 import MailIcon from '../../icons/message.svg';
@@ -73,6 +77,8 @@ export type IconName =
   | 'cross'
   | 'edit'
   | 'mail'
+  | 'location'
+  | 'calendar'
   | 'behance'
   | 'imdb'
   | 'whatsapp'
@@ -203,6 +209,14 @@ const ICONS: Record<IconName, BaseIconConfig> = {
   filter: {
     default: FilterIcon,
     primary: FilterIconPurple,
+  },
+  location: {
+    default: LocationIcon,
+    primary: LocationIconPurple,
+  },
+  calendar: {
+    default: CalendarIcon,
+    primary: CalendarIconPurple,
   },
 };
 
