@@ -8,19 +8,19 @@ import {
   useCachedSiteMetadataSlice,
 } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
-import type { TalentFiltersQS } from '../types/talent-database.types';
-import { BooleanRadioGroup, FilterSection } from './Filter';
-import MultiSelectDropdown from './Filter/MultiSelectDropdown';
+import { BooleanRadioGroup, FilterSection } from '../../talent-database/components/Filter';
+import MultiSelectDropdown from '../../talent-database/components/Filter/MultiSelectDropdown';
+import type { CastingFiltersQS } from '../types/casting-database.types';
 
-export function TalentFilterBar({
+export function CastingFilterBar({
   value,
   onChange,
   onReset,
   onClose,
   forwardScrollToRef,
 }: {
-  value: TalentFiltersQS;
-  onChange: (v: TalentFiltersQS) => void;
+  value: CastingFiltersQS;
+  onChange: (v: CastingFiltersQS) => void;
   onReset?: () => void;
   onClose?: () => void;
   forwardScrollToRef?: React.RefObject<HTMLElement | null>;
@@ -33,6 +33,8 @@ export function TalentFilterBar({
   const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
   const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye_color');
   const skillsRaw = useCachedSiteMetadataSlice('skills');
+  const projectTypesRaw = useCachedSiteMetadataSlice('projectTypeOptions');
+  const castingModalitiesRaw = useCachedSiteMetadataSlice('castingModalityOptions');
 
   const skillsByCat = useMemo(() => {
     const groups = new Map<string, SiteMetadataObject[]>();
@@ -75,7 +77,8 @@ export function TalentFilterBar({
     onReset?.();
   };
 
-  const stageName = useCommittedText(value.stageName ?? '', (v) => onChange({ ...value, stageName: v || undefined }));
+  const roleName = useCommittedText(value.roleName ?? '', (v) => onChange({ ...value, roleName: v || undefined }));
+
   const ageMin = useCommittedInt(value.ageMin ?? null, (v) => onChange({ ...value, ageMin: v ?? undefined }), {
     allowNull: true,
   });
@@ -89,12 +92,19 @@ export function TalentFilterBar({
     allowNull: true,
   });
 
+  const locationText = useCommittedText(value.locationText ?? '', (v) =>
+    onChange({ ...value, locationText: v || undefined })
+  );
+
   const basicCount =
-    (hasText(value.stageName) ? 1 : 0) +
+    (hasText(value.roleName) ? 1 : 0) +
     (hasRange(value.ageMin, value.ageMax) ? 1 : 0) +
     (genderActive ? 1 : 0) +
     (ethnicityActive ? 1 : 0) +
-    (hasAny(value.professionId) ? 1 : 0);
+    (hasAny(value.professionId) ? 1 : 0) +
+    (hasAny(value.projectTypeIds) ? 1 : 0) +
+    (hasAny(value.castingModalityIds) ? 1 : 0) +
+    (hasText(value.locationText) ? 1 : 0);
 
   const characteristicsCount =
     (hasRange(value.heightMinCm, value.heightMaxCm) ? 1 : 0) +
@@ -120,7 +130,6 @@ export function TalentFilterBar({
     <aside className="z-[300] w-full flex flex-col items-stretch overflow-auto overflow-x-hidden lg:max-w-[350px] bg-[var(--primary-color-white)]">
       <header className="flex items-center justify-between pb-2">
         <h4 className="text-[14px] font-semibold">{t('general.filter.title')}</h4>
-
         {isDesktop ? (
           <button type="button" className="cursor-pointer text-xs underline font-light" onClick={handleReset}>
             {t('general.filter.reset')}
@@ -139,18 +148,7 @@ export function TalentFilterBar({
 
       <Separator className="opacity-20 mt-12" />
 
-      <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
-        <FormInputField
-          id="stageName"
-          label={t('talent.filter.basic_info.stage_name')}
-          labelClassName="text-sm font-semibold"
-          placeholder={t('general.placeholder.stage_name')}
-          value={stageName.value}
-          onChange={stageName.onChange}
-          onBlur={stageName.onBlur}
-          onKeyDown={stageName.onKeyDown}
-        />
-
+      <FilterSection title={t('casting.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <article className="flex flex-col">
           <label htmlFor="ageMin" className="text-sm font-semibold mb-2">
             {t('talent.filter.basic_info.age_range')}
@@ -191,6 +189,18 @@ export function TalentFilterBar({
           }}
         />
 
+        <FormSelectField
+          id="ethnicityId"
+          label={t('profile.characteristics.ethnicity')}
+          labelClassName="font-semibold text-base"
+          options={ethnicityOptionsWithUnspecified}
+          value={(value.ethnicityIds && value.ethnicityIds[0]) ?? 'NULL'}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            const v = e.target.value;
+            onChange({ ...value, ethnicityIds: v ? [v] : undefined });
+          }}
+        />
+
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</label>
           <MultiSelectDropdown
@@ -199,6 +209,19 @@ export function TalentFilterBar({
             getLabel={(p) => t(p.stringCode)}
             selected={value.professionId ?? []}
             onChange={(next) => onChange({ ...value, professionId: next.length ? next : undefined })}
+            maxPanelHeight="16rem"
+            forwardScrollToRef={forwardScrollToRef}
+          />
+        </div>
+
+        <div className="w-full flex flex-col gap-1.5">
+          <label className="text-sm font-semibold">{t('casting.basic_info.project_type')}</label>
+          <MultiSelectDropdown
+            options={projectTypesRaw ?? []}
+            getId={(p) => p.id}
+            getLabel={(p) => t(p.stringCode)}
+            selected={value.projectTypeIds ?? []}
+            onChange={(next) => onChange({ ...value, projectTypeIds: next.length ? next : undefined })}
             maxPanelHeight="16rem"
             forwardScrollToRef={forwardScrollToRef}
           />
@@ -235,18 +258,6 @@ export function TalentFilterBar({
             />
           </div>
         </article>
-
-        <FormSelectField
-          id="ethnicityId"
-          label={t('profile.characteristics.ethnicity')}
-          labelClassName="font-semibold text-base"
-          options={ethnicityOptionsWithUnspecified}
-          value={(value.ethnicityIds && value.ethnicityIds[0]) ?? 'NULL'}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-            const v = e.target.value;
-            onChange({ ...value, ethnicityIds: v ? [v] : undefined });
-          }}
-        />
 
         <div className="w-full flex flex-col gap-1.5">
           <label className="text-sm font-semibold">{t('profile.characteristics.hairColor')}</label>

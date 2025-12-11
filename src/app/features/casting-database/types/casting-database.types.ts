@@ -1,3 +1,4 @@
+import type { BasePersonSearchFiltersQS } from '../../search/personSearchFilters.types';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 
 export type BaseCastingRolePublicCard = {
@@ -16,6 +17,13 @@ export type BaseCastingRolePublicCard = {
   ageMin: Number;
   ageMax: Number;
   defaultCode: String;
+};
+
+export type CastingFiltersQS = BasePersonSearchFiltersQS & {
+  roleName?: string;
+  projectTypeIds?: string[];
+  castingModalityIds?: string[];
+  locationText?: string;
 };
 
 /* ======================

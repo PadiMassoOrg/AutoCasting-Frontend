@@ -8,8 +8,7 @@ import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
 import { PublicProfileDetailsView } from '../../public-profile/pages';
 import { getPublicProfile } from '../../public-profile/services/publicProfileService';
 import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
-import { MobileFiltersDrawer, TalentCard } from '../components';
-import { TalentFilterBar } from '../components/TalentFilterBar';
+import { MobileFiltersDrawer, TalentCard, TalentFilterBar } from '../components';
 import { getTalentDatabase } from '../services/talentDatabaseService';
 import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
 
@@ -215,7 +214,7 @@ export default function TalentDatabasePage() {
             type="button"
             className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
             onClick={() => setMobileOpen(true)}
-            aria-label={t('talent.filters.open')}
+            aria-label={t('general.filters.open')}
           >
             <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
               <Icon name="filter" variant="primary" size={20} />
@@ -247,7 +246,7 @@ export default function TalentDatabasePage() {
                 aria-pressed={filtersOpen}
               >
                 <h2 className="text-sm font-light underline">
-                  {filtersOpen ? t('talent.filter.hide') : t('talent.filter.show')}
+                  {filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
                 </h2>
                 <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
                   <Icon name="filter" variant="primary" size={18} />

@@ -30,6 +30,7 @@
     "years": " años",
     "placeholder": {
       "stage_name": "Ricardo Darín",
+      "role_name": "Lali",
       "select": "Seleccionar",
       "color": "Color",
       "day": "Día",
@@ -49,6 +50,12 @@
       "about": "Escribir algo aquí...",
       "company_name": "Ej. “Producciones Pérez”, “Luna Pérez Casting”",
       "tax_number": "Ej. “20-12345678-3”"
+    },
+    "filter": {
+      "title": "Filtros",
+      "reset": "Resetear Filtros",
+      "hide": "Ocultar Filtros",
+      "show": "Mostrar Filtros"
     }
   },
   "validation": {
@@ -637,11 +644,6 @@
       "title": "Catálogo"
     },
     "filter": {
-      "title": "Filtros",
-      "reset": "Resetear Filtros",
-      "hide": "Ocultar Filtros",
-      "show": "Mostrar Filtros",
-      "include_no_headshot": "Incluir perfiles sin fotos",
       "basic_info": {
         "stage_name": "Nombre del Talento",
         "age_range": "Rango Etario",
@@ -651,6 +653,17 @@
       "characteristics": {
         "height": "Altura"
       }
+    }
+  },
+  "casting": {
+    "basic_info": {
+      "basic_info": "Información Básica",
+      "project_type": "Tipo de proyecto",
+      "casting_modality": "Modalidad del Casting"
+    },
+    "role_section": {},
+    "role": {
+      "role_name": "Nombre del Rol"
     }
   },
   "casting-database": {

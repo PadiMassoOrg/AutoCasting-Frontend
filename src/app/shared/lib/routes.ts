@@ -52,6 +52,8 @@ export const API_ROUTES = {
   SITEMETADATA_VERSION: '/sitemetadata/version',
   // Talent Database
   TALENT_DATABASE: '/talent/talent-database',
+  // Casting Database
+  CASTING_DATABASE: '/castings',
   // Authentication
   AUTH_LOGIN: '/auth/login',
   AUTH_REGISTER: '/auth/register',

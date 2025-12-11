@@ -1,11 +1,40 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../../shared/components/Icon/Icon';
+import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
+import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
-import { CastingRolePublicCard } from '../components';
-import { CASTING_ROLE_PUBLIC_CARDS_MOCK } from '../mock/casting-card-mock';
-import type { CastingRolePublicCardResponse } from '../types/casting-database.types';
+import { CastingFilterBar, CastingMobileFiltersDrawer, CastingRolePublicCard } from '../components';
+import { getCastingDatabase } from '../services/castingDatabaseService';
+import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';
+
+const MAX_AUTOFILL_PAGES = 6;
+const SCROLL_EPS = 8;
+
+const initialFilters: CastingFiltersQS = {
+  roleName: '',
+  genderIds: ['NULL'],
+  ethnicityIds: ['NULL'],
+  hairColorIds: undefined,
+  hairColorIdsMode: 'ANY',
+  eyeColorIds: undefined,
+  eyeColorIdsMode: 'ANY',
+  ageMin: undefined,
+  ageMax: undefined,
+  heightMinCm: undefined,
+  heightMaxCm: undefined,
+  professionId: undefined,
+  skillId: undefined,
+  tattoo: undefined,
+  passport: undefined,
+  drivingLicense: undefined,
+  professionsMode: 'ANY',
+  skillsMode: 'ANY',
+  projectTypeIds: undefined,
+  castingModalityIds: undefined,
+  locationText: undefined,
+};
 
 const CastingDatabasePage = () => {
   useViewportVhVar();
@@ -13,12 +42,151 @@ const CastingDatabasePage = () => {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
 
-  const [items, setItems] = useState<CastingRolePublicCardResponse[]>(CASTING_ROLE_PUBLIC_CARDS_MOCK);
+  const [filters, setFilters] = useState<CastingFiltersQS>(initialFilters);
+  const debouncedFilters = useDebouncedValue(filters, 350);
+
+  const firstRenderRef = useRef(true);
+  useEffect(() => {
+    firstRenderRef.current = false;
+  }, []);
+  const effectiveFilters = firstRenderRef.current ? filters : debouncedFilters;
+
+  const [items, setItems] = useState<CastingRolePublicCardResponse[]>([]);
+  const [page, setPage] = useState(0);
+  const [hasNext, setHasNext] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const inflightRef = useRef<AbortController | null>(null);
+  const requestIdRef = useRef(0);
+  const fetchingNextRef = useRef(false);
+
+  const cardsScrollRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const scrollRootRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
+  }, []);
+
+  useScrollExitOnEdge(cardsScrollRef, {
+    forwardTo: isDesktop ? cardsScrollRef : scrollRootRef,
+  });
+
+  const fetchPage = useCallback(
+    async (p: number, replace = false) => {
+      if (fetchingNextRef.current) return;
+      fetchingNextRef.current = true;
+      setLoading(true);
+      if (replace) setError(null);
+
+      const thisReqId = ++requestIdRef.current;
+      const ctrl = new AbortController();
+      inflightRef.current = ctrl;
+
+      try {
+        const res = await getCastingDatabase(p, pageSize, effectiveFilters, { signal: ctrl.signal });
+        if (requestIdRef.current !== thisReqId) return;
+
+        const fresh = res.items ?? [];
+        setItems((prev) => (replace ? fresh : [...prev, ...fresh]));
+        setPage(res.page + 1);
+        setHasNext(!!res.hasNext);
+      } catch (e: any) {
+        if (e?.name === 'AbortError' || e?.name === 'CanceledError') {
+        } else {
+          setError('fetch_error');
+          setHasNext(false);
+        }
+      } finally {
+        if (inflightRef.current === ctrl) inflightRef.current = null;
+        fetchingNextRef.current = false;
+        setLoading(false);
+      }
+    },
+    [effectiveFilters, pageSize]
+  );
+
+  useEffect(() => {
+    cardsScrollRef.current?.scrollTo({ top: 0 });
+    inflightRef.current?.abort();
+    inflightRef.current = null;
+    setItems([]);
+    setPage(0);
+    setHasNext(true);
+    setError(null);
+    fetchPage(0, true);
+  }, [effectiveFilters, pageSize, fetchPage]);
+
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState<boolean>(() => {
+    const saved = localStorage.getItem('castingDatabaseFiltersOpen');
+    return saved ? saved === '1' : true;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('castingDatabaseFiltersOpen', filtersOpen ? '1' : '0');
+  }, [filtersOpen]);
+
+  useEffect(() => {
+    const root = cardsScrollRef.current;
+    const target = sentinelRef.current;
+    if (!root || !target) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry.isIntersecting) return;
+        if (!hasNext || loading || fetchingNextRef.current || error) return;
+        fetchPage(page, false);
+      },
+      { root, rootMargin: '600px 0px 800px 0px', threshold: 0 }
+    );
+
+    io.observe(target);
+    return () => io.disconnect();
+  }, [hasNext, loading, page, fetchPage, error]);
+
+  useEffect(() => {
+    const box = cardsScrollRef.current;
+    if (!box || error) return;
+
+    let cancelled = false;
+    (async () => {
+      let tries = 0;
+      if (items.length === 0 && loading) return;
+
+      while (!cancelled && hasNext && box.scrollHeight <= box.clientHeight + SCROLL_EPS && tries < MAX_AUTOFILL_PAGES) {
+        tries += 1;
+        await fetchPage(page, false);
+        await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [items.length, hasNext, loading, fetchPage, page, error]);
+
+  useEffect(() => {
+    const onVis = () => {
+      if (document.hidden || error) return;
+      inflightRef.current?.abort();
+      setItems([]);
+      setPage(0);
+      setHasNext(true);
+      setError(null);
+      fetchPage(0, true);
+    };
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, [fetchPage, error]);
+
+  const showInitialSkeletons = items.length === 0 && loading && !error;
   const showEmptyState = !loading && !error && items.length === 0;
-  const gridItems = useMemo(() => items, [items]);
+  const isFetchingNextPage = items.length > 0 && loading;
+
+  const listItems = useMemo(() => items, [items]);
 
   return (
     <section className="w-full h-full min-h-0 bg-[var(--color-secondary-white)]">
@@ -29,7 +197,8 @@ const CastingDatabasePage = () => {
           <button
             type="button"
             className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
-            aria-label={t('talent.filters.open')}
+            onClick={() => setMobileOpen(true)}
+            aria-label={t('general.filters.open')}
           >
             <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
               <Icon name="filter" variant="primary" size={20} />
@@ -38,31 +207,85 @@ const CastingDatabasePage = () => {
         </article>
 
         {/* Filter Bar */}
-        {/* Content */}
-        <div className="py-4 px-6 lg:py-8 w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]">
-          <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
-          </div>
-          {error ? (
-            <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
-          ) : (
-            <>
-              <article className="flex flex-col gap-10">
-                {gridItems.map((it) => (
-                  <div key={it.id} className="w-full h-full">
-                    <CastingRolePublicCard item={it} />
-                  </div>
-                ))}
-              </article>
-
-              {showEmptyState && (
-                <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">
-                  {t('state.no_results')}
-                </p>
-              )}
-            </>
+        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col lg:flex-row gap-6 overflow-hidden">
+          {isDesktop && filtersOpen && (
+            <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-[var(--color-primary-white)] border-r border-[var(--color-secondary-outline)]">
+              <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5">
+                <CastingFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
+              </div>
+            </aside>
           )}
+
+          {/* Content */}
+          <div
+            ref={cardsScrollRef}
+            className="py-4 px-6 lg:py-8 w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
+          >
+            <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
+              <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
+              <button
+                type="button"
+                className="cursor-pointer inline-flex items-center gap-3"
+                onClick={() => setFiltersOpen((v) => !v)}
+                aria-pressed={filtersOpen}
+              >
+                <h2 className="text-sm font-light underline">
+                  {filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
+                </h2>
+                <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
+                  <Icon name="filter" variant="primary" size={18} />
+                </span>
+              </button>
+            </div>
+
+            {error ? (
+              <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
+            ) : (
+              <>
+                <article className="flex flex-col gap-10">
+                  {showInitialSkeletons &&
+                    Array.from({ length: pageSize }).map((_, i) => (
+                      <div key={`casting-skeleton-${i}`} className="w-full">
+                        <div className="animate-pulse w-full h-40 bg-neutral-100 rounded-lg" />
+                      </div>
+                    ))}
+
+                  {listItems.map((it) => (
+                    <div key={it.id} className="w-full">
+                      <CastingRolePublicCard item={it} />
+                    </div>
+                  ))}
+
+                  <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
+                </article>
+
+                {showEmptyState && (
+                  <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">
+                    {t('state.no_results')}
+                  </p>
+                )}
+                {isFetchingNextPage && (
+                  <p className="py-10 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
+                    {t('state.loading')}
+                  </p>
+                )}
+                {!hasNext && listItems.length > 0 && (
+                  <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
+                    {t('state.no_more_results')}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
         </div>
+
+        <CastingMobileFiltersDrawer
+          open={mobileOpen}
+          onClose={() => setMobileOpen(false)}
+          value={filters}
+          onReset={() => setFilters(initialFilters)}
+          onApply={(next) => setFilters(next)}
+        />
       </div>
     </section>
   );
