@@ -6,7 +6,7 @@ import { LinkLogo } from '../../shared/components/LinkLogo';
 import { ROUTES } from '../../shared/lib/routes';
 
 import clsx from 'clsx';
-import { useUserMode } from '../../context/UserModeContext';
+import { USER_MODE_TALENT, useUserMode } from '../../context/UserModeContext';
 import { Icon } from '../../shared/components/Icon/Icon';
 import Waves from '../../shared/icons/wave.svg';
 import UserModeSwitcher from './UserModeSwitcher';
@@ -106,7 +106,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                 </ul>
               ) : (
                 <ul className="w-full flex flex-col font-semibold">
-                  {mode == 'talent' ? (
+                  {mode == USER_MODE_TALENT ? (
                     <>
                       {/* <li onClick={onClose}>
                         <Link to={ROUTES.TALENT_APPLIED_PRODUCTIONS}>

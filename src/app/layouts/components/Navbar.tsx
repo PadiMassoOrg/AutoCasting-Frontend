@@ -10,7 +10,7 @@ import Sidebar from './Sidebar';
 import UserModeSwitcher from './UserModeSwitcher';
 
 import clsx from 'clsx';
-import { useUserMode } from '../../context/UserModeContext';
+import { USER_MODE_TALENT, useUserMode } from '../../context/UserModeContext';
 import { Icon } from '../../shared/components/Icon/Icon';
 import { jwtDecoder } from '../../shared/utils/jwtDecoder';
 
@@ -113,7 +113,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                   <Link to={ROUTES.AUTH_REGISTER}>{t('routes.register')}</Link>
                 </Button>
               </>
-            ) : mode == 'talent' ? (
+            ) : mode == USER_MODE_TALENT ? (
               <div className="flex flex-row gap-2 items-center h-full">
                 <Link to={profileUrl}>
                   <span className={clsx(baseClass, activePublicProfile && activeClass)}>

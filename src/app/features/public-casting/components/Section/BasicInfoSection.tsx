@@ -1,22 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { Chip } from '../../../../shared/components/Chip/Chip';
 import { Icon } from '../../../../shared/components/Icon/Icon';
-import type { CastingBasicInfo } from '../../../employer/employer-castings/types/employerCastings.types';
+import type { CastingBasicInfo } from '../../types/publicCasting.types';
 
 const BasicInfoSection = ({ data }: { data: CastingBasicInfo }) => {
   const { t } = useTranslation();
-  {
-    /* 
-    BASIC INFO
-
-    Title 
-    projectType castingModality
-    location (SOLO SI MODALITY PRESENCIAL)
-    deadline
-    shooting - shoooting end
-    description
-    */
-  }
 
   const deadlineText = `${t('casting.basic_info.deadline_complete')} ${data.applicationDeadline}`;
   const shootingText = `${data.shootingStartDate} - ${data.shootingEndDate}`;

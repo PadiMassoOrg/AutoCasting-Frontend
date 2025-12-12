@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useUserMode } from '../../context/UserModeContext';
+import { USER_MODE_EMPLOYER, USER_MODE_TALENT, useUserMode } from '../../context/UserModeContext';
 import { useMeData } from '../../features/auth/hooks/useMeData';
 import type { ActiveMode } from '../../features/auth/types/auth.types';
 import { useUpdateOnboardingMutation } from '../../features/onboarding/hooks/useUpdateOnboardingMutation';
@@ -27,13 +27,13 @@ function UserModeSwitcher({ showLabel = false, onAfterToggle }: ModeSwitcherProp
   const decoded = token ? jwtDecoder(token) : null;
   const talentProfileSlug = decoded?.talentProfileSlug;
 
-  const modeLabel = mode === 'talent' ? t('state.switch_to_employer') : t('state.switch_to_talent');
+  const modeLabel = mode === USER_MODE_TALENT ? t('state.switch_to_employer') : t('state.switch_to_talent');
 
   const handleClick = () => {
     if (!meData || isPending) return;
 
-    const nextMode = mode === 'talent' ? 'employer' : 'talent';
-    const nextActiveMode: ActiveMode = nextMode === 'talent' ? 'TALENT' : 'EMPLOYER';
+    const nextMode = mode === USER_MODE_TALENT ? USER_MODE_EMPLOYER : USER_MODE_TALENT;
+    const nextActiveMode: ActiveMode = nextMode === USER_MODE_TALENT ? 'TALENT' : 'EMPLOYER';
 
     let talentOnboardingStatus = meData.talentOnboardingStatus;
     let employerOnboardingStatus = meData.employerOnboardingStatus;

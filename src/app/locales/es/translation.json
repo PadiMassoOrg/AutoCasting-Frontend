@@ -678,7 +678,10 @@
   },
   "casting-database": {
     "page": {
-      "title": "Castings"
+      "title": "Castings",
+      "created_castings": "Castings creados",
+      "member_since": "Miembro desde",
+      "apply_title": "¿Listo para aplicar?"
     }
   },
   "settings": {

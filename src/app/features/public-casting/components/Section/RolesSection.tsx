@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { CastingRoles } from '../../../employer/employer-castings/types/employerCastings.types';
+import type { CastingRoles } from '../../types/publicCasting.types';
 import PublicRoleCard from '../PublicRoleCard';
 
 const RolesSection = ({ data }: { data: CastingRoles }) => {

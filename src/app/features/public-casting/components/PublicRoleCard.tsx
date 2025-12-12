@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ChevronUpDown } from '../../../shared/components/Chevron';
 import { Chip } from '../../../shared/components/Chip/Chip';
 import { formatBooleanLabeled, formatCurrencyAmount } from '../../../shared/utils/formatUtils';
-import type { CastingRole } from '../../employer/employer-castings/types/employerCastings.types';
+import type { CastingRole } from '../types/publicCasting.types';
 
 type ChipConfig = {
   key: string;
@@ -19,7 +19,6 @@ const PublicRoleCard = ({ data }: { data: CastingRole }) => {
   const skillsChips = buildSkillsChips(data, t);
 
   const amountLabel = formatCurrencyAmount(data.remuneration?.amount!, data.remuneration?.currency?.stringCode);
-
   const payRateLabel = t(data.remuneration?.payRateType?.stringCode!);
   const finalLabel = `${amountLabel} (${payRateLabel})`;
 

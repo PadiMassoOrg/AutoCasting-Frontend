@@ -145,7 +145,7 @@ export const PUBLIC_CASTING_MOCK: PublicCastingResponse = {
       'https://qmtzkcmnmhvmaerqhaex.supabase.co/storage/v1/object/public/profile-media-public/employer/d2d48616-72c1-4984-be34-6dbd293a6133/logo/1765187320706.jpeg',
     companyType: {
       id: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-      stringCode: 'sitemetadata.company_type.production_company',
+      stringCode: 'sitemetadata.company_type.producer',
       categoryStringCode: 'sitemetadata.company_type',
     },
     totalCastings: 25,

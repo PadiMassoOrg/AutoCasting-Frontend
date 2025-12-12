@@ -2,16 +2,16 @@ import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ContinueLaterButton } from '.';
+import { USER_MODE_EMPLOYER, USER_MODE_TALENT, useUserMode } from '../../../context/UserModeContext';
 import { Icon } from '../../../shared/components/Icon/Icon';
 import { WizardStep } from '../../../shared/components/Wizard';
 import type { WizardStepProps } from '../../../shared/components/Wizard/WizardStep';
+import { getAuthToken } from '../../../shared/lib/cookies';
+import { ROUTES } from '../../../shared/lib/routes';
+import { jwtDecoder } from '../../../shared/utils/jwtDecoder';
+import { useMeData } from '../../auth/hooks/useMeData';
 import type { ActiveMode } from '../../auth/types/auth.types';
 import { useUpdateOnboardingMutation } from '../hooks/useUpdateOnboardingMutation';
-import { useMeData } from '../../auth/hooks/useMeData';
-import { useUserMode } from '../../../context/UserModeContext';
-import { getAuthToken } from '../../../shared/lib/cookies';
-import { jwtDecoder } from '../../../shared/utils/jwtDecoder';
-import { ROUTES } from '../../../shared/lib/routes';
 
 type Props = WizardStepProps & {
   onModeChosen?: (mode: ActiveMode) => void;
@@ -53,13 +53,13 @@ function ModeSelectorStep({ onModeChosen }: Props) {
       {
         onSuccess: () => {
           if (nextActiveMode === 'TALENT') {
-            setMode('talent');
+            setMode(USER_MODE_TALENT);
             if (talentOnboardingStatus === 'COMPLETED') {
               navigate(talentProfileSlug ? `${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}` : ROUTES.TALENT);
               return;
             }
           } else if (nextActiveMode === 'EMPLOYER') {
-            setMode('employer');
+            setMode(USER_MODE_EMPLOYER);
             if (employerOnboardingStatus === 'COMPLETED') {
               navigate(ROUTES.EMPLOYER);
               return;
@@ -101,7 +101,7 @@ type ModeCardProps = {
 
 const ModeCard = ({ mode, onContinue }: ModeCardProps) => {
   const { t } = useTranslation();
-  const modeKey = mode === 'TALENT' ? 'talent' : 'employer';
+  const modeKey = mode === 'TALENT' ? USER_MODE_TALENT : USER_MODE_EMPLOYER;
 
   return (
     <div className="w-full max-w-[380px] bg-[var(--color-primary-white)] p-6 px-8 shadow-sm rounded-xl">
