@@ -138,13 +138,11 @@ export const CASTING_ROLE_PUBLIC_CARDS_MOCK = [
 export const PUBLIC_CASTING_MOCK: CastingResponse = {
   id: '648a58e5-4383-4907-83b2-7e78f1d13acb',
   defaultCode: 'C-648A58E5',
-
   castingStatus: {
     id: 'd025ae16-a0c6-49b4-861e-b657dec9a5ca',
     stringCode: 'sitemetadata.casting_status.draft',
     categoryStringCode: 'sitemetadata.casting_status',
   },
-
   castingBasicInfo: {
     id: 'a05a10c3-d907-4773-92ca-9c0c89c12865',
     sectionStatus: {
@@ -152,19 +150,27 @@ export const PUBLIC_CASTING_MOCK: CastingResponse = {
       stringCode: 'sitemetadata.casting_section_status.not_started',
       categoryStringCode: 'sitemetadata.casting_section_status',
     },
-    title: null,
-    projectType: null,
-    location: null,
-    castingModality: null,
-    castingModalityText: null,
-    applicationDeadline: null,
+    title: 'Casting Fanta',
+    projectType: {
+      id: '054145ca-93f5-4f4e-8dd6-b9e7935b6017',
+      stringCode: 'sitemetadata.project_type.theatre_play',
+      categoryStringCode: 'sitemetadata.project_type',
+    },
+    location: 'Puente La Noria',
+    castingModality: {
+      id: '8beb3bc6-e465-46ff-99ba-e7044ff0d238',
+      stringCode: 'sitemetadata.casting_modality.on_site',
+      categoryStringCode: 'sitemetadata.casting_modality',
+    },
+    castingModalityText: 'Lo hacemos en el fondo de mi patio',
+    applicationDeadline: '2026-1-31',
     hasWardrobeFitting: false,
     wardrobeFittingText: null,
-    shootingStartDate: null,
-    shootingEndDate: null,
-    description: null,
+    shootingStartDate: '2026-2-01',
+    shootingEndDate: '2026-2-10',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at nisl nec metus feugiat ullamcorper. Nulla facilisi. Sed suscipit, nunc eu tempor aliquet, ex erat rhoncus lorem, vitae tempus lorem ligula non odio. Integer vitae lacus id velit posuere mattis non a arcu.',
   },
-
   castingRoles: {
     id: '9850e544-cccc-42a2-a7d6-aa0be64896a2',
     sectionStatus: {
@@ -172,10 +178,97 @@ export const PUBLIC_CASTING_MOCK: CastingResponse = {
       stringCode: 'sitemetadata.casting_section_status.not_started',
       categoryStringCode: 'sitemetadata.casting_section_status',
     },
-    generalNotes: null,
-    roles: [],
+    generalNotes: 'Notas generales sobre el casting, que no las utilizamos en Frontend por ahora.',
+    roles: [
+      {
+        id: '123',
+        isComplete: true,
+        name: 'Hamlet',
+        roleType: {
+          id: '10135975-a6fa-4f0c-9fa7-095a32b3b3d7',
+          stringCode: 'sitemetadata.role_type.lead',
+          categoryStringCode: 'sitemetadata.role_type',
+        },
+        gender: {
+          id: 'f2ddae6f-dbd4-4ace-bbc2-dec807c6eb6f',
+          stringCode: 'sitemetadata.gender.male',
+        },
+        ageMin: 18,
+        ageMax: 50,
+        description:
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec at nisl nec metus feugiat ullamcorper. Nulla facilisi. Sed suscipit, nunc eu tempor aliquet, ex erat rhoncus lorem, vitae tempus lorem ligula non odio. Integer vitae lacus id velit posuere mattis non a arcu.',
+        professions: [
+          {
+            id: '4c48e4fe-e34d-4e18-9940-be64a0cfd21d',
+            stringCode: 'sitemetadata.profession.actor',
+            categoryStringCode: 'sitemetadata.category.scenic',
+          },
+          {
+            id: 'a2854dee-4eaf-4786-b098-e356387ff3e9',
+            stringCode: 'sitemetadata.profession.singer',
+            categoryStringCode: 'sitemetadata.category.scenic',
+          },
+        ],
+        characteristics: {
+          id: '123',
+          heightCm: 170,
+          ethnicity: {
+            id: 'c51a7430-02ba-4bc5-8f33-7d7ce3761444',
+            stringCode: 'sitemetadata.ethnicity.white_caucasian',
+          },
+          ethnicityId: null,
+          weightKg: null,
+          hairColor: {
+            id: 'e0478be6-36d2-4968-8b42-4b481a2efe1d',
+            stringCode: 'sitemetadata.color.light_brown',
+            categoryStringCode: 'sitemetadata.category.hair_color',
+          },
+          hairColorId: null,
+          eyeColor: null,
+          eyeColorId: null,
+          chestCm: null,
+          waistCm: null,
+          hipCm: null,
+          shirtSize: null,
+          pantSize: null,
+          dressSize: null,
+          shoeSize: null,
+          tattoo: true,
+          passport: true,
+          drivingLicense: null,
+          dietOption: null,
+          dietOptionId: null,
+        },
+        skills: [
+          {
+            id: 'e1bc529c-88e9-4221-9413-220de3160145',
+            stringCode: 'sitemetadata.skill.athletics',
+            categoryStringCode: 'sitemetadata.category.sport',
+          },
+          {
+            id: 'a905d7b8-2409-45ec-8284-51805b785abc',
+            stringCode: 'sitemetadata.skill.basketball',
+            categoryStringCode: 'sitemetadata.category.sport',
+          },
+          {
+            id: 'badb4d68-9a27-4a84-8cbf-c275786001db',
+            stringCode: 'sitemetadata.skill.aerial_acrobatics',
+            categoryStringCode: 'sitemetadata.category.physical',
+          },
+          {
+            id: '6de99c85-6d01-4c1f-93fe-c9da13476a44',
+            stringCode: 'sitemetadata.skill.russian',
+            categoryStringCode: 'sitemetadata.category.language',
+          },
+          {
+            id: '8bd33194-9ce7-4f1b-91b7-9c76eddec7df',
+            stringCode: 'sitemetadata.skill.spanish_arg',
+            categoryStringCode: 'sitemetadata.category.accent',
+          },
+        ],
+      },
+    ],
   },
-
   castingActing: {
     id: '486e4330-ebaa-418a-819c-b8465691ad22',
     sectionStatus: {

@@ -28,6 +28,7 @@
     "and": "y",
     "dash": "--",
     "years": " años",
+    "cm": "cm",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "role_name": "Lali",
@@ -659,9 +660,15 @@
     "basic_info": {
       "basic_info": "Información Básica",
       "project_type": "Tipo de proyecto",
-      "casting_modality": "Modalidad del Casting"
+      "casting_modality": "Modalidad del Casting",
+      "deadline_complete": "Finaliza el"
     },
-    "role_section": {},
+    "characteristics": {
+      "characteristics": "Características"
+    },
+    "role_section": {
+      "role": "Rol"
+    },
     "role": {
       "role_name": "Nombre del Rol"
     }

@@ -14,6 +14,8 @@ import CatalogIconPurple from '../../icons/catalogo-purple.svg';
 import CatalogIcon from '../../icons/catalogo.svg';
 import ClapperIconPurple from '../../icons/clapper-purple.svg';
 import ClapperIcon from '../../icons/clapper.svg';
+import ClockIconPurple from '../../icons/clock-purple.svg';
+import ClockIcon from '../../icons/clock.svg';
 import CopyLinkIconPurple from '../../icons/copy-link-purple.svg';
 import CopyLinkIcon from '../../icons/copy-link.svg';
 import CrossIconPurple from '../../icons/cross-purple.svg';
@@ -70,6 +72,7 @@ export type IconName =
   | 'catalog'
   | 'copyLink'
   | 'clapper'
+  | 'clock'
   | 'file'
   | 'filter'
   | 'profile'
@@ -217,6 +220,10 @@ const ICONS: Record<IconName, BaseIconConfig> = {
   calendar: {
     default: CalendarIcon,
     primary: CalendarIconPurple,
+  },
+  clock: {
+    default: ClockIcon,
+    primary: ClockIconPurple,
   },
 };
 

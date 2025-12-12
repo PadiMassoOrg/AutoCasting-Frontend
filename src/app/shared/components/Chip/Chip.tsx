@@ -4,11 +4,13 @@ type ChipProps = {
   label: string;
   onRemove?: () => void;
   t: (k: string) => string;
-  /** Marca el chip como "nuevo" y cambia el background */
+  translate?: boolean;
   newItem?: boolean;
 };
 
-export function Chip({ label, onRemove, t, newItem = false }: ChipProps) {
+export function Chip({ label, onRemove, t, translate = true, newItem = false }: ChipProps) {
+  const text = translate ? t(label) : label;
+
   return (
     <span
       className={[
@@ -18,7 +20,7 @@ export function Chip({ label, onRemove, t, newItem = false }: ChipProps) {
           : 'bg-[var(--color-primary-white)] border-[var(--color-secondary-outline)] text-[var(--color-primary-black)]',
       ].join(' ')}
     >
-      <p className="text-base">{t(label)}</p>
+      <p className="text-sm">{text}</p>
       {onRemove && <Icon name="cross" variant="primary" size={11} onClick={onRemove} />}
     </span>
   );

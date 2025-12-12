@@ -60,7 +60,7 @@ const CastingRolePublicCard = ({ item }: Props) => {
           <Chip label={getAgeChip()} t={t} />
         </div>
         <Separator className="opacity-20"></Separator>
-        <Button asChild variant="primary" className="max-w-[180px]">
+        <Button asChild variant="primary">
           <Link to={`${ROUTES.PUBLIC_CASTING}/${defaultCode}`}>
             {t('buttons.view_details')}
             <ChevronRight />

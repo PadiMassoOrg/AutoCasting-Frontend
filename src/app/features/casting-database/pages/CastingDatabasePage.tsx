@@ -5,8 +5,8 @@ import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
+import { CASTING_ROLE_PUBLIC_CARDS_MOCK } from '../../_TEST_/mock/casting-card-mock';
 import { CastingFilterBar, CastingMobileFiltersDrawer, CastingRolePublicCard } from '../components';
-import { CASTING_ROLE_PUBLIC_CARDS_MOCK } from '../mock/casting-card-mock';
 import { getCastingDatabase } from '../services/castingDatabaseService';
 import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';
 
