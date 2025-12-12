@@ -663,14 +663,17 @@
       "casting_modality": "Modalidad del Casting",
       "deadline_complete": "Finaliza el"
     },
-    "characteristics": {
-      "characteristics": "Características"
-    },
     "role_section": {
-      "role": "Rol"
-    },
-    "role": {
-      "role_name": "Nombre del Rol"
+      "role": {
+        "role": "Rol",
+        "role_name": "Nombre del Rol",
+        "characteristics": {
+          "characteristics": "Características"
+        },
+        "skills": {
+          "skills": "Habilidades"
+        }
+      }
     }
   },
   "casting-database": {

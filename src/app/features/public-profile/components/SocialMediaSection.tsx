@@ -1,6 +1,6 @@
 import ButtonRow from '../../../shared/components/ButtonRow/ButtonRow';
 import { Icon } from '../../../shared/components/Icon/Icon';
-import { normalizeExternalUrl } from '../../../shared/utils/urlUtils';
+import { normalizeExternalUrl } from '../../../shared/utils/formatUtils';
 import { getSocialMediaIconName } from '../../talent/talent-profile-edit/components/Form/SocialMedia/SocialMediaIconMapper';
 import type { ProfileSocialMedia } from '../../talent/talent-profile-edit/types/talentProfile.types';
 

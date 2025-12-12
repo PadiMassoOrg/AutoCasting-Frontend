@@ -8,7 +8,7 @@ import {
   useIsoDateField,
   useToggleSet,
 } from '../../../../../shared/utils/formUtils';
-import { capitalize } from '../../../../../shared/utils/textUtils';
+import { capitalize } from '../../../../../shared/utils/formatUtils';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
 import { useBasicInfoAutosave } from '../../hooks/autosaves';

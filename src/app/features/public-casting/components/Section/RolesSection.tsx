@@ -9,9 +9,9 @@ const RolesSection = ({ data }: { data: CastingRoles }) => {
     <section className="flex flex-col gap-4">
       {/* Title */}
       <article className="flex flex-col gap-2">
-        <h2 className="text-lg font-semibold">{t('casting.role_section.role')}</h2>
+        <h2 className="text-lg font-semibold">{t('casting.role_section.role.role')}</h2>
       </article>
-      <article className="flex flex-col gap-2">
+      <article className="flex flex-col gap-6">
         {data.roles?.map((i) => {
           return <PublicRoleCard data={i} key={i.id} />;
         })}

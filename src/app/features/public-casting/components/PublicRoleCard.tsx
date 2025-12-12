@@ -1,13 +1,64 @@
+import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { ChevronUpDown } from '../../../shared/components/Chevron';
 import { Chip } from '../../../shared/components/Chip/Chip';
-import { formatBooleanLabeled } from '../../../shared/utils/formatUtils';
+import { formatBooleanLabeled, formatCurrencyAmount } from '../../../shared/utils/formatUtils';
 import type { CastingRole } from '../../employer/employer-castings/types/employerCastings.types';
 
 type ChipConfig = {
   key: string;
   label: string;
   translate?: boolean;
+};
+
+const PublicRoleCard = ({ data }: { data: CastingRole }) => {
+  const { t } = useTranslation();
+
+  const headerChips = buildHeaderChips(data, t);
+  const characteristicsChips = buildCharacteristicsChips(data, t);
+  const skillsChips = buildSkillsChips(data, t);
+
+  const amountLabel = formatCurrencyAmount(data.remuneration?.amount!, data.remuneration?.currency?.stringCode);
+
+  const payRateLabel = t(data.remuneration?.payRateType?.stringCode!);
+  const finalLabel = `${amountLabel} (${payRateLabel})`;
+
+  return (
+    <article className="w-full rounded-xl border border-[var(--color-secondary-outline)] bg-white py-4 px-5 flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        <span className="flex flex-row items-center justify-between">
+          <h2 className="text-base font-bold">{data.name}</h2>
+          <ChevronUpDown open={true} />
+        </span>
+        <div className="flex flex-row flex-wrap gap-1">
+          {headerChips.map((chip) => (
+            <Chip key={chip.key} label={chip.label} t={t} translate={chip.translate} />
+          ))}
+        </div>
+      </div>
+      {data.description && (
+        <p className="text-sm text-[var(--color-secondary-grey-fonts)] font-light">{data.description}</p>
+      )}
+      <div className="flex flex-col gap-2">
+        <h2 className="text-sm font-semibold">{t('casting.role_section.role.characteristics.characteristics')}:</h2>
+        <div className="flex flex-row flex-wrap gap-1">
+          {characteristicsChips.map((chip) => (
+            <Chip key={chip.key} label={chip.label} t={t} translate={chip.translate} />
+          ))}
+        </div>
+      </div>
+      <div className="flex flex-col gap-2">
+        <h2 className="text-sm font-semibold">{t('casting.role_section.role.skills.skills')}:</h2>
+        <div className="flex flex-row flex-wrap gap-1">
+          {skillsChips.map((chip) => (
+            <Chip key={chip.key} label={chip.label} t={t} translate={chip.translate} />
+          ))}
+        </div>
+      </div>
+      <Separator className="opacity-20 my-1" />
+      <h2 className="text-lg font-semibold pb-1">{finalLabel}</h2>
+    </article>
+  );
 };
 
 const buildHeaderChips = (data: CastingRole, t: (k: string) => string): ChipConfig[] => {
@@ -118,40 +169,25 @@ const buildCharacteristicsChips = (data: CastingRole, t: (k: string) => string):
   return chips;
 };
 
-const PublicRoleCard = ({ data }: { data: CastingRole }) => {
-  const { t } = useTranslation();
+const buildSkillsChips = (data: CastingRole, t: (k: string) => string): ChipConfig[] => {
+  const chips: ChipConfig[] = [];
 
-  const headerChips = buildHeaderChips(data, t);
-  const characteristicsChips = buildCharacteristicsChips(data, t);
+  data.skills?.forEach((s) => {
+    if (!s) return;
 
-  return (
-    <article className="w-full rounded-xl border border-[var(--color-secondary-outline)] bg-white p-4 flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
-        <span className="flex flex-row items-center justify-between">
-          <h2 className="text-base font-bold">{data.name}</h2>
-          <ChevronUpDown open={true} />
-        </span>
-        <div className="flex flex-row flex-wrap gap-1">
-          {headerChips.map((chip) => (
-            <Chip key={chip.key} label={chip.label} t={t} translate={chip.translate} />
-          ))}
-        </div>
-      </div>
+    const categoryLabel = s.categoryStringCode ? t(s.categoryStringCode) : '';
+    const skillLabel = t(s.stringCode!);
 
-      {data.description && (
-        <p className="text-sm text-[var(--color-secondary-grey-fonts)] font-light">{data.description}</p>
-      )}
+    const finalLabel = categoryLabel ? `${categoryLabel}: ${skillLabel}` : skillLabel;
 
-      <div className="flex flex-col gap-2">
-        <h2 className="text-sm font-semibold">{t('casting.characteristics.characteristics')}:</h2>
-        <div className="flex flex-row flex-wrap gap-1">
-          {characteristicsChips.map((chip) => (
-            <Chip key={chip.key} label={chip.label} t={t} translate={chip.translate} />
-          ))}
-        </div>
-      </div>
-    </article>
-  );
+    chips.push({
+      key: s.id,
+      label: finalLabel,
+      translate: false,
+    });
+  });
+
+  return chips;
 };
 
 export default PublicRoleCard;
