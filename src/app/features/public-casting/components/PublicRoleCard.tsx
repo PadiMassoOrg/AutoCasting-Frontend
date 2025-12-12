@@ -1,4 +1,5 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronUpDown } from '../../../shared/components/Chevron';
 import { Chip } from '../../../shared/components/Chip/Chip';
@@ -13,21 +14,36 @@ type ChipConfig = {
 
 const PublicRoleCard = ({ data }: { data: CastingRole }) => {
   const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
 
   const headerChips = buildHeaderChips(data, t);
   const characteristicsChips = buildCharacteristicsChips(data, t);
   const skillsChips = buildSkillsChips(data, t);
 
-  const amountLabel = formatCurrencyAmount(data.remuneration?.amount!, data.remuneration?.currency?.stringCode);
-  const payRateLabel = t(data.remuneration?.payRateType?.stringCode!);
-  const finalLabel = `${amountLabel} (${payRateLabel})`;
+  const amountLabel = formatCurrencyAmount(
+    data.remuneration?.amount ?? null,
+    data.remuneration?.currency?.stringCode ?? null
+  );
+  const payRateLabelKey = data.remuneration?.payRateType?.stringCode;
+  const payRateLabel = payRateLabelKey ? t(payRateLabelKey) : '';
+
+  const finalAmountAndCurrencyLabel =
+    amountLabel && payRateLabel ? `${amountLabel} (${payRateLabel})` : amountLabel || payRateLabel || '';
 
   return (
     <article className="w-full rounded-xl border border-[var(--color-secondary-outline)] bg-white py-4 px-5 flex flex-col gap-4">
+      {/* Title + header chips (siempre visibles) */}
       <div className="flex flex-col gap-2">
         <span className="flex flex-row items-center justify-between">
           <h2 className="text-base font-bold">{data.name}</h2>
-          <ChevronUpDown open={true} />
+          <button
+            type="button"
+            onClick={() => setOpen((prev) => !prev)}
+            className="cursor-pointer"
+            aria-expanded={open}
+          >
+            <ChevronUpDown open={open} />
+          </button>
         </span>
         <div className="flex flex-row flex-wrap gap-1">
           {headerChips.map((chip) => (
@@ -35,27 +51,41 @@ const PublicRoleCard = ({ data }: { data: CastingRole }) => {
           ))}
         </div>
       </div>
-      {data.description && (
-        <p className="text-sm text-[var(--color-secondary-grey-fonts)] font-light">{data.description}</p>
+
+      {/* Contenido expandible */}
+      {open && (
+        <>
+          {data.description && (
+            <p className="text-sm text-[var(--color-secondary-grey-fonts)] font-light">{data.description}</p>
+          )}
+
+          <div className="flex flex-col gap-2">
+            <h2 className="text-sm font-semibold">{t('casting.characteristics.characteristics')}:</h2>
+            <div className="flex flex-row flex-wrap gap-1">
+              {characteristicsChips.map((chip) => (
+                <Chip key={chip.key} label={chip.label} t={t} translate={chip.translate} />
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h2 className="text-sm font-semibold">{t('casting.role_section.role.skills.skills')}:</h2>
+            <div className="flex flex-row flex-wrap gap-1">
+              {skillsChips.map((chip) => (
+                <Chip key={chip.key} label={chip.label} t={t} translate={chip.translate} />
+              ))}
+            </div>
+          </div>
+        </>
       )}
-      <div className="flex flex-col gap-2">
-        <h2 className="text-sm font-semibold">{t('casting.role_section.role.characteristics.characteristics')}:</h2>
-        <div className="flex flex-row flex-wrap gap-1">
-          {characteristicsChips.map((chip) => (
-            <Chip key={chip.key} label={chip.label} t={t} translate={chip.translate} />
-          ))}
-        </div>
-      </div>
-      <div className="flex flex-col gap-2">
-        <h2 className="text-sm font-semibold">{t('casting.role_section.role.skills.skills')}:</h2>
-        <div className="flex flex-row flex-wrap gap-1">
-          {skillsChips.map((chip) => (
-            <Chip key={chip.key} label={chip.label} t={t} translate={chip.translate} />
-          ))}
-        </div>
-      </div>
-      <Separator className="opacity-20 my-1" />
-      <h2 className="text-lg font-semibold pb-1">{finalLabel}</h2>
+
+      {/* Remuneración (siempre visible cuando exista label) */}
+      {finalAmountAndCurrencyLabel && (
+        <>
+          <Separator className="opacity-20 my-1" />
+          <h2 className="text-lg font-semibold pb-1">{finalAmountAndCurrencyLabel}</h2>
+        </>
+      )}
     </article>
   );
 };
@@ -176,7 +206,6 @@ const buildSkillsChips = (data: CastingRole, t: (k: string) => string): ChipConf
 
     const categoryLabel = s.categoryStringCode ? t(s.categoryStringCode) : '';
     const skillLabel = t(s.stringCode!);
-
     const finalLabel = categoryLabel ? `${categoryLabel}: ${skillLabel}` : skillLabel;
 
     chips.push({
