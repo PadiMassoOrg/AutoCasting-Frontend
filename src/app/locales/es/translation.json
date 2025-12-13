@@ -1,9 +1,9 @@
 {
   "company": {
     "site": "autocasting",
-    "trademark": "© 2025 Auto-Casting · Buenos Aires, AR",
-    "linkedIn": "https://www.linkedin.com/feed/",
-    "instagram": "https://www.instagram.com/"
+    "trademark": "© 2025 Auto-Casting · Buenos Aires, AR.",
+    "linkedIn": "https://www.linkedin.com/feed",
+    "instagram": "https://www.instagram.com"
   },
   "maintenance": {
     "scheduled": "Entraremos en mantenimiento el {{date, datetime}}.",
@@ -19,10 +19,10 @@
     "clear": "Limpiar",
     "reset": "Resetear",
     "apply": "Aplicar",
-    "copied": "Copaiado con éxito",
+    "copied": "Copaiado con éxito.",
     "logout": "Cerrar Sesión",
-    "no_data": "Sin información",
-    "unspecified": "Sin especificar",
+    "no_data": "Sin información.",
+    "unspecified": "Sin especificar.",
     "selections": "Selecciones",
     "select_all": "Seleccionar Todas",
     "and": "y",
@@ -51,7 +51,8 @@
       "website": "“www.tuempresa.com”",
       "about": "Escribir algo aquí...",
       "company_name": "Ej. “Producciones Pérez”, “Luna Pérez Casting”",
-      "tax_number": "Ej. “20-12345678-3”"
+      "tax_number": "Ej. “20-12345678-3”",
+      "year_example": "Ej. 2023"
     },
     "filter": {
       "title": "Filtros",
@@ -61,18 +62,18 @@
     }
   },
   "validation": {
-    "uuid_invalid": "Valor inválido",
-    "invalid": "Valor inválido",
-    "url_invalid": "Ingresa una URL válida",
+    "uuid_invalid": "Valor inválido.",
+    "invalid": "Valor inválido.",
+    "url_invalid": "Ingresa una URL válida.",
     "required": "Campo obligatorio.",
-    "number": "Solo números",
-    "number_invalid": "Número inválido",
-    "year_invalid": "Año inválido",
-    "year_out_of_range": "El año debe estar entre {{min}} y {{max}}",
-    "month_invalid": "Mes inválido",
-    "day_invalid": "Día inválido",
-    "type_image": "El archivo debe ser una imagen",
-    "max_size": "El archivo supera el tamaño máximo de {{mb}}MB"
+    "number": "Solo números.",
+    "number_invalid": "Número inválido.",
+    "year_invalid": "Año inválido.",
+    "year_out_of_range": "El año debe estar entre {{min}} y {{max}}.",
+    "month_invalid": "Mes inválido.",
+    "day_invalid": "Día inválido.",
+    "type_image": "El archivo debe ser una imagen.",
+    "max_size": "El archivo supera el tamaño máximo de {{mb}}MB."
   },
   "state": {
     "no_results": "No se encontraron resultados.",
@@ -143,7 +144,7 @@
       "prefer_not_to_say": "Prefiero no especificar"
     },
     "category": {
-      "scenic": "Habilidades España",
+      "scenic": "Habilidades Escénicas",
       "sport": "Deportes",
       "physical": "Habilidades Físicas",
       "language": "Idiomas",
@@ -294,8 +295,8 @@
       "other": "Otro"
     },
     "casting_modality": {
-      "on_site": "Casting: Presencial",
-      "autocasting": "Casting: Autocasting"
+      "on_site": "Presencial",
+      "autocasting": "Autocasting"
     },
     "role_type": {
       "lead": "Protagónico",
@@ -332,7 +333,7 @@
     }
   },
   "error_page": {
-    "title": "¡Ups! Algo salió mal",
+    "title": "¡Ups! Algo salió mal.",
     "description": "Estamos trabajando para solucionar el problema.",
     "subtext": "Por favor, intentá de nuevo en unos minutos."
   },
@@ -445,12 +446,12 @@
       "repeat": "Repetir contraseña"
     },
     "validation": {
-      "name_min": "Ingrese un nombre",
-      "email": "Email inválido",
-      "role": "El rol es requerido",
-      "plan": "El plan es requerido",
-      "password_min": "La contraseña debe tener al menos 6 caracteres",
-      "password_missmatch": "Las contraseñas no coinciden"
+      "name_min": "Ingrese un nombre.",
+      "email": "Email inválido.",
+      "role": "El rol es requerido.",
+      "plan": "El plan es requerido.",
+      "password_min": "La contraseña debe tener al menos 6 caracteres.",
+      "password_missmatch": "Las contraseñas no coinciden."
     }
   },
   "onboarding": {
@@ -517,7 +518,7 @@
   "profile": {
     "page": {
       "videos": "Videos",
-      "no_videos": "No hay videos",
+      "no_videos": "No hay videos.",
       "introduction_video": "Video de presentación",
       "showreel_video": "Videoreel",
       "socials": "Sociales",
