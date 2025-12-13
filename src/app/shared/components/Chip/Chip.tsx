@@ -3,14 +3,10 @@ import { Icon } from '../Icon/Icon';
 type ChipProps = {
   label: string;
   onRemove?: () => void;
-  t: (k: string) => string;
-  translate?: boolean;
   newItem?: boolean;
 };
 
-export function Chip({ label, onRemove, t, translate = true, newItem = false }: ChipProps) {
-  const text = translate ? t(label) : label;
-
+export function Chip({ label, onRemove, newItem = false }: ChipProps) {
   return (
     <span
       className={[
@@ -20,7 +16,7 @@ export function Chip({ label, onRemove, t, translate = true, newItem = false }: 
           : 'bg-[var(--color-primary-white)] border-[var(--color-secondary-outline)] text-[var(--color-primary-black)]',
       ].join(' ')}
     >
-      <p className="text-sm">{text}</p>
+      <p className="text-sm">{label}</p>
       {onRemove && <Icon name="cross" variant="primary" size={11} onClick={onRemove} />}
     </span>
   );

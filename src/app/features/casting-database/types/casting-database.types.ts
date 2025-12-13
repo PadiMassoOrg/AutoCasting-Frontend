@@ -14,9 +14,9 @@ export type BaseCastingRolePublicCard = {
   professions: SiteMetadataObject[];
   roleType: SiteMetadataObject;
   gender: SiteMetadataObject;
-  ageMin: Number;
-  ageMax: Number;
-  defaultCode: String;
+  ageMin: number;
+  ageMax: number;
+  defaultCode: string;
 };
 
 export type CastingFiltersQS = BasePersonSearchFiltersQS & {

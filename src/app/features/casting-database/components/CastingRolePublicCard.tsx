@@ -5,6 +5,7 @@ import { ChevronRight } from '../../../shared/components/Chevron';
 import { Chip } from '../../../shared/components/Chip/Chip';
 import { useMedia, XL_SCREEN_SIZE } from '../../../shared/hooks/useMedia';
 import { ROUTES } from '../../../shared/lib/routes';
+import { formatAgeRange } from '../../../shared/utils/formatUtils';
 import type { CastingRolePublicCardResponse } from '../types/casting-database.types';
 
 type Props = {
@@ -14,6 +15,7 @@ type Props = {
 const CastingRolePublicCard = ({ item }: Props) => {
   const { t } = useTranslation();
   const isDesktop = useMedia(XL_SCREEN_SIZE);
+
   const {
     name,
     employerImageUrl,
@@ -27,11 +29,6 @@ const CastingRolePublicCard = ({ item }: Props) => {
     ageMax,
     defaultCode,
   } = item;
-
-  const getAgeChip = () => {
-    const string = ageMin + ' - ' + ageMax + t('general.years');
-    return string;
-  };
 
   if (!isDesktop) {
     return (
@@ -48,16 +45,17 @@ const CastingRolePublicCard = ({ item }: Props) => {
         </div>
 
         <div className="flex flex-row gap-1 items-center">
-          <Chip label={projectType.stringCode} t={t} />
-          <Chip label={castingModality.stringCode} t={t} />
+          <Chip label={t(projectType.stringCode)} />
+          <Chip label={t(castingModality.stringCode)} />
         </div>
         <div className="flex flex-row gap-1 items-center flex-wrap">
           {professions.slice(-3).map((p) => {
-            return <Chip label={p.stringCode} t={t} key={p.id} />;
+            return <Chip label={t(p.stringCode)} key={p.id} />;
           })}
-          <Chip label={roleType.stringCode} t={t} />
-          <Chip label={gender.stringCode} t={t} />
-          <Chip label={getAgeChip()} t={t} />
+
+          <Chip label={t(roleType.stringCode)} />
+          <Chip label={t(gender.stringCode)} />
+          <Chip label={formatAgeRange(ageMin, ageMax, t)} />
         </div>
         <Separator className="opacity-20"></Separator>
         <Button asChild variant="primary">
@@ -81,18 +79,18 @@ const CastingRolePublicCard = ({ item }: Props) => {
             </div>
           </div>
           <div className="text-nowrap flex flex-row gap-1 items-center">
-            <Chip label={projectType.stringCode} t={t} />
-            <Chip label={castingModality.stringCode} t={t} />
+            <Chip label={t(projectType.stringCode)} />
+            <Chip label={t(castingModality.stringCode)} />
           </div>
         </div>
         <div className="flex flex-row items-end justify-between">
           <div className="flex flex-row gap-1 items-center">
             {professions.slice(-3).map((p) => {
-              return <Chip label={p.stringCode} t={t} key={p.id} />;
+              return <Chip label={t(p.stringCode)} key={p.id} />;
             })}
-            <Chip label={roleType.stringCode} t={t} />
-            <Chip label={gender.stringCode} t={t} />
-            <Chip label={getAgeChip()} t={t} />
+            <Chip label={t(roleType.stringCode)} />
+            <Chip label={t(gender.stringCode)} />
+            <Chip label={formatAgeRange(ageMin, ageMax, t)} />
           </div>
           <Button asChild variant="primary" className="max-w-[180px]">
             <Link to={`${ROUTES.PUBLIC_CASTING}/${defaultCode}`}>

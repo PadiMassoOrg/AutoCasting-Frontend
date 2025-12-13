@@ -9,6 +9,8 @@ const BasicInfoSection = ({ data }: { data: CastingBasicInfo }) => {
   const deadlineText = `${t('casting.basic_info.deadline_complete')} ${data.applicationDeadline}`;
   const shootingText = `${data.shootingStartDate} - ${data.shootingEndDate}`;
 
+  // TODO: Handle IF ELSE
+
   return (
     <section className="flex flex-col gap-4">
       {/* Title, Project type, Modality */}
@@ -18,8 +20,8 @@ const BasicInfoSection = ({ data }: { data: CastingBasicInfo }) => {
           <span>NEW</span>
         </div>
         <div className="flex flex-row items-center gap-1">
-          <Chip label={data.projectType!.stringCode!} t={t} />
-          <Chip label={data.castingModality!.stringCode!} t={t} />
+          <Chip label={t(data.projectType!.stringCode!)} />
+          <Chip label={t(data.castingModality!.stringCode!)} />
         </div>
       </article>
       {/* Location, Deadline, Shooting */}

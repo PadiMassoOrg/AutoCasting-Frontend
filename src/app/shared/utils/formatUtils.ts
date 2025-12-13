@@ -1,8 +1,32 @@
+// ==============================================
+// Strings
+// ==============================================
+export const capitalize = (s: string) => {
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+};
+
+// ==============================================
+// Numbers
+// ==============================================
 export function formatNumber(value: number): string {
   if (value === null || value === undefined) return '';
   return String(value);
 }
 
+export function formatAgeRange(min: number, max: number, t: (k: string) => string): string {
+  if (min == null && max == null) return '';
+  const minStr = min != null ? String(min) : '';
+  const maxStr = max != null ? String(max) : '';
+  return `${minStr} - ${maxStr} ${t('general.years')}`;
+}
+
+// ==============================================
+// Dates
+// ==============================================
+
+// ==============================================
+// Booleans
+// ==============================================
 export const formatBooleanYesNo = (value: boolean, t: (k: string) => string): string => {
   return value ? t('general.yes') : t('general.no');
 };
@@ -21,11 +45,9 @@ export const formatBooleanLabeled = (params: {
   return `${fieldLabel}: ${boolText}`;
 };
 
-export const capitalize = (s: string) => {
-  return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
-};
-
-// Currency - Always show $, no matter the Currency
+// ==============================================
+// Currency - For now always show $
+// ==============================================
 export function formatCurrencyAmount(amount: number | null | undefined, currencyStringCode?: string | null): string {
   if (amount === null || amount === undefined) return '';
 
@@ -45,7 +67,9 @@ export function formatCurrencyAmount(amount: number | null | undefined, currency
   return `$${formattedAmount} ${isoCode}`;
 }
 
+// ==============================================
 // URLs
+// ==============================================
 export function normalizeExternalUrl(raw?: string | null): string | null {
   if (!raw) return null;
   let url = raw.trim();
@@ -64,7 +88,9 @@ export function normalizeExternalUrl(raw?: string | null): string | null {
   return url;
 }
 
-// Phone
+// ==============================================
+// Phone Numbers
+// ==============================================
 export function normalizePhone(raw?: string | null): string | null {
   if (!raw) return null;
   let p = raw.trim().replace(/[^\d+]/g, '');

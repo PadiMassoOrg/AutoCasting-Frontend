@@ -57,7 +57,7 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
             {dividerBefore.has(key) && <Separator className="opacity-20 my-1" />}
             <div className="flex items-center justify-between">
               <span className="font-semibold text-base lg:text-[14px]">{label}:</span>
-              <Chip label={value} t={t} />
+              <Chip label={t(value)} />
             </div>
           </React.Fragment>
         );

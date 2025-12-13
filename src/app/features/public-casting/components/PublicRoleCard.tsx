@@ -47,7 +47,7 @@ const PublicRoleCard = ({ data }: { data: CastingRole }) => {
         </span>
         <div className="flex flex-row flex-wrap gap-1">
           {headerChips.map((chip) => (
-            <Chip key={chip.key} label={chip.label} t={t} translate={chip.translate} />
+            <Chip key={chip.key} label={t(chip.label)} />
           ))}
         </div>
       </div>
@@ -63,7 +63,7 @@ const PublicRoleCard = ({ data }: { data: CastingRole }) => {
             <h2 className="text-sm font-semibold">{t('casting.characteristics.characteristics')}:</h2>
             <div className="flex flex-row flex-wrap gap-1">
               {characteristicsChips.map((chip) => (
-                <Chip key={chip.key} label={chip.label} t={t} translate={chip.translate} />
+                <Chip key={chip.key} label={t(chip.label)} />
               ))}
             </div>
           </div>
@@ -72,7 +72,7 @@ const PublicRoleCard = ({ data }: { data: CastingRole }) => {
             <h2 className="text-sm font-semibold">{t('casting.role_section.role.skills.skills')}:</h2>
             <div className="flex flex-row flex-wrap gap-1">
               {skillsChips.map((chip) => (
-                <Chip key={chip.key} label={chip.label} t={t} translate={chip.translate} />
+                <Chip key={chip.key} label={t(chip.label)} />
               ))}
             </div>
           </div>

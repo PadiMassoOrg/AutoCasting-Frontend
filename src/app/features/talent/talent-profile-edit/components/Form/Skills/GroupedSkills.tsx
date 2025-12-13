@@ -77,7 +77,7 @@ function GroupedSkills({ skills, onRemove }: { skills: SiteMetadataObject[]; onR
               {isOpen && (
                 <div id={`skills-${cat}`} className="mt-3 flex flex-wrap gap-2">
                   {list.map((s) => (
-                    <Chip key={s.id} label={s.stringCode} t={t} onRemove={() => onRemove && onRemove(s.id)}></Chip>
+                    <Chip key={s.id} label={t(s.stringCode)} onRemove={() => onRemove && onRemove(s.id)}></Chip>
                   ))}
                 </div>
               )}

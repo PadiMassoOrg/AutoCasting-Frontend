@@ -1,6 +1,7 @@
+import type { CastingRolePublicCardResponse } from '../../casting-database/types/casting-database.types';
 import type { PublicCastingResponse } from '../../public-casting/types/publicCasting.types';
 
-export const CASTING_ROLE_PUBLIC_CARDS_MOCK = [
+export const CASTING_ROLE_PUBLIC_CARDS_MOCK: CastingRolePublicCardResponse[] = [
   {
     id: 'role-id-1',
     name: 'Cantante Femenino',
@@ -135,7 +136,7 @@ export const CASTING_ROLE_PUBLIC_CARDS_MOCK = [
   },
 ];
 
-export const PUBLIC_CASTING_MOCK: PublicCastingResponse = {
+export const PUBLIC_CASTING_RESPONSE_MOCK: PublicCastingResponse = {
   id: '648a58e5-4383-4907-83b2-7e78f1d13acb',
   defaultCode: 'C-648A58E5',
   employerInfo: {

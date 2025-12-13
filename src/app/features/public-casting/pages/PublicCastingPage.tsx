@@ -1,10 +1,10 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
-import { PUBLIC_CASTING_MOCK } from '../../_TEST_/mock/casting-card-mock';
+import { PUBLIC_CASTING_RESPONSE_MOCK } from '../../_TEST_/mock/casting-public-responses-mock';
 import { ApplySection, BasicInfoSection, EmployerInfoSection, RolesSection } from '../components/Section';
 
 const PublicCastingPage = () => {
-  const data = PUBLIC_CASTING_MOCK;
+  const data = PUBLIC_CASTING_RESPONSE_MOCK;
   const isDesktop = useMedia(LG_SCREEN_SIZE);
 
   if (isDesktop) {
