@@ -19,7 +19,7 @@ const VideoSection = ({ data }: { data: Media }) => {
     <article className="w-full h-full flex flex-col gap-2 bg-[var(--color-primary-white)] rounded-lg border-[var(--color-secondary-outline)] border">
       {!hasVideos && (
         <div className="w-full p-4">
-          <p className="text-[var(--color-secondary-grey)] font-base text-center">{t('profile.page.no_videos')}.</p>
+          <p className="text-[var(--color-secondary-grey)] font-base text-center">{t('profile.page.no_videos')}</p>
         </div>
       )}
 

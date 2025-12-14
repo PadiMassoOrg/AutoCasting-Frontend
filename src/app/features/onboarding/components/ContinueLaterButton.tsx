@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { USER_MODE_EMPLOYER, USER_MODE_TALENT, useUserMode } from '../../../context/UserModeContext';
 import { Icon } from '../../../shared/components/Icon/Icon';
 import { ROUTES } from '../../../shared/lib/routes';
 import { useMeData } from '../../auth/hooks/useMeData';
 import { logout } from '../../auth/services/authService';
 import { useUpdateOnboardingMutation } from '../hooks/useUpdateOnboardingMutation';
-import { useUserMode } from '../../../context/UserModeContext';
 
 function ContinueLaterButton() {
   const { t } = useTranslation();
@@ -45,9 +45,9 @@ function ContinueLaterButton() {
       {
         onSuccess: () => {
           if (nextActiveMode === 'TALENT') {
-            setMode('talent');
+            setMode(USER_MODE_TALENT);
           } else if (nextActiveMode === 'EMPLOYER') {
-            setMode('employer');
+            setMode(USER_MODE_EMPLOYER);
           }
           navigate(ROUTES.DASHBOARD);
         },

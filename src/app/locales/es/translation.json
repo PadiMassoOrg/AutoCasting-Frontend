@@ -1,9 +1,9 @@
 {
   "company": {
     "site": "autocasting",
-    "trademark": "© 2025 Auto-Casting · Buenos Aires, AR",
-    "linkedIn": "https://www.linkedin.com/feed/",
-    "instagram": "https://www.instagram.com/"
+    "trademark": "© 2025 Auto-Casting · Buenos Aires, AR.",
+    "linkedIn": "https://www.linkedin.com/feed",
+    "instagram": "https://www.instagram.com"
   },
   "maintenance": {
     "scheduled": "Entraremos en mantenimiento el {{date, datetime}}.",
@@ -19,16 +19,20 @@
     "clear": "Limpiar",
     "reset": "Resetear",
     "apply": "Aplicar",
-    "copied": "Copaiado con éxito",
+    "copied": "Copaiado con éxito.",
     "logout": "Cerrar Sesión",
-    "no_data": "Sin información",
-    "unspecified": "Sin especificar",
+    "no_data": "Sin información.",
+    "unspecified": "Sin especificar.",
     "selections": "Selecciones",
     "select_all": "Seleccionar Todas",
     "and": "y",
     "dash": "--",
+    "years": " años",
+    "cm": "cm",
+    "back_to": "Volver a",
     "placeholder": {
       "stage_name": "Ricardo Darín",
+      "role_name": "Lali",
       "select": "Seleccionar",
       "color": "Color",
       "day": "Día",
@@ -47,22 +51,29 @@
       "website": "“www.tuempresa.com”",
       "about": "Escribir algo aquí...",
       "company_name": "Ej. “Producciones Pérez”, “Luna Pérez Casting”",
-      "tax_number": "Ej. “20-12345678-3”"
+      "tax_number": "Ej. “20-12345678-3”",
+      "year_example": "Ej. 2023"
+    },
+    "filter": {
+      "title": "Filtros",
+      "reset": "Resetear Filtros",
+      "hide": "Ocultar Filtros",
+      "show": "Mostrar Filtros"
     }
   },
   "validation": {
-    "uuid_invalid": "Valor inválido",
-    "invalid": "Valor inválido",
-    "url_invalid": "Ingresa una URL válida",
+    "uuid_invalid": "Valor inválido.",
+    "invalid": "Valor inválido.",
+    "url_invalid": "Ingresa una URL válida.",
     "required": "Campo obligatorio.",
-    "number": "Solo números",
-    "number_invalid": "Número inválido",
-    "year_invalid": "Año inválido",
-    "year_out_of_range": "El año debe estar entre {{min}} y {{max}}",
-    "month_invalid": "Mes inválido",
-    "day_invalid": "Día inválido",
-    "type_image": "El archivo debe ser una imagen",
-    "max_size": "El archivo supera el tamaño máximo de {{mb}}MB"
+    "number": "Solo números.",
+    "number_invalid": "Número inválido.",
+    "year_invalid": "Año inválido.",
+    "year_out_of_range": "El año debe estar entre {{min}} y {{max}}.",
+    "month_invalid": "Mes inválido.",
+    "day_invalid": "Día inválido.",
+    "type_image": "El archivo debe ser una imagen.",
+    "max_size": "El archivo supera el tamaño máximo de {{mb}}MB."
   },
   "state": {
     "no_results": "No se encontraron resultados.",
@@ -80,7 +91,8 @@
     "understood": "Entendido",
     "back": "Atras",
     "next": "Siguiente",
-    "to_profile": "Ir a mi perfil"
+    "to_profile": "Ir a mi perfil",
+    "view_details": "Ver Detailles"
   },
   "routes": {
     "home": "Inicio",
@@ -93,6 +105,7 @@
     "settings": "Herramientas",
     "access": "Acceso",
     "talent-database": "Catálogo",
+    "casting-database": "Castings",
     "talent-applied-productions": "Mis Postulaciones",
     "productions": "Castings",
     "support": "Soporte Técnico",
@@ -131,7 +144,7 @@
       "prefer_not_to_say": "Prefiero no especificar"
     },
     "category": {
-      "scenic": "Habilidades España",
+      "scenic": "Habilidades Escénicas",
       "sport": "Deportes",
       "physical": "Habilidades Físicas",
       "language": "Idiomas",
@@ -256,10 +269,71 @@
       "company": "Marca / Empresa",
       "theater_company": "Compañía teatral",
       "institution": "Escuela / Academia"
+    },
+    "casting_status": {
+      "draft": "Borrador",
+      "closed": "Cerrado",
+      "published": "Publicado",
+      "paused": "Pausado",
+      "archived": "Archivado"
+    },
+    "casting_section_status": {
+      "not_started": "Sin completar",
+      "in_progress": "En progreso",
+      "completed": "Completado"
+    },
+    "project_type": {
+      "digital_content": "Contenido digital / RRSS",
+      "short_film": "Cortometraje",
+      "documentary": "Documental",
+      "feature_film": "Largometraje",
+      "musical": "Musical",
+      "theatre_play": "Obra teatral",
+      "student_project": "Proyecto estudiantil / Universitario",
+      "commercial": "Publicidad",
+      "music_video": "Videoclip",
+      "other": "Otro"
+    },
+    "casting_modality": {
+      "on_site": "Presencial",
+      "autocasting": "Autocasting"
+    },
+    "role_type": {
+      "lead": "Protagónico",
+      "secondary": "Secundario",
+      "extra": "Extra / Figurante",
+      "voice": "Voz en off / Locución",
+      "host": "Presentador / Host",
+      "creator": "Creador / Influencer",
+      "guest": "Participante / Invitado",
+      "other": "Otro"
+    },
+    "acting_mode": {
+      "general": "Actings general para todos los roles",
+      "per_role": "Seleccionar actings para cada rol",
+      "none": "Sin actings requeridos"
+    },
+    "compensation_type": {
+      "paid": "Remunerado",
+      "collaborative": "Colaborativo (o Proyecto cooperativo)",
+      "unpaid": "Sin remuneración"
+    },
+    "pay_rate_type": {
+      "fixed": "Tarifa fija",
+      "per_hour": "Por hora",
+      "per_day": "Por día",
+      "per_week": "Por semana",
+      "per_month": "Por mes",
+      "per_season": "Por temporada / función",
+      "to_be_agreed": "A convenir"
+    },
+    "currency": {
+      "ars": "ARS",
+      "usd": "USD"
     }
   },
   "error_page": {
-    "title": "¡Ups! Algo salió mal",
+    "title": "¡Ups! Algo salió mal.",
     "description": "Estamos trabajando para solucionar el problema.",
     "subtext": "Por favor, intentá de nuevo en unos minutos."
   },
@@ -372,12 +446,12 @@
       "repeat": "Repetir contraseña"
     },
     "validation": {
-      "name_min": "Ingrese un nombre",
-      "email": "Email inválido",
-      "role": "El rol es requerido",
-      "plan": "El plan es requerido",
-      "password_min": "La contraseña debe tener al menos 6 caracteres",
-      "password_missmatch": "Las contraseñas no coinciden"
+      "name_min": "Ingrese un nombre.",
+      "email": "Email inválido.",
+      "role": "El rol es requerido.",
+      "plan": "El plan es requerido.",
+      "password_min": "La contraseña debe tener al menos 6 caracteres.",
+      "password_missmatch": "Las contraseñas no coinciden."
     }
   },
   "onboarding": {
@@ -444,7 +518,7 @@
   "profile": {
     "page": {
       "videos": "Videos",
-      "no_videos": "No hay videos",
+      "no_videos": "No hay videos.",
       "introduction_video": "Video de presentación",
       "showreel_video": "Videoreel",
       "socials": "Sociales",
@@ -573,11 +647,6 @@
       "title": "Catálogo"
     },
     "filter": {
-      "title": "Filtros",
-      "reset": "Resetear Filtros",
-      "hide": "Ocultar Filtros",
-      "show": "Mostrar Filtros",
-      "include_no_headshot": "Incluir perfiles sin fotos",
       "basic_info": {
         "stage_name": "Nombre del Talento",
         "age_range": "Rango Etario",
@@ -587,6 +656,34 @@
       "characteristics": {
         "height": "Altura"
       }
+    }
+  },
+  "casting": {
+    "basic_info": {
+      "basic_info": "Información Básica",
+      "project_type": "Tipo de proyecto",
+      "casting_modality": "Modalidad del Casting",
+      "deadline_complete": "Finaliza el"
+    },
+    "role_section": {
+      "role": {
+        "role": "Rol",
+        "role_name": "Nombre del Rol",
+        "characteristics": {
+          "characteristics": "Características"
+        },
+        "skills": {
+          "skills": "Habilidades"
+        }
+      }
+    }
+  },
+  "casting-database": {
+    "page": {
+      "title": "Castings",
+      "created_castings": "Castings creados",
+      "member_since": "Miembro desde",
+      "apply_title": "¿Listo para aplicar?"
     }
   },
   "settings": {

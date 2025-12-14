@@ -8,10 +8,14 @@ import BurgerCloseIconPurple from '../../icons/burger-close-purple.svg';
 import BurgerCloseIcon from '../../icons/burger-close.svg';
 import BurgerIconPurple from '../../icons/burger-purple.svg';
 import BurgerIcon from '../../icons/burger.svg';
+import CalendarIconPurple from '../../icons/calendar-purple.svg';
+import CalendarIcon from '../../icons/calendar.svg';
 import CatalogIconPurple from '../../icons/catalogo-purple.svg';
 import CatalogIcon from '../../icons/catalogo.svg';
 import ClapperIconPurple from '../../icons/clapper-purple.svg';
 import ClapperIcon from '../../icons/clapper.svg';
+import ClockIconPurple from '../../icons/clock-purple.svg';
+import ClockIcon from '../../icons/clock.svg';
 import CopyLinkIconPurple from '../../icons/copy-link-purple.svg';
 import CopyLinkIcon from '../../icons/copy-link.svg';
 import CrossIconPurple from '../../icons/cross-purple.svg';
@@ -30,6 +34,8 @@ import InstagramIconPurple from '../../icons/instagram-purple.svg';
 import InstagramIcon from '../../icons/instagram.svg';
 import LinkedInIconPurple from '../../icons/linkedin-purple.svg';
 import LinkedInIcon from '../../icons/linkedin.svg';
+import LocationIconPurple from '../../icons/location-purple.svg';
+import LocationIcon from '../../icons/location.svg';
 import LogoutIconRed from '../../icons/logout-red.svg';
 import MailIconPurple from '../../icons/message-purple.svg';
 import MailIcon from '../../icons/message.svg';
@@ -66,6 +72,7 @@ export type IconName =
   | 'catalog'
   | 'copyLink'
   | 'clapper'
+  | 'clock'
   | 'file'
   | 'filter'
   | 'profile'
@@ -73,6 +80,8 @@ export type IconName =
   | 'cross'
   | 'edit'
   | 'mail'
+  | 'location'
+  | 'calendar'
   | 'behance'
   | 'imdb'
   | 'whatsapp'
@@ -203,6 +212,18 @@ const ICONS: Record<IconName, BaseIconConfig> = {
   filter: {
     default: FilterIcon,
     primary: FilterIconPurple,
+  },
+  location: {
+    default: LocationIcon,
+    primary: LocationIconPurple,
+  },
+  calendar: {
+    default: CalendarIcon,
+    primary: CalendarIconPurple,
+  },
+  clock: {
+    default: ClockIcon,
+    primary: ClockIconPurple,
   },
 };
 

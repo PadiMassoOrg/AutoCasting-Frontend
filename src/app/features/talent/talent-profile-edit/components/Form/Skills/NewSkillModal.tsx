@@ -66,7 +66,7 @@ export function NewSkillModal({
       {draft.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {draft.map((s) => (
-            <Chip key={s.id} label={t(s.stringCode)} onRemove={() => remove(s.id)} t={t} newItem />
+            <Chip key={s.id} label={t(s.stringCode)} onRemove={() => remove(s.id)} newItem />
           ))}
         </div>
       )}

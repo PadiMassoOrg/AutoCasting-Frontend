@@ -10,7 +10,7 @@ import Sidebar from './Sidebar';
 import UserModeSwitcher from './UserModeSwitcher';
 
 import clsx from 'clsx';
-import { useUserMode } from '../../context/UserModeContext';
+import { USER_MODE_TALENT, useUserMode } from '../../context/UserModeContext';
 import { Icon } from '../../shared/components/Icon/Icon';
 import { jwtDecoder } from '../../shared/utils/jwtDecoder';
 
@@ -47,6 +47,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
 
   // Public
   const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
+  const activeCastingDatabase = isRouteActive(ROUTES.CASTING_DATABASE);
   // Talent
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
   const activePublicProfile = isRouteActive(profileUrl, true);
@@ -89,6 +90,12 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                   {showLabels && t('routes.talent-database')}
                 </span>
               </Link>
+              <Link to={ROUTES.CASTING_DATABASE}>
+                <span className={clsx(baseClass, activeCastingDatabase && activeClass)}>
+                  {showIcons && <Icon name="clapper" variant={activeCastingDatabase ? 'primary' : 'default'} />}
+                  {showLabels && t('routes.casting-database')}
+                </span>
+              </Link>
               {isAuth && (
                 <span className="ml-2">
                   <UserModeSwitcher></UserModeSwitcher>
@@ -106,7 +113,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                   <Link to={ROUTES.AUTH_REGISTER}>{t('routes.register')}</Link>
                 </Button>
               </>
-            ) : mode == 'talent' ? (
+            ) : mode == USER_MODE_TALENT ? (
               <div className="flex flex-row gap-2 items-center h-full">
                 <Link to={profileUrl}>
                   <span className={clsx(baseClass, activePublicProfile && activeClass)}>

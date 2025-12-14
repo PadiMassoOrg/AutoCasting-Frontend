@@ -17,6 +17,15 @@ export type SiteMetadataResponse = {
   productionTypeOptions: SiteMetadataObject[];
   socialMediaOptions: SiteMetadataObject[];
   companyTypeOptions: SiteMetadataObject[];
+  castingStatusOptions: SiteMetadataObject[];
+  castingSectionStatusOptions: SiteMetadataObject[];
+  projectTypeOptions: SiteMetadataObject[];
+  castingModalityOptions: SiteMetadataObject[];
+  roleTypeOptions: SiteMetadataObject[];
+  actingModeOptions: SiteMetadataObject[];
+  compensationTypeOptions: SiteMetadataObject[];
+  payRateTypeOptions: SiteMetadataObject[];
+  currencyOptions: SiteMetadataObject[];
 };
 
 export type SiteMetadataVersion = {

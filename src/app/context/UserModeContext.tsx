@@ -10,15 +10,17 @@ type UserModeContextValue = {
 
 const UserModeContext = createContext<UserModeContextValue | undefined>(undefined);
 
+export const USER_MODE_TALENT = 'talent';
+export const USER_MODE_EMPLOYER = 'employer';
 const MODE_STORAGE_KEY = 'autocasting:user-mode';
 
 export function UserModeProvider({ children }: { children: ReactNode }) {
-  const [mode, setModeState] = useState<UserMode>('talent');
+  const [mode, setModeState] = useState<UserMode>(USER_MODE_TALENT);
 
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem(MODE_STORAGE_KEY) as UserMode | null;
-      if (stored === 'talent' || stored === 'employer') {
+      if (stored === USER_MODE_TALENT || stored === USER_MODE_EMPLOYER) {
         setModeState(stored);
       }
     } catch {
@@ -36,7 +38,7 @@ export function UserModeProvider({ children }: { children: ReactNode }) {
   };
 
   const toggleMode = () => {
-    setMode(mode === 'talent' ? 'employer' : 'talent');
+    setMode(mode === USER_MODE_TALENT ? USER_MODE_TALENT : USER_MODE_EMPLOYER);
   };
 
   const value: UserModeContextValue = { mode, setMode, toggleMode };

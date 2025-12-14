@@ -6,7 +6,7 @@ import { LinkLogo } from '../../shared/components/LinkLogo';
 import { ROUTES } from '../../shared/lib/routes';
 
 import clsx from 'clsx';
-import { useUserMode } from '../../context/UserModeContext';
+import { USER_MODE_TALENT, useUserMode } from '../../context/UserModeContext';
 import { Icon } from '../../shared/components/Icon/Icon';
 import Waves from '../../shared/icons/wave.svg';
 import UserModeSwitcher from './UserModeSwitcher';
@@ -36,7 +36,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
 
   // Public
   const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
-  //const activeProductions = isRouteActive(ROUTES.PRODUCTIONS);
+  const activeCastingDatabase = isRouteActive(ROUTES.CASTING_DATABASE);
   // Talent
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
   //const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS, true);
@@ -72,19 +72,19 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                 <li onClick={onClose}>
                   <Link to={ROUTES.TALENT_DATABASE}>
                     <span className={clsx(baseClass, activeTalentDatabase && activeClass)}>
-                      <Icon name="catalog" variant={activeTalentDatabase ? 'primary' : 'default'} />{' '}
+                      <Icon name="catalog" variant={activeTalentDatabase ? 'primary' : 'default'} />
                       {t('routes.talent-database')}
                     </span>
                   </Link>
                 </li>
-                {/* <li onClick={onClose}>
-                  <Link to={ROUTES.PRODUCTIONS}>
-                    <span className={clsx(baseClass, activeProductions && activeClass)}>
-                      <img src={activeProductions ? ClapperIconPurple : ClapperIcon} alt="" className="w-7" />
-                      {t('routes.productions')}
+                <li onClick={onClose}>
+                  <Link to={ROUTES.CASTING_DATABASE}>
+                    <span className={clsx(baseClass, activeCastingDatabase && activeClass)}>
+                      <Icon name="clapper" variant={activeCastingDatabase ? 'primary' : 'default'} />
+                      {t('routes.casting-database')}
                     </span>
                   </Link>
-                </li> */}
+                </li>
                 {isAuthenticated && (
                   <li className="mt-1 p-3 px-4">
                     <UserModeSwitcher showLabel onAfterToggle={onClose} />
@@ -106,7 +106,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                 </ul>
               ) : (
                 <ul className="w-full flex flex-col font-semibold">
-                  {mode == 'talent' ? (
+                  {mode == USER_MODE_TALENT ? (
                     <>
                       {/* <li onClick={onClose}>
                         <Link to={ROUTES.TALENT_APPLIED_PRODUCTIONS}>

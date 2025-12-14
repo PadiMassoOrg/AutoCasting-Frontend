@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import ButtonRow from '../../../shared/components/ButtonRow/ButtonRow';
 import { Icon } from '../../../shared/components/Icon/Icon';
-import { whatsappLink } from '../../../shared/utils/phoneUtils';
+import { whatsappLink } from '../../../shared/utils/formatUtils';
 import { shareUrl } from '../../../shared/utils/shareUtils';
 import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
 

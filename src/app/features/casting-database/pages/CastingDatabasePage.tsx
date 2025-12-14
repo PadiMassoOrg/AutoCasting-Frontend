@@ -1,20 +1,20 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../../../shared/components/Icon/Icon';
 import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
-import { PublicProfileDetailsView } from '../../public-profile/pages';
-import { getPublicProfile } from '../../public-profile/services/publicProfileService';
-import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
-import { MobileFiltersDrawer, TalentCard, TalentFilterBar } from '../components';
-import { getTalentDatabase } from '../services/talentDatabaseService';
-import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
+import { CASTING_ROLE_PUBLIC_CARDS_MOCK } from '../../_TEST_/mock';
+import { CastingFilterBar, CastingMobileFiltersDrawer, CastingRolePublicCard } from '../components';
+import { getCastingDatabase } from '../services/castingDatabaseService';
+import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';
 
-const initialFilters: TalentFiltersQS = {
-  includeNoHeadshot: undefined,
-  stageName: '',
+const MAX_AUTOFILL_PAGES = 6;
+const SCROLL_EPS = 8;
+
+const initialFilters: CastingFiltersQS = {
+  roleName: '',
   genderIds: ['NULL'],
   ethnicityIds: ['NULL'],
   hairColorIds: undefined,
@@ -32,18 +32,18 @@ const initialFilters: TalentFiltersQS = {
   drivingLicense: undefined,
   professionsMode: 'ANY',
   skillsMode: 'ANY',
+  projectTypeIds: undefined,
+  castingModalityIds: undefined,
+  locationText: undefined,
 };
 
-const MAX_AUTOFILL_PAGES = 6;
-const SCROLL_EPS = 8;
-
-export default function TalentDatabasePage() {
+const CastingDatabasePage = () => {
   useViewportVhVar();
   const { t } = useTranslation(undefined, { useSuspense: false });
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
 
-  const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
+  const [filters, setFilters] = useState<CastingFiltersQS>(initialFilters);
   const debouncedFilters = useDebouncedValue(filters, 350);
 
   const firstRenderRef = useRef(true);
@@ -52,13 +52,11 @@ export default function TalentDatabasePage() {
   }, []);
   const effectiveFilters = firstRenderRef.current ? filters : debouncedFilters;
 
-  const [items, setItems] = useState<ProfileCardResponse[]>([]);
+  const [items, setItems] = useState<CastingRolePublicCardResponse[]>([]);
   const [page, setPage] = useState(0);
   const [hasNext, setHasNext] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedProfile, setSelectedProfile] = useState<TalentPublicProfileResponse | null>(null);
-  const [detailsOpen, setDetailsOpen] = useState(false);
 
   const inflightRef = useRef<AbortController | null>(null);
   const requestIdRef = useRef(0);
@@ -72,7 +70,6 @@ export default function TalentDatabasePage() {
     scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
   }, []);
 
-  // ⬇️ IMPORTANTE: no forwardeamos al mismo elemento en desktop
   useScrollExitOnEdge(cardsScrollRef, {
     forwardTo: isDesktop ? cardsScrollRef : scrollRootRef,
   });
@@ -89,7 +86,7 @@ export default function TalentDatabasePage() {
       inflightRef.current = ctrl;
 
       try {
-        const res = await getTalentDatabase(p, pageSize, effectiveFilters, { signal: ctrl.signal });
+        const res = await getCastingDatabase(p, pageSize, effectiveFilters, { signal: ctrl.signal });
         if (requestIdRef.current !== thisReqId) return;
 
         const fresh = res.items ?? [];
@@ -98,7 +95,6 @@ export default function TalentDatabasePage() {
         setHasNext(!!res.hasNext);
       } catch (e: any) {
         if (e?.name === 'AbortError' || e?.name === 'CanceledError') {
-          // ignoramos cancelaciones
         } else {
           setError('fetch_error');
           setHasNext(false);
@@ -125,12 +121,12 @@ export default function TalentDatabasePage() {
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState<boolean>(() => {
-    const saved = localStorage.getItem('talentFiltersOpen');
+    const saved = localStorage.getItem('castingDatabaseFiltersOpen');
     return saved ? saved === '1' : true;
   });
 
   useEffect(() => {
-    localStorage.setItem('talentFiltersOpen', filtersOpen ? '1' : '0');
+    localStorage.setItem('castingDatabaseFiltersOpen', filtersOpen ? '1' : '0');
   }, [filtersOpen]);
 
   useEffect(() => {
@@ -187,29 +183,19 @@ export default function TalentDatabasePage() {
     return () => document.removeEventListener('visibilitychange', onVis);
   }, [fetchPage, error]);
 
-  const handleOpenDetails = useCallback(async (card: ProfileCardResponse) => {
-    try {
-      // Usa tu servicio real que devuelve TalentPublicProfileResponse
-      const full = await getPublicProfile(card.publicSlug);
-      setSelectedProfile(full);
-      setDetailsOpen(true);
-    } catch (e) {
-      console.error('Error loading profile details', e);
-    }
-  }, []);
-
   const showInitialSkeletons = items.length === 0 && loading && !error;
   const showEmptyState = !loading && !error && items.length === 0;
   const isFetchingNextPage = items.length > 0 && loading;
 
-  const gridItems = useMemo(() => items, [items]);
+  // const listItems = useMemo(() => items, [items]);
+  const listItems = CASTING_ROLE_PUBLIC_CARDS_MOCK;
 
   return (
     <section className="w-full h-full min-h-0 bg-[var(--color-secondary-white)]">
       <div className="h-full w-full flex flex-col">
         {/* Mobile Filter Icon */}
         <article className="lg:hidden flex items-center justify-between mb-3 shrink-0 p-5">
-          <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
+          <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
           <button
             type="button"
             className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
@@ -227,7 +213,7 @@ export default function TalentDatabasePage() {
           {isDesktop && filtersOpen && (
             <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-[var(--color-primary-white)] border-r border-[var(--color-secondary-outline)]">
               <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5">
-                <TalentFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
+                <CastingFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
               </div>
             </aside>
           )}
@@ -238,7 +224,7 @@ export default function TalentDatabasePage() {
             className="py-4 px-6 lg:py-8 w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
           >
             <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
+              <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
               <button
                 type="button"
                 className="cursor-pointer inline-flex items-center gap-3"
@@ -258,24 +244,17 @@ export default function TalentDatabasePage() {
               <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
             ) : (
               <>
-                <article
-                  className="
-                    grid gap-6 place-items-stretch
-                    grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
-                    sm:auto-rows-[408px]
-                    lg:auto-rows-auto
-                  "
-                >
+                <article className="flex flex-col gap-10">
                   {showInitialSkeletons &&
                     Array.from({ length: pageSize }).map((_, i) => (
-                      <div key={`skeleton-${i}`} className="w-full h-full">
-                        <div className="animate-pulse w-full h-full bg-neutral-100 rounded-lg" />
+                      <div key={`casting-skeleton-${i}`} className="w-full">
+                        <div className="animate-pulse w-full h-40 bg-neutral-100 rounded-lg" />
                       </div>
                     ))}
 
-                  {gridItems.map((it) => (
-                    <div key={it.id} className="w-full h-full">
-                      <TalentCard item={it} onClick={isDesktop ? () => handleOpenDetails(it) : undefined} />{' '}
+                  {listItems.map((it) => (
+                    <div key={it.id} className="w-full">
+                      <CastingRolePublicCard item={it} />
                     </div>
                   ))}
 
@@ -292,7 +271,7 @@ export default function TalentDatabasePage() {
                     {t('state.loading')}
                   </p>
                 )}
-                {!hasNext && gridItems.length > 0 && (
+                {!hasNext && listItems.length > 0 && (
                   <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
                     {t('state.no_more_results')}
                   </p>
@@ -302,25 +281,16 @@ export default function TalentDatabasePage() {
           </div>
         </div>
 
-        <MobileFiltersDrawer
+        <CastingMobileFiltersDrawer
           open={mobileOpen}
           onClose={() => setMobileOpen(false)}
           value={filters}
           onReset={() => setFilters(initialFilters)}
           onApply={(next) => setFilters(next)}
         />
-
-        {isDesktop && (
-          <PublicProfileDetailsView
-            open={detailsOpen && !!selectedProfile}
-            onClose={() => {
-              setDetailsOpen(false);
-              setSelectedProfile(null);
-            }}
-            profile={selectedProfile ?? null}
-          />
-        )}
       </div>
     </section>
   );
-}
+};
+
+export default CastingDatabasePage;
