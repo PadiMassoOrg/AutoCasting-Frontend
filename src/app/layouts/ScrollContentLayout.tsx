@@ -22,18 +22,10 @@ export default function ScrollContentLayout() {
       <div
         className={isDesktop ? 'fixed inset-x-0 overflow-hidden z-[100]' : ''}
         style={
-          isDesktop
-            ? {
-                top: `${header}px`,
-                bottom: `${footer}px`,
-                height: contentHeight,
-              }
-            : {
-                height: contentHeight,
-              }
+          isDesktop ? { top: `${header}px`, bottom: `${footer}px`, height: contentHeight } : { height: contentHeight }
         }
       >
-        <main className="w-full min-w-0 h-full">
+        <main data-scroll-root className="w-full min-w-0 h-full overflow-y-auto">
           <Outlet />
         </main>
       </div>
