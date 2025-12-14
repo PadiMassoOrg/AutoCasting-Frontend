@@ -149,7 +149,7 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
         label={t('profile.credits.year')}
         labelClassName="font-semibold"
         required
-        placeholder="1989"
+        placeholder={t('general.placeholder.year_example')}
         value={form.year}
         onChange={onYearChange}
         inputMode="numeric"

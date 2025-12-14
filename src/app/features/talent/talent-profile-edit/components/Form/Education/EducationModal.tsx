@@ -113,7 +113,7 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
         label={t('profile.education.graduationYear')}
         labelClassName="font-semibold"
         required
-        placeholder={t('profile.education.graduationYear_placeholder')}
+        placeholder={t('general.placeholder.year_example')}
         value={form.graduationYear}
         onChange={onYearChange}
         inputMode="numeric"
