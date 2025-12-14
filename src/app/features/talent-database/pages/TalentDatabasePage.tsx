@@ -72,7 +72,6 @@ export default function TalentDatabasePage() {
     scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
   }, []);
 
-  // ⬇️ IMPORTANTE: no forwardeamos al mismo elemento en desktop
   useScrollExitOnEdge(cardsScrollRef, {
     forwardTo: isDesktop ? cardsScrollRef : scrollRootRef,
   });
@@ -98,7 +97,6 @@ export default function TalentDatabasePage() {
         setHasNext(!!res.hasNext);
       } catch (e: any) {
         if (e?.name === 'AbortError' || e?.name === 'CanceledError') {
-          // ignoramos cancelaciones
         } else {
           setError('fetch_error');
           setHasNext(false);
@@ -189,7 +187,6 @@ export default function TalentDatabasePage() {
 
   const handleOpenDetails = useCallback(async (card: ProfileCardResponse) => {
     try {
-      // Usa tu servicio real que devuelve TalentPublicProfileResponse
       const full = await getPublicProfile(card.publicSlug);
       setSelectedProfile(full);
       setDetailsOpen(true);
@@ -207,22 +204,6 @@ export default function TalentDatabasePage() {
   return (
     <section className="w-full h-full min-h-0 bg-[var(--color-secondary-white)]">
       <div className="h-full w-full flex flex-col">
-        {/* Mobile Filter Icon */}
-        <article className="lg:hidden flex items-center justify-between mb-3 shrink-0 p-5">
-          <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
-          <button
-            type="button"
-            className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
-            onClick={() => setMobileOpen(true)}
-            aria-label={t('general.filters.open')}
-          >
-            <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
-              <Icon name="filter" variant="primary" size={20} />
-            </span>
-          </button>
-        </article>
-
-        {/* Filter Bar */}
         <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col lg:flex-row gap-6 overflow-hidden">
           {isDesktop && filtersOpen && (
             <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-[var(--color-primary-white)] border-r border-[var(--color-secondary-outline)]">
@@ -232,11 +213,24 @@ export default function TalentDatabasePage() {
             </aside>
           )}
 
-          {/* Content */}
           <div
             ref={cardsScrollRef}
             className="py-4 px-6 lg:py-8 w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
           >
+            <article className="lg:hidden flex items-center justify-between mb-3 shrink-0">
+              <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
+              <button
+                type="button"
+                className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
+                onClick={() => setMobileOpen(true)}
+                aria-label={t('general.filters.open')}
+              >
+                <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
+                  <Icon name="filter" variant="primary" size={20} />
+                </span>
+              </button>
+            </article>
+
             <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
               <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
               <button
@@ -275,7 +269,7 @@ export default function TalentDatabasePage() {
 
                   {gridItems.map((it) => (
                     <div key={it.id} className="w-full h-full">
-                      <TalentCard item={it} onClick={isDesktop ? () => handleOpenDetails(it) : undefined} />{' '}
+                      <TalentCard item={it} onClick={isDesktop ? () => handleOpenDetails(it) : undefined} />
                     </div>
                   ))}
 
