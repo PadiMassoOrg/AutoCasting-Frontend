@@ -5,6 +5,35 @@ export const capitalize = (s: string) => {
   return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 };
 
+function capitalizeDateLabel(text: string): string {
+  const exceptions = new Set(['de', 'del']);
+
+  return text
+    .split(' ')
+    .map((word) => {
+      const hasLetter = /[A-Za-zÁÉÍÓÚÜáéíóúüÑñ]/.test(word);
+      if (!hasLetter) return word;
+
+      const base = word.toLowerCase().replace(/[.,]/g, '');
+      if (exceptions.has(base)) return word;
+
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(' ');
+}
+
+export function formatMemberSince(date: string | Date | null | undefined, t: (k: string) => string): string {
+  if (!date) return '';
+
+  let formatted = formatLocalDate(date, 'long', 'es-AR');
+  if (!formatted) return '';
+
+  // Quita el último " de " antes del año: "15 de Mayo de 2020" -> "15 de Mayo 2020"
+  formatted = formatted.replace(/\s+de\s+(\d{4})$/, ' $1');
+
+  return `${t('casting-database.page.member_since')} ${formatted}`;
+}
+
 // ==============================================
 // Numbers
 // ==============================================
@@ -23,6 +52,46 @@ export function formatAgeRange(min: number, max: number, t: (k: string) => strin
 // ==============================================
 // Dates
 // ==============================================
+type DateFormatVariant = 'numeric' | 'short' | 'long' | 'dayMonth';
+
+function parseIsoDate(raw?: string | null): Date | null {
+  if (!raw) return null;
+  const d = new Date(raw);
+  if (Number.isNaN(d.getTime())) return null;
+  return d;
+}
+
+export function formatLocalDate(
+  value: string | Date | null | undefined,
+  variant: DateFormatVariant,
+  locale = 'es-AR'
+): string {
+  if (!value) return '';
+
+  const date = typeof value === 'string' ? parseIsoDate(value) : value;
+  if (!date || Number.isNaN(date.getTime())) return '';
+
+  let options: Intl.DateTimeFormatOptions;
+
+  switch (variant) {
+    case 'numeric':
+      options = { day: '2-digit', month: '2-digit', year: 'numeric' }; // 20/09/2025
+      break;
+    case 'short':
+      options = { day: '2-digit', month: 'short', year: 'numeric' }; // 20 sept. 2025
+      break;
+    case 'dayMonth':
+      options = { day: 'numeric', month: 'long' }; // 20 de septiembre
+      break;
+    case 'long':
+    default:
+      options = { day: 'numeric', month: 'long', year: 'numeric' }; // 20 de septiembre de 2025
+      break;
+  }
+
+  const raw = new Intl.DateTimeFormat(locale, options).format(date);
+  return capitalizeDateLabel(raw);
+}
 
 // ==============================================
 // Booleans

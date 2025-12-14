@@ -2,7 +2,7 @@ import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { Chip } from '../../../../shared/components/Chip/Chip';
 import { Icon } from '../../../../shared/components/Icon/Icon';
-import { normalizeExternalUrl } from '../../../../shared/utils/formatUtils';
+import { formatMemberSince, normalizeExternalUrl } from '../../../../shared/utils/formatUtils';
 import { getSocialMediaIconName } from '../../../talent/talent-profile-edit/components/Form/SocialMedia/SocialMediaIconMapper';
 import type { CastingEmployerPublicInfo } from '../../types/publicCasting.types';
 
@@ -46,9 +46,7 @@ const EmployerInfoSection = ({ data }: { data: CastingEmployerPublicInfo }) => {
         </span>
         <span className="flex flex-row gap-2 items-center">
           <Icon name={'profile'} size={18} />
-          <p>
-            {t('casting-database.page.member_since')} {data.memberSince}
-          </p>
+          <p>{formatMemberSince(data.memberSince, t)}</p>
         </span>
       </div>
       <div className="mt-8">
