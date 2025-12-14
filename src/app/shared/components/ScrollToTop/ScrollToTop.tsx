@@ -1,8 +1,7 @@
-// shared/components/ScrollToTop/ScrollToTop.tsx
 import { useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const MAX_FRAMES = 12; // ~200 ms a 60fps
+const MAX_FRAMES = 6; // 12 = ~200 ms a 60fps // 6 = ~100 ms a 60fps
 
 const ScrollToTop = () => {
   const location = useLocation();
