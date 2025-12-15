@@ -23,9 +23,7 @@ const TalentSettingsSecuritySection = () => {
       <div className="flex flex-col">
         {!isAutocastingAccount() && (
           <div className="flex flex-col py-6 mb-2">
-            <p className="mt-[-1.3rem] pl-2 text-[14px] font-light">
-              {t('settings.page.account.warning_account_other')}
-            </p>
+            <p className="mt-[-1.3rem] text-[14px] font-light">{t('settings.page.account.warning_account_other')}</p>
           </div>
         )}
         <div className="flex flex-col gap-4">
