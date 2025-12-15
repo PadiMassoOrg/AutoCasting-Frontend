@@ -256,7 +256,7 @@ export default function TalentDatabasePage() {
                   className="
                     grid gap-6 place-items-stretch
                     grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
-                    sm:auto-rows-[408px]
+                    sm:auto-rows-[380px]
                     lg:auto-rows-auto
                   "
                 >
