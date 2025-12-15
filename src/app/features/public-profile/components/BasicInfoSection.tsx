@@ -15,7 +15,7 @@ const BasicInfoSection = ({ data }: { data: TalentPublicProfileResponse }) => {
       {isDesktop ? (
         <div className="flex items-center justify-between">
           <div className="flex flex-row items-center gap-10">
-            <h2 className="text-[42px] font-bold">{basicInfo.stageName}</h2>
+            <h2 className="text-[40px] font-bold">{basicInfo.stageName}</h2>
             <ViewerActions className="shrink-0" />
           </div>
           <div className="flex flex-row items-center gap-4">
