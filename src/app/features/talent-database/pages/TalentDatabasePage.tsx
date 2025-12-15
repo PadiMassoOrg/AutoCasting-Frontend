@@ -243,7 +243,7 @@ export default function TalentDatabasePage() {
                   {filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
                 </h2>
                 <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
-                  <Icon name="filter" variant="primary" size={18} />
+                  <Icon name="filter" variant="primary" />
                 </span>
               </button>
             </div>

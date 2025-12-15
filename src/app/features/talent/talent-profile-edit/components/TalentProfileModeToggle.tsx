@@ -85,7 +85,7 @@ export default function TalentProfileModeToggle({ className }: Props) {
                 !canPreview && 'opacity-60 cursor-not-allowed'
               )}
             >
-              <Icon name="view" variant={viewActive ? 'primary' : 'default'} size={18} />
+              <Icon name="view" variant={viewActive ? 'primary' : 'default'} />
               <span>{t('profile.page.view_profile')}</span>
             </button>
 

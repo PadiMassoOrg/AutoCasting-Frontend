@@ -27,15 +27,15 @@ const BasicInfoSection = ({ data }: { data: CastingBasicInfo }) => {
       {/* Location, Deadline, Shooting */}
       <article className="flex flex-col gap-2 text-sm text-[var(--color-secondary-grey-fonts)]">
         <span className="flex flex-row gap-2 items-center">
-          <Icon name="location" className="opacity-30" size={18} />
+          <Icon name="location" className="opacity-30" />
           <p>{data.location}</p>
         </span>
         <span className="flex flex-row gap-2 items-center">
-          <Icon name="clock" className="opacity-30" size={18} />
+          <Icon name="clock" className="opacity-30" />
           <p>{deadlineText}</p>
         </span>
         <span className="flex flex-row gap-2 items-center">
-          <Icon name="calendar" className="opacity-30" size={18} />
+          <Icon name="calendar" className="opacity-30" />
           <p>{shootingText}</p>
         </span>
       </article>

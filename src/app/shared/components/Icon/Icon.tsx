@@ -243,7 +243,7 @@ export type IconProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
   size?: number;
 };
 
-export function Icon({ name, variant = 'default', size = 24, className, alt = '', style, ...rest }: IconProps) {
+export function Icon({ name, variant = 'default', size = 18, className, alt = '', style, ...rest }: IconProps) {
   const config = ICONS[name];
 
   const src =

@@ -111,15 +111,15 @@ const ModeCard = ({ mode, onContinue }: ModeCardProps) => {
       <h2 className="my-5 text-lg font-semibold text-center">{t(`onboarding.mode_selector.${modeKey}.header`)}</h2>
       <ul className="flex flex-col gap-4">
         <li className="flex items-center gap-2">
-          <Icon name="tick" variant="primary" size={18} />
+          <Icon name="tick" variant="primary" />
           <span>{t(`onboarding.mode_selector.${modeKey}.li_1`)}</span>
         </li>
         <li className="flex items-center gap-2">
-          <Icon name="tick" variant="primary" size={18} />
+          <Icon name="tick" variant="primary" />
           <span>{t(`onboarding.mode_selector.${modeKey}.li_2`)}</span>
         </li>
         <li className="flex items-center gap-2">
-          <Icon name="tick" variant="primary" size={18} />
+          <Icon name="tick" variant="primary" />
           <span>{t(`onboarding.mode_selector.${modeKey}.li_3`)}</span>
         </li>
       </ul>

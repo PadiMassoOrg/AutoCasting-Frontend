@@ -21,7 +21,7 @@ const EmployerInfoSection = ({ data }: { data: CastingEmployerPublicInfo }) => {
 
         return (
           <a key={link.optionId} href={href} target="_blank" rel="noopener noreferrer">
-            <Icon name={iconName} variant="primary" size={18} />
+            <Icon name={iconName} variant="primary" />
           </a>
         );
       })
@@ -39,13 +39,13 @@ const EmployerInfoSection = ({ data }: { data: CastingEmployerPublicInfo }) => {
       <Separator className="opacity-20 my-1" />
       <div className="flex flex-col gap-2 text-sm">
         <span className="flex flex-row gap-2 items-center">
-          <Icon name={'clapper'} size={18} />
+          <Icon name={'clapper'} />
           <p>
             {data.totalCastings} {t('casting-database.page.created_castings')}
           </p>
         </span>
         <span className="flex flex-row gap-2 items-center">
-          <Icon name={'profile'} size={18} />
+          <Icon name={'profile'} />
           <p>{formatMemberSince(data.memberSince, t)}</p>
         </span>
       </div>

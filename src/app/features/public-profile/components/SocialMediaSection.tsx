@@ -31,7 +31,7 @@ const SocialMediaSection = ({ data }: Props) => {
             title={label}
             className="w-full h-full"
           >
-            <Icon name={iconName} size={18} />
+            <Icon name={iconName} />
           </a>
         );
       })

@@ -124,12 +124,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                 <Link to={ROUTES.TALENT}>
                   <span className={clsx(baseClass, activeTalentProfile && activeClass)}>
                     {showIcons && (
-                      <Icon
-                        name="profile"
-                        variant={activeTalentProfile ? 'primary' : 'default'}
-                        size={24}
-                        className="w-6"
-                      />
+                      <Icon name="profile" variant={activeTalentProfile ? 'primary' : 'default'} className="w-6" />
                     )}
                     {showLabels && t('routes.profile')}
                   </span>
