@@ -252,23 +252,16 @@ export default function TalentDatabasePage() {
               <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
             ) : (
               <>
-                <article
-                  className="
-                    grid gap-6 place-items-stretch
-                    grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
-                    sm:auto-rows-[380px]
-                    lg:auto-rows-auto
-                  "
-                >
+                <article className="flex flex-wrap gap-6 items-stretch">
                   {showInitialSkeletons &&
                     Array.from({ length: pageSize }).map((_, i) => (
-                      <div key={`skeleton-${i}`} className="w-full h-full">
+                      <div key={`skeleton-${i}`} className="w-full sm:w-[280px]">
                         <div className="animate-pulse w-full h-full bg-neutral-100 rounded-lg" />
                       </div>
                     ))}
 
                   {gridItems.map((it) => (
-                    <div key={it.id} className="w-full h-full">
+                    <div key={it.id} className="w-full sm:w-[280px]">
                       <TalentCard item={it} onClick={isDesktop ? () => handleOpenDetails(it) : undefined} />
                     </div>
                   ))}
@@ -284,11 +277,6 @@ export default function TalentDatabasePage() {
                 {isFetchingNextPage && (
                   <p className="py-10 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
                     {t('state.loading')}
-                  </p>
-                )}
-                {!hasNext && gridItems.length > 0 && (
-                  <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
-                    {t('state.no_more_results')}
                   </p>
                 )}
               </>
