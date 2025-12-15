@@ -2,6 +2,7 @@ import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../../context/ModalContext';
+import { Icon } from '../../../../../../shared/components/Icon/Icon';
 import { useCachedSiteMetadataOption } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
 import { useSkillsAutosave } from '../../../hooks/autosaves';
@@ -49,7 +50,7 @@ export default function SkillsForm({ data }: { data: SiteMetadataObject[] }) {
   return (
     <div className="flex flex-col gap-4">
       <Button onClick={handleOpenModal} className="flex flex-row items-center justify-center gap-2">
-        <span className="text-3xl mb-1 font-extralight">+</span>
+        <Icon name="plus" variant="white" size={16} />
         <span className="text-base font-medium">{t('profile.skills.add_new')}</span>
       </Button>
       <div>

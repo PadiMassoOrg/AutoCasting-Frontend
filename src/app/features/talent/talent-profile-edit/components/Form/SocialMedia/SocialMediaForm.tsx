@@ -109,7 +109,7 @@ export default function SocialMediaForm({ data, onSaveLinks }: SocialMediaFormPr
 
       <Button
         type="button"
-        className="mt-2 self-start lg:max-w-[250px] flex flex-row gap-2"
+        className="mt-2 self-start lg:max-w-[250px] flex flex-row gap-2 items-center justify-center"
         variant={freeOptions.length === 0 ? 'disabled' : 'primary'}
         onClick={handleAddRow}
       >

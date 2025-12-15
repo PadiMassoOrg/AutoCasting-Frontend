@@ -64,7 +64,7 @@ export default function EducationForm({ data }: { data: Education[] }) {
   return (
     <div className="flex flex-col gap-4">
       <Button onClick={openCreateModal} className="flex items-center justify-center gap-2">
-        <span className="text-3xl mb-1 font-extralight">+</span>
+        <Icon name="plus" variant="white" size={16} />
         <span className="text-base font-medium">{t('profile.education.add_new')}</span>
       </Button>
 
