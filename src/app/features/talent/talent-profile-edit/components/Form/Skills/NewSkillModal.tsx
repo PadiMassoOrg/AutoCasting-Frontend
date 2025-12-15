@@ -71,7 +71,7 @@ export function NewSkillModal({
         </div>
       )}
 
-      <Separator className="opacity-20 mb-5" />
+      <Separator className="opacity-20" />
       <div className="flex gap-2">
         <Button variant="outline" onClick={onCancel}>
           {t('buttons.cancel')}
