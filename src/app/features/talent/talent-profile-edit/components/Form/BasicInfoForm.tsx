@@ -175,15 +175,15 @@ export default function BasicInfoForm({
       {/* Profesión */}
       <div className="flex flex-col gap-2">
         <Label className="text-sm font-bold">{t('profile.basic_info.profession')}</Label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3 place-items-start">
+        <div className="flex flex-wrap gap-2">
           {professionsMeta.map((p) => {
             const active = professions.values.includes(p.id);
             return (
-              <Button
+              <span
                 key={p.id}
                 onClick={() => professions.toggle(p.id)}
                 className={[
-                  'whitespace-nowrap cursor-pointer bg-transparent border-1',
+                  'px-4 py-1 rounded-full whitespace-nowrap cursor-pointer bg-transparent border-1',
                   active
                     ? 'bg-transparent text-[var(--color-primary-purple)] border--[var(--color-primary-purple)]'
                     : 'text-[var(--color-secondary-grey-fonts)] border-[var(--color-secondary-outline)]',
@@ -191,7 +191,7 @@ export default function BasicInfoForm({
                 title={t(p.stringCode)}
               >
                 {t(p.stringCode)}
-              </Button>
+              </span>
             );
           })}
         </div>
