@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import type { TalentFiltersQS } from '../types/talent-database.types';
 import { TalentFilterBar } from './TalentFilterBar';
 
-const FOOTER_H = 88;
+const FOOTER_H = 75;
 
 export function MobileFiltersDrawer({
   open,
