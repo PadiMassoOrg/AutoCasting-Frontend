@@ -97,7 +97,10 @@ function EmployerMediaStep({
         <form onSubmit={handleSubmit} className="flex lg:min-h-[70vh] flex-col justify-between gap-2">
           <div>
             <div className="w-full flex flex-col items-center gap-4 mb-4">
-              <button className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]">
+              <button
+                type="button"
+                className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]"
+              >
                 {t('onboarding.mode_selector.employer.title')}
               </button>
             </div>

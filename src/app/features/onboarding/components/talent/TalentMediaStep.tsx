@@ -90,7 +90,10 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
         <form onSubmit={handleSubmit} className="flex lg:min-h-[70vh] flex-col justify-between gap-2">
           <div>
             <div className="w-full flex flex-col items-center gap-4 mb-4">
-              <button className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]">
+              <button
+                type="button"
+                className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]"
+              >
                 {t('onboarding.mode_selector.talent.title')}
               </button>
             </div>
@@ -113,7 +116,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
                 <p className="text-sm">{t('onboarding.talent.step2.subtitle')}</p>
               </div>
 
-              <div className="max-w-[165px] w-full self-center my-10 lg:max-w-[300px] lg:items-center">
+              <div className="max-w-[165px] w-full self-center my-10 lg:max-w-[195px] lg:items-center">
                 <UploadTile
                   value={valueUrl}
                   previewUrl={previewUrl}
