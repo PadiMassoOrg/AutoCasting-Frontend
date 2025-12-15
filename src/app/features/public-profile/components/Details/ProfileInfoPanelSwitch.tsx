@@ -13,6 +13,7 @@ const ProfileInfoPanelSwitch = ({
   return (
     <>
       <div
+        className="w-full h-full"
         role="tabpanel"
         id={`panel-characteristics`}
         aria-labelledby="tab-characteristics"
@@ -21,15 +22,33 @@ const ProfileInfoPanelSwitch = ({
         <CharacteristicsPanel data={profile.characteristics} />
       </div>
 
-      <div role="tabpanel" id={`panel-skills`} aria-labelledby="tab-skills" hidden={activeKey !== 'skills'}>
+      <div
+        className="w-full h-full"
+        role="tabpanel"
+        id={`panel-skills`}
+        aria-labelledby="tab-skills"
+        hidden={activeKey !== 'skills'}
+      >
         <SkillsPanel skills={profile.skills} />
       </div>
 
-      <div role="tabpanel" id={`panel-credits`} aria-labelledby="tab-credits" hidden={activeKey !== 'credits'}>
+      <div
+        className="w-full h-full"
+        role="tabpanel"
+        id={`panel-credits`}
+        aria-labelledby="tab-credits"
+        hidden={activeKey !== 'credits'}
+      >
         <CreditsPanel credits={profile.credits} />
       </div>
 
-      <div role="tabpanel" id={`panel-education`} aria-labelledby="tab-education" hidden={activeKey !== 'education'}>
+      <div
+        className="w-full h-full"
+        role="tabpanel"
+        id={`panel-education`}
+        aria-labelledby="tab-education"
+        hidden={activeKey !== 'education'}
+      >
         <EducationPanel education={profile.education} />
       </div>
     </>

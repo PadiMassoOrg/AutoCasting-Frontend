@@ -13,7 +13,12 @@ const EducationPanel = ({ education }: { education: Education[] }) => {
     });
   }, [education]);
 
-  if (!items.length) return <h2 className="text-sm font-normal text-center">{t('general.no_data')}</h2>;
+  if (!items.length)
+    return (
+      <h2 className="h-full text-[var(--color-secondary-grey)] font-base flex flex-col items-center justify-center">
+        {t('general.no_data')}
+      </h2>
+    );
   return (
     <article className="flex flex-col gap-4">
       {items.map((e) => (
