@@ -239,10 +239,10 @@ export default function TalentDatabasePage() {
                 onClick={() => setFiltersOpen((v) => !v)}
                 aria-pressed={filtersOpen}
               >
-                <h2 className="text-sm font-light underline">
+                <h2 className="text-sm font-light underline text-[var(--color-primary-purple)]">
                   {filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
                 </h2>
-                <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
+                <span className="w-11 h-11 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
                   <Icon name="filter" variant="primary" />
                 </span>
               </button>

@@ -122,7 +122,7 @@ export function TalentFilterBar({
         <h4 className="text-[14px] font-bold">{t('general.filter.title')}</h4>
 
         {isDesktop ? (
-          <button type="button" className="cursor-pointer text-xs underline font-light" onClick={handleReset}>
+          <button type="button" className="cursor-pointer text-xs underline font-light text-[var(--color-primary-purple)]" onClick={handleReset}>
             {t('general.filter.reset')}
           </button>
         ) : (
