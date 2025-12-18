@@ -1,12 +1,12 @@
-import { DashboardSection } from '../../../../../layouts/components';
+import SectionCard from '../../../../../shared/components/SectionCard/SectionCard';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';
 import { SkillsForm } from '../Form';
 
 const TalentProfileSkillsEditSection = ({ profile }: { profile: TalentProfileResponse }) => {
   return (
-    <DashboardSection>
+    <SectionCard>
       <SkillsForm data={profile.skills}></SkillsForm>
-    </DashboardSection>
+    </SectionCard>
   );
 };
 

@@ -101,7 +101,7 @@ export default function TalentProfileModeToggle({ className }: Props) {
                   : 'bg-transparent text-black'
               )}
             >
-              <Icon name="edit" variant={editActive ? 'primary' : 'default'} size={17} />
+              <Icon name="edit" variant={editActive ? 'primary' : 'default'} />
               <span>{t('profile.page.edit_profile')}</span>
             </button>
           </article>

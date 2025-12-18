@@ -68,7 +68,7 @@ export default function DetailsView({
           {navigation}
           <div className="flex items-center gap-4">
             {headerRight}
-            <Icon name="burgerClose" onClick={onClose} size={20} />
+            <Icon name="burgerClose" onClick={onClose} />
           </div>
         </header>
 

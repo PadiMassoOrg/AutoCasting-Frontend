@@ -1,5 +1,5 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
-import { DashboardSection } from '../../../../../layouts/components';
+import SectionCard from '../../../../../shared/components/SectionCard/SectionCard';
 import { useSiteMetadataSlice } from '../../../../sitemetadata/hooks/useSiteMetadataSlice';
 import { useSocialMediaAutosave } from '../../hooks/autosaves';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';
@@ -11,13 +11,13 @@ const TalentProfileBasicInfoEditSection = ({ profile }: { profile: TalentProfile
   const socialMediaAutosave = useSocialMediaAutosave();
 
   return (
-    <DashboardSection>
+    <SectionCard>
       <BasicInfoForm data={profile.basicInfo} professionsMeta={professions} />
       <Separator className="opacity-20 my-8" />
       <ContactForm data={profile.contact} />
       <Separator className="opacity-20 my-8" />
       <SocialMediaForm data={profile.socialMedia} onSaveLinks={(payload) => socialMediaAutosave.immediate(payload)} />
-    </DashboardSection>
+    </SectionCard>
   );
 };
 

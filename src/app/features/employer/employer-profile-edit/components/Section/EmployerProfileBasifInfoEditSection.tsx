@@ -1,12 +1,12 @@
-import { DashboardSection } from '../../../../../layouts/components';
+import SectionCard from '../../../../../shared/components/SectionCard/SectionCard';
 import type { EmployerProfileResponse } from '../../types/employerProfile.types';
 import { EmployerBasicInfoForm } from '../Form';
 
 const EmployerProfileBasicInfoEditSection = ({ data }: { data: EmployerProfileResponse }) => {
   return (
-    <DashboardSection>
+    <SectionCard>
       <EmployerBasicInfoForm data={data.basicInfo} profileId={data.id} />
-    </DashboardSection>
+    </SectionCard>
   );
 };
 
