@@ -120,14 +120,7 @@ const CastingDatabasePage = () => {
   }, [effectiveFilters, pageSize, fetchPage]);
 
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [filtersOpen, setFiltersOpen] = useState<boolean>(() => {
-    const saved = localStorage.getItem('castingDatabaseFiltersOpen');
-    return saved ? saved === '1' : true;
-  });
-
-  useEffect(() => {
-    localStorage.setItem('castingDatabaseFiltersOpen', filtersOpen ? '1' : '0');
-  }, [filtersOpen]);
+  const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const root = cardsScrollRef.current;
