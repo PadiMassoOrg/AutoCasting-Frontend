@@ -6,11 +6,13 @@ import { logout } from '../../features/auth/services/authService';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import { getAuthToken } from '../../shared/lib/cookies';
 import { ROUTES } from '../../shared/lib/routes';
-import Sidebar from './Sidebar';
+import { Sidebar } from './';
 import UserModeSwitcher from './UserModeSwitcher';
 
 import clsx from 'clsx';
+import { useModal } from '../../context/ModalContext';
 import { USER_MODE_TALENT, useUserMode } from '../../context/UserModeContext';
+import { LogoutModal } from '../../features/auth/components';
 import { Icon } from '../../shared/components/Icon/Icon';
 import { jwtDecoder } from '../../shared/utils/jwtDecoder';
 
@@ -25,6 +27,8 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
   const isAuth = getAuthToken();
   const { mode } = useUserMode();
   const jwt = isAuth ? jwtDecoder(isAuth) : null;
+  const { openModal, closeModal } = useModal();
+
   const talentProfileSlug = jwt?.talentProfileSlug;
   const profileUrl = talentProfileSlug ? `${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}` : ROUTES.TALENT;
 
@@ -43,6 +47,19 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
       return location.pathname === to;
     }
     return !!matchPath({ path: to + '/*', end: false }, location.pathname);
+  };
+
+  const logoutModal = () => {
+    openModal(
+      <LogoutModal
+        onCancel={closeModal}
+        onLogout={() => {
+          logout();
+        }}
+      />,
+      t('auth.logout.modal_title'),
+      'lg'
+    );
   };
 
   // Public
@@ -151,7 +168,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
             {isAuth && (
               <span
                 className="ml-2 cursor-pointer flex flex-row items-center gap-2 text-[var(--color-alert-error)]"
-                onClick={logout}
+                onClick={logoutModal}
               >
                 <Icon name="logout" variant="danger" /> {showLabels && t('routes.logout')}
               </span>
