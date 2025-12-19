@@ -78,7 +78,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
       {...props}
       className={`w-full bg-[var(--color-primary-white)] border-[var(--color-secondary-outline)] border-b ${className}`}
     >
-      <div className="relative py-3 px-6 bg-[var(--color-primary-white)]">
+      <div className="relative py-3 px-8 bg-[var(--color-primary-white)]">
         <div className="lg:hidden w-full flex flex-row items-center justify-between">
           <LinkLogo horizontal path={ROUTES.HOME} />
           <button
