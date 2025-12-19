@@ -1,4 +1,4 @@
-import SectionCard from '../../../../../shared/components/SectionCard/SectionCard';
+import SectionCard from '../../../../../shared/components/Section/SectionCard';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';
 import { EducationForm } from '../Form';
 

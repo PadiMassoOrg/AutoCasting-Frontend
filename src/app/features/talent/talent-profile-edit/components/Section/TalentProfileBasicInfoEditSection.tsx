@@ -1,5 +1,5 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
-import SectionCard from '../../../../../shared/components/SectionCard/SectionCard';
+import SectionCard from '../../../../../shared/components/Section/SectionCard';
 import { useSiteMetadataSlice } from '../../../../sitemetadata/hooks/useSiteMetadataSlice';
 import { useSocialMediaAutosave } from '../../hooks/autosaves';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';

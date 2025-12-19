@@ -1,4 +1,4 @@
-import SectionCard from '../../../../../shared/components/SectionCard/SectionCard';
+import SectionCard from '../../../../../shared/components/Section/SectionCard';
 import type { EmployerProfileResponse } from '../../types/employerProfile.types';
 import { EmployerBasicInfoForm } from '../Form';
 

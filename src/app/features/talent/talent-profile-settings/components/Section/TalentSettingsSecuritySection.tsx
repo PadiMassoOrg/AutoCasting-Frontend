@@ -1,7 +1,7 @@
 import { FormInputField } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
-import SectionCard from '../../../../../shared/components/SectionCard/SectionCard';
+import SectionCard from '../../../../../shared/components/Section/SectionCard';
 import { useTalentProfile } from '../../../talent-profile-edit/hooks/useTalentProfile';
 import ChangePasswordForm from '../ChangePasswordForm';
 
