@@ -1,12 +1,18 @@
-import SectionCard from '../../../../../shared/components/Section/SectionCard';
+import { useTranslation } from 'react-i18next';
+import { DashboardSection } from '../../../../../layouts/components';
+import { SectionCard, SectionTitle } from '../../../../../shared/components/Section';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';
 import { CharacteristicsForm } from '../Form';
 
 const TalentProfileDetailsEditSection = ({ profile }: { profile: TalentProfileResponse }) => {
+  const { t } = useTranslation();
   return (
-    <SectionCard>
-      <CharacteristicsForm data={profile.characteristics}></CharacteristicsForm>
-    </SectionCard>
+    <DashboardSection>
+      <SectionTitle title={t('profile.pills.characteristics')} />
+      <SectionCard>
+        <CharacteristicsForm data={profile.characteristics}></CharacteristicsForm>
+      </SectionCard>
+    </DashboardSection>
   );
 };
 

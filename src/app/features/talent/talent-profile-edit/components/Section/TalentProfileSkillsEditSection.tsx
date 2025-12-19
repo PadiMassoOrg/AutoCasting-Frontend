@@ -60,7 +60,11 @@ const TalentProfileSkillsEditSection = ({ profile }: { profile: TalentProfileRes
   return (
     <DashboardSection>
       <SectionTitle title={t('profile.pills.skills')} action={actionButtonRender()} />
-      <SectionCard>{skills.length > 0 && <GroupedSkills skills={skills} onRemove={handleRemoveSkill} />}</SectionCard>
+      {skills.length > 0 && (
+        <SectionCard>
+          <GroupedSkills skills={skills} onRemove={handleRemoveSkill} />
+        </SectionCard>
+      )}
     </DashboardSection>
   );
 };

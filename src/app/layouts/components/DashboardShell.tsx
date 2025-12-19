@@ -1,6 +1,7 @@
+// layouts/components/DashboardShell.tsx
 import { Separator } from 'autocasting-ui-library-padimasso';
 import type { ReactNode } from 'react';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ChevronRight } from '../../shared/components/Chevron';
 import { LG_SCREEN_SIZE, useMedia } from '../../shared/hooks/useMedia';
 
@@ -16,9 +17,27 @@ type DashboardShellProps<Key extends string = string> = {
   sections?: DashboardSection<Key>[];
   initialKey?: Key;
   children?: ReactNode;
-  /** Slot para contenido fijo al fondo de la sidebar / menú (links, logout, etc.) */
   bottomSection?: ReactNode;
 };
+
+/* ------------ Contexto para navegación (goToNav, goToSection) ------------ */
+
+type DashboardShellContextValue = {
+  isDesktop: boolean;
+  hasSections: boolean;
+  activeKey: string | null;
+  mobileView: 'nav' | 'content';
+  goToNav: () => void;
+  goToSection: (key: string) => void;
+};
+
+const DashboardShellContext = createContext<DashboardShellContextValue | undefined>(undefined);
+
+export function useDashboardShell() {
+  const ctx = useContext(DashboardShellContext);
+  if (!ctx) throw new Error('useDashboardShell must be used within a DashboardShell');
+  return ctx;
+}
 
 function DashboardShell<Key extends string = string>({
   title,
@@ -38,73 +57,65 @@ function DashboardShell<Key extends string = string>({
       setActiveKey(null);
       return;
     }
-
     if (!activeKey || !sections!.some((s) => s.key === activeKey)) {
       setActiveKey(sections![0].key);
     }
   }, [hasSections, sections, activeKey]);
 
   useEffect(() => {
-    if (!hasSections) {
+    if (isDesktop && hasSections) setMobileView('content');
+    else if (!isDesktop && hasSections) setMobileView('nav');
+  }, [isDesktop, hasSections]);
+
+  const currentSection = useMemo(() => sections?.find((s) => s.key === activeKey) ?? null, [sections, activeKey]);
+
+  const goToNav = useCallback(() => {
+    // Si hay secciones y estamos en mobile: volvemos al menú
+    if (!isDesktop && hasSections) {
       setMobileView('nav');
       return;
     }
-
-    if (isDesktop) {
-      setMobileView('content');
-    } else {
-      setMobileView('nav');
-    }
+    // Fallback (páginas sin menú): back del navegador
+    window.history.back();
   }, [isDesktop, hasSections]);
 
-  const currentSection = useMemo(
-    () => (sections ? (sections.find((s) => s.key === activeKey) ?? null) : null),
-    [sections, activeKey]
+  const goToSection = useCallback(
+    (key: string) => {
+      setActiveKey(key as Key);
+      if (!isDesktop) setMobileView('content');
+    },
+    [isDesktop]
   );
 
-  const handleSelect = (key: Key) => {
-    setActiveKey(key);
-    if (!isDesktop) {
-      setMobileView('content');
-    }
-  };
+  const ctxValue = useMemo<DashboardShellContextValue>(
+    () => ({
+      isDesktop,
+      hasSections,
+      activeKey: (activeKey as unknown as string) ?? null,
+      mobileView,
+      goToNav,
+      goToSection,
+    }),
+    [isDesktop, hasSections, activeKey, mobileView, goToNav, goToSection]
+  );
 
-  const goToNav = () => {
-    if (!isDesktop && hasSections) {
-      setMobileView('nav');
-    }
-  };
-
-  const goToSection = (key: string) => {
-    handleSelect(key as Key);
-  };
-
-  const contextValue: DashboardShellContextValue | null = hasSections
-    ? {
-        isDesktop,
-        hasSections,
-        activeKey: (activeKey as string) ?? null,
-        mobileView,
-        goToNav,
-        goToSection,
-      }
-    : null;
-
-  /* ---------------------- Layout sin secciones ---------------------- */
+  // Sin secciones: layout simple
   if (!hasSections) {
     return (
-      <section className="w-full h-full min-h-0 flex flex-col bg-[var(--color-secondary-white)]">
-        <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
-          <div className="w-full max-w-[1100px] mx-auto px-4 lg:px-8 py-6 lg:py-8">{children}</div>
-        </article>
-      </section>
+      <DashboardShellContext.Provider value={ctxValue}>
+        <section className="w-full h-full min-h-0 flex flex-col bg-[var(--color-secondary-white)]">
+          <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
+            <div className="w-full max-w-[1100px] mx-auto px-4 lg:px-8 py-6 lg:py-8">{children}</div>
+          </article>
+        </section>
+      </DashboardShellContext.Provider>
     );
   }
 
-  /* ---------------------- Mobile – vista NAV ------------------------ */
+  // Mobile – vista de navegación
   if (!isDesktop && mobileView === 'nav') {
     return (
-      <DashboardShellContext.Provider value={contextValue!}>
+      <DashboardShellContext.Provider value={ctxValue}>
         <section className="w-full h-full bg-[var(--color-secondary-white)]">
           <div className="w-full max-w-[500px] mx-auto h-full pt-2 px-6">
             {title && (
@@ -116,7 +127,10 @@ function DashboardShell<Key extends string = string>({
                 <button
                   key={item.key}
                   type="button"
-                  onClick={() => handleSelect(item.key)}
+                  onClick={() => {
+                    setActiveKey(item.key);
+                    setMobileView('content');
+                  }}
                   className={[
                     'cursor-pointer w-full flex items-center justify-between px-6 py-4 text-sm font-medium',
                     index !== sections!.length - 1 && 'border-b border-[var(--color-secondary-outline)]',
@@ -139,9 +153,9 @@ function DashboardShell<Key extends string = string>({
     );
   }
 
-  /* ---------------- Desktop + mobile (content) ---------------------- */
+  // Desktop + mobile content
   return (
-    <DashboardShellContext.Provider value={contextValue!}>
+    <DashboardShellContext.Provider value={ctxValue}>
       <section className="w-full h-full min-h-0 flex flex-col lg:flex-row gap-0 bg-[var(--color-secondary-white)]">
         {isDesktop && (
           <aside className="hidden lg:block w-[265px] shrink-0 border-r border-[var(--color-secondary-outline)] bg-[var(--color-primary-white)]">
@@ -155,7 +169,7 @@ function DashboardShell<Key extends string = string>({
                     <button
                       key={item.key}
                       type="button"
-                      onClick={() => handleSelect(item.key)}
+                      onClick={() => setActiveKey(item.key)}
                       className={[
                         'flex items-center gap-2 rounded-lg px-4 py-4 text-sm font-semibold cursor-pointer w-full text-left',
                         selected
@@ -177,41 +191,16 @@ function DashboardShell<Key extends string = string>({
 
         <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch] pt-8">
           <div className="w-full max-w-[1100px] mx-auto px-4 lg:px-8 lg:py-5 pb-6">
-            {/* Mobile content: sin título, solo el render del hijo */}
             {!isDesktop && mobileView === 'content' && currentSection && <div>{currentSection.render()}</div>}
-
-            {/* Desktop: sin título; cada sección decide su propio header/card */}
             {isDesktop && currentSection && (
               <div className="flex flex-col gap-4 max-w-[790px] m-auto">{currentSection.render()}</div>
             )}
-
             {children}
           </div>
         </article>
       </section>
     </DashboardShellContext.Provider>
   );
-}
-
-/* ------------ Contexto para navegación (goToNav, goToSection) ------------ */
-
-type DashboardShellContextValue = {
-  isDesktop: boolean;
-  hasSections: boolean;
-  activeKey: string | null;
-  mobileView: 'nav' | 'content';
-  goToNav: () => void;
-  goToSection: (key: string) => void;
-};
-
-const DashboardShellContext = createContext<DashboardShellContextValue | undefined>(undefined);
-
-export function useDashboardShell(): DashboardShellContextValue {
-  const ctx = useContext(DashboardShellContext);
-  if (!ctx) {
-    throw new Error('useDashboardShell must be used within a DashboardShell');
-  }
-  return ctx;
 }
 
 export default DashboardShell;
