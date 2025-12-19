@@ -1,43 +1,54 @@
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-type ScrollToTopProps = {
-  selector: string;
-};
+const MAX_FRAMES = 6; // 12 = ~200 ms a 60fps // 6 = ~100 ms a 60fps
 
-const ScrollToTop = ({ selector }: ScrollToTopProps) => {
-  const { pathname } = useLocation();
+const ScrollToTop = () => {
+  const location = useLocation();
 
-  useEffect(() => {
-    let frame: number | null = null;
-    let attempts = 0;
-    const maxAttempts = 20;
+  useLayoutEffect(() => {
+    let frameId: number | null = null;
+    let runs = 0;
 
-    const tick = () => {
-      attempts += 1;
+    const scrollAll = () => {
+      runs += 1;
 
-      const el = document.querySelector<HTMLElement>(selector);
-      if (el) {
-        if (typeof el.scrollTo === 'function') {
-          el.scrollTo({ top: 0 });
-        } else {
-          el.scrollTop = 0;
-        }
+      const targets = new Set<HTMLElement | Window>();
+
+      // Scroll global del documento
+      if (typeof window !== 'undefined') {
+        targets.add(window);
       }
+      if (document.scrollingElement) {
+        targets.add(document.scrollingElement as HTMLElement);
+      }
+      targets.add(document.documentElement);
+      targets.add(document.body as HTMLElement);
 
-      if (attempts < maxAttempts) {
-        frame = window.requestAnimationFrame(tick);
+      // Todos los roots marcados
+      document.querySelectorAll<HTMLElement>('[data-scroll-root]').forEach((el) => targets.add(el));
+
+      targets.forEach((t) => {
+        if ('scrollTo' in t) {
+          (t as Window | HTMLElement).scrollTo({ top: 0, left: 0, behavior: 'auto' });
+        } else {
+          (t as HTMLElement).scrollTop = 0;
+        }
+      });
+
+      if (runs < MAX_FRAMES) {
+        frameId = window.requestAnimationFrame(scrollAll);
       }
     };
 
-    tick();
+    scrollAll();
 
     return () => {
-      if (frame !== null) {
-        window.cancelAnimationFrame(frame);
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
       }
     };
-  }, [pathname, selector]);
+  }, [location.pathname, location.search, location.hash]);
 
   return null;
 };

@@ -47,7 +47,10 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
             {/* Header */}
             <div className="w-full flex flex-col items-center gap-4 mb-6">
               <img src={Logo} className="w-14" />
-              <button className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]">
+              <button
+                type="button"
+                className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]"
+              >
                 {t('onboarding.mode_selector.employer.title')}
               </button>
             </div>

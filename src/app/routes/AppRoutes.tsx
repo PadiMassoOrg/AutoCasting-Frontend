@@ -93,7 +93,7 @@ export default function AppRoutes() {
   return (
     <Router>
       <RouteTracker />
-      <ScrollToTop selector="#app-scroll-root" />
+      <ScrollToTop />
       <AppRoutesContent />
     </Router>
   );

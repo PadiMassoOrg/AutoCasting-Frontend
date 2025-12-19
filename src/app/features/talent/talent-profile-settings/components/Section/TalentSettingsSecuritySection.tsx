@@ -1,7 +1,7 @@
 import { FormInputField } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
-import { DashboardSection } from '../../../../../layouts/components';
+import SectionCard from '../../../../../shared/components/Section/SectionCard';
 import { useTalentProfile } from '../../../talent-profile-edit/hooks/useTalentProfile';
 import ChangePasswordForm from '../ChangePasswordForm';
 
@@ -19,13 +19,11 @@ const TalentSettingsSecuritySection = () => {
   };
 
   return (
-    <DashboardSection>
+    <SectionCard>
       <div className="flex flex-col">
         {!isAutocastingAccount() && (
           <div className="flex flex-col py-6 mb-2">
-            <p className="mt-[-1.3rem] pl-2 text-[14px] font-light">
-              {t('settings.page.account.warning_account_other')}
-            </p>
+            <p className="mt-[-1.3rem] text-[14px] font-light">{t('settings.page.account.warning_account_other')}</p>
           </div>
         )}
         <div className="flex flex-col gap-4">
@@ -61,7 +59,7 @@ const TalentSettingsSecuritySection = () => {
           </div>
         </div>
       </div>
-    </DashboardSection>
+    </SectionCard>
   );
 };
 

@@ -66,7 +66,10 @@ export default function TalentProfileModeToggle({ className }: Props) {
   if (!isDesktop && meData?.activeMode === 'TALENT')
     return (
       <div
-        className={clsx('fixed inset-x-0 bottom-0 z-[20] bg-white flex justify-center pointer-events-none', className)}
+        className={clsx(
+          'fixed inset-x-0 bottom-0 z-[20] bg-white flex justify-center pointer-events-none shadow-[0_-4px_12px_rgba(0,0,0,0.07)]',
+          className
+        )}
       >
         <div className="pointer-events-auto w-full max-w-[460px] p-3">
           <article className="w-full p-1 rounded-lg border border-[var(--color-secondary-outline)] shadow-sm flex items-center">
@@ -82,7 +85,7 @@ export default function TalentProfileModeToggle({ className }: Props) {
                 !canPreview && 'opacity-60 cursor-not-allowed'
               )}
             >
-              <Icon name="view" variant={viewActive ? 'primary' : 'default'} size={18} />
+              <Icon name="view" variant={viewActive ? 'primary' : 'default'} />
               <span>{t('profile.page.view_profile')}</span>
             </button>
 
@@ -98,7 +101,7 @@ export default function TalentProfileModeToggle({ className }: Props) {
                   : 'bg-transparent text-black'
               )}
             >
-              <Icon name="edit" variant={editActive ? 'primary' : 'default'} size={17} />
+              <Icon name="edit" variant={editActive ? 'primary' : 'default'} />
               <span>{t('profile.page.edit_profile')}</span>
             </button>
           </article>

@@ -66,7 +66,7 @@ export default function PublicProfileDetailsView({ open, onClose, profile }: Pro
 
   const headerRight = (
     <Link aria-label={t('profile.share.share_profile')} className="cursor-pointer" to={url}>
-      <Icon name="open" variant="primary" size={18} />
+      <Icon name="open" variant="primary" />
     </Link>
   );
 

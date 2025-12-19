@@ -29,7 +29,7 @@ export default function FilterSection({ title, children, defaultOpen = false, co
         }}
       >
         <div className="flex items-center gap-2">
-          <h4 className="text-sm font-bold">{title}</h4>
+          <h4 className="text-sm font-semibold">{title}</h4>
           {count > 0 && (
             <span
               aria-label={`${count} filtros activos`}

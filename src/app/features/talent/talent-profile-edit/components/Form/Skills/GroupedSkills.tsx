@@ -55,7 +55,7 @@ function GroupedSkills({ skills, onRemove }: { skills: SiteMetadataObject[]; onR
 
         return (
           <div key={cat}>
-            <article className="py-6">
+            <article className="">
               <button
                 type="button"
                 className="w-full flex items-center justify-between cursor-pointer"
@@ -82,7 +82,7 @@ function GroupedSkills({ skills, onRemove }: { skills: SiteMetadataObject[]; onR
                 </div>
               )}
             </article>
-            <Separator className="opacity-20" />
+            <Separator className="opacity-20 my-6" />
           </div>
         );
       })}

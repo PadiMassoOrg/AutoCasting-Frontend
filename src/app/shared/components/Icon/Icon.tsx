@@ -42,6 +42,9 @@ import MailIcon from '../../icons/message.svg';
 import OGIcon from '../../icons/og-image.svg';
 import OpenIconPurple from '../../icons/open-purple.svg';
 import OpenIcon from '../../icons/open.svg';
+import PlusIconPurple from '../../icons/plus-purple.svg';
+import PlusIconWhite from '../../icons/plus-white.svg';
+import PlusIcon from '../../icons/plus.svg';
 import ProfileIconPurple from '../../icons/profile-purple.svg';
 import ProfileIcon from '../../icons/profile.svg';
 import SettingsIconPurple from '../../icons/settings-purple.svg';
@@ -84,6 +87,7 @@ export type IconName =
   | 'calendar'
   | 'behance'
   | 'imdb'
+  | 'plus'
   | 'whatsapp'
   | 'vimeo'
   | 'instagram'
@@ -93,11 +97,12 @@ export type IconName =
   | 'delete'
   | 'logout';
 
-export type IconVariant = 'default' | 'primary' | 'danger';
+export type IconVariant = 'default' | 'primary' | 'white' | 'danger';
 
 type BaseIconConfig = {
   default: string;
   primary?: string;
+  white?: string;
   danger?: string;
 };
 
@@ -225,6 +230,11 @@ const ICONS: Record<IconName, BaseIconConfig> = {
     default: ClockIcon,
     primary: ClockIconPurple,
   },
+  plus: {
+    default: PlusIcon,
+    primary: PlusIconPurple,
+    white: PlusIconWhite,
+  },
 };
 
 export type IconProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
@@ -233,10 +243,14 @@ export type IconProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
   size?: number;
 };
 
-export function Icon({ name, variant = 'default', size = 24, className, alt = '', style, ...rest }: IconProps) {
+export function Icon({ name, variant = 'default', size = 18, className, alt = '', style, ...rest }: IconProps) {
   const config = ICONS[name];
 
-  const src = (variant === 'primary' && config.primary) || (variant === 'danger' && config.danger) || config.default;
+  const src =
+    (variant === 'primary' && config.primary) ||
+    (variant === 'white' && config.white) ||
+    (variant === 'danger' && config.danger) ||
+    config.default;
 
   const finalStyle = {
     width: size,

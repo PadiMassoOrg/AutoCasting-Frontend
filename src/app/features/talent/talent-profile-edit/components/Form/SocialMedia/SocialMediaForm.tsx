@@ -1,6 +1,7 @@
 import { Button } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Icon } from '../../../../../../shared/components/Icon/Icon';
 import { useSiteMetadataSlice } from '../../../../../sitemetadata/hooks/useSiteMetadataSlice';
 import type { ProfileSocialMedia } from '../../../types/talentProfile.types';
 import SocialMediaRow from './SocialMediaRow';
@@ -108,11 +109,11 @@ export default function SocialMediaForm({ data, onSaveLinks }: SocialMediaFormPr
 
       <Button
         type="button"
-        className="mt-2 self-start lg:max-w-[250px]"
+        className="mt-2 self-start lg:max-w-[250px] flex flex-row gap-2 items-center justify-center"
         variant={freeOptions.length === 0 ? 'disabled' : 'primary'}
         onClick={handleAddRow}
       >
-        {t('profile.basic_info.add_social_media')}
+        <Icon name="plus" variant="white" size={16} /> {t('profile.basic_info.add_social_media')}
       </Button>
     </div>
   );

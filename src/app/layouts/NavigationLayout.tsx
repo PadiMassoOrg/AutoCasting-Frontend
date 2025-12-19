@@ -10,7 +10,7 @@ export default function NavigationLayout() {
         <Navbar id="app-navbar" />
       </header>
 
-      <main id="app-scroll-root" className="flex-1 w-full min-w-0 overflow-y-auto">
+      <main data-scroll-root className="flex-1 w-full min-w-0 overflow-y-auto">
         <div className="w-full max-w-[1650px] mx-auto px-4 lg:px-6 pt-4 lg:pt-6 pb-6">
           <Outlet />
         </div>

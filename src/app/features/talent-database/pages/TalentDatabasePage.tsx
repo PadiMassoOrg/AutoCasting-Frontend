@@ -72,7 +72,6 @@ export default function TalentDatabasePage() {
     scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
   }, []);
 
-  // ⬇️ IMPORTANTE: no forwardeamos al mismo elemento en desktop
   useScrollExitOnEdge(cardsScrollRef, {
     forwardTo: isDesktop ? cardsScrollRef : scrollRootRef,
   });
@@ -98,7 +97,6 @@ export default function TalentDatabasePage() {
         setHasNext(!!res.hasNext);
       } catch (e: any) {
         if (e?.name === 'AbortError' || e?.name === 'CanceledError') {
-          // ignoramos cancelaciones
         } else {
           setError('fetch_error');
           setHasNext(false);
@@ -124,14 +122,7 @@ export default function TalentDatabasePage() {
   }, [effectiveFilters, pageSize, fetchPage]);
 
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [filtersOpen, setFiltersOpen] = useState<boolean>(() => {
-    const saved = localStorage.getItem('talentFiltersOpen');
-    return saved ? saved === '1' : true;
-  });
-
-  useEffect(() => {
-    localStorage.setItem('talentFiltersOpen', filtersOpen ? '1' : '0');
-  }, [filtersOpen]);
+  const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const root = cardsScrollRef.current;
@@ -189,7 +180,6 @@ export default function TalentDatabasePage() {
 
   const handleOpenDetails = useCallback(async (card: ProfileCardResponse) => {
     try {
-      // Usa tu servicio real que devuelve TalentPublicProfileResponse
       const full = await getPublicProfile(card.publicSlug);
       setSelectedProfile(full);
       setDetailsOpen(true);
@@ -207,22 +197,6 @@ export default function TalentDatabasePage() {
   return (
     <section className="w-full h-full min-h-0 bg-[var(--color-secondary-white)]">
       <div className="h-full w-full flex flex-col">
-        {/* Mobile Filter Icon */}
-        <article className="lg:hidden flex items-center justify-between mb-3 shrink-0 p-5">
-          <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
-          <button
-            type="button"
-            className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
-            onClick={() => setMobileOpen(true)}
-            aria-label={t('general.filters.open')}
-          >
-            <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
-              <Icon name="filter" variant="primary" size={20} />
-            </span>
-          </button>
-        </article>
-
-        {/* Filter Bar */}
         <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col lg:flex-row gap-6 overflow-hidden">
           {isDesktop && filtersOpen && (
             <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-[var(--color-primary-white)] border-r border-[var(--color-secondary-outline)]">
@@ -232,11 +206,24 @@ export default function TalentDatabasePage() {
             </aside>
           )}
 
-          {/* Content */}
           <div
             ref={cardsScrollRef}
-            className="py-4 px-6 lg:py-8 w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
+            className="py-4 px-[56px] lg:py-8 w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
           >
+            <article className="lg:hidden flex items-center justify-between mb-3 shrink-0">
+              <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
+              <button
+                type="button"
+                className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
+                onClick={() => setMobileOpen(true)}
+                aria-label={t('general.filters.open')}
+              >
+                <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
+                  <Icon name="filter" variant="primary" size={20} />
+                </span>
+              </button>
+            </article>
+
             <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
               <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
               <button
@@ -245,11 +232,11 @@ export default function TalentDatabasePage() {
                 onClick={() => setFiltersOpen((v) => !v)}
                 aria-pressed={filtersOpen}
               >
-                <h2 className="text-sm font-light underline">
+                <h2 className="text-sm font-light underline text-[var(--color-primary-purple)]">
                   {filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
                 </h2>
-                <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
-                  <Icon name="filter" variant="primary" size={18} />
+                <span className="w-11 h-11 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
+                  <Icon name="filter" variant="primary" />
                 </span>
               </button>
             </div>
@@ -258,24 +245,17 @@ export default function TalentDatabasePage() {
               <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
             ) : (
               <>
-                <article
-                  className="
-                    grid gap-6 place-items-stretch
-                    grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
-                    sm:auto-rows-[408px]
-                    lg:auto-rows-auto
-                  "
-                >
+                <article className="flex flex-wrap gap-6 items-stretch">
                   {showInitialSkeletons &&
                     Array.from({ length: pageSize }).map((_, i) => (
-                      <div key={`skeleton-${i}`} className="w-full h-full">
+                      <div key={`skeleton-${i}`} className="w-full sm:w-[280px]">
                         <div className="animate-pulse w-full h-full bg-neutral-100 rounded-lg" />
                       </div>
                     ))}
 
                   {gridItems.map((it) => (
-                    <div key={it.id} className="w-full h-full">
-                      <TalentCard item={it} onClick={isDesktop ? () => handleOpenDetails(it) : undefined} />{' '}
+                    <div key={it.id} className="w-full sm:w-[280px]">
+                      <TalentCard item={it} onClick={isDesktop ? () => handleOpenDetails(it) : undefined} />
                     </div>
                   ))}
 
@@ -290,11 +270,6 @@ export default function TalentDatabasePage() {
                 {isFetchingNextPage && (
                   <p className="py-10 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
                     {t('state.loading')}
-                  </p>
-                )}
-                {!hasNext && gridItems.length > 0 && (
-                  <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
-                    {t('state.no_more_results')}
                   </p>
                 )}
               </>

@@ -44,7 +44,7 @@ export default function ProfileShareActions({ data }: Props) {
         aria-label={t('profile.share.whatsapp')}
         title="WhatsApp"
       >
-        <Icon name="whatsapp" size={18} />
+        <Icon name="whatsapp" />
       </a>
     );
   }
@@ -52,12 +52,12 @@ export default function ProfileShareActions({ data }: Props) {
   if (mailtoUrl) {
     items.push(
       <a key="email" href={mailtoUrl} aria-label={t('profile.share.email')} title="Email">
-        <Icon name="mail" size={18} />
+        <Icon name="mail" />
       </a>
     );
   }
 
-  items.push(<Icon name="copyLink" onClick={handleShare} size={18} />);
+  items.push(<Icon name="copyLink" onClick={handleShare} />);
 
   if (items.length === 0) return null;
 

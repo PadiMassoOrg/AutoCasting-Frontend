@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { type ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 
 import { Icon } from '../Icon/Icon';
 
@@ -20,12 +20,32 @@ export default function DetailsView({
   children,
   className,
 }: DetailsViewProps) {
+  const bodyRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     if (!open) return;
-    const prev = document.body.style.overflow;
+
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+
+    // 1) Panel: siempre arrancar desde arriba
+    if (bodyRef.current) {
+      bodyRef.current.scrollTop = 0;
+      bodyRef.current.scrollLeft = 0;
+    }
+
+    // 2) Root de la app (por si también querés que la pantalla general esté en top)
+    const root = document.querySelector<HTMLElement>('#app-scroll-root');
+    if (root) {
+      root.scrollTop = 0;
+      root.scrollLeft = 0;
+    } else {
+      // fallback
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }
+
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.overflow = prevOverflow;
     };
   }, [open]);
 
@@ -39,7 +59,7 @@ export default function DetailsView({
       {/* Panel derecho */}
       <aside
         className={clsx(
-          'relative ml-auto h-full w-full max-w-[550px]  bg-[var(--color-secondary-white)] shadow-xl flex flex-col',
+          'relative ml-auto h-full w-full max-w-[550px] bg-[var(--color-secondary-white)] shadow-xl flex flex-col',
           className
         )}
       >
@@ -48,12 +68,14 @@ export default function DetailsView({
           {navigation}
           <div className="flex items-center gap-4">
             {headerRight}
-            <Icon name="burgerClose" onClick={onClose} size={20} />
+            <Icon name="burgerClose" onClick={onClose} />
           </div>
         </header>
 
         {/* Body scrolleable */}
-        <div className="flex-1 min-h-0 overflow-auto px-8 py-10">{children}</div>
+        <div ref={bodyRef} className="flex-1 min-h-0 overflow-auto px-8 py-10">
+          {children}
+        </div>
       </aside>
     </div>
   );

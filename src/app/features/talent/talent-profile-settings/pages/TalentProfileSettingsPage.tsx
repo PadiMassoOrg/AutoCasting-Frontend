@@ -22,7 +22,7 @@ const TalentProfileSettingsPage = () => {
   ];
 
   const bottomSection = (
-    <div className="flex flex-col gap-4 pl-2 py-6 text-sm font-normal text-[var(--color-secondary-disabled-grey)] items-center lg:items-start">
+    <div className="flex flex-col gap-2 pl-2 py-6 text-sm font-normal text-[var(--color-secondary-disabled-grey)] items-center lg:items-start">
       <Link to={ROUTES.SUPPORT} className="cursor-pointer flex flex-row items-center gap-2">
         {t('routes.support')}
       </Link>

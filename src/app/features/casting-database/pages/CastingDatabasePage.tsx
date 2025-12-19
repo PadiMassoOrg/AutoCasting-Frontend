@@ -120,14 +120,7 @@ const CastingDatabasePage = () => {
   }, [effectiveFilters, pageSize, fetchPage]);
 
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [filtersOpen, setFiltersOpen] = useState<boolean>(() => {
-    const saved = localStorage.getItem('castingDatabaseFiltersOpen');
-    return saved ? saved === '1' : true;
-  });
-
-  useEffect(() => {
-    localStorage.setItem('castingDatabaseFiltersOpen', filtersOpen ? '1' : '0');
-  }, [filtersOpen]);
+  const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const root = cardsScrollRef.current;
@@ -235,7 +228,7 @@ const CastingDatabasePage = () => {
                   {filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
                 </h2>
                 <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
-                  <Icon name="filter" variant="primary" size={18} />
+                  <Icon name="filter" variant="primary" />
                 </span>
               </button>
             </div>

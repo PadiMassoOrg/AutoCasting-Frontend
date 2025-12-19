@@ -86,6 +86,7 @@
   },
   "buttons": {
     "cancel": "Cancelar",
+    "accept": "Aceptar",
     "save": "Guardar",
     "delete": "Borrar",
     "understood": "Entendido",
@@ -452,6 +453,10 @@
       "plan": "El plan es requerido.",
       "password_min": "La contraseña debe tener al menos 6 caracteres.",
       "password_missmatch": "Las contraseñas no coinciden."
+    },
+    "logout": {
+      "modal_title": "¿Querés cerrar sesión?",
+      "modal_text": "Vas a salir de tu cuenta de Auto-Casting. Podés volver a iniciar sesión cuando quieras."
     }
   },
   "onboarding": {

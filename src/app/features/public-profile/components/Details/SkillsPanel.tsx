@@ -40,7 +40,13 @@ export default function SkillsPanel({ skills }: Props) {
       return t(a).localeCompare(t(b));
     });
   }, [groups, t]);
-  if (!skills.length) return <h2 className="text-sm font-normal text-center">{t('general.no_data')}</h2>;
+
+  if (!skills.length)
+    return (
+      <h2 className="w-full h-full text-[var(--color-secondary-grey)] font-base flex flex-col items-center justify-center">
+        {t('general.no_data')}
+      </h2>
+    );
   return (
     <div className="flex flex-col" style={{ overflowAnchor: 'none' }}>
       {categories.map((catKey, index) => {

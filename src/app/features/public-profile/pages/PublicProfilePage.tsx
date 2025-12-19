@@ -56,7 +56,7 @@ const PublicProfilePage = () => {
           style={{
             height: `calc(100svh - ${NAVBAR}px - ${TOP_MARGIN})`,
             minHeight: '500px',
-            maxHeight: '850px',
+            maxHeight: '800px',
           }}
         >
           <BasicInfoSection data={data} />
