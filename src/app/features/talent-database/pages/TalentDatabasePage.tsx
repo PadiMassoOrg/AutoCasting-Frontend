@@ -198,6 +198,7 @@ export default function TalentDatabasePage() {
     <section className="w-full h-full min-h-0 bg-[var(--color-secondary-white)]">
       <div className="h-full w-full flex flex-col">
         <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col lg:flex-row gap-6 overflow-hidden">
+          {/* Desktop Filter Bar */}
           {isDesktop && filtersOpen && (
             <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-[var(--color-primary-white)] border-r border-[var(--color-secondary-outline)]">
               <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5">
@@ -208,9 +209,10 @@ export default function TalentDatabasePage() {
 
           <div
             ref={cardsScrollRef}
-            className="py-4 px-[56px] lg:py-8 w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
+            className="py-4 px-6 sm:px-[56px] lg:py-8 w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
           >
-            <article className="lg:hidden flex items-center justify-between mb-3 shrink-0 p-5">
+            {/* Mobile Title */}
+            <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
               <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
               <button
                 type="button"

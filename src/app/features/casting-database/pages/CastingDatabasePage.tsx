@@ -5,7 +5,6 @@ import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
-import { CASTING_ROLE_PUBLIC_CARDS_MOCK } from '../../_TEST_/mock';
 import { CastingFilterBar, CastingMobileFiltersDrawer, CastingRolePublicCard } from '../components';
 import { getCastingDatabase } from '../services/castingDatabaseService';
 import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';
@@ -180,29 +179,11 @@ const CastingDatabasePage = () => {
   const showEmptyState = !loading && !error && items.length === 0;
   const isFetchingNextPage = items.length > 0 && loading;
 
-  // const listItems = useMemo(() => items, [items]);
-  const listItems = CASTING_ROLE_PUBLIC_CARDS_MOCK;
-
   return (
     <section className="w-full h-full min-h-0 bg-[var(--color-secondary-white)]">
       <div className="h-full w-full flex flex-col">
-        {/* Mobile Filter Icon */}
-        <article className="lg:hidden flex items-center justify-between mb-3 shrink-0 p-5">
-          <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
-          <button
-            type="button"
-            className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
-            onClick={() => setMobileOpen(true)}
-            aria-label={t('general.filters.open')}
-          >
-            <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
-              <Icon name="filter" variant="primary" size={20} />
-            </span>
-          </button>
-        </article>
-
-        {/* Filter Bar */}
         <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col lg:flex-row gap-6 overflow-hidden">
+          {/* Desktop Filter Bar */}
           {isDesktop && filtersOpen && (
             <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-[var(--color-primary-white)] border-r border-[var(--color-secondary-outline)]">
               <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5">
@@ -211,11 +192,25 @@ const CastingDatabasePage = () => {
             </aside>
           )}
 
-          {/* Content */}
           <div
             ref={cardsScrollRef}
-            className="py-4 px-[56px] lg:py-8 w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
+            className="py-4 px-6 sm:px-[56px] lg:py-8 w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
           >
+            {/* Mobile Title */}
+            <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
+              <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
+              <button
+                type="button"
+                className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
+                onClick={() => setMobileOpen(true)}
+                aria-label={t('general.filters.open')}
+              >
+                <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
+                  <Icon name="filter" variant="primary" size={20} />
+                </span>
+              </button>
+            </article>
+
             <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
               <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
               <button
@@ -245,7 +240,7 @@ const CastingDatabasePage = () => {
                       </div>
                     ))}
 
-                  {listItems.map((it) => (
+                  {items.map((it) => (
                     <div key={it.id} className="w-full">
                       <CastingRolePublicCard item={it} />
                     </div>
@@ -264,7 +259,7 @@ const CastingDatabasePage = () => {
                     {t('state.loading')}
                   </p>
                 )}
-                {!hasNext && listItems.length > 0 && (
+                {!hasNext && items.length > 0 && (
                   <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
                     {t('state.no_more_results')}
                   </p>
