@@ -38,10 +38,10 @@ export default function InfoCarousel<K extends PillKeyBase, D>({
   const ActivePanel = renderers[active];
 
   return (
-    <section className={`w-full min-w-0 h-[817px] flex flex-col gap-3 ${className ?? ''}`}>
+    <section className={`w-full min-w-0 h-full flex flex-col gap-3 ${className ?? ''}`}>
       <Pills items={pills} value={active} onChange={setActive} />
       <div className="w-full flex-1 overflow-hidden rounded-xl">
-        <div className="h-full rounded-xl ring-1 ring-inset ring-[var(--color-secondary-outline)] bg-white">
+        <div className="h-full min-h-[645px] rounded-xl ring-1 ring-inset ring-[var(--color-secondary-outline)] bg-white">
           <div className="h-full overflow-auto py-6 px-7">{ActivePanel?.(data)}</div>
         </div>
       </div>
