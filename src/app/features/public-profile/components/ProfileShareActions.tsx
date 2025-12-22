@@ -43,6 +43,7 @@ export default function ProfileShareActions({ data }: Props) {
         rel="noopener noreferrer"
         aria-label={t('profile.share.whatsapp')}
         title="WhatsApp"
+        className="inline-flex"
       >
         <Icon name="whatsapp" />
       </a>
@@ -51,7 +52,7 @@ export default function ProfileShareActions({ data }: Props) {
 
   if (mailtoUrl) {
     items.push(
-      <a key="email" href={mailtoUrl} aria-label={t('profile.share.email')} title="Email">
+      <a key="email" href={mailtoUrl} aria-label={t('profile.share.email')} title="Email" className="inline-flex">
         <Icon name="mail" />
       </a>
     );

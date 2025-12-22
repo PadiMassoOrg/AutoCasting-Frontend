@@ -44,6 +44,7 @@ export default function ViewerActions({ className }: Props) {
         rel="noopener noreferrer"
         aria-label={t('profile.share.whatsapp')}
         title="WhatsApp"
+        className="inline-flex"
       >
         <Icon name="whatsapp" />
       </a>
@@ -52,7 +53,7 @@ export default function ViewerActions({ className }: Props) {
 
   if (mailtoUrl) {
     items.push(
-      <a key="email" href={mailtoUrl} aria-label={t('profile.share.email')} title="Email">
+      <a key="email" href={mailtoUrl} aria-label={t('profile.share.email')} title="Email" className="inline-flex">
         <Icon name="mail" />
       </a>
     );
