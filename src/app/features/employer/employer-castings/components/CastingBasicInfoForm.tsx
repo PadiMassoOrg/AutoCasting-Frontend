@@ -21,15 +21,13 @@ const CastingBasicInfoForm = ({ data }: { data?: CastingBasicInfo }) => {
 
   const [errors, setErrors] = useState<Errors>({});
 
-  console.log(data);
-
   const title = useCommittedText(
     data?.title ?? '',
     (v) => {
       const r = schema.shape.title.safeParse(v);
       setErrors((e) => ({
         ...e,
-        stageName: r.success ? null : r.error.errors[0]?.message,
+        title: r.success ? null : r.error.errors[0]?.message,
       }));
       if (r.success) autosave.immediate({ title: v });
     },
@@ -39,7 +37,7 @@ const CastingBasicInfoForm = ({ data }: { data?: CastingBasicInfo }) => {
   return (
     <div className="w-full flex flex-col gap-2">
       <FormInputField
-        id="stageName"
+        id="title"
         label={t('employer_castings.dashboard.basic_info.title')}
         labelClassName="font-semibold text-base"
         placeholder={t('general.placeholder.project_name')}

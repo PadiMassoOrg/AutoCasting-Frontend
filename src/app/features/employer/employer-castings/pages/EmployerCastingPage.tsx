@@ -12,6 +12,7 @@ import {
 const EmployerCastingPage = () => {
   const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
+  console.log(slug);
 
   // TODO if slug is of form "C-1532ED6C" it means we are "EDITING" a CASTING
 

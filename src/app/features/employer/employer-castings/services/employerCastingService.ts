@@ -12,6 +12,12 @@ export const getMyCastings = async (): Promise<CastingCardResponse[]> => {
   return response.data;
 };
 
+// POST
+export const createEmptyCasting = async (): Promise<string> => {
+  const response = await api.post(API_ROUTES.EMPLOYER_CASTINGS);
+  return response.data;
+};
+
 // PATCH
 export async function patchCastingBasicInfo(payload: CastingBasicInfoPatchRequest): Promise<CastingBasicInfo> {
   const body = stripUndefined(payload);

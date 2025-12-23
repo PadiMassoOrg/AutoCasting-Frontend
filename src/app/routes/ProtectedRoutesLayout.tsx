@@ -36,7 +36,7 @@ export default function ProtectedRoutesLayout() {
         {/* Employer */}
         <Route path={ROUTES.EMPLOYER} element={<EmployerProfileEditPage />} />
         <Route path={ROUTES.EMPLOYER_CASTINGS} element={<EmployerCastingsPage />} />
-        <Route path={ROUTES.EMPLOYER_CASTING} element={<EmployerCastingPage />} />
+        <Route path={ROUTES.EMPLOYER_CASTING + '/:slug'} element={<EmployerCastingPage />} />
       </Route>
       <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
     </Routes>
