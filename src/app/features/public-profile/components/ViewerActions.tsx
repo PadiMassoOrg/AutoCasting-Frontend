@@ -25,8 +25,8 @@ export default function ViewerActions({ className }: Props) {
   const mailtoUrl = data?.contact?.email ? `mailto:${data.contact.email}` : null;
 
   const handleShare = async () => {
+    // TODO: Implementar TOAST
     await shareUrl({
-      title: data?.basicInfo?.stageName ?? t('profile.share.profile_no_name'),
       url,
       onCopied: () => alert(t('general.copied')),
       onError: () => alert(t('general.error')),
