@@ -1,7 +1,8 @@
-import type { TFunction } from 'i18next';
+import { type TFunction } from 'i18next';
 import React from 'react';
 import Pills from '../../../features/public-profile/components/Pills/Pills';
 import { useCarouselPills, type CountGetters, type PillKeyBase } from '../../hooks/useCarouselPills';
+
 type Renderers<K extends PillKeyBase, D> = Record<K, (data: D) => React.ReactNode>;
 
 type InfoCarouselProps<K extends PillKeyBase, D> = {
@@ -14,6 +15,7 @@ type InfoCarouselProps<K extends PillKeyBase, D> = {
   panelWrapperClassName?: string;
   defaultActive?: K;
   translationPrefix?: string;
+  fixedHeight?: boolean;
 };
 
 export default function InfoCarousel<K extends PillKeyBase, D>({
@@ -23,8 +25,10 @@ export default function InfoCarousel<K extends PillKeyBase, D>({
   getCount,
   t,
   className,
+  panelWrapperClassName,
   defaultActive,
   translationPrefix,
+  fixedHeight = false,
 }: InfoCarouselProps<K, D>) {
   const { active, setActive, pills } = useCarouselPills<K, D>({
     order,
@@ -38,11 +42,14 @@ export default function InfoCarousel<K extends PillKeyBase, D>({
   const ActivePanel = renderers[active];
 
   return (
-    <section className={`w-full min-w-0 h-full flex flex-col gap-3 ${className ?? ''}`}>
+    <section className={`w-full min-w-0 h-full min-h-0 flex flex-col gap-3 ${className ?? ''}`}>
       <Pills items={pills} value={active} onChange={setActive} />
-      <div className="w-full flex-1 overflow-hidden rounded-xl">
-        <div className="h-full min-h-[645px] rounded-xl ring-1 ring-inset ring-[var(--color-secondary-outline)] bg-white">
-          <div className="h-full overflow-auto py-6 px-7">{ActivePanel?.(data)}</div>
+
+      <div className={`w-full flex-1 min-h-0 overflow-hidden rounded-xl ${panelWrapperClassName ?? ''}`}>
+        <div
+          className={`h-full ${fixedHeight ? 'min-h-[645px]' : 'min-h-[min(645px,100%)]'} rounded-xl ring-1 ring-inset ring-[var(--color-secondary-outline)] bg-white`}
+        >
+          <div className="h-full min-h-0 overflow-auto py-6 px-7">{ActivePanel?.(data)}</div>
         </div>
       </div>
     </section>
