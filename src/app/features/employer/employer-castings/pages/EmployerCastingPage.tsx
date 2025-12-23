@@ -2,25 +2,30 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { DashboardShell } from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
+import ServerError from '../../../../shared/components/ServerError/ServerError';
 import {
   EmployerCastingBasicInfoEditSection,
   EmployerCastingRemunerationEditSection,
   EmployerCastingRequirementsEditSection,
   EmployerCastingRolesEditSection,
 } from '../components/Section';
+import { useCastingDetailsBySlug } from '../hooks/useCastingDetailsBySlug';
 
 const EmployerCastingPage = () => {
   const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
-  console.log(slug);
+  const { data, error, isLoading } = useCastingDetailsBySlug(slug!);
 
-  // TODO if slug is of form "C-1532ED6C" it means we are "EDITING" a CASTING
+  if (isLoading || !data) return null;
+  if (error) return <ServerError />;
+
+  const { basicInfoSection } = data;
 
   const sections: DashboardSection[] = [
     {
       key: 'basic',
       label: t('employer_castings.dashboard.basic_info.basic_info'),
-      render: () => <EmployerCastingBasicInfoEditSection data={undefined} />,
+      render: () => <EmployerCastingBasicInfoEditSection data={basicInfoSection} />,
     },
     {
       key: 'roles',
@@ -39,7 +44,6 @@ const EmployerCastingPage = () => {
     },
   ];
 
-  // TODO: Handle TITLE EDIT OR NEW
   return <DashboardShell title={t('employer_castings.dashboard.title_new')} sections={sections}></DashboardShell>;
 };
 

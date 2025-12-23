@@ -3,12 +3,12 @@ import { EMPLOYER_CASTING_CACHE_KEY, patchCastingBasicInfo } from '../services/e
 import type { CastingBasicInfo, CastingResponse } from '../types/employerCastings.types';
 import type { CastingBasicInfoPatchRequest } from '../types/requests';
 
-export function useCastingBasicInfoAutosave() {
+export function useCastingBasicInfoAutosave(slug: string) {
   return useSectionAutosave<CastingBasicInfoPatchRequest, CastingBasicInfo>({
     mutationFn: patchCastingBasicInfo,
     delay: 800,
     onSuccessUpdate: (prev: CastingResponse, updated) => ({ ...prev, basicInfo: updated }),
-    cacheKeys: [EMPLOYER_CASTING_CACHE_KEY],
+    cacheKeys: [[...EMPLOYER_CASTING_CACHE_KEY, slug]],
     invalidateOnSuccess: 'active',
   });
 }

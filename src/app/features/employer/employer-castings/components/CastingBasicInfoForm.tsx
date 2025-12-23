@@ -1,6 +1,7 @@
 import { FormInputField } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import { useCommittedText } from '../../../../shared/utils/formUtils';
 import { useCachedSiteMetadataOption } from '../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { useCastingBasicInfoAutosave } from '../hooks/autosaves';
@@ -11,25 +12,27 @@ type Errors = {
   title?: string | null;
 };
 
-const CastingBasicInfoForm = ({ data }: { data?: CastingBasicInfo }) => {
+const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
+  const { slug } = useParams<{ slug: string }>();
   const { t } = useTranslation();
   const projectTypeOptions = useCachedSiteMetadataOption('projectTypeOptions', t);
   const castingModalityOptions = useCachedSiteMetadataOption('castingModalityOptions', t);
-  const autosave = useCastingBasicInfoAutosave();
+
+  const autosave = useCastingBasicInfoAutosave(slug!);
 
   const schema = useMemo(() => getCastingBasicInfoSchema(t), [t]);
 
   const [errors, setErrors] = useState<Errors>({});
 
   const title = useCommittedText(
-    data?.title ?? '',
+    data.title ?? '',
     (v) => {
       const r = schema.shape.title.safeParse(v);
       setErrors((e) => ({
         ...e,
         title: r.success ? null : r.error.errors[0]?.message,
       }));
-      if (r.success) autosave.immediate({ title: v });
+      if (r.success) autosave.immediate({ id: data.id, title: v });
     },
     { trim: true }
   );
