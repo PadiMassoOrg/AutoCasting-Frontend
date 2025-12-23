@@ -1,10 +1,11 @@
 import { FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { BooleanYesNoRadioGroup, RangeCalendar, TextareaField } from '../../../../shared/components/Form';
 import { useCommittedNullableBooleanValue } from '../../../../shared/components/Form/hooks/useCommittedBooleanValue';
+import { parseLocalISODate, toLocalISO } from '../../../../shared/components/Form/RangeCalendar';
 import { capitalize } from '../../../../shared/utils/formatUtils';
 import { onSelect, useCommittedText, useCommittedUuid, useIsoDateField } from '../../../../shared/utils/formUtils';
 import { useCachedSiteMetadataOption } from '../../../sitemetadata/hooks/useCachedSiteMetadata';
@@ -34,14 +35,27 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [errors, setErrors] = useState<Errors>({});
 
+  // ✅ 1) Calculo del rango “guardado” que viene del backend
+  const savedRange = useMemo(
+    () => toRangeFromData(data.shootingStartDate, data.shootingEndDate),
+    [data.shootingStartDate, data.shootingEndDate]
+  );
+
+  // ✅ 2) Sincroniza el state local cuando entra data o cambias de casting
+  //     - Si el usuario ya tocó el calendario en esta sesión, NO lo pisamos.
+  useEffect(() => {
+    setRange((prev) => {
+      // cambio de casting o primera carga: inicializa desde backend
+      if (!prev?.from && !prev?.to) return savedRange;
+      return prev;
+    });
+  }, [data.id, savedRange?.from?.getTime(), savedRange?.to?.getTime()]);
+
   const title = useCommittedText(
     data.title ?? '',
     (v) => {
       const r = schema.shape.title.safeParse(v);
-      setErrors((e) => ({
-        ...e,
-        title: r.success ? null : r.error.errors[0]?.message,
-      }));
+      setErrors((e) => ({ ...e, title: r.success ? null : r.error.errors[0]?.message }));
       if (r.success) autosave.immediate({ id: data.id, title: v });
     },
     { trim: true }
@@ -94,19 +108,34 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
   }, [i18n.language]);
 
   const hasWardrobeFitting = useCommittedNullableBooleanValue(data.hasWardrobeFitting, (v) => {
-    autosave.immediate({
-      id: data.id,
-      hasWardrobeFitting: v ?? undefined,
-    });
+    autosave.immediate({ id: data.id, hasWardrobeFitting: v ?? undefined });
   });
 
   const description = useCommittedText(data.description ?? '', (v) => {
-    setErrors((e) => ({
-      ...e,
-      description: null,
-    }));
+    setErrors((e) => ({ ...e, description: null }));
     autosave.immediate({ id: data.id, description: v || null });
   });
+
+  const handleRangeCommit = useCallback(
+    (from: Date, to: Date) => {
+      autosave.immediate({
+        id: data.id,
+        shootingStartDate: toLocalISO(from),
+        shootingEndDate: toLocalISO(to),
+      });
+    },
+    [autosave, data.id]
+  );
+
+  const handleRangeClear = useCallback(() => {
+    setRange(undefined);
+
+    autosave.immediate({
+      id: data.id,
+      shootingStartDate: null,
+      shootingEndDate: null,
+    });
+  }, [autosave, data.id]);
 
   return (
     <div className="w-full flex flex-col">
@@ -156,12 +185,8 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
             id="applicationDeadline-day"
             placeholder={t('general.placeholder.day')}
             value={applicationDeadline.day}
-            onChange={(e) => {
-              onSelect((v) => applicationDeadline.onDay(v))(e);
-            }}
-            onBlur={(e) => {
-              applicationDeadline.onAnyBlur(e);
-            }}
+            onChange={(e) => onSelect((v) => applicationDeadline.onDay(v))(e)}
+            onBlur={(e) => applicationDeadline.onAnyBlur(e)}
             options={applicationDeadline.dayOptions}
             error={errors.applicationDeadline?.day ?? undefined}
           />
@@ -169,12 +194,8 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
             id="applicationDeadline-month"
             placeholder={t('general.placeholder.month')}
             value={applicationDeadline.month}
-            onChange={(e) => {
-              onSelect((v) => applicationDeadline.onMonth(v))(e);
-            }}
-            onBlur={(e) => {
-              applicationDeadline.onAnyBlur(e);
-            }}
+            onChange={(e) => onSelect((v) => applicationDeadline.onMonth(v))(e)}
+            onBlur={(e) => applicationDeadline.onAnyBlur(e)}
             options={monthOptions}
             error={errors.applicationDeadline?.month ?? undefined}
           />
@@ -182,12 +203,8 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
             id="applicationDeadline-year"
             placeholder={t('general.placeholder.year')}
             value={applicationDeadline.year}
-            onChange={(e) => {
-              onSelect((v) => applicationDeadline.onYear(v))(e);
-            }}
-            onBlur={(e) => {
-              applicationDeadline.onAnyBlur(e);
-            }}
+            onChange={(e) => onSelect((v) => applicationDeadline.onYear(v))(e)}
+            onBlur={(e) => applicationDeadline.onAnyBlur(e)}
             options={yearOptions}
             error={errors.applicationDeadline?.year ?? undefined}
           />
@@ -196,22 +213,16 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
         <BooleanYesNoRadioGroup
           label={t('employer_castings.dashboard.basic_info.has_wardrobe_fitting')}
           value={hasWardrobeFitting.value}
-          onChange={(next) => hasWardrobeFitting.onChange(next)} // next: boolean
+          onChange={(next) => hasWardrobeFitting.onChange(next)}
           name="hasWardrobeFitting"
         />
 
         <RangeCalendar
-          label="Fechas de rodaje/Disponibilidad (Rango)"
-          required
+          label={t('employer_castings.dashboard.basic_info.shooting_dates')}
           value={range}
           onChange={setRange}
-          onCommit={(from, to) => {
-            autosave.immediate({
-              id: data.id,
-              shootingStartDate: from.toISOString().slice(0, 10),
-              shootingEndDate: to.toISOString().slice(0, 10),
-            });
-          }}
+          onCommit={handleRangeCommit}
+          onClear={handleRangeClear}
         />
 
         <TextareaField
@@ -227,6 +238,13 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
       </div>
     </div>
   );
+};
+
+const toRangeFromData = (start?: string | null, end?: string | null): DateRange | undefined => {
+  const from = parseLocalISODate(start);
+  const to = parseLocalISODate(end);
+  if (!from && !to) return undefined;
+  return { from: from ?? to, to: to ?? from };
 };
 
 export default CastingBasicInfoForm;

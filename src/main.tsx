@@ -1,5 +1,6 @@
 import 'autocasting-ui-library-padimasso/styles.css';
 import './index.css';
+import 'react-day-picker/style.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';

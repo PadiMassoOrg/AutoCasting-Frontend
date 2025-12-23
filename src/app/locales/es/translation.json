@@ -741,7 +741,8 @@
         "project_type": "Tipo de proyecto",
         "casting_modality": "Modalidad del Casting",
         "application_deadline": "Fecha límite para postulación",
-        "has_wardrobe_fitting": "¿Habrá prueba de vestuario?"
+        "has_wardrobe_fitting": "¿Habrá prueba de vestuario?",
+        "shooting_dates": "Fechas de rodaje/Disponibilidad (Rango)"
       },
       "roles": {
         "roles": "Roles",

@@ -34,8 +34,8 @@ export type BaseCastingBasicInfo = {
   applicationDeadline: string;
   hasWardrobeFitting: boolean;
   wardrobeFittingText: string;
-  shootingStartDay: string;
-  shootingEndDay: string;
+  shootingStartDate: string;
+  shootingEndDate: string;
   description: string;
 };
 
