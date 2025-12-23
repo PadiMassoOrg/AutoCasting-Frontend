@@ -43,6 +43,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
   const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
   // Employer
   const activeEmployerProfile = isRouteActive(ROUTES.EMPLOYER, true);
+  const activeEmployerCastings = isRouteActive(ROUTES.EMPLOYER_CASTINGS, true);
 
   useEffect(() => {
     if (!open) return;
@@ -108,18 +109,10 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                 <ul className="w-full flex flex-col font-semibold">
                   {mode == USER_MODE_TALENT ? (
                     <>
-                      {/* <li onClick={onClose}>
-                        <Link to={ROUTES.TALENT_APPLIED_PRODUCTIONS}>
-                          <span className={clsx(baseClass, activeAppliedProductions && activeClass)}>
-                            <img src={activeAppliedProductions ? FileIconPurple : FileIcon} alt="" className="w-7" />
-                            {t('routes.talent-applied-productions')}
-                          </span>
-                        </Link>
-                      </li> */}
                       <li onClick={onClose}>
                         <Link to={ROUTES.TALENT}>
                           <span className={clsx(baseClass, activeTalentProfile && activeClass)}>
-                            <Icon name="view" variant={activeTalentProfile ? 'primary' : 'default'} />{' '}
+                            <Icon name="profile" variant={activeTalentProfile ? 'primary' : 'default'} />{' '}
                             {t('routes.profile')}
                           </span>
                         </Link>
@@ -136,9 +129,15 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                   ) : (
                     <>
                       <li onClick={onClose}>
+                        <Link to={ROUTES.EMPLOYER_CASTINGS}>
+                          <span className={clsx(baseClass, activeEmployerCastings && activeClass)}>
+                            <Icon name="clapperManage" variant={activeEmployerCastings ? 'primary' : 'default'} />{' '}
+                            {t('routes.employer_castings')}
+                          </span>
+                        </Link>
                         <Link to={ROUTES.EMPLOYER}>
                           <span className={clsx(baseClass, activeEmployerProfile && activeClass)}>
-                            <Icon name="view" variant={activeEmployerProfile ? 'primary' : 'default'} />{' '}
+                            <Icon name="profile" variant={activeEmployerProfile ? 'primary' : 'default'} />{' '}
                             {t('routes.profile')}
                           </span>
                         </Link>

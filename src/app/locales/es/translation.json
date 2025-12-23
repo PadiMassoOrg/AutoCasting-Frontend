@@ -108,7 +108,7 @@
     "talent-database": "Catálogo",
     "casting-database": "Castings",
     "talent-applied-productions": "Mis Postulaciones",
-    "productions": "Castings",
+    "employer_castings": "Mis Castings",
     "support": "Soporte Técnico",
     "faq": "Preguntas Frecuentes",
     "privacy": "Políticas de Privacidad",
@@ -723,6 +723,13 @@
       "access": "Acceso",
       "support": "Soporte Técnico",
       "faq": "Preguntas Frecuentes"
+    }
+  },
+  "employer_castings": {
+    "page": {
+      "title": "Mis Castings",
+      "create_casting": "Nuevo Casting",
+      "empty_page": "Aún no hay castings que mostrar."
     }
   },
   "legal": {

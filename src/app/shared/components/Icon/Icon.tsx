@@ -12,6 +12,8 @@ import CalendarIconPurple from '../../icons/calendar-purple.svg';
 import CalendarIcon from '../../icons/calendar.svg';
 import CatalogIconPurple from '../../icons/catalogo-purple.svg';
 import CatalogIcon from '../../icons/catalogo.svg';
+import ClapperManageIconPurple from '../../icons/clapper-manage-purple.svg';
+import ClapperManageIcon from '../../icons/clapper-manage.svg';
 import ClapperIconPurple from '../../icons/clapper-purple.svg';
 import ClapperIcon from '../../icons/clapper.svg';
 import ClockIconPurple from '../../icons/clock-purple.svg';
@@ -75,6 +77,7 @@ export type IconName =
   | 'catalog'
   | 'copyLink'
   | 'clapper'
+  | 'clapperManage'
   | 'clock'
   | 'file'
   | 'filter'
@@ -234,6 +237,10 @@ const ICONS: Record<IconName, BaseIconConfig> = {
     default: PlusIcon,
     primary: PlusIconPurple,
     white: PlusIconWhite,
+  },
+  clapperManage: {
+    default: ClapperManageIcon,
+    primary: ClapperManageIconPurple,
   },
 };
 
