@@ -730,6 +730,22 @@
       "title": "Mis Castings",
       "create_casting": "Nuevo Casting",
       "empty_page": "Aún no hay castings que mostrar."
+    },
+    "dashboard": {
+      "title_new": "Nuevo Casting",
+      "title_edit": "Editar Casting",
+      "basic_info": {
+        "basic_info": "Información Básica"
+      },
+      "roles": {
+        "roles": "Roles"
+      },
+      "requirements": {
+        "requirements": "Requisitos"
+      },
+      "remuneration": {
+        "remuneration": "Remuneración"
+      }
     }
   },
   "legal": {

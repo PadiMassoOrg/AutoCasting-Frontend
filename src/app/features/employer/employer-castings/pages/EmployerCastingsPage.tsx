@@ -21,7 +21,7 @@ const EmployerCastingsPage = () => {
   }, [fetchPage]);
 
   const actionButtonRender = () => (
-    <Link to={ROUTES.EMPLOYER_NEW_CASTING}>
+    <Link to={ROUTES.EMPLOYER_CASTING}>
       <Button className="flex flex-row items-center justify-center gap-2">
         <Icon name="plus" variant="white" size={16} />
         <span className="text-base font-medium">{t('employer_castings.page.create_casting')}</span>

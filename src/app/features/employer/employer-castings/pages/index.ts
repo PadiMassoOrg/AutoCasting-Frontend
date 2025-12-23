@@ -1,3 +1,3 @@
+import EmployerCastingPage from './EmployerCastingPage';
 import EmployerCastingsPage from './EmployerCastingsPage';
-import NewCastingPage from './NewCastingPage';
-export { EmployerCastingsPage, NewCastingPage };
+export { EmployerCastingPage, EmployerCastingsPage };

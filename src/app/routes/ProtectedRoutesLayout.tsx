@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useMeData } from '../features/auth/hooks/useMeData';
-import { EmployerCastingsPage, NewCastingPage } from '../features/employer/employer-castings/pages';
+import { EmployerCastingPage, EmployerCastingsPage } from '../features/employer/employer-castings/pages';
 import { EmployerProfileEditPage } from '../features/employer/employer-profile-edit/pages';
 import { TalentProfileEditPage } from '../features/talent/talent-profile-edit/pages';
 import { TalentProfileSettingsPage } from '../features/talent/talent-profile-settings/pages';
@@ -36,7 +36,7 @@ export default function ProtectedRoutesLayout() {
         {/* Employer */}
         <Route path={ROUTES.EMPLOYER} element={<EmployerProfileEditPage />} />
         <Route path={ROUTES.EMPLOYER_CASTINGS} element={<EmployerCastingsPage />} />
-        <Route path={ROUTES.EMPLOYER_NEW_CASTING} element={<NewCastingPage />} />
+        <Route path={ROUTES.EMPLOYER_CASTING} element={<EmployerCastingPage />} />
       </Route>
       <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
     </Routes>
