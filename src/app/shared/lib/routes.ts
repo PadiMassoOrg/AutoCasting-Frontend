@@ -50,10 +50,6 @@ export const API_ROUTES = {
   // Site Metadata
   SITEMETADATA: '/sitemetadata',
   SITEMETADATA_VERSION: '/sitemetadata/version',
-  // Talent Database
-  TALENT_DATABASE: '/talent/talent-database',
-  // Casting Database
-  CASTING_DATABASE: '/castings',
   // Authentication
   AUTH_LOGIN: '/auth/login',
   AUTH_REGISTER: '/auth/register',
@@ -67,7 +63,10 @@ export const API_ROUTES = {
   // Legal
   CURRENT_LEGAL_DOCUMENT: '/legal/current',
   ACCEPT_LEGAL_DOCUMENT: '/legal/accept',
-  // Talent Profile
+  // Database
+  TALENT_DATABASE: '/talent-database',
+  CASTING_DATABASE: '/castings-database',
+  // Talent
   TALENT_PROFILE: '/talent',
   TALENT_BASIC_INFO: '/talent/basic-info',
   TALENT_CONTACT: '/talent/contact',
@@ -75,12 +74,11 @@ export const API_ROUTES = {
   TALENT_MEDIA: '/talent/media',
   TALENT_CHARACTERISTICS: '/talent/characteristics',
   TALENT_SKILLS: '/talent/skills',
-  // Credits
   CREDIT: '/credit',
-  // Education
   EDUCATION: '/education',
-  // Employer Profile
+  // Employer
   EMPLOYER_PROFILE: '/employer',
   EMPLOYER_BASIC_INFO: '/employer/basic-info',
   EMPLOYER_SOCIAL_MEDIA: '/employer/social-media',
+  EMPLOYER_CASTINGS: '/employer/castings',
 };

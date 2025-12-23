@@ -1,13 +1,24 @@
 import { Button } from 'autocasting-ui-library-padimasso';
+import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { DashboardSection, DashboardShell } from '../../../../layouts/components';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../shared/components/Section';
 import { ROUTES } from '../../../../shared/lib/routes';
+import { getMyCastings } from '../services/employerCastingService';
 
 const EmployerCastingsPage = () => {
   const { t } = useTranslation();
+
+  const fetchPage = useCallback(async () => {
+    const data = await getMyCastings();
+    console.log(data);
+  }, []);
+
+  useEffect(() => {
+    fetchPage();
+  }, [fetchPage]);
 
   const actionButtonRender = () => (
     <Link to={ROUTES.EMPLOYER_NEW_CASTING}>
