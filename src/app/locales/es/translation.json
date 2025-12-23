@@ -52,7 +52,8 @@
       "about": "Escribir algo aquí...",
       "company_name": "Ej. “Producciones Pérez”, “Luna Pérez Casting”",
       "tax_number": "Ej. “20-12345678-3”",
-      "year_example": "Ej. 2023"
+      "year_example": "Ej. 2023",
+      "project_name": "Nombre del proyecto"
     },
     "filter": {
       "title": "Filtros",
@@ -735,7 +736,8 @@
       "title_new": "Nuevo Casting",
       "title_edit": "Editar Casting",
       "basic_info": {
-        "basic_info": "Información Básica"
+        "basic_info": "Información Básica",
+        "title": "Título"
       },
       "roles": {
         "roles": "Roles",

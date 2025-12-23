@@ -81,4 +81,5 @@ export const API_ROUTES = {
   EMPLOYER_BASIC_INFO: '/employer/basic-info',
   EMPLOYER_SOCIAL_MEDIA: '/employer/social-media',
   EMPLOYER_CASTINGS: '/employer/castings',
+  EMPLOYER_CASTING_BASIC_INFO: '/employer/casting/basic-info',
 };

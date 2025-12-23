@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import { DashboardShell } from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
 import {
@@ -10,11 +11,15 @@ import {
 
 const EmployerCastingPage = () => {
   const { t } = useTranslation();
+  const { slug } = useParams<{ slug: string }>();
+
+  // TODO if slug is of form "C-1532ED6C" it means we are "EDITING" a CASTING
+
   const sections: DashboardSection[] = [
     {
       key: 'basic',
       label: t('employer_castings.dashboard.basic_info.basic_info'),
-      render: () => <EmployerCastingBasicInfoEditSection />,
+      render: () => <EmployerCastingBasicInfoEditSection data={undefined} />,
     },
     {
       key: 'roles',
