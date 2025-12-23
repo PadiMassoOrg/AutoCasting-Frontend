@@ -2,6 +2,7 @@ import { FormInputField, FormSelectField, Label, Separator } from 'autocasting-u
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useEmployerLogoPatch } from '../../../../../integrations/supabase/media/hooks/useEmployerLogoPatch';
+import { TextareaField } from '../../../../../shared/components/Form';
 import UploadTile from '../../../../../shared/components/UploadTile/UploadTile';
 import { useCommittedText, useCommittedUuid } from '../../../../../shared/utils/formUtils';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
@@ -288,26 +289,16 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
         error={errors.websiteUrl ?? undefined}
       />
 
-      <div className="flex flex-col gap-1">
-        <Label className="text-sm font-semibold">{t('employer_profile.basic_info.about')}</Label>
-        <textarea
-          id="about"
-          className="
-          w-full min-h-36 px-5 py-2.5 rounded-xl text-base 
-          placeholder:text-[var(--color-secondary-grey)] placeholder:font-light placeholder:text-sm
-          border border-[var(--color-secondary-outline)]
-          focus:outline-none focus:ring-0 focus:border-[var(--color-primary-black)]
-          disabled:bg-[var(--color-secondary-offwhite)] disabled:cursor-not-allowed
-          transition-colors
-          "
-          placeholder={t('general.placeholder.about')}
-          value={about.value}
-          onChange={(e) => about.onChange(e as any)}
-          onBlur={(e) => about.onBlur(e as any)}
-          onKeyDown={(e) => about.onKeyDown(e as any)}
-        />
-        {errors.about && <span className="text-sm text-red-600">{errors.about}</span>}
-      </div>
+      <TextareaField
+        id="about"
+        label={t('employer_profile.basic_info.about')}
+        placeholder={t('general.placeholder.about')}
+        value={about.value}
+        onChange={about.onChange}
+        onBlur={about.onBlur}
+        onKeyDown={about.onKeyDown}
+        error={errors.about}
+      />
 
       <Separator className="opacity-20 my-8" />
 

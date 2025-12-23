@@ -26,8 +26,10 @@ export type BaseCastingBasicInfo = {
   sectionStatus: SiteMetadataObject;
   title: string;
   projectType: SiteMetadataObject;
+  projectTypeId: string;
   location: string;
   castingModality: SiteMetadataObject;
+  castingModalityId: string;
   castingModalityText: string;
   applicationDeadline: string;
   hasWardrobeFitting: boolean;

@@ -1,0 +1,100 @@
+import { useId } from 'react';
+import { useTranslation } from 'react-i18next';
+
+export type BooleanYesNoRadioGroupProps = {
+  label: string;
+  value: boolean | null;
+  onChange: (next: boolean) => void;
+
+  name?: string;
+  className?: string;
+  legendClassName?: string;
+  optionClassName?: string;
+  disabled?: boolean;
+};
+
+export default function BooleanYesNoRadioGroup({
+  label,
+  value,
+  onChange,
+  name,
+  className = 'flex flex-col gap-1',
+  legendClassName = 'text-[14px] font-semibold',
+  optionClassName = 'flex items-center gap-2 text-[14px] font-semibold',
+  disabled = false,
+}: BooleanYesNoRadioGroupProps) {
+  const { t } = useTranslation();
+  const uid = useId();
+  const groupName = (name ?? 'bool') + '__' + uid;
+
+  const idYes = `${groupName}-yes`;
+  const idNo = `${groupName}-no`;
+
+  const renderRadioInput = (checked: boolean, props: React.InputHTMLAttributes<HTMLInputElement>) => (
+    <span className="relative inline-flex items-center justify-center h-6 w-6">
+      <input
+        {...props}
+        type="radio"
+        checked={checked}
+        disabled={disabled}
+        className="
+          peer
+          h-6 w-6
+          rounded-full
+          border
+          border-[var(--color-secondary-outline)]
+          appearance-none
+          cursor-pointer
+          checked:border-[var(--color-primary-purple)]
+          bg-white
+          transition-colors
+          disabled:cursor-not-allowed
+          disabled:opacity-50
+        "
+      />
+      <span
+        className="
+          pointer-events-none
+          absolute
+          h-3 w-3
+          rounded-full
+          bg-[var(--color-primary-purple)]
+          scale-0
+          peer-checked:scale-100
+          transition-transform
+        "
+      />
+    </span>
+  );
+
+  return (
+    <fieldset className={className}>
+      <legend className={legendClassName}>{label}</legend>
+
+      {/* Horizontal yes/no */}
+      <div className="mt-2 pl-1 flex flex-row items-center gap-6">
+        {/* Sí */}
+        <label htmlFor={idYes} className={optionClassName}>
+          {renderRadioInput(value === true, {
+            id: idYes,
+            name: groupName,
+            onChange: () => onChange(true),
+          })}
+          <span className="cursor-pointer select-none">{t('general.yes')}</span>
+        </label>
+
+        {/* No */}
+        <label htmlFor={idNo} className={optionClassName}>
+          {renderRadioInput(value === false, {
+            id: idNo,
+            name: groupName,
+            onChange: () => onChange(false),
+          })}
+          <span className="cursor-pointer select-none">{t('general.no')}</span>
+        </label>
+      </div>
+
+      <div className="min-h-[25px]" />
+    </fieldset>
+  );
+}

@@ -9,7 +9,23 @@ export function getCastingBasicInfoSchema(t: TFunction) {
     .trim()
     .min(1, { message: t('validation.required') });
 
+  const projectTypeId = z
+    .string()
+    .trim()
+    .regex(UUID_RX, { message: t('validation.uuid_invalid') })
+    .optional()
+    .or(z.literal('').transform(() => undefined));
+
+  const castingModalityId = z
+    .string()
+    .trim()
+    .regex(UUID_RX, { message: t('validation.uuid_invalid') })
+    .optional()
+    .or(z.literal('').transform(() => undefined));
+
   return z.object({
     title,
+    projectTypeId,
+    castingModalityId,
   });
 }

@@ -1,3 +1,3 @@
-import type { BaseCastingBasicInfo } from './employerCastings.types';
+import type { CastingBasicInfo } from './employerCastings.types';
 
-export type CastingBasicInfoPatchRequest = Partial<BaseCastingBasicInfo>;
+export type CastingBasicInfoPatchRequest = Partial<CastingBasicInfo>;

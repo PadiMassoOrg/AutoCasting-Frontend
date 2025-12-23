@@ -737,7 +737,11 @@
       "title_edit": "Editar Casting",
       "basic_info": {
         "basic_info": "Información Básica",
-        "title": "Título"
+        "title": "Título",
+        "project_type": "Tipo de proyecto",
+        "casting_modality": "Modalidad del Casting",
+        "application_deadline": "Fecha límite para postulación",
+        "has_wardrobe_fitting": "¿Habrá prueba de vestuario?"
       },
       "roles": {
         "roles": "Roles",
