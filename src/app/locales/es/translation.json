@@ -81,8 +81,8 @@
     "loading": "Cargando...",
     "loading_suggestions": "Cargando sugerencias...",
     "server_err": "Ocurrió un error, intente nuevamente.",
-    "switch_to_talent": "Cambiar a Talento",
-    "switch_to_employer": "Cambiar a Empleador"
+    "switch_to_talent": "Soy Talento",
+    "switch_to_employer": "Busco Talento"
   },
   "buttons": {
     "cancel": "Cancelar",
@@ -482,7 +482,8 @@
       }
     },
     "common": {
-      "of": "de"
+      "of": "de",
+      "edit_profile_label": "Para editar tu informacion hace click en:"
     },
     "talent": {
       "step1": {

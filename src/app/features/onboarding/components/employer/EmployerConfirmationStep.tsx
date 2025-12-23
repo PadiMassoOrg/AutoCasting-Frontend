@@ -2,6 +2,8 @@ import { Button, Label } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
+import ButtonRow from '../../../../shared/components/ButtonRow/ButtonRow';
+import { Icon } from '../../../../shared/components/Icon/Icon';
 import { WizardStep } from '../../../../shared/components/Wizard';
 import type { WizardStepProps } from '../../../../shared/components/Wizard/WizardStep';
 import Logo from '../../../../shared/icons/og-image.svg';
@@ -40,12 +42,12 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
   };
 
   return (
-    <section className="w-full relative max-w-[400px]">
+    <section className="w-full  relative max-w-[400px]">
       <WizardStep>
-        <div className="flex min-h-[85vh] lg:min-h-[70vh] flex-col justify-between gap-10">
+        <div className="flex flex-col min-h-[90vh] lg:min-h-[65vh] justify-between">
           <div>
             {/* Header */}
-            <div className="w-full flex flex-col items-center gap-4 mb-6">
+            <div className="w-full flex flex-col items-center gap-4">
               <img src={Logo} className="w-14" />
               <button
                 type="button"
@@ -56,7 +58,7 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
             </div>
 
             {/* Progress */}
-            <div className="flex flex-col gap-1 mb-8">
+            <div className="flex flex-col gap-1 mb-2">
               <div className="w-full h-[9px] rounded-full bg-[var(--color-secondary-offwhite)] overflow-hidden">
                 <div
                   className="h-[9px] bg-[var(--color-primary-purple)] transition-all"
@@ -69,9 +71,13 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
             </div>
 
             {/* Contenido principal */}
-            <div className="text-center">
-              <h1 className="text-2xl font-semibold mb-3">{t('onboarding.employer.confirmation_step.header')}</h1>
+            <div className="text-center flex flex-col gap-1">
+              <h1 className="text-2xl font-semibold">{t('onboarding.employer.confirmation_step.header')}</h1>
               <p className="text-sm">{t('onboarding.employer.confirmation_step.subtitle')}</p>
+              <p className="text-sm mt-4">
+                {t('onboarding.common.edit_profile_label')}
+                <ButtonRow items={[<Icon variant="primary" name="profile" />]} className="mt-2"></ButtonRow>
+              </p>
             </div>
 
             {serverError && (
@@ -84,7 +90,7 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
           </div>
 
           <div>
-            <div className="flex justify-between items-center gap-4 mb-6">
+            <div className="flex justify-between items-center gap-4">
               <Button variant="outline" type="button" onClick={goBack}>
                 {t('buttons.back')}
               </Button>

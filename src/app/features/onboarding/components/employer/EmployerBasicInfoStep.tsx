@@ -76,77 +76,72 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
   return (
     <section className="w-full relative max-w-[400px]">
       <WizardStep>
-        <div className="flex lg:min-h-[65vh] flex-col justify-between">
-          <div>
-            <div className="w-full flex flex-col items-center gap-4 mb-6">
-              <button
-                type="button"
-                className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]"
-              >
-                {t('onboarding.mode_selector.employer.title')}
-              </button>
-            </div>
+        <div className="flex flex-col justify-between">
+          <div className="w-full flex flex-col items-center gap-4 mb-6">
+            <button
+              type="button"
+              className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]"
+            >
+              {t('onboarding.mode_selector.employer.title')}
+            </button>
+          </div>
 
-            <div className="flex flex-col gap-1 mb-3">
-              <div className="w-full h-[9px] rounded-full bg-[var(--color-secondary-offwhite)] overflow-hidden">
-                <div
-                  className="h-[9px] bg-[var(--color-primary-purple)] transition-all"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-              <p className="text-[13px] mt-1 font-semibold">
-                {stepIndex + 1} {t('onboarding.common.of')} {totalSteps}
-              </p>
-            </div>
-
-            <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col mb-4">
-              <div className="text-center mb-4 lg:mb-8">
-                <h1 className="text-2xl font-semibold mb-1">{t('onboarding.employer.step1.header')}</h1>
-                <p className="text-sm">{t('onboarding.employer.step1.subtitle')}</p>
-              </div>
-
-              <FormInputField
-                id="companyName"
-                type="text"
-                placeholder={t('general.placeholder.company_name')}
-                className="bg-[var(--color-primary-white)]"
-                {...register('companyName')}
-                error={errors.companyName?.message}
+          <div className="flex flex-col gap-1 mb-3">
+            <div className="w-full h-[9px] rounded-full bg-[var(--color-secondary-offwhite)] overflow-hidden">
+              <div
+                className="h-[9px] bg-[var(--color-primary-purple)] transition-all"
+                style={{ width: `${progress}%` }}
               />
-
-              <div className="mt-4">
-                <FormInputField
-                  id="taxNumber"
-                  type="text"
-                  placeholder={t('general.placeholder.tax_number')}
-                  className="bg-[var(--color-primary-white)]"
-                  {...register('taxNumber')}
-                  error={errors.taxNumber?.message}
-                />
-                <p className="text-[var(--color-secondary-grey-fonts)] text-xs italic pl-2 pt-1">
-                  {t('onboarding.employer.step1.tax_disclaimer')}
-                </p>
-              </div>
-
-              {serverError && (
-                <Label variant="error" className="pl-1 mt-3">
-                  {serverError}
-                </Label>
-              )}
-            </form>
-          </div>
-
-          <div>
-            <div className="flex justify-between items-center gap-4 mb-6">
-              <Button variant="outline" type="button" onClick={onBackToModeSelector}>
-                {t('buttons.back')}
-              </Button>
-              <Button variant="primary" type="button" disabled={isNextDisabled} onClick={handleNextClick}>
-                {isSubmitting || isPending ? t('state.loading') : t('buttons.next')}
-              </Button>
             </div>
-            <ContinueLaterButton />
+            <p className="text-[13px] mt-1 font-semibold">
+              {stepIndex + 1} {t('onboarding.common.of')} {totalSteps}
+            </p>
           </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col mb-4">
+            <div className="text-center mb-4">
+              <h1 className="text-2xl font-semibold mb-1">{t('onboarding.employer.step1.header')}</h1>
+              <p className="text-sm">{t('onboarding.employer.step1.subtitle')}</p>
+            </div>
+
+            <FormInputField
+              id="companyName"
+              type="text"
+              placeholder={t('general.placeholder.company_name')}
+              className="bg-[var(--color-primary-white)]"
+              {...register('companyName')}
+              error={errors.companyName?.message}
+            />
+
+            <FormInputField
+              id="taxNumber"
+              type="text"
+              placeholder={t('general.placeholder.tax_number')}
+              className="bg-[var(--color-primary-white)]"
+              {...register('taxNumber')}
+              error={errors.taxNumber?.message}
+            />
+            <p className="text-[var(--color-secondary-grey-fonts)] text-xs italic pl-2 pt-1">
+              {t('onboarding.employer.step1.tax_disclaimer')}
+            </p>
+
+            {serverError && (
+              <Label variant="error" className="pl-1 mt-3">
+                {serverError}
+              </Label>
+            )}
+          </form>
+
+          <div className="flex justify-between items-center gap-4 mb-6">
+            <Button variant="outline" type="button" onClick={onBackToModeSelector}>
+              {t('buttons.back')}
+            </Button>
+            <Button variant="primary" type="button" disabled={isNextDisabled} onClick={handleNextClick}>
+              {isSubmitting || isPending ? t('state.loading') : t('buttons.next')}
+            </Button>
+          </div>
+
+          <ContinueLaterButton />
         </div>
       </WizardStep>
     </section>

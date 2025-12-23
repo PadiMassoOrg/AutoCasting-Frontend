@@ -292,7 +292,14 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
         <Label className="text-sm font-semibold">{t('employer_profile.basic_info.about')}</Label>
         <textarea
           id="about"
-          className="w-full min-h-[135px] rounded-md border border-[var(--color-secondary-outline)] px-3 py-2 text-sm"
+          className="
+          w-full min-h-36 px-5 py-2.5 rounded-xl text-base 
+          placeholder:text-[var(--color-secondary-grey)] placeholder:font-light placeholder:text-sm
+          border border-[var(--color-secondary-outline)]
+          focus:outline-none focus:ring-0 focus:border-[var(--color-primary-black)]
+          disabled:bg-[var(--color-secondary-offwhite)] disabled:cursor-not-allowed
+          transition-colors
+          "
           placeholder={t('general.placeholder.about')}
           value={about.value}
           onChange={(e) => about.onChange(e as any)}

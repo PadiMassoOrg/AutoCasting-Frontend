@@ -64,10 +64,10 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
   return (
     <section className="w-full relative max-w-[400px]">
       <WizardStep>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-[70vh] flex-col justify-between gap-10">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-[80vh] lg:min-h-[65vh] flex-col justify-between">
           <div>
             {/* Header */}
-            <div className="w-full flex flex-col items-center gap-4 mb-6">
+            <div className="w-full flex flex-col items-center gap-4 mb-2">
               <button
                 type="button"
                 className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]"
@@ -77,7 +77,7 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
             </div>
 
             {/* Progress */}
-            <div className="flex flex-col gap-1 mb-8">
+            <div className="flex flex-col gap-1 mb-4">
               <div className="w-full h-[9px] rounded-full bg-[var(--color-secondary-offwhite)] overflow-hidden">
                 <div
                   className="h-[9px] bg-[var(--color-primary-purple)] transition-all"
@@ -89,7 +89,7 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
               </p>
             </div>
 
-            <div className="w-full mb-4 flex flex-col gap-4">
+            <div className="w-full mb-4 flex flex-col gap-2">
               <div className="text-center mb-4">
                 <h1 className="text-2xl font-semibold mb-3">{t('onboarding.talent.step1.header')}</h1>
                 <p className="text-sm">{t('onboarding.talent.step1.subtitle')}</p>

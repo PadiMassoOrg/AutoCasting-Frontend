@@ -79,7 +79,7 @@ export default function PublicProfileDetailsView({ open, onClose, profile }: Pro
         </div>
         <ImageCarousel images={images.length > 0 ? images : null} isDesktop isDesktopXL />
         <Separator className="opacity-20 my-4"></Separator>
-        <ProfileInfoCarousel profile={profile} />
+        <ProfileInfoCarousel profile={profile} infoPanelFixedHeight={true} />
         <Separator className="opacity-20 my-4"></Separator>
         <VideoSection data={media} />
       </div>

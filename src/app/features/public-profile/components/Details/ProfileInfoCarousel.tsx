@@ -8,9 +8,11 @@ const ORDER: readonly PillKey[] = ['characteristics', 'skills', 'credits', 'educ
 
 export default function ProfileInfoCarousel({
   profile,
+  infoPanelFixedHeight,
   className,
 }: {
   profile: TalentPublicProfileResponse;
+  infoPanelFixedHeight?: boolean;
   className?: string;
 }) {
   const { t } = useTranslation();
@@ -25,6 +27,7 @@ export default function ProfileInfoCarousel({
       className={className}
       defaultActive="characteristics"
       translationPrefix="profile.pills"
+      fixedHeight={infoPanelFixedHeight}
     />
   );
 }
