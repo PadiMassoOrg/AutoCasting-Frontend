@@ -1,8 +1,9 @@
 import { FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
+import type { DateRange } from 'react-day-picker';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { BooleanYesNoRadioGroup, TextareaField } from '../../../../shared/components/Form';
+import { BooleanYesNoRadioGroup, RangeCalendar, TextareaField } from '../../../../shared/components/Form';
 import { useCommittedNullableBooleanValue } from '../../../../shared/components/Form/hooks/useCommittedBooleanValue';
 import { capitalize } from '../../../../shared/utils/formatUtils';
 import { onSelect, useCommittedText, useCommittedUuid, useIsoDateField } from '../../../../shared/utils/formUtils';
@@ -30,6 +31,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
   const YEAR_START = new Date().getFullYear();
   const YEAR_END = YEAR_START + 2;
 
+  const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [errors, setErrors] = useState<Errors>({});
 
   const title = useCommittedText(
@@ -196,6 +198,20 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
           value={hasWardrobeFitting.value}
           onChange={(next) => hasWardrobeFitting.onChange(next)} // next: boolean
           name="hasWardrobeFitting"
+        />
+
+        <RangeCalendar
+          label="Fechas de rodaje/Disponibilidad (Rango)"
+          required
+          value={range}
+          onChange={setRange}
+          onCommit={(from, to) => {
+            autosave.immediate({
+              id: data.id,
+              shootingStartDate: from.toISOString().slice(0, 10),
+              shootingEndDate: to.toISOString().slice(0, 10),
+            });
+          }}
         />
 
         <TextareaField
