@@ -211,11 +211,11 @@ const UploadTile = forwardRef<HTMLDivElement, UploadTileProps>(function UploadTi
           <div className={clsx('flex flex-col items-center gap-2 text-gray-400', classes?.empty)}>
             <div
               className={clsx(
-                'h-11 w-11 grid place-items-center rounded-full bg-gray-200 text-2xl leading-none',
+                'h-10 w-10 grid place-items-center justify-center rounded-full bg-gray-200 text-xl',
                 classes?.icon
               )}
             >
-              +
+              <span className="mb-[2px] mx-[1px]">+</span>
             </div>
             {label && <span className={clsx('text-xs', classes?.label)}>{label}</span>}
           </div>

@@ -75,7 +75,7 @@ function ModeSelectorStep({ onModeChosen }: Props) {
   return (
     <section className="w-full pb-6 pt-4">
       <WizardStep>
-        <div className="flex min-h-[65vh] flex-col justify-between gap-10">
+        <div className="flex min-h-[60vh] flex-col justify-between gap-10">
           <div className="flex flex-col items-center gap-4">
             <div className="text-center">
               <h1 className="text-2xl font-bold mb-4">{t('onboarding.mode_selector.header')}</h1>
@@ -83,10 +83,13 @@ function ModeSelectorStep({ onModeChosen }: Props) {
             </div>
           </div>
           <div className="w-full flex flex-col gap-6 items-center lg:flex-row lg:justify-center">
-            <ModeCard mode="TALENT" onContinue={() => handleContinue('TALENT')} />
-            <ModeCard mode="EMPLOYER" onContinue={() => handleContinue('EMPLOYER')} />
+            {meData?.talentOnboardingStatus !== 'COMPLETED' && (
+              <ModeCard mode="TALENT" onContinue={() => handleContinue('TALENT')} />
+            )}
+            {meData?.employerOnboardingStatus !== 'COMPLETED' && (
+              <ModeCard mode="EMPLOYER" onContinue={() => handleContinue('EMPLOYER')} />
+            )}
           </div>
-          <div></div>
           <ContinueLaterButton />
         </div>
       </WizardStep>

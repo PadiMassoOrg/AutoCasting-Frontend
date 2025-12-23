@@ -115,7 +115,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
               </Link>
               {isAuth && (
                 <span className="ml-2">
-                  <UserModeSwitcher></UserModeSwitcher>
+                  <UserModeSwitcher showLabel></UserModeSwitcher>
                 </span>
               )}
             </div>
