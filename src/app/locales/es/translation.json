@@ -738,10 +738,12 @@
         "basic_info": "Información Básica"
       },
       "roles": {
-        "roles": "Roles"
+        "roles": "Roles",
+        "add_new": "Nuevo Rol"
       },
       "requirements": {
-        "requirements": "Requisitos"
+        "requirements": "Requisitos",
+        "add_new": "Agregar Requerimiento"
       },
       "remuneration": {
         "remuneration": "Remuneración"
