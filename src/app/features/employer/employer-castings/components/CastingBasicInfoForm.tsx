@@ -35,17 +35,13 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [errors, setErrors] = useState<Errors>({});
 
-  // ✅ 1) Calculo del rango “guardado” que viene del backend
   const savedRange = useMemo(
     () => toRangeFromData(data.shootingStartDate, data.shootingEndDate),
     [data.shootingStartDate, data.shootingEndDate]
   );
 
-  // ✅ 2) Sincroniza el state local cuando entra data o cambias de casting
-  //     - Si el usuario ya tocó el calendario en esta sesión, NO lo pisamos.
   useEffect(() => {
     setRange((prev) => {
-      // cambio de casting o primera carga: inicializa desde backend
       if (!prev?.from && !prev?.to) return savedRange;
       return prev;
     });
@@ -227,7 +223,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
 
         <TextareaField
           id="description"
-          label={t('employer_profile.basic_info.about')}
+          label={t('employer_castings.dashboard.basic_info.description')}
           placeholder={t('general.placeholder.about')}
           value={description.value}
           onChange={description.onChange}

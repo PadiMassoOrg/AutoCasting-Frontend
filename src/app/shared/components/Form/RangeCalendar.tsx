@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { DayPicker, type DateRange } from 'react-day-picker';
+import { DATE_FNS_LOCALE_BY_LANG, useLanguage, WEEKDAYS_SHORT_BY_LANG } from '../../../context/LanguageContext';
 
 type RangeCalendarProps = {
   label?: string;
@@ -30,13 +32,18 @@ export function RangeCalendar({
   onClear,
   clearable = true,
 }: RangeCalendarProps) {
+  const { lang } = useLanguage();
+  const locale = DATE_FNS_LOCALE_BY_LANG[lang];
+  const weekdayLabels = WEEKDAYS_SHORT_BY_LANG[lang];
+
   const [month, setMonth] = React.useState<Date>(() => getTargetMonth(value));
 
-  React.useEffect(() => {
+  useEffect(() => {
     const next = getTargetMonth(value);
-    if (month.getFullYear() !== next.getFullYear() || month.getMonth() !== next.getMonth()) {
-      setMonth(next);
-    }
+    setMonth((prev) => {
+      if (prev.getFullYear() === next.getFullYear() && prev.getMonth() === next.getMonth()) return prev;
+      return next;
+    });
   }, [value?.from?.getTime(), value?.to?.getTime()]);
 
   const handleSelect = React.useCallback(
@@ -54,31 +61,38 @@ export function RangeCalendar({
   );
 
   return (
-    <div className={`${className} flex flex-col`}>
-      <div className="flex items-center justify-between mb-2">
-        {label ? <div className="text-sm font-semibold">{label}</div> : <span />}
-      </div>
-      <div className="flex flex-col gap-1">
-        <DayPicker
-          mode="range"
-          navLayout="around"
-          weekStartsOn={weekStartsOn}
-          month={month}
-          onMonthChange={setMonth}
-          selected={value}
-          onSelect={handleSelect}
-          numberOfMonths={1}
-          className="p-2 bg-[var(--color-secondary-white)] rounded-2xl border border-[var(--color-secondary-outline)]"
-        />
-        {clearable && (value?.from || value?.to) ? (
-          <button type="button" onClick={onClear} className="min-h-[25px] cursor-pointer text-sm underline font-light ">
-            Limpiar
-          </button>
-        ) : (
-          <div className="min-h-[25px]"></div>
-        )}
-      </div>
-      <div className="min-h-[25px]"></div>
+    <div className={`${className ?? ''} flex flex-col w-full lg:max-w-[350px]`}>
+      {label ? <div className="mb-2 text-sm font-semibold">{label}</div> : null}
+
+      <DayPicker
+        mode="range"
+        navLayout="around"
+        weekStartsOn={weekStartsOn}
+        month={month}
+        onMonthChange={setMonth}
+        selected={value}
+        onSelect={handleSelect}
+        numberOfMonths={1}
+        locale={locale}
+        formatters={{
+          formatWeekdayName: (date) => weekdayLabels[date.getDay()],
+        }}
+        className="w-full p-2 bg-[var(--color-secondary-white)] rounded-2xl border border-[var(--color-secondary-outline)] overflow-hidden"
+        styles={{
+          root: { width: '100%' },
+          months: { width: '100%' },
+          month: { width: '100%' },
+          month_grid: { width: '100%', tableLayout: 'fixed' },
+        }}
+      />
+
+      {clearable && (value?.from || value?.to) ? (
+        <button type="button" onClick={onClear} className="min-h-[25px] cursor-pointer text-sm underline font-light">
+          Limpiar
+        </button>
+      ) : (
+        <div className="min-h-[25px]" />
+      )}
     </div>
   );
 }
