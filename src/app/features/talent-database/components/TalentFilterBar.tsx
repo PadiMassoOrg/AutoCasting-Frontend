@@ -54,11 +54,13 @@ export function TalentFilterBar({
     [skillsByCat]
   );
 
+  // TODO: Verificar si queremos seguir manejandolo de esta manera
   const genderOptionsWithUnspecified = useMemo(
     () => [{ value: 'NULL', label: t('general.all') }, ...genderOptions],
     [genderOptions, t]
   );
 
+  // TODO: Verificar si queremos seguir manejandolo de esta manera
   const ethnicityOptionsWithUnspecified = useMemo(
     () => [{ value: 'NULL', label: t('general.all') }, ...ethnicityOptions],
     [ethnicityOptions, t]
