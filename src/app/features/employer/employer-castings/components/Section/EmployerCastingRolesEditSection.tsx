@@ -10,12 +10,12 @@ const EmployerCastingRolesEditSection = () => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
 
-  // TODO: Handle EDIT or NEW
   const handleOpenModal = () => {
     openModal(
       <CastingRoleModal
-        onSave={() => {
-          console.log('save Role Modal');
+        mode="create"
+        onSave={(draft) => {
+          console.log('Role Modal SAVE -->', draft);
         }}
         onCancel={closeModal}
       />,
