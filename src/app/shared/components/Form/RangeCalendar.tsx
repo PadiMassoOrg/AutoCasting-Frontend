@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect } from 'react';
-import { DayPicker, type DateRange } from 'react-day-picker';
+import { DayPicker, formatCaption, type DateRange } from 'react-day-picker';
 import { DATE_FNS_LOCALE_BY_LANG, useLanguage, WEEKDAYS_SHORT_BY_LANG } from '../../../context/LanguageContext';
 
 type RangeCalendarProps = {
@@ -94,6 +94,10 @@ export function RangeCalendar({
         disabled={[{ before: minDate }, { after: maxDate }]}
         formatters={{
           formatWeekdayName: (date) => weekdayLabels[date.getDay()],
+          formatCaption: (date, options, dateLib) => {
+            const s = formatCaption(date, options, dateLib);
+            return s ? s[0].toLocaleUpperCase(lang) + s.slice(1) : s;
+          },
         }}
         className="w-full p-2 bg-[var(--color-secondary-white)] rounded-2xl border border-[var(--color-secondary-outline)] overflow-hidden"
         styles={{
@@ -101,7 +105,6 @@ export function RangeCalendar({
           months: { width: '100%' },
           month: { width: '100%' },
           month_grid: { width: '100%', tableLayout: 'fixed' },
-          caption_label: { textTransform: 'capitalize' },
         }}
       />
 

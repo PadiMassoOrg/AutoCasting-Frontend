@@ -18,6 +18,8 @@ type Errors = {
   projectTypeId?: string | null;
   castingModalityId?: string | null;
   applicationDeadline?: { year?: string | null; month?: string | null; day?: string | null } | null;
+  wardrobeFittingText?: string | null;
+  castingModalityText?: string | null;
   description?: string | null;
 };
 
@@ -29,6 +31,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
   const autosave = useCastingBasicInfoAutosave(slug!);
   const schema = useMemo(() => getCastingBasicInfoSchema(t), [t]);
 
+  const ON_SITE_CODE = t('sitemetadata.casting_modality.on_site');
   const YEAR_START = new Date().getFullYear();
   const YEAR_END = YEAR_START + 2;
 
@@ -70,11 +73,40 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
   const castingModality = useCommittedUuid(data.castingModality?.id ?? null, (id) => {
     const raw = id ?? '';
     const r = schema.shape.castingModalityId.safeParse(raw);
+
     setErrors((e) => ({
       ...e,
       castingModalityId: r.success ? null : r.error.errors[0]?.message || t('validation.uuid_invalid'),
     }));
-    if (r.success) autosave.immediate({ id: data.id, castingModalityId: id ?? undefined });
+
+    if (!r.success) return;
+
+    const nextCode = castingModalityOptions.find((o) => o.value === id)?.label ?? null;
+
+    if (nextCode && nextCode !== ON_SITE_CODE) {
+      autosave.immediate({
+        id: data.id,
+        castingModalityId: id ?? undefined,
+        castingModalityText: null,
+      });
+      setErrors((e) => ({ ...e, castingModalityText: null }));
+      return;
+    }
+
+    autosave.immediate({ id: data.id, castingModalityId: id ?? undefined });
+  });
+
+  const selectedCastingModalityStringCodeTranslation = useMemo(() => {
+    if (!castingModality.value) return null;
+    const opt = castingModalityOptions.find((o) => o.value === castingModality.value);
+    return opt?.label ?? null;
+  }, [castingModality.value, castingModalityOptions]);
+
+  const isOnSite = selectedCastingModalityStringCodeTranslation === ON_SITE_CODE;
+
+  const castingModalityText = useCommittedText(data.castingModalityText ?? '', (v) => {
+    setErrors((e) => ({ ...e, castingModalityText: null }));
+    autosave.immediate({ id: data.id, castingModalityText: v || null });
   });
 
   const applicationDeadline = useIsoDateField(
@@ -104,7 +136,25 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
   }, [i18n.language]);
 
   const hasWardrobeFitting = useCommittedNullableBooleanValue(data.hasWardrobeFitting, (v) => {
-    autosave.immediate({ id: data.id, hasWardrobeFitting: v ?? undefined });
+    if (v === false) {
+      autosave.immediate({
+        id: data.id,
+        hasWardrobeFitting: false,
+        wardrobeFittingText: null,
+      });
+      setErrors((e) => ({ ...e, wardrobeFittingText: null }));
+      return;
+    }
+
+    autosave.immediate({
+      id: data.id,
+      hasWardrobeFitting: v ?? undefined,
+    });
+  });
+
+  const wardrobeFittingText = useCommittedText(data.wardrobeFittingText ?? '', (v) => {
+    setErrors((e) => ({ ...e, wardrobeFittingText: null }));
+    autosave.immediate({ id: data.id, wardrobeFittingText: v || null });
   });
 
   const description = useCommittedText(data.description ?? '', (v) => {
@@ -170,6 +220,19 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
         options={castingModalityOptions}
         error={errors.castingModalityId ?? undefined}
       />
+      {isOnSite && (
+        <FormInputField
+          id="castingModalityText"
+          label={t('employer_castings.dashboard.basic_info.casting_modality_on_site')}
+          labelClassName="font-semibold text-base"
+          placeholder={t('general.placeholder.casting_modality')}
+          value={castingModalityText.value}
+          onChange={castingModalityText.onChange}
+          onBlur={castingModalityText.onBlur}
+          onKeyDown={castingModalityText.onKeyDown}
+          error={errors.castingModalityText ?? undefined}
+        />
+      )}
 
       <div className="flex flex-col gap-2">
         <Label className="text-sm font-semibold">
@@ -205,33 +268,48 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
             error={errors.applicationDeadline?.year ?? undefined}
           />
         </div>
-
-        <BooleanYesNoRadioGroup
-          label={t('employer_castings.dashboard.basic_info.has_wardrobe_fitting')}
-          value={hasWardrobeFitting.value}
-          onChange={(next) => hasWardrobeFitting.onChange(next)}
-          name="hasWardrobeFitting"
-        />
-
-        <RangeCalendar
-          label={t('employer_castings.dashboard.basic_info.shooting_dates')}
-          value={range}
-          onChange={setRange}
-          onCommit={handleRangeCommit}
-          onClear={handleRangeClear}
-        />
-
-        <TextareaField
-          id="description"
-          label={t('employer_castings.dashboard.basic_info.description')}
-          placeholder={t('general.placeholder.about')}
-          value={description.value}
-          onChange={description.onChange}
-          onBlur={description.onBlur}
-          onKeyDown={description.onKeyDown}
-          error={errors.description}
-        />
       </div>
+
+      <BooleanYesNoRadioGroup
+        label={t('employer_castings.dashboard.basic_info.has_wardrobe_fitting')}
+        value={hasWardrobeFitting.value}
+        onChange={(next) => hasWardrobeFitting.onChange(next)}
+        name="hasWardrobeFitting"
+      />
+
+      {hasWardrobeFitting.value === true && (
+        <FormInputField
+          id="wardrobeFittingText"
+          label={t('employer_castings.dashboard.basic_info.wardrobe_fitting_details')}
+          labelClassName="font-semibold text-base"
+          placeholder={t('general.placeholder.wardrobe_fitting')}
+          value={wardrobeFittingText.value}
+          onChange={wardrobeFittingText.onChange}
+          onBlur={wardrobeFittingText.onBlur}
+          onKeyDown={wardrobeFittingText.onKeyDown}
+          error={errors.wardrobeFittingText ?? undefined}
+        />
+      )}
+
+      <RangeCalendar
+        label={t('employer_castings.dashboard.basic_info.shooting_dates')}
+        value={range}
+        onChange={setRange}
+        onCommit={handleRangeCommit}
+        onClear={handleRangeClear}
+      />
+      <div className="min-h-[5px]"></div>
+
+      <TextareaField
+        id="description"
+        label={t('employer_castings.dashboard.basic_info.description')}
+        placeholder={t('general.placeholder.about')}
+        value={description.value}
+        onChange={description.onChange}
+        onBlur={description.onBlur}
+        onKeyDown={description.onKeyDown}
+        error={errors.description}
+      />
     </div>
   );
 };

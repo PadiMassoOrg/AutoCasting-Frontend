@@ -53,7 +53,9 @@
       "company_name": "Ej. “Producciones Pérez”, “Luna Pérez Casting”",
       "tax_number": "Ej. “20-12345678-3”",
       "year_example": "Ej. 2023",
-      "project_name": "Nombre del proyecto"
+      "project_name": "Nombre del proyecto",
+      "wardrobe_fitting": "Ej. Fecha aprox., cantidad de días.",
+      "casting_modality": "Ej. Carlos Pelegrini 1100 Dto 4A, CABA"
     },
     "filter": {
       "title": "Filtros",
@@ -740,8 +742,10 @@
         "title": "Título",
         "project_type": "Tipo de proyecto",
         "casting_modality": "Modalidad del Casting",
+        "casting_modality_on_site": "Locación Casting Presencial",
         "application_deadline": "Fecha límite para postulación",
         "has_wardrobe_fitting": "¿Habrá prueba de vestuario?",
+        "wardrobe_fitting_details": "Detalle de Prueba de Vestuario",
         "shooting_dates": "Fechas de rodaje/Disponibilidad (Rango)",
         "description": "Descripción del Proyecto (opcional)"
       },
