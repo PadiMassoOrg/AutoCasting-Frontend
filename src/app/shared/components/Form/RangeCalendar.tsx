@@ -36,6 +36,21 @@ export function RangeCalendar({
   const locale = DATE_FNS_LOCALE_BY_LANG[lang];
   const weekdayLabels = WEEKDAYS_SHORT_BY_LANG[lang];
 
+  const minDate = React.useMemo(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  }, []);
+
+  const maxDate = React.useMemo(() => {
+    const d = new Date(minDate);
+    d.setFullYear(d.getFullYear() + 2);
+    return d;
+  }, [minDate]);
+
+  const startMonthLimit = React.useMemo(() => startOfMonth(minDate), [minDate]);
+  const endMonthLimit = React.useMemo(() => startOfMonth(maxDate), [maxDate]);
+
   const [month, setMonth] = React.useState<Date>(() => getTargetMonth(value));
 
   useEffect(() => {
@@ -74,6 +89,9 @@ export function RangeCalendar({
         onSelect={handleSelect}
         numberOfMonths={1}
         locale={locale}
+        startMonth={startMonthLimit}
+        endMonth={endMonthLimit}
+        disabled={[{ before: minDate }, { after: maxDate }]}
         formatters={{
           formatWeekdayName: (date) => weekdayLabels[date.getDay()],
         }}
@@ -83,6 +101,7 @@ export function RangeCalendar({
           months: { width: '100%' },
           month: { width: '100%' },
           month_grid: { width: '100%', tableLayout: 'fixed' },
+          caption_label: { textTransform: 'capitalize' },
         }}
       />
 
