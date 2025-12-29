@@ -1,15 +1,26 @@
 import api from '../../../../shared/lib/axios';
 import { API_ROUTES } from '../../../../shared/lib/routes';
 import { stripUndefined } from '../../../../shared/utils/stripUndefined';
-import type { CastingBasicInfo, CastingCardResponse, CastingResponse } from '../types/employerCastings.types';
+import type {
+  CastingBasicInfo,
+  CastingCardResponse,
+  CastingEmployerCardResponse,
+  CastingResponse,
+} from '../types/employerCastings.types';
 import type { CastingBasicInfoPatchRequest } from '../types/requests';
 
 export const EMPLOYER_CASTING_CACHE_KEY = ['cache-employer-casting'] as const;
 export const EMPLOYER_CASTINGS_LIST_CACHE_KEY = ['cache-employer-castings-list'] as const;
+export const EMPLOYER_CASTING_ROLES_LIST_CACHE_KEY = ['cache-employer-casting-role-list'] as const;
 
 // GET
 export const getMyCastings = async (): Promise<CastingCardResponse[]> => {
   const response = await api.get(API_ROUTES.EMPLOYER_CASTINGS);
+  return response.data;
+};
+
+export const getRolesBySectionId = async (sectionId: string): Promise<CastingEmployerCardResponse[]> => {
+  const response = await api.get(API_ROUTES.CASTING_ROLE + `/${sectionId}`);
   return response.data;
 };
 

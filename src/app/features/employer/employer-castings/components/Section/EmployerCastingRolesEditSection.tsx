@@ -1,13 +1,16 @@
-import { Button } from 'autocasting-ui-library-padimasso';
+import { Button, Label } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
 import { DashboardSection } from '../../../../../layouts/components';
 import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../../shared/components/Section';
+import { useCastingRoles } from '../../hooks/useCastingRoles';
+import EmployerCastingRoleCard from '../EmployerCastingRoleCard';
 import CastingRoleModal from '../Form/Role/CastingRoleModal';
 
-const EmployerCastingRolesEditSection = () => {
+const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) => {
   const { t } = useTranslation();
+  const { data } = useCastingRoles(sectionId);
   const { openModal, closeModal } = useModal();
 
   const handleOpenModal = () => {
@@ -34,6 +37,13 @@ const EmployerCastingRolesEditSection = () => {
   return (
     <DashboardSection>
       <SectionTitle title={t('employer_castings.dashboard.roles.roles')} action={actionButtonRender()} />
+      {data?.length! > 0 ? (
+        data?.map((role) => <EmployerCastingRoleCard data={role} key={role.id}></EmployerCastingRoleCard>)
+      ) : (
+        <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
+          {t('employer_castings.page.empty_roles')}
+        </Label>
+      )}
     </DashboardSection>
   );
 };

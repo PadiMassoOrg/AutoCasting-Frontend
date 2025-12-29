@@ -7,7 +7,7 @@ export const useCastingDetailsBySlug = (slug?: string) => {
     queryKey: slug ? [...EMPLOYER_CASTING_CACHE_KEY, slug] : [...EMPLOYER_CASTING_CACHE_KEY, 'no-slug'],
     queryFn: () => getCastingDetailsBySlug(slug!),
     enabled: !!slug,
-    staleTime: Infinity,
+    staleTime: 0,
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

@@ -735,7 +735,8 @@
     "page": {
       "title": "Mis Castings",
       "create_casting": "Nuevo Casting",
-      "empty_page": "Aún no hay castings que mostrar."
+      "empty_page": "Aún no hay castings que mostrar.",
+      "empty_roles": "Aún no agregaste roles."
     },
     "dashboard": {
       "title_new": "Nuevo Casting",

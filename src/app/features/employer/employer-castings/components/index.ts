@@ -1,3 +1,4 @@
 import CastingBasicInfoForm from './CastingBasicInfoForm';
-import CastingCard from './CastingCard';
-export { CastingBasicInfoForm, CastingCard };
+import EmployerCastingRoleCard from './EmployerCastingRoleCard';
+import CastingCard from './PublicCastingCard';
+export { CastingBasicInfoForm, CastingCard, EmployerCastingRoleCard };
