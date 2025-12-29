@@ -1,2 +1,3 @@
 import CastingBasicInfoForm from './CastingBasicInfoForm';
-export { CastingBasicInfoForm };
+import CastingCard from './CastingCard';
+export { CastingBasicInfoForm, CastingCard };

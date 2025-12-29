@@ -1,19 +1,22 @@
 import { Button } from 'autocasting-ui-library-padimasso';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DashboardSection, DashboardShell } from '../../../../layouts/components';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../shared/components/Section';
+import { CastingCard } from '../components';
 import { useCreateEmptyCastingMutation } from '../hooks/useCreateEmptyCastingMutation';
 import { getMyCastings } from '../services/employerCastingService';
+import type { CastingCardResponse } from '../types/employerCastings.types';
 
 const EmployerCastingsPage = () => {
   const { t } = useTranslation();
   const { mutate: createEmptyCasting, isPending } = useCreateEmptyCastingMutation();
+  const [misCastings, setMyCastings] = useState<CastingCardResponse[]>([]);
 
   const fetchPage = useCallback(async () => {
     const data = await getMyCastings();
-    console.log(data);
+    setMyCastings(data);
   }, []);
 
   useEffect(() => {
@@ -37,6 +40,9 @@ const EmployerCastingsPage = () => {
         <SectionTitle title={t('employer_castings.page.title')} action={actionButtonRender()} />
         {/* TODO: Filter Bar */}
         {/* TODO: Render Cards */}
+        {misCastings.map((i) => {
+          return <CastingCard data={i} key={i.id}></CastingCard>;
+        })}
       </DashboardSection>
     </DashboardShell>
   );

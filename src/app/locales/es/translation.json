@@ -30,6 +30,9 @@
     "years": " años",
     "cm": "cm",
     "back_to": "Volver a",
+    "creation_date": "Fecha de creación",
+    "limit_date": "Fecha límite",
+
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "role_name": "Lali",
@@ -737,6 +740,7 @@
     "dashboard": {
       "title_new": "Nuevo Casting",
       "title_edit": "Editar Casting",
+      "casting": {},
       "basic_info": {
         "basic_info": "Información Básica",
         "title": "Título",
