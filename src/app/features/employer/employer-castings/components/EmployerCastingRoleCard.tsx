@@ -51,12 +51,12 @@ const EmployerCastingRoleCard = ({ data }: { data: EmployerCastingRoleCardRespon
 
   return (
     <SectionCard>
-      <div className="flex flex-row items-center justify-between">
-        <h2 className="font-semibold">{roleName}</h2>
-        <span className="flex flex-row gap-2 items-center">
+      <div className="w-full flex flex-row items-center justify-between">
+        <p className="font-semibold">{roleName}</p>
+        <div className="flex flex-row gap-2 items-center shrink-0">
           <Icon name="edit" variant="primary" onClick={handleEditModal}></Icon>
           <Icon name="delete" variant="danger" onClick={handleDeleteModal}></Icon>
-        </span>
+        </div>
       </div>
       <div className="flex flex-row items-center flex-wrap gap-2 mt-4">
         <Chip label={t(gender.stringCode)}></Chip>
