@@ -4,14 +4,16 @@ import { Chip } from '../../../../shared/components/Chip/Chip';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { SectionCard } from '../../../../shared/components/Section';
 import { formatAgeRange } from '../../../../shared/utils/formatUtils';
-import { useCastingRolePatchAutosave } from '../hooks/autosaves';
+import { useCastingRoleDeleteAutosave, useCastingRolePatchAutosave } from '../hooks/autosaves';
 import type { EmployerCastingRoleCardResponse } from '../types/employerCastings.types';
+import CastingRoleDeleteModal from './Form/Role/CastingRoleDeleteModal';
 import CastingRoleModal from './Form/Role/CastingRoleModal';
 
 const EmployerCastingRoleCard = ({ data }: { data: EmployerCastingRoleCardResponse }) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
   const patchRole = useCastingRolePatchAutosave(data.sectionId);
+  const deleteRole = useCastingRoleDeleteAutosave(data.sectionId);
 
   const { sectionId, roleName, roleType, gender, ageMin, ageMax, professions, skills } = data;
 
@@ -33,7 +35,18 @@ const EmployerCastingRoleCard = ({ data }: { data: EmployerCastingRoleCardRespon
   };
 
   const handleDeleteModal = () => {
-    alert('Delete Modal');
+    openModal(
+      <CastingRoleDeleteModal
+        role={data}
+        onCancel={closeModal}
+        onConfirm={() => {
+          deleteRole.immediate({ id: data.id });
+          closeModal();
+        }}
+      />,
+      t('employer_castings.dashboard.title_delete'),
+      'lg'
+    );
   };
 
   return (

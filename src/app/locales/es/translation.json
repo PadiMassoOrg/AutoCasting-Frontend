@@ -32,6 +32,7 @@
     "back_to": "Volver a",
     "creation_date": "Fecha de creación",
     "limit_date": "Fecha límite",
+    "delete_confirm": "Estás por borrar",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "role_name": "Lali",
@@ -617,7 +618,6 @@
       "add_new": "Agregar nuevo crédito",
       "edit": "Editar crédito",
       "delete": "Borrar crédito",
-      "delete_confirm": "Estás por borrar",
       "production_type": "Tipo de producción",
       "production_type_placeholder": "Ej. TV, Publicidad, Cine...",
       "project": "Nombre del proyecto",
@@ -633,7 +633,6 @@
       "add_new": "Agregar nueva formación",
       "edit": "Editar formación",
       "delete": "Borrar formación",
-      "delete_confirm": "Estás por borrar",
       "institution": "Institución",
       "institution_placeholder": "Nombre de la institución",
       "courseName": "Nombre del curso / Título obtenido",
@@ -744,6 +743,7 @@
     "dashboard": {
       "title_new": "Nuevo Casting",
       "title_edit": "Editar Casting",
+      "title_delete": "¿Seguro deseas eliminar este rol?",
       "casting": {},
       "basic_info": {
         "basic_info": "Información Básica",

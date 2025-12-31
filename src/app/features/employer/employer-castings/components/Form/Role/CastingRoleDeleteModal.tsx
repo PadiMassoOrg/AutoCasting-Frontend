@@ -1,22 +1,20 @@
 import { Button } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import type { Education } from '../../../types/talentProfile.types';
+import type { EmployerCastingRoleCardResponse } from '../../../types/employerCastings.types';
 
-const EducationDeleteModal = ({
-  education,
-  onConfirm,
-  onCancel,
-}: {
-  education: Education;
-  onConfirm: () => void | Promise<void>;
+type Props = {
+  role: EmployerCastingRoleCardResponse;
   onCancel: () => void;
-}) => {
+  onConfirm: () => void;
+};
+
+const CastingRoleDeleteModal = ({ role, onCancel, onConfirm }: Props) => {
   const { t } = useTranslation();
 
   return (
     <article className="flex flex-col gap-5">
       <p className="text-base">
-        {t('general.delete_confirm')}: <strong>{education.courseName}</strong>
+        {t('general.delete_confirm')}: <strong>{role.roleName}</strong>
       </p>
       <div className="flex gap-2 justify-end">
         <Button variant="outline" onClick={onCancel}>
@@ -30,4 +28,4 @@ const EducationDeleteModal = ({
   );
 };
 
-export default EducationDeleteModal;
+export default CastingRoleDeleteModal;

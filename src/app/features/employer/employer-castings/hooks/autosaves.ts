@@ -75,8 +75,10 @@ export function useCastingRoleDeleteAutosave(sectionId: string) {
     cacheKeys: [rolesKey],
     invalidateOnSuccess: false,
     onSuccessUpdate: (prev, { id }) => {
-      const arr = Array.isArray(prev) ? prev : [];
-      return arr.filter((r) => r.id !== id);
+      const remove = (arr: EmployerCastingRoleCardResponse[]) => arr.filter((r) => r.id !== id);
+
+      if (Array.isArray(prev)) return remove(prev);
+      return { ...prev, roles: remove(prev?.roles ?? []) };
     },
   });
 }
