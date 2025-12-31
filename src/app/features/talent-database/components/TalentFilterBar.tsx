@@ -197,8 +197,8 @@ export function TalentFilterBar({
           }}
         />
 
-        <div className="w-full flex flex-col gap-1.5">
-          <label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</label>
+        <div>
+          <h2 className="text-sm font-semibold mb-2">{t('talent.filter.basic_info.profession')}</h2>
           <MultiSelectDropdown
             options={professionsRaw ?? []}
             getId={(p) => p.id}
@@ -254,8 +254,8 @@ export function TalentFilterBar({
           }}
         />
 
-        <div className="w-full flex flex-col gap-1.5">
-          <label className="text-sm font-semibold">{t('profile.characteristics.hairColor')}</label>
+        <div>
+          <h2 className="text-sm font-semibold mb-2">{t('profile.characteristics.hairColor')}</h2>
           <MultiSelectDropdown
             options={hairOptions ?? []}
             getId={(o) => o.value}
@@ -267,8 +267,8 @@ export function TalentFilterBar({
           />
         </div>
 
-        <div className="w-full flex flex-col gap-1.5">
-          <label className="text-sm font-semibold">{t('profile.characteristics.eyeColor')}</label>
+        <div>
+          <h2 className="text-sm font-semibold mb-2">{t('profile.characteristics.eyeColor')}</h2>
           <MultiSelectDropdown
             options={eyeOptions ?? []}
             getId={(o) => o.value}
@@ -316,8 +316,8 @@ export function TalentFilterBar({
           };
 
           return (
-            <div key={catCode} className="w-full flex flex-col gap-1.5">
-              <label className="text-sm font-semibold">{t(catCode)}</label>
+            <div key={catCode}>
+              <h2 className="text-sm font-semibold mb-2">{t(catCode)}</h2>
               <MultiSelectDropdown
                 options={list}
                 getId={(s) => s.id}

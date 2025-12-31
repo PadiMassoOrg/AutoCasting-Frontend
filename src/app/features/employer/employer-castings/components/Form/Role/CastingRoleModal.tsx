@@ -170,7 +170,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
       />
 
       <div>
-        <label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</label>
+        <h2 className="text-sm font-semibold mb-2">{t('talent.filter.basic_info.profession')}</h2>
         <MultiSelectDropdown
           options={professionsRaw ?? []}
           getId={(p) => p.id}
