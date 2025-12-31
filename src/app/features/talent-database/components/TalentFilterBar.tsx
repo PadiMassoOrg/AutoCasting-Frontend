@@ -213,7 +213,7 @@ export function TalentFilterBar({
 
       <Separator className="opacity-20" />
 
-      <FilterSection title={t('profile.characteristics.characteristics')} count={characteristicsCount}>
+      <FilterSection title={t('profile.pills.characteristics')} count={characteristicsCount}>
         <article className="flex flex-col">
           <label htmlFor="heightMin" className="text-sm font-semibold mb-2">
             {t('talent.filter.characteristics.height')}
@@ -304,7 +304,7 @@ export function TalentFilterBar({
 
       <Separator className="opacity-20" />
 
-      <FilterSection title={t('filters.skills', 'Habilidades')} count={skillsCount}>
+      <FilterSection title={t('profile.pills.skills')} count={skillsCount}>
         {skillsCats.map(({ catCode, list, idSet }) => {
           const selectedGlobal = value.skillId ?? [];
           const selectedInCat = selectedGlobal.filter((id) => idSet.has(id));

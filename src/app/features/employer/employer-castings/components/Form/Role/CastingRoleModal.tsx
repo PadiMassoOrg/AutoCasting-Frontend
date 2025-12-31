@@ -7,9 +7,25 @@ import {
   useCachedSiteMetadataSlice,
 } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
-import { MultiSelectDropdown } from '../../../../../talent-database/components/Filter';
+import {
+  BooleanRadioGroup,
+  FilterSection,
+  MultiSelectDropdown,
+} from '../../../../../talent-database/components/Filter';
 import { getCastingRoleSchema, type CastingRoleFormKey, type CastingRoleFormValues } from '../../../schemas/formSchema';
 import type { EmployerCastingRoleCardResponse } from '../../../types/employerCastings.types';
+
+type DraftRoleCharacteristicsForm = {
+  heightCm: string;
+  weightKg: string;
+  ethnicityId: string;
+  hairColorId: string;
+  eyeColorId: string;
+  dietOptionId: string;
+  tattoo?: boolean | null;
+  passport?: boolean | null;
+  drivingLicense?: boolean | null;
+};
 
 export type DraftCastingRole = {
   id?: string;
@@ -22,11 +38,27 @@ export type DraftCastingRole = {
   description: string;
   professionIds: string[];
   skillIds: string[];
+
+  // NUEVO: Characteristics (alineado a backend)
+  characteristics?: {
+    heightCm?: number | null;
+    weightKg?: number | null;
+    ethnicityId?: string | null;
+    hairColorId?: string | null;
+    eyeColorId?: string | null;
+    dietOptionId?: string | null;
+    tattoo?: boolean | null;
+    passport?: boolean | null;
+    drivingLicense?: boolean | null;
+  } | null;
 };
 
-type DraftCastingRoleForm = Omit<DraftCastingRole, 'ageMin' | 'ageMax'> & {
+type DraftCastingRoleForm = Omit<DraftCastingRole, 'ageMin' | 'ageMax' | 'characteristics'> & {
   ageMin: string;
   ageMax: string;
+
+  // NUEVO: characteristics en form como strings/tri-state
+  characteristics: DraftRoleCharacteristicsForm;
 };
 
 type Props = {
@@ -45,7 +77,67 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
   const professionsRaw = useCachedSiteMetadataSlice('professions') as SiteMetadataObject[] | undefined;
 
+  const ethnicityOptions = useCachedSiteMetadataOption('ethnicityOptions', t);
+  const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
+  const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye_color');
+  const dietOptions = useCachedSiteMetadataOption('dietOptions', t);
+
+  const skillsRaw = useCachedSiteMetadataSlice('skills') as SiteMetadataObject[] | undefined;
+
+  const skillsByCat = useMemo(() => {
+    const groups = new Map<string, SiteMetadataObject[]>();
+    (skillsRaw ?? []).forEach((s) => {
+      const k = s.categoryStringCode ?? 'sitemetadata.category.other';
+      if (!groups.has(k)) groups.set(k, []);
+      groups.get(k)!.push(s);
+    });
+    return Array.from(groups.entries());
+  }, [skillsRaw]);
+
+  const skillsCats = useMemo(
+    () =>
+      skillsByCat.map(([catCode, list]) => ({
+        catCode,
+        list,
+        idSet: new Set(list.map((s) => s.id)),
+      })),
+    [skillsByCat]
+  );
+
   const [errors, setErrors] = useState<Partial<Record<CastingRoleFormKey, string>>>({});
+
+  // -----------------------
+  // Helpers (defensivos)
+  // -----------------------
+  const pickId = (v: any): string => {
+    if (!v) return '';
+    if (typeof v === 'string') return v;
+    if (typeof v === 'object' && typeof v.id === 'string') return v.id;
+    return '';
+  };
+
+  const pickAnyId = (obj: any, keys: string[]): string => {
+    for (const k of keys) {
+      const id = pickId(obj?.[k]);
+      if (id) return id;
+    }
+    return '';
+  };
+
+  const toDigitsMax3 = (s: string) => s.replace(/\D/g, '').slice(0, 3);
+  const toDigitsMax2 = (s: string) => s.replace(/\D/g, '').slice(0, 2);
+
+  const makeEmptyCharacteristics = (): DraftRoleCharacteristicsForm => ({
+    heightCm: '',
+    weightKg: '',
+    ethnicityId: '',
+    hairColorId: '',
+    eyeColorId: '',
+    dietOptionId: '',
+    tattoo: undefined,
+    passport: undefined,
+    drivingLicense: undefined,
+  });
 
   const makeEmpty = (): DraftCastingRoleForm => ({
     rolesSectionId: sectionId,
@@ -57,6 +149,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
     professionIds: [],
     description: '',
     skillIds: [],
+    characteristics: makeEmptyCharacteristics(),
   });
 
   const makeFromInitial = (r?: EmployerCastingRoleCardResponse): DraftCastingRoleForm =>
@@ -72,6 +165,24 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
           description: r.description ?? '',
           professionIds: (r.professions ?? []).map((p) => p.id),
           skillIds: (r.skills ?? []).map((s) => s.id),
+          characteristics: (() => {
+            const ch: any = (r as any)?.characteristics;
+
+            const height = ch?.heightCm ?? ch?.height ?? ch?.height_cm ?? ch?.heightCM ?? null;
+            const weight = ch?.weightKg ?? ch?.weight ?? ch?.weight_kg ?? ch?.weightKG ?? null;
+
+            return {
+              heightCm: height != null ? String(height) : '',
+              weightKg: weight != null ? String(weight) : '',
+              ethnicityId: pickAnyId(ch, ['ethnicityId', 'ethnicity', 'ethnicityOption']),
+              hairColorId: pickAnyId(ch, ['hairColorId', 'hairColor', 'hairColorOption']),
+              eyeColorId: pickAnyId(ch, ['eyeColorId', 'eyeColor', 'eyeColorOption']),
+              dietOptionId: pickAnyId(ch, ['dietOptionId', 'dietOption']),
+              tattoo: ch?.tattoo ?? undefined,
+              passport: ch?.passport ?? undefined,
+              drivingLicense: ch?.drivingLicense ?? undefined,
+            };
+          })(),
         }
       : makeEmpty();
 
@@ -104,14 +215,31 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
     }
   };
 
+  const onChangeCh = <K extends keyof DraftRoleCharacteristicsForm>(k: K, v: DraftRoleCharacteristicsForm[K]) => {
+    setForm((f) => ({ ...f, characteristics: { ...f.characteristics, [k]: v } }));
+  };
+
   const onAgeChange =
     (k: 'ageMin' | 'ageMax'): React.ChangeEventHandler<HTMLInputElement> =>
     (e) => {
-      const digits = e.target.value.replace(/\D/g, '').slice(0, 2);
+      const digits = toDigitsMax2(e.target.value);
       onChange(k, digits);
     };
 
+  const onChNumChange =
+    (k: 'heightCm' | 'weightKg'): React.ChangeEventHandler<HTMLInputElement> =>
+    (e) => {
+      const digits = toDigitsMax3(e.target.value);
+      onChangeCh(k, digits);
+    };
+
   const toIntOrNaN = (s: string) => Number.parseInt(s, 10);
+  const toIntOrNull = (s: string) => {
+    const trimmed = s.trim();
+    if (!trimmed) return null;
+    const n = Number.parseInt(trimmed, 10);
+    return Number.isFinite(n) ? n : null;
+  };
 
   const validateAndSave = async () => {
     const rawForSchema: CastingRoleFormValues = {
@@ -140,6 +268,32 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
       return;
     }
 
+    const ch = form.characteristics;
+    const hasCharacteristics =
+      ch.heightCm.trim() !== '' ||
+      ch.weightKg.trim() !== '' ||
+      ch.ethnicityId.trim() !== '' ||
+      ch.hairColorId.trim() !== '' ||
+      ch.eyeColorId.trim() !== '' ||
+      ch.dietOptionId.trim() !== '' ||
+      ch.tattoo !== undefined ||
+      ch.passport !== undefined ||
+      ch.drivingLicense !== undefined;
+
+    const characteristicsPayload = hasCharacteristics
+      ? {
+          heightCm: toIntOrNull(ch.heightCm),
+          weightKg: toIntOrNull(ch.weightKg),
+          ethnicityId: ch.ethnicityId.trim() ? ch.ethnicityId : null,
+          hairColorId: ch.hairColorId.trim() ? ch.hairColorId : null,
+          eyeColorId: ch.eyeColorId.trim() ? ch.eyeColorId : null,
+          dietOptionId: ch.dietOptionId.trim() ? ch.dietOptionId : null,
+          ...(ch.tattoo !== undefined ? { tattoo: ch.tattoo } : {}),
+          ...(ch.passport !== undefined ? { passport: ch.passport } : {}),
+          ...(ch.drivingLicense !== undefined ? { drivingLicense: ch.drivingLicense } : {}),
+        }
+      : undefined;
+
     const draft: DraftCastingRole = {
       id: form.id,
       rolesSectionId: sectionId,
@@ -151,10 +305,42 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
       professionIds: form.professionIds,
       skillIds: form.skillIds,
       description: form.description,
+      characteristics: characteristicsPayload,
     };
 
     await onSave(draft);
   };
+
+  const hasAny = (arr?: unknown[]) => (arr?.length ?? 0) > 0;
+
+  const characteristicsCount = useMemo(() => {
+    const ch = form.characteristics;
+
+    return (
+      (ch.heightCm.trim() !== '' || ch.weightKg.trim() !== '' ? 1 : 0) +
+      (ch.ethnicityId.trim() !== '' ? 1 : 0) +
+      (ch.hairColorId.trim() !== '' ? 1 : 0) +
+      (ch.eyeColorId.trim() !== '' ? 1 : 0) +
+      (ch.dietOptionId.trim() !== '' ? 1 : 0) +
+      (ch.tattoo !== undefined ? 1 : 0) +
+      (ch.passport !== undefined ? 1 : 0) +
+      (ch.drivingLicense !== undefined ? 1 : 0)
+    );
+  }, [form.characteristics]);
+
+  const skillsCount = useMemo(() => {
+    const selected = form.skillIds ?? [];
+    if (!hasAny(selected)) return 0;
+
+    const selectedSet = new Set(selected);
+
+    return skillsCats.reduce((acc, { idSet }) => {
+      for (const id of selectedSet) {
+        if (idSet.has(id)) return acc + 1;
+      }
+      return acc;
+    }, 0);
+  }, [skillsCats, form.skillIds]);
 
   return (
     <article className="flex flex-col">
@@ -241,7 +427,124 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
         error={errors.description}
       />
 
-      <Separator className="opacity-20 my-6" />
+      <Separator className="opacity-20 mt-6" />
+
+      <FilterSection title={t('profile.pills.characteristics')} count={characteristicsCount}>
+        <div className="flex flex-col">
+          <label htmlFor="heightCm" className="text-sm font-semibold mb-2">
+            {t('talent.filter.characteristics.height')}
+          </label>
+          <div className="flex flex-row gap-4">
+            <FormInputField
+              id="heightCm"
+              inputMode="numeric"
+              placeholder="cm"
+              value={form.characteristics.heightCm}
+              onChange={onChNumChange('heightCm')}
+            />
+            <FormInputField
+              id="weightKg"
+              inputMode="numeric"
+              placeholder="kg"
+              value={form.characteristics.weightKg}
+              onChange={onChNumChange('weightKg')}
+            />
+          </div>
+        </div>
+
+        <FormSelectField
+          id="ethnicityId"
+          label={t('profile.characteristics.ethnicity')}
+          labelClassName="font-semibold"
+          placeholder={t('general.placeholder.select')}
+          value={form.characteristics.ethnicityId}
+          onChange={(e) => onChangeCh('ethnicityId', e.target.value)}
+          options={ethnicityOptions}
+        />
+
+        <FormSelectField
+          id="hairColorId"
+          label={t('profile.characteristics.hairColor')}
+          labelClassName="font-semibold"
+          placeholder={t('general.placeholder.select')}
+          value={form.characteristics.hairColorId}
+          onChange={(e) => onChangeCh('hairColorId', e.target.value)}
+          options={hairOptions}
+        />
+
+        <FormSelectField
+          id="eyeColorId"
+          label={t('profile.characteristics.eyeColor')}
+          labelClassName="font-semibold"
+          placeholder={t('general.placeholder.select')}
+          value={form.characteristics.eyeColorId}
+          onChange={(e) => onChangeCh('eyeColorId', e.target.value)}
+          options={eyeOptions}
+        />
+
+        <FormSelectField
+          id="dietOptionId"
+          label={t('profile.characteristics.dietOption', 'Dieta')}
+          labelClassName="font-semibold"
+          placeholder={t('general.placeholder.select')}
+          value={form.characteristics.dietOptionId}
+          onChange={(e) => onChangeCh('dietOptionId', e.target.value)}
+          options={dietOptions}
+        />
+
+        <div className="grid grid-cols-1">
+          <BooleanRadioGroup
+            name="tattoo"
+            label={t('profile.characteristics.tattoo')}
+            value={form.characteristics.tattoo ?? undefined}
+            onChange={(next) => onChangeCh('tattoo', next ?? null)}
+          />
+          <BooleanRadioGroup
+            name="passport"
+            label={t('profile.characteristics.passport')}
+            value={form.characteristics.passport ?? undefined}
+            onChange={(next) => onChangeCh('passport', next ?? null)}
+          />
+          <BooleanRadioGroup
+            name="drivingLicense"
+            label={t('profile.characteristics.drivingLicense')}
+            value={form.characteristics.drivingLicense ?? undefined}
+            onChange={(next) => onChangeCh('drivingLicense', next ?? null)}
+          />
+        </div>
+      </FilterSection>
+
+      <Separator className="opacity-20" />
+
+      <FilterSection title={t('profile.pills.skills')} count={skillsCount}>
+        {skillsCats.map(({ catCode, list, idSet }) => {
+          const selectedGlobal = form.skillIds ?? [];
+          const selectedInCat = selectedGlobal.filter((id) => idSet.has(id));
+
+          const handleCatChange = (nextIds: string[]) => {
+            const rest = selectedGlobal.filter((id) => !idSet.has(id));
+            const merged = Array.from(new Set([...rest, ...nextIds]));
+            onChange('skillIds', merged);
+          };
+
+          return (
+            <div key={catCode} className="mb-2">
+              <h4 className="text-sm font-semibold mb-2">{t(catCode)}</h4>
+              <MultiSelectDropdown
+                options={list}
+                getId={(s) => s.id}
+                getLabel={(s) => t(s.stringCode)}
+                selected={selectedInCat}
+                onChange={handleCatChange}
+                maxPanelHeight="16rem"
+                error={errors.skillIds}
+              />
+            </div>
+          );
+        })}
+      </FilterSection>
+
+      <Separator className="opacity-20 mb-6" />
 
       <div className="flex gap-2">
         <Button type="button" variant="outline" onClick={onCancel}>
