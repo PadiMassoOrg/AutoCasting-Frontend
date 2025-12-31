@@ -6,7 +6,7 @@ export const useCastingRoles = (sectionId?: string) => {
   const token = getAuthToken();
 
   return useQuery({
-    queryKey: [...EMPLOYER_CASTING_ROLES_LIST_CACHE_KEY, token ?? 'no-token'],
+    queryKey: [...EMPLOYER_CASTING_ROLES_LIST_CACHE_KEY, sectionId ?? 'no-section', token ?? 'no-token'],
     queryFn: () => getRolesBySectionId(sectionId!),
     enabled: !!sectionId,
     staleTime: 0,

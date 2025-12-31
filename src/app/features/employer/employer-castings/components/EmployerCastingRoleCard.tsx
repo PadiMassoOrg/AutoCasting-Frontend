@@ -4,26 +4,27 @@ import { Chip } from '../../../../shared/components/Chip/Chip';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { SectionCard } from '../../../../shared/components/Section';
 import { formatAgeRange } from '../../../../shared/utils/formatUtils';
-import type { CastingEmployerCardResponse } from '../types/employerCastings.types';
+import type { EmployerCastingRoleCardResponse } from '../types/employerCastings.types';
 import CastingRoleModal from './Form/Role/CastingRoleModal';
 
-const EmployerCastingRoleCard = ({ data }: { data: CastingEmployerCardResponse }) => {
+const EmployerCastingRoleCard = ({ data }: { data: EmployerCastingRoleCardResponse }) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
 
-  const { id, roleName, roleType, gender, ageMin, ageMax, description, professions, characteristics, skills } = data;
+  const { sectionId, roleName, roleType, gender, ageMin, ageMax, professions, skills } = data;
 
-  // TODO: Finish Modals
   const handleEditModal = () => {
     openModal(
       <CastingRoleModal
         mode="edit"
+        initial={data}
         onSave={(draft) => {
           console.log('Role Modal SAVE -->', draft);
         }}
         onCancel={closeModal}
+        sectionId={sectionId}
       />,
-      t('employer_castings.dashboard.roles.add_new'),
+      t('employer_castings.dashboard.roles.edit'),
       'lg'
     );
   };

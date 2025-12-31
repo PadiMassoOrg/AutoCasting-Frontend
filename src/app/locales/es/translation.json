@@ -32,10 +32,10 @@
     "back_to": "Volver a",
     "creation_date": "Fecha de creación",
     "limit_date": "Fecha límite",
-
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "role_name": "Lali",
+      "description": "Descripción",
       "select": "Seleccionar",
       "color": "Color",
       "day": "Día",
@@ -696,6 +696,9 @@
       "created_castings": "Castings creados",
       "member_since": "Miembro desde",
       "apply_title": "¿Listo para aplicar?"
+    },
+    "filter": {
+      "role_type": "Tipo de Rol"
     }
   },
   "settings": {
@@ -757,8 +760,9 @@
       "roles": {
         "roles": "Roles",
         "add_new": "Nuevo Rol",
+        "edit": "Editar Rol",
         "role": {
-          "title": "Nombre del Rol"
+          "role_name": "Nombre del Rol"
         }
       },
       "requirements": {

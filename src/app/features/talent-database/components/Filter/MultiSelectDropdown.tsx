@@ -78,7 +78,7 @@ export default function MultiSelectDropdown<T>({
         {/* Header */}
         <button
           type="button"
-          className="cursor-pointer relative w-full h-14 rounded-xl px-6 py-3 text-left bg-white"
+          className="cursor-pointer relative w-full h-12 rounded-xl px-6 py-3 text-left bg-white"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >

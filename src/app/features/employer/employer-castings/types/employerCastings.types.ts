@@ -1,3 +1,4 @@
+import type { WithAuditable } from '../../../../shared/types/auditable.types';
 import type { DeepNullableExceptId } from '../../../../shared/utils/typeUtils';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 import type { Characteristics } from '../../../talent/talent-profile-edit/types/talentProfile.types';
@@ -45,11 +46,12 @@ export type BaseCastingRolesSection = {
   id: string;
   sectionStatus: SiteMetadataObject;
   generalNotes: string;
-  roles: CastingEmployerCardResponse;
+  roles: EmployerCastingRoleCardResponse;
 };
 
 export type BaseCastingRole = {
   id: string;
+  sectionId: string;
   roleName: string;
   roleType: SiteMetadataObject;
   gender: SiteMetadataObject;
@@ -64,9 +66,9 @@ export type BaseCastingRole = {
 /* ======================
    Export & DeepNullable
    ====================== */
-export type CastingBasicInfo = DeepNullableExceptId<BaseCastingBasicInfo>;
-export type CastingRolesSection = DeepNullableExceptId<BaseCastingRolesSection>;
-export type CastingEmployerCardResponse = BaseCastingRole;
+export type CastingBasicInfo = WithAuditable<DeepNullableExceptId<BaseCastingBasicInfo>>;
+export type CastingRolesSection = WithAuditable<DeepNullableExceptId<BaseCastingRolesSection>>;
+export type EmployerCastingRoleCardResponse = WithAuditable<BaseCastingRole>;
 
-export type CastingCardResponse = BaseCastingCard;
-export type CastingResponse = BaseCastingResponse;
+export type CastingCardResponse = WithAuditable<BaseCastingCard>;
+export type CastingResponse = WithAuditable<BaseCastingResponse>;

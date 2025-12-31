@@ -4,10 +4,10 @@ import { stripUndefined } from '../../../../shared/utils/stripUndefined';
 import type {
   CastingBasicInfo,
   CastingCardResponse,
-  CastingEmployerCardResponse,
   CastingResponse,
+  EmployerCastingRoleCardResponse,
 } from '../types/employerCastings.types';
-import type { CastingBasicInfoPatchRequest } from '../types/requests';
+import type { CastingBasicInfoPatchRequest, CastingRoleRequest } from '../types/requests';
 
 export const EMPLOYER_CASTING_CACHE_KEY = ['cache-employer-casting'] as const;
 export const EMPLOYER_CASTINGS_LIST_CACHE_KEY = ['cache-employer-castings-list'] as const;
@@ -19,7 +19,7 @@ export const getMyCastings = async (): Promise<CastingCardResponse[]> => {
   return response.data;
 };
 
-export const getRolesBySectionId = async (sectionId: string): Promise<CastingEmployerCardResponse[]> => {
+export const getRolesBySectionId = async (sectionId: string): Promise<EmployerCastingRoleCardResponse[]> => {
   const response = await api.get(API_ROUTES.CASTING_ROLE + `/${sectionId}`);
   return response.data;
 };
@@ -32,6 +32,11 @@ export const getCastingDetailsBySlug = async (slug: string): Promise<CastingResp
 // POST
 export const createEmptyCasting = async (): Promise<string> => {
   const response = await api.post(API_ROUTES.EMPLOYER_CASTINGS);
+  return response.data;
+};
+
+export const createNewRole = async (payload: CastingRoleRequest): Promise<EmployerCastingRoleCardResponse> => {
+  const response = await api.post(API_ROUTES.CASTING_ROLE, payload);
   return response.data;
 };
 

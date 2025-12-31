@@ -4,6 +4,7 @@ import { useModal } from '../../../../../context/ModalContext';
 import { DashboardSection } from '../../../../../layouts/components';
 import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../../shared/components/Section';
+import { useCastingRoleAutosave } from '../../hooks/autosaves';
 import { useCastingRoles } from '../../hooks/useCastingRoles';
 import EmployerCastingRoleCard from '../EmployerCastingRoleCard';
 import CastingRoleModal from '../Form/Role/CastingRoleModal';
@@ -11,6 +12,8 @@ import CastingRoleModal from '../Form/Role/CastingRoleModal';
 const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) => {
   const { t } = useTranslation();
   const { data } = useCastingRoles(sectionId);
+  const createRoleMutation = useCastingRoleAutosave(sectionId);
+
   const { openModal, closeModal } = useModal();
 
   const handleOpenModal = () => {
@@ -18,9 +21,11 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
       <CastingRoleModal
         mode="create"
         onSave={(draft) => {
-          console.log('Role Modal SAVE -->', draft);
+          createRoleMutation.immediate(draft);
+          closeModal();
         }}
         onCancel={closeModal}
+        sectionId={sectionId}
       />,
       t('employer_castings.dashboard.roles.add_new'),
       'lg'
