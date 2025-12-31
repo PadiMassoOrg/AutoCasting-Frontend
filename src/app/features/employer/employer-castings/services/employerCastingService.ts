@@ -7,7 +7,7 @@ import type {
   CastingResponse,
   EmployerCastingRoleCardResponse,
 } from '../types/employerCastings.types';
-import type { CastingBasicInfoPatchRequest, CastingRoleRequest } from '../types/requests';
+import type { CastingBasicInfoPatchRequest, CastingRolePatchRequest, CastingRoleRequest } from '../types/requests';
 
 export const EMPLOYER_CASTING_CACHE_KEY = ['cache-employer-casting'] as const;
 export const EMPLOYER_CASTINGS_LIST_CACHE_KEY = ['cache-employer-castings-list'] as const;
@@ -40,9 +40,21 @@ export const createNewRole = async (payload: CastingRoleRequest): Promise<Employ
   return response.data;
 };
 
-// PATCH
+// PATCH & PUT
 export async function patchCastingBasicInfo(payload: CastingBasicInfoPatchRequest): Promise<CastingBasicInfo> {
   const body = stripUndefined(payload);
   const { data } = await api.patch(API_ROUTES.CASTING_BASIC_INFO, body);
   return data;
+}
+
+export async function patchCastingRole(req: CastingRolePatchRequest) {
+  const { id, ...body } = req;
+  const res = await api.put(`${API_ROUTES.CASTING_ROLE}/${id}`, body);
+  return res.data;
+}
+
+// DELTE
+export async function deleteCastingRole({ id }: { id: string }) {
+  await api.delete(`${API_ROUTES.CASTING_ROLE}/${id}`);
+  return { id };
 }

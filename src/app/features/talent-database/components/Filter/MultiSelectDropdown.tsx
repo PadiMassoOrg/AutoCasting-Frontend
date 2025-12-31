@@ -1,5 +1,5 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
-import { useMemo, useRef, useState } from 'react';
+import { Label, Separator } from 'autocasting-ui-library-padimasso';
+import React, { useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useScrollExitOnEdge } from '../../../../shared/hooks/useScrollExitOnEdge';
 
@@ -10,6 +10,10 @@ type BaseProps<T> = {
   getLabel: (opt: T) => string;
   maxPanelHeight?: string;
   className?: string;
+
+  /** error message (si existe, se muestra debajo y marca el borde) */
+  error?: string | null;
+
   /** a qué contenedor scrolleable forwardear cuando el panel llega a su borde */
   forwardScrollToRef?: React.RefObject<HTMLElement | null>;
 };
@@ -39,6 +43,7 @@ export default function MultiSelectDropdown<T>({
   getLabel,
   maxPanelHeight = '16rem',
   className = '',
+  error,
   forwardScrollToRef,
   ...rest
 }: MultiSelectDropdownProps<T>) {
@@ -51,35 +56,43 @@ export default function MultiSelectDropdown<T>({
   const count = selectedIds.length;
   const allSelected = !single && count > 0 && count === ids.length;
 
-  const setSelected = (ids: string[]) => {
-    if (single) (rest as SingleSelectProps).onChange(ids[0] ?? undefined);
-    else (rest as MultipleSelectProps).onChange(ids);
+  const setSelected = (nextIds: string[]) => {
+    if (single) (rest as SingleSelectProps).onChange(nextIds[0] ?? undefined);
+    else (rest as MultipleSelectProps).onChange(nextIds);
   };
 
   const toggleAll = () => setSelected(single ? [] : allSelected ? [] : ids);
 
-  const toggleOne = (id: string) => {
-    if (single) return setSelected(selectedIds.includes(id) ? [] : [id]);
+  const toggleOne = (optId: string) => {
+    if (single) return setSelected(selectedIds.includes(optId) ? [] : [optId]);
     const set = new Set(selectedIds);
-    set.has(id) ? set.delete(id) : set.add(id);
+    set.has(optId) ? set.delete(optId) : set.add(optId);
     setSelected(Array.from(set));
   };
 
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Si no nos pasan forwardScrollToRef, no hacemos nada especial
-  if (forwardScrollToRef) {
-    useScrollExitOnEdge(panelRef, { forwardTo: forwardScrollToRef });
-  }
+  // Ref dummy para cumplir tipos cuando forwardScrollToRef viene undefined
+  const noopForwardRef = useRef<HTMLElement | null>(null);
+  const forwardTo = forwardScrollToRef ?? noopForwardRef;
+
+  // Hook SIEMPRE llamado (no condicional)
+  useScrollExitOnEdge(panelRef, { forwardTo });
+
+  const containerBorder = error ? 'border-red-500' : 'border-[var(--color-secondary-outline)]';
+  const errorId = useId();
+  const describedBy = error ? `${errorId}-error` : undefined;
 
   return (
     <>
-      <div className={`w-full rounded-xl border border-[var(--color-secondary-outline)] bg-white ${className}`}>
+      <div className={`w-full rounded-xl border ${containerBorder} bg-white ${className}`}>
         {/* Header */}
         <button
           type="button"
           className="cursor-pointer relative w-full h-12 rounded-xl px-6 py-3 text-left bg-white"
           aria-expanded={open}
+          aria-invalid={!!error}
+          aria-describedby={describedBy}
           onClick={() => setOpen((v) => !v)}
         >
           <div className="w-full flex items-center justify-between">
@@ -89,6 +102,7 @@ export default function MultiSelectDropdown<T>({
                 {count} {t('general.selections')}
               </span>
             </div>
+
             <svg
               className={`pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 transition-transform ${
                 open ? 'rotate-180' : ''
@@ -118,7 +132,6 @@ export default function MultiSelectDropdown<T>({
               style={{ maxHeight: maxPanelHeight, overflow: 'auto' }}
               className="px-6 py-3 flex flex-col gap-2"
             >
-              {/* Select all (sólo en modo multiple) */}
               {!single && (
                 <label className="flex items-center gap-3 text-sm font-normal cursor-pointer">
                   <span className="relative inline-flex items-center justify-center h-6 w-6">
@@ -163,17 +176,16 @@ export default function MultiSelectDropdown<T>({
                 </label>
               )}
 
-              {/* Opciones */}
               {options.map((opt) => {
-                const id = getId(opt);
-                const checked = selectedIds.includes(id);
+                const optId = getId(opt);
+                const checked = selectedIds.includes(optId);
                 return (
-                  <label key={id} className="flex items-center gap-3 text-sm font-normal cursor-pointer">
+                  <label key={optId} className="flex items-center gap-3 text-sm font-normal cursor-pointer">
                     <span className="relative inline-flex items-center justify-center h-6 w-6">
                       <input
                         type="checkbox"
                         checked={checked}
-                        onChange={() => toggleOne(id)}
+                        onChange={() => toggleOne(optId)}
                         className="
                           peer
                           h-6 w-6
@@ -215,7 +227,15 @@ export default function MultiSelectDropdown<T>({
           </div>
         </div>
       </div>
-      <div className="min-h-[25px]" />
+      {!error ? (
+        <div className="min-h-[25px]" />
+      ) : (
+        <div className="min-h-[25px]">
+          <Label id={`${errorId}-error`} variant="error" className="mt-0.5">
+            {error}
+          </Label>
+        </div>
+      )}
     </>
   );
 }

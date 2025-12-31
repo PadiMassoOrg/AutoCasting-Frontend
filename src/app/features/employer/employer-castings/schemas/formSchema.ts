@@ -8,7 +8,7 @@ export const getCastingRoleSchema = (t: TFunction) =>
   z
     .object({
       rolesSectionId: z
-        .string({ required_error: t('validation.required'), invalid_type_error: t('validation.required') })
+        .string({ required_error: t('validation.required') })
         .trim()
         .min(1, { message: t('validation.required') })
         .regex(UUID_RX, { message: t('validation.uuid_invalid') }),
@@ -21,43 +21,56 @@ export const getCastingRoleSchema = (t: TFunction) =>
         .regex(SAFE_TEXT_RX, { message: t('validation.invalid') }),
 
       roleType: z
-        .string({ required_error: t('validation.required'), invalid_type_error: t('validation.required') })
+        .string({ required_error: t('validation.required') })
         .trim()
         .min(1, { message: t('validation.required') })
         .regex(UUID_RX, { message: t('validation.uuid_invalid') }),
 
       gender: z
-        .string({ required_error: t('validation.required'), invalid_type_error: t('validation.required') })
+        .string({ required_error: t('validation.required') })
         .trim()
         .min(1, { message: t('validation.required') })
         .regex(UUID_RX, { message: t('validation.uuid_invalid') }),
 
       ageMin: z
-        .number({ required_error: t('validation.required'), invalid_type_error: t('validation.required') })
-        .int({ message: t('validation.invalid') })
-        .min(1, { message: t('validation.invalid') })
-        .max(99, { message: t('validation.invalid') }),
+        .number({ required_error: t('validation.required') })
+        .int({ message: t('validation.number_invalid') })
+        .min(0, { message: t('validation.number_invalid') })
+        .max(99, { message: t('validation.number_invalid') }),
 
       ageMax: z
-        .number({ required_error: t('validation.required'), invalid_type_error: t('validation.required') })
-        .int({ message: t('validation.invalid') })
-        .min(1, { message: t('validation.invalid') })
-        .max(99, { message: t('validation.invalid') }),
+        .number({ required_error: t('validation.required') })
+        .int({ message: t('validation.number_invalid') })
+        .min(0, { message: t('validation.number_invalid') })
+        .max(99, { message: t('validation.number_invalid') }),
 
       professionIds: z
         .array(
           z
-            .string({ required_error: t('validation.required'), invalid_type_error: t('validation.required') })
+            .string({ required_error: t('validation.required') })
             .trim()
             .min(1, { message: t('validation.required') })
             .regex(UUID_RX, { message: t('validation.uuid_invalid') })
         )
         .min(1, { message: t('validation.required') }),
 
+      // OPCIONAL (tu backend lo trata como optional)
+      skillIds: z
+        .array(
+          z
+            .string()
+            .trim()
+            .min(1, { message: t('validation.required') })
+            .regex(UUID_RX, { message: t('validation.uuid_invalid') })
+        )
+        .optional(),
+
+      // OPCIONAL
       description: z
         .string()
         .trim()
-        .max(1000, { message: t('validation.invalid') }),
+        .max(2000, { message: t('validation.invalid') })
+        .optional(),
     })
     .superRefine((data, ctx) => {
       if (data.ageMin > data.ageMax) {

@@ -21,6 +21,7 @@ export type DraftCastingRole = {
   ageMax: number;
   description: string;
   professionIds: string[];
+  skillIds: string[];
 };
 
 type DraftCastingRoleForm = Omit<DraftCastingRole, 'ageMin' | 'ageMax'> & {
@@ -44,6 +45,8 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
   const professionsRaw = useCachedSiteMetadataSlice('professions') as SiteMetadataObject[] | undefined;
 
+  const [errors, setErrors] = useState<Partial<Record<CastingRoleFormKey, string>>>({});
+
   const makeEmpty = (): DraftCastingRoleForm => ({
     rolesSectionId: sectionId,
     roleName: '',
@@ -53,6 +56,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
     ageMax: '',
     professionIds: [],
     description: '',
+    skillIds: [],
   });
 
   const makeFromInitial = (r?: EmployerCastingRoleCardResponse): DraftCastingRoleForm =>
@@ -67,13 +71,13 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
           ageMax: r.ageMax != null ? String(r.ageMax) : '',
           description: r.description ?? '',
           professionIds: (r.professions ?? []).map((p) => p.id),
+          skillIds: (r.skills ?? []).map((s) => s.id),
         }
       : makeEmpty();
 
   const [form, setForm] = useState<DraftCastingRoleForm>(() =>
     mode === 'edit' ? makeFromInitial(initial) : makeEmpty()
   );
-  const [errors, setErrors] = useState<Partial<Record<CastingRoleFormKey, string>>>({});
 
   useEffect(() => {
     setForm(mode === 'edit' ? makeFromInitial(initial) : makeEmpty());
@@ -84,18 +88,20 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
     setForm((f) => ({ ...f, [k]: v }));
 
     const mapKey = ((): CastingRoleFormKey | null => {
-      if (k === 'rolesSectionId') return 'rolesSectionId';
       if (k === 'roleName') return 'roleName';
       if (k === 'roleTypeId') return 'roleType';
       if (k === 'genderId') return 'gender';
       if (k === 'ageMin') return 'ageMin';
       if (k === 'ageMax') return 'ageMax';
       if (k === 'professionIds') return 'professionIds';
+      if (k === 'skillIds') return 'skillIds';
       if (k === 'description') return 'description';
       return null;
     })();
 
-    if (mapKey) setErrors((e) => ({ ...e, [mapKey]: undefined }));
+    if (mapKey) {
+      setErrors((e) => ({ ...e, [mapKey]: undefined }));
+    }
   };
 
   const onAgeChange =
@@ -109,20 +115,22 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
 
   const validateAndSave = async () => {
     const rawForSchema: CastingRoleFormValues = {
-      rolesSectionId: form.rolesSectionId,
+      rolesSectionId: sectionId,
       roleName: form.roleName,
       roleType: form.roleTypeId,
       gender: form.genderId,
       ageMin: toIntOrNaN(form.ageMin),
       ageMax: toIntOrNaN(form.ageMax),
       professionIds: form.professionIds,
-      description: form.description,
+      skillIds: form.skillIds.length ? form.skillIds : undefined,
+      description: form.description?.trim() ? form.description.trim() : undefined,
     };
 
     const parsed = castingRoleSchema.safeParse(rawForSchema);
 
     if (!parsed.success) {
-      const flat = parsed.error.flatten().fieldErrors as Partial<Record<CastingRoleFormKey, string[]>>;
+      const flattened = parsed.error.flatten();
+      const flat = flattened.fieldErrors as Partial<Record<CastingRoleFormKey, string[]>>;
       const fieldErrors: Partial<Record<CastingRoleFormKey, string>> = {};
       (Object.keys(flat) as CastingRoleFormKey[]).forEach((k) => {
         const msg = flat[k]?.[0];
@@ -132,11 +140,20 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
       return;
     }
 
-    await onSave({
-      ...form,
+    const draft: DraftCastingRole = {
+      id: form.id,
+      rolesSectionId: sectionId,
+      roleName: form.roleName,
+      roleTypeId: form.roleTypeId,
+      genderId: form.genderId,
       ageMin: parsed.data.ageMin,
       ageMax: parsed.data.ageMax,
-    });
+      professionIds: form.professionIds,
+      skillIds: form.skillIds,
+      description: form.description,
+    };
+
+    await onSave(draft);
   };
 
   return (
@@ -152,7 +169,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
         error={errors.roleName}
       />
 
-      <div className="w-full flex flex-col gap-1.5">
+      <div>
         <label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</label>
         <MultiSelectDropdown
           options={professionsRaw ?? []}
@@ -161,6 +178,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
           selected={form.professionIds}
           onChange={(next) => onChange('professionIds', next)}
           maxPanelHeight="16rem"
+          error={errors.professionIds}
         />
       </div>
 
@@ -218,18 +236,28 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
         placeholder={t('general.placeholder.about')}
         value={form.description}
         onChange={(e) => onChange('description', e.target.value)}
-        onBlur={() => null}
-        onKeyDown={() => null}
+        onBlur={() => {}}
+        onKeyDown={() => {}}
         error={errors.description}
       />
 
       <Separator className="opacity-20 my-6" />
 
       <div className="flex gap-2">
-        <Button variant="outline" onClick={onCancel}>
+        <Button type="button" variant="outline" onClick={onCancel}>
           {t('buttons.cancel')}
         </Button>
-        <Button onClick={validateAndSave}>{t('buttons.save')}</Button>
+
+        <Button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            void validateAndSave();
+          }}
+        >
+          {t('buttons.save')}
+        </Button>
       </div>
     </article>
   );
