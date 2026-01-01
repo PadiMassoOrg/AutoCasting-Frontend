@@ -37,14 +37,14 @@ const EmployerCastingRoleCard = ({ data }: { data: EmployerCastingRoleCardRespon
   const handleDeleteModal = () => {
     openModal(
       <CastingRoleDeleteModal
-        role={data}
+        data={data}
         onCancel={closeModal}
         onConfirm={() => {
           deleteRole.immediate({ id: data.id });
           closeModal();
         }}
       />,
-      t('employer_castings.dashboard.title_delete'),
+      t('employer_castings.dashboard.roles.delete'),
       'lg'
     );
   };

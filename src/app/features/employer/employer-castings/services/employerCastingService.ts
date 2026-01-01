@@ -8,7 +8,11 @@ import type {
   EmployerCastingRequirementCardResponse,
   EmployerCastingRoleCardResponse,
 } from '../types/employerCastings.types';
-import type { CastingBasicInfoPatchRequest, CastingRolePatchRequest, CastingRoleRequest } from '../types/requests';
+import type {
+  CastingBasicInfoPatchRequest,
+  CastingRolePatchRequest,
+  CastingRoleUpsertRequest,
+} from '../types/requests';
 
 export const EMPLOYER_CASTING_CACHE_KEY = ['cache-employer-casting'] as const;
 export const EMPLOYER_CASTINGS_LIST_CACHE_KEY = ['cache-employer-castings-list'] as const;
@@ -44,7 +48,7 @@ export const createEmptyCasting = async (): Promise<string> => {
   return response.data;
 };
 
-export const createNewRole = async (payload: CastingRoleRequest): Promise<EmployerCastingRoleCardResponse> => {
+export const createNewRole = async (payload: CastingRoleUpsertRequest): Promise<EmployerCastingRoleCardResponse> => {
   const response = await api.post(API_ROUTES.CASTING_ROLE, payload);
   return response.data;
 };

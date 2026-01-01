@@ -76,7 +76,7 @@ export type BaseCastingRequirement = {
   roleName: string;
   requiresAudio: boolean;
   requiresVideo: boolean;
-  descirption: string;
+  description: string;
 };
 
 /* ======================

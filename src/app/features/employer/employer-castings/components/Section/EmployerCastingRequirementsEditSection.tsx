@@ -5,6 +5,7 @@ import { DashboardSection } from '../../../../../layouts/components';
 import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import { useCastingRequirements } from '../../hooks/useCastingRequirements';
+import EmployerCastingRequirementCard from '../EmployerCastingRequirementCard';
 import CastingRequirementModal from '../Form/Requirement/CastingRequirementModal';
 
 const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: string }) => {
@@ -38,7 +39,7 @@ const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: stri
     <DashboardSection>
       <SectionTitle title={t('employer_castings.dashboard.requirements.requirements')} action={actionButtonRender()} />
       {data?.length! > 0 ? (
-        data?.map((r) => <h2 key={r.id}>{r.roleName}</h2>)
+        data?.map((requirement) => <EmployerCastingRequirementCard key={requirement.id} data={requirement} />)
       ) : (
         <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
           {t('employer_castings.page.empty_roles')}

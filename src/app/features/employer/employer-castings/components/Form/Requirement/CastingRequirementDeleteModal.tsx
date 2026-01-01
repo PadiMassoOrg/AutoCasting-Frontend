@@ -1,14 +1,14 @@
 import { Button } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import type { EmployerCastingRoleCardResponse } from '../../../types/employerCastings.types';
+import type { EmployerCastingRequirementCardResponse } from '../../../types/employerCastings.types';
 
 type Props = {
-  data: EmployerCastingRoleCardResponse;
+  data: EmployerCastingRequirementCardResponse;
   onCancel: () => void;
   onConfirm: () => void;
 };
 
-const CastingRoleDeleteModal = ({ data, onCancel, onConfirm }: Props) => {
+const CastingRequirementDeleteModal = ({ data, onCancel, onConfirm }: Props) => {
   const { t } = useTranslation();
 
   return (
@@ -28,4 +28,4 @@ const CastingRoleDeleteModal = ({ data, onCancel, onConfirm }: Props) => {
   );
 };
 
-export default CastingRoleDeleteModal;
+export default CastingRequirementDeleteModal;

@@ -761,13 +761,20 @@
         "roles": "Roles",
         "add_new": "Nuevo Rol",
         "edit": "Editar Rol",
+        "delete": "¿Seguro deseas eliminar este rol?",
         "role": {
           "role_name": "Nombre del Rol"
         }
       },
       "requirements": {
         "requirements": "Requerimientos",
-        "add_new": "Agregar Requerimiento"
+        "add_new": "Agregar Requerimiento",
+        "edit": "Editar Requerimiento",
+        "delete": "¿Seguro deseas eliminar este requerimiento?",
+        "requirement": {
+          "audio_true": "Audio",
+          "video_true": "Video"
+        }
       },
       "remuneration": {
         "remuneration": "Remuneración"

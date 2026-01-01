@@ -42,7 +42,7 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
     <DashboardSection>
       <SectionTitle title={t('employer_castings.dashboard.roles.roles')} action={actionButtonRender()} />
       {data?.length! > 0 ? (
-        data?.map((role) => <EmployerCastingRoleCard data={role} key={role.id}></EmployerCastingRoleCard>)
+        data?.map((role) => <EmployerCastingRoleCard data={role} key={role.id} />)
       ) : (
         <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
           {t('employer_castings.page.empty_roles')}
