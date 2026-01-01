@@ -22,9 +22,9 @@ type DraftRoleCharacteristicsForm = {
   hairColorId: string;
   eyeColorId: string;
   dietOptionId: string;
-  tattoo?: boolean | null;
-  passport?: boolean | null;
-  drivingLicense?: boolean | null;
+  tattoo: boolean | null;
+  passport: boolean | null;
+  drivingLicense: boolean | null;
 };
 
 export type DraftCastingRole = {
@@ -38,8 +38,6 @@ export type DraftCastingRole = {
   description: string;
   professionIds: string[];
   skillIds: string[];
-
-  // NUEVO: Characteristics (alineado a backend)
   characteristics?: {
     heightCm?: number | null;
     weightKg?: number | null;
@@ -56,8 +54,6 @@ export type DraftCastingRole = {
 type DraftCastingRoleForm = Omit<DraftCastingRole, 'ageMin' | 'ageMax' | 'characteristics'> & {
   ageMin: string;
   ageMax: string;
-
-  // NUEVO: characteristics en form como strings/tri-state
   characteristics: DraftRoleCharacteristicsForm;
 };
 
@@ -106,9 +102,6 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
 
   const [errors, setErrors] = useState<Partial<Record<CastingRoleFormKey, string>>>({});
 
-  // -----------------------
-  // Helpers (defensivos)
-  // -----------------------
   const pickId = (v: any): string => {
     if (!v) return '';
     if (typeof v === 'string') return v;
@@ -134,9 +127,9 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
     hairColorId: '',
     eyeColorId: '',
     dietOptionId: '',
-    tattoo: undefined,
-    passport: undefined,
-    drivingLicense: undefined,
+    tattoo: null,
+    passport: null,
+    drivingLicense: null,
   });
 
   const makeEmpty = (): DraftCastingRoleForm => ({
@@ -178,9 +171,9 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
               hairColorId: pickAnyId(ch, ['hairColorId', 'hairColor', 'hairColorOption']),
               eyeColorId: pickAnyId(ch, ['eyeColorId', 'eyeColor', 'eyeColorOption']),
               dietOptionId: pickAnyId(ch, ['dietOptionId', 'dietOption']),
-              tattoo: ch?.tattoo ?? undefined,
-              passport: ch?.passport ?? undefined,
-              drivingLicense: ch?.drivingLicense ?? undefined,
+              tattoo: ch?.tattoo ?? null,
+              passport: ch?.passport ?? null,
+              drivingLicense: ch?.drivingLicense ?? null,
             };
           })(),
         }
@@ -210,9 +203,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
       return null;
     })();
 
-    if (mapKey) {
-      setErrors((e) => ({ ...e, [mapKey]: undefined }));
-    }
+    if (mapKey) setErrors((e) => ({ ...e, [mapKey]: undefined }));
   };
 
   const onChangeCh = <K extends keyof DraftRoleCharacteristicsForm>(k: K, v: DraftRoleCharacteristicsForm[K]) => {
@@ -269,18 +260,21 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
     }
 
     const ch = form.characteristics;
-    const hasCharacteristics =
-      ch.heightCm.trim() !== '' ||
-      ch.weightKg.trim() !== '' ||
-      ch.ethnicityId.trim() !== '' ||
-      ch.hairColorId.trim() !== '' ||
-      ch.eyeColorId.trim() !== '' ||
-      ch.dietOptionId.trim() !== '' ||
-      ch.tattoo !== undefined ||
-      ch.passport !== undefined ||
-      ch.drivingLicense !== undefined;
 
-    const characteristicsPayload = hasCharacteristics
+    const shouldSendCharacteristics =
+      mode === 'edit'
+        ? true
+        : ch.heightCm.trim() !== '' ||
+          ch.weightKg.trim() !== '' ||
+          ch.ethnicityId.trim() !== '' ||
+          ch.hairColorId.trim() !== '' ||
+          ch.eyeColorId.trim() !== '' ||
+          ch.dietOptionId.trim() !== '' ||
+          ch.tattoo !== null ||
+          ch.passport !== null ||
+          ch.drivingLicense !== null;
+
+    const characteristicsPayload = shouldSendCharacteristics
       ? {
           heightCm: toIntOrNull(ch.heightCm),
           weightKg: toIntOrNull(ch.weightKg),
@@ -288,9 +282,9 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
           hairColorId: ch.hairColorId.trim() ? ch.hairColorId : null,
           eyeColorId: ch.eyeColorId.trim() ? ch.eyeColorId : null,
           dietOptionId: ch.dietOptionId.trim() ? ch.dietOptionId : null,
-          ...(ch.tattoo !== undefined ? { tattoo: ch.tattoo } : {}),
-          ...(ch.passport !== undefined ? { passport: ch.passport } : {}),
-          ...(ch.drivingLicense !== undefined ? { drivingLicense: ch.drivingLicense } : {}),
+          tattoo: ch.tattoo,
+          passport: ch.passport,
+          drivingLicense: ch.drivingLicense,
         }
       : undefined;
 
@@ -315,32 +309,26 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
 
   const characteristicsCount = useMemo(() => {
     const ch = form.characteristics;
+    const isBool = (v: unknown): v is boolean => v === true || v === false;
 
     return (
-      (ch.heightCm.trim() !== '' || ch.weightKg.trim() !== '' ? 1 : 0) +
+      (ch.heightCm.trim() !== '' ? 1 : 0) +
+      (ch.weightKg.trim() !== '' ? 1 : 0) +
       (ch.ethnicityId.trim() !== '' ? 1 : 0) +
       (ch.hairColorId.trim() !== '' ? 1 : 0) +
       (ch.eyeColorId.trim() !== '' ? 1 : 0) +
       (ch.dietOptionId.trim() !== '' ? 1 : 0) +
-      (ch.tattoo !== undefined ? 1 : 0) +
-      (ch.passport !== undefined ? 1 : 0) +
-      (ch.drivingLicense !== undefined ? 1 : 0)
+      (isBool(ch.tattoo) ? 1 : 0) +
+      (isBool(ch.passport) ? 1 : 0) +
+      (isBool(ch.drivingLicense) ? 1 : 0)
     );
   }, [form.characteristics]);
 
   const skillsCount = useMemo(() => {
     const selected = form.skillIds ?? [];
     if (!hasAny(selected)) return 0;
-
-    const selectedSet = new Set(selected);
-
-    return skillsCats.reduce((acc, { idSet }) => {
-      for (const id of selectedSet) {
-        if (idSet.has(id)) return acc + 1;
-      }
-      return acc;
-    }, 0);
-  }, [skillsCats, form.skillIds]);
+    return new Set(selected).size;
+  }, [form.skillIds]);
 
   return (
     <article className="flex flex-col">
@@ -496,20 +484,23 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
           <BooleanRadioGroup
             name="tattoo"
             label={t('profile.characteristics.tattoo')}
-            value={form.characteristics.tattoo ?? undefined}
-            onChange={(next) => onChangeCh('tattoo', next ?? null)}
+            value={form.characteristics.tattoo}
+            anyValue="null"
+            onChange={(next) => onChangeCh('tattoo', next == null ? null : next)}
           />
           <BooleanRadioGroup
             name="passport"
             label={t('profile.characteristics.passport')}
-            value={form.characteristics.passport ?? undefined}
-            onChange={(next) => onChangeCh('passport', next ?? null)}
+            value={form.characteristics.passport}
+            anyValue="null"
+            onChange={(next) => onChangeCh('passport', next == null ? null : next)}
           />
           <BooleanRadioGroup
             name="drivingLicense"
             label={t('profile.characteristics.drivingLicense')}
-            value={form.characteristics.drivingLicense ?? undefined}
-            onChange={(next) => onChangeCh('drivingLicense', next ?? null)}
+            value={form.characteristics.drivingLicense}
+            anyValue="null"
+            onChange={(next) => onChangeCh('drivingLicense', next == null ? null : next)}
           />
         </div>
       </FilterSection>
