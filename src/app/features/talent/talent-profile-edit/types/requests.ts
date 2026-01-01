@@ -1,3 +1,4 @@
+import type { DeepNullableExceptId } from '../../../../shared/utils/typeUtils';
 import type {
   BaseCharacteristics,
   BaseCredit,
@@ -8,7 +9,7 @@ import type {
 
 export type BasicInfoPatchRequest = Partial<BaseProfileBasicInfo>;
 export type ContactPatchRequest = Partial<BaseProfileContact>;
-export type CharacteristicsPatchRequest = Partial<BaseCharacteristics>;
+export type CharacteristicsPatchRequest = DeepNullableExceptId<Partial<BaseCharacteristics>>;
 export type SkillsPatchRequest = { skillIds: string[] };
 export type CreditRequest = Partial<BaseCredit>;
 export type EducationRequest = Partial<BaseEducation>;

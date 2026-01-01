@@ -22,9 +22,9 @@ type DraftRoleCharacteristicsForm = {
   hairColorId: string;
   eyeColorId: string;
   dietOptionId: string;
-  tattoo: boolean | null;
-  passport: boolean | null;
-  drivingLicense: boolean | null;
+  tattoo?: boolean | null;
+  passport?: boolean | null;
+  drivingLicense?: boolean | null;
 };
 
 export type DraftCastingRole = {
