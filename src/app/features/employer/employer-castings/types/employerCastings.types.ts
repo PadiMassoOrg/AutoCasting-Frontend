@@ -19,6 +19,7 @@ export type BaseCastingResponse = {
   castingStatus: SiteMetadataObject;
   basicInfoSection: CastingBasicInfo;
   rolesSection: CastingRolesSection;
+  requirementsSection: CastingRequirementsSection;
 };
 
 // ======================
@@ -46,7 +47,7 @@ export type BaseCastingRolesSection = {
   id: string;
   sectionStatus: SiteMetadataObject;
   generalNotes: string;
-  roles: EmployerCastingRoleCardResponse;
+  roles: EmployerCastingRoleCardResponse[];
 };
 
 export type BaseCastingRole = {
@@ -63,12 +64,28 @@ export type BaseCastingRole = {
   skills: SiteMetadataObject[];
 };
 
+export type BaseCastingRequirementsSection = {
+  id: string;
+  sectionStatus: SiteMetadataObject;
+  requirements: EmployerCastingRequirementCardResponse[];
+};
+
+export type BaseCastingRequirement = {
+  id: string;
+  sectionId: string;
+  roleName: string;
+  requiresAudio: boolean;
+  requiresVideo: boolean;
+  descirption: string;
+};
+
 /* ======================
    Export & DeepNullable
    ====================== */
 export type CastingBasicInfo = WithAuditable<DeepNullableExceptId<BaseCastingBasicInfo>>;
 export type CastingRolesSection = WithAuditable<DeepNullableExceptId<BaseCastingRolesSection>>;
 export type EmployerCastingRoleCardResponse = WithAuditable<BaseCastingRole>;
+export type EmployerCastingRequirementCardResponse = WithAuditable<DeepNullableExceptId<BaseCastingRequirement>>;
 
 export type CastingCardResponse = WithAuditable<BaseCastingCard>;
 export type CastingResponse = WithAuditable<BaseCastingResponse>;

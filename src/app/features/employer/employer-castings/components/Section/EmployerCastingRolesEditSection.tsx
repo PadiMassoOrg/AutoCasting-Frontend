@@ -4,17 +4,16 @@ import { useModal } from '../../../../../context/ModalContext';
 import { DashboardSection } from '../../../../../layouts/components';
 import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../../shared/components/Section';
+import { useCastingRoleCreateAutosave } from '../../hooks/autosaves';
 import { useCastingRoles } from '../../hooks/useCastingRoles';
 import EmployerCastingRoleCard from '../EmployerCastingRoleCard';
 import CastingRoleModal from '../Form/Role/CastingRoleModal';
-import { useCastingRoleCreateAutosave } from '../../hooks/autosaves';
 
 const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) => {
   const { t } = useTranslation();
+  const { openModal, closeModal } = useModal();
   const { data } = useCastingRoles(sectionId);
   const createRoleMutation = useCastingRoleCreateAutosave(sectionId);
-
-  const { openModal, closeModal } = useModal();
 
   const handleOpenModal = () => {
     openModal(

@@ -5,6 +5,7 @@ import type {
   CastingBasicInfo,
   CastingCardResponse,
   CastingResponse,
+  EmployerCastingRequirementCardResponse,
   EmployerCastingRoleCardResponse,
 } from '../types/employerCastings.types';
 import type { CastingBasicInfoPatchRequest, CastingRolePatchRequest, CastingRoleRequest } from '../types/requests';
@@ -12,6 +13,7 @@ import type { CastingBasicInfoPatchRequest, CastingRolePatchRequest, CastingRole
 export const EMPLOYER_CASTING_CACHE_KEY = ['cache-employer-casting'] as const;
 export const EMPLOYER_CASTINGS_LIST_CACHE_KEY = ['cache-employer-castings-list'] as const;
 export const EMPLOYER_CASTING_ROLES_LIST_CACHE_KEY = ['cache-employer-casting-role-list'] as const;
+export const EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY = ['cache-employer-casting-requirement-list'] as const;
 
 // GET
 export const getMyCastings = async (): Promise<CastingCardResponse[]> => {
@@ -21,6 +23,13 @@ export const getMyCastings = async (): Promise<CastingCardResponse[]> => {
 
 export const getRolesBySectionId = async (sectionId: string): Promise<EmployerCastingRoleCardResponse[]> => {
   const response = await api.get(API_ROUTES.CASTING_ROLE + `/${sectionId}`);
+  return response.data;
+};
+
+export const getRequirementsBySectionId = async (
+  sectionId: string
+): Promise<EmployerCastingRequirementCardResponse[]> => {
+  const response = await api.get(API_ROUTES.CASTING_REQUIREMENT + `/${sectionId}`);
   return response.data;
 };
 

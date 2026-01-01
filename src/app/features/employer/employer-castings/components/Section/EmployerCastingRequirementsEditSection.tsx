@@ -1,14 +1,16 @@
-import { Button } from 'autocasting-ui-library-padimasso';
+import { Button, Label } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
 import { DashboardSection } from '../../../../../layouts/components';
 import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../../shared/components/Section';
+import { useCastingRequirements } from '../../hooks/useCastingRequirements';
 import CastingRequirementModal from '../Form/Requirement/CastingRequirementModal';
 
-const EmployerCastingRequirementsEditSection = () => {
+const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: string }) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
+  const { data } = useCastingRequirements(sectionId);
 
   // TODO: Handle EDIT or NEW
   const handleOpenModal = () => {
@@ -24,6 +26,8 @@ const EmployerCastingRequirementsEditSection = () => {
     );
   };
 
+  console.log(data);
+
   const actionButtonRender = () => (
     <Button onClick={handleOpenModal} className="flex flex-row items-center justify-center gap-2">
       <Icon name="plus" variant="white" size={16} />
@@ -33,6 +37,13 @@ const EmployerCastingRequirementsEditSection = () => {
   return (
     <DashboardSection>
       <SectionTitle title={t('employer_castings.dashboard.requirements.requirements')} action={actionButtonRender()} />
+      {data?.length! > 0 ? (
+        data?.map((r) => <h2 key={r.id}>{r.roleName}</h2>)
+      ) : (
+        <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
+          {t('employer_castings.page.empty_roles')}
+        </Label>
+      )}
     </DashboardSection>
   );
 };

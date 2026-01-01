@@ -19,7 +19,7 @@ const EmployerCastingPage = () => {
   if (isLoading || !data) return null;
   if (error) return <ServerError />;
 
-  const { basicInfoSection, rolesSection } = data;
+  const { basicInfoSection, rolesSection, requirementsSection } = data;
 
   const sections: DashboardSection[] = [
     {
@@ -35,7 +35,7 @@ const EmployerCastingPage = () => {
     {
       key: 'requirements',
       label: t('employer_castings.dashboard.requirements.requirements'),
-      render: () => <EmployerCastingRequirementsEditSection />,
+      render: () => <EmployerCastingRequirementsEditSection sectionId={requirementsSection.id} />,
     },
     {
       key: 'remuneration',
