@@ -35,7 +35,9 @@ const EmployerCastingPage = () => {
     {
       key: 'requirements',
       label: t('employer_castings.dashboard.requirements.requirements'),
-      render: () => <EmployerCastingRequirementsEditSection sectionId={requirementsSection.id} />,
+      render: () => (
+        <EmployerCastingRequirementsEditSection sectionId={requirementsSection.id} roles={rolesSection.roles ?? []} />
+      ),
     },
     {
       key: 'remuneration',
@@ -44,7 +46,7 @@ const EmployerCastingPage = () => {
     },
   ];
 
-  return <DashboardShell title={t('employer_castings.dashboard.title_new')} sections={sections}></DashboardShell>;
+  return <DashboardShell title={t('employer_castings.dashboard.title_new')} sections={sections} />;
 };
 
 export default EmployerCastingPage;

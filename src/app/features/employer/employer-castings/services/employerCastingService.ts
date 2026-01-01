@@ -39,6 +39,7 @@ export const getRequirementsBySectionId = async (
 
 export const getCastingDetailsBySlug = async (slug: string): Promise<CastingResponse> => {
   const response = await api.get(API_ROUTES.CASTING + `/${slug}`);
+  console.log(response.data);
   return response.data;
 };
 

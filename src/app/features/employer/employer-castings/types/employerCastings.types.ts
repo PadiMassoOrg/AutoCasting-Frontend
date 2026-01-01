@@ -84,8 +84,9 @@ export type BaseCastingRequirement = {
    ====================== */
 export type CastingBasicInfo = WithAuditable<DeepNullableExceptId<BaseCastingBasicInfo>>;
 export type CastingRolesSection = WithAuditable<DeepNullableExceptId<BaseCastingRolesSection>>;
+export type CastingRequirementsSection = WithAuditable<DeepNullableExceptId<BaseCastingRequirementsSection>>;
 export type EmployerCastingRoleCardResponse = WithAuditable<BaseCastingRole>;
-export type EmployerCastingRequirementCardResponse = WithAuditable<DeepNullableExceptId<BaseCastingRequirement>>;
+export type EmployerCastingRequirementCardResponse = WithAuditable<BaseCastingRequirement>;
 
 export type CastingCardResponse = WithAuditable<BaseCastingCard>;
 export type CastingResponse = WithAuditable<BaseCastingResponse>;

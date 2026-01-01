@@ -738,7 +738,8 @@
       "title": "Mis Castings",
       "create_casting": "Nuevo Casting",
       "empty_page": "Aún no hay castings que mostrar.",
-      "empty_roles": "Aún no agregaste roles."
+      "empty_roles": "Aún no agregaste roles.",
+      "empty_requirements": "Aún no agregaste requerimientos."
     },
     "dashboard": {
       "title_new": "Nuevo Casting",
@@ -768,8 +769,8 @@
       },
       "requirements": {
         "requirements": "Requerimientos",
-        "add_new": "Agregar Requerimiento",
-        "edit": "Editar Requerimiento",
+        "add_new": "Archivos Requeridos",
+        "edit": "Archivos Requeridos",
         "delete": "¿Seguro deseas eliminar este requerimiento?",
         "requirement": {
           "audio_true": "Audio",
