@@ -1,6 +1,6 @@
 import { Label } from 'autocasting-ui-library-padimasso';
 import type { HTMLAttributes } from 'react';
-import { useId, useMemo } from 'react';
+import React, { useId, useMemo } from 'react';
 import type { RadioOption } from './RadioGroupField';
 
 type Props = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & {
@@ -10,14 +10,11 @@ type Props = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & {
   disabled?: boolean;
   name?: string;
   onChange: (next: string[]) => void;
-
+  error?: string | null;
   labelClassName?: string;
   wrapperClassName?: string;
-
   optionsWrapperClassName?: string;
   optionClassName?: string;
-
-  minSelections?: number;
 };
 
 const MultiRadioGroupField = ({
@@ -27,13 +24,12 @@ const MultiRadioGroupField = ({
   disabled = false,
   name,
   onChange,
+  error,
 
   wrapperClassName = 'flex flex-col',
   labelClassName = 'text-sm font-semibold mb-3',
   optionsWrapperClassName = 'flex flex-col gap-2',
   optionClassName = 'flex items-center gap-2 text-sm',
-
-  minSelections,
 
   className,
   ...rest
@@ -47,12 +43,11 @@ const MultiRadioGroupField = ({
     const next = new Set(selectedSet);
     if (next.has(value)) next.delete(value);
     else next.add(value);
-
-    const arr = Array.from(next);
-    if (minSelections != null && arr.length < minSelections) return;
-
-    onChange(arr);
+    onChange(Array.from(next));
   };
+
+  const errorId = useId();
+  const describedBy = error ? `${errorId}-error` : undefined;
 
   const renderCircleCheckbox = (checked: boolean, props: React.InputHTMLAttributes<HTMLInputElement>) => (
     <span className="relative inline-flex items-center justify-center h-6 w-6">
@@ -73,6 +68,7 @@ const MultiRadioGroupField = ({
           transition-colors
           disabled:cursor-not-allowed
         "
+        aria-describedby={describedBy}
       />
       <span
         className="
@@ -90,39 +86,49 @@ const MultiRadioGroupField = ({
   );
 
   return (
-    <div className={[wrapperClassName, className].filter(Boolean).join(' ')} {...rest}>
-      {label ? <Label className={labelClassName}>{label}</Label> : null}
+    <>
+      <div className={[wrapperClassName, className].filter(Boolean).join(' ')} {...rest}>
+        {label ? <Label className={labelClassName}>{label}</Label> : null}
 
-      <div className={optionsWrapperClassName}>
-        {options.map((opt) => {
-          const isDisabled = disabled || Boolean(opt.disabled);
-          const checked = selectedSet.has(opt.value);
-          const id = `${groupName}--${opt.value}`;
+        <div className={optionsWrapperClassName}>
+          {options.map((opt) => {
+            const isDisabled = disabled || Boolean(opt.disabled);
+            const checked = selectedSet.has(opt.value);
+            const id = `${groupName}--${opt.value}`;
 
-          return (
-            <label
-              key={opt.value}
-              htmlFor={id}
-              className={[optionClassName, isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'].join(' ')}
-            >
-              {renderCircleCheckbox(checked, {
-                id,
-                name: groupName,
-                value: opt.value,
-                disabled: isDisabled,
-                onChange: () => {
-                  if (isDisabled) return;
-                  toggle(opt.value);
-                },
-              })}
-              <span className="cursor-pointer select-none">{opt.label}</span>
-            </label>
-          );
-        })}
+            return (
+              <label
+                key={opt.value}
+                htmlFor={id}
+                className={[optionClassName, isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'].join(' ')}
+              >
+                {renderCircleCheckbox(checked, {
+                  id,
+                  name: groupName,
+                  value: opt.value,
+                  disabled: isDisabled,
+                  onChange: () => {
+                    if (isDisabled) return;
+                    toggle(opt.value);
+                  },
+                })}
+                <span className="cursor-pointer select-none">{opt.label}</span>
+              </label>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="min-h-[25px]" />
-    </div>
+      {!error ? (
+        <div className="min-h-[25px]" />
+      ) : (
+        <div className="min-h-[25px]">
+          <Label id={`${errorId}-error`} variant="error" className="mt-0.5">
+            {error}
+          </Label>
+        </div>
+      )}
+    </>
   );
 };
 

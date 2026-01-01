@@ -1,10 +1,12 @@
-import { Button, Separator } from 'autocasting-ui-library-padimasso';
+// src/features/employer-castings/components/Form/Requirement/CastingRequirementModal.tsx
+import { Button, Label, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CheckboxField from '../../../../../../shared/components/Form/CheckboxField';
 import MultiRadioGroupField from '../../../../../../shared/components/Form/MultiRadioGroupField';
 import RadioGroupField, { type RadioOption } from '../../../../../../shared/components/Form/RadioGroupField';
 import TextareaField from '../../../../../../shared/components/Form/TextareaField';
+import { getCastingRequirementSchema, type CastingRequirementFormKey } from '../../../schemas/formSchema';
 import type { EmployerCastingRequirementCardResponse } from '../../../types/employerCastings.types';
 
 export type DraftCastingRequirement =
@@ -32,15 +34,12 @@ type Props = {
   onSave: (draft: DraftCastingRequirement) => Promise<void> | void;
   onCancel: () => void;
   sectionId: string;
-
-  /** en CREATE es obligatorio para poder elegir roles; en EDIT puede omitirse */
   roleOptions?: RadioOption[];
 };
 
 type FormState = {
-  selectedRoleIds: string[]; // CREATE
-  lockedRoleId: string; // EDIT (no editable)
-
+  selectedRoleIds: string[];
+  lockedRoleId: string;
   requiresAudio: boolean;
   requiresVideo: boolean;
   description: string;
@@ -48,12 +47,11 @@ type FormState = {
 
 const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, roleOptions = [] }: Props) => {
   const { t } = useTranslation();
+  const requirementSchema = useMemo(() => getCastingRequirementSchema(t), [t]);
 
   const readInitialRoleId = (r?: EmployerCastingRequirementCardResponse): string => {
     const any = r as any;
-    return (
-      any?.castingRoleId ?? any?.roleId ?? any?.castingRole?.id ?? any?.role?.id ?? '' // fallback
-    );
+    return any?.castingRoleId ?? any?.roleId ?? any?.castingRole?.id ?? any?.role?.id ?? '';
   };
 
   const readInitialRoleName = (r?: EmployerCastingRequirementCardResponse): string => {
@@ -81,58 +79,68 @@ const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, r
   };
 
   const [form, setForm] = useState<FormState>(() => (mode === 'edit' ? makeFromInitial(initial) : makeEmpty()));
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Partial<Record<CastingRequirementFormKey, string>>>({});
 
   useEffect(() => {
     setForm(mode === 'edit' ? makeFromInitial(initial) : makeEmpty());
-    setSubmitError(null);
+    setErrors({});
   }, [mode, (initial as any)?.id, sectionId]);
-
-  useEffect(() => {
-    if (mode !== 'create') return;
-    setForm((f) => ({ ...f }));
-  }, [mode, roleOptions]);
 
   const lockedRoleOptions: RadioOption[] = useMemo(() => {
     if (mode !== 'edit') return [];
-
     const roleId = form.lockedRoleId || readInitialRoleId(initial);
     const roleName = readInitialRoleName(initial) || t('general.placeholder.select');
-
     const fromOptions = roleOptions.find((o) => o.value === roleId);
     const label = fromOptions?.label ?? roleName;
-
     if (roleId) return [{ value: roleId, label, disabled: true }];
-
     return [{ value: 'LOCKED', label, disabled: true }];
   }, [mode, form.lockedRoleId, initial, roleOptions, t]);
 
-  const validateAndSave = async () => {
-    setSubmitError(null);
+  const onChange = <K extends keyof FormState>(k: K, v: FormState[K]) => {
+    setForm((f) => ({ ...f, [k]: v }));
 
-    const hasAudioOrVideo = Boolean(form.requiresAudio) || Boolean(form.requiresVideo);
-    if (!hasAudioOrVideo) {
-      setSubmitError(
-        t('employer_castings.dashboard.requirements.error_select_audio_or_video', 'Seleccione Audio o Video')
-      );
+    const mapKey = ((): CastingRequirementFormKey | null => {
+      if (k === 'selectedRoleIds') return 'roleIds';
+      if (k === 'requiresAudio' || k === 'requiresVideo') return 'media';
+      if (k === 'description') return 'description';
+      return null;
+    })();
+
+    if (mapKey) setErrors((e) => ({ ...e, [mapKey]: undefined }));
+  };
+
+  const validateAndSave = async () => {
+    const schemaValues = {
+      requirementsSectionId: sectionId,
+      roleIds: mode === 'create' ? form.selectedRoleIds : [form.lockedRoleId || readInitialRoleId(initial)],
+      requiresAudio: Boolean(form.requiresAudio),
+      requiresVideo: Boolean(form.requiresVideo),
+      description: form.description?.trim() ? form.description.trim() : undefined,
+    };
+
+    const parsed = requirementSchema.safeParse(schemaValues);
+
+    if (!parsed.success) {
+      const flattened = parsed.error.flatten();
+      const flat = flattened.fieldErrors as Partial<Record<CastingRequirementFormKey, string[]>>;
+      const fieldErrors: Partial<Record<CastingRequirementFormKey, string>> = {};
+      (Object.keys(flat) as CastingRequirementFormKey[]).forEach((k) => {
+        const msg = flat[k]?.[0];
+        if (msg) fieldErrors[k] = msg;
+      });
+      setErrors(fieldErrors);
       return;
     }
 
     if (mode === 'create') {
-      if (!form.selectedRoleIds.length) {
-        setSubmitError(t('employer_castings.dashboard.requirements.error_select_role', 'Seleccione al menos un rol'));
-        return;
-      }
-
       const draft: DraftCastingRequirement = {
         mode: 'create',
         requirementsSectionId: sectionId,
-        roleIds: form.selectedRoleIds,
-        requiresAudio: form.requiresAudio,
-        requiresVideo: form.requiresVideo,
+        roleIds: parsed.data.roleIds ?? [],
+        requiresAudio: parsed.data.requiresAudio,
+        requiresVideo: parsed.data.requiresVideo,
         description: form.description ?? '',
       };
-
       await onSave(draft);
       return;
     }
@@ -141,7 +149,7 @@ const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, r
     const roleId = form.lockedRoleId || readInitialRoleId(initial);
 
     if (!id) {
-      setSubmitError(t('general.error', 'Error'));
+      setErrors((e) => ({ ...e, roleIds: t('general.error', 'Error') }));
       return;
     }
 
@@ -150,8 +158,8 @@ const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, r
       id,
       requirementsSectionId: sectionId,
       roleId,
-      requiresAudio: form.requiresAudio,
-      requiresVideo: form.requiresVideo,
+      requiresAudio: parsed.data.requiresAudio,
+      requiresVideo: parsed.data.requiresVideo,
       description: form.description ?? '',
     };
 
@@ -164,8 +172,8 @@ const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, r
         <MultiRadioGroupField
           selected={form.selectedRoleIds}
           options={roleOptions}
-          onChange={(next) => setForm((f) => ({ ...f, selectedRoleIds: next }))}
-          minSelections={1}
+          onChange={(next) => onChange('selectedRoleIds', next)}
+          error={errors.roleIds}
         />
       ) : (
         <RadioGroupField
@@ -176,34 +184,43 @@ const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, r
         />
       )}
 
-      <Separator className="opacity-20 mt-1 mb-8" />
+      <Separator className="opacity-20 mt-2.5 mb-9" />
 
       <div className="flex items-center gap-6">
         <CheckboxField
           id="requiresVideo"
           label={t('employer_castings.dashboard.requirements.requirement.video_true')}
           checked={form.requiresVideo}
-          onCheckedChange={(checked) => setForm((f) => ({ ...f, requiresVideo: checked }))}
+          onCheckedChange={(checked) => onChange('requiresVideo', checked)}
         />
         <CheckboxField
           id="requiresAudio"
           label={t('employer_castings.dashboard.requirements.requirement.audio_true')}
           checked={form.requiresAudio}
-          onCheckedChange={(checked) => setForm((f) => ({ ...f, requiresAudio: checked }))}
+          onCheckedChange={(checked) => onChange('requiresAudio', checked)}
         />
       </div>
 
-      <div className="mt-6">
+      {!errors.media ? (
+        <div className="min-h-[25px]" />
+      ) : (
+        <div className="min-h-[25px]">
+          <Label id={`${errors.media}-error`} variant="error" className="mt-0.5">
+            {errors.media}
+          </Label>
+        </div>
+      )}
+
+      <div className="mt-2">
         <TextareaField
           id="description"
-          label={t('employer_castings.dashboard.requirements.description_optional')}
-          placeholder={t('general.placeholder.write_something')}
+          label={t('employer_castings.dashboard.requirements.requirement.description')}
+          placeholder={t('general.placeholder.about')}
           value={form.description}
-          onChange={(e) => setForm((f) => ({ ...f, description: (e?.target?.value ?? '') as string }))}
+          onChange={(e) => onChange('description', (e?.target?.value ?? '') as string)}
+          error={errors.description}
         />
       </div>
-
-      {submitError ? <p className="mt-4 text-sm text-red-600">{submitError}</p> : null}
 
       <Separator className="opacity-20 my-6" />
 

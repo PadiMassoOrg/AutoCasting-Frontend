@@ -774,7 +774,8 @@
         "delete": "¿Seguro deseas eliminar este requerimiento?",
         "requirement": {
           "audio_true": "Audio",
-          "video_true": "Video"
+          "video_true": "Video",
+          "description": "Descripción/Instrucciones (opcional)"
         }
       },
       "remuneration": {

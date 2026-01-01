@@ -54,7 +54,6 @@ export const getCastingRoleSchema = (t: TFunction) =>
         )
         .min(1, { message: t('validation.required') }),
 
-      // OPCIONAL (tu backend lo trata como optional)
       skillIds: z
         .array(
           z
@@ -65,7 +64,6 @@ export const getCastingRoleSchema = (t: TFunction) =>
         )
         .optional(),
 
-      // OPCIONAL
       description: z
         .string()
         .trim()
@@ -82,5 +80,56 @@ export const getCastingRoleSchema = (t: TFunction) =>
       }
     });
 
+export const getCastingRequirementSchema = (t: TFunction) =>
+  z
+    .object({
+      requirementsSectionId: z
+        .string({ required_error: t('validation.required') })
+        .trim()
+        .min(1, { message: t('validation.required') })
+        .regex(UUID_RX, { message: t('validation.uuid_invalid') }),
+
+      roleIds: z
+        .array(
+          z
+            .string({ required_error: t('validation.required') })
+            .trim()
+            .min(1, { message: t('validation.required') })
+            .regex(UUID_RX, { message: t('validation.uuid_invalid') })
+        )
+        .optional(),
+
+      requiresAudio: z.boolean().default(false),
+      requiresVideo: z.boolean().default(false),
+
+      description: z
+        .string()
+        .trim()
+        .max(2000, { message: t('validation.invalid') })
+        .optional(),
+    })
+    .superRefine((data, ctx) => {
+      const roles = data.roleIds ?? [];
+      if (roles.length < 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['roleIds'],
+          message: t('validation.required'),
+        });
+      }
+
+      const hasMedia = Boolean(data.requiresAudio) || Boolean(data.requiresVideo);
+      if (!hasMedia) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['media'],
+          message: t('validation.required'),
+        });
+      }
+    });
+
 export type CastingRoleFormValues = z.infer<ReturnType<typeof getCastingRoleSchema>>;
 export type CastingRoleFormKey = keyof CastingRoleFormValues;
+
+export type CastingRequirementFormValues = z.infer<ReturnType<typeof getCastingRequirementSchema>>;
+export type CastingRequirementFormKey = keyof CastingRequirementFormValues | 'media';
