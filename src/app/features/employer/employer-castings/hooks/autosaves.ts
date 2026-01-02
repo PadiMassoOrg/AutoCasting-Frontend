@@ -9,6 +9,7 @@ import {
   EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY,
   EMPLOYER_CASTING_ROLES_LIST_CACHE_KEY,
   patchCastingBasicInfo,
+  patchCastingRequirement,
   patchCastingRole,
 } from '../services/employerCastingService';
 import type {
@@ -20,6 +21,7 @@ import type {
 import type {
   CastingBasicInfoPatchRequest,
   CastingRequirementDeleteRequest,
+  CastingRequirementPatchRequest,
   CastingRequirementUpsertRequest,
   CastingRoleDeleteRequest,
   CastingRolePatchRequest,
@@ -108,6 +110,27 @@ export function useCastingRequirementCreateAutosave(sectionId: string) {
   });
 }
 
+export function useCastingRequirementPatchAutosave(sectionId: string) {
+  const token = getAuthToken();
+  const requirementsKey = [...EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY, sectionId, token ?? 'no-token'];
+
+  return useSectionAutosave<CastingRequirementPatchRequest, EmployerCastingRequirementCardResponse>({
+    mutationFn: patchCastingRequirement,
+    delay: 200,
+    cacheKeys: [requirementsKey],
+    invalidateOnSuccess: false,
+    onSuccessUpdate: (prev, updated) => {
+      const arr = normalizeReqArray(prev);
+
+      // Importante: si el backend devuelve un DTO "corto" (sin roleName/sectionId),
+      // hacemos merge con el item existente para no romper la UI.
+      const next = arr.map((r) => (r.id === (updated as any)?.id ? ({ ...r, ...(updated as any) } as any) : r));
+
+      return sortDescByCreatedAt(next);
+    },
+  });
+}
+
 export function useCastingRequirementDeleteAutosave(sectionId: string) {
   const token = getAuthToken();
   const requirementsKey = [...EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY, sectionId, token ?? 'no-token'];
@@ -118,7 +141,7 @@ export function useCastingRequirementDeleteAutosave(sectionId: string) {
     cacheKeys: [requirementsKey],
     invalidateOnSuccess: false,
     onSuccessUpdate: (prev, { id }) => {
-      const arr = Array.isArray(prev) ? prev : [];
+      const arr = normalizeReqArray(prev);
       return arr.filter((r) => r.id !== id);
     },
   });

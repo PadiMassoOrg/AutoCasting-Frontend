@@ -10,6 +10,7 @@ import type {
 } from '../types/employerCastings.types';
 import type {
   CastingBasicInfoPatchRequest,
+  CastingRequirementPatchRequest,
   CastingRequirementUpsertRequest,
   CastingRolePatchRequest,
   CastingRoleUpsertRequest,
@@ -72,6 +73,12 @@ export async function patchCastingBasicInfo(payload: CastingBasicInfoPatchReques
 export async function patchCastingRole(req: CastingRolePatchRequest) {
   const { id, ...body } = req;
   const res = await api.put(`${API_ROUTES.CASTING_ROLE}/${id}`, body);
+  return res.data;
+}
+
+export async function patchCastingRequirement(req: CastingRequirementPatchRequest) {
+  const { id, ...body } = req;
+  const res = await api.put(`${API_ROUTES.CASTING_REQUIREMENT}/${id}`, body);
   return res.data;
 }
 

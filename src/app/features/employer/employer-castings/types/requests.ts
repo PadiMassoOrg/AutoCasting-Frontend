@@ -27,4 +27,5 @@ export type CastingBasicInfoPatchRequest = Partial<CastingBasicInfo>;
 export type CastingRolePatchRequest = CastingRoleUpsertRequest & { id: string };
 export type CastingRoleDeleteRequest = { id: string };
 
+export type CastingRequirementPatchRequest = CastingRequirementUpsertRequest & { id: string };
 export type CastingRequirementDeleteRequest = { id: string };

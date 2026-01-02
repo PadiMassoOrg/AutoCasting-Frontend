@@ -4,7 +4,7 @@ import { Chip } from '../../../../shared/components/Chip/Chip';
 import type { RadioOption } from '../../../../shared/components/Form/RadioGroupField';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { SectionCard } from '../../../../shared/components/Section';
-import { useCastingRequirementDeleteAutosave } from '../hooks/autosaves';
+import { useCastingRequirementDeleteAutosave, useCastingRequirementPatchAutosave } from '../hooks/autosaves';
 import type { EmployerCastingRequirementCardResponse } from '../types/employerCastings.types';
 import CastingRequirementDeleteModal from './Form/Requirement/CastingRequirementDeleteModal';
 import CastingRequirementModal from './Form/Requirement/CastingRequirementModal';
@@ -20,6 +20,7 @@ const EmployerCastingRequirementCard = ({
 }) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
+  const patchRequirement = useCastingRequirementPatchAutosave(sectionId);
   const deleteRequirement = useCastingRequirementDeleteAutosave(sectionId);
 
   const { roleName, requiresAudio, requiresVideo, description } = data;
@@ -31,8 +32,20 @@ const EmployerCastingRequirementCard = ({
         initial={data}
         sectionId={sectionId}
         roleOptions={roleOptions}
-        onSave={() => {
-          console.log('save Requirement Modal');
+        onSave={(draft) => {
+          // ✅ Fix TS: draft puede ser "create" o "edit" (union). Solo "edit" tiene id.
+          if (draft.mode !== 'edit') return;
+
+          // ✅ No enviamos "mode" al backend. Armamos el payload explícitamente.
+          patchRequirement.immediate({
+            id: draft.id,
+            requirementsSectionId: draft.requirementsSectionId,
+            roleIds: draft.roleIds,
+            requiresAudio: draft.requiresAudio,
+            requiresVideo: draft.requiresVideo,
+            description: draft.description?.trim() ? draft.description.trim() : undefined,
+          });
+
           closeModal();
         }}
         onCancel={closeModal}
