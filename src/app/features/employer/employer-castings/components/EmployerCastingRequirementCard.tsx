@@ -4,6 +4,7 @@ import { Chip } from '../../../../shared/components/Chip/Chip';
 import type { RadioOption } from '../../../../shared/components/Form/RadioGroupField';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { SectionCard } from '../../../../shared/components/Section';
+import { useCastingRequirementDeleteAutosave } from '../hooks/autosaves';
 import type { EmployerCastingRequirementCardResponse } from '../types/employerCastings.types';
 import CastingRequirementDeleteModal from './Form/Requirement/CastingRequirementDeleteModal';
 import CastingRequirementModal from './Form/Requirement/CastingRequirementModal';
@@ -11,14 +12,17 @@ import CastingRequirementModal from './Form/Requirement/CastingRequirementModal'
 const EmployerCastingRequirementCard = ({
   data,
   roleOptions,
+  sectionId,
 }: {
   data: EmployerCastingRequirementCardResponse;
   roleOptions: RadioOption[];
+  sectionId: string;
 }) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
+  const deleteRequirement = useCastingRequirementDeleteAutosave(sectionId);
 
-  const { sectionId, roleName, requiresAudio, requiresVideo, description } = data;
+  const { roleName, requiresAudio, requiresVideo, description } = data;
 
   const handleEditModal = () => {
     openModal(
@@ -44,6 +48,7 @@ const EmployerCastingRequirementCard = ({
         data={data}
         onCancel={closeModal}
         onConfirm={() => {
+          deleteRequirement.immediate({ id: data.id });
           closeModal();
         }}
       />,

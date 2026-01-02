@@ -21,11 +21,9 @@ type RoleRef = {
 const EmployerCastingRequirementsEditSection = ({ sectionId, roles }: { sectionId: string; roles: RoleRef[] }) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
-
   const requirementsQuery = useCastingRequirements(sectionId);
   const createRequirementMutation = useCastingRequirementCreateAutosave(sectionId);
 
-  // Con el fix del autosave, esto ya debería ser siempre ARRAY plano.
   const data = (requirementsQuery.data ?? []) as EmployerCastingRequirementCardResponse[];
 
   const roleOptions: RadioOption[] = useMemo(
@@ -85,7 +83,12 @@ const EmployerCastingRequirementsEditSection = ({ sectionId, roles }: { sectionI
 
       {(data?.length ?? 0) > 0 ? (
         data.map((requirement) => (
-          <EmployerCastingRequirementCard key={requirement.id} data={requirement} roleOptions={roleOptions} />
+          <EmployerCastingRequirementCard
+            key={requirement.id}
+            data={requirement}
+            roleOptions={roleOptions}
+            sectionId={sectionId}
+          />
         ))
       ) : (
         <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">

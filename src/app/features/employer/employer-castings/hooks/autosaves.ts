@@ -3,6 +3,7 @@ import { useSectionAutosave } from '../../../talent/talent-profile-edit/hooks/us
 import {
   createBulkRequirement,
   createNewRole,
+  deleteCastingRequirement,
   deleteCastingRole,
   EMPLOYER_CASTING_CACHE_KEY,
   EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY,
@@ -18,6 +19,7 @@ import type {
 } from '../types/employerCastings.types';
 import type {
   CastingBasicInfoPatchRequest,
+  CastingRequirementDeleteRequest,
   CastingRequirementUpsertRequest,
   CastingRoleDeleteRequest,
   CastingRolePatchRequest,
@@ -84,7 +86,7 @@ export function useCastingRoleDeleteAutosave(sectionId: string) {
   });
 }
 
-// Requirement (CREATE BULK -> devuelve ARRAY)
+// Requirement
 export function useCastingRequirementCreateAutosave(sectionId: string) {
   const token = getAuthToken();
   const requirementsKey = [...EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY, sectionId, token ?? 'no-token'];
@@ -94,17 +96,30 @@ export function useCastingRequirementCreateAutosave(sectionId: string) {
     delay: 200,
     cacheKeys: [requirementsKey],
     invalidateOnSuccess: false,
-
     onSuccessUpdate: (prev, created) => {
       const prevArr = normalizeReqArray(prev);
       const createdArr = normalizeReqArray(created);
-
       const map = new Map<string, EmployerCastingRequirementCardResponse>();
       [...createdArr, ...prevArr].forEach((r) => {
         if (r?.id) map.set(r.id, r);
       });
-
       return sortDescByCreatedAt(Array.from(map.values()));
+    },
+  });
+}
+
+export function useCastingRequirementDeleteAutosave(sectionId: string) {
+  const token = getAuthToken();
+  const requirementsKey = [...EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY, sectionId, token ?? 'no-token'];
+
+  return useSectionAutosave<CastingRequirementDeleteRequest, { id: string }>({
+    mutationFn: deleteCastingRequirement,
+    delay: 0,
+    cacheKeys: [requirementsKey],
+    invalidateOnSuccess: false,
+    onSuccessUpdate: (prev, { id }) => {
+      const arr = Array.isArray(prev) ? prev : [];
+      return arr.filter((r) => r.id !== id);
     },
   });
 }

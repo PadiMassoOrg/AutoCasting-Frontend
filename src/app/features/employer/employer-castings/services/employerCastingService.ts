@@ -80,3 +80,8 @@ export async function deleteCastingRole({ id }: { id: string }) {
   await api.delete(`${API_ROUTES.CASTING_ROLE}/${id}`);
   return { id };
 }
+
+export async function deleteCastingRequirement({ id }: { id: string }) {
+  await api.delete(`${API_ROUTES.CASTING_REQUIREMENT}/${id}`);
+  return { id };
+}
