@@ -1,9 +1,11 @@
 import { getAuthToken } from '../../../../shared/lib/cookies';
 import { useSectionAutosave } from '../../../talent/talent-profile-edit/hooks/useSectionAutoSave';
 import {
+  createBulkRequirement,
   createNewRole,
   deleteCastingRole,
   EMPLOYER_CASTING_CACHE_KEY,
+  EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY,
   EMPLOYER_CASTING_ROLES_LIST_CACHE_KEY,
   patchCastingBasicInfo,
   patchCastingRole,
@@ -11,15 +13,18 @@ import {
 import type {
   CastingBasicInfo,
   CastingResponse,
+  EmployerCastingRequirementCardResponse,
   EmployerCastingRoleCardResponse,
 } from '../types/employerCastings.types';
 import type {
   CastingBasicInfoPatchRequest,
+  CastingRequirementUpsertRequest,
   CastingRoleDeleteRequest,
   CastingRolePatchRequest,
   CastingRoleUpsertRequest,
 } from '../types/requests';
 
+// Basic Info
 export function useCastingBasicInfoAutosave(slug: string) {
   return useSectionAutosave<CastingBasicInfoPatchRequest, CastingBasicInfo>({
     mutationFn: patchCastingBasicInfo,
@@ -30,6 +35,7 @@ export function useCastingBasicInfoAutosave(slug: string) {
   });
 }
 
+// Role
 export function useCastingRoleCreateAutosave(sectionId: string) {
   const token = getAuthToken();
   const rolesKey = [...EMPLOYER_CASTING_ROLES_LIST_CACHE_KEY, sectionId, token ?? 'no-token'];
@@ -40,11 +46,8 @@ export function useCastingRoleCreateAutosave(sectionId: string) {
     cacheKeys: [rolesKey],
     invalidateOnSuccess: false,
     onSuccessUpdate: (prev, created) => {
-      const replace = (arr: EmployerCastingRoleCardResponse[]) =>
-        sortDescByCreatedAt([created, ...arr.filter((x) => x.id !== created.id)]);
-
-      if (Array.isArray(prev)) return replace(prev);
-      return { ...prev, roles: replace(prev?.roles ?? []) };
+      const prevArr = Array.isArray(prev) ? prev : [];
+      return sortDescByCreatedAt([created, ...prevArr.filter((x) => x.id !== created.id)]);
     },
   });
 }
@@ -75,20 +78,51 @@ export function useCastingRoleDeleteAutosave(sectionId: string) {
     cacheKeys: [rolesKey],
     invalidateOnSuccess: false,
     onSuccessUpdate: (prev, { id }) => {
-      const remove = (arr: EmployerCastingRoleCardResponse[]) => arr.filter((r) => r.id !== id);
-
-      if (Array.isArray(prev)) return remove(prev);
-      return { ...prev, roles: remove(prev?.roles ?? []) };
+      const arr = Array.isArray(prev) ? prev : [];
+      return arr.filter((r) => r.id !== id);
     },
   });
 }
 
-// HELPERS
+// Requirement (CREATE BULK -> devuelve ARRAY)
+export function useCastingRequirementCreateAutosave(sectionId: string) {
+  const token = getAuthToken();
+  const requirementsKey = [...EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY, sectionId, token ?? 'no-token'];
+
+  return useSectionAutosave<CastingRequirementUpsertRequest, EmployerCastingRequirementCardResponse[]>({
+    mutationFn: createBulkRequirement,
+    delay: 200,
+    cacheKeys: [requirementsKey],
+    invalidateOnSuccess: false,
+
+    onSuccessUpdate: (prev, created) => {
+      const prevArr = normalizeReqArray(prev);
+      const createdArr = normalizeReqArray(created);
+
+      const map = new Map<string, EmployerCastingRequirementCardResponse>();
+      [...createdArr, ...prevArr].forEach((r) => {
+        if (r?.id) map.set(r.id, r);
+      });
+
+      return sortDescByCreatedAt(Array.from(map.values()));
+    },
+  });
+}
+
+// === Helpers ===
+const normalizeReqArray = (v: any): EmployerCastingRequirementCardResponse[] => {
+  if (!v) return [];
+  if (Array.isArray(v)) {
+    return v.flatMap((x) => (Array.isArray(x) ? x : [x])).filter((x) => x && typeof x.id === 'string');
+  }
+  return [];
+};
+
 const getCreatedTs = (r: any) => {
   const v = r?.createdAt ?? r?.creationTime ?? r?.createdDate ?? r?.creationDate;
   const ts = v ? new Date(v).getTime() : 0;
   return Number.isFinite(ts) ? ts : 0;
 };
 
-const sortDescByCreatedAt = (list: EmployerCastingRoleCardResponse[]) =>
-  [...list].sort((a, b) => getCreatedTs(b) - getCreatedTs(a));
+const sortDescByCreatedAt = <T extends any>(list: T[]) =>
+  [...list].sort((a: any, b: any) => getCreatedTs(b) - getCreatedTs(a));

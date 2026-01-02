@@ -48,6 +48,8 @@ const MultiRadioGroupField = ({
   const uid = useId();
   const groupName = (name ?? 'multi-radio') + '__' + uid;
 
+  const selectedSet = useMemo(() => new Set(selected ?? []), [selected]);
+
   const normalizedDisabled = useMemo(() => {
     const s = new Set<string>();
     (disabledValues ?? []).forEach((v) => {
@@ -66,23 +68,7 @@ const MultiRadioGroupField = ({
     return s;
   }, [lockedValues]);
 
-  const lockedOptionValues = useMemo(() => {
-    const set = new Set<string>();
-    (options ?? []).forEach((o) => {
-      if (normalizedLocked.has(normalize(o.value))) set.add(o.value);
-    });
-    return set;
-  }, [options, normalizedLocked]);
-
-  const userSelectedSet = useMemo(() => {
-    const s = new Set<string>();
-    (selected ?? []).forEach((v) => {
-      if (!lockedOptionValues.has(v)) s.add(v);
-    });
-    return s;
-  }, [selected, lockedOptionValues]);
-
-  const isLocked = (opt: RadioOption) => lockedOptionValues.has(opt.value);
+  const isLocked = (opt: RadioOption) => normalizedLocked.has(normalize(opt.value));
 
   const isDisabledOpt = (opt: RadioOption) => {
     if (disabled) return true;
@@ -92,9 +78,8 @@ const MultiRadioGroupField = ({
   };
 
   const toggle = (value: string) => {
-    if (lockedOptionValues.has(value)) return;
+    const next = new Set<string>(selectedSet);
 
-    const next = new Set<string>(userSelectedSet);
     if (next.has(value)) next.delete(value);
     else next.add(value);
 
@@ -149,7 +134,7 @@ const MultiRadioGroupField = ({
           {options.map((opt) => {
             const locked = isLocked(opt);
             const isDisabled = isDisabledOpt(opt);
-            const checked = locked || userSelectedSet.has(opt.value);
+            const checked = locked || selectedSet.has(opt.value);
             const id = `${groupName}--${opt.value}`;
 
             return (

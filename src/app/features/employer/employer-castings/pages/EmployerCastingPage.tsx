@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { DashboardShell } from '../../../../layouts/components';
@@ -10,16 +11,43 @@ import {
   EmployerCastingRolesEditSection,
 } from '../components/Section';
 import { useCastingDetailsBySlug } from '../hooks/useCastingDetailsBySlug';
+import { useCastingRoles } from '../hooks/useCastingRoles';
 
 const EmployerCastingPage = () => {
   const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
-  const { data, error, isLoading } = useCastingDetailsBySlug(slug!);
 
-  if (isLoading || !data) return null;
-  if (error) return <ServerError />;
+  const detailsQuery = useCastingDetailsBySlug(slug);
+  const rolesSectionId = detailsQuery.data?.rolesSection?.id;
 
-  const { basicInfoSection, rolesSection, requirementsSection } = data;
+  const rolesQuery = useCastingRoles(rolesSectionId);
+
+  const lastRolesUpdatedAt = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!slug) return;
+    if (!rolesSectionId) return;
+
+    const ts = rolesQuery.dataUpdatedAt;
+    if (!ts) return;
+
+    if (lastRolesUpdatedAt.current == null) {
+      lastRolesUpdatedAt.current = ts;
+      return;
+    }
+
+    if (lastRolesUpdatedAt.current === ts) return;
+
+    lastRolesUpdatedAt.current = ts;
+    void detailsQuery.refetch();
+  }, [slug, rolesSectionId, rolesQuery.dataUpdatedAt, detailsQuery]);
+
+  if (detailsQuery.isLoading || !detailsQuery.data) return null;
+  if (detailsQuery.error) return <ServerError />;
+
+  const { basicInfoSection, rolesSection, requirementsSection } = detailsQuery.data;
+
+  const rolesForRequirements = (rolesQuery.data ?? rolesSection.roles ?? []) as any;
 
   const sections: DashboardSection[] = [
     {
@@ -36,7 +64,7 @@ const EmployerCastingPage = () => {
       key: 'requirements',
       label: t('employer_castings.dashboard.requirements.requirements'),
       render: () => (
-        <EmployerCastingRequirementsEditSection sectionId={requirementsSection.id} roles={rolesSection.roles ?? []} />
+        <EmployerCastingRequirementsEditSection sectionId={requirementsSection.id} roles={rolesForRequirements} />
       ),
     },
     {

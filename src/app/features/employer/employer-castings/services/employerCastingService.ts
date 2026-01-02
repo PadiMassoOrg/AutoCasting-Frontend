@@ -10,6 +10,7 @@ import type {
 } from '../types/employerCastings.types';
 import type {
   CastingBasicInfoPatchRequest,
+  CastingRequirementUpsertRequest,
   CastingRolePatchRequest,
   CastingRoleUpsertRequest,
 } from '../types/requests';
@@ -39,7 +40,7 @@ export const getRequirementsBySectionId = async (
 
 export const getCastingDetailsBySlug = async (slug: string): Promise<CastingResponse> => {
   const response = await api.get(API_ROUTES.CASTING + `/${slug}`);
-  console.log(response.data);
+
   return response.data;
 };
 
@@ -51,6 +52,13 @@ export const createEmptyCasting = async (): Promise<string> => {
 
 export const createNewRole = async (payload: CastingRoleUpsertRequest): Promise<EmployerCastingRoleCardResponse> => {
   const response = await api.post(API_ROUTES.CASTING_ROLE, payload);
+  return response.data;
+};
+
+export const createBulkRequirement = async (
+  payload: CastingRequirementUpsertRequest
+): Promise<EmployerCastingRequirementCardResponse[]> => {
+  const response = await api.post(API_ROUTES.CASTING_REQUIREMENT, payload);
   return response.data;
 };
 

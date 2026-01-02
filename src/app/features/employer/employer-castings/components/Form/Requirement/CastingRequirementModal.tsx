@@ -15,16 +15,16 @@ export type DraftCastingRequirement =
       roleIds: string[];
       requiresAudio: boolean;
       requiresVideo: boolean;
-      description: string;
+      description?: string;
     }
   | {
       mode: 'edit';
       id: string;
       requirementsSectionId: string;
-      roleId: string;
+      roleIds: string[];
       requiresAudio: boolean;
       requiresVideo: boolean;
-      description: string;
+      description?: string;
     };
 
 type Props = {
@@ -34,8 +34,6 @@ type Props = {
   onCancel: () => void;
   sectionId: string;
   roleOptions?: RadioOption[];
-
-  /** Role IDs que NO pueden seleccionarse (porque ya tienen remuneration/requirement asignada, etc) */
   disabledRoleIds?: string[];
 };
 
@@ -66,7 +64,7 @@ const CastingRequirementModal = ({
 
   const readInitialRoleId = (r?: EmployerCastingRequirementCardResponse): string => {
     const any = r as any;
-    return any?.castingRoleId ?? any?.roleId ?? any?.castingRole?.id ?? any?.role?.id ?? '';
+    return any?.roleId ?? any?.castingRoleId ?? any?.castingRole?.id ?? any?.role?.id ?? '';
   };
 
   const readInitialRoleName = (r?: EmployerCastingRequirementCardResponse): string => {
@@ -165,7 +163,7 @@ const CastingRequirementModal = ({
         roleIds: parsed.data.roleIds ?? [],
         requiresAudio: parsed.data.requiresAudio,
         requiresVideo: parsed.data.requiresVideo,
-        description: form.description ?? '',
+        description: parsed.data.description,
       };
       await onSave(draft);
       return;
@@ -183,10 +181,10 @@ const CastingRequirementModal = ({
       mode: 'edit',
       id,
       requirementsSectionId: sectionId,
-      roleId,
+      roleIds: [roleId].filter(Boolean),
       requiresAudio: parsed.data.requiresAudio,
       requiresVideo: parsed.data.requiresVideo,
-      description: form.description ?? '',
+      description: parsed.data.description,
     };
 
     await onSave(draft);

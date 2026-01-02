@@ -6,7 +6,10 @@ import { DashboardSection } from '../../../../../layouts/components';
 import type { RadioOption } from '../../../../../shared/components/Form/RadioGroupField';
 import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../../shared/components/Section';
+import { useCastingRequirementCreateAutosave } from '../../hooks/autosaves';
 import { useCastingRequirements } from '../../hooks/useCastingRequirements';
+import type { EmployerCastingRequirementCardResponse } from '../../types/employerCastings.types';
+import type { CastingRequirementUpsertRequest } from '../../types/requests';
 import EmployerCastingRequirementCard from '../EmployerCastingRequirementCard';
 import CastingRequirementModal from '../Form/Requirement/CastingRequirementModal';
 
@@ -15,37 +18,15 @@ type RoleRef = {
   roleName: string | null;
 };
 
-const pickStringId = (v: any): string => (typeof v === 'string' && v.trim() ? v.trim() : '');
-
-const readRoleIdsFromRequirement = (req: any): string[] => {
-  const out: string[] = [];
-
-  const push = (v: any) => {
-    const id = pickStringId(v);
-    if (id) out.push(id);
-  };
-
-  const pushMany = (arr: any) => {
-    if (!Array.isArray(arr)) return;
-    arr.forEach((x) => push(x));
-  };
-
-  pushMany(req?.roleIds);
-  pushMany(req?.castingRoleIds);
-
-  push(req?.castingRoleId);
-  push(req?.roleId);
-
-  push(req?.castingRole?.id);
-  push(req?.role?.id);
-
-  return Array.from(new Set(out));
-};
-
 const EmployerCastingRequirementsEditSection = ({ sectionId, roles }: { sectionId: string; roles: RoleRef[] }) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
-  const { data = [] } = useCastingRequirements(sectionId);
+
+  const requirementsQuery = useCastingRequirements(sectionId);
+  const createRequirementMutation = useCastingRequirementCreateAutosave(sectionId);
+
+  // Con el fix del autosave, esto ya debería ser siempre ARRAY plano.
+  const data = (requirementsQuery.data ?? []) as EmployerCastingRequirementCardResponse[];
 
   const roleOptions: RadioOption[] = useMemo(
     () =>
@@ -58,8 +39,8 @@ const EmployerCastingRequirementsEditSection = ({ sectionId, roles }: { sectionI
 
   const disabledRoleIds = useMemo(() => {
     const ids = new Set<string>();
-    (data ?? []).forEach((req: any) => {
-      readRoleIdsFromRequirement(req).forEach((id) => ids.add(id));
+    (data ?? []).forEach((req) => {
+      if (req?.roleId) ids.add(req.roleId);
     });
     return Array.from(ids);
   }, [data]);
@@ -71,8 +52,17 @@ const EmployerCastingRequirementsEditSection = ({ sectionId, roles }: { sectionI
         sectionId={sectionId}
         roleOptions={roleOptions}
         disabledRoleIds={disabledRoleIds}
-        onSave={() => {
-          console.log('save Requirement Modal');
+        onSave={(draft) => {
+          if (draft.mode !== 'create') return;
+          const payload: CastingRequirementUpsertRequest = {
+            requirementsSectionId: draft.requirementsSectionId,
+            roleIds: draft.roleIds,
+            requiresAudio: draft.requiresAudio,
+            requiresVideo: draft.requiresVideo,
+            description: draft.description?.trim() ? draft.description.trim() : undefined,
+          };
+
+          createRequirementMutation.immediate(payload);
           closeModal();
         }}
         onCancel={closeModal}
@@ -94,7 +84,7 @@ const EmployerCastingRequirementsEditSection = ({ sectionId, roles }: { sectionI
       <SectionTitle title={t('employer_castings.dashboard.requirements.requirements')} action={actionButtonRender()} />
 
       {(data?.length ?? 0) > 0 ? (
-        data.map((requirement: any) => (
+        data.map((requirement) => (
           <EmployerCastingRequirementCard key={requirement.id} data={requirement} roleOptions={roleOptions} />
         ))
       ) : (

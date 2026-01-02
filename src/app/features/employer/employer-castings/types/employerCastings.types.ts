@@ -73,6 +73,7 @@ export type BaseCastingRequirementsSection = {
 export type BaseCastingRequirement = {
   id: string;
   sectionId: string;
+  roleId: string;
   roleName: string;
   requiresAudio: boolean;
   requiresVideo: boolean;
