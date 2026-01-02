@@ -15,6 +15,33 @@ type RoleRef = {
   roleName: string | null;
 };
 
+const pickStringId = (v: any): string => (typeof v === 'string' && v.trim() ? v.trim() : '');
+
+const readRoleIdsFromRequirement = (req: any): string[] => {
+  const out: string[] = [];
+
+  const push = (v: any) => {
+    const id = pickStringId(v);
+    if (id) out.push(id);
+  };
+
+  const pushMany = (arr: any) => {
+    if (!Array.isArray(arr)) return;
+    arr.forEach((x) => push(x));
+  };
+
+  pushMany(req?.roleIds);
+  pushMany(req?.castingRoleIds);
+
+  push(req?.castingRoleId);
+  push(req?.roleId);
+
+  push(req?.castingRole?.id);
+  push(req?.role?.id);
+
+  return Array.from(new Set(out));
+};
+
 const EmployerCastingRequirementsEditSection = ({ sectionId, roles }: { sectionId: string; roles: RoleRef[] }) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
@@ -29,12 +56,21 @@ const EmployerCastingRequirementsEditSection = ({ sectionId, roles }: { sectionI
     [roles, t]
   );
 
+  const disabledRoleIds = useMemo(() => {
+    const ids = new Set<string>();
+    (data ?? []).forEach((req: any) => {
+      readRoleIdsFromRequirement(req).forEach((id) => ids.add(id));
+    });
+    return Array.from(ids);
+  }, [data]);
+
   const handleOpenModal = () => {
     openModal(
       <CastingRequirementModal
         mode="create"
         sectionId={sectionId}
         roleOptions={roleOptions}
+        disabledRoleIds={disabledRoleIds}
         onSave={() => {
           console.log('save Requirement Modal');
           closeModal();
@@ -58,7 +94,7 @@ const EmployerCastingRequirementsEditSection = ({ sectionId, roles }: { sectionI
       <SectionTitle title={t('employer_castings.dashboard.requirements.requirements')} action={actionButtonRender()} />
 
       {(data?.length ?? 0) > 0 ? (
-        data.map((requirement) => (
+        data.map((requirement: any) => (
           <EmployerCastingRequirementCard key={requirement.id} data={requirement} roleOptions={roleOptions} />
         ))
       ) : (

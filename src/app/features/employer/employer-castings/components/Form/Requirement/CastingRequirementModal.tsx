@@ -1,6 +1,5 @@
-// src/features/employer-castings/components/Form/Requirement/CastingRequirementModal.tsx
 import { Button, Label, Separator } from 'autocasting-ui-library-padimasso';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CheckboxField from '../../../../../../shared/components/Form/CheckboxField';
 import MultiRadioGroupField from '../../../../../../shared/components/Form/MultiRadioGroupField';
@@ -35,6 +34,9 @@ type Props = {
   onCancel: () => void;
   sectionId: string;
   roleOptions?: RadioOption[];
+
+  /** Role IDs que NO pueden seleccionarse (porque ya tienen remuneration/requirement asignada, etc) */
+  disabledRoleIds?: string[];
 };
 
 type FormState = {
@@ -45,7 +47,20 @@ type FormState = {
   description: string;
 };
 
-const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, roleOptions = [] }: Props) => {
+const normalize = (v: unknown) =>
+  String(v ?? '')
+    .trim()
+    .toLowerCase();
+
+const CastingRequirementModal = ({
+  mode,
+  initial,
+  onSave,
+  onCancel,
+  sectionId,
+  roleOptions = [],
+  disabledRoleIds = [],
+}: Props) => {
   const { t } = useTranslation();
   const requirementSchema = useMemo(() => getCastingRequirementSchema(t), [t]);
 
@@ -58,6 +73,12 @@ const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, r
     const any = r as any;
     return (any?.roleName ?? any?.castingRoleName ?? any?.role?.roleName ?? any?.castingRole?.roleName ?? '') as string;
   };
+
+  const lockedRoleIds = useMemo(() => {
+    const lockedNorm = new Set((disabledRoleIds ?? []).map(normalize).filter(Boolean));
+    if (!lockedNorm.size) return [];
+    return (roleOptions ?? []).filter((o) => lockedNorm.has(normalize(o.value))).map((o) => o.value);
+  }, [disabledRoleIds, roleOptions]);
 
   const makeEmpty = (): FormState => ({
     selectedRoleIds: [],
@@ -110,9 +131,14 @@ const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, r
   };
 
   const validateAndSave = async () => {
+    const roleIds =
+      mode === 'create'
+        ? (form.selectedRoleIds ?? [])
+        : [form.lockedRoleId || readInitialRoleId(initial)].filter(Boolean);
+
     const schemaValues = {
       requirementsSectionId: sectionId,
-      roleIds: mode === 'create' ? form.selectedRoleIds : [form.lockedRoleId || readInitialRoleId(initial)],
+      roleIds,
       requiresAudio: Boolean(form.requiresAudio),
       requiresVideo: Boolean(form.requiresVideo),
       description: form.description?.trim() ? form.description.trim() : undefined,
@@ -166,13 +192,23 @@ const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, r
     await onSave(draft);
   };
 
+  const isCreateSaveDisabled = useMemo(() => {
+    if (mode !== 'create') return false;
+    if ((form.selectedRoleIds ?? []).length <= 0) return true;
+    if (!form.requiresAudio && !form.requiresVideo) return true;
+    return false;
+  }, [mode, form.selectedRoleIds, form.requiresAudio, form.requiresVideo]);
+
+  const mediaErrorId = useId();
+
   return (
     <article className="flex flex-col">
       {mode === 'create' ? (
         <MultiRadioGroupField
           selected={form.selectedRoleIds}
           options={roleOptions}
-          onChange={(next) => onChange('selectedRoleIds', next)}
+          lockedValues={lockedRoleIds}
+          onChange={(next) => onChange('selectedRoleIds', next ?? [])}
           error={errors.roleIds}
         />
       ) : (
@@ -184,7 +220,7 @@ const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, r
         />
       )}
 
-      <Separator className="opacity-20 mt-2.5 mb-9" />
+      <Separator className="opacity-20 mt-2 mb-8.5" />
 
       <div className="flex items-center gap-6">
         <CheckboxField
@@ -205,7 +241,7 @@ const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, r
         <div className="min-h-[25px]" />
       ) : (
         <div className="min-h-[25px]">
-          <Label id={`${errors.media}-error`} variant="error" className="mt-0.5">
+          <Label id={`${mediaErrorId}-error`} variant="error" className="mt-0.5">
             {errors.media}
           </Label>
         </div>
@@ -220,9 +256,10 @@ const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, r
           onChange={(e) => onChange('description', (e?.target?.value ?? '') as string)}
           error={errors.description}
         />
+        <div className="min-h-[25px]" />
       </div>
 
-      <Separator className="opacity-20 my-6" />
+      <Separator className="opacity-20 mb-7.5 mt-2" />
 
       <div className="flex gap-2">
         <Button type="button" variant="outline" onClick={onCancel}>
@@ -231,6 +268,7 @@ const CastingRequirementModal = ({ mode, initial, onSave, onCancel, sectionId, r
 
         <Button
           type="button"
+          disabled={mode === 'create' ? isCreateSaveDisabled : false}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();

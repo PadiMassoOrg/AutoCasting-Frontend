@@ -11,11 +11,20 @@ type Props = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & {
   name?: string;
   onChange: (next: string[]) => void;
   error?: string | null;
+
+  disabledValues?: string[];
+  lockedValues?: string[];
+
   labelClassName?: string;
   wrapperClassName?: string;
   optionsWrapperClassName?: string;
   optionClassName?: string;
 };
+
+const normalize = (v: unknown) =>
+  String(v ?? '')
+    .trim()
+    .toLowerCase();
 
 const MultiRadioGroupField = ({
   label,
@@ -25,6 +34,8 @@ const MultiRadioGroupField = ({
   name,
   onChange,
   error,
+  disabledValues = [],
+  lockedValues = [],
 
   wrapperClassName = 'flex flex-col',
   labelClassName = 'text-sm font-semibold mb-3',
@@ -37,12 +48,56 @@ const MultiRadioGroupField = ({
   const uid = useId();
   const groupName = (name ?? 'multi-radio') + '__' + uid;
 
-  const selectedSet = useMemo(() => new Set(selected ?? []), [selected]);
+  const normalizedDisabled = useMemo(() => {
+    const s = new Set<string>();
+    (disabledValues ?? []).forEach((v) => {
+      const n = normalize(v);
+      if (n) s.add(n);
+    });
+    return s;
+  }, [disabledValues]);
+
+  const normalizedLocked = useMemo(() => {
+    const s = new Set<string>();
+    (lockedValues ?? []).forEach((v) => {
+      const n = normalize(v);
+      if (n) s.add(n);
+    });
+    return s;
+  }, [lockedValues]);
+
+  const lockedOptionValues = useMemo(() => {
+    const set = new Set<string>();
+    (options ?? []).forEach((o) => {
+      if (normalizedLocked.has(normalize(o.value))) set.add(o.value);
+    });
+    return set;
+  }, [options, normalizedLocked]);
+
+  const userSelectedSet = useMemo(() => {
+    const s = new Set<string>();
+    (selected ?? []).forEach((v) => {
+      if (!lockedOptionValues.has(v)) s.add(v);
+    });
+    return s;
+  }, [selected, lockedOptionValues]);
+
+  const isLocked = (opt: RadioOption) => lockedOptionValues.has(opt.value);
+
+  const isDisabledOpt = (opt: RadioOption) => {
+    if (disabled) return true;
+    if (Boolean(opt.disabled)) return true;
+    if (isLocked(opt)) return true;
+    return normalizedDisabled.has(normalize(opt.value));
+  };
 
   const toggle = (value: string) => {
-    const next = new Set(selectedSet);
+    if (lockedOptionValues.has(value)) return;
+
+    const next = new Set<string>(userSelectedSet);
     if (next.has(value)) next.delete(value);
     else next.add(value);
+
     onChange(Array.from(next));
   };
 
@@ -92,8 +147,9 @@ const MultiRadioGroupField = ({
 
         <div className={optionsWrapperClassName}>
           {options.map((opt) => {
-            const isDisabled = disabled || Boolean(opt.disabled);
-            const checked = selectedSet.has(opt.value);
+            const locked = isLocked(opt);
+            const isDisabled = isDisabledOpt(opt);
+            const checked = locked || userSelectedSet.has(opt.value);
             const id = `${groupName}--${opt.value}`;
 
             return (
