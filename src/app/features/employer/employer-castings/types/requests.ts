@@ -1,5 +1,5 @@
 import type { CharacteristicsPatchRequest } from '../../../talent/talent-profile-edit/types/requests';
-import type { CastingBasicInfo } from './employerCastings.types';
+import type { CastingSectionBasicInfo } from './employerCastings.types';
 
 export type CastingRoleUpsertRequest = {
   rolesSectionId: string;
@@ -22,7 +22,7 @@ export type CastingRequirementUpsertRequest = {
   description?: string;
 };
 
-export type CastingBasicInfoPatchRequest = Partial<CastingBasicInfo>;
+export type CastingBasicInfoPatchRequest = Partial<CastingSectionBasicInfo>;
 
 export type CastingRolePatchRequest = CastingRoleUpsertRequest & { id: string };
 export type CastingRoleDeleteRequest = { id: string };

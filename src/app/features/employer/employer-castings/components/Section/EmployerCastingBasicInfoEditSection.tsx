@@ -2,14 +2,20 @@ import { t } from 'i18next';
 import { CastingBasicInfoForm } from '..';
 import { DashboardSection } from '../../../../../layouts/components';
 import { SectionCard, SectionTitle } from '../../../../../shared/components/Section';
-import type { CastingBasicInfo } from '../../types/employerCastings.types';
+import ServerError from '../../../../../shared/components/ServerError/ServerError';
+import { useSectionBasicInfo } from '../../hooks/useSectionBasicInfo';
 
-const EmployerCastingBasicInfoEditSection = ({ data }: { data: CastingBasicInfo }) => {
+const EmployerCastingBasicInfoEditSection = ({ sectionId }: { sectionId: string }) => {
+  const { data, isLoading, error } = useSectionBasicInfo(sectionId);
+
+  if (isLoading || !data) return null;
+  if (error) return <ServerError />;
+
   return (
     <DashboardSection>
       <SectionTitle title={t('employer_castings.dashboard.basic_info.basic_info')} />
       <SectionCard>
-        <CastingBasicInfoForm data={data}></CastingBasicInfoForm>
+        <CastingBasicInfoForm data={data} />
       </SectionCard>
     </DashboardSection>
   );

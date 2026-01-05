@@ -4,16 +4,21 @@ import { useModal } from '../../../../../context/ModalContext';
 import { DashboardSection } from '../../../../../layouts/components';
 import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../../shared/components/Section';
+import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useCastingRoleCreateAutosave } from '../../hooks/autosaves';
-import { useCastingRoles } from '../../hooks/useCastingRoles';
+import { useSectionRoles } from '../../hooks/useSectionRoles';
 import EmployerCastingRoleCard from '../EmployerCastingRoleCard';
 import CastingRoleModal from '../Form/Role/CastingRoleModal';
 
 const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
-  const { data } = useCastingRoles(sectionId);
+
+  const { data, isLoading, error } = useSectionRoles(sectionId);
   const createRoleMutation = useCastingRoleCreateAutosave(sectionId);
+
+  if (isLoading || !data) return null;
+  if (error) return <ServerError />;
 
   const handleOpenModal = () => {
     openModal(
@@ -41,8 +46,8 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
   return (
     <DashboardSection>
       <SectionTitle title={t('employer_castings.dashboard.roles.roles')} action={actionButtonRender()} />
-      {data?.length! > 0 ? (
-        data?.map((role) => <EmployerCastingRoleCard data={role} key={role.id} />)
+      {(data.roles?.length ?? 0) > 0 ? (
+        data.roles?.map((role) => <EmployerCastingRoleCard data={role} key={role.id} />)
       ) : (
         <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
           {t('employer_castings.page.empty_roles')}

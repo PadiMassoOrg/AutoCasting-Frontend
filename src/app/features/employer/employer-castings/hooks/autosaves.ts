@@ -1,20 +1,21 @@
 import { getAuthToken } from '../../../../shared/lib/cookies';
 import { useSectionAutosave } from '../../../talent/talent-profile-edit/hooks/useSectionAutoSave';
 import {
+  CASTING_SECTION_BASIC_INFO_CACHE_KEY,
+  CASTING_SECTION_REQUIREMENTS_CACHE_KEY,
+  CASTING_SECTION_ROLES_CACHE_KEY,
   createBulkRequirement,
   createNewRole,
   deleteCastingRequirement,
   deleteCastingRole,
-  EMPLOYER_CASTING_CACHE_KEY,
-  EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY,
-  EMPLOYER_CASTING_ROLES_LIST_CACHE_KEY,
   patchCastingBasicInfo,
   patchCastingRequirement,
   patchCastingRole,
 } from '../services/employerCastingService';
 import type {
-  CastingBasicInfo,
-  CastingResponse,
+  CastingSectionBasicInfo,
+  CastingSectionRequirements,
+  CastingSectionRoles,
   EmployerCastingRequirementCardResponse,
   EmployerCastingRoleCardResponse,
 } from '../types/employerCastings.types';
@@ -28,126 +29,159 @@ import type {
   CastingRoleUpsertRequest,
 } from '../types/requests';
 
-// Basic Info
-export function useCastingBasicInfoAutosave(slug: string) {
-  return useSectionAutosave<CastingBasicInfoPatchRequest, CastingBasicInfo>({
+export function useCastingBasicInfoAutosave(sectionId: string) {
+  const token = getAuthToken();
+  const key = [...CASTING_SECTION_BASIC_INFO_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
+
+  return useSectionAutosave<CastingBasicInfoPatchRequest, CastingSectionBasicInfo>({
     mutationFn: patchCastingBasicInfo,
     delay: 800,
-    onSuccessUpdate: (prev: CastingResponse, updated) => ({ ...prev, basicInfo: updated }),
-    cacheKeys: [[...EMPLOYER_CASTING_CACHE_KEY, slug]],
-    invalidateOnSuccess: 'active',
+    cacheKeys: [key],
+    invalidateOnSuccess: false,
+    onSuccessUpdate: (_prev, updated) => updated as CastingSectionBasicInfo,
   });
 }
 
-// Role
 export function useCastingRoleCreateAutosave(sectionId: string) {
   const token = getAuthToken();
-  const rolesKey = [...EMPLOYER_CASTING_ROLES_LIST_CACHE_KEY, sectionId, token ?? 'no-token'];
+  const key = [...CASTING_SECTION_ROLES_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
 
   return useSectionAutosave<CastingRoleUpsertRequest, EmployerCastingRoleCardResponse>({
     mutationFn: createNewRole,
     delay: 200,
-    cacheKeys: [rolesKey],
+    cacheKeys: [key],
     invalidateOnSuccess: false,
     onSuccessUpdate: (prev, created) => {
-      const prevArr = Array.isArray(prev) ? prev : [];
-      return sortDescByCreatedAt([created, ...prevArr.filter((x) => x.id !== created.id)]);
+      const prevSection = normalizeRolesSection(prev);
+      const prevRoles = prevSection.roles ?? [];
+      const nextRoles = sortDescByCreatedAt([created, ...prevRoles.filter((x) => x.id !== created.id)]);
+      return { ...prevSection, roles: nextRoles } as CastingSectionRoles;
     },
   });
 }
 
 export function useCastingRolePatchAutosave(sectionId: string) {
   const token = getAuthToken();
-  const rolesKey = [...EMPLOYER_CASTING_ROLES_LIST_CACHE_KEY, sectionId, token ?? 'no-token'];
+  const key = [...CASTING_SECTION_ROLES_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
 
   return useSectionAutosave<CastingRolePatchRequest, EmployerCastingRoleCardResponse>({
     mutationFn: patchCastingRole,
     delay: 200,
-    cacheKeys: [rolesKey],
+    cacheKeys: [key],
     invalidateOnSuccess: false,
     onSuccessUpdate: (prev, updated) => {
-      const arr = Array.isArray(prev) ? prev : [];
-      return sortDescByCreatedAt(arr.map((r) => (r.id === updated.id ? updated : r)));
+      const prevSection = normalizeRolesSection(prev);
+      const prevRoles = prevSection.roles ?? [];
+      const nextRoles = sortDescByCreatedAt(prevRoles.map((r) => (r.id === updated.id ? updated : r)));
+      return { ...prevSection, roles: nextRoles } as CastingSectionRoles;
     },
   });
 }
 
 export function useCastingRoleDeleteAutosave(sectionId: string) {
   const token = getAuthToken();
-  const rolesKey = [...EMPLOYER_CASTING_ROLES_LIST_CACHE_KEY, sectionId, token ?? 'no-token'];
+  const key = [...CASTING_SECTION_ROLES_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
 
   return useSectionAutosave<CastingRoleDeleteRequest, { id: string }>({
     mutationFn: deleteCastingRole,
     delay: 0,
-    cacheKeys: [rolesKey],
+    cacheKeys: [key],
     invalidateOnSuccess: false,
     onSuccessUpdate: (prev, { id }) => {
-      const arr = Array.isArray(prev) ? prev : [];
-      return arr.filter((r) => r.id !== id);
+      const prevSection = normalizeRolesSection(prev);
+      const prevRoles = prevSection.roles ?? [];
+      const nextRoles = prevRoles.filter((r) => r.id !== id);
+      return { ...prevSection, roles: nextRoles } as CastingSectionRoles;
     },
   });
 }
 
-// Requirement
 export function useCastingRequirementCreateAutosave(sectionId: string) {
   const token = getAuthToken();
-  const requirementsKey = [...EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY, sectionId, token ?? 'no-token'];
+  const key = [...CASTING_SECTION_REQUIREMENTS_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
 
   return useSectionAutosave<CastingRequirementUpsertRequest, EmployerCastingRequirementCardResponse[]>({
     mutationFn: createBulkRequirement,
     delay: 200,
-    cacheKeys: [requirementsKey],
+    cacheKeys: [key],
     invalidateOnSuccess: false,
     onSuccessUpdate: (prev, created) => {
-      const prevArr = normalizeReqArray(prev);
+      const prevSection = normalizeRequirementsSection(prev);
+      const prevReqs = prevSection.requirements ?? [];
+
+      const prevArr = normalizeReqArray(prevReqs);
       const createdArr = normalizeReqArray(created);
+
       const map = new Map<string, EmployerCastingRequirementCardResponse>();
       [...createdArr, ...prevArr].forEach((r) => {
         if (r?.id) map.set(r.id, r);
       });
-      return sortDescByCreatedAt(Array.from(map.values()));
+
+      const nextReqs = sortDescByCreatedAt(Array.from(map.values()));
+      return { ...prevSection, requirements: nextReqs } as CastingSectionRequirements;
     },
   });
 }
 
 export function useCastingRequirementPatchAutosave(sectionId: string) {
   const token = getAuthToken();
-  const requirementsKey = [...EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY, sectionId, token ?? 'no-token'];
+  const key = [...CASTING_SECTION_REQUIREMENTS_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
 
   return useSectionAutosave<CastingRequirementPatchRequest, EmployerCastingRequirementCardResponse>({
     mutationFn: patchCastingRequirement,
     delay: 200,
-    cacheKeys: [requirementsKey],
+    cacheKeys: [key],
     invalidateOnSuccess: false,
     onSuccessUpdate: (prev, updated) => {
-      const arr = normalizeReqArray(prev);
+      const prevSection = normalizeRequirementsSection(prev);
+      const prevReqs = normalizeReqArray(prevSection.requirements ?? []);
 
-      // Importante: si el backend devuelve un DTO "corto" (sin roleName/sectionId),
-      // hacemos merge con el item existente para no romper la UI.
-      const next = arr.map((r) => (r.id === (updated as any)?.id ? ({ ...r, ...(updated as any) } as any) : r));
+      const nextReqs = sortDescByCreatedAt(
+        prevReqs.map((r) => {
+          if (r.id !== (updated as any)?.id) return r;
+          return { ...r, ...(updated as any), roleName: (updated as any)?.roleName ?? (r as any)?.roleName } as any;
+        })
+      );
 
-      return sortDescByCreatedAt(next);
+      return { ...prevSection, requirements: nextReqs } as CastingSectionRequirements;
     },
   });
 }
 
 export function useCastingRequirementDeleteAutosave(sectionId: string) {
   const token = getAuthToken();
-  const requirementsKey = [...EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY, sectionId, token ?? 'no-token'];
+  const key = [...CASTING_SECTION_REQUIREMENTS_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
 
   return useSectionAutosave<CastingRequirementDeleteRequest, { id: string }>({
     mutationFn: deleteCastingRequirement,
     delay: 0,
-    cacheKeys: [requirementsKey],
+    cacheKeys: [key],
     invalidateOnSuccess: false,
     onSuccessUpdate: (prev, { id }) => {
-      const arr = normalizeReqArray(prev);
-      return arr.filter((r) => r.id !== id);
+      const prevSection = normalizeRequirementsSection(prev);
+      const prevReqs = normalizeReqArray(prevSection.requirements ?? []);
+      const nextReqs = prevReqs.filter((r) => r.id !== id);
+      return { ...prevSection, requirements: nextReqs } as CastingSectionRequirements;
     },
   });
 }
 
-// === Helpers ===
+const normalizeRolesSection = (v: any): CastingSectionRoles => {
+  const any = (v ?? {}) as any;
+  return {
+    ...(any ?? {}),
+    roles: Array.isArray(any?.roles) ? any.roles : [],
+  } as CastingSectionRoles;
+};
+
+const normalizeRequirementsSection = (v: any): CastingSectionRequirements => {
+  const any = (v ?? {}) as any;
+  return {
+    ...(any ?? {}),
+    requirements: Array.isArray(any?.requirements) ? any.requirements : [],
+  } as CastingSectionRequirements;
+};
+
 const normalizeReqArray = (v: any): EmployerCastingRequirementCardResponse[] => {
   if (!v) return [];
   if (Array.isArray(v)) {

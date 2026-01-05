@@ -2,7 +2,6 @@ import { FormInputField, FormSelectField, Label } from 'autocasting-ui-library-p
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
 import { BooleanYesNoRadioGroup, RangeCalendar, TextareaField } from '../../../../shared/components/Form';
 import { useCommittedNullableBooleanValue } from '../../../../shared/components/Form/hooks/useCommittedBooleanValue';
 import { parseLocalISODate, toLocalISO } from '../../../../shared/components/Form/RangeCalendar';
@@ -11,7 +10,7 @@ import { onSelect, useCommittedText, useCommittedUuid, useIsoDateField } from '.
 import { useCachedSiteMetadataOption } from '../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { useCastingBasicInfoAutosave } from '../hooks/autosaves';
 import { getCastingBasicInfoSchema } from '../schemas/castingBasicInfoSchema';
-import type { CastingBasicInfo } from '../types/employerCastings.types';
+import type { CastingSectionBasicInfo } from '../types/employerCastings.types';
 
 type Errors = {
   title?: string | null;
@@ -23,12 +22,11 @@ type Errors = {
   description?: string | null;
 };
 
-const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
-  const { slug } = useParams<{ slug: string }>();
+const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
   const { t, i18n } = useTranslation();
   const projectTypeOptions = useCachedSiteMetadataOption('projectTypeOptions', t);
   const castingModalityOptions = useCachedSiteMetadataOption('castingModalityOptions', t);
-  const autosave = useCastingBasicInfoAutosave(slug!);
+  const autosave = useCastingBasicInfoAutosave(data.id);
   const schema = useMemo(() => getCastingBasicInfoSchema(t), [t]);
 
   const ON_SITE_CODE = t('sitemetadata.casting_modality.on_site');
@@ -220,6 +218,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
         options={castingModalityOptions}
         error={errors.castingModalityId ?? undefined}
       />
+
       {isOnSite && (
         <FormInputField
           id="castingModalityText"
@@ -298,6 +297,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingBasicInfo }) => {
         onCommit={handleRangeCommit}
         onClear={handleRangeClear}
       />
+
       <div className="min-h-[5px]"></div>
 
       <TextareaField

@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { DashboardShell } from '../../../../layouts/components';
@@ -10,71 +9,48 @@ import {
   EmployerCastingRequirementsEditSection,
   EmployerCastingRolesEditSection,
 } from '../components/Section';
-import { useCastingDetailsBySlug } from '../hooks/useCastingDetailsBySlug';
-import { useCastingRoles } from '../hooks/useCastingRoles';
+import { EmployerCastingIdsProvider } from '../context/EmployerCastingContext';
+import { useEmployerCastingDetailsBySlug } from '../hooks/useEmployerCastingDetailsBySlug';
 
 const EmployerCastingPage = () => {
   const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
 
-  const detailsQuery = useCastingDetailsBySlug(slug);
-  const rolesSectionId = detailsQuery.data?.rolesSection?.id;
+  const { data, isLoading, error } = useEmployerCastingDetailsBySlug(slug);
 
-  const rolesQuery = useCastingRoles(rolesSectionId);
+  if (isLoading || !data) return null;
+  if (error) return <ServerError />;
 
-  const lastRolesUpdatedAt = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (!slug) return;
-    if (!rolesSectionId) return;
-
-    const ts = rolesQuery.dataUpdatedAt;
-    if (!ts) return;
-
-    if (lastRolesUpdatedAt.current == null) {
-      lastRolesUpdatedAt.current = ts;
-      return;
-    }
-
-    if (lastRolesUpdatedAt.current === ts) return;
-
-    lastRolesUpdatedAt.current = ts;
-    void detailsQuery.refetch();
-  }, [slug, rolesSectionId, rolesQuery.dataUpdatedAt, detailsQuery]);
-
-  if (detailsQuery.isLoading || !detailsQuery.data) return null;
-  if (detailsQuery.error) return <ServerError />;
-
-  const { basicInfoSection, rolesSection, requirementsSection } = detailsQuery.data;
-
-  const rolesForRequirements = (rolesQuery.data ?? rolesSection.roles ?? []) as any;
+  const { basicInfoSectionId, rolesSectionId, requirementsSectionId, remunerationSectionId } = data;
 
   const sections: DashboardSection[] = [
     {
       key: 'basic',
       label: t('employer_castings.dashboard.basic_info.basic_info'),
-      render: () => <EmployerCastingBasicInfoEditSection data={basicInfoSection} />,
+      render: () => <EmployerCastingBasicInfoEditSection sectionId={basicInfoSectionId} />,
     },
     {
       key: 'roles',
       label: t('employer_castings.dashboard.roles.roles'),
-      render: () => <EmployerCastingRolesEditSection sectionId={rolesSection.id} />,
+      render: () => <EmployerCastingRolesEditSection sectionId={rolesSectionId} />,
     },
     {
       key: 'requirements',
       label: t('employer_castings.dashboard.requirements.requirements'),
-      render: () => (
-        <EmployerCastingRequirementsEditSection sectionId={requirementsSection.id} roles={rolesForRequirements} />
-      ),
+      render: () => <EmployerCastingRequirementsEditSection sectionId={requirementsSectionId} />,
     },
     {
       key: 'remuneration',
       label: t('employer_castings.dashboard.remuneration.remuneration'),
-      render: () => <EmployerCastingRemunerationEditSection />,
+      render: () => <EmployerCastingRemunerationEditSection sectionId={remunerationSectionId} />,
     },
   ];
 
-  return <DashboardShell title={t('employer_castings.dashboard.title_new')} sections={sections} />;
+  return (
+    <EmployerCastingIdsProvider value={data}>
+      <DashboardShell title={t('employer_castings.dashboard.title_new')} sections={sections} />
+    </EmployerCastingIdsProvider>
+  );
 };
 
 export default EmployerCastingPage;

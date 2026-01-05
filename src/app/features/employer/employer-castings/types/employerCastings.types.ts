@@ -17,9 +17,20 @@ export type BaseCastingResponse = {
   id: string;
   defaultCode: string;
   castingStatus: SiteMetadataObject;
-  basicInfoSection: CastingBasicInfo;
-  rolesSection: CastingRolesSection;
-  requirementsSection: CastingRequirementsSection;
+  basicInfoSection: CastingSectionBasicInfo;
+  rolesSection: CastingSectionRoles;
+  requirementsSection: CastingSectionRequirements;
+  remunerationSection: CastingSectionRemunerations;
+};
+
+export type EmployerBaseCastingResponse = {
+  id: string;
+  defaultCode: string;
+  castingStatus: SiteMetadataObject;
+  basicInfoSectionId: string;
+  rolesSectionId: string;
+  requirementsSectionId: string;
+  remunerationSectionId: string;
 };
 
 // ======================
@@ -62,6 +73,7 @@ export type BaseCastingRole = {
   professions: SiteMetadataObject[];
   characteristics: Characteristics;
   skills: SiteMetadataObject[];
+  remuneration: EmployerCastingRemunerationCardResponse;
 };
 
 export type BaseCastingRequirementsSection = {
@@ -80,14 +92,37 @@ export type BaseCastingRequirement = {
   description: string;
 };
 
+export type BaseCastingRemunerationsSection = {
+  id: string;
+  sectionStatus: SiteMetadataObject;
+  compensationType: SiteMetadataObject;
+  paySameForAllRoles: boolean;
+  remunerations: EmployerCastingRemunerationCardResponse[];
+};
+
+export type BaseCastingRemuneration = {
+  id: string;
+  castingRoleId: string;
+  roleName: string;
+  isComplete: boolean;
+  payRateType: SiteMetadataObject;
+  currency: SiteMetadataObject;
+  amount: number;
+  notes: string;
+};
+
 /* ======================
    Export & DeepNullable
    ====================== */
-export type CastingBasicInfo = WithAuditable<DeepNullableExceptId<BaseCastingBasicInfo>>;
-export type CastingRolesSection = WithAuditable<DeepNullableExceptId<BaseCastingRolesSection>>;
-export type CastingRequirementsSection = WithAuditable<DeepNullableExceptId<BaseCastingRequirementsSection>>;
+export type CastingSectionBasicInfo = WithAuditable<DeepNullableExceptId<BaseCastingBasicInfo>>;
+export type CastingSectionRoles = WithAuditable<BaseCastingRolesSection>;
+export type CastingSectionRequirements = WithAuditable<BaseCastingRequirementsSection>;
+export type CastingSectionRemunerations = WithAuditable<BaseCastingRemunerationsSection>;
+
 export type EmployerCastingRoleCardResponse = WithAuditable<BaseCastingRole>;
 export type EmployerCastingRequirementCardResponse = WithAuditable<BaseCastingRequirement>;
+export type EmployerCastingRemunerationCardResponse = WithAuditable<BaseCastingRemuneration>;
 
 export type CastingCardResponse = WithAuditable<BaseCastingCard>;
 export type CastingResponse = WithAuditable<BaseCastingResponse>;
+export type EmployerCastingResponse = WithAuditable<EmployerBaseCastingResponse>;

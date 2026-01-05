@@ -3,45 +3,67 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
 import { DashboardSection } from '../../../../../layouts/components';
+import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import type { RadioOption } from '../../../../../shared/components/Form/RadioGroupField';
 import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../../shared/components/Section';
+import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
 import { useCastingRequirementCreateAutosave } from '../../hooks/autosaves';
-import { useCastingRequirements } from '../../hooks/useCastingRequirements';
+import { useSectionRequirements } from '../../hooks/useSectionRequirements';
+import { useSectionRoles } from '../../hooks/useSectionRoles';
 import type { EmployerCastingRequirementCardResponse } from '../../types/employerCastings.types';
 import type { CastingRequirementUpsertRequest } from '../../types/requests';
 import EmployerCastingRequirementCard from '../EmployerCastingRequirementCard';
 import CastingRequirementModal from '../Form/Requirement/CastingRequirementModal';
 
-type RoleRef = {
-  id: string;
-  roleName: string | null;
-};
-
-const EmployerCastingRequirementsEditSection = ({ sectionId, roles }: { sectionId: string; roles: RoleRef[] }) => {
+const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: string }) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
-  const requirementsQuery = useCastingRequirements(sectionId);
+  const { rolesSectionId } = useEmployerCastingIds();
+  const {
+    data: requirementsSection,
+    isLoading: isRequirementsLoading,
+    error: requirementsError,
+  } = useSectionRequirements(sectionId);
+  const { data: rolesSection, isLoading: isRolesLoading, error: rolesError } = useSectionRoles(rolesSectionId);
   const createRequirementMutation = useCastingRequirementCreateAutosave(sectionId);
 
-  const data = (requirementsQuery.data ?? []) as EmployerCastingRequirementCardResponse[];
+  if (isRequirementsLoading || isRolesLoading) return null;
+  if (requirementsError || rolesError) return <ServerError />;
+  if (!requirementsSection || !rolesSection) return null;
+
+  const rolesById = useMemo(() => {
+    const map = new Map<string, string>();
+    (rolesSection.roles ?? []).forEach((r) => {
+      map.set(r.id, r.roleName ?? '');
+    });
+    return map;
+  }, [rolesSection.roles]);
+
+  const requirementsForUi: EmployerCastingRequirementCardResponse[] = useMemo(() => {
+    const fallback = t('general.placeholder.role_name');
+    return (requirementsSection.requirements ?? []).map((req: any) => {
+      const roleName = req?.roleName ?? rolesById.get(req?.roleId) ?? fallback;
+      return { ...req, roleName };
+    });
+  }, [requirementsSection.requirements, rolesById, t]);
 
   const roleOptions: RadioOption[] = useMemo(
     () =>
-      (roles ?? []).map((r) => ({
+      (rolesSection.roles ?? []).map((r) => ({
         value: r.id,
         label: r.roleName ?? t('general.placeholder.role_name'),
       })),
-    [roles, t]
+    [rolesSection.roles, t]
   );
 
   const disabledRoleIds = useMemo(() => {
     const ids = new Set<string>();
-    (data ?? []).forEach((req) => {
+    (requirementsSection.requirements ?? []).forEach((req: any) => {
       if (req?.roleId) ids.add(req.roleId);
     });
     return Array.from(ids);
-  }, [data]);
+  }, [requirementsSection.requirements]);
 
   const handleOpenModal = () => {
     openModal(
@@ -52,6 +74,7 @@ const EmployerCastingRequirementsEditSection = ({ sectionId, roles }: { sectionI
         disabledRoleIds={disabledRoleIds}
         onSave={(draft) => {
           if (draft.mode !== 'create') return;
+
           const payload: CastingRequirementUpsertRequest = {
             requirementsSectionId: draft.requirementsSectionId,
             roleIds: draft.roleIds,
@@ -81,8 +104,8 @@ const EmployerCastingRequirementsEditSection = ({ sectionId, roles }: { sectionI
     <DashboardSection>
       <SectionTitle title={t('employer_castings.dashboard.requirements.requirements')} action={actionButtonRender()} />
 
-      {(data?.length ?? 0) > 0 ? (
-        data.map((requirement) => (
+      {(requirementsForUi.length ?? 0) > 0 ? (
+        requirementsForUi.map((requirement) => (
           <EmployerCastingRequirementCard
             key={requirement.id}
             data={requirement}
