@@ -12,6 +12,7 @@ import {
   patchCastingBasicInfo,
   patchCastingRequirement,
   patchCastingRole,
+  patchCastingRoleRemuneration,
   patchCastingSectionRemuneration,
 } from '../services/employerCastingService';
 import type {
@@ -29,6 +30,7 @@ import type {
   CastingRequirementUpsertRequest,
   CastingRoleDeleteRequest,
   CastingRolePatchRequest,
+  CastingRoleRemunerationPatchRequest,
   CastingRoleUpsertRequest,
   CastingSectionRemunerationPatchRequest,
 } from '../types/requests';
@@ -187,6 +189,27 @@ export function useCastingRemunerationsSectionAutosave(sectionId: string) {
   });
 }
 
+export function useCastingRoleRemunerationPatchAutosave(sectionId: string) {
+  const token = getAuthToken();
+  const key = [...CASTING_SECTION_REMUNERATIONS_CACHE_KEY, sectionId, token ?? 'no-token'];
+
+  return useSectionAutosave<CastingRoleRemunerationPatchRequest, any>({
+    mutationFn: patchCastingRoleRemuneration,
+    delay: 200,
+    cacheKeys: [key],
+    invalidateOnSuccess: 'active',
+    onSuccessUpdate: (prev, updated) => {
+      const prevSection = normalizeRemunerationsSection(prev);
+      const prevRems = prevSection.remunerations ?? [];
+      const nextRems = prevRems.map((r: any) => {
+        if (r?.id !== (updated as any)?.id) return r;
+        return { ...r, ...(updated as any), roleName: (r as any)?.roleName } as any;
+      });
+      return { ...prevSection, remunerations: nextRems } as CastingSectionRemunerations;
+    },
+  });
+}
+
 // Helpers
 const normalizeRolesSection = (v: any): CastingSectionRoles => {
   const any = (v ?? {}) as any;
@@ -202,6 +225,14 @@ const normalizeRequirementsSection = (v: any): CastingSectionRequirements => {
     ...(any ?? {}),
     requirements: Array.isArray(any?.requirements) ? any.requirements : [],
   } as CastingSectionRequirements;
+};
+
+const normalizeRemunerationsSection = (v: any): CastingSectionRemunerations => {
+  const any = (v ?? {}) as any;
+  return {
+    ...(any ?? {}),
+    remunerations: Array.isArray(any?.remunerations) ? any.remunerations : [],
+  } as CastingSectionRemunerations;
 };
 
 const normalizeReqArray = (v: any): EmployerCastingRequirementCardResponse[] => {

@@ -28,6 +28,14 @@ export type BaseCastingSectionRemuneration = {
   castingCompensationTypeId: string;
 };
 
+export type BaseRoleRemunerationPatchRequest = {
+  id: string;
+  payRateTypeId?: string;
+  currencyId?: string;
+  amount?: number | null;
+  notes?: string | null;
+};
+
 export type CastingBasicInfoPatchRequest = Partial<CastingSectionBasicInfo>;
 
 export type CastingRolePatchRequest = CastingRoleUpsertRequest & { id: string };
@@ -37,3 +45,4 @@ export type CastingRequirementPatchRequest = CastingRequirementUpsertRequest & {
 export type CastingRequirementDeleteRequest = { id: string };
 
 export type CastingSectionRemunerationPatchRequest = BaseCastingSectionRemuneration;
+export type CastingRoleRemunerationPatchRequest = BaseRoleRemunerationPatchRequest;

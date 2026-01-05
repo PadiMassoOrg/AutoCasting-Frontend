@@ -128,8 +128,20 @@ export const getCastingRequirementSchema = (t: TFunction) =>
       }
     });
 
+export const getCastingRoleRemunerationSchema = (t: TFunction) =>
+  z.object({
+    amount: z
+      .number({ invalid_type_error: t('validation.number_invalid') })
+      .finite({ message: t('validation.number_invalid') })
+      .min(0, { message: t('validation.number_invalid') })
+      .nullable(),
+  });
+
 export type CastingRoleFormValues = z.infer<ReturnType<typeof getCastingRoleSchema>>;
 export type CastingRoleFormKey = keyof CastingRoleFormValues;
 
 export type CastingRequirementFormValues = z.infer<ReturnType<typeof getCastingRequirementSchema>>;
 export type CastingRequirementFormKey = keyof CastingRequirementFormValues | 'media';
+
+export type CastingRoleRemunerationFormValues = z.infer<ReturnType<typeof getCastingRoleRemunerationSchema>>;
+export type CastingRoleRemunerationFormKey = keyof CastingRoleRemunerationFormValues;

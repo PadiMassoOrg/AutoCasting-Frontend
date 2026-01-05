@@ -323,8 +323,7 @@
     },
     "compensation_type": {
       "paid": "Remunerado",
-      "collaborative": "Proyecto cooperativo",
-      "unpaid": "Sin remuneración"
+      "collaborative": "Proyecto cooperativo"
     },
     "pay_rate_type": {
       "fixed": "Tarifa fija",
@@ -333,7 +332,8 @@
       "per_week": "Por semana",
       "per_month": "Por mes",
       "per_season": "Por temporada / función",
-      "to_be_agreed": "A convenir"
+      "to_be_agreed": "A convenir",
+      "unpaid": "Sin remuneración"
     },
     "currency": {
       "ars": "ARS",
@@ -739,7 +739,8 @@
       "create_casting": "Nuevo Casting",
       "empty_page": "Aún no hay castings que mostrar.",
       "empty_roles": "Aún no agregaste roles.",
-      "empty_requirements": "Aún no agregaste requerimientos."
+      "empty_requirements": "Aún no agregaste requerimientos.",
+      "empty_remunerations": "Para gestionar las remuneracions primero creá los Roles."
     },
     "dashboard": {
       "title_new": "Nuevo Casting",
@@ -778,8 +779,12 @@
           "description": "Descripción/Instrucciones (opcional)"
         }
       },
-      "remuneration": {
-        "remuneration": "Remuneración"
+      "remunerations": {
+        "title": "Remuneración",
+        "remuneration": {
+          "pay_rate_type_label": "Tipo de tarifa",
+          "amount_label": "Monto"
+        }
       }
     }
   },

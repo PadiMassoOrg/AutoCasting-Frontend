@@ -41,7 +41,7 @@ const EmployerCastingPage = () => {
     },
     {
       key: 'remuneration',
-      label: t('employer_castings.dashboard.remuneration.remuneration'),
+      label: t('employer_castings.dashboard.remunerations.title'),
       render: () => <EmployerCastingRemunerationEditSection sectionId={remunerationSectionId} />,
     },
   ];

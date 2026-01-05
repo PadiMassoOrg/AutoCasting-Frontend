@@ -82,6 +82,7 @@ export const API_ROUTES = {
   CASTING_ROLE: '/casting/role',
   CASTING_REQUIREMENT: '/casting/requirement',
   CASTING_REMUNERATION: '/casting/remuneration',
+  CASTING_REMUNERATION_REMUENRATIONS: '/casting/remuneration/remunerations',
   EMPLOYER_PROFILE: '/employer',
   EMPLOYER_BASIC_INFO: '/employer/basic-info',
   EMPLOYER_SOCIAL_MEDIA: '/employer/social-media',

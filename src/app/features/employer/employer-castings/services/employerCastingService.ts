@@ -16,15 +16,13 @@ import type {
   CastingRequirementPatchRequest,
   CastingRequirementUpsertRequest,
   CastingRolePatchRequest,
+  CastingRoleRemunerationPatchRequest,
   CastingRoleUpsertRequest,
   CastingSectionRemunerationPatchRequest,
 } from '../types/requests';
 
 export const EMPLOYER_CASTINGS_LIST_CACHE_KEY = ['cache-employer-castings-list'] as const;
 export const EMPLOYER_CASTING_CACHE_KEY = ['cache-employer-casting'] as const;
-export const EMPLOYER_CASTING_ROLES_LIST_CACHE_KEY = ['cache-employer-casting-role-list'] as const;
-export const EMPLOYER_CASTING_REQUIREMENTS_LIST_CACHE_KEY = ['cache-employer-casting-requirement-list'] as const;
-
 export const CASTING_SECTION_BASIC_INFO_CACHE_KEY = ['cache-casting-section-basic-info'] as const;
 export const CASTING_SECTION_ROLES_CACHE_KEY = ['cache-casting-section-roles'] as const;
 export const CASTING_SECTION_REQUIREMENTS_CACHE_KEY = ['cache-casting-section-requirements'] as const;
@@ -115,5 +113,11 @@ export async function patchCastingSectionRemuneration(
 ): Promise<CastingSectionRemunerations> {
   const body = stripUndefined(payload);
   const { data } = await api.patch(API_ROUTES.CASTING_REMUNERATION, body);
+  return data;
+}
+
+export async function patchCastingRoleRemuneration(payload: CastingRoleRemunerationPatchRequest): Promise<any> {
+  const body = stripUndefined(payload);
+  const { data } = await api.patch(API_ROUTES.CASTING_REMUNERATION_REMUENRATIONS, body);
   return data;
 }

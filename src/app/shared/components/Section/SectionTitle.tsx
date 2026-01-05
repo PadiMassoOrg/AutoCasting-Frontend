@@ -14,7 +14,7 @@ export default function SectionTitle({ title, action }: SectionTitleProps) {
   const showBack = !isDesktop && hasSections;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 justify-between">
+    <div className="flex flex-col lg:flex-row gap-4 justify-between min-h-12">
       <div className="flex items-center gap-2 min-w-0">
         {showBack ? (
           <button type="button" onClick={goToNav} className="cursor-pointer flex items-center gap-1" aria-label="Back">
