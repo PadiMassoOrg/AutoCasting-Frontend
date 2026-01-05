@@ -323,7 +323,7 @@
     },
     "compensation_type": {
       "paid": "Remunerado",
-      "collaborative": "Colaborativo (o Proyecto cooperativo)",
+      "collaborative": "Proyecto cooperativo",
       "unpaid": "Sin remuneración"
     },
     "pay_rate_type": {

@@ -22,6 +22,12 @@ export type CastingRequirementUpsertRequest = {
   description?: string;
 };
 
+// Remuneration
+export type BaseCastingSectionRemuneration = {
+  id: string;
+  castingCompensationTypeId: string;
+};
+
 export type CastingBasicInfoPatchRequest = Partial<CastingSectionBasicInfo>;
 
 export type CastingRolePatchRequest = CastingRoleUpsertRequest & { id: string };
@@ -29,3 +35,5 @@ export type CastingRoleDeleteRequest = { id: string };
 
 export type CastingRequirementPatchRequest = CastingRequirementUpsertRequest & { id: string };
 export type CastingRequirementDeleteRequest = { id: string };
+
+export type CastingSectionRemunerationPatchRequest = BaseCastingSectionRemuneration;

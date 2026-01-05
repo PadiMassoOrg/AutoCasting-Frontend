@@ -2,6 +2,7 @@ import { getAuthToken } from '../../../../shared/lib/cookies';
 import { useSectionAutosave } from '../../../talent/talent-profile-edit/hooks/useSectionAutoSave';
 import {
   CASTING_SECTION_BASIC_INFO_CACHE_KEY,
+  CASTING_SECTION_REMUNERATIONS_CACHE_KEY,
   CASTING_SECTION_REQUIREMENTS_CACHE_KEY,
   CASTING_SECTION_ROLES_CACHE_KEY,
   createBulkRequirement,
@@ -11,9 +12,11 @@ import {
   patchCastingBasicInfo,
   patchCastingRequirement,
   patchCastingRole,
+  patchCastingSectionRemuneration,
 } from '../services/employerCastingService';
 import type {
   CastingSectionBasicInfo,
+  CastingSectionRemunerations,
   CastingSectionRequirements,
   CastingSectionRoles,
   EmployerCastingRequirementCardResponse,
@@ -27,8 +30,10 @@ import type {
   CastingRoleDeleteRequest,
   CastingRolePatchRequest,
   CastingRoleUpsertRequest,
+  CastingSectionRemunerationPatchRequest,
 } from '../types/requests';
 
+// Basic Info
 export function useCastingBasicInfoAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_BASIC_INFO_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
@@ -42,6 +47,7 @@ export function useCastingBasicInfoAutosave(sectionId: string) {
   });
 }
 
+// Roles
 export function useCastingRoleCreateAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_ROLES_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
@@ -96,6 +102,7 @@ export function useCastingRoleDeleteAutosave(sectionId: string) {
   });
 }
 
+// Requirements
 export function useCastingRequirementCreateAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_REQUIREMENTS_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
@@ -166,6 +173,21 @@ export function useCastingRequirementDeleteAutosave(sectionId: string) {
   });
 }
 
+// Remunerations
+export function useCastingRemunerationsSectionAutosave(sectionId: string) {
+  const token = getAuthToken();
+  const key = [...CASTING_SECTION_REMUNERATIONS_CACHE_KEY, sectionId, token ?? 'no-token'];
+
+  return useSectionAutosave<CastingSectionRemunerationPatchRequest, CastingSectionRemunerations>({
+    mutationFn: patchCastingSectionRemuneration,
+    delay: 200,
+    cacheKeys: [key],
+    invalidateOnSuccess: false,
+    onSuccessUpdate: (prev, updated) => ({ ...(prev as any), ...(updated as any) }) as CastingSectionRemunerations,
+  });
+}
+
+// Helpers
 const normalizeRolesSection = (v: any): CastingSectionRoles => {
   const any = (v ?? {}) as any;
   return {

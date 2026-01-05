@@ -16,54 +16,60 @@ import type { CastingRequirementUpsertRequest } from '../../types/requests';
 import EmployerCastingRequirementCard from '../EmployerCastingRequirementCard';
 import CastingRequirementModal from '../Form/Requirement/CastingRequirementModal';
 
+const EMPTY_ARR: any[] = [];
+
 const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: string }) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
   const { rolesSectionId } = useEmployerCastingIds();
+
   const {
     data: requirementsSection,
     isLoading: isRequirementsLoading,
     error: requirementsError,
   } = useSectionRequirements(sectionId);
+
   const { data: rolesSection, isLoading: isRolesLoading, error: rolesError } = useSectionRoles(rolesSectionId);
+
   const createRequirementMutation = useCastingRequirementCreateAutosave(sectionId);
+
+  const roles = rolesSection?.roles ?? EMPTY_ARR;
+  const requirements = requirementsSection?.requirements ?? EMPTY_ARR;
+
+  const rolesById = useMemo(() => {
+    const map = new Map<string, string>();
+    roles.forEach((r: any) => map.set(r.id, r.roleName ?? ''));
+    return map;
+  }, [roles]);
+
+  const roleOptions: RadioOption[] = useMemo(
+    () =>
+      roles.map((r: any) => ({
+        value: r.id,
+        label: r.roleName ?? t('general.placeholder.role_name'),
+      })),
+    [roles, t]
+  );
+
+  const requirementsForUi: EmployerCastingRequirementCardResponse[] = useMemo(() => {
+    const fallback = t('general.placeholder.role_name');
+    return requirements.map((req: any) => {
+      const roleName = req?.roleName ?? rolesById.get(req?.roleId) ?? fallback;
+      return { ...req, roleName };
+    });
+  }, [requirements, rolesById, t]);
+
+  const disabledRoleIds = useMemo(() => {
+    const ids = new Set<string>();
+    requirements.forEach((req: any) => {
+      if (req?.roleId) ids.add(req.roleId);
+    });
+    return Array.from(ids);
+  }, [requirements]);
 
   if (isRequirementsLoading || isRolesLoading) return null;
   if (requirementsError || rolesError) return <ServerError />;
   if (!requirementsSection || !rolesSection) return null;
-
-  const rolesById = useMemo(() => {
-    const map = new Map<string, string>();
-    (rolesSection.roles ?? []).forEach((r) => {
-      map.set(r.id, r.roleName ?? '');
-    });
-    return map;
-  }, [rolesSection.roles]);
-
-  const requirementsForUi: EmployerCastingRequirementCardResponse[] = useMemo(() => {
-    const fallback = t('general.placeholder.role_name');
-    return (requirementsSection.requirements ?? []).map((req: any) => {
-      const roleName = req?.roleName ?? rolesById.get(req?.roleId) ?? fallback;
-      return { ...req, roleName };
-    });
-  }, [requirementsSection.requirements, rolesById, t]);
-
-  const roleOptions: RadioOption[] = useMemo(
-    () =>
-      (rolesSection.roles ?? []).map((r) => ({
-        value: r.id,
-        label: r.roleName ?? t('general.placeholder.role_name'),
-      })),
-    [rolesSection.roles, t]
-  );
-
-  const disabledRoleIds = useMemo(() => {
-    const ids = new Set<string>();
-    (requirementsSection.requirements ?? []).forEach((req: any) => {
-      if (req?.roleId) ids.add(req.roleId);
-    });
-    return Array.from(ids);
-  }, [requirementsSection.requirements]);
 
   const handleOpenModal = () => {
     openModal(
@@ -104,7 +110,7 @@ const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: stri
     <DashboardSection>
       <SectionTitle title={t('employer_castings.dashboard.requirements.requirements')} action={actionButtonRender()} />
 
-      {(requirementsForUi.length ?? 0) > 0 ? (
+      {requirementsForUi.length > 0 ? (
         requirementsForUi.map((requirement) => (
           <EmployerCastingRequirementCard
             key={requirement.id}

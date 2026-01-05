@@ -17,6 +17,7 @@ import type {
   CastingRequirementUpsertRequest,
   CastingRolePatchRequest,
   CastingRoleUpsertRequest,
+  CastingSectionRemunerationPatchRequest,
 } from '../types/requests';
 
 export const EMPLOYER_CASTINGS_LIST_CACHE_KEY = ['cache-employer-castings-list'] as const;
@@ -108,3 +109,11 @@ export const getSectionRemunerationsById = async (sectionId: string): Promise<Ca
   const response = await api.get(API_ROUTES.CASTING_REMUNERATION + `/${sectionId}`);
   return response.data;
 };
+
+export async function patchCastingSectionRemuneration(
+  payload: CastingSectionRemunerationPatchRequest
+): Promise<CastingSectionRemunerations> {
+  const body = stripUndefined(payload);
+  const { data } = await api.patch(API_ROUTES.CASTING_REMUNERATION, body);
+  return data;
+}
