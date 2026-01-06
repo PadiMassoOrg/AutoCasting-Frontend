@@ -58,7 +58,7 @@ export function useCastingRoleCreateAutosave(sectionId: string) {
     mutationFn: createNewRole,
     delay: 200,
     cacheKeys: [key],
-    invalidateOnSuccess: false,
+    invalidateOnSuccess: 'active',
     onSuccessUpdate: (prev, created) => {
       const prevSection = normalizeRolesSection(prev);
       const prevRoles = prevSection.roles ?? [];
@@ -94,7 +94,7 @@ export function useCastingRoleDeleteAutosave(sectionId: string) {
     mutationFn: deleteCastingRole,
     delay: 0,
     cacheKeys: [key],
-    invalidateOnSuccess: false,
+    invalidateOnSuccess: 'active',
     onSuccessUpdate: (prev, { id }) => {
       const prevSection = normalizeRolesSection(prev);
       const prevRoles = prevSection.roles ?? [];

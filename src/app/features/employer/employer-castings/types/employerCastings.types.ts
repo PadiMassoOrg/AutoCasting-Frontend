@@ -96,7 +96,7 @@ export type BaseCastingRemunerationsSection = {
   id: string;
   sectionStatus: SiteMetadataObject;
   compensationType: SiteMetadataObject;
-  paySameForAllRoles: boolean;
+  notes: string;
   remunerations: EmployerCastingRemunerationCardResponse[];
 };
 
@@ -108,7 +108,6 @@ export type BaseCastingRemuneration = {
   payRateType: SiteMetadataObject;
   currency: SiteMetadataObject;
   amount: number;
-  notes: string;
 };
 
 /* ======================

@@ -26,6 +26,7 @@ export type CastingRequirementUpsertRequest = {
 export type BaseCastingSectionRemuneration = {
   id: string;
   castingCompensationTypeId: string;
+  notes?: string;
 };
 
 export type BaseRoleRemunerationPatchRequest = {
@@ -33,7 +34,6 @@ export type BaseRoleRemunerationPatchRequest = {
   payRateTypeId?: string;
   currencyId?: string;
   amount?: number | null;
-  notes?: string | null;
 };
 
 export type CastingBasicInfoPatchRequest = Partial<CastingSectionBasicInfo>;

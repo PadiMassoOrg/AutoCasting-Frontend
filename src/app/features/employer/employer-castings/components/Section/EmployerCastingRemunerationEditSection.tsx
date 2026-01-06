@@ -1,8 +1,10 @@
 import { Label } from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
+import { useEffect, useState } from 'react';
 import { DashboardSection } from '../../../../../layouts/components';
 import { RadioGroupField } from '../../../../../shared/components/Form';
-import { SectionTitle } from '../../../../../shared/components/Section';
+import TextareaField from '../../../../../shared/components/Form/TextareaField';
+import { SectionCard, SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { useCastingRemunerationsSectionAutosave } from '../../hooks/autosaves';
@@ -18,31 +20,60 @@ const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: stri
   if (error) return <ServerError />;
 
   const selectedCompensationTypeId = data.compensationType.id;
+  const isCollaborative = data.compensationType?.stringCode === 'sitemetadata.compensation_type.collaborative';
+
+  const [notes, setNotes] = useState<string>(data.notes ?? '');
+
+  useEffect(() => {
+    setNotes(data.notes ?? '');
+  }, [sectionId]);
 
   return (
     <DashboardSection>
       <SectionTitle title={t('employer_castings.dashboard.remunerations.title')} />
       {data.remunerations.length > 0 ? (
         <>
-          <div className="mt-2">
-            <RadioGroupField
-              value={selectedCompensationTypeId}
-              options={compensationTypeOptions}
-              optionsWrapperClassName="w-full flex flex-row items-center gap-4 lg:gap-8"
-              optionClassName="flex items-center gap-2 text-sm lg:text-base"
-              onValueChange={(nextId) => {
-                if (!nextId) return;
-                if (nextId === selectedCompensationTypeId) return;
-                sectionAutosave.immediate({
-                  id: sectionId,
-                  castingCompensationTypeId: nextId,
-                });
-              }}
-            />
-          </div>
-          {data.remunerations.map((r: any) => {
-            return <RoleRemunerationEditCard key={r.id} sectionId={sectionId} data={r} />;
-          })}
+          <RadioGroupField
+            value={selectedCompensationTypeId}
+            options={compensationTypeOptions}
+            optionsWrapperClassName="w-full flex flex-row items-center gap-4 lg:gap-8"
+            optionClassName="flex items-center gap-2 text-sm lg:text-base"
+            onValueChange={(nextId) => {
+              if (!nextId) return;
+              if (nextId === selectedCompensationTypeId) return;
+              sectionAutosave.immediate({
+                id: sectionId,
+                castingCompensationTypeId: nextId,
+              });
+            }}
+          />
+
+          {isCollaborative ? (
+            <SectionCard>
+              <p>{t('employer_castings.dashboard.remunerations.collaborative.description')}</p>
+
+              <div className="min-h-[22px]" />
+
+              <TextareaField
+                id="collaborativeNotes"
+                label={t('employer_castings.dashboard.remunerations.collaborative.label')}
+                placeholder={t('employer_castings.dashboard.remunerations.collaborative.notes_placeholder')}
+                value={notes}
+                onChange={(e) => setNotes((e?.target?.value ?? '') as string)}
+                onBlur={() => {
+                  sectionAutosave.immediate({
+                    id: sectionId,
+                    castingCompensationTypeId: selectedCompensationTypeId,
+                    notes,
+                  });
+                }}
+              />
+            </SectionCard>
+          ) : (
+            data.remunerations.map((r: any) => {
+              return <RoleRemunerationEditCard key={r.id} sectionId={sectionId} data={r} />;
+            })
+          )}
         </>
       ) : (
         <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-2 lg:pt-6">
