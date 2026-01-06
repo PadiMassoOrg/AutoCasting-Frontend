@@ -68,6 +68,16 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
     if (r.success) autosave.immediate({ id: data.id, projectTypeId: id ?? undefined });
   });
 
+  const castingModalityText = useCommittedText(data.castingModalityText ?? '', (v) => {
+    setErrors((e) => ({ ...e, castingModalityText: null }));
+    autosave.immediate({ id: data.id, castingModalityText: v || null });
+  });
+
+  const wardrobeFittingText = useCommittedText(data.wardrobeFittingText ?? '', (v) => {
+    setErrors((e) => ({ ...e, wardrobeFittingText: null }));
+    autosave.immediate({ id: data.id, wardrobeFittingText: v || null });
+  });
+
   const castingModality = useCommittedUuid(data.castingModality?.id ?? null, (id) => {
     const raw = id ?? '';
     const r = schema.shape.castingModalityId.safeParse(raw);
@@ -87,6 +97,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         castingModalityId: id ?? undefined,
         castingModalityText: null,
       });
+      castingModalityText.setValue('');
       setErrors((e) => ({ ...e, castingModalityText: null }));
       return;
     }
@@ -101,11 +112,6 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
   }, [castingModality.value, castingModalityOptions]);
 
   const isOnSite = selectedCastingModalityStringCodeTranslation === ON_SITE_CODE;
-
-  const castingModalityText = useCommittedText(data.castingModalityText ?? '', (v) => {
-    setErrors((e) => ({ ...e, castingModalityText: null }));
-    autosave.immediate({ id: data.id, castingModalityText: v || null });
-  });
 
   const applicationDeadline = useIsoDateField(
     data.applicationDeadline ?? '',
@@ -140,6 +146,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         hasWardrobeFitting: false,
         wardrobeFittingText: null,
       });
+      wardrobeFittingText.setValue('');
       setErrors((e) => ({ ...e, wardrobeFittingText: null }));
       return;
     }
@@ -148,11 +155,6 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
       id: data.id,
       hasWardrobeFitting: v ?? undefined,
     });
-  });
-
-  const wardrobeFittingText = useCommittedText(data.wardrobeFittingText ?? '', (v) => {
-    setErrors((e) => ({ ...e, wardrobeFittingText: null }));
-    autosave.immediate({ id: data.id, wardrobeFittingText: v || null });
   });
 
   const description = useCommittedText(data.description ?? '', (v) => {
