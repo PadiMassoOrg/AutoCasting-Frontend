@@ -12,6 +12,8 @@ type RangeCalendarProps = {
   className?: string;
   onClear?: () => void;
   clearable?: boolean;
+
+  required?: boolean;
 };
 
 const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
@@ -31,6 +33,7 @@ export function RangeCalendar({
   className,
   onClear,
   clearable = true,
+  required = false,
 }: RangeCalendarProps) {
   const { lang } = useLanguage();
   const locale = DATE_FNS_LOCALE_BY_LANG[lang];
@@ -77,7 +80,16 @@ export function RangeCalendar({
 
   return (
     <div className={`${className ?? ''} flex flex-col w-full lg:max-w-[350px]`}>
-      {label ? <div className="mb-2 text-sm font-semibold">{label}</div> : null}
+      {label ? (
+        <div className="mb-2 text-sm font-semibold">
+          {label}
+          {required ? (
+            <span className="text-red-500 ml-1" aria-hidden="true">
+              *
+            </span>
+          ) : null}
+        </div>
+      ) : null}
 
       <DayPicker
         mode="range"

@@ -23,6 +23,8 @@ type Props = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & {
   optionsWrapperClassName?: string;
   optionClassName?: string;
   legendClassName?: string;
+
+  required?: boolean;
 };
 
 const RadioGroupField = ({
@@ -38,6 +40,7 @@ const RadioGroupField = ({
   optionsWrapperClassName = 'flex flex-col gap-2',
   optionClassName = 'flex items-center gap-2 text-sm',
 
+  required = false,
   className,
   ...rest
 }: Props) => {
@@ -81,7 +84,16 @@ const RadioGroupField = ({
 
   return (
     <div className={[wrapperClassName, className].filter(Boolean).join(' ')} {...rest}>
-      {label ? <Label className={labelClassName}>{label}</Label> : null}
+      {label ? (
+        <Label className={labelClassName}>
+          {label}
+          {required ? (
+            <span className="text-red-500 ml-1" aria-hidden="true">
+              *
+            </span>
+          ) : null}
+        </Label>
+      ) : null}
 
       <div className={optionsWrapperClassName}>
         {options.map((opt) => {

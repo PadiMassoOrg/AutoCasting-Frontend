@@ -16,17 +16,17 @@ const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: stri
   const compensationTypeOptions = useCachedSiteMetadataOption('castingCompensationTypeOptions', t);
   const sectionAutosave = useCastingRemunerationsSectionAutosave(sectionId);
 
+  const [notes, setNotes] = useState<string>('');
+
+  useEffect(() => {
+    setNotes(data?.notes ?? '');
+  }, [data?.id, data?.notes]);
+
   if (isLoading || !data) return null;
   if (error) return <ServerError />;
 
   const selectedCompensationTypeId = data.compensationType.id;
   const isCollaborative = data.compensationType?.stringCode === 'sitemetadata.compensation_type.collaborative';
-
-  const [notes, setNotes] = useState<string>(data.notes ?? '');
-
-  useEffect(() => {
-    setNotes(data.notes ?? '');
-  }, [sectionId]);
 
   return (
     <DashboardSection>

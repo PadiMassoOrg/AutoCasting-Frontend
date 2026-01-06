@@ -7,7 +7,7 @@ type AnyKeyHandler = (e: any) => void;
 
 export type TextareaFieldProps = Omit<
   TextareaHTMLAttributes<HTMLTextAreaElement>,
-  'value' | 'onChange' | 'onBlur' | 'onKeyDown'
+  'value' | 'onChange' | 'onBlur' | 'onKeyDown' | 'required'
 > & {
   id: string;
   label?: string;
@@ -27,6 +27,8 @@ export type TextareaFieldProps = Omit<
 
   textareaClassName?: string;
   minHeightClassName?: string;
+
+  required?: boolean;
 };
 
 export default function TextareaField({
@@ -37,6 +39,7 @@ export default function TextareaField({
   error,
   disabled,
   placeholder,
+  required = false,
 
   labelClassName = 'text-sm font-semibold',
   wrapperClassName = 'flex flex-col gap-1',
@@ -65,6 +68,11 @@ export default function TextareaField({
       {label ? (
         <Label className={labelClassName} htmlFor={id}>
           {label}
+          {required ? (
+            <span className="text-red-500 ml-1" aria-hidden="true">
+              *
+            </span>
+          ) : null}
         </Label>
       ) : null}
 

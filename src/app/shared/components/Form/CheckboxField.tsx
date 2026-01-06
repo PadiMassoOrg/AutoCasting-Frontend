@@ -10,6 +10,8 @@ type Props = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & {
 
   labelClassName?: string;
   wrapperClassName?: string;
+
+  required?: boolean;
 };
 
 const CheckboxField = ({
@@ -20,6 +22,7 @@ const CheckboxField = ({
   onCheckedChange,
   labelClassName = 'text-sm',
   wrapperClassName = 'flex items-center gap-2.5',
+  required = false,
   className,
   ...rest
 }: Props) => {
@@ -75,6 +78,11 @@ const CheckboxField = ({
         )}
       >
         {label}
+        {required ? (
+          <span className="text-red-500 ml-1" aria-hidden="true">
+            *
+          </span>
+        ) : null}
       </Label>
     </div>
   );

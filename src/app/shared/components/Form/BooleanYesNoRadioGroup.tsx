@@ -11,6 +11,8 @@ export type BooleanYesNoRadioGroupProps = {
   legendClassName?: string;
   optionClassName?: string;
   disabled?: boolean;
+
+  required?: boolean;
 };
 
 export default function BooleanYesNoRadioGroup({
@@ -22,6 +24,7 @@ export default function BooleanYesNoRadioGroup({
   legendClassName = 'text-[14px] font-semibold',
   optionClassName = 'flex items-center gap-2 text-[14px] font-semibold',
   disabled = false,
+  required = false,
 }: BooleanYesNoRadioGroupProps) {
   const { t } = useTranslation();
   const uid = useId();
@@ -69,7 +72,14 @@ export default function BooleanYesNoRadioGroup({
 
   return (
     <fieldset className={className}>
-      <legend className={legendClassName}>{label}</legend>
+      <legend className={legendClassName}>
+        {label}
+        {required ? (
+          <span className="text-red-500 ml-1" aria-hidden="true">
+            *
+          </span>
+        ) : null}
+      </legend>
 
       {/* Horizontal yes/no */}
       <div className="mt-2 pl-1 flex flex-row items-center gap-6">

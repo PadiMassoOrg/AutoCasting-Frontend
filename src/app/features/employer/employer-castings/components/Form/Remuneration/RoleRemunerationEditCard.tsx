@@ -1,6 +1,6 @@
 import { FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SectionCard } from '../../../../../../shared/components/Section';
 import { useCachedSiteMetadataOption } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { useCastingRoleRemunerationPatchAutosave } from '../../../hooks/autosaves';
@@ -37,6 +37,100 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
 
   const isUnpaid = Boolean(unpaidOptionId) && payRateTypeId === unpaidOptionId;
 
+  const clearAmountState = useCallback(() => {
+    setAmount('');
+    setAmountError(undefined);
+  }, []);
+
+  const handlePayRateTypeChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const next = e.target.value;
+      if (!next) return;
+
+      setPayRateTypeId(next);
+      setAmountError(undefined);
+
+      if (unpaidOptionId && next === unpaidOptionId) {
+        clearAmountState();
+        autosave.immediate({
+          id: data.id,
+          payRateTypeId: next,
+          amount: null,
+        });
+        return;
+      }
+
+      autosave.immediate({
+        id: data.id,
+        payRateTypeId: next,
+      });
+    },
+    [autosave, clearAmountState, data.id, unpaidOptionId]
+  );
+
+  const handleCurrencyChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const next = e.target.value;
+      if (!next) return;
+
+      setCurrencyId(next);
+      setAmountError(undefined);
+
+      autosave.immediate({
+        id: data.id,
+        currencyId: next,
+      });
+    },
+    [autosave, data.id]
+  );
+
+  const handleAmountChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(e.target.value);
+    setAmountError(undefined);
+  }, []);
+
+  const handleAmountBlur = useCallback(() => {
+    const v = (amount ?? '').trim();
+
+    // Empty => validate with amount=null, then persist null
+    if (!v) {
+      const parsed = schema.safeParse({
+        id: data.id,
+        payRateTypeId,
+        currencyId,
+        amount: null,
+      });
+
+      if (!parsed.success) {
+        const msg = parsed.error.flatten().fieldErrors?.amount?.[0];
+        setAmountError(msg);
+        return;
+      }
+
+      autosave.immediate({ id: data.id, amount: null });
+      return;
+    }
+
+    const normalized = v.replace(',', '.');
+    const num = Number(normalized);
+    const candidate = Number.isFinite(num) ? num : Number.NaN;
+
+    const parsed = schema.safeParse({
+      id: data.id,
+      payRateTypeId,
+      currencyId,
+      amount: candidate,
+    });
+
+    if (!parsed.success) {
+      const msg = parsed.error.flatten().fieldErrors?.amount?.[0];
+      setAmountError(msg);
+      return;
+    }
+
+    autosave.immediate({ id: data.id, amount: num });
+  }, [amount, autosave, currencyId, data.id, payRateTypeId, schema]);
+
   return (
     <SectionCard>
       <h2 className="text-base font-semibold">{data.roleName}</h2>
@@ -46,38 +140,24 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
           id={`payRateTypeId-${data.id}`}
           placeholder={t('general.placeholder.select')}
           value={payRateTypeId}
-          onChange={(e) => {
-            const next = e.target.value;
-            if (!next) return;
-
-            setPayRateTypeId(next);
-            setAmountError(undefined);
-
-            if (unpaidOptionId && next === unpaidOptionId) {
-              setAmount('');
-              autosave.immediate({
-                id: data.id,
-                payRateTypeId: next,
-                amount: null,
-              });
-              return;
-            }
-
-            autosave.immediate({
-              id: data.id,
-              payRateTypeId: next,
-            });
-          }}
+          onChange={handlePayRateTypeChange}
           options={payRateTypeOptions}
           label={t('employer_castings.dashboard.remunerations.remuneration.pay_rate_type_label')}
+          labelClassName="font-semibold text-base"
+          required
         />
       </div>
 
       {!isUnpaid ? (
         <div>
-          <Label className="text-base font-semibold">
-            {t('employer_castings.dashboard.remunerations.remuneration.amount_label')}
-          </Label>
+          <div className="flex">
+            <Label className="text-base font-semibold">
+              {t('employer_castings.dashboard.remunerations.remuneration.amount_label')}
+            </Label>
+            <span className="text-red-500 ml-1" aria-hidden="true">
+              *
+            </span>
+          </div>
 
           <div className="mt-2 flex flex-row items-center gap-3">
             <div className="w-[110px]">
@@ -85,16 +165,7 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
                 id={`currencyId-${data.id}`}
                 placeholder={t('general.placeholder.select')}
                 value={currencyId}
-                onChange={(e) => {
-                  const next = e.target.value;
-                  if (!next) return;
-                  setCurrencyId(next);
-                  setAmountError(undefined);
-                  autosave.immediate({
-                    id: data.id,
-                    currencyId: next,
-                  });
-                }}
+                onChange={handleCurrencyChange}
                 options={currencyTypeOptions}
               />
             </div>
@@ -104,50 +175,8 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
                 id={`amount-${data.id}`}
                 placeholder="0"
                 value={amount}
-                onChange={(e) => {
-                  setAmount(e.target.value);
-                  setAmountError(undefined);
-                }}
-                onBlur={() => {
-                  const v = (amount ?? '').trim();
-
-                  if (!v) {
-                    const parsed = schema.safeParse({
-                      id: data.id,
-                      payRateTypeId,
-                      currencyId,
-                      amount: null,
-                    });
-
-                    if (!parsed.success) {
-                      const msg = parsed.error.flatten().fieldErrors?.amount?.[0];
-                      setAmountError(msg);
-                      return;
-                    }
-
-                    autosave.immediate({ id: data.id, amount: null });
-                    return;
-                  }
-
-                  const normalized = v.replace(',', '.');
-                  const num = Number(normalized);
-                  const candidate = Number.isFinite(num) ? num : Number.NaN;
-
-                  const parsed = schema.safeParse({
-                    id: data.id,
-                    payRateTypeId,
-                    currencyId,
-                    amount: candidate,
-                  });
-
-                  if (!parsed.success) {
-                    const msg = parsed.error.flatten().fieldErrors?.amount?.[0];
-                    setAmountError(msg);
-                    return;
-                  }
-
-                  autosave.immediate({ id: data.id, amount: num });
-                }}
+                onChange={handleAmountChange}
+                onBlur={handleAmountBlur}
                 error={amountError}
               />
             </div>

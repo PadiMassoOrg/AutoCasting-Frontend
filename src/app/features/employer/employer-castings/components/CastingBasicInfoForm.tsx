@@ -195,6 +195,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         onBlur={title.onBlur}
         onKeyDown={title.onKeyDown}
         error={errors.title ?? undefined}
+        required
       />
 
       <FormSelectField
@@ -207,6 +208,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         onBlur={projectType.onBlur}
         options={projectTypeOptions}
         error={errors.projectTypeId ?? undefined}
+        required
       />
 
       <FormSelectField
@@ -219,6 +221,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         onBlur={castingModality.onBlur}
         options={castingModalityOptions}
         error={errors.castingModalityId ?? undefined}
+        required
       />
 
       {isOnSite && (
@@ -232,13 +235,19 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
           onBlur={castingModalityText.onBlur}
           onKeyDown={castingModalityText.onKeyDown}
           error={errors.castingModalityText ?? undefined}
+          required
         />
       )}
 
       <div className="flex flex-col gap-2">
-        <Label className="text-sm font-semibold">
-          {t('employer_castings.dashboard.basic_info.application_deadline')}
-        </Label>
+        <div className="flex">
+          <Label className="text-sm font-semibold">
+            {t('employer_castings.dashboard.basic_info.application_deadline')}
+          </Label>
+          <span className="text-red-500 ml-1" aria-hidden="true">
+            *
+          </span>
+        </div>
 
         <div className="grid grid-cols-3 gap-2">
           <FormSelectField
@@ -276,6 +285,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         value={hasWardrobeFitting.value}
         onChange={(next) => hasWardrobeFitting.onChange(next)}
         name="hasWardrobeFitting"
+        required
       />
 
       {hasWardrobeFitting.value === true && (
@@ -289,6 +299,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
           onBlur={wardrobeFittingText.onBlur}
           onKeyDown={wardrobeFittingText.onKeyDown}
           error={errors.wardrobeFittingText ?? undefined}
+          required
         />
       )}
 
@@ -298,6 +309,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         onChange={setRange}
         onCommit={handleRangeCommit}
         onClear={handleRangeClear}
+        required
       />
 
       <div className="min-h-[5px]"></div>

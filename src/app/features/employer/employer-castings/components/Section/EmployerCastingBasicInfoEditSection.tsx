@@ -11,8 +11,6 @@ const EmployerCastingBasicInfoEditSection = ({ sectionId }: { sectionId: string 
   if (isLoading || !data) return null;
   if (error) return <ServerError />;
 
-  console.log(data.sectionStatus?.stringCode);
-
   return (
     <DashboardSection>
       <SectionTitle title={t('employer_castings.dashboard.basic_info.basic_info')} />

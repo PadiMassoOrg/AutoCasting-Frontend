@@ -1,4 +1,4 @@
-import { Button, FormInputField, FormSelectField, Separator } from 'autocasting-ui-library-padimasso';
+import { Button, FormInputField, FormSelectField, Label, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TextareaField } from '../../../../../../shared/components/Form';
@@ -336,15 +336,20 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
         id="roleName"
         label={t('employer_castings.dashboard.roles.role.role_name')}
         labelClassName="font-semibold"
-        required
         placeholder={t('general.placeholder.role_name')}
         value={form.roleName}
         onChange={(e) => onChange('roleName', e.target.value)}
         error={errors.roleName}
+        required
       />
 
       <div>
-        <h2 className="text-sm font-semibold mb-2">{t('talent.filter.basic_info.profession')}</h2>
+        <div className="flex mb-1.5">
+          <Label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</Label>
+          <span className="text-red-500 ml-1" aria-hidden="true">
+            *
+          </span>
+        </div>
         <MultiSelectDropdown
           options={professionsRaw ?? []}
           getId={(p) => p.id}
@@ -381,9 +386,13 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
       />
 
       <div className="flex flex-col">
-        <label htmlFor="ageMin" className="text-sm font-semibold mb-2">
-          {t('talent.filter.basic_info.age_range')}
-        </label>
+        <div className="flex mb-1.5">
+          <Label className="text-sm font-semibold">{t('talent.filter.basic_info.age_range')} </Label>
+          <span className="text-red-500 ml-1" aria-hidden="true">
+            *
+          </span>
+        </div>
+
         <div className="flex flex-row gap-4">
           <FormInputField
             id="ageMin"

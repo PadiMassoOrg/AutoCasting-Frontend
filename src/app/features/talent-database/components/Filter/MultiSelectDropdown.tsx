@@ -10,12 +10,9 @@ type BaseProps<T> = {
   getLabel: (opt: T) => string;
   maxPanelHeight?: string;
   className?: string;
-
-  /** error message (si existe, se muestra debajo y marca el borde) */
   error?: string | null;
-
-  /** a qué contenedor scrolleable forwardear cuando el panel llega a su borde */
   forwardScrollToRef?: React.RefObject<HTMLElement | null>;
+  required?: boolean;
 };
 
 type MultipleSelectProps = {
@@ -45,6 +42,7 @@ export default function MultiSelectDropdown<T>({
   className = '',
   error,
   forwardScrollToRef,
+  required = false,
   ...rest
 }: MultiSelectDropdownProps<T>) {
   const { t } = useTranslation();
@@ -97,8 +95,17 @@ export default function MultiSelectDropdown<T>({
         >
           <div className="w-full flex items-center justify-between">
             <div className="flex flex-col">
-              {title && <span className="text-sm text-neutral-600">{title}</span>}
-              <span className="text-sm">
+              {title && (
+                <span className="text-sm text-neutral-600">
+                  {title}
+                  {required ? (
+                    <span className="text-red-500 ml-1" aria-hidden="true">
+                      *
+                    </span>
+                  ) : null}
+                </span>
+              )}
+              <span className="text-base">
                 {count} {t('general.selections')}
               </span>
             </div>
@@ -133,7 +140,7 @@ export default function MultiSelectDropdown<T>({
               className="px-6 py-3 flex flex-col gap-2"
             >
               {!single && (
-                <label className="flex items-center gap-3 text-sm font-normal cursor-pointer">
+                <label className="flex items-center gap-3 text-base font-normal cursor-pointer">
                   <span className="relative inline-flex items-center justify-center h-6 w-6">
                     <input
                       type="checkbox"
@@ -180,7 +187,7 @@ export default function MultiSelectDropdown<T>({
                 const optId = getId(opt);
                 const checked = selectedIds.includes(optId);
                 return (
-                  <label key={optId} className="flex items-center gap-3 text-sm font-normal cursor-pointer">
+                  <label key={optId} className="flex items-center gap-3 text-base font-normal cursor-pointer">
                     <span className="relative inline-flex items-center justify-center h-6 w-6">
                       <input
                         type="checkbox"
