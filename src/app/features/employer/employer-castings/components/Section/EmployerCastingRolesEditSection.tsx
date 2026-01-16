@@ -5,6 +5,7 @@ import { DashboardSection } from '../../../../../layouts/components';
 import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
+import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
 import { useCastingRoleCreateAutosave } from '../../hooks/autosaves';
 import { useSectionRoles } from '../../hooks/useSectionRoles';
 import EmployerCastingRoleCard from '../EmployerCastingRoleCard';
@@ -16,6 +17,8 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
 
   const { data, isLoading, error } = useSectionRoles(sectionId);
   const createRoleMutation = useCastingRoleCreateAutosave(sectionId);
+
+  useSyncCastingSectionStatus('roles', data?.sectionStatus);
 
   if (isLoading || !data) return null;
   if (error) return <ServerError />;

@@ -49,6 +49,11 @@ import PlusIconWhite from '../../icons/plus-white.svg';
 import PlusIcon from '../../icons/plus.svg';
 import ProfileIconPurple from '../../icons/profile-purple.svg';
 import ProfileIcon from '../../icons/profile.svg';
+import PublishIconDisabled from '../../icons/publish-disabled.svg';
+import PublishIconPurple from '../../icons/publish-purple.svg';
+import PublishIcon from '../../icons/publish.svg';
+import SaveIconPurple from '../../icons/save-purple.svg';
+import SaveIcon from '../../icons/save.svg';
 import SettingsIconPurple from '../../icons/settings-purple.svg';
 import SettingsIcon from '../../icons/settings.svg';
 import SwitcherIconPurple from '../../icons/switcher-purple.svg';
@@ -98,15 +103,18 @@ export type IconName =
   | 'tikTok'
   | 'linkedin'
   | 'delete'
+  | 'save'
+  | 'publish'
   | 'logout';
 
-export type IconVariant = 'default' | 'primary' | 'white' | 'danger';
+export type IconVariant = 'default' | 'primary' | 'white' | 'danger' | 'disabled';
 
 type BaseIconConfig = {
   default: string;
   primary?: string;
   white?: string;
   danger?: string;
+  disabled?: string;
 };
 
 const ICONS: Record<IconName, BaseIconConfig> = {
@@ -242,6 +250,15 @@ const ICONS: Record<IconName, BaseIconConfig> = {
     default: ClapperManageIcon,
     primary: ClapperManageIconPurple,
   },
+  save: {
+    default: SaveIcon,
+    primary: SaveIconPurple,
+  },
+  publish: {
+    default: PublishIcon,
+    primary: PublishIconPurple,
+    disabled: PublishIconDisabled,
+  },
 };
 
 export type IconProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
@@ -257,6 +274,7 @@ export function Icon({ name, variant = 'default', size = 18, className, alt = ''
     (variant === 'primary' && config.primary) ||
     (variant === 'white' && config.white) ||
     (variant === 'danger' && config.danger) ||
+    (variant === 'disabled' && config.disabled) ||
     config.default;
 
   const finalStyle = {
@@ -265,7 +283,7 @@ export function Icon({ name, variant = 'default', size = 18, className, alt = ''
     ...style,
   };
 
-  const baseClassName = 'inline-block cursor-pointer';
+  const baseClassName = `inline-block ${variant === 'disabled' ? 'cursor-not-allowed' : 'cursor-pointer'}`;
   const finalClassName = className ? `${baseClassName} ${className}` : baseClassName;
 
   return <img src={src} alt={alt} className={finalClassName} style={finalStyle} {...rest} />;

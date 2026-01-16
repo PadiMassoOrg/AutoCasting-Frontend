@@ -44,6 +44,11 @@ export const createEmptyCasting = async (): Promise<string> => {
   return response.data;
 };
 
+export async function deleteCasting({ id }: { id: string }) {
+  await api.delete(`${API_ROUTES.EMPLOYER_CASTING}/${id}`);
+  return { id };
+}
+
 // Basic Info
 export const getSectionBasicInfoById = async (sectionId: string): Promise<CastingSectionBasicInfo> => {
   const response = await api.get(API_ROUTES.CASTING_BASIC_INFO + `/${sectionId}`);

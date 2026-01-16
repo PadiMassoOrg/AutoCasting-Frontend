@@ -8,6 +8,7 @@ import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
+import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
 import { useCastingRequirementCreateAutosave } from '../../hooks/autosaves';
 import { useSectionRequirements } from '../../hooks/useSectionRequirements';
 import { useSectionRoles } from '../../hooks/useSectionRoles';
@@ -66,6 +67,8 @@ const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: stri
     });
     return Array.from(ids);
   }, [requirements]);
+
+  useSyncCastingSectionStatus('requirements', requirementsSection?.sectionStatus);
 
   if (isRequirementsLoading || isRolesLoading) return null;
   if (requirementsError || rolesError) return <ServerError />;

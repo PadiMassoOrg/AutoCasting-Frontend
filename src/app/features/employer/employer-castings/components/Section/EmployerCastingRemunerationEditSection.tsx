@@ -7,6 +7,7 @@ import TextareaField from '../../../../../shared/components/Form/TextareaField';
 import { SectionCard, SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
+import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
 import { useCastingRemunerationsSectionAutosave } from '../../hooks/autosaves';
 import { useSectionRemunerations } from '../../hooks/useSectionRemunerations';
 import RoleRemunerationEditCard from '../Form/Remuneration/RoleRemunerationEditCard';
@@ -21,6 +22,8 @@ const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: stri
   useEffect(() => {
     setNotes(data?.notes ?? '');
   }, [data?.id, data?.notes]);
+
+  useSyncCastingSectionStatus('remuneration', data?.sectionStatus);
 
   if (isLoading || !data) return null;
   if (error) return <ServerError />;

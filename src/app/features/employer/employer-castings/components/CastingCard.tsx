@@ -16,10 +16,11 @@ const CastingCard = ({ data }: { data: CastingCardResponse }) => {
   const { title, defaultCode, creationDate, applicationDeadline, projectType, status } = data;
 
   // TODO: Buttons, media queries
+  // TODO: SIN TITULO
   return (
     <SectionCard>
       <div className="flex flex-row items-center justify-between">
-        <h2>{title}</h2>
+        <h2>{title != null ? title : 'Sin Título'}</h2>
         <span>{t(status.stringCode)}</span>
       </div>
       <Separator className="opacity-20 my-3" />
@@ -34,7 +35,7 @@ const CastingCard = ({ data }: { data: CastingCardResponse }) => {
         </div>
         <div className="w-full flex flex-row items-center justify-between">
           <p className="text-[var(--color-secondary-grey-fonts)]">{t('casting.basic_info.project_type')}:</p>
-          <Chip label={t(projectType?.stringCode)} />
+          {projectType?.stringCode && <Chip label={t(projectType?.stringCode)} />}
         </div>
       </div>
       <Separator className="opacity-20 my-3" />
