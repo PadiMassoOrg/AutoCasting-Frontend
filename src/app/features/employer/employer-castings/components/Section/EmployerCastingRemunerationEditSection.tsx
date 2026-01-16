@@ -60,7 +60,7 @@ const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: stri
               <TextareaField
                 id="collaborativeNotes"
                 label={t('employer_castings.dashboard.remunerations.collaborative.label')}
-                placeholder={t('employer_castings.dashboard.remunerations.collaborative.notes_placeholder')}
+                placeholder={t('employer_castings.dashboard.remunerations.collaborative.placeholder')}
                 value={notes}
                 onChange={(e) => setNotes((e?.target?.value ?? '') as string)}
                 onBlur={() => {

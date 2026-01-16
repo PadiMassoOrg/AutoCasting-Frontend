@@ -787,7 +787,7 @@
         "collaborative": {
           "description": "Este proyecto se desarrolla de forma cooperativa, sin remuneración económica directa.Usá este espacio para explicar cómo se basa la colaboración, qué se ofrece a cambio de la participación (experiencia, visibilidad, material final, viáticos u otros acuerdos) y cualquier detalle relevante para el talento.",
           "label": "Notas/Compensación adicional (opcional)",
-          "placeholder": "ej. Viáticos, productos gratis, etc..."
+          "placeholder": "Ej. Viáticos, productos gratis, etc..."
         },
         "remuneration": {
           "pay_rate_type_label": "Tipo de tarifa",
