@@ -1,24 +1,46 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { Button, Label } from 'autocasting-ui-library-padimasso';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
 import { DashboardSection } from '../../../../../layouts/components';
 import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
+import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
 import { useCastingRoleCreateAutosave } from '../../hooks/autosaves';
 import { useSectionRoles } from '../../hooks/useSectionRoles';
+import { EMPLOYER_CASTING_CACHE_KEY } from '../../services/employerCastingService';
 import EmployerCastingRoleCard from '../EmployerCastingRoleCard';
 import CastingRoleModal from '../Form/Role/CastingRoleModal';
 
 const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
-
+  const queryClient = useQueryClient();
+  const { defaultCode } = useEmployerCastingIds();
   const { data, isLoading, error } = useSectionRoles(sectionId);
   const createRoleMutation = useCastingRoleCreateAutosave(sectionId);
 
   useSyncCastingSectionStatus('roles', data?.sectionStatus);
+
+  const prevCountRef = useRef<number | null>(null);
+  const currentCount = data?.roles?.length ?? 0;
+
+  useEffect(() => {
+    if (prevCountRef.current === null) {
+      prevCountRef.current = currentCount;
+      return;
+    }
+
+    if (prevCountRef.current !== currentCount) {
+      prevCountRef.current = currentCount;
+      queryClient.invalidateQueries({
+        queryKey: [...EMPLOYER_CASTING_CACHE_KEY, defaultCode],
+      });
+    }
+  }, [currentCount, defaultCode, queryClient]);
 
   if (isLoading || !data) return null;
   if (error) return <ServerError />;

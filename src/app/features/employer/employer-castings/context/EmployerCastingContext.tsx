@@ -28,7 +28,6 @@ type EmployerCastingContextValue = EmployerCastingIds & {
 };
 
 const COMPLETED_CODE = 'sitemetadata.casting_section_status.completed';
-
 const isCompleted = (s: SiteMetadataObject | null) => s?.stringCode === COMPLETED_CODE;
 
 const EmployerCastingIdsContext = createContext<EmployerCastingContextValue | null>(null);
@@ -48,7 +47,17 @@ export const EmployerCastingIdsProvider = ({ value, children }: { value: Employe
       requirements: value.requirementsSectionStatus ?? null,
       remuneration: value.remunerationSectionStatus ?? null,
     });
-  }, [value.id]);
+  }, [
+    value.id,
+    value.basicInfoSectionStatus?.id,
+    value.basicInfoSectionStatus?.stringCode,
+    value.rolesSectionStatus?.id,
+    value.rolesSectionStatus?.stringCode,
+    value.requirementsSectionStatus?.id,
+    value.requirementsSectionStatus?.stringCode,
+    value.remunerationSectionStatus?.id,
+    value.remunerationSectionStatus?.stringCode,
+  ]);
 
   const setSectionStatus = useCallback((key: SectionKey, status: SiteMetadataObject) => {
     setSectionStatuses((prev) => {
