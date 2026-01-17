@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { getAuthToken } from '../../../../shared/lib/cookies';
-import { CASTING_SECTION_ROLES_CACHE_KEY, getSectionRolesById } from '../services/employerCastingService';
-import type { CastingSectionRoles } from '../types/employerCastings.types';
+import { getAuthToken } from '../../../../../shared/lib/cookies';
+import { CASTING_SECTION_ROLES_CACHE_KEY, getSectionRolesById } from '../../services/employerCastingService';
+import type { CastingSectionRoles } from '../../types/employerCastings.types';
 
 export const useSectionRoles = (sectionId: string) => {
   const token = getAuthToken();

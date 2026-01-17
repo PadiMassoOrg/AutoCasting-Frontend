@@ -49,6 +49,12 @@ export async function deleteCasting({ id }: { id: string }) {
   return { id };
 }
 
+// Casting Statuses
+export const publishCasting = async ({ id }: { id: string }): Promise<EmployerCastingResponse> => {
+  const response = await api.post(API_ROUTES.PUBLISH_CASTING(id));
+  return response.data;
+};
+
 // Basic Info
 export const getSectionBasicInfoById = async (sectionId: string): Promise<CastingSectionBasicInfo> => {
   const response = await api.get(API_ROUTES.CASTING_BASIC_INFO + `/${sectionId}`);

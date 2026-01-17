@@ -4,18 +4,32 @@ import ButtonRow from '../../../../shared/components/ButtonRow/ButtonRow';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { ROUTES } from '../../../../shared/lib/routes';
 import { useEmployerCastingIds, useEmployerCastingPublishAllowed } from '../context/EmployerCastingContext';
+import { usePublishCastingMutation } from '../hooks/status/usePublishCastingMutation';
 import { useDeleteCastingMutation } from '../hooks/useDeleteCastingMutation';
 
 const CastingToolBar = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { mutate: deleteCasting } = useDeleteCastingMutation();
-
-  const { id: castingId } = useEmployerCastingIds();
+  const { mutate: publish, isPending: isPublishing } = usePublishCastingMutation();
+  const { id: castingId, defaultCode } = useEmployerCastingIds();
   const publishAllowed = useEmployerCastingPublishAllowed();
 
   const redirectToCastingsList = () => {
     navigate(ROUTES.EMPLOYER_CASTINGS);
+  };
+
+  const handlePublishCasting = () => {
+    if (!publishAllowed || isPublishing) return;
+
+    publish(
+      { id: castingId, slug: defaultCode },
+      {
+        onSuccess: () => {
+          redirectToCastingsList();
+        },
+      }
+    );
   };
 
   const handleDeleteCasting = () => {
@@ -40,6 +54,7 @@ const CastingToolBar = () => {
             <p className="text-sm font-semibold">{t('general.save_changes')}</p>
           </div>,
           <div
+            onClick={handlePublishCasting}
             className={`flex flex-row gap-2 items-center ${publishAllowed ? 'cursor-pointer' : 'cursor-not-allowed'}`}
           >
             <Icon variant={publishAllowed ? 'primary' : 'disabled'} name="publish" />

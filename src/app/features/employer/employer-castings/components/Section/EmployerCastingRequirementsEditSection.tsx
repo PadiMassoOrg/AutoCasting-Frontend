@@ -10,8 +10,8 @@ import ServerError from '../../../../../shared/components/ServerError/ServerErro
 import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
 import { useCastingRequirementCreateAutosave } from '../../hooks/autosaves';
-import { useSectionRequirements } from '../../hooks/useSectionRequirements';
-import { useSectionRoles } from '../../hooks/useSectionRoles';
+import { useSectionRequirements } from '../../hooks/section/useSectionRequirements';
+import { useSectionRoles } from '../../hooks/section/useSectionRoles';
 import type { EmployerCastingRequirementCardResponse } from '../../types/employerCastings.types';
 import type { CastingRequirementUpsertRequest } from '../../types/requests';
 import EmployerCastingRequirementCard from '../EmployerCastingRequirementCard';

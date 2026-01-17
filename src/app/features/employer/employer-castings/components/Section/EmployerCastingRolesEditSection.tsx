@@ -10,7 +10,7 @@ import ServerError from '../../../../../shared/components/ServerError/ServerErro
 import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
 import { useCastingRoleCreateAutosave } from '../../hooks/autosaves';
-import { useSectionRoles } from '../../hooks/useSectionRoles';
+import { useSectionRoles } from '../../hooks/section/useSectionRoles';
 import { EMPLOYER_CASTING_CACHE_KEY } from '../../services/employerCastingService';
 import EmployerCastingRoleCard from '../EmployerCastingRoleCard';
 import CastingRoleModal from '../Form/Role/CastingRoleModal';

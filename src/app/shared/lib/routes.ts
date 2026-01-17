@@ -88,4 +88,5 @@ export const API_ROUTES = {
   EMPLOYER_SOCIAL_MEDIA: '/employer/social-media',
   EMPLOYER_CASTINGS: '/employer/castings',
   EMPLOYER_CASTING: '/employer/casting',
+  PUBLISH_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/publish`,
 };

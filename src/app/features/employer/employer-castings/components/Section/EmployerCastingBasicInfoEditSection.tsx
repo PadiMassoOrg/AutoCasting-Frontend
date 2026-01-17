@@ -4,7 +4,7 @@ import { DashboardSection } from '../../../../../layouts/components';
 import { SectionCard, SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
-import { useSectionBasicInfo } from '../../hooks/useSectionBasicInfo';
+import { useSectionBasicInfo } from '../../hooks/section/useSectionBasicInfo';
 
 const EmployerCastingBasicInfoEditSection = ({ sectionId }: { sectionId: string }) => {
   const { data, isLoading, error } = useSectionBasicInfo(sectionId);

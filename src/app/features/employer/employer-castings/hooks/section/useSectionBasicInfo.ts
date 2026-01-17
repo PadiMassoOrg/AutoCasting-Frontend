@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { getAuthToken } from '../../../../shared/lib/cookies';
-import { CASTING_SECTION_BASIC_INFO_CACHE_KEY, getSectionBasicInfoById } from '../services/employerCastingService';
-import type { CastingSectionBasicInfo } from '../types/employerCastings.types';
+import { getAuthToken } from '../../../../../shared/lib/cookies';
+import { CASTING_SECTION_BASIC_INFO_CACHE_KEY, getSectionBasicInfoById } from '../../services/employerCastingService';
+import type { CastingSectionBasicInfo } from '../../types/employerCastings.types';
 
 export const useSectionBasicInfo = (sectionId: string) => {
   const token = getAuthToken();

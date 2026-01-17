@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { getAuthToken } from '../../../../shared/lib/cookies';
+import { getAuthToken } from '../../../../../shared/lib/cookies';
 import {
   CASTING_SECTION_REMUNERATIONS_CACHE_KEY,
   getSectionRemunerationsById,
-} from '../services/employerCastingService';
-import type { CastingSectionRemunerations } from '../types/employerCastings.types';
+} from '../../services/employerCastingService';
+import type { CastingSectionRemunerations } from '../../types/employerCastings.types';
 
 export const useSectionRemunerations = (sectionId: string) => {
   const token = getAuthToken();

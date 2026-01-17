@@ -9,7 +9,7 @@ import ServerError from '../../../../../shared/components/ServerError/ServerErro
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
 import { useCastingRemunerationsSectionAutosave } from '../../hooks/autosaves';
-import { useSectionRemunerations } from '../../hooks/useSectionRemunerations';
+import { useSectionRemunerations } from '../../hooks/section/useSectionRemunerations';
 import RoleRemunerationEditCard from '../Form/Remuneration/RoleRemunerationEditCard';
 
 const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: string }) => {
