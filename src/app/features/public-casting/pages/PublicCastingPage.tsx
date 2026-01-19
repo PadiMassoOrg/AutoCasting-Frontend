@@ -13,8 +13,6 @@ const PublicCastingPage = () => {
   if (isLoading || !data) return null;
   if (error) return <ServerError />;
 
-  console.log(data);
-
   if (isDesktop) {
     return (
       <main className="flex flex-row gap-10">
