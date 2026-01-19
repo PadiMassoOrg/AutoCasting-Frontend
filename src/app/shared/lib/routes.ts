@@ -66,6 +66,8 @@ export const API_ROUTES = {
   // Database
   TALENT_DATABASE: '/talent-database',
   CASTINGS_DATABASE: '/castings-database',
+  // Casting
+  CASTING: '/casting',
   // Talent
   TALENT_PROFILE: '/talent',
   TALENT_BASIC_INFO: '/talent/basic-info',
@@ -77,7 +79,6 @@ export const API_ROUTES = {
   CREDIT: '/credit',
   EDUCATION: '/education',
   // Employer
-  CASTING: '/casting',
   CASTING_BASIC_INFO: '/casting/basic-info',
   CASTING_ROLE: '/casting/role',
   CASTING_REQUIREMENT: '/casting/requirement',

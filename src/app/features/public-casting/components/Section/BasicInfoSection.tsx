@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { Chip } from '../../../../shared/components/Chip/Chip';
 import { Icon } from '../../../../shared/components/Icon/Icon';
-import type { CastingBasicInfo } from '../../types/publicCasting.types';
+import type { CastingBasicInfoSection } from '../../types/publicCasting.types';
 
-const BasicInfoSection = ({ data }: { data: CastingBasicInfo }) => {
+const BasicInfoSection = ({ data }: { data: CastingBasicInfoSection }) => {
   const { t } = useTranslation();
 
   const deadlineText = `${t('casting.basic_info.deadline_complete')} ${data.applicationDeadline}`;
@@ -28,7 +28,7 @@ const BasicInfoSection = ({ data }: { data: CastingBasicInfo }) => {
       <article className="flex flex-col gap-2 text-sm text-[var(--color-secondary-grey-fonts)]">
         <span className="flex flex-row gap-2 items-center">
           <Icon name="location" className="opacity-30" />
-          <p>{data.location}</p>
+          <p>{data.castingModalityText}</p>
         </span>
         <span className="flex flex-row gap-2 items-center">
           <Icon name="clock" className="opacity-30" />

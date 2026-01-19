@@ -35,7 +35,7 @@ const PublicRoleCard = ({ data }: { data: CastingRole }) => {
       {/* Title + header chips (siempre visibles) */}
       <div className="flex flex-col gap-2">
         <span className="flex flex-row items-center justify-between">
-          <h2 className="text-base font-bold">{data.name}</h2>
+          <h2 className="text-base font-bold">{data.roleName}</h2>
           <button
             type="button"
             onClick={() => setOpen((prev) => !prev)}
@@ -60,7 +60,7 @@ const PublicRoleCard = ({ data }: { data: CastingRole }) => {
           )}
 
           <div className="flex flex-col gap-2">
-            <h2 className="text-sm font-semibold">{t('casting.characteristics.characteristics')}:</h2>
+            <h2 className="text-sm font-semibold">{t('casting.role_section.role.characteristics.characteristics')}:</h2>
             <div className="flex flex-row flex-wrap gap-1">
               {characteristicsChips.map((chip) => (
                 <Chip key={chip.key} label={t(chip.label)} />

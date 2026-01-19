@@ -4,9 +4,9 @@ import { Chip } from '../../../../shared/components/Chip/Chip';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { formatMemberSince, normalizeExternalUrl } from '../../../../shared/utils/formatUtils';
 import { getSocialMediaIconName } from '../../../talent/talent-profile-edit/components/Form/SocialMedia/SocialMediaIconMapper';
-import type { CastingEmployerPublicInfo } from '../../types/publicCasting.types';
+import type { EmployerInfo } from '../../types/publicCasting.types';
 
-const EmployerInfoSection = ({ data }: { data: CastingEmployerPublicInfo }) => {
+const EmployerInfoSection = ({ data }: { data: EmployerInfo }) => {
   const { t } = useTranslation();
 
   const socialMediaItems =
