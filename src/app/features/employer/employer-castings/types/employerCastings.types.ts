@@ -1,4 +1,5 @@
 import type { WithAuditable } from '../../../../shared/types/auditable.types';
+import type { DeepNullableExceptId } from '../../../../shared/utils/typeUtils';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 import type { Characteristics } from '../../../talent/talent-profile-edit/types/talentProfile.types';
 
@@ -117,7 +118,7 @@ export type BaseCastingRemuneration = {
 /* ======================
    Export & DeepNullable
    ====================== */
-export type CastingSectionBasicInfo = WithAuditable<BaseCastingBasicInfo>;
+export type CastingSectionBasicInfo = WithAuditable<DeepNullableExceptId<BaseCastingBasicInfo>>;
 export type CastingSectionRoles = WithAuditable<BaseCastingRolesSection>;
 export type CastingSectionRequirements = WithAuditable<BaseCastingRequirementsSection>;
 export type CastingSectionRemunerations = WithAuditable<BaseCastingRemunerationsSection>;

@@ -9,7 +9,7 @@ import { useEmployerCastings } from '../hooks/useEmployerCastings';
 
 const EmployerCastingsPage = () => {
   const { t } = useTranslation();
-  const { data: myCastings, isLoading } = useEmployerCastings();
+  const { data: myCastings } = useEmployerCastings();
   const { mutate: createEmptyCasting, isPending } = useCreateEmptyCastingMutation();
 
   const actionButtonRender = () => (
