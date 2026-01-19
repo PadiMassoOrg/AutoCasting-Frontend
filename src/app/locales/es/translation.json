@@ -25,6 +25,7 @@
     "copied": "Copaiado con éxito.",
     "logout": "Cerrar Sesión",
     "no_data": "Sin información.",
+    "untitled": "Sin título.",
     "unspecified": "Sin especificar.",
     "selections": "Selecciones",
     "select_all": "Seleccionar Todas",
@@ -745,6 +746,11 @@
       "empty_requirements": "Aún no agregaste requerimientos.",
       "empty_remunerations": "Para gestionar las remuneracions primero creá los Roles."
     },
+    "casting_card": {
+      "status": {
+        "status": "Estado"
+      }
+    },
     "dashboard": {
       "title_new": "Nuevo Casting",
       "title_edit": "Editar Casting",
@@ -785,7 +791,7 @@
       "remunerations": {
         "title": "Remuneración",
         "collaborative": {
-          "description": "Este proyecto se desarrolla de forma cooperativa, sin remuneración económica directa.Usá este espacio para explicar cómo se basa la colaboración, qué se ofrece a cambio de la participación (experiencia, visibilidad, material final, viáticos u otros acuerdos) y cualquier detalle relevante para el talento.",
+          "description": "Este proyecto se desarrolla de forma cooperativa, sin remuneración económica directa. Usá este espacio para explicar cómo se basa la colaboración, qué se ofrece a cambio de la participación (experiencia, visibilidad, material final, viáticos u otros acuerdos) y cualquier detalle relevante para el talento.",
           "label": "Notas/Compensación adicional (opcional)",
           "placeholder": "Ej. Viáticos, productos gratis, etc..."
         },
