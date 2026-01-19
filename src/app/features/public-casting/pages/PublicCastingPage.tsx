@@ -16,7 +16,7 @@ const PublicCastingPage = () => {
   if (isDesktop) {
     return (
       <main className="flex flex-row gap-10">
-        <section>
+        <section className="flex-1">
           <BasicInfoSection data={data.basicInfoSection}></BasicInfoSection>
           <Separator className="opacity-0 my-2" />
           <RolesSection data={data.rolesSection}></RolesSection>

@@ -5,7 +5,7 @@ import { appendBasePersonFilters } from '../../search/buildPersonSearchQuery';
 import type { BasePersonSearchFiltersQS } from '../../search/personSearchFilters.types';
 import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
 
-export const TALENT_DATABASE_CACHE_KEY = 'cache-talent-database' as const;
+export const TALENT_DATABASE_CACHE_KEY = ['cache-talent-database', 'v1'] as const;
 
 export const getTalentDatabase = async (
   page: number,
@@ -14,7 +14,7 @@ export const getTalentDatabase = async (
   opts?: { signal?: AbortSignal }
 ): Promise<SliceResponse<ProfileCardResponse>> => {
   const qs = buildTalentQuery(page, size, filters);
-  qs.set('_', String(Date.now()));
+
   const response = await api.get(`${API_ROUTES.TALENT_DATABASE}?${qs.toString()}`, {
     signal: opts?.signal,
     headers: { 'Cache-Control': 'no-store' },
@@ -27,6 +27,8 @@ export const getTalentDatabase = async (
   return response.data;
 };
 
+// ============ internals ============
+
 function buildTalentQuery(page: number, size: number, filters?: TalentFiltersQS) {
   const qs = new URLSearchParams();
   qs.set('page', String(page));
@@ -35,12 +37,17 @@ function buildTalentQuery(page: number, size: number, filters?: TalentFiltersQS)
 
   const append = (k: string, v: unknown) => {
     if (v === undefined || v === null || v === '') return;
-    if (Array.isArray(v)) v.forEach((x) => qs.append(k, String(x)));
-    else qs.set(k, String(v));
+    if (Array.isArray(v)) {
+      const cleaned = v.filter((x) => x !== undefined && x !== null && String(x) !== '');
+      if (!cleaned.length) return;
+      cleaned.forEach((x) => qs.append(k, String(x)));
+      return;
+    }
+    qs.set(k, String(v));
   };
 
   append('includeNoHeadshot', filters.includeNoHeadshot);
-  append('stageName', filters.stageName);
+  append('stageName', filters.stageName?.trim() || undefined);
 
   appendBasePersonFilters(append, filters as BasePersonSearchFiltersQS);
 

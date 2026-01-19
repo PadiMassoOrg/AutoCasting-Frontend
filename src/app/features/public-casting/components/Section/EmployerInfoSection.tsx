@@ -33,7 +33,7 @@ const EmployerInfoSection = ({ data }: { data: EmployerInfo }) => {
         <img src={data.imageUrl!} className="w-14 h-14 rounded-full object-cover"></img>
         <div className="flex flex-col gap-1">
           <h2 className="text-lg font-semibold">{data.companyName}</h2>
-          <Chip label={t(data.companyType?.stringCode!)} />
+          {data.companyType && <Chip label={t(data.companyType?.stringCode!)} />}
         </div>
       </div>
       <Separator className="opacity-20 my-1" />

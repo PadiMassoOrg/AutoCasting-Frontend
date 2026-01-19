@@ -5,7 +5,7 @@ import { appendBasePersonFilters } from '../../search/buildPersonSearchQuery';
 import type { BasePersonSearchFiltersQS } from '../../search/personSearchFilters.types';
 import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';
 
-export const CASTING_DATABASE_CACHE_KEY = 'cache-casting-database' as const;
+export const CASTING_DATABASE_CACHE_KEY = ['cache-casting-database', 'v1'] as const;
 
 export const getCastingDatabase = async (
   page: number,
@@ -14,7 +14,7 @@ export const getCastingDatabase = async (
   opts?: { signal?: AbortSignal }
 ): Promise<SliceResponse<CastingRolePublicCardResponse>> => {
   const qs = buildCastingQuery(page, size, filters);
-  qs.set('_', String(Date.now()));
+
   const response = await api.get(`${API_ROUTES.CASTINGS_DATABASE}?${qs.toString()}`, {
     signal: opts?.signal,
     headers: { 'Cache-Control': 'no-store' },
@@ -26,6 +26,8 @@ export const getCastingDatabase = async (
   }
   return response.data;
 };
+
+// ============ internals ============
 
 function buildCastingQuery(page: number, size: number, filters?: CastingFiltersQS) {
   const qs = new URLSearchParams();
@@ -44,34 +46,36 @@ function buildCastingQuery(page: number, size: number, filters?: CastingFiltersQ
     return cleaned.length ? cleaned : undefined;
   };
 
-  const cleanedFilters = {
+  const cleanedFilters: CastingFiltersQS = {
     ...filters,
-    genderIds: normalizeArray(filters.genderIds),
-    ethnicityIds: normalizeArray(filters.ethnicityIds),
-    hairColorIds: normalizeArray(filters.hairColorIds),
-    eyeColorIds: normalizeArray(filters.eyeColorIds),
-    professionId: normalizeArray(filters.professionId),
-    skillId: normalizeArray(filters.skillId),
-    projectTypeIds: normalizeArray(filters.projectTypeIds),
-    castingModalityIds: normalizeArray(filters.castingModalityIds),
+    genderIds: normalizeArray(filters.genderIds) as any,
+    ethnicityIds: normalizeArray(filters.ethnicityIds) as any,
+    hairColorIds: normalizeArray(filters.hairColorIds) as any,
+    eyeColorIds: normalizeArray(filters.eyeColorIds) as any,
+    professionId: normalizeArray(filters.professionId) as any,
+    skillId: normalizeArray(filters.skillId) as any,
+    projectTypeIds: normalizeArray(filters.projectTypeIds) as any,
+    castingModalityIds: normalizeArray(filters.castingModalityIds) as any,
   };
 
   const append = (k: string, v: unknown) => {
     if (v === undefined || v === null || v === '') return;
+
     if (Array.isArray(v)) {
       const arr = v.filter((x) => x !== undefined && x !== null && String(x) !== '' && !isNullToken(x));
       if (!arr.length) return;
       arr.forEach((x) => qs.append(k, String(x)));
       return;
     }
+
     if (isNullToken(v)) return;
     qs.set(k, String(v));
   };
 
   append('roleName', cleanedFilters.roleName);
   append('locationText', cleanedFilters.locationText);
-  append('projectTypeId', cleanedFilters.projectTypeIds);
-  append('castingModalityId', cleanedFilters.castingModalityIds);
+  append('projectTypeId', cleanedFilters.projectTypeIds as any);
+  append('castingModalityId', cleanedFilters.castingModalityIds as any);
 
   appendBasePersonFilters(append, cleanedFilters as BasePersonSearchFiltersQS);
 
