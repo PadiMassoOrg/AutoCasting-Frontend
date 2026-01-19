@@ -1,4 +1,3 @@
-// EmployerCastingPage.tsx
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { DashboardShell } from '../../../../layouts/components';

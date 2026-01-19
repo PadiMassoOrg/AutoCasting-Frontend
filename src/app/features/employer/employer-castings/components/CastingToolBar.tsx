@@ -1,7 +1,6 @@
+import { Button } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import ButtonRow from '../../../../shared/components/ButtonRow/ButtonRow';
-import { Icon } from '../../../../shared/components/Icon/Icon';
 import { ROUTES } from '../../../../shared/lib/routes';
 import { useEmployerCastingIds, useEmployerCastingPublishAllowed } from '../context/EmployerCastingContext';
 import { usePublishCastingMutation } from '../hooks/status/usePublishCastingMutation';
@@ -43,33 +42,31 @@ const CastingToolBar = () => {
     );
   };
 
-  console.log(publishAllowed);
-
   return (
-    <section className="w-full flex items-center justify-center mb-4">
-      <ButtonRow
-        items={[
-          <div className="flex flex-row gap-2 items-center cursor-pointer" onClick={redirectToCastingsList}>
-            <Icon variant="default" name="save" />
-            <p className="text-sm font-semibold">{t('general.save_changes')}</p>
-          </div>,
-          <div
-            onClick={handlePublishCasting}
-            className={`flex flex-row gap-2 items-center ${publishAllowed ? 'cursor-pointer' : 'cursor-not-allowed'}`}
-          >
-            <Icon variant={publishAllowed ? 'primary' : 'disabled'} name="publish" />
-            <p
-              className={`text-sm font-semibold ${publishAllowed ? 'text-[var(--color-primary-purple)]' : 'text-[var(--color-secondary-disabled-grey)]'}`}
-            >
-              {t('general.publish_casting')}
-            </p>
-          </div>,
-          <div className="flex flex-row gap-2 items-center cursor-pointer" onClick={handleDeleteCasting}>
-            <Icon variant="danger" name="delete" />
-            <p className="text-sm font-semibold text-[var(--color-alert-error)]">{t('general.delete')}</p>
-          </div>,
-        ]}
-      ></ButtonRow>
+    <section className="w-full flex items-center justify-end gap-4 mb-2">
+      <p
+        className="cursor-pointer underline text-sm font-light text-[var(--color-alert-error)]"
+        onClick={handleDeleteCasting}
+      >
+        {t('general.delete')}
+      </p>
+      <Button
+        variant="primaryOutline"
+        className="flex flex-row gap-2 items-center cursor-pointer max-w-[185px]"
+        onClick={redirectToCastingsList}
+      >
+        <p className="text-sm font-semibold">{t('general.save_changes')}</p>
+      </Button>
+      <Button
+        variant="primary"
+        className="max-w-[185px]"
+        disabled={!publishAllowed || isPublishing}
+        onClick={handlePublishCasting}
+      >
+        {t('general.publish_casting')}
+      </Button>
+      {/* TODO: Actions */}
+      {/* <span>ACC</span> */}
     </section>
   );
 };

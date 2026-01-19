@@ -1,7 +1,10 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { Chip } from '../../../../shared/components/Chip/Chip';
+import { Icon } from '../../../../shared/components/Icon/Icon';
 import { SectionCard } from '../../../../shared/components/Section';
+import { ROUTES } from '../../../../shared/lib/routes';
 import { formatLocalDate } from '../../../../shared/utils/formatUtils';
 import type { CastingCardResponse } from '../types/employerCastings.types';
 
@@ -41,7 +44,8 @@ const CastingCard = ({ data }: { data: CastingCardResponse }) => {
           {projectType?.stringCode && <Chip label={t(projectType?.stringCode)} />}
         </div>
       </div>
-      {/* <div className="flex flex-row items-center">
+      <Separator className="opacity-20 my-3" />
+      <div className="flex flex-row items-center">
         <Link to={'/'} className="flex-1 flex items-center justify-center">
           <Icon name="profile" />
         </Link>
@@ -53,7 +57,7 @@ const CastingCard = ({ data }: { data: CastingCardResponse }) => {
         <Link to={ROUTES.EMPLOYER_CASTING + '/' + defaultCode} className="flex-1 flex items-center justify-center">
           <Icon name="edit" />
         </Link>
-      </div> */}
+      </div>
     </SectionCard>
   );
 };
