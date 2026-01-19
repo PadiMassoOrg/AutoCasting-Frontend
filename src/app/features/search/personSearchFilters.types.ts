@@ -13,9 +13,9 @@ export type BasePersonSearchFiltersQS = Partial<{
   hairColorIdsMode: MatchMode;
   eyeColorIds: string[];
   eyeColorIdsMode: MatchMode;
-  tattoo: boolean;
-  passport: boolean;
-  drivingLicense: boolean;
+  tattoo: boolean | null;
+  passport: boolean | null;
+  drivingLicense: boolean | null;
   skillId: string[];
   skillsMode: MatchMode;
 }>;

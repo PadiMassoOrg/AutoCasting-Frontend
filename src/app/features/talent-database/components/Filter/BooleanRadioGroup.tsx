@@ -2,12 +2,13 @@ import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type Tri = '' | 'true' | 'false';
-const boolToTri = (b: boolean | undefined): Tri => (b === undefined ? '' : b ? 'true' : 'false');
+const boolToTri = (b: boolean | null | undefined): Tri => (b == null ? '' : b ? 'true' : 'false');
 
 export type BooleanRadioGroupProps = {
   label: string;
-  value: boolean | undefined;
-  onChange: (next: boolean | undefined) => void;
+  value: boolean | null | undefined;
+  onChange: (next: boolean | null | undefined) => void;
+  anyValue?: 'undefined' | 'null';
   name?: string;
   className?: string;
   legendClassName?: string;
@@ -18,6 +19,7 @@ export default function BooleanRadioGroup({
   label,
   value,
   onChange,
+  anyValue = 'undefined',
   name,
   className = 'flex flex-col gap-1',
   legendClassName = 'text-[14px] font-semibold',
@@ -31,6 +33,8 @@ export default function BooleanRadioGroup({
   const idAny = `${groupName}-any`;
   const idYes = `${groupName}-yes`;
   const idNo = `${groupName}-no`;
+
+  const anyNext = anyValue === 'null' ? null : undefined;
 
   const renderRadioInput = (checked: boolean, props: React.InputHTMLAttributes<HTMLInputElement>) => (
     <span className="relative inline-flex items-center justify-center h-6 w-6">
@@ -71,17 +75,15 @@ export default function BooleanRadioGroup({
       <legend className={legendClassName}>{label}</legend>
 
       <div className="mt-2 pl-1 flex flex-col gap-2">
-        {/* Cualquiera / Todos */}
         <label htmlFor={idAny} className={optionClassName}>
           {renderRadioInput(tri === '', {
             id: idAny,
             name: groupName,
-            onChange: () => onChange(undefined),
+            onChange: () => onChange(anyNext),
           })}
           <span className="cursor-pointer select-none">{t('general.all')}</span>
         </label>
 
-        {/* Sí */}
         <label htmlFor={idYes} className={optionClassName}>
           {renderRadioInput(tri === 'true', {
             id: idYes,
@@ -91,7 +93,6 @@ export default function BooleanRadioGroup({
           <span className="cursor-pointer select-none">{t('general.yes')}</span>
         </label>
 
-        {/* No */}
         <label htmlFor={idNo} className={optionClassName}>
           {renderRadioInput(tri === 'false', {
             id: idNo,

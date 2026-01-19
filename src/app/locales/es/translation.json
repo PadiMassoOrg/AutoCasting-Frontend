@@ -16,9 +16,12 @@
     "any": "Cualquiera",
     "accept": "Aceptar",
     "save": "Guardar",
+    "save_changes": " Guardar Cambios",
+    "delete": "Eliminar",
     "clear": "Limpiar",
     "reset": "Resetear",
     "apply": "Aplicar",
+    "publish_casting": "Publicar Casting",
     "copied": "Copaiado con éxito.",
     "logout": "Cerrar Sesión",
     "no_data": "Sin información.",
@@ -30,9 +33,13 @@
     "years": " años",
     "cm": "cm",
     "back_to": "Volver a",
+    "creation_date": "Fecha de creación",
+    "limit_date": "Fecha límite",
+    "delete_confirm": "Estás por borrar",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "role_name": "Lali",
+      "description": "Descripción",
       "select": "Seleccionar",
       "color": "Color",
       "day": "Día",
@@ -52,7 +59,10 @@
       "about": "Escribir algo aquí...",
       "company_name": "Ej. “Producciones Pérez”, “Luna Pérez Casting”",
       "tax_number": "Ej. “20-12345678-3”",
-      "year_example": "Ej. 2023"
+      "year_example": "Ej. 2023",
+      "project_name": "Nombre del proyecto",
+      "wardrobe_fitting": "Ej. Fecha aprox., cantidad de días.",
+      "casting_modality": "Ej. Carlos Pelegrini 1100 Dto 4A, CABA"
     },
     "filter": {
       "title": "Filtros",
@@ -108,7 +118,7 @@
     "talent-database": "Catálogo",
     "casting-database": "Castings",
     "talent-applied-productions": "Mis Postulaciones",
-    "productions": "Castings",
+    "employer_castings": "Mis Castings",
     "support": "Soporte Técnico",
     "faq": "Preguntas Frecuentes",
     "privacy": "Políticas de Privacidad",
@@ -316,8 +326,7 @@
     },
     "compensation_type": {
       "paid": "Remunerado",
-      "collaborative": "Colaborativo (o Proyecto cooperativo)",
-      "unpaid": "Sin remuneración"
+      "collaborative": "Proyecto cooperativo"
     },
     "pay_rate_type": {
       "fixed": "Tarifa fija",
@@ -326,7 +335,8 @@
       "per_week": "Por semana",
       "per_month": "Por mes",
       "per_season": "Por temporada / función",
-      "to_be_agreed": "A convenir"
+      "to_be_agreed": "A convenir",
+      "unpaid": "Sin remuneración"
     },
     "currency": {
       "ars": "ARS",
@@ -611,7 +621,6 @@
       "add_new": "Agregar nuevo crédito",
       "edit": "Editar crédito",
       "delete": "Borrar crédito",
-      "delete_confirm": "Estás por borrar",
       "production_type": "Tipo de producción",
       "production_type_placeholder": "Ej. TV, Publicidad, Cine...",
       "project": "Nombre del proyecto",
@@ -627,7 +636,6 @@
       "add_new": "Agregar nueva formación",
       "edit": "Editar formación",
       "delete": "Borrar formación",
-      "delete_confirm": "Estás por borrar",
       "institution": "Institución",
       "institution_placeholder": "Nombre de la institución",
       "courseName": "Nombre del curso / Título obtenido",
@@ -690,6 +698,9 @@
       "created_castings": "Castings creados",
       "member_since": "Miembro desde",
       "apply_title": "¿Listo para aplicar?"
+    },
+    "filter": {
+      "role_type": "Tipo de Rol"
     }
   },
   "settings": {
@@ -723,6 +734,66 @@
       "access": "Acceso",
       "support": "Soporte Técnico",
       "faq": "Preguntas Frecuentes"
+    }
+  },
+  "employer_castings": {
+    "page": {
+      "title": "Mis Castings",
+      "create_casting": "Nuevo Casting",
+      "empty_page": "Aún no hay castings que mostrar.",
+      "empty_roles": "Aún no agregaste roles.",
+      "empty_requirements": "Aún no agregaste requerimientos.",
+      "empty_remunerations": "Para gestionar las remuneracions primero creá los Roles."
+    },
+    "dashboard": {
+      "title_new": "Nuevo Casting",
+      "title_edit": "Editar Casting",
+      "title_delete": "¿Seguro deseas eliminar este rol?",
+      "casting": {},
+      "basic_info": {
+        "basic_info": "Información Básica",
+        "title": "Título",
+        "project_type": "Tipo de proyecto",
+        "casting_modality": "Modalidad del Casting",
+        "casting_modality_on_site": "Locación Casting Presencial",
+        "application_deadline": "Fecha límite para postulación",
+        "has_wardrobe_fitting": "¿Habrá prueba de vestuario?",
+        "wardrobe_fitting_details": "Detalle de Prueba de Vestuario",
+        "shooting_dates": "Fechas de rodaje/Disponibilidad (Rango)",
+        "description": "Descripción del Proyecto (opcional)"
+      },
+      "roles": {
+        "roles": "Roles",
+        "add_new": "Nuevo Rol",
+        "edit": "Editar Rol",
+        "delete": "¿Seguro deseas eliminar este rol?",
+        "role": {
+          "role_name": "Nombre del Rol"
+        }
+      },
+      "requirements": {
+        "requirements": "Requerimientos",
+        "add_new": "Archivos Requeridos",
+        "edit": "Archivos Requeridos",
+        "delete": "¿Seguro deseas eliminar este requerimiento?",
+        "requirement": {
+          "audio_true": "Audio",
+          "video_true": "Video",
+          "description": "Descripción/Instrucciones (opcional)"
+        }
+      },
+      "remunerations": {
+        "title": "Remuneración",
+        "collaborative": {
+          "description": "Este proyecto se desarrolla de forma cooperativa, sin remuneración económica directa.Usá este espacio para explicar cómo se basa la colaboración, qué se ofrece a cambio de la participación (experiencia, visibilidad, material final, viáticos u otros acuerdos) y cualquier detalle relevante para el talento.",
+          "label": "Notas/Compensación adicional (opcional)",
+          "placeholder": "Ej. Viáticos, productos gratis, etc..."
+        },
+        "remuneration": {
+          "pay_rate_type_label": "Tipo de tarifa",
+          "amount_label": "Monto"
+        }
+      }
     }
   },
   "legal": {

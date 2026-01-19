@@ -23,7 +23,7 @@ export type SiteMetadataResponse = {
   castingModalityOptions: SiteMetadataObject[];
   roleTypeOptions: SiteMetadataObject[];
   actingModeOptions: SiteMetadataObject[];
-  compensationTypeOptions: SiteMetadataObject[];
+  castingCompensationTypeOptions: SiteMetadataObject[];
   payRateTypeOptions: SiteMetadataObject[];
   currencyOptions: SiteMetadataObject[];
 };

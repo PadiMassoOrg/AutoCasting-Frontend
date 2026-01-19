@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../../context/ModalContext';
-import { useCreditDeleteAutosave, useEducationPatchAutosave } from '../../../hooks/autosaves';
+import { useCreditDeleteAutosave, useCreditPatchAutosave } from '../../../hooks/autosaves';
 import type { Credit } from '../../../types/talentProfile.types';
 import CreditDeleteModal from './CreditDeleteModal';
 import CreditModal from './CreditModal';
@@ -10,7 +10,7 @@ export default function CreditsForm({ data }: { data: Credit[] }) {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
 
-  const patchMut = useEducationPatchAutosave();
+  const patchMut = useCreditPatchAutosave();
   const deleteMut = useCreditDeleteAutosave();
 
   const openEditModal = (credit: Credit) => {

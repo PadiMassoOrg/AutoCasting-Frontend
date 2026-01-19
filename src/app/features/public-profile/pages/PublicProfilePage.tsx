@@ -20,7 +20,7 @@ const PublicProfilePage = () => {
   if (isLoading || !data) return null;
   if (error) return <ServerError />;
 
-  const { socialMedia, media } = data!;
+  const { socialMedia, media } = data;
 
   const mergePictures = (): string[] =>
     [media.headshotImageUrl, media.fullBodyImageUrl, ...(media.otherPicturesUrl ?? [])].filter(

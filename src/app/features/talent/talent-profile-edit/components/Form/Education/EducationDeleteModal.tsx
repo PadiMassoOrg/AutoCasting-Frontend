@@ -16,7 +16,7 @@ const EducationDeleteModal = ({
   return (
     <article className="flex flex-col gap-5">
       <p className="text-base">
-        {t('profile.education.delete_confirm')}: <strong>{education.courseName}</strong>
+        {t('general.delete_confirm')}: <strong>{education.courseName}</strong>
       </p>
       <div className="flex gap-2 justify-end">
         <Button variant="outline" onClick={onCancel}>

@@ -71,6 +71,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
   const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
   // Employer
   const activeEmployerProfile = isRouteActive(ROUTES.EMPLOYER, true);
+  const activeEmployerCastings = isRouteActive(ROUTES.EMPLOYER_CASTINGS, true);
 
   return (
     <nav
@@ -155,6 +156,18 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
               </div>
             ) : (
               <div className="flex flex-row gap-2 items-center h-full">
+                <Link to={ROUTES.EMPLOYER_CASTINGS}>
+                  <span className={clsx(baseClass, activeEmployerCastings && activeClass)}>
+                    {showIcons && (
+                      <Icon
+                        name="clapperManage"
+                        variant={activeEmployerCastings ? 'primary' : 'default'}
+                        className="w-6"
+                      />
+                    )}
+                    {showLabels && t('routes.employer_castings')}
+                  </span>
+                </Link>
                 <Link to={ROUTES.EMPLOYER}>
                   <span className={clsx(baseClass, activeEmployerProfile && activeClass)}>
                     {showIcons && (

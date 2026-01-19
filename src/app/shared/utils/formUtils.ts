@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import {
   useCallback,
   useEffect,
@@ -359,4 +360,11 @@ function isValidDate(y: string, m: string, d: string) {
   if (!yy || !mm || !dd) return false;
   const dt = new Date(yy, mm - 1, dd);
   return dt.getFullYear() === yy && dt.getMonth() + 1 === mm && dt.getDate() === dd;
+}
+
+export function getBooleanOptions(t: TFunction<'translation', undefined>) {
+  return [
+    { value: 'true', label: t('general.yes') },
+    { value: 'false', label: t('general.no') },
+  ];
 }

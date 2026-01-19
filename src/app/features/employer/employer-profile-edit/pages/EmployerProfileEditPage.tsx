@@ -10,13 +10,9 @@ const EmployerProfileEditPage = () => {
   if (error) return <ServerError />;
 
   return (
-    <div className="relative h-full flex flex-col">
-      <div className="flex-1 min-h-0">
-        <DashboardShell>
-          <EmployerProfileBasicInfoEditSection data={data}></EmployerProfileBasicInfoEditSection>
-        </DashboardShell>
-      </div>
-    </div>
+    <DashboardShell>
+      <EmployerProfileBasicInfoEditSection data={data}></EmployerProfileBasicInfoEditSection>
+    </DashboardShell>
   );
 };
 

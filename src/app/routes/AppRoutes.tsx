@@ -1,5 +1,4 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import DummyPage from '../features/_TEST_/dummy_page';
 import { useMeData } from '../features/auth/hooks/useMeData';
 import { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage } from '../features/auth/pages';
 import CastingDatabasePage from '../features/casting-database/pages/CastingDatabasePage';
@@ -81,10 +80,6 @@ function AppRoutesContent() {
           </ProtectedRoute>
         }
       />
-      <Route element={<ScrollContentLayout />}>
-        <Route path={ROUTES.TALENT_APPLIED_PRODUCTIONS} element={<DummyPage />} />
-        <Route path={ROUTES.PRODUCTIONS} element={<DummyPage />} />
-      </Route>
     </Routes>
   );
 }

@@ -190,8 +190,8 @@ export function CastingFilterBar({
           }}
         />
 
-        <div className="w-full flex flex-col gap-1.5">
-          <label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</label>
+        <div>
+          <h2 className="text-sm font-semibold mb-2">{t('talent.filter.basic_info.profession')}</h2>
           <MultiSelectDropdown
             options={professionsRaw ?? []}
             getId={(p) => p.id}
@@ -203,8 +203,8 @@ export function CastingFilterBar({
           />
         </div>
 
-        <div className="w-full flex flex-col gap-1.5">
-          <label className="text-sm font-semibold">{t('casting.basic_info.project_type')}</label>
+        <div>
+          <h2 className="text-sm font-semibold mb-2">{t('casting.basic_info.project_type')}</h2>
           <MultiSelectDropdown
             options={projectTypesRaw ?? []}
             getId={(p) => p.id}
@@ -248,8 +248,8 @@ export function CastingFilterBar({
           </div>
         </article>
 
-        <div className="w-full flex flex-col gap-1.5">
-          <label className="text-sm font-semibold">{t('profile.characteristics.hairColor')}</label>
+        <div>
+          <h2 className="text-sm font-semibold mb-2">{t('profile.characteristics.hairColor')}</h2>
           <MultiSelectDropdown
             options={hairOptions ?? []}
             getId={(o) => o.value}
@@ -261,8 +261,8 @@ export function CastingFilterBar({
           />
         </div>
 
-        <div className="w-full flex flex-col gap-1.5">
-          <label className="text-sm font-semibold">{t('profile.characteristics.eyeColor')}</label>
+        <div>
+          <h2 className="text-sm font-semibold mb-2">{t('profile.characteristics.eyeColor')}</h2>
           <MultiSelectDropdown
             options={eyeOptions ?? []}
             getId={(o) => o.value}
@@ -310,8 +310,8 @@ export function CastingFilterBar({
           };
 
           return (
-            <div key={catCode} className="w-full flex flex-col gap-1.5">
-              <label className="text-sm font-semibold">{t(catCode)}</label>
+            <div key={catCode}>
+              <h2 className="text-sm font-semibold mb-2">{t(catCode)}</h2>
               <MultiSelectDropdown
                 options={list}
                 getId={(s) => s.id}

@@ -2,6 +2,7 @@ import { FormInputField, FormSelectField } from 'autocasting-ui-library-padimass
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  getBooleanOptions,
   useCommittedBoolean,
   useCommittedInt,
   useCommittedText,
@@ -20,11 +21,6 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
   const ethnicityOptions = useCachedSiteMetadataOption('ethnicityOptions', t);
   const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye_color');
   const dietOptions = useCachedSiteMetadataOption('dietOptions', t);
-
-  const booleanOptions = [
-    { value: 'true', label: t('general.yes') },
-    { value: 'false', label: t('general.no') },
-  ];
 
   const schema = useMemo(() => getCharacteristicsSchema(t), [t]);
 
@@ -411,7 +407,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           labelClassName="font-semibold text-base"
           value={tattoo.value}
           onChange={tattoo.onChange}
-          options={booleanOptions}
+          options={getBooleanOptions(t)}
         />
 
         <FormSelectField
@@ -420,7 +416,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           labelClassName="font-semibold text-base"
           value={passport.value}
           onChange={passport.onChange}
-          options={booleanOptions}
+          options={getBooleanOptions(t)}
         />
       </article>
 
@@ -430,7 +426,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         labelClassName="font-semibold text-base"
         value={drivingLicense.value}
         onChange={drivingLicense.onChange}
-        options={booleanOptions}
+        options={getBooleanOptions(t)}
       />
 
       {/* Dieta */}

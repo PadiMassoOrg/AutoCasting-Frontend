@@ -16,7 +16,7 @@ const CreditDeleteModal = ({
   return (
     <article className="flex flex-col gap-5">
       <p className="text-base">
-        {t('profile.credits.delete_confirm')}: <strong>{credit.projectName}</strong> ({credit.year})
+        {t('general.delete_confirm')}: <strong>{credit.projectName}</strong> ({credit.year})
       </p>
       <div className="flex gap-2 justify-end">
         <Button variant="outline" onClick={onCancel}>

@@ -11,17 +11,16 @@ export const ROUTES = {
   TALENT: '/dashboard/talent',
   TALENT_MEDIA: '/dashboard/talent/media',
   TALENT_DETAILS: '/dashboard/talent/details',
-  TALENT_APPLIED_PRODUCTIONS: '/dashboard/talent/applied',
+  TALENT_APPLIED_CASTINGS: '/dashboard/talent/applications',
   TALENT_SETTINGS: '/dashboard/talent/settings',
   EMPLOYER: '/dashboard/employer',
-  EMPLOYER_PRODUCTIONS: '/dashboard/employer/productions',
-  EMPLOYER_SETTINGS: '/dashboard/employer/settings',
+  EMPLOYER_CASTINGS: '/dashboard/employer/castings',
+  EMPLOYER_CASTING: '/dashboard/employer/casting',
   // Public
   PUBLIC_PROFILE: '/profile',
   TALENT_DATABASE: '/talent-database',
   CASTING_DATABASE: '/casting-database',
   PUBLIC_CASTING: '/casting',
-  PRODUCTIONS: '/productions',
   SUPPORT: '/support',
   FAQ: '/faq',
   TERMS: '/terms-and-conditions',
@@ -51,10 +50,6 @@ export const API_ROUTES = {
   // Site Metadata
   SITEMETADATA: '/sitemetadata',
   SITEMETADATA_VERSION: '/sitemetadata/version',
-  // Talent Database
-  TALENT_DATABASE: '/talent/talent-database',
-  // Casting Database
-  CASTING_DATABASE: '/castings',
   // Authentication
   AUTH_LOGIN: '/auth/login',
   AUTH_REGISTER: '/auth/register',
@@ -68,7 +63,10 @@ export const API_ROUTES = {
   // Legal
   CURRENT_LEGAL_DOCUMENT: '/legal/current',
   ACCEPT_LEGAL_DOCUMENT: '/legal/accept',
-  // Talent Profile
+  // Database
+  TALENT_DATABASE: '/talent-database',
+  CASTINGS_DATABASE: '/castings-database',
+  // Talent
   TALENT_PROFILE: '/talent',
   TALENT_BASIC_INFO: '/talent/basic-info',
   TALENT_CONTACT: '/talent/contact',
@@ -76,12 +74,19 @@ export const API_ROUTES = {
   TALENT_MEDIA: '/talent/media',
   TALENT_CHARACTERISTICS: '/talent/characteristics',
   TALENT_SKILLS: '/talent/skills',
-  // Credits
   CREDIT: '/credit',
-  // Education
   EDUCATION: '/education',
-  // Employer Profile
+  // Employer
+  CASTING: '/casting',
+  CASTING_BASIC_INFO: '/casting/basic-info',
+  CASTING_ROLE: '/casting/role',
+  CASTING_REQUIREMENT: '/casting/requirement',
+  CASTING_REMUNERATION: '/casting/remuneration',
+  CASTING_REMUNERATION_REMUENRATIONS: '/casting/remuneration/remunerations',
   EMPLOYER_PROFILE: '/employer',
   EMPLOYER_BASIC_INFO: '/employer/basic-info',
   EMPLOYER_SOCIAL_MEDIA: '/employer/social-media',
+  EMPLOYER_CASTINGS: '/employer/castings',
+  EMPLOYER_CASTING: '/employer/casting',
+  PUBLISH_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/publish`,
 };

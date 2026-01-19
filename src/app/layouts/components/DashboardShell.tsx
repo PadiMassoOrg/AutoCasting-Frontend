@@ -1,4 +1,3 @@
-// layouts/components/DashboardShell.tsx
 import { Separator } from 'autocasting-ui-library-padimasso';
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
@@ -18,6 +17,7 @@ type DashboardShellProps<Key extends string = string> = {
   initialKey?: Key;
   children?: ReactNode;
   bottomSection?: ReactNode;
+  contentHeader?: ReactNode;
 };
 
 /* ------------ Contexto para navegación (goToNav, goToSection) ------------ */
@@ -45,6 +45,7 @@ function DashboardShell<Key extends string = string>({
   initialKey,
   children,
   bottomSection,
+  contentHeader,
 }: DashboardShellProps<Key>) {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const hasSections = !!(sections && sections.length > 0);
@@ -70,12 +71,10 @@ function DashboardShell<Key extends string = string>({
   const currentSection = useMemo(() => sections?.find((s) => s.key === activeKey) ?? null, [sections, activeKey]);
 
   const goToNav = useCallback(() => {
-    // Si hay secciones y estamos en mobile: volvemos al menú
     if (!isDesktop && hasSections) {
       setMobileView('nav');
       return;
     }
-    // Fallback (páginas sin menú): back del navegador
     window.history.back();
   }, [isDesktop, hasSections]);
 
@@ -99,7 +98,6 @@ function DashboardShell<Key extends string = string>({
     [isDesktop, hasSections, activeKey, mobileView, goToNav, goToSection]
   );
 
-  // Sin secciones: layout simple
   if (!hasSections) {
     return (
       <DashboardShellContext.Provider value={ctxValue}>
@@ -112,7 +110,7 @@ function DashboardShell<Key extends string = string>({
     );
   }
 
-  // Mobile – vista de navegación
+  // Mobile
   if (!isDesktop && mobileView === 'nav') {
     return (
       <DashboardShellContext.Provider value={ctxValue}>
@@ -153,7 +151,7 @@ function DashboardShell<Key extends string = string>({
     );
   }
 
-  // Desktop + mobile content
+  // Desktop + Content
   return (
     <DashboardShellContext.Provider value={ctxValue}>
       <section className="w-full h-full min-h-0 flex flex-col lg:flex-row gap-0 bg-[var(--color-secondary-white)]">
@@ -191,9 +189,17 @@ function DashboardShell<Key extends string = string>({
 
         <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch] pt-8">
           <div className="w-full max-w-[1100px] mx-auto px-4 lg:px-8 lg:py-5 pb-6">
-            {!isDesktop && mobileView === 'content' && currentSection && <div>{currentSection.render()}</div>}
+            {!isDesktop && mobileView === 'content' && currentSection && (
+              <div>
+                {contentHeader}
+                {currentSection.render()}
+              </div>
+            )}
             {isDesktop && currentSection && (
-              <div className="flex flex-col gap-4 max-w-[790px] m-auto">{currentSection.render()}</div>
+              <div className="h-full flex flex-col gap-4 max-w-[790px] m-auto">
+                {contentHeader}
+                {currentSection.render()}
+              </div>
             )}
             {children}
           </div>
