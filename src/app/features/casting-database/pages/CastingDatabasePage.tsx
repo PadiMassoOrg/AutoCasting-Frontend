@@ -196,7 +196,6 @@ const CastingDatabasePage = () => {
             ref={cardsScrollRef}
             className="py-4 px-6 sm:px-[56px] lg:py-8 w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
           >
-            {/* Mobile Title */}
             <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
               <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
               <button
@@ -257,11 +256,6 @@ const CastingDatabasePage = () => {
                 {isFetchingNextPage && (
                   <p className="py-10 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
                     {t('state.loading')}
-                  </p>
-                )}
-                {!hasNext && items.length > 0 && (
-                  <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
-                    {t('state.no_more_results')}
                   </p>
                 )}
               </>

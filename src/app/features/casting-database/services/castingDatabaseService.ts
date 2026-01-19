@@ -15,7 +15,7 @@ export const getCastingDatabase = async (
 ): Promise<SliceResponse<CastingRolePublicCardResponse>> => {
   const qs = buildCastingQuery(page, size, filters);
   qs.set('_', String(Date.now()));
-  const response = await api.get(`${API_ROUTES.CASTING_DATABASE}?${qs.toString()}`, {
+  const response = await api.get(`${API_ROUTES.CASTINGS_DATABASE}?${qs.toString()}`, {
     signal: opts?.signal,
     headers: { 'Cache-Control': 'no-store' },
     validateStatus: (s) => (s >= 200 && s < 300) || s === 204,
@@ -33,18 +33,47 @@ function buildCastingQuery(page: number, size: number, filters?: CastingFiltersQ
   qs.set('size', String(size));
   if (!filters) return qs;
 
-  const append = (k: string, v: unknown) => {
-    if (v === undefined || v === null || v === '') return;
-    if (Array.isArray(v)) v.forEach((x) => qs.append(k, String(x)));
-    else qs.set(k, String(v));
+  const isNullToken = (x: unknown) => {
+    const s = String(x);
+    return s === 'NULL' || s === 'null' || s === 'undefined';
   };
 
-  append('roleName', filters.roleName);
-  append('locationText', filters.locationText);
-  append('projectTypeId', filters.projectTypeIds);
-  append('castingModalityId', filters.castingModalityIds);
+  const normalizeArray = (v: unknown) => {
+    if (!Array.isArray(v)) return v;
+    const cleaned = v.filter((x) => x !== undefined && x !== null && String(x) !== '' && !isNullToken(x));
+    return cleaned.length ? cleaned : undefined;
+  };
 
-  appendBasePersonFilters(append, filters as BasePersonSearchFiltersQS);
+  const cleanedFilters = {
+    ...filters,
+    genderIds: normalizeArray(filters.genderIds),
+    ethnicityIds: normalizeArray(filters.ethnicityIds),
+    hairColorIds: normalizeArray(filters.hairColorIds),
+    eyeColorIds: normalizeArray(filters.eyeColorIds),
+    professionId: normalizeArray(filters.professionId),
+    skillId: normalizeArray(filters.skillId),
+    projectTypeIds: normalizeArray(filters.projectTypeIds),
+    castingModalityIds: normalizeArray(filters.castingModalityIds),
+  };
+
+  const append = (k: string, v: unknown) => {
+    if (v === undefined || v === null || v === '') return;
+    if (Array.isArray(v)) {
+      const arr = v.filter((x) => x !== undefined && x !== null && String(x) !== '' && !isNullToken(x));
+      if (!arr.length) return;
+      arr.forEach((x) => qs.append(k, String(x)));
+      return;
+    }
+    if (isNullToken(v)) return;
+    qs.set(k, String(v));
+  };
+
+  append('roleName', cleanedFilters.roleName);
+  append('locationText', cleanedFilters.locationText);
+  append('projectTypeId', cleanedFilters.projectTypeIds);
+  append('castingModalityId', cleanedFilters.castingModalityIds);
+
+  appendBasePersonFilters(append, cleanedFilters as BasePersonSearchFiltersQS);
 
   return qs;
 }

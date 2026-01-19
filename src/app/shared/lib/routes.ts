@@ -65,7 +65,7 @@ export const API_ROUTES = {
   ACCEPT_LEGAL_DOCUMENT: '/legal/accept',
   // Database
   TALENT_DATABASE: '/talent-database',
-  CASTING_DATABASE: '/castings-database',
+  CASTINGS_DATABASE: '/castings-database',
   // Talent
   TALENT_PROFILE: '/talent',
   TALENT_BASIC_INFO: '/talent/basic-info',
