@@ -746,6 +746,11 @@
       "empty_requirements": "Aún no agregaste requerimientos.",
       "empty_remunerations": "Para gestionar las remuneracions primero creá los Roles."
     },
+    "actions": {
+      "view_details": "Ver Detalles",
+      "view_applicants": "Ver Postulantes",
+      "copy_link": "Copiar Link"
+    },
     "casting_card": {
       "status": {
         "status": "Estado"
@@ -755,7 +760,6 @@
       "title_new": "Nuevo Casting",
       "title_edit": "Editar Casting",
       "title_delete": "¿Seguro deseas eliminar este rol?",
-      "casting": {},
       "basic_info": {
         "basic_info": "Información Básica",
         "title": "Título",

@@ -44,6 +44,8 @@ import MailIcon from '../../icons/message.svg';
 import OGIcon from '../../icons/og-image.svg';
 import OpenIconPurple from '../../icons/open-purple.svg';
 import OpenIcon from '../../icons/open.svg';
+import OverflowMenuIconPurple from '../../icons/overflowmenu-purple.svg';
+import OverflowMenuIcon from '../../icons/overflowmenu.svg';
 import PlusIconPurple from '../../icons/plus-purple.svg';
 import PlusIconWhite from '../../icons/plus-white.svg';
 import PlusIcon from '../../icons/plus.svg';
@@ -105,6 +107,7 @@ export type IconName =
   | 'delete'
   | 'save'
   | 'publish'
+  | 'overflowmenu'
   | 'logout';
 
 export type IconVariant = 'default' | 'primary' | 'white' | 'danger' | 'disabled';
@@ -258,6 +261,10 @@ const ICONS: Record<IconName, BaseIconConfig> = {
     default: PublishIcon,
     primary: PublishIconPurple,
     disabled: PublishIconDisabled,
+  },
+  overflowmenu: {
+    default: OverflowMenuIcon,
+    primary: OverflowMenuIconPurple,
   },
 };
 
