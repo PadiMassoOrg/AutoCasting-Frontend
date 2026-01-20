@@ -81,7 +81,6 @@ const OverflowMenu = ({
     };
   }, [open, close]);
 
-  // Cerrar con Escape + click/touch afuera
   useEffect(() => {
     if (!open) return;
 
@@ -212,12 +211,7 @@ const OverflowMenu = ({
         aria-haspopup="menu"
         aria-expanded={open}
         disabled={disabled}
-        className={cx(
-          'inline-flex items-center justify-center rounded-lg h-10 w-10',
-          'hover:bg-[var(--color-secondary-white)] transition-colors',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
-          triggerClassName
-        )}
+        className={cx('disabled:opacity-50 disabled:cursor-not-allowed', triggerClassName)}
       >
         <Icon name="overflowmenu" variant="default" />
       </button>

@@ -88,7 +88,7 @@ const CastingToolBar = () => {
   );
 
   return (
-    <section className="w-full flex items-center justify-end gap-2 mb-2">
+    <section className="w-full hidden lg:flex items-center justify-end gap-2 mb-2 ">
       <Button
         variant="primaryOutline"
         className="flex flex-row gap-2 items-center cursor-pointer max-w-[185px]"
