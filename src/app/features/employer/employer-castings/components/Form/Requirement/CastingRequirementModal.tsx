@@ -93,7 +93,7 @@ const CastingRequirementModal = ({
       lockedRoleId: roleId,
       requiresAudio: Boolean((r as any)?.requiresAudio),
       requiresVideo: Boolean((r as any)?.requiresVideo),
-      description: (((r as any)?.description ?? '') as string) ?? '',
+      description: ((r as any)?.description as string) ?? '',
     };
   };
 
@@ -198,7 +198,15 @@ const CastingRequirementModal = ({
   }, [mode, form.selectedRoleIds, form.requiresAudio, form.requiresVideo]);
 
   const mediaErrorId = useId();
-
+  console.log(
+    'selectedRoleIds',
+    form.selectedRoleIds,
+    form.selectedRoleIds?.map((x) => [x, typeof x])
+  );
+  console.log(
+    'roleOptions',
+    roleOptions.map((o) => [o.value, typeof o.value])
+  );
   return (
     <article className="flex flex-col">
       {mode === 'create' ? (
@@ -206,6 +214,7 @@ const CastingRequirementModal = ({
           selected={form.selectedRoleIds}
           options={roleOptions}
           lockedValues={lockedRoleIds}
+          mustSelectOne
           onChange={(next) => onChange('selectedRoleIds', next ?? [])}
           error={errors.roleIds}
         />
