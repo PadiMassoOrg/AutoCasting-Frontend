@@ -1,23 +1,19 @@
 import { Button } from 'autocasting-ui-library-padimasso';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import OverflowMenu from '../../../../shared/components/OverflowMenu/OverflowMenu';
-import type { OverflowMenuItem } from '../../../../shared/components/OverflowMenu/overflowmenu.types';
 import { ROUTES } from '../../../../shared/lib/routes';
-import { copyToClipboardGraceful } from '../../../../shared/utils/domUtils';
 import { isCastingStatusPublished } from '../../../../shared/utils/siteMetadatUtils';
 import { useEmployerCastingIds, useEmployerCastingPublishAllowed } from '../context/EmployerCastingContext';
 import { usePublishCastingMutation } from '../hooks/status/usePublishCastingMutation';
+import { useCastingOverflowMenuItems } from '../hooks/useCastingOverflowMenuItems';
 import { useDeleteCastingMutation } from '../hooks/useDeleteCastingMutation';
 
-const CastingToolBar = () => {
+const useEmployerCastingToolbarLogic = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
-  const { mutate: deleteCasting } = useDeleteCastingMutation();
+  const { mutate: deleteCasting, isPending: isDeleting } = useDeleteCastingMutation();
   const { mutate: publish, isPending: isPublishing } = usePublishCastingMutation();
-
   const { id: castingId, defaultCode, castingStatus } = useEmployerCastingIds() as any;
   const publishAllowed = useEmployerCastingPublishAllowed();
 
@@ -27,7 +23,6 @@ const CastingToolBar = () => {
 
   const handlePublishCasting = () => {
     if (!publishAllowed || isPublishing) return;
-
     publish(
       { id: castingId, slug: defaultCode },
       {
@@ -39,6 +34,7 @@ const CastingToolBar = () => {
   };
 
   const handleDeleteCasting = () => {
+    if (isDeleting) return;
     deleteCasting(
       { id: castingId },
       {
@@ -50,42 +46,32 @@ const CastingToolBar = () => {
   };
 
   const publicCastingPath = `${ROUTES.PUBLIC_CASTING}/${defaultCode}`;
-
   const actionsDisabled = !isCastingStatusPublished(castingStatus) || !publishAllowed || isPublishing;
 
-  const items: OverflowMenuItem[] = useMemo(
-    () => [
-      {
-        key: 'details',
-        label: t('employer_castings.actions.view_details'),
-        disabled: actionsDisabled,
-        onSelect: () => navigate(publicCastingPath),
-      },
-      {
-        key: 'applicants',
-        label: t('employer_castings.actions.view_applicants'),
-        disabled: actionsDisabled,
-        onSelect: () => console.log('view_applicants'),
-      },
-      {
-        key: 'copy_link',
-        label: t('employer_castings.actions.copy_link'),
-        disabled: actionsDisabled,
-        onSelect: () => {
-          const url = new URL(publicCastingPath, window.location.origin).toString();
-          void copyToClipboardGraceful(url);
-        },
-      },
-      { type: 'separator', key: 'sep-1' },
-      {
-        key: 'delete',
-        label: t('general.delete'),
-        destructive: true,
-        onSelect: () => handleDeleteCasting(),
-      },
-    ],
-    [t, actionsDisabled, navigate, publicCastingPath]
-  );
+  const items = useCastingOverflowMenuItems({
+    publicCastingPath,
+    disablePublicActions: actionsDisabled,
+    onDelete: handleDeleteCasting,
+    deleteDisabled: isDeleting,
+  });
+
+  return {
+    t,
+    redirectToCastingsList,
+    handlePublishCasting,
+    publishAllowed,
+    isPublishing,
+    items,
+  };
+};
+
+/**
+ * CastingToolBar:
+ * - Desktop ONLY.
+ */
+const CastingToolBar = () => {
+  const { t, redirectToCastingsList, handlePublishCasting, publishAllowed, isPublishing, items } =
+    useEmployerCastingToolbarLogic();
 
   return (
     <section className="w-full hidden lg:flex items-center justify-end gap-2 mb-2 ">
@@ -112,3 +98,27 @@ const CastingToolBar = () => {
 };
 
 export default CastingToolBar;
+
+/**
+ * CastingBottomBar:
+ * - Mobile ONLY - (DashboardShell mobileView === 'nav')
+ */
+export const CastingBottomBar = () => {
+  const { t, redirectToCastingsList, handlePublishCasting, publishAllowed, isPublishing, items } =
+    useEmployerCastingToolbarLogic();
+
+  return (
+    <section className="w-full lg:hidden flex items-center gap-2">
+      <Button variant="primaryOutline" onClick={redirectToCastingsList}>
+        <p className="text-sm font-semibold">{t('general.save')}</p>
+      </Button>
+
+      <Button variant="primary" disabled={!publishAllowed || isPublishing} onClick={handlePublishCasting}>
+        {t('general.publish')}
+      </Button>
+      <div className="px-1">
+        <OverflowMenu items={items} align="end" side="top" />
+      </div>
+    </section>
+  );
+};

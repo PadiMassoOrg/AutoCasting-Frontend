@@ -18,26 +18,8 @@ type DashboardShellProps<Key extends string = string> = {
   children?: ReactNode;
   bottomSection?: ReactNode;
   contentHeader?: ReactNode;
+  mobileNavBottomBar?: ReactNode;
 };
-
-/* ------------ Contexto para navegación (goToNav, goToSection) ------------ */
-
-type DashboardShellContextValue = {
-  isDesktop: boolean;
-  hasSections: boolean;
-  activeKey: string | null;
-  mobileView: 'nav' | 'content';
-  goToNav: () => void;
-  goToSection: (key: string) => void;
-};
-
-const DashboardShellContext = createContext<DashboardShellContextValue | undefined>(undefined);
-
-export function useDashboardShell() {
-  const ctx = useContext(DashboardShellContext);
-  if (!ctx) throw new Error('useDashboardShell must be used within a DashboardShell');
-  return ctx;
-}
 
 function DashboardShell<Key extends string = string>({
   title,
@@ -46,6 +28,7 @@ function DashboardShell<Key extends string = string>({
   children,
   bottomSection,
   contentHeader,
+  mobileNavBottomBar,
 }: DashboardShellProps<Key>) {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const hasSections = !!(sections && sections.length > 0);
@@ -98,6 +81,7 @@ function DashboardShell<Key extends string = string>({
     [isDesktop, hasSections, activeKey, mobileView, goToNav, goToSection]
   );
 
+  // No Sections
   if (!hasSections) {
     return (
       <DashboardShellContext.Provider value={ctxValue}>
@@ -110,12 +94,14 @@ function DashboardShell<Key extends string = string>({
     );
   }
 
-  // Mobile
+  // Mobile NAV
   if (!isDesktop && mobileView === 'nav') {
+    const bottomPad = mobileNavBottomBar ? 'pb-28' : '';
+
     return (
       <DashboardShellContext.Provider value={ctxValue}>
-        <section className="w-full h-full bg-[var(--color-secondary-white)]">
-          <div className="w-full max-w-[500px] mx-auto h-full pt-2 px-6">
+        <section className="w-full h-full bg-[var(--color-secondary-white)] relative">
+          <div className={['w-full max-w-[500px] mx-auto h-full pt-2 px-6', bottomPad].filter(Boolean).join(' ')}>
             {title && (
               <h1 className="my-6 text-2xl font-semibold text-[var(--color-primary-black)] text-center">{title}</h1>
             )}
@@ -142,10 +128,26 @@ function DashboardShell<Key extends string = string>({
               ))}
             </div>
 
-            <Separator className="opacity-0 my-20" />
-
-            {bottomSection && <footer className="mt-10">{bottomSection}</footer>}
+            {bottomSection && !mobileNavBottomBar && (
+              <>
+                <Separator className="opacity-0 my-20" />
+                <footer className="mt-10">{bottomSection}</footer>
+              </>
+            )}
           </div>
+
+          {mobileNavBottomBar && (
+            <div className="fixed left-0 right-0 bottom-0 z-[50] bg-[var(--color-primary-white)] border-t border-[var(--color-secondary-outline)]">
+              <div
+                className="w-full mx-auto p-3"
+                style={{
+                  paddingBottom: `calc(env(safe-area-inset-bottom, 0px) + 16px)`,
+                }}
+              >
+                {mobileNavBottomBar}
+              </div>
+            </div>
+          )}
         </section>
       </DashboardShellContext.Provider>
     );
@@ -207,6 +209,24 @@ function DashboardShell<Key extends string = string>({
       </section>
     </DashboardShellContext.Provider>
   );
+}
+
+/* ------------ Contexto para navegación (goToNav, goToSection) ------------ */
+type DashboardShellContextValue = {
+  isDesktop: boolean;
+  hasSections: boolean;
+  activeKey: string | null;
+  mobileView: 'nav' | 'content';
+  goToNav: () => void;
+  goToSection: (key: string) => void;
+};
+
+const DashboardShellContext = createContext<DashboardShellContextValue | undefined>(undefined);
+
+export function useDashboardShell() {
+  const ctx = useContext(DashboardShellContext);
+  if (!ctx) throw new Error('useDashboardShell must be used within a DashboardShell');
+  return ctx;
 }
 
 export default DashboardShell;
