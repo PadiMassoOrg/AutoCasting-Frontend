@@ -64,9 +64,7 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
   const actionButtonRender = () => (
     <span onClick={handleOpenModal} className="flex flex-row items-center justify-center gap-2 cursor-pointer">
       <Icon name="plus" variant="primary" size={16} />
-      <span className="text-base font-semibold text-[var(--color-primary-purple)]">
-        {t('employer_castings.dashboard.roles.add_new')}
-      </span>
+      <span className="text-base font-semibold text-[var(--color-primary-purple)]">{t('general.add')}</span>
     </span>
   );
 

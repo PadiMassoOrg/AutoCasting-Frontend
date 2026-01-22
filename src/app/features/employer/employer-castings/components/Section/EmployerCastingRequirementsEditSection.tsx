@@ -109,9 +109,7 @@ const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: stri
       className={`flex flex-row items-center justify-center gap-2 ${roleOptions.length === 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
     >
       <Icon name="plus" variant="primary" size={16} />
-      <span className="text-base font-semibold text-[var(--color-primary-purple)]">
-        {t('employer_castings.dashboard.requirements.add_new')}
-      </span>
+      <span className="text-base font-semibold text-[var(--color-primary-purple)]">{t('general.add')}</span>
     </span>
   );
 
