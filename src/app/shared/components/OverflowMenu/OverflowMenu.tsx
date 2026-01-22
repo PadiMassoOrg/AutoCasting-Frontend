@@ -33,6 +33,7 @@ const OverflowMenu = ({
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   const [anchor, setAnchor] = useState<{ x: number; y: number } | null>(null);
+  const [hoverKey, setHoverKey] = useState<string | null>(null);
 
   const visibleItems = useMemo(() => (items ?? []).filter((it) => (it as any)?.hidden !== true), [items]);
 
@@ -130,11 +131,11 @@ const OverflowMenu = ({
   }, [open, close]);
 
   const onSelectItem = async (it: OverflowMenuItem) => {
-    if (it.type === 'separator') return;
-    if (it.disabled) return;
+    if ((it as any).type === 'separator') return;
+    if ((it as any).disabled) return;
 
     try {
-      await it.onSelect?.();
+      await (it as any).onSelect?.();
     } finally {
       close();
     }
@@ -167,20 +168,44 @@ const OverflowMenu = ({
             }}
           >
             {visibleItems.map((it) => {
-              if (it.type === 'separator') {
-                return <div key={it.key} className="my-2 h-px w-full bg-[var(--color-secondary-outline)] opacity-60" />;
+              if ((it as any).type === 'separator') {
+                return (
+                  <div
+                    key={(it as any).key}
+                    className="my-2 h-px w-full bg-[var(--color-secondary-outline)] opacity-60"
+                  />
+                );
               }
 
-              const isDestructive = !!it.destructive;
+              const isDestructive = !!(it as any).destructive;
+              const isDisabled = !!(it as any).disabled;
+
+              const iconName = (it as any).iconName;
+              const forcedIconVariant = (it as any).iconVariant;
+
+              const resolvedIconVariant =
+                forcedIconVariant ||
+                (isDisabled
+                  ? 'disabled'
+                  : isDestructive
+                    ? 'danger'
+                    : hoverKey === (it as any).key
+                      ? 'primary'
+                      : 'default');
+
+              const labelNode = (it as any).label;
+              const isStringLabel = typeof labelNode === 'string';
 
               return (
                 <button
-                  key={it.key}
+                  key={(it as any).key}
                   type="button"
                   role="menuitem"
                   data-menuitem="true"
-                  disabled={!!it.disabled}
+                  disabled={isDisabled}
                   onClick={() => void onSelectItem(it)}
+                  onMouseEnter={() => setHoverKey((it as any).key)}
+                  onMouseLeave={() => setHoverKey(null)}
                   className={cx(
                     'w-full text-left px-3 py-2 rounded-xl',
                     'flex items-center gap-3',
@@ -190,11 +215,12 @@ const OverflowMenu = ({
                       ? 'text-[var(--color-alert-error)] hover:bg-red-50'
                       : 'text-[var(--color-primary-black)] hover:text-[var(--color-primary-purple)] hover:bg-[var(--color-secondary-white)]',
                     'transition-colors',
-                    'disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-inherit',
+                    'disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-inherit',
                     itemClassName
                   )}
                 >
-                  <span className="select-none">{it.label}</span>
+                  {iconName && <Icon name={iconName} variant={resolvedIconVariant} />}
+                  {isStringLabel ? <span className="select-none">{labelNode}</span> : labelNode}
                 </button>
               );
             })}

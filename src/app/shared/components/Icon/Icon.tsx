@@ -1,5 +1,8 @@
 import type { ImgHTMLAttributes } from 'react';
 
+import ApplicantsIconDisabled from '../../icons/applicants-disabled.svg';
+import ApplicantsIconPurple from '../../icons/applicants-purple.svg';
+import ApplicantsIcon from '../../icons/applicants.svg';
 import ArrowLongLeftIconPurple from '../../icons/arrow-long-left-purple.svg';
 import ArrowLongLeftIcon from '../../icons/arrow-long-left.svg';
 import BehanceIconPurple from '../../icons/behance-purple.svg';
@@ -18,6 +21,7 @@ import ClapperIconPurple from '../../icons/clapper-purple.svg';
 import ClapperIcon from '../../icons/clapper.svg';
 import ClockIconPurple from '../../icons/clock-purple.svg';
 import ClockIcon from '../../icons/clock.svg';
+import CopyLinkIconDisabled from '../../icons/copy-link-disabled.svg';
 import CopyLinkIconPurple from '../../icons/copy-link-purple.svg';
 import CopyLinkIcon from '../../icons/copy-link.svg';
 import CrossIconPurple from '../../icons/cross-purple.svg';
@@ -42,6 +46,7 @@ import LogoutIconRed from '../../icons/logout-red.svg';
 import MailIconPurple from '../../icons/message-purple.svg';
 import MailIcon from '../../icons/message.svg';
 import OGIcon from '../../icons/og-image.svg';
+import OpenIconDisabled from '../../icons/open-disabled.svg';
 import OpenIconPurple from '../../icons/open-purple.svg';
 import OpenIcon from '../../icons/open.svg';
 import OverflowMenuIconPurple from '../../icons/overflowmenu-purple.svg';
@@ -108,6 +113,7 @@ export type IconName =
   | 'save'
   | 'publish'
   | 'overflowmenu'
+  | 'applicants'
   | 'logout';
 
 export type IconVariant = 'default' | 'primary' | 'white' | 'danger' | 'disabled';
@@ -136,6 +142,7 @@ const ICONS: Record<IconName, BaseIconConfig> = {
   open: {
     default: OpenIcon,
     primary: OpenIconPurple,
+    disabled: OpenIconDisabled,
   },
   burger: {
     default: BurgerIcon,
@@ -172,6 +179,7 @@ const ICONS: Record<IconName, BaseIconConfig> = {
   copyLink: {
     default: CopyLinkIcon,
     primary: CopyLinkIconPurple,
+    disabled: CopyLinkIconDisabled,
   },
   clapper: {
     default: ClapperIcon,
@@ -265,6 +273,11 @@ const ICONS: Record<IconName, BaseIconConfig> = {
   overflowmenu: {
     default: OverflowMenuIcon,
     primary: OverflowMenuIconPurple,
+  },
+  applicants: {
+    default: ApplicantsIcon,
+    primary: ApplicantsIconPurple,
+    disabled: ApplicantsIconDisabled,
   },
 };
 

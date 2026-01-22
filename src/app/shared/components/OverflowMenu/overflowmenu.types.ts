@@ -1,12 +1,18 @@
+import type { ReactNode } from 'react';
+import type { IconName, IconVariant } from '../Icon/Icon';
+
 export type OverflowMenuItem =
   | {
       type?: 'action';
       key: string;
-      label: string;
+      label: ReactNode;
       onSelect: () => void | Promise<void>;
       disabled?: boolean;
       destructive?: boolean;
       hidden?: boolean;
+
+      iconName?: IconName;
+      iconVariant?: IconVariant;
     }
   | {
       type: 'separator';
