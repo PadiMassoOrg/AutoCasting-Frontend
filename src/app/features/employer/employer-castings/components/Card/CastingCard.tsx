@@ -1,13 +1,13 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { Chip } from '../../../../shared/components/Chip/Chip';
-import OverflowMenu from '../../../../shared/components/OverflowMenu/OverflowMenu';
-import { SectionCard } from '../../../../shared/components/Section';
-import { ROUTES } from '../../../../shared/lib/routes';
-import { formatLocalDate } from '../../../../shared/utils/formatUtils';
-import { isCastingStatusPublished } from '../../../../shared/utils/siteMetadatUtils';
-import { useCastingOverflowMenuItems } from '../hooks/useCastingOverflowMenuItems';
-import type { CastingCardResponse } from '../types/employerCastings.types';
+import { Chip } from '../../../../../shared/components/Chip/Chip';
+import { OverflowMenu } from '../../../../../shared/components/OverflowMenu';
+import { SectionCard } from '../../../../../shared/components/Section';
+import { ROUTES } from '../../../../../shared/lib/routes';
+import { formatLocalDate } from '../../../../../shared/utils/formatUtils';
+import { isCastingStatusPublished } from '../../../../../shared/utils/siteMetadatUtils';
+import { useCastingOverflowMenuItems } from '../../hooks/useCastingOverflowMenuItems';
+import type { CastingCardResponse } from '../../types/employerCastings.types';
 
 const CastingCard = ({
   data,

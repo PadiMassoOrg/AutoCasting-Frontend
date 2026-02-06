@@ -14,7 +14,7 @@ import { useSectionRequirements } from '../../hooks/section/useSectionRequiremen
 import { useSectionRoles } from '../../hooks/section/useSectionRoles';
 import type { EmployerCastingRequirementCardResponse } from '../../types/employerCastings.types';
 import type { CastingRequirementUpsertRequest } from '../../types/requests';
-import EmployerCastingRequirementCard from '../EmployerCastingRequirementCard';
+import { EmployerCastingRequirementCard } from '../Card';
 import CastingRequirementModal from '../Form/Requirement/CastingRequirementModal';
 
 const EMPTY_ARR: any[] = [];

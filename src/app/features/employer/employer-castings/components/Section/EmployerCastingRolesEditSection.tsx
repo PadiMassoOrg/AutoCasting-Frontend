@@ -12,7 +12,7 @@ import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSection
 import { useCastingRoleCreateAutosave } from '../../hooks/autosaves';
 import { useSectionRoles } from '../../hooks/section/useSectionRoles';
 import { EMPLOYER_CASTING_CACHE_KEY } from '../../services/employerCastingService';
-import EmployerCastingRoleCard from '../EmployerCastingRoleCard';
+import { EmployerCastingRoleCard } from '../Card';
 import CastingRoleModal from '../Form/Role/CastingRoleModal';
 
 const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) => {

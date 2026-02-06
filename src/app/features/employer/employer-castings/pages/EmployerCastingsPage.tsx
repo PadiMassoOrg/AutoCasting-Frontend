@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { DashboardSection, DashboardShell } from '../../../../layouts/components';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../shared/components/Section';
-import { CastingCard } from '../components';
+import { CastingCard } from '../components/Card';
+import EmployerCastingsFilterBar from '../components/Filter/EmployerCastingsFilterBar';
 import { useCreateEmptyCastingMutation } from '../hooks/useCreateEmptyCastingMutation';
 import { useDeleteCastingMutation } from '../hooks/useDeleteCastingMutation';
 import { useEmployerCastings } from '../hooks/useEmployerCastings';
@@ -49,7 +50,8 @@ const EmployerCastingsPage = () => {
       <DashboardSection>
         <SectionTitle title={t('employer_castings.page.title')} action={actionButtonRender()} />
 
-        {/* TODO: Filter Bar */}
+        <EmployerCastingsFilterBar></EmployerCastingsFilterBar>
+
         {myCastings?.length ? (
           myCastings.map((i) => (
             <CastingCard

@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next';
-import { useModal } from '../../../../context/ModalContext';
-import { Chip } from '../../../../shared/components/Chip/Chip';
-import type { RadioOption } from '../../../../shared/components/Form/RadioGroupField';
-import { Icon } from '../../../../shared/components/Icon/Icon';
-import { SectionCard } from '../../../../shared/components/Section';
-import { useCastingRequirementDeleteAutosave, useCastingRequirementPatchAutosave } from '../hooks/autosaves';
-import type { EmployerCastingRequirementCardResponse } from '../types/employerCastings.types';
-import CastingRequirementDeleteModal from './Form/Requirement/CastingRequirementDeleteModal';
-import CastingRequirementModal from './Form/Requirement/CastingRequirementModal';
+import { useModal } from '../../../../../context/ModalContext';
+import { Chip } from '../../../../../shared/components/Chip/Chip';
+import type { RadioOption } from '../../../../../shared/components/Form/RadioGroupField';
+import { Icon } from '../../../../../shared/components/Icon/Icon';
+import { SectionCard } from '../../../../../shared/components/Section';
+import { useCastingRequirementDeleteAutosave, useCastingRequirementPatchAutosave } from '../../hooks/autosaves';
+import type { EmployerCastingRequirementCardResponse } from '../../types/employerCastings.types';
+import CastingRequirementDeleteModal from '../Form/Requirement/CastingRequirementDeleteModal';
+import CastingRequirementModal from '../Form/Requirement/CastingRequirementModal';
 
 const EmployerCastingRequirementCard = ({
   data,
@@ -33,10 +33,8 @@ const EmployerCastingRequirementCard = ({
         sectionId={sectionId}
         roleOptions={roleOptions}
         onSave={(draft) => {
-          // ✅ Fix TS: draft puede ser "create" o "edit" (union). Solo "edit" tiene id.
           if (draft.mode !== 'edit') return;
 
-          // ✅ No enviamos "mode" al backend. Armamos el payload explícitamente.
           patchRequirement.immediate({
             id: draft.id,
             requirementsSectionId: draft.requirementsSectionId,

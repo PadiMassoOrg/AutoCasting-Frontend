@@ -12,6 +12,7 @@ type Props = {
   menuClassName?: string;
   itemClassName?: string;
   disabled?: boolean;
+  trigger?: (ctx: { open: boolean; disabled: boolean }) => React.ReactNode;
 };
 
 function cx(...xs: Array<string | false | null | undefined>) {
@@ -27,6 +28,7 @@ const OverflowMenu = ({
   menuClassName,
   itemClassName,
   disabled = false,
+  trigger,
 }: Props) => {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
@@ -131,13 +133,14 @@ const OverflowMenu = ({
   }, [open, close]);
 
   const onSelectItem = async (it: OverflowMenuItem) => {
-    if ((it as any).type === 'separator') return;
+    if (it.type === 'separator' || it.type === 'content') return;
     if ((it as any).disabled) return;
 
     try {
       await (it as any).onSelect?.();
     } finally {
-      close();
+      const closeOnSelect = (it as any).closeOnSelect ?? true;
+      if (closeOnSelect) close();
     }
   };
 
@@ -168,12 +171,20 @@ const OverflowMenu = ({
             }}
           >
             {visibleItems.map((it) => {
-              if ((it as any).type === 'separator') {
+              if (it.type === 'separator') {
                 return (
                   <div
                     key={(it as any).key}
                     className="my-2 h-px w-full bg-[var(--color-secondary-outline)] opacity-60"
                   />
+                );
+              }
+
+              if (it.type === 'content') {
+                return (
+                  <div key={it.key} className="px-1 py-1">
+                    {it.content}
+                  </div>
                 );
               }
 
@@ -239,7 +250,7 @@ const OverflowMenu = ({
         disabled={disabled}
         className={cx('disabled:opacity-50 disabled:cursor-not-allowed', triggerClassName)}
       >
-        <Icon name="overflowmenu" variant="default" />
+        {trigger ? trigger({ open, disabled }) : <Icon name="overflowmenu" variant="default" />}
       </button>
       {MenuRenderer}
     </>

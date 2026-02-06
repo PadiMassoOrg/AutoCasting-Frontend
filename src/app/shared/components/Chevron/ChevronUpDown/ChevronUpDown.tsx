@@ -1,7 +1,15 @@
-const ChevronUpDown = ({ open }: { open: boolean }) => {
+type ChevronUpDownProps = {
+  open: boolean;
+  sizePx?: number;
+  className?: string;
+};
+
+const ChevronUpDown = ({ open, sizePx = 28, className }: ChevronUpDownProps) => {
   return (
     <svg
-      className={`w-7 transition-transform ${open ? 'rotate-180' : ''}`}
+      width={sizePx}
+      height={sizePx}
+      className={['transition-transform', open ? 'rotate-180' : '', className ?? ''].filter(Boolean).join(' ')}
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"

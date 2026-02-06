@@ -1,24 +1,26 @@
-import type { ReactNode } from 'react';
-import type { IconName, IconVariant } from '../Icon/Icon';
-
 export type OverflowMenuItem =
   | {
-      type?: 'action';
+      type?: 'item';
       key: string;
-      label: ReactNode;
-      onSelect: () => void | Promise<void>;
+      label: React.ReactNode;
+      onSelect?: () => void | Promise<void>;
       disabled?: boolean;
       destructive?: boolean;
+      iconName?: string;
+      iconVariant?: string;
       hidden?: boolean;
-
-      iconName?: IconName;
-      iconVariant?: IconVariant;
+      closeOnSelect?: boolean;
     }
   | {
       type: 'separator';
       key: string;
+    }
+  | {
+      type: 'content';
+      key: string;
+      content: React.ReactNode;
       hidden?: boolean;
     };
 
 export type OverflowMenuAlign = 'start' | 'end';
-export type OverflowMenuSide = 'bottom' | 'top';
+export type OverflowMenuSide = 'top' | 'bottom';

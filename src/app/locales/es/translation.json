@@ -69,10 +69,14 @@
       "casting_modality": "Ej. Carlos Pelegrini 1100 Dto 4A, CABA"
     },
     "filter": {
+      "filter": "Filtrar",
       "title": "Filtros",
       "reset": "Resetear Filtros",
       "hide": "Ocultar Filtros",
       "show": "Mostrar Filtros"
+    },
+    "order": {
+      "order": "Ordenar"
     }
   },
   "validation": {
