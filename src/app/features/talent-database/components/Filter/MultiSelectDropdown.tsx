@@ -13,6 +13,7 @@ type BaseProps<T> = {
   error?: string | null;
   forwardScrollToRef?: React.RefObject<HTMLElement | null>;
   required?: boolean;
+  hideSelectAll?: boolean;
 };
 
 type MultipleSelectProps = {
@@ -43,6 +44,7 @@ export default function MultiSelectDropdown<T>({
   error,
   forwardScrollToRef,
   required = false,
+  hideSelectAll = false,
   ...rest
 }: MultiSelectDropdownProps<T>) {
   const { t } = useTranslation();
@@ -139,7 +141,7 @@ export default function MultiSelectDropdown<T>({
               style={{ maxHeight: maxPanelHeight, overflow: 'auto' }}
               className="px-6 py-3 flex flex-col gap-2"
             >
-              {!single && (
+              {!single && !hideSelectAll && (
                 <label className="flex items-center gap-3 text-base font-normal cursor-pointer">
                   <span className="relative inline-flex items-center justify-center h-6 w-6">
                     <input

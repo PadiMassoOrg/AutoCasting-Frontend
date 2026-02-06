@@ -73,7 +73,14 @@ const OverflowMenu = ({
     if (!open) return;
 
     const onResize = () => close();
-    const onScroll = () => close();
+
+    const onScroll = (e: Event) => {
+      const target = e.target as Node | null;
+      if (!target) return;
+      if (menuRef.current?.contains(target)) return;
+      if (triggerRef.current?.contains(target)) return;
+      close();
+    };
 
     window.addEventListener('resize', onResize);
     window.addEventListener('scroll', onScroll, true);
@@ -182,7 +189,7 @@ const OverflowMenu = ({
 
               if (it.type === 'content') {
                 return (
-                  <div key={it.key} className="px-1 py-1">
+                  <div key={it.key} className="p-2">
                     {it.content}
                   </div>
                 );

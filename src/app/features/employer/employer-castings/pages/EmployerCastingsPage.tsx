@@ -5,17 +5,29 @@ import { DashboardSection, DashboardShell } from '../../../../layouts/components
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../shared/components/Section';
 import { CastingCard } from '../components/Card';
+import type { EmployerCastingsFiltersState } from '../components/Filter/EmployerCastingFilterMenuContent';
 import EmployerCastingsFilterBar from '../components/Filter/EmployerCastingsFilterBar';
 import { useCreateEmptyCastingMutation } from '../hooks/useCreateEmptyCastingMutation';
 import { useDeleteCastingMutation } from '../hooks/useDeleteCastingMutation';
 import { useEmployerCastings } from '../hooks/useEmployerCastings';
+import type { EmployerCastingsOrderBy } from '../types/employerCastingsFilters.types';
 
 const EmployerCastingsPage = () => {
   const { t } = useTranslation();
-  const { data: myCastings } = useEmployerCastings();
   const { mutate: createEmptyCasting, isPending: isCreating } = useCreateEmptyCastingMutation();
   const { mutate: deleteCasting, isPending: isDeleting } = useDeleteCastingMutation();
 
+  const [filters, setFilters] = useState<EmployerCastingsFiltersState>({
+    projectTypeIds: undefined,
+    statusIdTokens: undefined,
+  });
+  const [orderBy, setOrderBy] = useState<EmployerCastingsOrderBy>('CREATION_DATE_DESC');
+  const { data: myCastings } = useEmployerCastings({
+    page: 0,
+    size: 10,
+    filters,
+    orderBy,
+  });
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleDelete = useCallback(
@@ -25,9 +37,7 @@ const EmployerCastingsPage = () => {
       deleteCasting(
         { id },
         {
-          onSettled: () => {
-            setDeletingId(null);
-          },
+          onSettled: () => setDeletingId(null),
         }
       );
     },
@@ -50,7 +60,12 @@ const EmployerCastingsPage = () => {
       <DashboardSection>
         <SectionTitle title={t('employer_castings.page.title')} action={actionButtonRender()} />
 
-        <EmployerCastingsFilterBar></EmployerCastingsFilterBar>
+        <EmployerCastingsFilterBar
+          filters={filters}
+          onFiltersChange={setFilters}
+          orderBy={orderBy}
+          onOrderByChange={setOrderBy}
+        />
 
         {myCastings?.length ? (
           myCastings.map((i) => (

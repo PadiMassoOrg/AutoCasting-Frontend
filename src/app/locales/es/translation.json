@@ -76,7 +76,9 @@
       "show": "Mostrar Filtros"
     },
     "order": {
-      "order": "Ordenar"
+      "order": "Ordenar",
+      "created_desc": "Fecha de creación (más reciente)",
+      "created_asc": "Fecha de creación (más antigua)"
     }
   },
   "validation": {
@@ -811,6 +813,10 @@
           "amount_label": "Monto"
         }
       }
+    },
+    "order": {
+      "deadline_asc": "Fecha límite (más cercana)",
+      "deadline_desc": "Fecha límite (más lejana)"
     }
   },
   "legal": {
