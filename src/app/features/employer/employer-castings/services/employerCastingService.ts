@@ -1,7 +1,7 @@
 import api from '../../../../shared/lib/axios';
 import { API_ROUTES } from '../../../../shared/lib/routes';
 import { stripUndefined } from '../../../../shared/utils/stripUndefined';
-import type { EmployerCastingsFiltersState } from '../components/Filter/EmployerCastingFilterMenuContent';
+import type { EmployerCastingsFiltersState } from '../components/Filter/EmployerCastingsFilterBar';
 import type {
   CastingCardResponse,
   CastingSectionBasicInfo,
@@ -35,6 +35,7 @@ export type GetMyCastingsArgs = {
   size: number;
   filters: EmployerCastingsFiltersState;
   orderBy: EmployerCastingsOrderBy;
+  search?: string;
 };
 
 // Castings
@@ -45,8 +46,11 @@ export async function getMyCastings({ page, size, filters, orderBy }: GetMyCasti
   qs.set('size', String(size));
   qs.set('orderBy', orderBy);
 
-  (filters.projectTypeIds ?? []).forEach((token) => qs.append('projectTypeId', token));
-  (filters.statusIdTokens ?? []).forEach((token) => qs.append('statusId', token));
+  const q = (filters.search ?? '').trim();
+  if (q.length) qs.set('q', q);
+
+  (filters.projectTypeIds ?? []).forEach((token: string) => qs.append('projectTypeId', token));
+  (filters.statusIdTokens ?? []).forEach((token: string) => qs.append('statusId', token));
 
   const { data } = await api.get<CastingCardResponse[]>(`${API_ROUTES.EMPLOYER_CASTINGS}?${qs.toString()}`);
   return data;

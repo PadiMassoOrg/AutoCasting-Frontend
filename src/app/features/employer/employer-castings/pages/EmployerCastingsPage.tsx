@@ -1,12 +1,13 @@
 import { Button, Label } from 'autocasting-ui-library-padimasso';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DashboardSection, DashboardShell } from '../../../../layouts/components';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../shared/components/Section';
 import { CastingCard } from '../components/Card';
-import type { EmployerCastingsFiltersState } from '../components/Filter/EmployerCastingFilterMenuContent';
-import EmployerCastingsFilterBar from '../components/Filter/EmployerCastingsFilterBar';
+import EmployerCastingsFilterBar, {
+  type EmployerCastingsFiltersState,
+} from '../components/Filter/EmployerCastingsFilterBar';
 import { useCreateEmptyCastingMutation } from '../hooks/useCreateEmptyCastingMutation';
 import { useDeleteCastingMutation } from '../hooks/useDeleteCastingMutation';
 import { useEmployerCastings } from '../hooks/useEmployerCastings';
@@ -20,14 +21,23 @@ const EmployerCastingsPage = () => {
   const [filters, setFilters] = useState<EmployerCastingsFiltersState>({
     projectTypeIds: undefined,
     statusIdTokens: undefined,
+    search: undefined,
   });
+
   const [orderBy, setOrderBy] = useState<EmployerCastingsOrderBy>('CREATION_DATE_DESC');
-  const { data: myCastings } = useEmployerCastings({
-    page: 0,
-    size: 10,
-    filters,
-    orderBy,
-  });
+
+  const args = useMemo(
+    () => ({
+      page: 0,
+      size: 10,
+      filters,
+      orderBy,
+    }),
+    [filters, orderBy]
+  );
+
+  const { data: myCastings } = useEmployerCastings(args);
+
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleDelete = useCallback(

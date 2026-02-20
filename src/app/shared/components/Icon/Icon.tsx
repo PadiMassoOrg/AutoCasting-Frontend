@@ -77,6 +77,10 @@ import WhatsappIcon from '../../icons/whatsapp.svg';
 import XIconPurple from '../../icons/x-purple.svg';
 import XIcon from '../../icons/x.svg';
 
+import SearchIconDisabled from '../../icons/search-disabled.svg';
+import SearchIconPurple from '../../icons/search-purple.svg';
+import SearchIcon from '../../icons/search.svg';
+
 export type IconName =
   | 'ogIcon'
   | 'switcher'
@@ -114,6 +118,7 @@ export type IconName =
   | 'publish'
   | 'overflowmenu'
   | 'applicants'
+  | 'search'
   | 'logout';
 
 export type IconVariant = 'default' | 'primary' | 'white' | 'danger' | 'disabled';
@@ -278,6 +283,11 @@ const ICONS: Record<IconName, BaseIconConfig> = {
     default: ApplicantsIcon,
     primary: ApplicantsIconPurple,
     disabled: ApplicantsIconDisabled,
+  },
+  search: {
+    default: SearchIcon,
+    primary: SearchIconPurple,
+    disabled: SearchIconDisabled,
   },
 };
 

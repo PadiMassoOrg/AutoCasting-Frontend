@@ -1,11 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { MultiSelectDropdown } from '../../../../talent-database/components/Filter';
-
-export type EmployerCastingsFiltersState = {
-  projectTypeIds?: string[];
-  statusIdTokens?: string[];
-};
+import type { EmployerCastingsFiltersState } from './EmployerCastingsFilterBar';
 
 export default function EmployerCastingsFilterMenuContent({
   value,

@@ -1,12 +1,17 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { OverflowMenu } from '../../../../../shared/components/OverflowMenu';
+import SearchInput from '../../../../../shared/components/Search/SearchInput';
 import { TextDropdownTrigger } from '../../../../../shared/components/Trigger/TextDropdownTrigger';
 import { AUDITABLE_ORDER_BY } from '../../../../../shared/types/orderBy.types';
 import type { EmployerCastingsOrderBy } from '../../types/employerCastingsFilters.types';
-import EmployerCastingsFilterMenuContent, {
-  type EmployerCastingsFiltersState,
-} from './EmployerCastingFilterMenuContent';
+import EmployerCastingsFilterMenuContent from './EmployerCastingFilterMenuContent';
+
+export type EmployerCastingsFiltersState = {
+  projectTypeIds?: string[];
+  statusIdTokens?: string[];
+  search?: string;
+};
 
 type Props = {
   filters: EmployerCastingsFiltersState;
@@ -17,6 +22,11 @@ type Props = {
 
 const EmployerCastingsFilterBar = ({ filters, onFiltersChange, orderBy, onOrderByChange }: Props) => {
   const { t } = useTranslation();
+  const [searchInput, setSearchInput] = useState(filters.search ?? '');
+
+  useEffect(() => {
+    setSearchInput(filters.search ?? '');
+  }, [filters.search]);
 
   const filterItems = useMemo(
     () => [
@@ -61,8 +71,27 @@ const EmployerCastingsFilterBar = ({ filters, onFiltersChange, orderBy, onOrderB
   }, [orderBy, onOrderByChange, t]);
 
   return (
-    <section className="flex flex-row items-center justify-between">
+    <section className="flex flex-row items-center justify-between gap-3">
       <article className="flex flex-row items-center gap-2">
+        <div className="w-full max-w-[360px] mr-4">
+          <SearchInput
+            value={searchInput}
+            onChange={setSearchInput}
+            onCommit={(v) => {
+              const next = v.trim();
+              const current = (filters.search ?? '').trim();
+
+              if (next === current) return;
+
+              onFiltersChange({
+                ...filters,
+                search: next.length ? next : undefined,
+              });
+            }}
+            placeholder={t('general.search')}
+          />
+        </div>
+
         <OverflowMenu
           items={filterItems}
           align="start"
