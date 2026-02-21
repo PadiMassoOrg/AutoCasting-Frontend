@@ -73,7 +73,7 @@ const EmployerCastingsFilterBar = ({ filters, onFiltersChange, orderBy, onOrderB
   return (
     <section className="flex flex-row items-center justify-between gap-3">
       <article className="flex flex-row items-center gap-2">
-        <div className="w-full max-w-[360px] mr-4">
+        <div className="w-[240px] mr-2">
           <SearchInput
             value={searchInput}
             onChange={setSearchInput}

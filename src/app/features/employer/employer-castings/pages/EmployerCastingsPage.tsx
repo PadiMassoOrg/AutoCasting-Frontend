@@ -77,20 +77,22 @@ const EmployerCastingsPage = () => {
           onOrderByChange={setOrderBy}
         />
 
-        {myCastings?.length ? (
-          myCastings.map((i) => (
-            <CastingCard
-              key={i.id}
-              data={i}
-              onDelete={handleDelete}
-              deleteDisabled={isDeleting && deletingId === i.id}
-            />
-          ))
-        ) : (
-          <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
-            {t('employer_castings.page.empty_page')}
-          </Label>
-        )}
+        <div className="flex flex-col gap-6 lg:flex-row">
+          {myCastings?.length ? (
+            myCastings.map((i) => (
+              <CastingCard
+                key={i.id}
+                data={i}
+                onDelete={handleDelete}
+                deleteDisabled={isDeleting && deletingId === i.id}
+              />
+            ))
+          ) : (
+            <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
+              {t('employer_castings.page.empty_page')}
+            </Label>
+          )}
+        </div>
       </DashboardSection>
     </DashboardShell>
   );

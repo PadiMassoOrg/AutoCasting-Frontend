@@ -42,7 +42,7 @@ export default function SearchInput({ value, onChange, onCommit, placeholder, cl
   return (
     <div className={['relative w-full', className].filter(Boolean).join(' ')}>
       <input
-        type="search"
+        type="text"
         value={current}
         onChange={(e) => setValue(e.target.value)}
         disabled={disabled}
@@ -67,17 +67,6 @@ export default function SearchInput({ value, onChange, onCommit, placeholder, cl
       />
 
       <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-        {current.length ? (
-          <button
-            type="button"
-            onClick={clear}
-            className="text-sm text-[var(--color-primary-purple)] hover:opacity-80"
-            aria-label="Clear search"
-          >
-            ×
-          </button>
-        ) : null}
-
         <Icon name="search" variant="primary" size={18} />
       </div>
     </div>
