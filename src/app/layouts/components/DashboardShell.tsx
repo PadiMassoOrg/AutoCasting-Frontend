@@ -87,7 +87,7 @@ function DashboardShell<Key extends string = string>({
       <DashboardShellContext.Provider value={ctxValue}>
         <section className="w-full h-full min-h-0 flex flex-col bg-[var(--color-secondary-white)]">
           <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
-            <div className="w-full max-w-[1500px] mx-auto p-6">{children}</div>
+            <div className="w-full max-w-[1350px] mx-auto p-6">{children}</div>
           </article>
         </section>
       </DashboardShellContext.Provider>

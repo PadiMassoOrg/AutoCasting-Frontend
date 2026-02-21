@@ -34,7 +34,7 @@ const CastingCard = ({
   });
 
   return (
-    <SectionCard className="lg:min-w-[400px]">
+    <SectionCard className="lg:min-w-[415px]">
       <div className="flex flex-row items-center justify-between">
         <h2 className="font-bold">{title != null ? title : t('general.untitled')}</h2>
         <OverflowMenu items={items} align="end" side="bottom" />

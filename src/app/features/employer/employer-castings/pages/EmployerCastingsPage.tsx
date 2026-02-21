@@ -77,7 +77,7 @@ const EmployerCastingsPage = () => {
           onOrderByChange={setOrderBy}
         />
 
-        <div className="flex flex-col gap-6 lg:flex-row">
+        <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">
           {myCastings?.length ? (
             myCastings.map((i) => (
               <CastingCard

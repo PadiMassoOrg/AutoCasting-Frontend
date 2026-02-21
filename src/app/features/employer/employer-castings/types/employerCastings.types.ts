@@ -11,6 +11,7 @@ export type BaseCastingCard = {
   applicationDeadline: string;
   projectType: SiteMetadataObject;
   status: SiteMetadataObject;
+  allowedStatusCodes: string[];
 };
 
 export type BaseCastingResponse = {
