@@ -1,11 +1,11 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { Chip } from '../../../../../shared/components/Chip/Chip';
+import { Chip, StatusChip } from '../../../../../shared/components/Chip';
 import { OverflowMenu } from '../../../../../shared/components/OverflowMenu';
 import { SectionCard } from '../../../../../shared/components/Section';
 import { ROUTES } from '../../../../../shared/lib/routes';
 import { formatLocalDate } from '../../../../../shared/utils/formatUtils';
-import { isCastingStatusPublished } from '../../../../../shared/utils/siteMetadatUtils';
+import { isCastingStatusPublished } from '../../../../sitemetadata/utils/siteMetadataUtils';
 import { useCastingOverflowMenuItems } from '../../hooks/useCastingOverflowMenuItems';
 import type { CastingCardResponse } from '../../types/employerCastings.types';
 
@@ -47,7 +47,7 @@ const CastingCard = ({
           <p className="text-[var(--color-secondary-grey-fonts)]">
             {t('employer_castings.casting_card.status.status')}:
           </p>
-          <span>{t(status.stringCode)}</span>
+          <StatusChip status={status} variant="inline" />
         </div>
 
         <div className="w-full flex flex-row items-center justify-between">

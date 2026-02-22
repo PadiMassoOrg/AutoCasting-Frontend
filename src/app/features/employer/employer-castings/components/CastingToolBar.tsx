@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import OverflowMenu from '../../../../shared/components/OverflowMenu/OverflowMenu';
 import { ROUTES } from '../../../../shared/lib/routes';
-import { isCastingStatusPublished } from '../../../../shared/utils/siteMetadatUtils';
+import { isCastingStatusPublished } from '../../../sitemetadata/utils/siteMetadataUtils';
 import { useEmployerCastingIds, useEmployerCastingPublishAllowed } from '../context/EmployerCastingContext';
 import { usePublishCastingMutation } from '../hooks/status/usePublishCastingMutation';
 import { useCastingOverflowMenuItems } from '../hooks/useCastingOverflowMenuItems';

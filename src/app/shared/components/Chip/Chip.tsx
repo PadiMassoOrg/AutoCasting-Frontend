@@ -6,7 +6,7 @@ type ChipProps = {
   newItem?: boolean;
 };
 
-export function Chip({ label, onRemove, newItem = false }: ChipProps) {
+export default function Chip({ label, onRemove, newItem = false }: ChipProps) {
   return (
     <span
       className={[
