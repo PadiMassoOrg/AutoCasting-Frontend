@@ -8,6 +8,7 @@ import { formatLocalDate } from '../../../../../shared/utils/formatUtils';
 import StatusDropdown from '../../../../sitemetadata/component/StatusDropdown';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { isCastingStatusPublished } from '../../../../sitemetadata/utils/siteMetadataUtils';
+import { useCastingStatusActions } from '../../hooks/status/useCastingStatusActions';
 import { useCastingOverflowMenuItems } from '../../hooks/useCastingOverflowMenuItems';
 import type { CastingCardResponse } from '../../types/employerCastings.types';
 
@@ -21,9 +22,12 @@ const CastingCard = ({
   deleteDisabled?: boolean;
 }) => {
   const { t } = useTranslation();
+
   if (!data) return null;
 
   const { id, title, defaultCode, creationDate, applicationDeadline, projectType, status, allowedStatusCodes } = data;
+
+  const { setStatus, isPending: isStatusPending } = useCastingStatusActions();
 
   const published = isCastingStatusPublished(status);
   const publicCastingPath = `${ROUTES.PUBLIC_CASTING}/${defaultCode}`;
@@ -39,9 +43,10 @@ const CastingCard = ({
 
   const castingStatusOptions = useCachedSiteMetadataOption('castingStatusOptions', t, undefined, { raw: true });
 
-  const handleSelectStatus = async () => {
-    // 1) llamás endpoint según stringCode elegido
-    // 2) invalidás query de cards (o patch optimistic si querés)
+  const handleSelectStatus = async (nextStatus: { id: string; stringCode: string; categoryStringCode?: string }) => {
+    if (isStatusPending) return;
+
+    await setStatus(nextStatus, { id, slug: defaultCode });
   };
 
   return (
@@ -64,7 +69,7 @@ const CastingCard = ({
             allowedCodes={allowedStatusCodes ?? []}
             allOptions={castingStatusOptions}
             onSelect={handleSelectStatus}
-            disabled={false}
+            disabled={isStatusPending}
           />
         </div>
 

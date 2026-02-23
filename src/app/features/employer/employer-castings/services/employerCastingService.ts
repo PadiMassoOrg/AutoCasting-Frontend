@@ -71,12 +71,6 @@ export async function deleteCasting({ id }: { id: string }) {
   return { id };
 }
 
-// Casting Statuses
-export const publishCasting = async ({ id }: { id: string }): Promise<EmployerCastingResponse> => {
-  const response = await api.post(API_ROUTES.PUBLISH_CASTING(id));
-  return response.data;
-};
-
 // Basic Info
 export const getSectionBasicInfoById = async (sectionId: string): Promise<CastingSectionBasicInfo> => {
   const response = await api.get(API_ROUTES.CASTING_BASIC_INFO + `/${sectionId}`);
@@ -154,3 +148,29 @@ export async function patchCastingRoleRemuneration(payload: CastingRoleRemunerat
   const { data } = await api.patch(API_ROUTES.CASTING_REMUNERATION_REMUENRATIONS, body);
   return data;
 }
+
+// Casting Statuses
+export const publishCasting = async ({ id }: { id: string }): Promise<EmployerCastingResponse> => {
+  const response = await api.post(API_ROUTES.PUBLISH_CASTING(id));
+  return response.data;
+};
+
+export const setDraftCasting = async ({ id }: { id: string }): Promise<EmployerCastingResponse> => {
+  const response = await api.post(API_ROUTES.DRAFT_CASTING(id));
+  return response.data;
+};
+
+export const pauseCasting = async ({ id }: { id: string }): Promise<EmployerCastingResponse> => {
+  const response = await api.post(API_ROUTES.PAUSE_CASTING(id));
+  return response.data;
+};
+
+export const closeCasting = async ({ id }: { id: string }): Promise<EmployerCastingResponse> => {
+  const response = await api.post(API_ROUTES.CLOSE_CASTING(id));
+  return response.data;
+};
+
+export const archiveCasting = async ({ id }: { id: string }): Promise<EmployerCastingResponse> => {
+  const response = await api.post(API_ROUTES.ARCHIVE_CASTING(id));
+  return response.data;
+};

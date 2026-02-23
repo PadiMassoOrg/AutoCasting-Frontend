@@ -69,7 +69,7 @@ export default function StatusDropdown({ value, allowedCodes, allOptions, onSele
       trigger={({ open, disabled: trigDisabled }) => (
         <div
           className={[
-            'inline-flex items-center gap-1 bg-[var(--color-primary-light-grey)] rounded-full px-1.5 py-1 pl-2.5',
+            'inline-flex items-center gap-1 bg-[var(--color-primary-light-grey)] rounded-full px-1.5 pl-2.5 py-1',
             trigDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
           ].join(' ')}
         >

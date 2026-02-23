@@ -1,3 +1,4 @@
+// useCastingStatusActions.ts
 import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
 import {
   CASTING_STATUS_ARCHIVED,
@@ -6,58 +7,60 @@ import {
   CASTING_STATUS_PAUSED,
   CASTING_STATUS_PUBLISHED,
 } from '../../../../sitemetadata/utils/siteMetadataUtils';
-import { usePublishCastingMutation } from '../status/usePublishCastingMutation';
-// cuando existan:
-// import { usePauseCastingMutation } from '../status/usePauseCastingMutation';
-// import { useCloseCastingMutation } from '../status/useCloseCastingMutation';
-// import { useArchiveCastingMutation } from '../status/useArchiveCastingMutation';
-// import { useDraftCastingMutation } from '../status/useDraftCastingMutation';
+
+import { useCastingStatusMutation, type CastingStatusAction } from '../status/useCastingStatusMutation';
 
 type SetStatusParams = {
   id: string;
   slug?: string;
 };
 
-export function useCastingStatusActions() {
-  const publish = usePublishCastingMutation();
-  // const pause = usePauseCastingMutation();
-  // const close = useCloseCastingMutation();
-  // const archive = useArchiveCastingMutation();
-  // const draft = useDraftCastingMutation();
+const actionByStatusCode: Record<string, CastingStatusAction> = {
+  [CASTING_STATUS_PUBLISHED]: 'publish',
+  [CASTING_STATUS_DRAFT]: 'draft',
+  [CASTING_STATUS_PAUSED]: 'pause',
+  [CASTING_STATUS_CLOSED]: 'close',
+  [CASTING_STATUS_ARCHIVED]: 'archive',
+};
 
-  const isPending = publish.isPending;
-  // || pause.isPending
-  // || close.isPending
-  // || archive.isPending
-  // || draft.isPending
+const allowedStatusCodes = Object.keys(actionByStatusCode);
+
+export function useCastingStatusActions() {
+  const publish = useCastingStatusMutation('publish');
+  const draft = useCastingStatusMutation('draft');
+  const pause = useCastingStatusMutation('pause');
+  const close = useCastingStatusMutation('close');
+  const archive = useCastingStatusMutation('archive');
+
+  const isPending = publish.isPending || draft.isPending || pause.isPending || close.isPending || archive.isPending;
+
   const setStatus = async (next: SiteMetadataObject, params: SetStatusParams) => {
-    switch (next.stringCode) {
-      case CASTING_STATUS_PUBLISHED:
+    const action = actionByStatusCode[next.stringCode];
+    if (!action) return;
+
+    switch (action) {
+      case 'publish':
         await publish.mutateAsync({ id: params.id, slug: params.slug });
         return;
-
-      case CASTING_STATUS_DRAFT:
-        // await draft.mutateAsync({ id: params.id, slug: params.slug });
+      case 'draft':
+        await draft.mutateAsync({ id: params.id, slug: params.slug });
         return;
-
-      case CASTING_STATUS_PAUSED:
-        // await pause.mutateAsync({ id: params.id, slug: params.slug });
+      case 'pause':
+        await pause.mutateAsync({ id: params.id, slug: params.slug });
         return;
-
-      case CASTING_STATUS_CLOSED:
-        // await close.mutateAsync({ id: params.id, slug: params.slug });
+      case 'close':
+        await close.mutateAsync({ id: params.id, slug: params.slug });
         return;
-
-      case CASTING_STATUS_ARCHIVED:
-        // await archive.mutateAsync({ id: params.id, slug: params.slug });
+      case 'archive':
+        await archive.mutateAsync({ id: params.id, slug: params.slug });
         return;
-
       default:
         return;
     }
   };
 
   const setStatusByCode = async (stringCode: string, params: SetStatusParams) => {
+    if (!allowedStatusCodes.includes(stringCode)) return;
     await setStatus({ id: stringCode, stringCode }, params);
   };
 

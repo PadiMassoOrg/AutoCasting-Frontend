@@ -90,4 +90,8 @@ export const API_ROUTES = {
   EMPLOYER_CASTINGS: '/employer/castings',
   EMPLOYER_CASTING: '/employer/casting',
   PUBLISH_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/publish`,
+  DRAFT_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/draft`,
+  PAUSE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/pause`,
+  CLOSE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/close`,
+  ARCHIVE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/archive`,
 };
