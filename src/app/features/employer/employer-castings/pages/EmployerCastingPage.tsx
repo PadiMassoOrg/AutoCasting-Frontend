@@ -1,10 +1,10 @@
-// EmployerCastingPage.tsx
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { DashboardShell } from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { CastingToolBar } from '../components';
+import { CastingBottomBar } from '../components/CastingToolBar';
 import {
   EmployerCastingBasicInfoEditSection,
   EmployerCastingRemunerationEditSection,
@@ -54,6 +54,7 @@ const EmployerCastingPage = () => {
         title={t('employer_castings.dashboard.title_edit')}
         sections={sections}
         contentHeader={<CastingToolBar />}
+        mobileNavBottomBar={<CastingBottomBar />}
       />
     </EmployerCastingIdsProvider>
   );

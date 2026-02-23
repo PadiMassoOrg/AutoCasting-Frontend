@@ -1,13 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAuthToken } from '../../../../shared/lib/cookies';
-import { EMPLOYER_CASTINGS_LIST_CACHE_KEY, getMyCastings } from '../services/employerCastingService';
+import {
+  EMPLOYER_CASTINGS_LIST_CACHE_KEY,
+  getMyCastings,
+  type GetMyCastingsArgs,
+} from '../services/employerCastingService';
 
-export const useEmployerCastings = () => {
+export const useEmployerCastings = (args: GetMyCastingsArgs) => {
   const token = getAuthToken();
 
   return useQuery({
-    queryKey: [...EMPLOYER_CASTINGS_LIST_CACHE_KEY, token ?? 'no-token'],
-    queryFn: getMyCastings,
+    queryKey: [...EMPLOYER_CASTINGS_LIST_CACHE_KEY, token ?? 'no-token', args],
+    queryFn: () => getMyCastings(args),
     enabled: !!token,
     staleTime: 0,
     refetchOnMount: 'always',

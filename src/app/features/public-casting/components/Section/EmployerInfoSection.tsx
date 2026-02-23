@@ -1,12 +1,12 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { Chip } from '../../../../shared/components/Chip/Chip';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { formatMemberSince, normalizeExternalUrl } from '../../../../shared/utils/formatUtils';
 import { getSocialMediaIconName } from '../../../talent/talent-profile-edit/components/Form/SocialMedia/SocialMediaIconMapper';
-import type { CastingEmployerPublicInfo } from '../../types/publicCasting.types';
+import type { EmployerInfo } from '../../types/publicCasting.types';
+import { Chip } from '../../../../shared/components/Chip';
 
-const EmployerInfoSection = ({ data }: { data: CastingEmployerPublicInfo }) => {
+const EmployerInfoSection = ({ data }: { data: EmployerInfo }) => {
   const { t } = useTranslation();
 
   const socialMediaItems =
@@ -33,7 +33,7 @@ const EmployerInfoSection = ({ data }: { data: CastingEmployerPublicInfo }) => {
         <img src={data.imageUrl!} className="w-14 h-14 rounded-full object-cover"></img>
         <div className="flex flex-col gap-1">
           <h2 className="text-lg font-semibold">{data.companyName}</h2>
-          <Chip label={t(data.companyType?.stringCode!)} />
+          {data.companyType && <Chip label={t(data.companyType?.stringCode!)} />}
         </div>
       </div>
       <Separator className="opacity-20 my-1" />

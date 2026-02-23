@@ -66,6 +66,8 @@ export const API_ROUTES = {
   // Database
   TALENT_DATABASE: '/talent-database',
   CASTINGS_DATABASE: '/castings-database',
+  // Casting
+  CASTING: '/casting',
   // Talent
   TALENT_PROFILE: '/talent',
   TALENT_BASIC_INFO: '/talent/basic-info',
@@ -77,7 +79,6 @@ export const API_ROUTES = {
   CREDIT: '/credit',
   EDUCATION: '/education',
   // Employer
-  CASTING: '/casting',
   CASTING_BASIC_INFO: '/casting/basic-info',
   CASTING_ROLE: '/casting/role',
   CASTING_REQUIREMENT: '/casting/requirement',
@@ -89,4 +90,8 @@ export const API_ROUTES = {
   EMPLOYER_CASTINGS: '/employer/castings',
   EMPLOYER_CASTING: '/employer/casting',
   PUBLISH_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/publish`,
+  DRAFT_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/draft`,
+  PAUSE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/pause`,
+  CLOSE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/close`,
+  ARCHIVE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/archive`,
 };

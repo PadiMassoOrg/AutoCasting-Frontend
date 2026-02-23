@@ -1,22 +1,64 @@
 import { Button, Label } from 'autocasting-ui-library-padimasso';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DashboardSection, DashboardShell } from '../../../../layouts/components';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../shared/components/Section';
-import { CastingCard } from '../components';
+import { CastingCard } from '../components/Card';
+import EmployerCastingsFilterBar, {
+  type EmployerCastingsFiltersState,
+} from '../components/Filter/EmployerCastingsFilterBar';
 import { useCreateEmptyCastingMutation } from '../hooks/useCreateEmptyCastingMutation';
+import { useDeleteCastingMutation } from '../hooks/useDeleteCastingMutation';
 import { useEmployerCastings } from '../hooks/useEmployerCastings';
+import type { EmployerCastingsOrderBy } from '../types/employerCastingsFilters.types';
 
 const EmployerCastingsPage = () => {
   const { t } = useTranslation();
-  const { data: myCastings, isLoading } = useEmployerCastings();
-  const { mutate: createEmptyCasting, isPending } = useCreateEmptyCastingMutation();
+  const { mutate: createEmptyCasting, isPending: isCreating } = useCreateEmptyCastingMutation();
+  const { mutate: deleteCasting, isPending: isDeleting } = useDeleteCastingMutation();
+
+  const [filters, setFilters] = useState<EmployerCastingsFiltersState>({
+    projectTypeIds: undefined,
+    statusIdTokens: undefined,
+    search: undefined,
+  });
+
+  const [orderBy, setOrderBy] = useState<EmployerCastingsOrderBy>('CREATION_DATE_DESC');
+
+  const args = useMemo(
+    () => ({
+      page: 0,
+      size: 10,
+      filters,
+      orderBy,
+    }),
+    [filters, orderBy]
+  );
+
+  const { data: myCastings } = useEmployerCastings(args);
+
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDelete = useCallback(
+    (id: string) => {
+      if (isDeleting) return;
+      setDeletingId(id);
+      deleteCasting(
+        { id },
+        {
+          onSettled: () => setDeletingId(null),
+        }
+      );
+    },
+    [deleteCasting, isDeleting]
+  );
 
   const actionButtonRender = () => (
     <Button
       className="flex flex-row items-center justify-center gap-2"
       onClick={createEmptyCasting}
-      disabled={isPending}
+      disabled={isCreating}
     >
       <Icon name="plus" variant="white" size={16} />
       <span className="text-base font-medium">{t('employer_castings.page.create_casting')}</span>
@@ -27,16 +69,30 @@ const EmployerCastingsPage = () => {
     <DashboardShell>
       <DashboardSection>
         <SectionTitle title={t('employer_castings.page.title')} action={actionButtonRender()} />
-        {/* TODO: Filter Bar */}
-        {myCastings?.length! > 0 ? (
-          myCastings?.map((i) => {
-            return <CastingCard data={i} key={i.id}></CastingCard>;
-          })
-        ) : (
-          <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
-            {t('employer_castings.page.empty_page')}
-          </Label>
-        )}
+
+        <EmployerCastingsFilterBar
+          filters={filters}
+          onFiltersChange={setFilters}
+          orderBy={orderBy}
+          onOrderByChange={setOrderBy}
+        />
+
+        <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">
+          {myCastings?.length ? (
+            myCastings.map((i) => (
+              <CastingCard
+                key={i.id}
+                data={i}
+                onDelete={handleDelete}
+                deleteDisabled={isDeleting && deletingId === i.id}
+              />
+            ))
+          ) : (
+            <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
+              {t('employer_castings.page.empty_page')}
+            </Label>
+          )}
+        </div>
       </DashboardSection>
     </DashboardShell>
   );

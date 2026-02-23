@@ -21,7 +21,7 @@ export default function ProtectedRoutesLayout() {
 
   const effectiveDashboardRoute =
     meData.activeMode === 'EMPLOYER'
-      ? ROUTES.EMPLOYER
+      ? ROUTES.EMPLOYER_CASTINGS
       : talentProfileSlug
         ? `${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}`
         : ROUTES.TALENT;

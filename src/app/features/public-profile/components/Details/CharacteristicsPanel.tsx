@@ -1,7 +1,7 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Chip } from '../../../../shared/components/Chip/Chip';
+import { Chip } from '../../../../shared/components/Chip';
 import type { Characteristics } from '../../../talent/talent-profile-edit/types/talentProfile.types';
 import { formatCharacteristicValue } from '../../utils/publicProfileUtils';
 

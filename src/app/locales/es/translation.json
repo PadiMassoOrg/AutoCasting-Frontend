@@ -15,16 +15,21 @@
     "all": "Todos",
     "any": "Cualquiera",
     "accept": "Aceptar",
+    "add": "Agregar",
     "save": "Guardar",
+    "search": "Buscar",
     "save_changes": " Guardar Cambios",
     "delete": "Eliminar",
     "clear": "Limpiar",
     "reset": "Resetear",
     "apply": "Aplicar",
+    "edit": "Editar",
+    "publish": "Publicar",
     "publish_casting": "Publicar Casting",
     "copied": "Copaiado con éxito.",
     "logout": "Cerrar Sesión",
     "no_data": "Sin información.",
+    "untitled": "Sin título.",
     "unspecified": "Sin especificar.",
     "selections": "Selecciones",
     "select_all": "Seleccionar Todas",
@@ -65,10 +70,16 @@
       "casting_modality": "Ej. Carlos Pelegrini 1100 Dto 4A, CABA"
     },
     "filter": {
+      "filter": "Filtrar",
       "title": "Filtros",
       "reset": "Resetear Filtros",
       "hide": "Ocultar Filtros",
       "show": "Mostrar Filtros"
+    },
+    "order": {
+      "order": "Ordenar",
+      "created_desc": "Fecha de creación (más reciente)",
+      "created_asc": "Fecha de creación (más antigua)"
     }
   },
   "validation": {
@@ -745,11 +756,20 @@
       "empty_requirements": "Aún no agregaste requerimientos.",
       "empty_remunerations": "Para gestionar las remuneracions primero creá los Roles."
     },
+    "actions": {
+      "view_details": "Ver Detalles",
+      "view_applicants": "Ver Postulantes",
+      "copy_link": "Copiar Link"
+    },
+    "casting_card": {
+      "status": {
+        "status": "Estado"
+      }
+    },
     "dashboard": {
       "title_new": "Nuevo Casting",
       "title_edit": "Editar Casting",
       "title_delete": "¿Seguro deseas eliminar este rol?",
-      "casting": {},
       "basic_info": {
         "basic_info": "Información Básica",
         "title": "Título",
@@ -785,7 +805,7 @@
       "remunerations": {
         "title": "Remuneración",
         "collaborative": {
-          "description": "Este proyecto se desarrolla de forma cooperativa, sin remuneración económica directa.Usá este espacio para explicar cómo se basa la colaboración, qué se ofrece a cambio de la participación (experiencia, visibilidad, material final, viáticos u otros acuerdos) y cualquier detalle relevante para el talento.",
+          "description": "Este proyecto se desarrolla de forma cooperativa, sin remuneración económica directa. Usá este espacio para explicar cómo se basa la colaboración, qué se ofrece a cambio de la participación (experiencia, visibilidad, material final, viáticos u otros acuerdos) y cualquier detalle relevante para el talento.",
           "label": "Notas/Compensación adicional (opcional)",
           "placeholder": "Ej. Viáticos, productos gratis, etc..."
         },
@@ -794,6 +814,10 @@
           "amount_label": "Monto"
         }
       }
+    },
+    "order": {
+      "deadline_asc": "Fecha límite (más cercana)",
+      "deadline_desc": "Fecha límite (más lejana)"
     }
   },
   "legal": {

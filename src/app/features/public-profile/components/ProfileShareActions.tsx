@@ -25,7 +25,6 @@ export default function ProfileShareActions({ data }: Props) {
 
   const handleShare = async () => {
     await shareUrl({
-      title: basicInfo?.stageName ?? t('profile.share.profile_no_name'),
       url,
       onCopied: () => alert(t('general.copied')),
       onError: () => alert(t('general.error')),

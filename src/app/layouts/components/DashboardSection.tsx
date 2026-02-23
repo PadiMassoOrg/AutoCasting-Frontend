@@ -6,5 +6,5 @@ type DashboardSectionProps = {
 };
 
 export default function DashboardSection({ children, className = '' }: DashboardSectionProps) {
-  return <section className={`flex flex-col gap-6 pb-20 ${className}`}>{children}</section>;
+  return <section className={`flex flex-col gap-4 pb-14 ${className}`}>{children}</section>;
 }

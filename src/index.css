@@ -39,6 +39,15 @@
     /* Fonts */
     --font-inter: 'Inter', sans-serif;
     --font-serif: 'Source Serif 4', serif;
+    /* SiteMetadata */
+    --casting-status-draft: #a1a3b2;
+    --casting-status-published: #008856;
+    --casting-status-paused: #fdc200;
+    --casting-status-closed: #ef0c0c;
+    --casting-status-archived: #73737d;
+    --application-status-test: #fafafa;
+    --status-unknown: #b0b0b0;
+    /*  */
   }
 
   /* General */

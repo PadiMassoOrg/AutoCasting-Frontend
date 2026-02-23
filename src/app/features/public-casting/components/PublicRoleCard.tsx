@@ -2,7 +2,7 @@ import { Separator } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronUpDown } from '../../../shared/components/Chevron';
-import { Chip } from '../../../shared/components/Chip/Chip';
+import { Chip } from '../../../shared/components/Chip';
 import { formatBooleanLabeled, formatCurrencyAmount } from '../../../shared/utils/formatUtils';
 import type { CastingRole } from '../types/publicCasting.types';
 
@@ -35,17 +35,19 @@ const PublicRoleCard = ({ data }: { data: CastingRole }) => {
       {/* Title + header chips (siempre visibles) */}
       <div className="flex flex-col gap-2">
         <span className="flex flex-row items-center justify-between">
-          <h2 className="text-base font-bold">{data.name}</h2>
-          <button
-            type="button"
-            onClick={() => setOpen((prev) => !prev)}
-            className="cursor-pointer"
-            aria-expanded={open}
-          >
-            <ChevronUpDown open={open} />
-          </button>
+          <h2 className="text-base font-bold">{data.roleName}</h2>
+          {data.description || characteristicsChips.length > 0 || skillsChips.length > 0 ? (
+            <button
+              type="button"
+              onClick={() => setOpen((prev) => !prev)}
+              className="cursor-pointer"
+              aria-expanded={open}
+            >
+              <ChevronUpDown open={open} />
+            </button>
+          ) : null}
         </span>
-        <div className="flex flex-row flex-wrap gap-1">
+        <div className="flex flex-row flex-wrap gap-2">
           {headerChips.map((chip) => (
             <Chip key={chip.key} label={t(chip.label)} />
           ))}
@@ -59,23 +61,29 @@ const PublicRoleCard = ({ data }: { data: CastingRole }) => {
             <p className="text-sm text-[var(--color-secondary-grey-fonts)] font-light">{data.description}</p>
           )}
 
-          <div className="flex flex-col gap-2">
-            <h2 className="text-sm font-semibold">{t('casting.characteristics.characteristics')}:</h2>
-            <div className="flex flex-row flex-wrap gap-1">
-              {characteristicsChips.map((chip) => (
-                <Chip key={chip.key} label={t(chip.label)} />
-              ))}
+          {characteristicsChips.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <h2 className="text-sm font-semibold">
+                {t('casting.role_section.role.characteristics.characteristics')}:
+              </h2>
+              <div className="flex flex-row flex-wrap gap-2">
+                {characteristicsChips.map((chip) => (
+                  <Chip key={chip.key} label={t(chip.label)} />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          <div className="flex flex-col gap-2">
-            <h2 className="text-sm font-semibold">{t('casting.role_section.role.skills.skills')}:</h2>
-            <div className="flex flex-row flex-wrap gap-1">
-              {skillsChips.map((chip) => (
-                <Chip key={chip.key} label={t(chip.label)} />
-              ))}
+          {skillsChips.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <h2 className="text-sm font-semibold">{t('casting.role_section.role.skills.skills')}:</h2>
+              <div className="flex flex-row flex-wrap gap-2">
+                {skillsChips.map((chip) => (
+                  <Chip key={chip.key} label={t(chip.label)} />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </>
       )}
 

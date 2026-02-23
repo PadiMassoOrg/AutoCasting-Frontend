@@ -2,24 +2,26 @@ import { Label } from 'autocasting-ui-library-padimasso';
 import type { HTMLAttributes } from 'react';
 import { useId } from 'react';
 
-export type RadioOption = {
+export type RadioOption<TMeta = unknown> = {
   value: string;
   label: string;
   disabled?: boolean;
+  meta?: TMeta;
 };
 
-type Props = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & {
+type Props<TMeta = unknown> = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & {
   label?: string;
   value: string;
-  options: RadioOption[];
+  options: RadioOption<TMeta>[];
   disabled?: boolean;
   name?: string;
   onValueChange: (value: string) => void;
 
+  renderOption?: (opt: RadioOption<TMeta>, checked: boolean) => React.ReactNode;
+
   labelClassName?: string;
   wrapperClassName?: string;
 
-  /** style hooks */
   optionsWrapperClassName?: string;
   optionClassName?: string;
   legendClassName?: string;
@@ -27,27 +29,8 @@ type Props = Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> & {
   required?: boolean;
 };
 
-const RadioGroupField = ({
-  label,
-  value,
-  options,
-  disabled = false,
-  name,
-  onValueChange,
-
-  wrapperClassName = 'flex flex-col',
-  labelClassName = 'text-sm font-semibold mb-3',
-  optionsWrapperClassName = 'flex flex-col gap-2',
-  optionClassName = 'flex items-center gap-2 text-sm',
-
-  required = false,
-  className,
-  ...rest
-}: Props) => {
-  const uid = useId();
-  const groupName = (name ?? 'radio') + '__' + uid;
-
-  const renderRadioInput = (checked: boolean, props: React.InputHTMLAttributes<HTMLInputElement>) => (
+function renderRadioInput(checked: boolean, props: React.InputHTMLAttributes<HTMLInputElement>) {
+  return (
     <span className="relative inline-flex items-center justify-center h-6 w-6">
       <input
         {...props}
@@ -81,6 +64,28 @@ const RadioGroupField = ({
       />
     </span>
   );
+}
+
+const RadioGroupField = <TMeta,>({
+  label,
+  value,
+  options,
+  disabled = false,
+  name,
+  onValueChange,
+
+  wrapperClassName = 'flex flex-col',
+  labelClassName = 'text-sm font-semibold mb-3',
+  optionsWrapperClassName = 'flex flex-col gap-2',
+  optionClassName = 'flex items-center gap-2 text-sm',
+
+  required = false,
+  className,
+  renderOption,
+  ...rest
+}: Props<TMeta>) => {
+  const uid = useId();
+  const groupName = (name ?? 'radio') + '__' + uid;
 
   return (
     <div className={[wrapperClassName, className].filter(Boolean).join(' ')} {...rest}>
@@ -117,7 +122,8 @@ const RadioGroupField = ({
                   onValueChange(opt.value);
                 },
               })}
-              <span className="cursor-pointer select-none">{opt.label}</span>
+
+              {renderOption ? renderOption(opt, checked) : <span className="select-none">{opt.label}</span>}
             </label>
           );
         })}

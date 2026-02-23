@@ -194,7 +194,7 @@ const CastingDatabasePage = () => {
 
           <div
             ref={cardsScrollRef}
-            className="py-4 px-6 sm:px-[56px] lg:py-8 w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
+            className="p-6 sm:px-[56px] w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
           >
             <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
               <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>

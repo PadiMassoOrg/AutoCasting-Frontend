@@ -1,36 +1,58 @@
 import type { DeepNullableExceptId } from '../../../shared/utils/typeUtils';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
-import type { Characteristics, ProfileSocialMedia } from '../../talent/talent-profile-edit/types/talentProfile.types';
+import type { Characteristics } from '../../talent/talent-profile-edit/types/talentProfile.types';
 
-export type CastingBaseResponse = {
+export type PublicCastingResponse = {
   id: string;
   defaultCode: string;
   castingStatus: SiteMetadataObject;
-  employerInfo: CastingEmployerPublicInfo;
-  castingBasicInfo: CastingBasicInfo;
-  castingRoles: CastingRoles;
-  castingActing: CastingActing;
-  castingRemuneration: CastingRemuneration;
+  employerInfo: EmployerInfo;
+  basicInfoSection: CastingBasicInfoSection;
+  rolesSection: CastingRolesSection;
+  requirementsSection: CastingRequirementsSection;
+  remunerationSection: CastingRemunerationsSection;
 };
 
 // ======================
-// Related Entities
+// Employer (Casting public response)
 // ======================
-export type BaseCastingEmployerPublicInfo = {
+export type BaseEmployerInfo = {
   id: string;
   companyName: string;
   companyType: SiteMetadataObject;
   imageUrl: string;
+  socialMedia: EmployerSocialMedia;
   totalCastings: number;
   memberSince: string;
-  socialMedia: ProfileSocialMedia;
+  taxNumber?: string;
+  companyEmail?: string;
+  address?: string;
+  websiteUrl?: string;
+  about?: string;
 };
 
-export type BaseCastingBasicInfo = {
+export type BaseEmployerSocialMedia = {
+  links: EmployerSocialMediaLink[];
+};
+
+export type BaseEmployerSocialMediaLink = {
+  optionId: string;
+  stringCode: string;
+  url: string;
+};
+
+export type EmployerInfo = DeepNullableExceptId<BaseEmployerInfo>;
+export type EmployerSocialMedia = DeepNullableExceptId<BaseEmployerSocialMedia>;
+export type EmployerSocialMediaLink = DeepNullableExceptId<BaseEmployerSocialMediaLink>;
+
+// ======================
+// Sections
+// ======================
+export type BaseCastingBasicInfoSection = {
   id: string;
+  sectionStatus: SiteMetadataObject;
   title: string;
   projectType: SiteMetadataObject;
-  location: string;
   castingModality: SiteMetadataObject;
   castingModalityText: string;
   applicationDeadline: string;
@@ -41,15 +63,34 @@ export type BaseCastingBasicInfo = {
   description: string;
 };
 
-export type BaseCastingRoles = {
+export type BaseCastingRolesSection = {
   id: string;
+  sectionStatus: SiteMetadataObject;
   generalNotes: string;
   roles: CastingRole[];
 };
 
+export type BaseCastingRequirementsSection = {
+  id: string;
+  sectionStatus: SiteMetadataObject;
+  requirements: CastingRequirement[];
+};
+
+export type BaseCastingRemunerationsSection = {
+  id: string;
+  sectionStatus: SiteMetadataObject;
+  compensationType: SiteMetadataObject;
+  notes: string;
+  remunerations: CastingRoleRemunerationRow[];
+};
+
+// ======================
+// Nested Entities
+// ======================
 export type BaseCastingRole = {
   id: string;
-  name: string;
+  sectionId: string;
+  roleName: string;
   roleType: SiteMetadataObject;
   gender: SiteMetadataObject;
   ageMin: number;
@@ -61,45 +102,38 @@ export type BaseCastingRole = {
   remuneration: CastingRoleRemuneration;
 };
 
-export type BaseCastingActing = {
+export type BaseCastingRequirement = {
   id: string;
-  actingMode: SiteMetadataObject;
-  requirements: CastingActingRequirement[];
-};
-
-export type BaseCastingActingRequirement = {
-  id: string;
-  castingRoleId: string;
+  roleId: string;
   description: string;
-  slotsCount: number;
-};
-
-export type BaseCastingRemuneration = {
-  id: string;
-  compensationType: SiteMetadataObject;
-  paySameForAllRoles: boolean;
-  remunerations: CastingRoleRemuneration[];
+  requiresAudio: boolean;
+  requiresVideo: boolean;
 };
 
 export type BaseCastingRoleRemuneration = {
   id: string;
   castingRoleId: string;
+  isComplete: boolean;
   payRateType: SiteMetadataObject;
   currency: SiteMetadataObject;
   amount: number;
   notes: string;
 };
 
+export type BaseCastingRoleRemunerationRow = BaseCastingRoleRemuneration & {
+  roleName: string;
+};
+
 /* ======================
    Export & DeepNullable
    ====================== */
-export type CastingEmployerPublicInfo = DeepNullableExceptId<BaseCastingEmployerPublicInfo>;
-export type CastingBasicInfo = DeepNullableExceptId<BaseCastingBasicInfo>;
-export type CastingRoles = DeepNullableExceptId<BaseCastingRoles>;
-export type CastingRole = DeepNullableExceptId<BaseCastingRole>;
-export type CastingActing = DeepNullableExceptId<BaseCastingActing>;
-export type CastingActingRequirement = DeepNullableExceptId<BaseCastingActingRequirement>;
-export type CastingRemuneration = DeepNullableExceptId<BaseCastingRemuneration>;
-export type CastingRoleRemuneration = DeepNullableExceptId<BaseCastingRoleRemuneration>;
+export type CastingBasicInfoSection = DeepNullableExceptId<BaseCastingBasicInfoSection>;
+export type CastingRolesSection = DeepNullableExceptId<BaseCastingRolesSection>;
+export type CastingRequirementsSection = DeepNullableExceptId<BaseCastingRequirementsSection>;
+export type CastingRemunerationsSection = DeepNullableExceptId<BaseCastingRemunerationsSection>;
 
-export type PublicCastingResponse = CastingBaseResponse;
+export type CastingRole = DeepNullableExceptId<BaseCastingRole>;
+export type CastingRequirement = DeepNullableExceptId<BaseCastingRequirement>;
+
+export type CastingRoleRemuneration = DeepNullableExceptId<BaseCastingRoleRemuneration>;
+export type CastingRoleRemunerationRow = DeepNullableExceptId<BaseCastingRoleRemunerationRow>;
