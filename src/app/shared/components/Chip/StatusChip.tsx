@@ -3,17 +3,18 @@ import type { SiteMetadataObject } from '../../../features/sitemetadata/types/si
 import { resolveCastingStatusColorVar } from '../../../features/sitemetadata/utils/siteMetadataUtils';
 
 type StatusChipVariant = 'bordered' | 'inline';
+type StatusChipAlign = 'inline' | 'spaced';
 
 type StatusChipProps = {
   status: SiteMetadataObject;
   variant?: StatusChipVariant;
+  align?: StatusChipAlign;
   className?: string;
 };
 
-export default function StatusChip({ status, variant = 'bordered', className }: StatusChipProps) {
+export default function StatusChip({ status, variant = 'bordered', align = 'inline', className }: StatusChipProps) {
   const { t } = useTranslation();
   const code = status?.stringCode;
-
   if (!code) return null;
 
   const colorVar = resolveCastingStatusColorVar(code);
@@ -23,13 +24,23 @@ export default function StatusChip({ status, variant = 'bordered', className }: 
   const borderedClasses =
     'rounded-xl border px-3 py-1 bg-[var(--color-primary-white)] border-[var(--color-secondary-outline)] text-[var(--color-primary-black)]';
   const inlineClasses = 'text-[var(--color-primary-black)]';
+  const alignClasses = align === 'spaced' ? 'w-full justify-between' : '';
 
   return (
     <span
-      className={[baseClasses, variant === 'bordered' ? borderedClasses : inlineClasses, className ?? ''].join(' ')}
+      className={[
+        baseClasses,
+        alignClasses,
+        variant === 'bordered' ? borderedClasses : inlineClasses,
+        className ?? '',
+      ].join(' ')}
     >
       <span className="text-sm">{t(code)}</span>
-      <span className="inline-block w-4 h-4 rounded-full" style={{ background: colorVar }} aria-hidden="true" />
+      <span
+        className="inline-block w-4 h-4 rounded-full shrink-0"
+        style={{ background: colorVar }}
+        aria-hidden="true"
+      />
     </span>
   );
 }

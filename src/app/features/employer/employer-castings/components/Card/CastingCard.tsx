@@ -1,10 +1,12 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { Chip, StatusChip } from '../../../../../shared/components/Chip';
+import { Chip } from '../../../../../shared/components/Chip';
 import { OverflowMenu } from '../../../../../shared/components/OverflowMenu';
 import { SectionCard } from '../../../../../shared/components/Section';
 import { ROUTES } from '../../../../../shared/lib/routes';
 import { formatLocalDate } from '../../../../../shared/utils/formatUtils';
+import StatusDropdown from '../../../../sitemetadata/component/StatusDropdown';
+import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { isCastingStatusPublished } from '../../../../sitemetadata/utils/siteMetadataUtils';
 import { useCastingOverflowMenuItems } from '../../hooks/useCastingOverflowMenuItems';
 import type { CastingCardResponse } from '../../types/employerCastings.types';
@@ -20,7 +22,9 @@ const CastingCard = ({
 }) => {
   const { t } = useTranslation();
   if (!data) return null;
-  const { id, title, defaultCode, creationDate, applicationDeadline, projectType, status } = data;
+
+  const { id, title, defaultCode, creationDate, applicationDeadline, projectType, status, allowedStatusCodes } = data;
+
   const published = isCastingStatusPublished(status);
   const publicCastingPath = `${ROUTES.PUBLIC_CASTING}/${defaultCode}`;
   const editCastingPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}`;
@@ -32,6 +36,13 @@ const CastingCard = ({
     onDelete: onDelete ? () => onDelete(id) : undefined,
     deleteDisabled,
   });
+
+  const castingStatusOptions = useCachedSiteMetadataOption('castingStatusOptions', t, undefined, { raw: true });
+
+  const handleSelectStatus = async () => {
+    // 1) llamás endpoint según stringCode elegido
+    // 2) invalidás query de cards (o patch optimistic si querés)
+  };
 
   return (
     <SectionCard className="lg:min-w-[415px]">
@@ -47,7 +58,14 @@ const CastingCard = ({
           <p className="text-[var(--color-secondary-grey-fonts)]">
             {t('employer_castings.casting_card.status.status')}:
           </p>
-          <StatusChip status={status} variant="inline" />
+
+          <StatusDropdown
+            value={status}
+            allowedCodes={allowedStatusCodes ?? []}
+            allOptions={castingStatusOptions}
+            onSelect={handleSelectStatus}
+            disabled={false}
+          />
         </div>
 
         <div className="w-full flex flex-row items-center justify-between">
