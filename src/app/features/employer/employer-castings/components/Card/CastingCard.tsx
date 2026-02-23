@@ -42,6 +42,7 @@ const CastingCard = ({
   });
 
   const castingStatusOptions = useCachedSiteMetadataOption('castingStatusOptions', t, undefined, { raw: true });
+  const isMetadataReady = Array.isArray(castingStatusOptions) && castingStatusOptions.length > 0;
 
   const handleSelectStatus = async (nextStatus: { id: string; stringCode: string; categoryStringCode?: string }) => {
     if (isStatusPending) return;
@@ -49,47 +50,48 @@ const CastingCard = ({
     await setStatus(nextStatus, { id, slug: defaultCode });
   };
 
-  return (
-    <SectionCard className="lg:min-w-[415px]">
-      <div className="flex flex-row items-center justify-between">
-        <h2 className="font-bold">{title != null ? title : t('general.untitled')}</h2>
-        <OverflowMenu items={items} align="end" side="bottom" />
-      </div>
-
-      <Separator className="opacity-20 my-3" />
-
-      <div className="w-full flex flex-col items-center gap-2 text-sm">
-        <div className="w-full flex flex-row items-center justify-between">
-          <p className="text-[var(--color-secondary-grey-fonts)]">
-            {t('employer_castings.casting_card.status.status')}:
-          </p>
-
-          <StatusDropdown
-            value={status}
-            allowedCodes={allowedStatusCodes ?? []}
-            allOptions={castingStatusOptions}
-            onSelect={handleSelectStatus}
-            disabled={isStatusPending}
-          />
+  if (isMetadataReady)
+    return (
+      <SectionCard className="lg:min-w-[415px]">
+        <div className="flex flex-row items-center justify-between">
+          <h2 className="font-bold">{title != null ? title : t('general.untitled')}</h2>
+          <OverflowMenu items={items} align="end" side="bottom" />
         </div>
 
-        <div className="w-full flex flex-row items-center justify-between">
-          <p className="text-[var(--color-secondary-grey-fonts)]">{t('general.creation_date')}:</p>
-          <span>{formatLocalDate(creationDate, 'dayMonth')}</span>
-        </div>
+        <Separator className="opacity-20 my-3" />
 
-        <div className="w-full flex flex-row items-center justify-between">
-          <p className="text-[var(--color-secondary-grey-fonts)]">{t('general.limit_date')}:</p>
-          <span>{formatLocalDate(applicationDeadline, 'dayMonth')}</span>
-        </div>
+        <div className="w-full flex flex-col items-center gap-2 text-sm">
+          <div className="w-full flex flex-row items-center justify-between">
+            <p className="text-[var(--color-secondary-grey-fonts)]">
+              {t('employer_castings.casting_card.status.status')}:
+            </p>
 
-        <div className="w-full flex flex-row items-center justify-between">
-          <p className="text-[var(--color-secondary-grey-fonts)]">{t('casting.basic_info.project_type')}:</p>
-          {projectType?.stringCode && <Chip label={t(projectType.stringCode)} />}
+            <StatusDropdown
+              value={status}
+              allowedCodes={allowedStatusCodes ?? []}
+              allOptions={castingStatusOptions}
+              onSelect={handleSelectStatus}
+              disabled={isStatusPending}
+            />
+          </div>
+
+          <div className="w-full flex flex-row items-center justify-between">
+            <p className="text-[var(--color-secondary-grey-fonts)]">{t('general.creation_date')}:</p>
+            <span>{formatLocalDate(creationDate, 'dayMonth')}</span>
+          </div>
+
+          <div className="w-full flex flex-row items-center justify-between">
+            <p className="text-[var(--color-secondary-grey-fonts)]">{t('general.limit_date')}:</p>
+            <span>{formatLocalDate(applicationDeadline, 'dayMonth')}</span>
+          </div>
+
+          <div className="w-full flex flex-row items-center justify-between">
+            <p className="text-[var(--color-secondary-grey-fonts)]">{t('casting.basic_info.project_type')}:</p>
+            {projectType?.stringCode && <Chip label={t(projectType.stringCode)} />}
+          </div>
         </div>
-      </div>
-    </SectionCard>
-  );
+      </SectionCard>
+    );
 };
 
 export default CastingCard;
