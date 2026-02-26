@@ -8,11 +8,11 @@ export function useCachedSiteMetadata(): SiteMetadataResponse | undefined {
 
   const { data } = useQuery<SiteMetadataResponse | undefined>({
     queryKey: METADATA_CACHE_KEY,
-    queryFn: async () => qc.getQueryData<SiteMetadataResponse>(METADATA_CACHE_KEY),
     enabled: false,
+    initialData: () => qc.getQueryData<SiteMetadataResponse>(METADATA_CACHE_KEY),
   });
 
-  return data ?? qc.getQueryData<SiteMetadataResponse>(METADATA_CACHE_KEY);
+  return data;
 }
 
 export function useCachedSiteMetadataSlice<K extends keyof SiteMetadataResponse>(key: K) {
