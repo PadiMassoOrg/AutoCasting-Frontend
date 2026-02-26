@@ -30,11 +30,11 @@ const CastingCard = ({
   const { setStatus, isPending: isStatusPending } = useCastingStatusActions();
 
   const published = isCastingStatusPublished(status);
-  const publicCastingPath = `${ROUTES.PUBLIC_CASTING}/${defaultCode}`;
+  const employerCastingDetailsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/details`;
   const editCastingPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/editor`;
 
   const items = useCastingOverflowMenuItems({
-    publicCastingPath,
+    employerCastingDetailsPath,
     editCastingPath,
     disablePublicActions: !published,
     onDelete: onDelete ? () => onDelete(id) : undefined,
