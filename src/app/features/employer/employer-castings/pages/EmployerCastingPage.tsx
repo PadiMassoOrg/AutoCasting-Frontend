@@ -12,13 +12,13 @@ import {
   EmployerCastingRolesEditSection,
 } from '../components/Section';
 import { EmployerCastingIdsProvider } from '../context/EmployerCastingContext';
-import { useEmployerCastingDetailsBySlug } from '../hooks/useEmployerCastingDetailsBySlug';
+import { useEmployerCastingEditorBySlug } from '../hooks/useEmployerCastingDetailsBySlug';
 
 const EmployerCastingPage = () => {
   const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
 
-  const { data, isLoading, error } = useEmployerCastingDetailsBySlug(slug);
+  const { data, isLoading, error } = useEmployerCastingEditorBySlug(slug);
 
   if (isLoading || !data) return null;
   if (error) return <ServerError />;

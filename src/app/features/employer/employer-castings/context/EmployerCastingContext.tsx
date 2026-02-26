@@ -1,11 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
-import type { EmployerCastingResponse } from '../types/employerCastings.types';
+import type { EmployerCastingEditorResponse } from '../types/employerCastings.types';
 
 type SectionKey = 'basic' | 'roles' | 'requirements' | 'remuneration';
 
 type EmployerCastingIds = Pick<
-  EmployerCastingResponse,
+  EmployerCastingEditorResponse,
   | 'id'
   | 'defaultCode'
   | 'castingStatus'

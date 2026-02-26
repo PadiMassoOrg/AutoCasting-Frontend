@@ -31,7 +31,7 @@ const CastingCard = ({
 
   const published = isCastingStatusPublished(status);
   const publicCastingPath = `${ROUTES.PUBLIC_CASTING}/${defaultCode}`;
-  const editCastingPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}`;
+  const editCastingPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/editor`;
 
   const items = useCastingOverflowMenuItems({
     publicCastingPath,

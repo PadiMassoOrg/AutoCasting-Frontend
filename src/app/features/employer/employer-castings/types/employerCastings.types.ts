@@ -24,7 +24,7 @@ export type BaseCastingResponse = {
   remunerationSection: CastingSectionRemunerations;
 };
 
-export type EmployerBaseCastingResponse = {
+export type BaseEmployerCastingEditorResponse = {
   id: string;
   defaultCode: string;
   castingStatus: SiteMetadataObject;
@@ -130,4 +130,4 @@ export type EmployerCastingRemunerationCardResponse = WithAuditable<BaseCastingR
 
 export type CastingCardResponse = WithAuditable<BaseCastingCard>;
 export type CastingResponse = WithAuditable<BaseCastingResponse>;
-export type EmployerCastingResponse = WithAuditable<EmployerBaseCastingResponse>;
+export type EmployerCastingEditorResponse = WithAuditable<BaseEmployerCastingEditorResponse>;

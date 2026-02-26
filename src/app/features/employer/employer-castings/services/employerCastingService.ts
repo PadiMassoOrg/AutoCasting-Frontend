@@ -8,8 +8,8 @@ import type {
   CastingSectionRemunerations,
   CastingSectionRequirements,
   CastingSectionRoles,
+  EmployerCastingEditorResponse,
   EmployerCastingRequirementCardResponse,
-  EmployerCastingResponse,
   EmployerCastingRoleCardResponse,
 } from '../types/employerCastings.types';
 import type { EmployerCastingsOrderBy } from '../types/employerCastingsFilters.types';
@@ -56,8 +56,8 @@ export async function getMyCastings({ page, size, filters, orderBy }: GetMyCasti
   return data;
 }
 
-export const getEmployerCastingDetailsBySlug = async (slug: string): Promise<EmployerCastingResponse> => {
-  const response = await api.get(API_ROUTES.EMPLOYER_CASTING + `/${slug}`);
+export const getEmployerCastingEditorBySlug = async (slug: string): Promise<EmployerCastingEditorResponse> => {
+  const response = await api.get(API_ROUTES.EMPLOYER_CASTING + `/${slug}` + '/editor');
   return response.data;
 };
 
@@ -150,27 +150,27 @@ export async function patchCastingRoleRemuneration(payload: CastingRoleRemunerat
 }
 
 // Casting Statuses
-export const publishCasting = async ({ id }: { id: string }): Promise<EmployerCastingResponse> => {
+export const publishCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
   const response = await api.post(API_ROUTES.PUBLISH_CASTING(id));
   return response.data;
 };
 
-export const setDraftCasting = async ({ id }: { id: string }): Promise<EmployerCastingResponse> => {
+export const setDraftCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
   const response = await api.post(API_ROUTES.DRAFT_CASTING(id));
   return response.data;
 };
 
-export const pauseCasting = async ({ id }: { id: string }): Promise<EmployerCastingResponse> => {
+export const pauseCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
   const response = await api.post(API_ROUTES.PAUSE_CASTING(id));
   return response.data;
 };
 
-export const closeCasting = async ({ id }: { id: string }): Promise<EmployerCastingResponse> => {
+export const closeCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
   const response = await api.post(API_ROUTES.CLOSE_CASTING(id));
   return response.data;
 };
 
-export const archiveCasting = async ({ id }: { id: string }): Promise<EmployerCastingResponse> => {
+export const archiveCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
   const response = await api.post(API_ROUTES.ARCHIVE_CASTING(id));
   return response.data;
 };
