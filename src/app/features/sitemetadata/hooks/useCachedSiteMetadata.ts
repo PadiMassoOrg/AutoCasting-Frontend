@@ -1,11 +1,18 @@
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { TFunction } from 'i18next';
 import { METADATA_CACHE_KEY } from '../services/siteMetadataService';
 import type { SiteMetadataObject, SiteMetadataResponse } from '../types/sitemetadata.types';
 
 export function useCachedSiteMetadata(): SiteMetadataResponse | undefined {
   const qc = useQueryClient();
-  return qc.getQueryData<SiteMetadataResponse>(METADATA_CACHE_KEY);
+
+  const { data } = useQuery<SiteMetadataResponse | undefined>({
+    queryKey: METADATA_CACHE_KEY,
+    queryFn: async () => qc.getQueryData<SiteMetadataResponse>(METADATA_CACHE_KEY),
+    enabled: false,
+  });
+
+  return data ?? qc.getQueryData<SiteMetadataResponse>(METADATA_CACHE_KEY);
 }
 
 export function useCachedSiteMetadataSlice<K extends keyof SiteMetadataResponse>(key: K) {

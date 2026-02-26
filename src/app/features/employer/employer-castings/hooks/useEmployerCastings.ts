@@ -10,7 +10,14 @@ export const useEmployerCastings = (args: GetMyCastingsArgs) => {
   const token = getAuthToken();
 
   return useQuery({
-    queryKey: [...EMPLOYER_CASTINGS_LIST_CACHE_KEY, token ?? 'no-token', args],
+    queryKey: [
+      ...EMPLOYER_CASTINGS_LIST_CACHE_KEY,
+      token ?? 'no-token',
+      args.page,
+      args.size,
+      args.orderBy,
+      JSON.stringify(args.filters ?? {}),
+    ],
     queryFn: () => getMyCastings(args),
     enabled: !!token,
     staleTime: 0,
