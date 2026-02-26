@@ -40,7 +40,10 @@ export default function ProtectedRoutesLayout() {
         <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/editor'} element={<EmployerCastingPage />} />
       </Route>
       <Route element={<NavigationLayout />}>
-        <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/details'} element={<EmployerCastingDetailsPage />} />
+        <Route
+          path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/details'}
+          element={<EmployerCastingDetailsPage mode="employer" />}
+        />
       </Route>
       <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
     </Routes>

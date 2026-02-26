@@ -3,11 +3,18 @@ import { useParams } from 'react-router-dom';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { ApplySection, BasicInfoSection, EmployerInfoSection, RolesSection } from '../components/Section';
-import { useCastingDetailsBySlug } from '../hooks/useCastingDetailsBySlug';
+import { useCastingDetails } from '../hooks/useCastingDetails';
 
-const EmployerCastingDetailsPage = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const { data, error, isLoading } = useCastingDetailsBySlug(slug!);
+type Props = { mode: 'public' | 'employer' };
+
+const CastingDetailsPage = ({ mode }: Props) => {
+  const { slug, roleId } = useParams<{ slug: string; roleId?: string }>();
+  const { data, error, isLoading } = useCastingDetails({
+    mode,
+    slug: slug!,
+    roleId,
+  });
+
   const isDesktop = useMedia(LG_SCREEN_SIZE);
 
   if (isLoading || !data) return null;
@@ -41,4 +48,4 @@ const EmployerCastingDetailsPage = () => {
   );
 };
 
-export default EmployerCastingDetailsPage;
+export default CastingDetailsPage;

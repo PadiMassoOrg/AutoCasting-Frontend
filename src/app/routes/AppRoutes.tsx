@@ -15,6 +15,7 @@ import { getAuthToken } from '../shared/lib/cookies';
 import { ROUTES } from '../shared/lib/routes';
 import ProtectedRoute from './ProtectedRoute';
 import ProtectedRoutesLayout from './ProtectedRoutesLayout';
+import CastingDetailsPage from '../features/public-casting/pages/CastingDetailsPage';
 
 function RouteTracker() {
   useRouteTracking();
@@ -65,6 +66,7 @@ function AppRoutesContent() {
       </Route>
       <Route element={<NavigationLayout />}>
         <Route path={ROUTES.PUBLIC_PROFILE + '/:slug'} element={<PublicProfilePage />} />
+        <Route path={ROUTES.PUBLIC_CASTING + '/:slug/roles/:roleId'} element={<CastingDetailsPage mode="public" />} />
       </Route>
       <Route element={<ScrollContentLayout />}>
         <Route path={ROUTES.TALENT_DATABASE} element={<TalentDatabasePage />} />
