@@ -17,6 +17,7 @@ const CastingRolePublicCard = ({ item }: Props) => {
   const isDesktop = useMedia(XL_SCREEN_SIZE);
 
   const {
+    id,
     name,
     employerImageUrl,
     employerCompanyName,
@@ -59,7 +60,7 @@ const CastingRolePublicCard = ({ item }: Props) => {
         </div>
         <Separator className="opacity-20"></Separator>
         <Button asChild variant="primary">
-          <Link to={`${ROUTES.PUBLIC_CASTING}/${defaultCode}`}>
+          <Link to={`${ROUTES.PUBLIC_CASTING}/${defaultCode}/roles/${id}`}>
             {t('buttons.view_details')}
             <ChevronRight />
           </Link>
@@ -93,7 +94,7 @@ const CastingRolePublicCard = ({ item }: Props) => {
             <Chip label={formatAgeRange(ageMin, ageMax, t)} />
           </div>
           <Button asChild variant="primary" className="max-w-[180px]">
-            <Link to={`${ROUTES.PUBLIC_CASTING}/${defaultCode}`}>
+            <Link to={`${ROUTES.PUBLIC_CASTING}/${defaultCode}/roles/${id}`}>
               {t('buttons.view_details')}
               <ChevronRight />
             </Link>

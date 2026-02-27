@@ -5,7 +5,7 @@ import type { OverflowMenuItem } from '../../../../shared/components/OverflowMen
 import { copyToClipboardGraceful } from '../../../../shared/utils/domUtils';
 
 type Params = {
-  publicCastingPath: string;
+  employerCastingDetailsPath: string;
   editCastingPath?: string;
   disablePublicActions: boolean;
   onApplicants?: () => void;
@@ -14,7 +14,7 @@ type Params = {
 };
 
 export const useCastingOverflowMenuItems = ({
-  publicCastingPath,
+  employerCastingDetailsPath,
   editCastingPath,
   disablePublicActions,
   onApplicants,
@@ -31,7 +31,7 @@ export const useCastingOverflowMenuItems = ({
         label: t('employer_castings.actions.view_details'),
         iconName: 'open',
         disabled: disablePublicActions,
-        onSelect: () => navigate(publicCastingPath),
+        onSelect: () => navigate(employerCastingDetailsPath),
       },
       {
         key: 'applicants',
@@ -46,7 +46,7 @@ export const useCastingOverflowMenuItems = ({
         iconName: 'copyLink',
         disabled: disablePublicActions,
         onSelect: () => {
-          const url = new URL(publicCastingPath, window.location.origin).toString();
+          const url = new URL(employerCastingDetailsPath, window.location.origin).toString();
           void copyToClipboardGraceful(url);
         },
       },
@@ -74,5 +74,14 @@ export const useCastingOverflowMenuItems = ({
     }
 
     return items;
-  }, [t, navigate, publicCastingPath, editCastingPath, disablePublicActions, onApplicants, onDelete, deleteDisabled]);
+  }, [
+    t,
+    navigate,
+    employerCastingDetailsPath,
+    editCastingPath,
+    disablePublicActions,
+    onApplicants,
+    onDelete,
+    deleteDisabled,
+  ]);
 };

@@ -2,7 +2,7 @@ import type { DeepNullableExceptId } from '../../../shared/utils/typeUtils';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 import type { Characteristics } from '../../talent/talent-profile-edit/types/talentProfile.types';
 
-export type PublicCastingResponse = {
+export type CastingDetailsResponse = {
   id: string;
   defaultCode: string;
   castingStatus: SiteMetadataObject;
@@ -11,6 +11,11 @@ export type PublicCastingResponse = {
   rolesSection: CastingRolesSection;
   requirementsSection: CastingRequirementsSection;
   remunerationSection: CastingRemunerationsSection;
+};
+
+export type PublicCastingDetailsResponse = {
+  casting: CastingDetailsResponse;
+  alreadyApplied: boolean;
 };
 
 // ======================

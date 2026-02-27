@@ -37,6 +37,7 @@ const EmployerCastingsPage = () => {
   );
 
   const { data: myCastings } = useEmployerCastings(args);
+  const castings = myCastings ?? [];
 
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -78,8 +79,8 @@ const EmployerCastingsPage = () => {
         />
 
         <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">
-          {myCastings?.length ? (
-            myCastings.map((i) => (
+          {castings.length > 0 ? (
+            castings.map((i) => (
               <CastingCard
                 key={i.id}
                 data={i}

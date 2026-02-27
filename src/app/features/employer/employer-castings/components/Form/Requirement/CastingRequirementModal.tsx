@@ -198,15 +198,7 @@ const CastingRequirementModal = ({
   }, [mode, form.selectedRoleIds, form.requiresAudio, form.requiresVideo]);
 
   const mediaErrorId = useId();
-  console.log(
-    'selectedRoleIds',
-    form.selectedRoleIds,
-    form.selectedRoleIds?.map((x) => [x, typeof x])
-  );
-  console.log(
-    'roleOptions',
-    roleOptions.map((o) => [o.value, typeof o.value])
-  );
+
   return (
     <article className="flex flex-col">
       {mode === 'create' ? (

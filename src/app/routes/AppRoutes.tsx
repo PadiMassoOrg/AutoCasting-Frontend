@@ -6,7 +6,6 @@ import MainSiteLayout from '../features/main-site/layout/MainSiteLayout';
 import { PrivacyPage, SupportPage, TermsPage } from '../features/main-site/page';
 import MainSitePage from '../features/main-site/page/MainSitePage';
 import { OnboardingWizard } from '../features/onboarding/components';
-import { PublicCastingPage } from '../features/public-casting/pages';
 import { PublicProfilePage } from '../features/public-profile/pages';
 import { TalentDatabasePage } from '../features/talent-database/pages';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
@@ -16,6 +15,7 @@ import { getAuthToken } from '../shared/lib/cookies';
 import { ROUTES } from '../shared/lib/routes';
 import ProtectedRoute from './ProtectedRoute';
 import ProtectedRoutesLayout from './ProtectedRoutesLayout';
+import CastingDetailsPage from '../features/public-casting/pages/CastingDetailsPage';
 
 function RouteTracker() {
   useRouteTracking();
@@ -66,7 +66,7 @@ function AppRoutesContent() {
       </Route>
       <Route element={<NavigationLayout />}>
         <Route path={ROUTES.PUBLIC_PROFILE + '/:slug'} element={<PublicProfilePage />} />
-        <Route path={ROUTES.PUBLIC_CASTING + '/:slug'} element={<PublicCastingPage />} />
+        <Route path={ROUTES.PUBLIC_CASTING + '/:slug/roles/:roleId'} element={<CastingDetailsPage mode="public" />} />
       </Route>
       <Route element={<ScrollContentLayout />}>
         <Route path={ROUTES.TALENT_DATABASE} element={<TalentDatabasePage />} />

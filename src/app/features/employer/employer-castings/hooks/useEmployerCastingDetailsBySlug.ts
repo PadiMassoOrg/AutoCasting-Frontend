@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { EMPLOYER_CASTING_CACHE_KEY, getEmployerCastingDetailsBySlug } from '../services/employerCastingService';
-import type { EmployerCastingResponse } from '../types/employerCastings.types';
+import { EMPLOYER_CASTING_CACHE_KEY, getEmployerCastingEditorBySlug } from '../services/employerCastingService';
+import type { EmployerCastingEditorResponse } from '../types/employerCastings.types';
 
-export const useEmployerCastingDetailsBySlug = (slug?: string) => {
-  return useQuery<EmployerCastingResponse>({
+export const useEmployerCastingEditorBySlug = (slug?: string) => {
+  return useQuery<EmployerCastingEditorResponse>({
     queryKey: slug ? [...EMPLOYER_CASTING_CACHE_KEY, slug] : [...EMPLOYER_CASTING_CACHE_KEY, 'no-slug'],
-    queryFn: () => getEmployerCastingDetailsBySlug(slug!),
+    queryFn: () => getEmployerCastingEditorBySlug(slug!),
     enabled: !!slug,
     staleTime: 0,
     refetchOnMount: 'always',

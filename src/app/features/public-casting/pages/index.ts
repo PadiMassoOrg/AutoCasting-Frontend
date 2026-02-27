@@ -1,2 +1,2 @@
-import PublicCastingPage from './PublicCastingPage';
-export { PublicCastingPage };
+import CastingDetailsPage from './CastingDetailsPage';
+export { CastingDetailsPage as EmployerCastingDetailsPage };

@@ -23,6 +23,7 @@
     "clear": "Limpiar",
     "reset": "Resetear",
     "apply": "Aplicar",
+    "finalize": "Finalizar",
     "edit": "Editar",
     "publish": "Publicar",
     "publish_casting": "Publicar Casting",
@@ -38,6 +39,7 @@
     "years": " años",
     "cm": "cm",
     "back_to": "Volver a",
+    "back": "Volver",
     "creation_date": "Fecha de creación",
     "limit_date": "Fecha límite",
     "delete_confirm": "Estás por borrar",
@@ -707,11 +709,25 @@
     "page": {
       "title": "Castings",
       "created_castings": "Castings creados",
-      "member_since": "Miembro desde",
-      "apply_title": "¿Listo para aplicar?"
+      "member_since": "Miembro desde"
     },
     "filter": {
       "role_type": "Tipo de Rol"
+    }
+  },
+  "application": {
+    "cta_title": "¿Listo para aplicar?",
+    "cta_text": "Al aplicar estás compartiendo tus Perfil con",
+    "cta_auth_warning": "Este contenido solo está disponible para perfiles de talento. Iniciá sesión o creá tu cuenta para postularte a este casting.",
+    "cta_applied_warning": "Haz aplicado recientemente a este casting. Por favor, espera a que el equipo de casting revise tu postulación.",
+    "modal": {
+      "title": "Requerimientos",
+      "video": "Video (Compartí tu link de YouTube, Vimeo, etc.)",
+      "audio": "Audio (Compartí tu link de Soundcloud, Drive, etc.)"
+    },
+    "confirmation_modal": {
+      "title": "¡Postulación enviada con éxito!",
+      "text": "Gracias por aplicar. Tus materiales ya están disponibles para el equipo de casting."
     }
   },
   "settings": {
