@@ -1,18 +1,28 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import type { TFunction } from 'i18next';
+import { useMemo, useSyncExternalStore } from 'react';
 import { METADATA_CACHE_KEY } from '../services/siteMetadataService';
 import type { SiteMetadataObject, SiteMetadataResponse } from '../types/sitemetadata.types';
+
+function isSameKey(a: unknown, b: unknown) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
 
 export function useCachedSiteMetadata(): SiteMetadataResponse | undefined {
   const qc = useQueryClient();
 
-  const { data } = useQuery<SiteMetadataResponse | undefined>({
-    queryKey: METADATA_CACHE_KEY,
-    enabled: false,
-    initialData: () => qc.getQueryData<SiteMetadataResponse>(METADATA_CACHE_KEY),
-  });
+  // Suscripción al cache: fuerza rerender cuando cambie algo en el cache
+  const snapshot = useSyncExternalStore(
+    (onStoreChange) =>
+      qc.getQueryCache().subscribe((event) => {
+        const key = event?.query?.queryKey;
+        if (key && isSameKey(key, METADATA_CACHE_KEY)) onStoreChange();
+      }),
+    () => qc.getQueryData<SiteMetadataResponse>(METADATA_CACHE_KEY),
+    () => qc.getQueryData<SiteMetadataResponse>(METADATA_CACHE_KEY)
+  );
 
-  return data;
+  return snapshot;
 }
 
 export function useCachedSiteMetadataSlice<K extends keyof SiteMetadataResponse>(key: K) {
@@ -44,19 +54,22 @@ export function useCachedSiteMetadataOption(
   opts?: { raw?: boolean }
 ): { value: string; label: string }[] | SiteMetadataObject[] {
   const list = useCachedSiteMetadataSlice(key) as SiteMetadataObject[] | undefined;
-  if (!list) return opts?.raw ? [] : [];
 
-  let filtered = list;
+  return useMemo(() => {
+    if (!list) return opts?.raw ? [] : [];
 
-  if (category) {
-    const categoryCode = `sitemetadata.category.${category}`;
-    filtered = list.filter((x) => x.categoryStringCode === categoryCode);
-  }
+    let filtered = list;
 
-  if (opts?.raw) return filtered;
+    if (category) {
+      const categoryCode = `sitemetadata.category.${category}`;
+      filtered = list.filter((x) => x.categoryStringCode === categoryCode);
+    }
 
-  return filtered.map((x) => ({
-    value: x.id,
-    label: t(x.stringCode),
-  }));
+    if (opts?.raw) return filtered;
+
+    return filtered.map((x) => ({
+      value: x.id,
+      label: t(x.stringCode),
+    }));
+  }, [list, category, opts?.raw, t]);
 }
