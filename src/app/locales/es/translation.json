@@ -38,6 +38,7 @@
     "years": " años",
     "cm": "cm",
     "back_to": "Volver a",
+    "back": "Volver",
     "creation_date": "Fecha de creación",
     "limit_date": "Fecha límite",
     "delete_confirm": "Estás por borrar",
@@ -716,7 +717,12 @@
   "application": {
     "cta_title": "¿Listo para aplicar?",
     "cta_text": "Al aplicar estás compartiendo tus Perfil con",
-    "cta_auth_warning": "Este contenido solo está disponible para perfiles de talento. Iniciá sesión como talento para ver los detalles del casting."
+    "cta_auth_warning": "Este contenido solo está disponible para perfiles de talento. Iniciá sesión como talento para ver los detalles del casting.",
+    "modal": {
+      "title": "Requerimientos",
+      "video": "Video (Compartí tu link de YouTube, Vimeo, etc.)",
+      "audio": "Audio (Compartí tu link de Soundcloud, Drive, etc.)"
+    }
   },
   "settings": {
     "pills": {
