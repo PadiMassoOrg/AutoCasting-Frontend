@@ -68,6 +68,8 @@ export const API_ROUTES = {
   CASTINGS_DATABASE: '/castings-database',
   // Casting
   CASTING: '/casting',
+  // Application
+  TALENT_CASTING_APPLICATION: '/apply',
   // Talent
   TALENT_PROFILE: '/talent',
   TALENT_BASIC_INFO: '/talent/basic-info',

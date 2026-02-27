@@ -33,6 +33,7 @@ const CastingDetailsPage = ({ mode }: Props) => {
           <ApplySection
             employer={data.employerInfo.companyName!}
             requirements={data.requirementsSection.requirements ?? []}
+            roleId={roleId!}
           ></ApplySection>
         </section>
       </main>
@@ -49,6 +50,7 @@ const CastingDetailsPage = ({ mode }: Props) => {
       <ApplySection
         employer={data.employerInfo.companyName!}
         requirements={data.requirementsSection.requirements ?? []}
+        roleId={roleId!}
       ></ApplySection>
     </div>
   );

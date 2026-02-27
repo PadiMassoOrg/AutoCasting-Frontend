@@ -23,6 +23,7 @@
     "clear": "Limpiar",
     "reset": "Resetear",
     "apply": "Aplicar",
+    "finalize": "Finalizar",
     "edit": "Editar",
     "publish": "Publicar",
     "publish_casting": "Publicar Casting",
@@ -717,11 +718,15 @@
   "application": {
     "cta_title": "¿Listo para aplicar?",
     "cta_text": "Al aplicar estás compartiendo tus Perfil con",
-    "cta_auth_warning": "Este contenido solo está disponible para perfiles de talento. Iniciá sesión como talento para ver los detalles del casting.",
+    "cta_auth_warning": "Este contenido solo está disponible para perfiles de talento. Iniciá sesión o creá tu cuenta para postularte a este casting.",
     "modal": {
       "title": "Requerimientos",
       "video": "Video (Compartí tu link de YouTube, Vimeo, etc.)",
       "audio": "Audio (Compartí tu link de Soundcloud, Drive, etc.)"
+    },
+    "confirmation_modal": {
+      "title": "¡Postulación enviada con éxito!",
+      "text": "Gracias por aplicar. Tus materiales ya están disponibles para el equipo de casting."
     }
   },
   "settings": {
