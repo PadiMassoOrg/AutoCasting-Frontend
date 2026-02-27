@@ -1,22 +1,29 @@
 import api from '../../../shared/lib/axios';
 import { API_ROUTES } from '../../../shared/lib/routes';
-import type { CastingDetailsResponse } from '../types/publicCasting.types';
+import type { CastingDetailsResponse, PublicCastingDetailsResponse } from '../types/publicCasting.types';
 
-export const CASTING_DETAILS_CACHE_KEY = ['cache-casting-details'] as const;
+export const PUBLIC_CASTING_DETAILS_CACHE_KEY = ['cache-casting-details'] as const;
+export const EMPLOYER_CASTING_DETAILS_CACHE_KEY = ['cache-employer-casting-details'] as const;
 
-export const getCastingDetails = async (args: {
-  mode: 'public' | 'employer';
+export const getPublicCastingDetails = async (args: {
   slug: string;
-  roleId?: string;
+  roleId: string;
+  signal?: AbortSignal;
+}): Promise<PublicCastingDetailsResponse> => {
+  const { slug, roleId, signal } = args;
+
+  const url = `${API_ROUTES.CASTING}/${slug}/roles/${roleId}`;
+  const res = await api.get(url, { signal });
+  return res.data;
+};
+
+export const getEmployerCastingDetails = async (args: {
+  slug: string;
   signal?: AbortSignal;
 }): Promise<CastingDetailsResponse> => {
-  const { mode, slug, roleId, signal } = args;
+  const { slug, signal } = args;
 
-  const url =
-    mode === 'employer'
-      ? `${API_ROUTES.EMPLOYER_CASTING}/${slug}/details`
-      : `${API_ROUTES.CASTING}/${slug}/roles/${roleId}`;
-
+  const url = `${API_ROUTES.EMPLOYER_CASTING}/${slug}/details`;
   const res = await api.get(url, { signal });
   return res.data;
 };

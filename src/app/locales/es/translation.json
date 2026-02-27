@@ -719,6 +719,7 @@
     "cta_title": "¿Listo para aplicar?",
     "cta_text": "Al aplicar estás compartiendo tus Perfil con",
     "cta_auth_warning": "Este contenido solo está disponible para perfiles de talento. Iniciá sesión o creá tu cuenta para postularte a este casting.",
+    "cta_applied_warning": "Haz aplicado recientemente a este casting. Por favor, espera a que el equipo de casting revise tu postulación.",
     "modal": {
       "title": "Requerimientos",
       "video": "Video (Compartí tu link de YouTube, Vimeo, etc.)",

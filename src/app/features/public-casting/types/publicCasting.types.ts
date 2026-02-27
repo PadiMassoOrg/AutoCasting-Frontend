@@ -13,6 +13,11 @@ export type CastingDetailsResponse = {
   remunerationSection: CastingRemunerationsSection;
 };
 
+export type PublicCastingDetailsResponse = {
+  casting: CastingDetailsResponse;
+  alreadyApplied: boolean;
+};
+
 // ======================
 // Employer (Casting public response)
 // ======================
