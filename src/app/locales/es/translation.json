@@ -707,12 +707,16 @@
     "page": {
       "title": "Castings",
       "created_castings": "Castings creados",
-      "member_since": "Miembro desde",
-      "apply_title": "¿Listo para aplicar?"
+      "member_since": "Miembro desde"
     },
     "filter": {
       "role_type": "Tipo de Rol"
     }
+  },
+  "application": {
+    "cta_title": "¿Listo para aplicar?",
+    "cta_text": "Al aplicar estás compartiendo tus Perfil con",
+    "cta_auth_warning": "Este contenido solo está disponible para perfiles de talento. Iniciá sesión como talento para ver los detalles del casting."
   },
   "settings": {
     "pills": {

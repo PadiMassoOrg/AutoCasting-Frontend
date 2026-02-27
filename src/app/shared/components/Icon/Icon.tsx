@@ -36,6 +36,8 @@ import FilterIconPurple from '../../icons/filter-purple.svg';
 import FilterIcon from '../../icons/filter.svg';
 import ImdbIconPurple from '../../icons/imdb-purple.svg';
 import ImdbIcon from '../../icons/imdb.svg';
+import InfoIconPurple from '../../icons/info-purple.svg';
+import InfoIcon from '../../icons/info.svg';
 import InstagramIconPurple from '../../icons/instagram-purple.svg';
 import InstagramIcon from '../../icons/instagram.svg';
 import LinkedInIconPurple from '../../icons/linkedin-purple.svg';
@@ -119,6 +121,7 @@ export type IconName =
   | 'overflowmenu'
   | 'applicants'
   | 'search'
+  | 'info'
   | 'logout';
 
 export type IconVariant = 'default' | 'primary' | 'white' | 'danger' | 'disabled';
@@ -288,6 +291,10 @@ const ICONS: Record<IconName, BaseIconConfig> = {
     default: SearchIcon,
     primary: SearchIconPurple,
     disabled: SearchIconDisabled,
+  },
+  info: {
+    default: InfoIcon,
+    primary: InfoIconPurple,
   },
 };
 

@@ -19,7 +19,7 @@ const CastingDetailsPage = ({ mode }: Props) => {
 
   if (isLoading || !data) return null;
   if (error) return <ServerError />;
-
+  console.log(data);
   if (isDesktop) {
     return (
       <main className="flex flex-row gap-10">
@@ -28,9 +28,12 @@ const CastingDetailsPage = ({ mode }: Props) => {
           <Separator className="opacity-0 my-2" />
           <RolesSection data={data.rolesSection}></RolesSection>
         </section>
-        <section className="flex flex-col gap-6 min-w-[320px]">
+        <section className="flex flex-col gap-6 w-[350px]">
           <EmployerInfoSection data={data.employerInfo}></EmployerInfoSection>
-          <ApplySection></ApplySection>
+          <ApplySection
+            employer={data.employerInfo.companyName!}
+            requirements={data.requirementsSection.requirements ?? []}
+          ></ApplySection>
         </section>
       </main>
     );
@@ -43,7 +46,10 @@ const CastingDetailsPage = ({ mode }: Props) => {
       <RolesSection data={data.rolesSection}></RolesSection>
       <Separator className="opacity-20 my-4" />
       <EmployerInfoSection data={data.employerInfo}></EmployerInfoSection>
-      <ApplySection></ApplySection>
+      <ApplySection
+        employer={data.employerInfo.companyName!}
+        requirements={data.requirementsSection.requirements ?? []}
+      ></ApplySection>
     </div>
   );
 };
