@@ -95,11 +95,11 @@ const useEmployerCastingToolbarLogic = () => {
     );
   };
 
-  const publicCastingPath = `${ROUTES.PUBLIC_CASTING}/${defaultCode}`;
+  const employerCastingDetailsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/details`;
   const actionsDisabled = !isCastingStatusPublished(castingStatus) || !publishAllowed || isStatusPending;
 
   const items = useCastingOverflowMenuItems({
-    publicCastingPath,
+    employerCastingDetailsPath,
     disablePublicActions: actionsDisabled,
     onDelete: handleDeleteCasting,
     deleteDisabled: isDeleting,
