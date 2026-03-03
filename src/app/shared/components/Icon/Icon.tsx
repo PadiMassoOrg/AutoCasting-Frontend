@@ -53,6 +53,8 @@ import OpenIconPurple from '../../icons/open-purple.svg';
 import OpenIcon from '../../icons/open.svg';
 import OverflowMenuIconPurple from '../../icons/overflowmenu-purple.svg';
 import OverflowMenuIcon from '../../icons/overflowmenu.svg';
+import PlayIconPurple from '../../icons/play-purple.svg';
+import PlayIcon from '../../icons/play.svg';
 import PlusIconPurple from '../../icons/plus-purple.svg';
 import PlusIconWhite from '../../icons/plus-white.svg';
 import PlusIcon from '../../icons/plus.svg';
@@ -63,6 +65,9 @@ import PublishIconPurple from '../../icons/publish-purple.svg';
 import PublishIcon from '../../icons/publish.svg';
 import SaveIconPurple from '../../icons/save-purple.svg';
 import SaveIcon from '../../icons/save.svg';
+import SearchIconDisabled from '../../icons/search-disabled.svg';
+import SearchIconPurple from '../../icons/search-purple.svg';
+import SearchIcon from '../../icons/search.svg';
 import SettingsIconPurple from '../../icons/settings-purple.svg';
 import SettingsIcon from '../../icons/settings.svg';
 import SwitcherIconPurple from '../../icons/switcher-purple.svg';
@@ -78,10 +83,6 @@ import WhatsappIconPurple from '../../icons/whatsapp-purple.svg';
 import WhatsappIcon from '../../icons/whatsapp.svg';
 import XIconPurple from '../../icons/x-purple.svg';
 import XIcon from '../../icons/x.svg';
-
-import SearchIconDisabled from '../../icons/search-disabled.svg';
-import SearchIconPurple from '../../icons/search-purple.svg';
-import SearchIcon from '../../icons/search.svg';
 
 export type IconName =
   | 'ogIcon'
@@ -122,6 +123,7 @@ export type IconName =
   | 'applicants'
   | 'search'
   | 'info'
+  | 'play'
   | 'logout';
 
 export type IconVariant = 'default' | 'primary' | 'white' | 'danger' | 'disabled';
@@ -295,6 +297,10 @@ const ICONS: Record<IconName, BaseIconConfig> = {
   info: {
     default: InfoIcon,
     primary: InfoIconPurple,
+  },
+  play: {
+    default: PlayIcon,
+    primary: PlayIconPurple,
   },
 };
 

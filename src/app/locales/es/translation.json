@@ -836,6 +836,17 @@
       "deadline_desc": "Fecha límite (más lejana)"
     }
   },
+  "employer_casting_applicants": {
+    "page": {
+      "title": "Postulantes",
+      "empty_page": "Aún no hay postulantes para este casting."
+    },
+    "applicant_card": {
+      "actings": "Acting",
+      "audio": "Audio",
+      "video": "Video"
+    }
+  },
   "legal": {
     "terms": "Términos y Condiciones",
     "privacy": "Políticas de Privacidad",

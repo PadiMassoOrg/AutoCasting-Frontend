@@ -1,6 +1,10 @@
+import { Label } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import { DashboardSection, DashboardShell } from '../../../../layouts/components';
+import { SectionTitle } from '../../../../shared/components/Section';
+import { CastingApplicantCard } from '../components';
 import { useEmployerCastingApplicants } from '../hooks/useEmployerCastingApplicants';
 import type {
   EmployerCastingApplicantsFiltersState,
@@ -35,9 +39,29 @@ const EmployerCastingApplicantsPage = () => {
   const { data } = useEmployerCastingApplicants(args);
 
   const applicants = data?.items ?? [];
+
   console.log(applicants);
 
-  return <div>{slug}</div>;
+  return (
+    <DashboardShell>
+      <DashboardSection>
+        <SectionTitle title={t('employer_casting_applicants.page.title') + ' CASTING NAME'} />
+
+        {/* Filter Bar */}
+
+        {/* Cards */}
+        <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">
+          {applicants.length > 0 ? (
+            applicants.map((i) => <CastingApplicantCard key={i.applicationId} data={i} />)
+          ) : (
+            <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
+              {t('employer_casting_applicants.page.empty_page')}
+            </Label>
+          )}
+        </div>
+      </DashboardSection>
+    </DashboardShell>
+  );
 };
 
 export default EmployerCastingApplicantsPage;
