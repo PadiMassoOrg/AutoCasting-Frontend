@@ -8,7 +8,7 @@ type Params = {
   employerCastingDetailsPath: string;
   editCastingPath?: string;
   disablePublicActions: boolean;
-  onApplicants?: () => void;
+  onApplicants: () => void;
   onDelete?: () => void | Promise<void>;
   deleteDisabled?: boolean;
 };
@@ -38,7 +38,7 @@ export const useCastingOverflowMenuItems = ({
         label: t('employer_castings.actions.view_applicants'),
         iconName: 'applicants',
         disabled: disablePublicActions,
-        onSelect: () => (onApplicants ? onApplicants() : console.log('view_applicants')),
+        onSelect: () => onApplicants(),
       },
       {
         key: 'copy_link',

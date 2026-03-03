@@ -1,5 +1,6 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Chip } from '../../../../../shared/components/Chip';
 import { OverflowMenu } from '../../../../../shared/components/OverflowMenu';
 import { SectionCard } from '../../../../../shared/components/Section';
@@ -22,6 +23,7 @@ const CastingCard = ({
   deleteDisabled?: boolean;
 }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const { id, title, defaultCode, creationDate, applicationDeadline, projectType, status, allowedStatusCodes } = data;
 
@@ -30,6 +32,7 @@ const CastingCard = ({
   const published = isCastingStatusPublished(status);
   const employerCastingDetailsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/details`;
   const editCastingPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/editor`;
+  const applicantsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/applicants`;
 
   const items = useCastingOverflowMenuItems({
     employerCastingDetailsPath,
@@ -37,6 +40,7 @@ const CastingCard = ({
     disablePublicActions: !published,
     onDelete: onDelete ? () => onDelete(id) : undefined,
     deleteDisabled,
+    onApplicants: () => navigate(applicantsPath),
   });
 
   const castingStatusOptions = useCachedSiteMetadataOption('castingStatusOptions', t, undefined, { raw: true });

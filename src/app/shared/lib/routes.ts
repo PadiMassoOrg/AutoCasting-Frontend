@@ -69,7 +69,7 @@ export const API_ROUTES = {
   // Casting
   CASTING: '/casting',
   // Application
-  TALENT_CASTING_APPLICATION: '/apply',
+  TALENT_CASTING_APPLY: '/apply',
   // Talent
   TALENT_PROFILE: '/talent',
   TALENT_BASIC_INFO: '/talent/basic-info',
@@ -80,6 +80,7 @@ export const API_ROUTES = {
   TALENT_SKILLS: '/talent/skills',
   CREDIT: '/credit',
   EDUCATION: '/education',
+  TALENT_CASTING_APPLICATIONS: '/talent/applications',
   // Employer
   CASTING_BASIC_INFO: '/casting/basic-info',
   CASTING_ROLE: '/casting/role',
@@ -96,4 +97,5 @@ export const API_ROUTES = {
   PAUSE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/pause`,
   CLOSE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/close`,
   ARCHIVE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/archive`,
+  EMPLOYER_CASTING_APPLICANTS: (castingSlug: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingSlug}/applicants`,
 };

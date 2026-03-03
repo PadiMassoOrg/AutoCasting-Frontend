@@ -5,5 +5,5 @@ import type { CastingApplicationRequest } from '../types/requests';
 export const TALENT_CASTING_APPLICATION_CACHE_KEY = ['cache-talent-casting-application'] as const;
 
 export async function applyToCastingRole(roleId: string, request?: CastingApplicationRequest): Promise<void> {
-  await api.post(`${API_ROUTES.TALENT_CASTING_APPLICATION}/${roleId}`, request ?? undefined);
+  await api.post(`${API_ROUTES.TALENT_CASTING_APPLY}/${roleId}`, request ?? undefined);
 }
