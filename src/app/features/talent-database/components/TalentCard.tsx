@@ -1,6 +1,6 @@
-import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../../../app/shared/lib/routes';
+import { InlineList } from '../../../shared/components/InlineList';
 import imagePlaceholder from '../../../shared/icons/image_placeholder.svg';
 import type { ProfileCardResponse } from '../types/talent-database.types';
 
@@ -46,17 +46,10 @@ export default function TalentCard({ item, onClick }: Props) {
           className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
-
       <div className="py-3 flex-1 lg:min-h-0 flex flex-col justify-center gap-1">
         <h3 className="text-2xl sm:text-xl font-semibold leading-tight line-clamp-1">{stageName}</h3>
         <div className="flex items-start justify-between gap-2">
-          <span className="flex flex-wrap items-center gap-1 text-base sm:text-sm font-normal text-[var(--color-secondary-grey)] line-clamp-1">
-            {professions?.reduce<JSX.Element[]>((acc, curr, index) => {
-              const label = t(curr.stringCode ?? '');
-              if (index === 0) return [<span key={curr.id}>{label}</span>];
-              return [...acc.slice(-1), <span key={`sep-${index}`}>•</span>, <span key={curr.id}>{label}</span>];
-            }, [])}
-          </span>
+          <InlineList items={professions} quantity={3} />
         </div>
       </div>
     </article>

@@ -11,10 +11,13 @@ export type ApplicantRequirementSubmissionRow = {
 
 export type EmployerCastingApplicantCardResponse = {
   applicationId: string;
-  talentProfileId: string;
+  talentPublicSlug: string;
   talentHeadshotImageUrl: string;
   talentStageName: string;
   talentProfessions: SiteMetadataObject[];
+  talentEmail: string;
+  talentPhoneNumber: string;
+  castingTitle: string;
   castingRoleName: string;
   castingRoleId: string;
   castingSlug: string;

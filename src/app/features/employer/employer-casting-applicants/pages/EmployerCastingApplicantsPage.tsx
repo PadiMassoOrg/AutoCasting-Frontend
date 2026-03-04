@@ -37,15 +37,14 @@ const EmployerCastingApplicantsPage = () => {
   );
 
   const { data } = useEmployerCastingApplicants(args);
-
   const applicants = data?.items ?? [];
 
-  console.log(applicants);
+  const title = applicants.length > 0 ? `${applicants[0].castingTitle}` : '';
 
   return (
     <DashboardShell>
       <DashboardSection>
-        <SectionTitle title={t('employer_casting_applicants.page.title') + ' CASTING NAME'} />
+        <SectionTitle title={t('employer_casting_applicants.page.title') + ' ' + title} />
 
         {/* Filter Bar */}
 
