@@ -26,6 +26,7 @@ export type SiteMetadataResponse = {
   castingCompensationTypeOptions: SiteMetadataObject[];
   payRateTypeOptions: SiteMetadataObject[];
   currencyOptions: SiteMetadataObject[];
+  castingApplicationStatusOptions: SiteMetadataObject[];
 };
 
 export type SiteMetadataVersion = {

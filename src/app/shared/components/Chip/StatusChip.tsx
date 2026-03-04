@@ -1,6 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import type { SiteMetadataObject } from '../../../features/sitemetadata/types/sitemetadata.types';
-import { resolveCastingStatusColorVar } from '../../../features/sitemetadata/utils/siteMetadataUtils';
+import {
+  resolveCastingApplicationStatusColorVar,
+  resolveCastingStatusColorVar,
+} from '../../../features/sitemetadata/utils/siteMetadataUtils';
 
 type StatusChipVariant = 'bordered' | 'inline';
 type StatusChipAlign = 'inline' | 'spaced';
@@ -12,13 +15,17 @@ type StatusChipProps = {
   className?: string;
 };
 
+const APPLICATION_STATUS_PREFIX = 'sitemetadata.application_status.';
+
 export default function StatusChip({ status, variant = 'bordered', align = 'inline', className }: StatusChipProps) {
   const { t } = useTranslation();
+
   const code = status?.stringCode;
   if (!code) return null;
 
-  const colorVar = resolveCastingStatusColorVar(code);
-  if (!colorVar) return null;
+  const colorVar = code.startsWith(APPLICATION_STATUS_PREFIX)
+    ? resolveCastingApplicationStatusColorVar(code)
+    : resolveCastingStatusColorVar(code);
 
   const baseClasses = 'inline-flex items-center gap-2';
   const borderedClasses =
@@ -36,11 +43,13 @@ export default function StatusChip({ status, variant = 'bordered', align = 'inli
       ].join(' ')}
     >
       <span className="text-sm">{t(code)}</span>
-      <span
-        className="inline-block w-4 h-4 rounded-full shrink-0"
-        style={{ background: colorVar }}
-        aria-hidden="true"
-      />
+      {colorVar ? (
+        <span
+          className="inline-block w-4 h-4 rounded-full shrink-0"
+          style={{ background: colorVar }}
+          aria-hidden="true"
+        />
+      ) : null}
     </span>
   );
 }

@@ -33,7 +33,6 @@ export async function getEmployerApplicantsByCastingSlug({
   const q = (filters.search ?? '').trim();
   if (q.length) qs.set('q', q);
 
-  (filters.roleIds ?? []).forEach((id: string) => qs.append('roleId', id));
   (filters.applicationStatusIdTokens ?? []).forEach((token: string) => qs.append('applicationStatusId', token));
   (filters.professionIds ?? []).forEach((id: string) => qs.append('professionId', id));
 
@@ -42,4 +41,32 @@ export async function getEmployerApplicantsByCastingSlug({
   );
 
   return data;
+}
+
+// =========================
+// Application Status actions
+// =========================
+export async function preselectApplication({ applicationId }: { applicationId: string }) {
+  const res = await api.post(API_ROUTES.PRESELECT_APPLICATION(applicationId));
+  return res.data;
+}
+
+export async function selectApplication({ applicationId }: { applicationId: string }) {
+  const res = await api.post(API_ROUTES.SELECT_APPLICATION(applicationId));
+  return res.data;
+}
+
+export async function viewApplication({ applicationId }: { applicationId: string }) {
+  const res = await api.post(API_ROUTES.VIEW_APPLICATION(applicationId));
+  return res.data;
+}
+
+export async function notProceedingApplication({ applicationId }: { applicationId: string }) {
+  const res = await api.post(API_ROUTES.NOT_PROCEEDING_APPLICATION(applicationId));
+  return res.data;
+}
+
+export async function blankApplication({ applicationId }: { applicationId: string }) {
+  const res = await api.post(API_ROUTES.BLANK_APPLICATION(applicationId));
+  return res.data;
 }

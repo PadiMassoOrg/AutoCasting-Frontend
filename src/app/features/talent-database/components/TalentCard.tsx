@@ -10,7 +10,6 @@ type Props = {
 };
 
 export default function TalentCard({ item, onClick }: Props) {
-  const { t } = useTranslation();
   const { publicSlug, stageName, headshotImageUrl, professions } = item;
 
   const handleClick = () => {

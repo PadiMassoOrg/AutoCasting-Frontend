@@ -354,6 +354,13 @@
     "currency": {
       "ars": "ARS",
       "usd": "USD"
+    },
+    "application_status": {
+      "blank": "No Visto",
+      "viewed": "Visto",
+      "preselected": "Preseleccionado",
+      "selected": "Seleccionado",
+      "not_proceeding": "No Seleccionado"
     }
   },
   "error_page": {
