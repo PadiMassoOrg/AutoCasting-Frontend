@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useTalentCastingApplications } from '../hooks/useTalentCastingApplications';
 import type {
   TalentCastingApplicationsFiltersState,
@@ -7,16 +6,14 @@ import type {
 } from '../types/talentCastingApplicationFilters.types';
 
 const TalentCastingApplications = () => {
-  const { t } = useTranslation();
-
-  const [filters, setFilters] = useState<TalentCastingApplicationsFiltersState>({
+  const [filters] = useState<TalentCastingApplicationsFiltersState>({
     castingStatusIdTokens: undefined,
     projectTypeIdTokens: undefined,
     modalityIdTokens: undefined,
     search: undefined,
   });
 
-  const [orderBy, setOrderBy] = useState<TalentCastingApplicationsOrderBy>('CREATION_DATE_DESC');
+  const [orderBy] = useState<TalentCastingApplicationsOrderBy>('CREATION_DATE_DESC');
 
   const args = useMemo(
     () => ({

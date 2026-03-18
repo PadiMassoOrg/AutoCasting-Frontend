@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../../../app/shared/lib/routes';
 import { InlineList } from '../../../shared/components/InlineList';
 import imagePlaceholder from '../../../shared/icons/image_placeholder.svg';
