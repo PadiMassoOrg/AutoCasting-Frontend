@@ -42,16 +42,19 @@ const CastingApplicantCard = ({ data }: { data: EmployerCastingApplicantCardResp
   return (
     <SectionCard className="lg:min-w-[415px]">
       {/* Profile and Status */}
-      <div className="flex flex-row items-center justify-between gap-2">
-        <div className="flex flex-row items-center gap-2 min-w-0">
-          <img src={talentHeadshotImageUrl} alt={talentStageName} className="w-10 h-10 rounded-full object-cover" />
-          <div className="flex flex-col min-w-0">
-            <h2 className="font-semibold text-base line-clamp-1">{talentStageName}</h2>
-            <InlineList items={talentProfessions} />
-          </div>
+      <div className="flex flex-row items-center gap-3 min-w-0">
+        <img src={talentHeadshotImageUrl} alt={talentStageName} className="w-10 h-10 rounded-full object-cover" />
+        <div className="flex flex-col min-w-0">
+          <h2 className="font-semibold text-base line-clamp-1">{talentStageName}</h2>
+          <InlineList items={talentProfessions} />
         </div>
+      </div>
 
-        {/* Application Status */}
+      <Separator className="opacity-20 my-3" />
+
+      {/* Application Status */}
+      <div className="flex flex-row items-center justify-between">
+        <p className="text-sm text-[var(--color-secondary-gray)]">{t('general.status')}:</p>
         {isMetadataReady ? (
           <StatusDropdown
             value={applicationStatus}
@@ -69,13 +72,14 @@ const CastingApplicantCard = ({ data }: { data: EmployerCastingApplicantCardResp
       <Separator className="opacity-20 my-3" />
 
       {/* Role */}
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-row items-center justify-between min-h-[28px]">
         <p className="text-sm text-[var(--color-secondary-gray)]">{t('casting.role_section.role.role')}:</p>
         <p className="text-sm text-black">{castingRoleName}</p>
       </div>
 
-      {/* Requirements */}
       <Separator className="opacity-20 my-3" />
+
+      {/* Requirements */}
       <div className="flex flex-row items-center justify-between">
         <p className="text-sm text-[var(--color-secondary-gray)]">
           {t('employer_casting_applicants.applicant_card.actings')}:

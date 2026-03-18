@@ -28,6 +28,7 @@ export const useCastingApplicationStatusMutation = (action: CastingApplicationSt
     onSuccess: async (_data, variables) => {
       await queryClient.invalidateQueries({
         queryKey: [...EMPLOYER_CASTING_APPLICANTS_CACHE_KEY, variables.castingSlug],
+        exact: false,
       });
     },
   });

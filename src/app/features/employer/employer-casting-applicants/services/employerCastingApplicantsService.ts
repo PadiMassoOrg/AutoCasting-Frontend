@@ -17,6 +17,15 @@ export type GetEmployerApplicantsArgs = {
   orderBy: EmployerCastingApplicantsOrderBy;
 };
 
+export const getEmployerCastingApplicantsQueryKey = ({
+  slug,
+  page,
+  size,
+  filters,
+  orderBy,
+}: GetEmployerApplicantsArgs) =>
+  [...EMPLOYER_CASTING_APPLICANTS_CACHE_KEY, slug, page, size, orderBy, JSON.stringify(filters ?? {})] as const;
+
 export async function getEmployerApplicantsByCastingSlug({
   slug,
   page,
