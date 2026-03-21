@@ -43,6 +43,7 @@
     "creation_date": "Fecha de creación",
     "limit_date": "Fecha límite",
     "delete_confirm": "Estás por borrar",
+    "status": "Estado",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "role_name": "Lali",
@@ -295,7 +296,7 @@
       "institution": "Escuela / Academia"
     },
     "casting_status": {
-      "draft": "Borrador",
+      "draft": "Incompleto",
       "closed": "Cerrado",
       "published": "Publicado",
       "paused": "Pausado",
@@ -354,6 +355,13 @@
     "currency": {
       "ars": "ARS",
       "usd": "USD"
+    },
+    "application_status": {
+      "blank": "No Visto",
+      "viewed": "Visto",
+      "preselected": "Preseleccionado",
+      "selected": "Seleccionado",
+      "not_proceeding": "No Seleccionado"
     }
   },
   "error_page": {
@@ -834,6 +842,17 @@
     "order": {
       "deadline_asc": "Fecha límite (más cercana)",
       "deadline_desc": "Fecha límite (más lejana)"
+    }
+  },
+  "employer_casting_applicants": {
+    "page": {
+      "title": "Postulantes",
+      "empty_page": "Aún no hay postulantes para este casting."
+    },
+    "applicant_card": {
+      "actings": "Acting",
+      "audio": "Audio",
+      "video": "Video"
     }
   },
   "legal": {

@@ -15,7 +15,7 @@ const SectionCard = ({ children, className = '', contentClassName = '' }: Sectio
         className,
       ].join(' ')}
     >
-      <div className={['p-5 lg:p-8', contentClassName].join(' ')}>{children}</div>
+      <div className={['p-6', contentClassName].join(' ')}>{children}</div>
     </article>
   );
 };

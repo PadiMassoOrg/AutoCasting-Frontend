@@ -46,9 +46,11 @@
     --casting-status-paused: #fdc200;
     --casting-status-closed: #ef0c0c;
     --casting-status-archived: #73737d;
-    --application-status-test: #fafafa;
-    --status-unknown: #b0b0b0;
-    /*  */
+    --casting-application-status-blank: #e9ebee;
+    --casting-application-status-preselected: #0083e6;
+    --casting-application-status-selected: #008856;
+    --casting-application-status-not-proceeding: #ef0c0c;
+    --casting-application-status-viewed: #a1a3b2;
   }
 
   /* General */

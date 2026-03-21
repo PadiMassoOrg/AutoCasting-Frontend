@@ -1,5 +1,6 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Chip } from '../../../../../shared/components/Chip';
 import { OverflowMenu } from '../../../../../shared/components/OverflowMenu';
 import { SectionCard } from '../../../../../shared/components/Section';
@@ -7,7 +8,7 @@ import { ROUTES } from '../../../../../shared/lib/routes';
 import { formatLocalDate } from '../../../../../shared/utils/formatUtils';
 import StatusDropdown from '../../../../sitemetadata/component/StatusDropdown';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
-import { isCastingStatusPublished } from '../../../../sitemetadata/utils/siteMetadataUtils';
+import { CASTING_STATUS_ORDER } from '../../../../sitemetadata/utils/siteMetadataUtils';
 import { useCastingStatusActions } from '../../hooks/status/useCastingStatusActions';
 import { useCastingOverflowMenuItems } from '../../hooks/useCastingOverflowMenuItems';
 import type { CastingCardResponse } from '../../types/employerCastings.types';
@@ -22,21 +23,24 @@ const CastingCard = ({
   deleteDisabled?: boolean;
 }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const { id, title, defaultCode, creationDate, applicationDeadline, projectType, status, allowedStatusCodes } = data;
 
   const { setStatus, isPending: isStatusPending } = useCastingStatusActions();
 
-  const published = isCastingStatusPublished(status);
   const employerCastingDetailsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/details`;
   const editCastingPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/editor`;
+  const applicantsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/applicants`;
 
+  // IMPORTANT: We prefer disabled options (items exist but are disabled), so we pass statusCode to the hook.
   const items = useCastingOverflowMenuItems({
     employerCastingDetailsPath,
     editCastingPath,
-    disablePublicActions: !published,
+    statusCode: status?.stringCode,
     onDelete: onDelete ? () => onDelete(id) : undefined,
     deleteDisabled,
+    onApplicants: () => navigate(applicantsPath),
   });
 
   const castingStatusOptions = useCachedSiteMetadataOption('castingStatusOptions', t, undefined, { raw: true });
@@ -65,8 +69,9 @@ const CastingCard = ({
           {isMetadataReady ? (
             <StatusDropdown
               value={status}
-              allowedCodes={allowedStatusCodes ?? []}
+              allowedCodes={allowedStatusCodes ?? []} // [] => none allowed (dropdown disabled by StatusDropdown semantics)
               allOptions={castingStatusOptions}
+              order={CASTING_STATUS_ORDER}
               onSelect={handleSelectStatus}
               disabled={isStatusPending}
             />

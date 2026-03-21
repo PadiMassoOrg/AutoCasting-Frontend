@@ -69,7 +69,7 @@ export const API_ROUTES = {
   // Casting
   CASTING: '/casting',
   // Application
-  TALENT_CASTING_APPLICATION: '/apply',
+  TALENT_CASTING_APPLY: '/apply',
   // Talent
   TALENT_PROFILE: '/talent',
   TALENT_BASIC_INFO: '/talent/basic-info',
@@ -80,6 +80,7 @@ export const API_ROUTES = {
   TALENT_SKILLS: '/talent/skills',
   CREDIT: '/credit',
   EDUCATION: '/education',
+  TALENT_CASTING_APPLICATIONS: '/talent/applications',
   // Employer
   CASTING_BASIC_INFO: '/casting/basic-info',
   CASTING_ROLE: '/casting/role',
@@ -91,9 +92,20 @@ export const API_ROUTES = {
   EMPLOYER_SOCIAL_MEDIA: '/employer/social-media',
   EMPLOYER_CASTINGS: '/employer/castings',
   EMPLOYER_CASTING: '/employer/casting',
+  // Casting Status
   PUBLISH_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/publish`,
   DRAFT_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/draft`,
   PAUSE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/pause`,
   CLOSE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/close`,
   ARCHIVE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/archive`,
+  EMPLOYER_CASTING_APPLICANTS: (castingSlug: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingSlug}/applicants`,
+  // Application Status
+  EMPLOYER_CASTING_APPLICATIONS: '/employer/applications',
+  PRESELECT_APPLICATION: (applicationId: string) =>
+    `${API_ROUTES.EMPLOYER_CASTING_APPLICATIONS}/${applicationId}/preselect`,
+  SELECT_APPLICATION: (applicationId: string) => `${API_ROUTES.EMPLOYER_CASTING_APPLICATIONS}/${applicationId}/select`,
+  NOT_PROCEEDING_APPLICATION: (applicationId: string) =>
+    `${API_ROUTES.EMPLOYER_CASTING_APPLICATIONS}/${applicationId}/not-proceeding`,
+  VIEW_APPLICATION: (applicationId: string) => `${API_ROUTES.EMPLOYER_CASTING_APPLICATIONS}/${applicationId}/view`,
+  BLANK_APPLICATION: (applicationId: string) => `${API_ROUTES.EMPLOYER_CASTING_APPLICATIONS}/${applicationId}/blank`,
 };

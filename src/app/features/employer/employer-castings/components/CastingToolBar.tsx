@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import OverflowMenu from '../../../../shared/components/OverflowMenu/OverflowMenu';
 import { ROUTES } from '../../../../shared/lib/routes';
-import { CASTING_STATUS_PUBLISHED, isCastingStatusPublished } from '../../../sitemetadata/utils/siteMetadataUtils';
+import { CASTING_STATUS_PUBLISHED } from '../../../sitemetadata/utils/siteMetadataUtils';
 import { useEmployerCastingIds, useEmployerCastingPublishAllowed } from '../context/EmployerCastingContext';
 import { useCastingStatusActions } from '../hooks/status/useCastingStatusActions';
 import { useCastingOverflowMenuItems } from '../hooks/useCastingOverflowMenuItems';
@@ -73,7 +73,7 @@ const useEmployerCastingToolbarLogic = () => {
   const navigate = useNavigate();
   const { mutate: deleteCasting, isPending: isDeleting } = useDeleteCastingMutation();
   const { setStatusByCode, isPending: isStatusPending } = useCastingStatusActions();
-  const { id: castingId, defaultCode, castingStatus } = useEmployerCastingIds() as any;
+  const { id: castingId, defaultCode } = useEmployerCastingIds() as any;
   const publishAllowed = useEmployerCastingPublishAllowed();
 
   const redirectToCastingsList = () => navigate(ROUTES.EMPLOYER_CASTINGS);
@@ -95,14 +95,14 @@ const useEmployerCastingToolbarLogic = () => {
     );
   };
 
-  const publicCastingPath = `${ROUTES.PUBLIC_CASTING}/${defaultCode}`;
-  const actionsDisabled = !isCastingStatusPublished(castingStatus) || !publishAllowed || isStatusPending;
+  const employerCastingDetailsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/details`;
+  const applicantsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/applicants`;
 
   const items = useCastingOverflowMenuItems({
-    publicCastingPath,
-    disablePublicActions: actionsDisabled,
+    employerCastingDetailsPath,
     onDelete: handleDeleteCasting,
     deleteDisabled: isDeleting,
+    onApplicants: () => navigate(applicantsPath),
   });
 
   return {
