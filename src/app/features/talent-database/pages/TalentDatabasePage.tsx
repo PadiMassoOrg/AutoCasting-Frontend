@@ -6,8 +6,6 @@ import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
 import { PublicProfileDetailsView } from '../../public-profile/pages';
-import { getPublicProfile } from '../../public-profile/services/publicProfileService';
-import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
 import { MobileFiltersDrawer, TalentCard, TalentFilterBar } from '../components';
 import { getTalentDatabase } from '../services/talentDatabaseService';
 import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
@@ -57,7 +55,7 @@ export default function TalentDatabasePage() {
   const [hasNext, setHasNext] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedProfile, setSelectedProfile] = useState<TalentPublicProfileResponse | null>(null);
+  const [selectedPublicSlug, setSelectedPublicSlug] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
   const inflightRef = useRef<AbortController | null>(null);
@@ -178,14 +176,14 @@ export default function TalentDatabasePage() {
     return () => document.removeEventListener('visibilitychange', onVis);
   }, [fetchPage, error]);
 
-  const handleOpenDetails = useCallback(async (card: ProfileCardResponse) => {
-    try {
-      const full = await getPublicProfile(card.publicSlug);
-      setSelectedProfile(full);
-      setDetailsOpen(true);
-    } catch (e) {
-      console.error('Error loading profile details', e);
-    }
+  const handleOpenDetails = useCallback((card: ProfileCardResponse) => {
+    setSelectedPublicSlug(card.publicSlug);
+    setDetailsOpen(true);
+  }, []);
+
+  const handleCloseDetails = useCallback(() => {
+    setDetailsOpen(false);
+    setSelectedPublicSlug(null);
   }, []);
 
   const showInitialSkeletons = items.length === 0 && loading && !error;
@@ -198,7 +196,6 @@ export default function TalentDatabasePage() {
     <section className="w-full h-full min-h-0 bg-[var(--color-secondary-white)]">
       <div className="h-full w-full flex flex-col">
         <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col lg:flex-row gap-6 overflow-hidden">
-          {/* Desktop Filter Bar */}
           {isDesktop && filtersOpen && (
             <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-[var(--color-primary-white)] border-r border-[var(--color-secondary-outline)]">
               <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5">
@@ -211,7 +208,6 @@ export default function TalentDatabasePage() {
             ref={cardsScrollRef}
             className="p-6 sm:px-[56px] w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
           >
-            {/* Mobile Title */}
             <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
               <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
               <button
@@ -288,14 +284,7 @@ export default function TalentDatabasePage() {
         />
 
         {isDesktop && (
-          <PublicProfileDetailsView
-            open={detailsOpen && !!selectedProfile}
-            onClose={() => {
-              setDetailsOpen(false);
-              setSelectedProfile(null);
-            }}
-            profile={selectedProfile ?? null}
-          />
+          <PublicProfileDetailsView open={detailsOpen} onClose={handleCloseDetails} publicSlug={selectedPublicSlug} />
         )}
       </div>
     </section>

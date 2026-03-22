@@ -13,7 +13,7 @@ type Props = { className?: string };
 export default function ViewerActions({ className }: Props) {
   const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
-  const { data } = usePublicProfile(slug!);
+  const { data } = usePublicProfile(slug);
 
   const url = isBrowser ? window.location.href : '';
 
@@ -59,7 +59,7 @@ export default function ViewerActions({ className }: Props) {
     );
   }
 
-  items.push(<Icon name="copyLink" onClick={handleShare} />);
+  items.push(<Icon key="copy-link" name="copyLink" onClick={handleShare} />);
 
   if (items.length === 0) return null;
 

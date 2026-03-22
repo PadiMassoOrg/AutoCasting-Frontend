@@ -6,8 +6,6 @@ import { DashboardSection, DashboardShell } from '../../../../layouts/components
 import { SectionTitle } from '../../../../shared/components/Section';
 import { LG_SCREEN_SIZE, useMedia } from '../../../../shared/hooks/useMedia';
 import { PublicProfileDetailsView } from '../../../public-profile/pages';
-import { getPublicProfile } from '../../../public-profile/services/publicProfileService';
-import type { TalentPublicProfileResponse } from '../../../talent/talent-profile-edit/types/talentProfile.types';
 import { CastingApplicantCard } from '../components/Card';
 import CastingApplicantsFilterBar from '../components/Filter/CastingApplicantsFilterBar';
 import { useEmployerCastingApplicants } from '../hooks/useEmployerCastingApplicants';
@@ -29,7 +27,7 @@ const EmployerCastingApplicantsPage = () => {
     search: undefined,
   });
   const [orderBy, setOrderBy] = useState<EmployerCastingApplicantsOrderBy>('CREATION_DATE_DESC');
-  const [selectedProfile, setSelectedProfile] = useState<TalentPublicProfileResponse | null>(null);
+  const [selectedPublicSlug, setSelectedPublicSlug] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
   const args = useMemo(
@@ -47,19 +45,14 @@ const EmployerCastingApplicantsPage = () => {
   const applicants = data?.items ?? [];
   const title = applicants.length > 0 ? `${applicants[0].castingTitle}` : '';
 
-  const handleOpenDetails = useCallback(async (talentPublicSlug: string) => {
-    try {
-      const full = await getPublicProfile(talentPublicSlug);
-      setSelectedProfile(full);
-      setDetailsOpen(true);
-    } catch (e) {
-      console.error('Error loading profile details', e);
-    }
+  const handleOpenDetails = useCallback((talentPublicSlug: string) => {
+    setSelectedPublicSlug(talentPublicSlug);
+    setDetailsOpen(true);
   }, []);
 
   const handleCloseDetails = useCallback(() => {
     setDetailsOpen(false);
-    setSelectedProfile(null);
+    setSelectedPublicSlug(null);
   }, []);
 
   return (
@@ -88,11 +81,7 @@ const EmployerCastingApplicantsPage = () => {
       </DashboardSection>
 
       {isDesktop && (
-        <PublicProfileDetailsView
-          open={detailsOpen && !!selectedProfile}
-          onClose={handleCloseDetails}
-          profile={selectedProfile ?? null}
-        />
+        <PublicProfileDetailsView open={detailsOpen} onClose={handleCloseDetails} publicSlug={selectedPublicSlug} />
       )}
     </DashboardShell>
   );
