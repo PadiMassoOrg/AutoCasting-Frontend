@@ -73,11 +73,11 @@ const TalentCastingApplicationCard = ({ data }: { data: TalentCastingApplication
           </div>
         </div>
         {/* Professions */}
-        <div className="flex flex-row items-center flex-wrap gap-2">
+        {/* <div className="flex flex-row items-center flex-wrap gap-2">
           {professions.map((profession) => (
             <Chip key={profession.stringCode} label={t(profession.stringCode)} />
           ))}
-        </div>
+        </div> */}
         {/* Role */}
         <div className="flex flex-row gap-2">
           <Chip label={t(roleType.stringCode)}></Chip>
