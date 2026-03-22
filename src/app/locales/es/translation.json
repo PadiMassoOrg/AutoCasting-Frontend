@@ -44,6 +44,7 @@
     "limit_date": "Fecha límite",
     "delete_confirm": "Estás por borrar",
     "status": "Estado",
+    "view_details": "Ver Detalles",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "role_name": "Lali",
@@ -322,6 +323,7 @@
       "other": "Otro"
     },
     "casting_modality": {
+      "casting": "Casting",
       "on_site": "Presencial",
       "autocasting": "Autocasting"
     },
@@ -855,6 +857,16 @@
       "actings": "Acting",
       "audio": "Audio",
       "video": "Video"
+    }
+  },
+  "talent_applied_castings": {
+    "page": {
+      "title": "Mis Postulaciones",
+      "empty_page": "Aún no has aplicado a ningún casting."
+    },
+    "application_card": {
+      "casting_title": "Casting",
+      "application_status": "Estado de la postulación"
     }
   },
   "legal": {
