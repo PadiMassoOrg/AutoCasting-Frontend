@@ -23,13 +23,12 @@ const EmployerCastingApplicantsPage = () => {
 
   if (!slug) return null;
 
-  const [filters] = useState<EmployerCastingApplicantsFiltersState>({
-    roleIds: undefined,
+  const [filters, setFilters] = useState<EmployerCastingApplicantsFiltersState>({
     applicationStatusIdTokens: undefined,
     professionIds: undefined,
     search: undefined,
   });
-  const [orderBy] = useState<EmployerCastingApplicantsOrderBy>('CREATION_DATE_DESC');
+  const [orderBy, setOrderBy] = useState<EmployerCastingApplicantsOrderBy>('CREATION_DATE_DESC');
   const [selectedProfile, setSelectedProfile] = useState<TalentPublicProfileResponse | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
@@ -68,10 +67,13 @@ const EmployerCastingApplicantsPage = () => {
       <DashboardSection>
         <SectionTitle title={t('employer_casting_applicants.page.title') + ' ' + title} />
 
-        {/* Filter Bar */}
-        <CastingApplicantsFilterBar />
+        <CastingApplicantsFilterBar
+          filters={filters}
+          onFiltersChange={setFilters}
+          orderBy={orderBy}
+          onOrderByChange={setOrderBy}
+        />
 
-        {/* Cards */}
         <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">
           {applicants.length > 0 ? (
             applicants.map((i) => (

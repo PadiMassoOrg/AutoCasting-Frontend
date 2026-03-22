@@ -82,7 +82,9 @@
     "order": {
       "order": "Ordenar",
       "created_desc": "Fecha de creación (más reciente)",
-      "created_asc": "Fecha de creación (más antigua)"
+      "created_asc": "Fecha de creación (más antigua)",
+      "most_recent": "Más recientes",
+      "oldest": "Más antiguos"
     }
   },
   "validation": {
