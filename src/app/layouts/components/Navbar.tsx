@@ -66,6 +66,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
   const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
   const activeCastingDatabase = isRouteActive(ROUTES.CASTING_DATABASE);
   // Talent
+  const activeAppliedCastings = isRouteActive(ROUTES.TALENT_APPLIED_CASTINGS, true);
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
   const activePublicProfile = isRouteActive(profileUrl, true);
   const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
@@ -133,10 +134,12 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
               </>
             ) : mode == USER_MODE_TALENT ? (
               <div className="flex flex-row gap-2 items-center h-full">
-                <Link to={profileUrl}>
-                  <span className={clsx(baseClass, activePublicProfile && activeClass)}>
-                    {showIcons && <Icon name="view" variant={activePublicProfile ? 'primary' : 'default'} />}
-                    {showLabels && t('routes.profile')}
+                <Link to={ROUTES.TALENT_APPLIED_CASTINGS}>
+                  <span className={clsx(baseClass, activeAppliedCastings && activeClass)}>
+                    {showIcons && (
+                      <Icon name="file" variant={activeAppliedCastings ? 'primary' : 'default'} className="w-6" />
+                    )}
+                    {showLabels && t('routes.talent-applied-castings')}
                   </span>
                 </Link>
                 <Link to={ROUTES.TALENT}>
@@ -144,6 +147,12 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                     {showIcons && (
                       <Icon name="profile" variant={activeTalentProfile ? 'primary' : 'default'} className="w-6" />
                     )}
+                    {showLabels && t('routes.profile')}
+                  </span>
+                </Link>
+                <Link to={profileUrl}>
+                  <span className={clsx(baseClass, activePublicProfile && activeClass)}>
+                    {showIcons && <Icon name="view" variant={activePublicProfile ? 'primary' : 'default'} />}
                     {showLabels && t('routes.profile')}
                   </span>
                 </Link>
