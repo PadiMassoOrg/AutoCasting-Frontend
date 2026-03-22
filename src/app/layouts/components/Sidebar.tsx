@@ -39,7 +39,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
   const activeCastingDatabase = isRouteActive(ROUTES.CASTING_DATABASE);
   // Talent
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
-  //const activeAppliedProductions = isRouteActive(ROUTES.TALENT_APPLIED_PRODUCTIONS, true);
+  const activeAppliedCastings = isRouteActive(ROUTES.TALENT_APPLIED_CASTINGS, true);
   const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
   // Employer
   const activeEmployerProfile = isRouteActive(ROUTES.EMPLOYER, true);
@@ -109,6 +109,14 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                 <ul className="w-full flex flex-col font-semibold">
                   {mode == USER_MODE_TALENT ? (
                     <>
+                      <li onClick={onClose}>
+                        <Link to={ROUTES.TALENT_APPLIED_CASTINGS}>
+                          <span className={clsx(baseClass, activeAppliedCastings && activeClass)}>
+                            <Icon name="file" variant={activeAppliedCastings ? 'primary' : 'default'} />{' '}
+                            {t('routes.talent-applied-castings')}
+                          </span>
+                        </Link>
+                      </li>
                       <li onClick={onClose}>
                         <Link to={ROUTES.TALENT}>
                           <span className={clsx(baseClass, activeTalentProfile && activeClass)}>

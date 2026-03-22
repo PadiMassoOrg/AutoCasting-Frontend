@@ -8,4 +8,12 @@ export type TalentCastingApplicationCardResponse = {
   castingStatus: SiteMetadataObject;
   castingRoleId: string;
   castingSlug: string;
+  companyName: string;
+  employerImageUrl: string;
+  castingModalityText: string | null;
+  shootingStartDate: string;
+  shootingEndDate: string;
+  gender: SiteMetadataObject;
+  professions: SiteMetadataObject[];
+  roleType: SiteMetadataObject;
 };

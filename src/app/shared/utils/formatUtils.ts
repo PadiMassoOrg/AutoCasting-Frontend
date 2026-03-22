@@ -34,6 +34,9 @@ export function formatMemberSince(date: string | Date | null | undefined, t: (k:
   return `${t('casting-database.page.member_since')} ${formatted}`;
 }
 
+export function formatCastingModalityText(modality: string, t: (k: string) => string): string {
+  return t('sitemetadata.casting_modality.casting') + ': ' + t(modality);
+}
 // ==============================================
 // Numbers
 // ==============================================
