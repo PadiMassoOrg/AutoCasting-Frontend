@@ -1,2 +1,2 @@
 import CastingDetailsPage from './CastingDetailsPage';
-export { CastingDetailsPage as EmployerCastingDetailsPage };
+export { CastingDetailsPage };

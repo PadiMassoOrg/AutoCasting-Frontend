@@ -6,6 +6,7 @@ import MainSiteLayout from '../features/main-site/layout/MainSiteLayout';
 import { PrivacyPage, SupportPage, TermsPage } from '../features/main-site/page';
 import MainSitePage from '../features/main-site/page/MainSitePage';
 import { OnboardingWizard } from '../features/onboarding/components';
+import { CastingDetailsPage } from '../features/public-casting/pages';
 import { PublicProfilePage } from '../features/public-profile/pages';
 import { TalentDatabasePage } from '../features/talent-database/pages';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
@@ -15,7 +16,6 @@ import { getAuthToken } from '../shared/lib/cookies';
 import { ROUTES } from '../shared/lib/routes';
 import ProtectedRoute from './ProtectedRoute';
 import ProtectedRoutesLayout from './ProtectedRoutesLayout';
-import CastingDetailsPage from '../features/public-casting/pages/CastingDetailsPage';
 
 function RouteTracker() {
   useRouteTracking();
