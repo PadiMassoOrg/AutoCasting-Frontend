@@ -25,7 +25,6 @@ const TalentCastingApplicationCard = ({ data }: { data: TalentCastingApplication
     shootingStartDate,
     shootingEndDate,
     gender,
-    professions,
     roleType,
   } = data;
 
