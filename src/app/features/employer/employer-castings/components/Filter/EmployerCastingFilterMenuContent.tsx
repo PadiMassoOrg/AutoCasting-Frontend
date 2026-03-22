@@ -26,9 +26,9 @@ export default function EmployerCastingsFilterMenuContent({
   };
 
   return (
-    <>
-      <section className="flex flex-col">
-        <article className="flex flex-col gap-2">
+    <section className="min-w-[300px]">
+      <article className="flex flex-col">
+        <div className="flex flex-col gap-2">
           <h3 className="text-base font-semibold">{t('casting.basic_info.project_type')}</h3>
           <MultiSelectDropdown
             options={projectTypesRaw ?? []}
@@ -39,8 +39,8 @@ export default function EmployerCastingsFilterMenuContent({
             maxPanelHeight="16rem"
             hideSelectAll
           />
-        </article>
-        <article className="flex flex-col gap-2">
+        </div>
+        <div className="flex flex-col gap-2">
           <h3 className="text-base font-semibold">{t('employer_castings.casting_card.status.status')}</h3>
           <MultiSelectDropdown
             options={castingStatusesRaw ?? []}
@@ -51,8 +51,8 @@ export default function EmployerCastingsFilterMenuContent({
             maxPanelHeight="16rem"
             hideSelectAll
           />
-        </article>
-      </section>
+        </div>
+      </article>
       <button
         type="button"
         className="cursor-pointer text-sm underline font-light text-[var(--color-primary-purple)]"
@@ -60,6 +60,6 @@ export default function EmployerCastingsFilterMenuContent({
       >
         {t('general.filter.reset')}
       </button>
-    </>
+    </section>
   );
 }

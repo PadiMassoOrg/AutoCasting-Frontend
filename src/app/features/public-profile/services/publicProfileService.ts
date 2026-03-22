@@ -4,6 +4,9 @@ import type { TalentPublicProfileResponse } from '../../talent/talent-profile-ed
 
 export const PUBLIC_PROFILE_CACHE_KEY = ['cache-profile'] as const;
 
+export const getPublicProfileQueryKey = (slug?: string | null) =>
+  [...PUBLIC_PROFILE_CACHE_KEY, slug ?? 'no-slug'] as const;
+
 export const getPublicProfile = async (slug: string): Promise<TalentPublicProfileResponse> => {
   const response = await api.get(API_ROUTES.TALENT_PROFILE + `/${slug}`);
   return response.data;

@@ -6,19 +6,21 @@ import { Link } from 'react-router-dom';
 import DetailsView from '../../../shared/components/DetailsView/DetailsView';
 import { Icon } from '../../../shared/components/Icon/Icon';
 import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
+import ServerError from '../../../shared/components/ServerError/ServerError';
 import ProfileInfoCarousel from '../../public-profile/components/Details/ProfileInfoCarousel';
 import VideoSection from '../../public-profile/components/VideoSection';
-import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
 import { ProfileShareActions, SocialMediaSection } from '../components';
+import { usePublicProfile } from '../hooks/usePublicProfile';
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  profile?: TalentPublicProfileResponse | null;
+  publicSlug?: string | null;
 };
 
-export default function PublicProfileDetailsView({ open, onClose, profile }: Props) {
+export default function PublicProfileDetailsView({ open, onClose, publicSlug }: Props) {
   const { t } = useTranslation();
+  const { data: profile, error, isLoading } = usePublicProfile(publicSlug, open);
 
   const images = useMemo(() => {
     const media = profile?.media;
@@ -29,9 +31,9 @@ export default function PublicProfileDetailsView({ open, onClose, profile }: Pro
     );
   }, [profile]);
 
-  if (!open || !profile) {
-    return null;
-  }
+  if (!open) return null;
+  if (isLoading || !profile) return null;
+  if (error) return <ServerError />;
 
   const { basicInfo, media, socialMedia } = profile;
 
@@ -53,6 +55,8 @@ export default function PublicProfileDetailsView({ open, onClose, profile }: Pro
         }, [])
       : null;
 
+  const url = `${window.location.origin}/profile/${profile.publicSlug}`;
+
   const headerLeft = (
     <div className="flex flex-col min-w-0">
       <h2 className="text-2xl font-bold truncate">{basicInfo?.stageName}</h2>
@@ -61,8 +65,6 @@ export default function PublicProfileDetailsView({ open, onClose, profile }: Pro
       )}
     </div>
   );
-
-  const url = `${window.location.origin}/profile/${profile.publicSlug}`;
 
   const headerRight = (
     <Link aria-label={t('profile.share.share_profile')} className="cursor-pointer" to={url}>
@@ -74,13 +76,13 @@ export default function PublicProfileDetailsView({ open, onClose, profile }: Pro
     <DetailsView open={open} onClose={onClose} headerLeft={headerLeft} headerRight={headerRight}>
       <div className="flex flex-col gap-6">
         <div className="w-full flex flex-row items-center justify-between">
-          <ProfileShareActions data={profile}></ProfileShareActions>
+          <ProfileShareActions data={profile} />
           <SocialMediaSection data={socialMedia} />
         </div>
         <ImageCarousel images={images.length > 0 ? images : null} isDesktop isDesktopXL />
-        <Separator className="opacity-20 my-4"></Separator>
+        <Separator className="opacity-20 my-4" />
         <ProfileInfoCarousel profile={profile} infoPanelFixedHeight={true} />
-        <Separator className="opacity-20 my-4"></Separator>
+        <Separator className="opacity-20 my-4" />
         <VideoSection data={media} />
       </div>
     </DetailsView>
