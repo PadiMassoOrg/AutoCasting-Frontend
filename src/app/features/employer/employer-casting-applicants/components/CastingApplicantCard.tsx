@@ -3,13 +3,19 @@ import { useTranslation } from 'react-i18next';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { InlineList } from '../../../../shared/components/InlineList';
 import { SectionCard } from '../../../../shared/components/Section';
+import { ROUTES } from '../../../../shared/lib/routes';
 import StatusDropdown from '../../../sitemetadata/component/StatusDropdown';
 import { useCachedSiteMetadataOption } from '../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { CASTING_APPLICATION_STATUS_ORDER } from '../../../sitemetadata/utils/siteMetadataUtils';
 import { useCastingApplicationStatusActions } from '../hooks/status/useCastingApplicationStatusActions';
 import type { EmployerCastingApplicantCardResponse } from '../types/employerCastingApplicants.types';
 
-const CastingApplicantCard = ({ data }: { data: EmployerCastingApplicantCardResponse }) => {
+type Props = {
+  data: EmployerCastingApplicantCardResponse;
+  onOpenDetails: (talentPublicSlug: string) => void | Promise<void>;
+};
+
+const CastingApplicantCard = ({ data, onOpenDetails }: Props) => {
   const { t } = useTranslation();
   const { setStatus, isPending } = useCastingApplicationStatusActions();
 
@@ -17,6 +23,8 @@ const CastingApplicantCard = ({ data }: { data: EmployerCastingApplicantCardResp
     applicationId,
     talentHeadshotImageUrl,
     talentStageName,
+    talentEmail,
+    talentPublicSlug,
     talentProfessions,
     castingRoleName,
     castingSlug,
@@ -39,13 +47,40 @@ const CastingApplicantCard = ({ data }: { data: EmployerCastingApplicantCardResp
     await setStatus(nextStatus, { applicationId, castingSlug });
   };
 
+  const handlePublicProfileRedirect = () => {
+    window.location.href = ROUTES.PUBLIC_PROFILE + '/' + talentPublicSlug;
+  };
+
+  const handleOpenDetails = () => {
+    onOpenDetails(talentPublicSlug);
+  };
+
   return (
     <SectionCard className="lg:min-w-[415px]">
       {/* Profile and Status */}
       <div className="flex flex-row items-center gap-3 min-w-0">
         <img src={talentHeadshotImageUrl} alt={talentStageName} className="w-10 h-10 rounded-full object-cover" />
-        <div className="flex flex-col min-w-0">
-          <h2 className="font-semibold text-base line-clamp-1">{talentStageName}</h2>
+        <div className="flex flex-col flex-1 min-w-0">
+          <div className="flex flex-row items-center justify-between gap-3 min-w-0">
+            <h2
+              className="font-semibold text-base line-clamp-1 cursor-pointer hover:underline hover:text-[var(--color-primary-purple)]"
+              onClick={handleOpenDetails}
+            >
+              {talentStageName}
+            </h2>
+            <div className="flex flex-row items-center gap-2 shrink-0">
+              <a
+                key="email"
+                href={`mailto:${talentEmail}`}
+                aria-label={t('profile.share.email')}
+                title="Email"
+                className="inline-flex"
+              >
+                <Icon name="mail" variant="default" />
+              </a>
+              <Icon name="view" variant="default" onClick={handlePublicProfileRedirect} />
+            </div>
+          </div>
           <InlineList items={talentProfessions} />
         </div>
       </div>
