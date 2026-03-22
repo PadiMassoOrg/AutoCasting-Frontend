@@ -8,7 +8,8 @@ import { LG_SCREEN_SIZE, useMedia } from '../../../../shared/hooks/useMedia';
 import { PublicProfileDetailsView } from '../../../public-profile/pages';
 import { getPublicProfile } from '../../../public-profile/services/publicProfileService';
 import type { TalentPublicProfileResponse } from '../../../talent/talent-profile-edit/types/talentProfile.types';
-import { CastingApplicantCard } from '../components';
+import { CastingApplicantCard } from '../components/Card';
+import CastingApplicantsFilterBar from '../components/Filter/CastingApplicantsFilterBar';
 import { useEmployerCastingApplicants } from '../hooks/useEmployerCastingApplicants';
 import type {
   EmployerCastingApplicantsFiltersState,
@@ -68,6 +69,7 @@ const EmployerCastingApplicantsPage = () => {
         <SectionTitle title={t('employer_casting_applicants.page.title') + ' ' + title} />
 
         {/* Filter Bar */}
+        <CastingApplicantsFilterBar />
 
         {/* Cards */}
         <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">

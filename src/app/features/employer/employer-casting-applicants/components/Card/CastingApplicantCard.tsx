@@ -1,14 +1,14 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { Icon } from '../../../../shared/components/Icon/Icon';
-import { InlineList } from '../../../../shared/components/InlineList';
-import { SectionCard } from '../../../../shared/components/Section';
-import { ROUTES } from '../../../../shared/lib/routes';
-import StatusDropdown from '../../../sitemetadata/component/StatusDropdown';
-import { useCachedSiteMetadataOption } from '../../../sitemetadata/hooks/useCachedSiteMetadata';
-import { CASTING_APPLICATION_STATUS_ORDER } from '../../../sitemetadata/utils/siteMetadataUtils';
-import { useCastingApplicationStatusActions } from '../hooks/status/useCastingApplicationStatusActions';
-import type { EmployerCastingApplicantCardResponse } from '../types/employerCastingApplicants.types';
+import { Icon } from '../../../../../shared/components/Icon/Icon';
+import { InlineList } from '../../../../../shared/components/InlineList';
+import { SectionCard } from '../../../../../shared/components/Section';
+import { ROUTES } from '../../../../../shared/lib/routes';
+import StatusDropdown from '../../../../sitemetadata/component/StatusDropdown';
+import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
+import { CASTING_APPLICATION_STATUS_ORDER } from '../../../../sitemetadata/utils/siteMetadataUtils';
+import { useCastingApplicationStatusActions } from '../../hooks/status/useCastingApplicationStatusActions';
+import type { EmployerCastingApplicantCardResponse } from '../../types/employerCastingApplicants.types';
 
 type Props = {
   data: EmployerCastingApplicantCardResponse;
