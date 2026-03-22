@@ -4,23 +4,24 @@ import { OverflowMenu } from '../../../../../shared/components/OverflowMenu';
 import SearchInput from '../../../../../shared/components/Search/SearchInput';
 import { TextDropdownTrigger } from '../../../../../shared/components/Trigger/TextDropdownTrigger';
 import { AUDITABLE_ORDER_BY } from '../../../../../shared/types/orderBy.types';
-import type { EmployerCastingApplicantsOrderBy } from '../../types/employerCastingApplicantsFilter.types';
-import CastingApplicantsFilterMenuContent from './CastingApplicantsFilterMenuContent';
+import type { TalentCastingApplicationsOrderBy } from '../../types/talentCastingApplicationFilters.types';
+import TalentCastingApplicationFilterMenuContent from './TalentCastingApplicationFilterMenuContent';
 
-export type EmployerCastingApplicantsFiltersState = {
-  applicationStatusIdTokens?: string[];
-  professionIds?: string[];
+export type TalentCastingApplicationsFiltersState = {
+  castingStatusIdTokens?: string[];
+  projectTypeIdTokens?: string[];
+  modalityIdTokens?: string[];
   search?: string;
 };
 
 type Props = {
-  filters: EmployerCastingApplicantsFiltersState;
-  onFiltersChange: (next: EmployerCastingApplicantsFiltersState) => void;
-  orderBy: EmployerCastingApplicantsOrderBy;
-  onOrderByChange: (next: EmployerCastingApplicantsOrderBy) => void;
+  filters: TalentCastingApplicationsFiltersState;
+  onFiltersChange: (next: TalentCastingApplicationsFiltersState) => void;
+  orderBy: TalentCastingApplicationsOrderBy;
+  onOrderByChange: (next: TalentCastingApplicationsOrderBy) => void;
 };
 
-const CastingApplicantsFilterBar = ({ filters, onFiltersChange, orderBy, onOrderByChange }: Props) => {
+const TalentCastingApplicationFilterBar = ({ filters, onFiltersChange, orderBy, onOrderByChange }: Props) => {
   const { t } = useTranslation();
   const [searchInput, setSearchInput] = useState(filters.search ?? '');
 
@@ -33,7 +34,7 @@ const CastingApplicantsFilterBar = ({ filters, onFiltersChange, orderBy, onOrder
       {
         type: 'content' as const,
         key: 'filters-content',
-        content: <CastingApplicantsFilterMenuContent value={filters} onChange={onFiltersChange} />,
+        content: <TalentCastingApplicationFilterMenuContent value={filters} onChange={onFiltersChange} />,
       },
     ],
     [filters, onFiltersChange]
@@ -50,12 +51,12 @@ const CastingApplicantsFilterBar = ({ filters, onFiltersChange, orderBy, onOrder
       {
         key: AUDITABLE_ORDER_BY.CREATION_DATE_DESC,
         label: mkLabel(orderBy === AUDITABLE_ORDER_BY.CREATION_DATE_DESC, t('general.order.application_desc')),
-        onSelect: () => onOrderByChange(AUDITABLE_ORDER_BY.CREATION_DATE_DESC as EmployerCastingApplicantsOrderBy),
+        onSelect: () => onOrderByChange(AUDITABLE_ORDER_BY.CREATION_DATE_DESC),
       },
       {
         key: AUDITABLE_ORDER_BY.CREATION_DATE_ASC,
         label: mkLabel(orderBy === AUDITABLE_ORDER_BY.CREATION_DATE_ASC, t('general.order.application_asc')),
-        onSelect: () => onOrderByChange(AUDITABLE_ORDER_BY.CREATION_DATE_ASC as EmployerCastingApplicantsOrderBy),
+        onSelect: () => onOrderByChange(AUDITABLE_ORDER_BY.CREATION_DATE_ASC),
       },
     ];
   }, [orderBy, onOrderByChange, t]);
@@ -87,7 +88,6 @@ const CastingApplicantsFilterBar = ({ filters, onFiltersChange, orderBy, onOrder
           align="start"
           side="bottom"
           trigger={() => <TextDropdownTrigger label={t('general.filter.filter')} open />}
-          menuClassName="max-w-[90%]"
         />
 
         <OverflowMenu
@@ -103,4 +103,4 @@ const CastingApplicantsFilterBar = ({ filters, onFiltersChange, orderBy, onOrder
   );
 };
 
-export default CastingApplicantsFilterBar;
+export default TalentCastingApplicationFilterBar;

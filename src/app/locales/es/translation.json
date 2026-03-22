@@ -84,8 +84,10 @@
       "order": "Ordenar",
       "created_desc": "Fecha de creación (más reciente)",
       "created_asc": "Fecha de creación (más antigua)",
-      "most_recent": "Más recientes",
-      "oldest": "Más antiguos"
+      "deadline_desc": "Fecha límite (más lejana)",
+      "deadline_asc": "Fecha límite (más cercana)",
+      "application_desc": "Fecha de postulación (más reciente)",
+      "application_asc": "Fecha de postulación (más antigua)"
     }
   },
   "validation": {
@@ -842,10 +844,6 @@
           "amount_label": "Monto"
         }
       }
-    },
-    "order": {
-      "deadline_asc": "Fecha límite (más cercana)",
-      "deadline_desc": "Fecha límite (más lejana)"
     }
   },
   "employer_casting_applicants": {

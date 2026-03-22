@@ -59,12 +59,12 @@ const EmployerCastingsFilterBar = ({ filters, onFiltersChange, orderBy, onOrderB
       },
       {
         key: 'DEADLINE_ASC',
-        label: mkLabel(orderBy === 'DEADLINE_ASC', t('employer_castings.order.deadline_asc')),
+        label: mkLabel(orderBy === 'DEADLINE_ASC', t('general.order.deadline_asc')),
         onSelect: () => onOrderByChange('DEADLINE_ASC'),
       },
       {
         key: 'DEADLINE_DESC',
-        label: mkLabel(orderBy === 'DEADLINE_DESC', t('employer_castings.order.deadline_desc')),
+        label: mkLabel(orderBy === 'DEADLINE_DESC', t('general.order.deadline_desc')),
         onSelect: () => onOrderByChange('DEADLINE_DESC'),
       },
     ];

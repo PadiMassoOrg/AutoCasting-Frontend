@@ -4,21 +4,21 @@ import { useMemo, useState } from 'react';
 import { DashboardSection, DashboardShell } from '../../../../layouts/components';
 import { SectionTitle } from '../../../../shared/components/Section';
 import TalentCastingApplicationCard from '../components/Card/TalentCastingApplicationCard';
+import TalentCastingApplicationFilterBar, {
+  type TalentCastingApplicationsFiltersState,
+} from '../components/Filter/TalentCastingApplicationFilterBar';
 import { useTalentCastingApplications } from '../hooks/useTalentCastingApplications';
-import type {
-  TalentCastingApplicationsFiltersState,
-  TalentCastingApplicationsOrderBy,
-} from '../types/talentCastingApplicationFilters.types';
+import type { TalentCastingApplicationsOrderBy } from '../types/talentCastingApplicationFilters.types';
 
 const TalentCastingApplications = () => {
-  const [filters] = useState<TalentCastingApplicationsFiltersState>({
+  const [filters, setFilters] = useState<TalentCastingApplicationsFiltersState>({
     castingStatusIdTokens: undefined,
     projectTypeIdTokens: undefined,
     modalityIdTokens: undefined,
     search: undefined,
   });
 
-  const [orderBy] = useState<TalentCastingApplicationsOrderBy>('CREATION_DATE_DESC');
+  const [orderBy, setOrderBy] = useState<TalentCastingApplicationsOrderBy>('CREATION_DATE_DESC');
 
   const args = useMemo(
     () => ({
@@ -31,7 +31,6 @@ const TalentCastingApplications = () => {
   );
 
   const { data } = useTalentCastingApplications(args);
-
   const applications = data?.items ?? [];
 
   return (
@@ -39,7 +38,12 @@ const TalentCastingApplications = () => {
       <DashboardSection>
         <SectionTitle title={t('talent_applied_castings.page.title')} />
 
-        {/* Filter Bar */}
+        <TalentCastingApplicationFilterBar
+          filters={filters}
+          onFiltersChange={setFilters}
+          orderBy={orderBy}
+          onOrderByChange={setOrderBy}
+        />
 
         <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">
           {applications.length > 0 ? (
