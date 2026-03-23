@@ -17,9 +17,18 @@ type Props = {
   requirements: CastingRequirement[];
   roleId: string;
   alreadyApplied?: boolean;
+  multipleAlreadyApplied?: boolean;
+  shouldShowApplyAction?: boolean;
 };
 
-const ApplySection = ({ employer, requirements, roleId, alreadyApplied }: Props) => {
+const ApplySection = ({
+  employer,
+  requirements,
+  roleId,
+  alreadyApplied,
+  multipleAlreadyApplied = false,
+  shouldShowApplyAction = true,
+}: Props) => {
   const { t } = useTranslation();
   const isAuth = getAuthToken();
   const { mode } = useUserMode();
@@ -70,6 +79,7 @@ const ApplySection = ({ employer, requirements, roleId, alreadyApplied }: Props)
   };
 
   const onClickApply = () => {
+    if (!shouldShowApplyAction) return;
     if (!showApplySection) return;
     if (isAlreadyApplied) return;
     if (apply.isPending) return;
@@ -104,6 +114,15 @@ const ApplySection = ({ employer, requirements, roleId, alreadyApplied }: Props)
       );
     }
 
+    if (multipleAlreadyApplied) {
+      return (
+        <span className="flex gap-2 items-start">
+          <Icon name="info" variant="primary" className="mt-1" />
+          <p className="text-sm text-[var(--color-secondary-gray)]">{t('application.cta_multiple_applied_warning')}</p>
+        </span>
+      );
+    }
+
     if (isAlreadyApplied) {
       return (
         <span className="flex gap-2 items-start">
@@ -127,11 +146,14 @@ const ApplySection = ({ employer, requirements, roleId, alreadyApplied }: Props)
 
       {renderInfoBlock()}
 
-      <Separator className="opacity-20" />
-
-      <Button variant="primary" disabled={isDisabled} onClick={onClickApply}>
-        {t('general.apply')}
-      </Button>
+      {shouldShowApplyAction && (
+        <>
+          <Separator className="opacity-20" />
+          <Button variant="primary" disabled={isDisabled} onClick={onClickApply}>
+            {t('general.apply')}
+          </Button>
+        </>
+      )}
     </article>
   );
 };

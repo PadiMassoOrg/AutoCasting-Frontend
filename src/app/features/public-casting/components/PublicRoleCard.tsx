@@ -1,4 +1,4 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronUpDown } from '../../../shared/components/Chevron';
@@ -12,7 +12,14 @@ type ChipConfig = {
   translate?: boolean;
 };
 
-const PublicRoleCard = ({ data }: { data: CastingRole }) => {
+type Props = {
+  data: CastingRole;
+  showApplyButton?: boolean;
+  applyDisabled?: boolean;
+  onApply?: (role: CastingRole) => void;
+};
+
+const PublicRoleCard = ({ data, showApplyButton = false, applyDisabled = false, onApply }: Props) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
@@ -32,7 +39,6 @@ const PublicRoleCard = ({ data }: { data: CastingRole }) => {
 
   return (
     <article className="w-full rounded-xl border border-[var(--color-secondary-outline)] bg-white py-4 px-5 flex flex-col gap-4">
-      {/* Title + header chips (siempre visibles) */}
       <div className="flex flex-col gap-2">
         <span className="flex flex-row items-center justify-between">
           <h2 className="text-base font-bold">{data.roleName}</h2>
@@ -54,7 +60,6 @@ const PublicRoleCard = ({ data }: { data: CastingRole }) => {
         </div>
       </div>
 
-      {/* Contenido expandible */}
       {open && (
         <>
           {data.description && (
@@ -87,11 +92,18 @@ const PublicRoleCard = ({ data }: { data: CastingRole }) => {
         </>
       )}
 
-      {/* Remuneración (siempre visible cuando exista label) */}
-      {finalAmountAndCurrencyLabel && (
+      {(finalAmountAndCurrencyLabel || showApplyButton) && (
         <>
           <Separator className="opacity-20 my-1" />
-          <h2 className="text-lg font-semibold pb-1">{finalAmountAndCurrencyLabel}</h2>
+          <div className="flex flex-row items-center justify-between gap-4">
+            <h2 className="text-lg font-semibold">{finalAmountAndCurrencyLabel}</h2>
+
+            {showApplyButton && (
+              <Button variant="primary" className="!w-auto" disabled={applyDisabled} onClick={() => onApply?.(data)}>
+                {t('general.apply')}
+              </Button>
+            )}
+          </div>
         </>
       )}
     </article>

@@ -1,2 +1,3 @@
 import CastingDetailsPage from './CastingDetailsPage';
-export { CastingDetailsPage };
+import CastingPublicOverviewPage from './CastingPublicOverviewPage';
+export { CastingDetailsPage, CastingPublicOverviewPage };

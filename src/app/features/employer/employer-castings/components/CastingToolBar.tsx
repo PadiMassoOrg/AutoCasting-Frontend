@@ -96,10 +96,12 @@ const useEmployerCastingToolbarLogic = () => {
   };
 
   const employerCastingDetailsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/details`;
+  const publicCastingDetailsPath = `${ROUTES.PUBLIC_CASTING}/${defaultCode}`;
   const applicantsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/applicants`;
 
   const items = useCastingOverflowMenuItems({
     employerCastingDetailsPath,
+    publicCastingDetailsPath,
     onDelete: handleDeleteCasting,
     deleteDisabled: isDeleting,
     onApplicants: () => navigate(applicantsPath),
