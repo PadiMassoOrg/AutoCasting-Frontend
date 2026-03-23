@@ -3,6 +3,7 @@ import { API_ROUTES } from '../../../shared/lib/routes';
 import type { CastingDetailsResponse, PublicCastingDetailsResponse } from '../types/publicCasting.types';
 
 export const PUBLIC_CASTING_DETAILS_CACHE_KEY = ['cache-casting-details'] as const;
+export const PUBLIC_CASTING_OVERVIEW_CACHE_KEY = ['cache-public-casting-overview'] as const;
 export const EMPLOYER_CASTING_DETAILS_CACHE_KEY = ['cache-employer-casting-details'] as const;
 
 export const getPublicCastingDetails = async (args: {
@@ -13,6 +14,17 @@ export const getPublicCastingDetails = async (args: {
   const { slug, roleId, signal } = args;
 
   const url = `${API_ROUTES.CASTING}/${slug}/roles/${roleId}`;
+  const res = await api.get(url, { signal });
+  return res.data;
+};
+
+export const getPublicCastingOverview = async (args: {
+  slug: string;
+  signal?: AbortSignal;
+}): Promise<CastingDetailsResponse> => {
+  const { slug, signal } = args;
+
+  const url = `${API_ROUTES.CASTING}/${slug}`;
   const res = await api.get(url, { signal });
   return res.data;
 };

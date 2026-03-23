@@ -13,6 +13,7 @@ import {
 
 type Params = {
   employerCastingDetailsPath: string;
+  publicCastingDetailsPath: string;
   editCastingPath?: string;
   onApplicants: () => void;
   onDelete?: () => void | Promise<void>;
@@ -29,15 +30,10 @@ type Visibility = {
 };
 
 const VISIBILITY_BY_STATUS: Record<string, Visibility> = {
-  // 1) Draft: Solo Editar
   [CASTING_STATUS_DRAFT]: { details: false, applicants: false, copyLink: false, edit: true, delete: true },
-  // 2) Closed: Ver Detalles y Postulantes
   [CASTING_STATUS_CLOSED]: { details: true, applicants: true, copyLink: false, edit: false, delete: true },
-  // 3) Paused: Todo
   [CASTING_STATUS_PAUSED]: { details: true, applicants: true, copyLink: true, edit: true, delete: true },
-  // 4) Published: Todo
   [CASTING_STATUS_PUBLISHED]: { details: true, applicants: true, copyLink: true, edit: true, delete: true },
-  // 5) Archived: Ver detalles y postulantes
   [CASTING_STATUS_ARCHIVED]: { details: true, applicants: true, copyLink: false, edit: false, delete: true },
 };
 
@@ -50,6 +46,7 @@ function resolveVisibility(statusCode?: string | null): Visibility {
 
 export const useCastingOverflowMenuItems = ({
   employerCastingDetailsPath,
+  publicCastingDetailsPath,
   editCastingPath,
   onApplicants,
   onDelete,
@@ -82,9 +79,10 @@ export const useCastingOverflowMenuItems = ({
         label: t('employer_castings.actions.copy_link'),
         iconName: 'copyLink',
         disabled: !v.copyLink,
-        onSelect: () => {
-          const url = new URL(employerCastingDetailsPath, window.location.origin).toString();
-          void copyToClipboardGraceful(url);
+        onSelect: async () => {
+          const url = new URL(publicCastingDetailsPath, window.location.origin).toString();
+          await copyToClipboardGraceful(url);
+          alert(t('general.copied'));
         },
       },
     ];
@@ -113,5 +111,15 @@ export const useCastingOverflowMenuItems = ({
     }
 
     return items;
-  }, [t, navigate, employerCastingDetailsPath, editCastingPath, onApplicants, onDelete, deleteDisabled, statusCode]);
+  }, [
+    t,
+    navigate,
+    employerCastingDetailsPath,
+    publicCastingDetailsPath,
+    editCastingPath,
+    onApplicants,
+    onDelete,
+    deleteDisabled,
+    statusCode,
+  ]);
 };
