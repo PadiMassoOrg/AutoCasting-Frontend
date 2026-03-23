@@ -1,6 +1,10 @@
 import api from '../../../shared/lib/axios';
 import { API_ROUTES } from '../../../shared/lib/routes';
-import type { CastingDetailsResponse, PublicCastingDetailsResponse } from '../types/publicCasting.types';
+import type {
+  CastingDetailsResponse,
+  PublicCastingDetailsResponse,
+  PublicCastingOverviewResponse,
+} from '../types/publicCasting.types';
 
 export const PUBLIC_CASTING_DETAILS_CACHE_KEY = ['cache-casting-details'] as const;
 export const PUBLIC_CASTING_OVERVIEW_CACHE_KEY = ['cache-public-casting-overview'] as const;
@@ -21,7 +25,7 @@ export const getPublicCastingDetails = async (args: {
 export const getPublicCastingOverview = async (args: {
   slug: string;
   signal?: AbortSignal;
-}): Promise<CastingDetailsResponse> => {
+}): Promise<PublicCastingOverviewResponse> => {
   const { slug, signal } = args;
 
   const url = `${API_ROUTES.CASTING}/${slug}`;

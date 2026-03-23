@@ -18,6 +18,11 @@ export type PublicCastingDetailsResponse = {
   alreadyApplied: boolean;
 };
 
+export type PublicCastingOverviewResponse = {
+  casting: CastingDetailsResponse;
+  appliedRoleIds: string[];
+};
+
 // ======================
 // Employer (Casting public response)
 // ======================

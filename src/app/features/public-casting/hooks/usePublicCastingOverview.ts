@@ -1,15 +1,15 @@
 import type { UseQueryOptions } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { getPublicCastingOverview, PUBLIC_CASTING_OVERVIEW_CACHE_KEY } from '../services/castingDetailsService';
-import type { CastingDetailsResponse } from '../types/publicCasting.types';
+import type { PublicCastingOverviewResponse } from '../types/publicCasting.types';
 
 type Args = { slug: string };
-type Options = Omit<UseQueryOptions<CastingDetailsResponse>, 'queryKey' | 'queryFn'>;
+type Options = Omit<UseQueryOptions<PublicCastingOverviewResponse>, 'queryKey' | 'queryFn'>;
 
 export const usePublicCastingOverview = (args: Args, options?: Options) => {
   const { slug } = args;
 
-  return useQuery<CastingDetailsResponse>({
+  return useQuery<PublicCastingOverviewResponse>({
     queryKey: [...PUBLIC_CASTING_OVERVIEW_CACHE_KEY, slug ?? 'no-slug'],
     queryFn: ({ signal }) => getPublicCastingOverview({ slug, signal }),
     enabled: !!slug,
