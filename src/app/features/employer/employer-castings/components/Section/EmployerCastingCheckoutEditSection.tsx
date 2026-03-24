@@ -1,33 +1,30 @@
-import { Button } from 'autocasting-ui-library-padimasso';
+import { Label } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { DashboardSection } from '../../../../../layouts/components';
 import { SectionTitle } from '../../../../../shared/components/Section';
-import { ROUTES } from '../../../../../shared/lib/routes';
-import { CASTING_STATUS_PUBLISHED } from '../../../../sitemetadata/utils/siteMetadataUtils';
-import { useEmployerCastingIds, useEmployerCastingPublishAllowed } from '../../context/EmployerCastingContext';
-import { useCastingStatusActions } from '../../hooks/status/useCastingStatusActions';
+import ServerError from '../../../../../shared/components/ServerError/ServerError';
+import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
+import { useSectionCheckout } from '../../hooks/section/useSectionCheckout';
+import CastingCheckoutPaymentForm from '../Form/Checkout/CastingCheckoutPaymentForm';
+import CastingCheckoutSummaryForm from '../Form/Checkout/CastingCheckoutSummaryForm';
 
 const EmployerCastingCheckoutEditSection = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { id: castingId, defaultCode } = useEmployerCastingIds() as any;
-  const { setStatusByCode, isPending: isStatusPending } = useCastingStatusActions();
-  const publishAllowed = useEmployerCastingPublishAllowed();
+  const { id: castingId } = useEmployerCastingIds();
+  const { data, isLoading, error } = useSectionCheckout(castingId);
 
-  const handlePublishCasting = async () => {
-    if (!publishAllowed || isStatusPending) return;
-    await setStatusByCode(CASTING_STATUS_PUBLISHED, { id: castingId, slug: defaultCode });
-    navigate(ROUTES.EMPLOYER_CASTINGS);
-  };
+  if (isLoading || !data) return null;
+  if (error) return <ServerError />;
 
   return (
     <DashboardSection>
       <SectionTitle title={t('employer_castings.dashboard.checkout.checkout_and_publish')} />
-      <div className="items-center">
-        <Button variant="primary" disabled={!publishAllowed || isStatusPending} onClick={handlePublishCasting}>
-          {t('general.publish')}
-        </Button>{' '}
+      <Label className="mt-2 w-full text-[var(--color-secondary-grey-fonts)]">
+        {t('employer_castings.dashboard.checkout.subtitle')}
+      </Label>
+      <div className="flex flex-col gap-10 w-full lg:flex-row">
+        <CastingCheckoutSummaryForm data={data} />
+        <CastingCheckoutPaymentForm />
       </div>
     </DashboardSection>
   );

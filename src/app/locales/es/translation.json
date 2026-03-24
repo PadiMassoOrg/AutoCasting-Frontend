@@ -26,6 +26,7 @@
     "finalize": "Finalizar",
     "edit": "Editar",
     "publish": "Publicar",
+    "pay_and_publish": "Pagar y Publicar",
     "publish_casting": "Publicar Casting",
     "copied": "Copaiado con éxito.",
     "logout": "Cerrar Sesión",
@@ -45,6 +46,8 @@
     "delete_confirm": "Estás por borrar",
     "status": "Estado",
     "view_details": "Ver Detalles",
+    "total": "Total",
+    "roles": "Roles",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "role_name": "Lali",
@@ -833,9 +836,6 @@
           "description": "Descripción/Instrucciones (opcional)"
         }
       },
-      "checkout": {
-        "checkout_and_publish": "Finalizar y Publicar"
-      },
       "remunerations": {
         "title": "Remuneración",
         "collaborative": {
@@ -846,6 +846,21 @@
         "remuneration": {
           "pay_rate_type_label": "Tipo de tarifa",
           "amount_label": "Monto"
+        }
+      },
+      "checkout": {
+        "checkout_and_publish": "Finalizar y Publicar",
+        "subtitle": "Revisá el resumen. Cuando pagues, tu casting se publica automáticamente.",
+        "checkout_summary": {
+          "title": "Resumen del Casting",
+          "coupon": "Cupón",
+          "beta_discount": "100% Version Beta",
+          "beta_total": "$0 ARS"
+        },
+        "checkout_payment": {
+          "title": "Finalización de Compra",
+          "beta_total": "$0 ARS",
+          "disclaimer": "Al pagar, tu casting se publica automáticamente."
         }
       }
     }
