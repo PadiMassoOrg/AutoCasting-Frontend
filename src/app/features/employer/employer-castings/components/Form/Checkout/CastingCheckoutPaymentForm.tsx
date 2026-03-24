@@ -19,6 +19,7 @@ const CastingCheckoutPaymentForm = () => {
     await setStatusByCode(CASTING_STATUS_PUBLISHED, { id: castingId, slug: defaultCode });
     navigate(ROUTES.EMPLOYER_CASTINGS);
   };
+
   return (
     <SectionCard className="w-full h-full">
       <article className="mb-10">

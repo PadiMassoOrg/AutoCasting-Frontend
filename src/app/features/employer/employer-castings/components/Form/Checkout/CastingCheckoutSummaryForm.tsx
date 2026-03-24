@@ -6,44 +6,58 @@ import type { CastingSectionCheckout } from '../../../types/employerCastings.typ
 
 const CastingCheckoutSummaryForm = ({ data }: { data: CastingSectionCheckout }) => {
   const { t } = useTranslation();
+
+  const { castingTitle, projectType, castingModality, applicationDeadline, roles } = data;
+
   return (
     <SectionCard className="w-full">
       <h2 className="text-base font-semibold">{t('employer_castings.dashboard.checkout.checkout_summary.title')}</h2>
       <div className="mt-6">
         {/* Casting */}
         <article className="flex flex-col gap-3">
-          <h2 className="text-sm font-semibold">{data.castingTitle}</h2>
+          <h2 className="text-sm font-semibold">{castingTitle ? castingTitle : t('general.untitled')}</h2>
           <div className="flex flex-row items-center justify-between">
-            <p className="text-sm text-[var(--secondary-color-gray)]">
+            <p className="text-sm text-[var(--color-secondary-gray)]">
               {t('employer_castings.dashboard.basic_info.project_type')}:
             </p>
-            <p className="text-sm">{t(data.projectType.stringCode)}</p>
+            {projectType ? <p className="text-sm">{t(projectType.stringCode)}</p> : <p className="text-sm">-</p>}
           </div>
           <div className="flex flex-row items-center justify-between">
-            <p className="text-sm text-[var(--secondary-color-gray)]">
+            <p className="text-sm text-[var(--color-secondary-gray)]">
               {t('employer_castings.dashboard.basic_info.casting_modality')}:
             </p>
-            <p className="text-sm">{t(data.castingModality.stringCode)}</p>
+            {castingModality ? (
+              <p className="text-sm">{t(castingModality.stringCode)}</p>
+            ) : (
+              <p className="text-sm">-</p>
+            )}
           </div>
           <div className="flex flex-row items-center justify-between">
-            <p className="text-sm text-[var(--secondary-color-gray)]">{t('general.limit_date')}:</p>
-            <p className="text-sm">{formatLocalDate(data.applicationDeadline, 'dayMonth')}</p>
+            <p className="text-sm text-[var(--color-secondary-gray)]">{t('general.limit_date')}:</p>
+            {applicationDeadline ? (
+              <p className="text-sm">{formatLocalDate(applicationDeadline, 'dayMonth')}</p>
+            ) : (
+              <p className="text-sm">-</p>
+            )}
           </div>
         </article>
         <Separator className="opacity-20 my-6"></Separator>
         {/* Roles */}
         <article className="flex flex-col gap-3">
           <h2 className="text-sm font-semibold">{t('general.roles')}</h2>
-          <div className="flex flex-row items-center justify-between">
-            {data.roles.map((role) => {
+
+          {roles.length > 0 ? (
+            roles.map((role) => {
               return (
-                <>
+                <div className="flex flex-row items-center justify-between">
                   <p className="text-sm">{role.roleName}</p>
                   <p className="text-sm">{t(role.roleType.stringCode)}</p>
-                </>
+                </div>
               );
-            })}
-          </div>
+            })
+          ) : (
+            <p className="text-sm text-[var(--color-secondary-gray)]">{t('employer_castings.page.empty_roles')}</p>
+          )}
         </article>
         <Separator className="opacity-20 my-6"></Separator>
         {/* Coupon */}
