@@ -22,7 +22,7 @@ const EmployerCastingCheckoutEditSection = () => {
       <Label className="mt-2 w-full text-[var(--color-secondary-grey-fonts)]">
         {t('employer_castings.dashboard.checkout.subtitle')}
       </Label>
-      <div className="flex flex-col gap-10 w-full lg:flex-row lg:gap-6 lg:justify-between">
+      <div className="flex flex-col gap-6 w-full lg:flex-row lg:justify-between">
         <CastingCheckoutSummaryForm data={data} />
         <CastingCheckoutPaymentForm />
       </div>
