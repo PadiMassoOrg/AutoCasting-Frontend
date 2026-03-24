@@ -1,5 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
+import {
+  collapseTalentCastingApplicationStatusIdsForDisplay,
+  expandTalentCastingApplicationStatusIdsForBackend,
+  getDisplayableCastingStatuses,
+} from '../../../../sitemetadata/utils/siteMetadataUtils';
 import { MultiSelectDropdown } from '../../../../talent-database/components/Filter';
 import type { TalentCastingApplicationsFiltersState } from './TalentCastingApplicationFilterBar';
 
@@ -16,9 +21,29 @@ export default function TalentCastingApplicationFilterMenuContent({
   const castingStatusesRaw = useCachedSiteMetadataSlice('castingStatusOptions');
   const castingModalitiesRaw = useCachedSiteMetadataSlice('castingModalityOptions');
 
+  const visibleCastingStatuses = getDisplayableCastingStatuses(castingStatusesRaw);
+
   const selectedProjectTypes = value.projectTypeIdTokens ?? [];
   const selectedStatusTokens = value.castingStatusIdTokens ?? [];
   const selectedModalityTokens = value.modalityIdTokens ?? [];
+
+  const visibleSelectedStatusIds = collapseTalentCastingApplicationStatusIdsForDisplay({
+    selectedBackendIds: selectedStatusTokens,
+    visibleStatuses: visibleCastingStatuses,
+    allStatuses: castingStatusesRaw,
+  });
+
+  const handleCastingStatusChange = (nextVisibleIds: string[]) => {
+    const expandedIds = expandTalentCastingApplicationStatusIdsForBackend({
+      selectedVisibleIds: nextVisibleIds,
+      allStatuses: castingStatusesRaw,
+    });
+
+    onChange({
+      ...value,
+      castingStatusIdTokens: expandedIds.length ? expandedIds : undefined,
+    });
+  };
 
   const handleReset = () => {
     onChange({
@@ -53,16 +78,11 @@ export default function TalentCastingApplicationFilterMenuContent({
         <div className="flex flex-col gap-2">
           <h3 className="text-base font-semibold">{t('employer_castings.casting_card.status.status')}</h3>
           <MultiSelectDropdown
-            options={castingStatusesRaw ?? []}
+            options={visibleCastingStatuses}
             getId={(p) => p.id}
             getLabel={(p) => t(p.stringCode)}
-            selected={selectedStatusTokens}
-            onChange={(next) =>
-              onChange({
-                ...value,
-                castingStatusIdTokens: next.length ? next : undefined,
-              })
-            }
+            selected={visibleSelectedStatusIds}
+            onChange={handleCastingStatusChange}
             maxPanelHeight="16rem"
             hideSelectAll
           />
