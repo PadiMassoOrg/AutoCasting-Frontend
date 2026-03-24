@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { Chip, StatusChip } from '../../../../../shared/components/Chip';
 import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { SectionCard } from '../../../../../shared/components/Section';
@@ -9,15 +8,12 @@ import type { TalentCastingApplicationCardResponse } from '../../types/talentCas
 
 const TalentCastingApplicationCard = ({ data }: { data: TalentCastingApplicationCardResponse }) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const {
     roleName,
     castingProjectType,
     castingModality,
     castingStatus,
-    castingRoleId,
-    castingSlug,
     employerImageUrl,
     companyName,
     castingModalityText,
