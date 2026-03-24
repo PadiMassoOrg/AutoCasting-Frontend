@@ -833,6 +833,9 @@
           "description": "Descripción/Instrucciones (opcional)"
         }
       },
+      "checkout": {
+        "checkout_and_publish": "Finalizar y Publicar"
+      },
       "remunerations": {
         "title": "Remuneración",
         "collaborative": {

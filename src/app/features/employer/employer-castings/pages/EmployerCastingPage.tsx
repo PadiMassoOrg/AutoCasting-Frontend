@@ -3,10 +3,9 @@ import { useParams } from 'react-router-dom';
 import { DashboardShell } from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
-import { CastingToolBar } from '../components';
-import { CastingBottomBar } from '../components/CastingToolBar';
 import {
   EmployerCastingBasicInfoEditSection,
+  EmployerCastingCheckoutEditSection,
   EmployerCastingRemunerationEditSection,
   EmployerCastingRequirementsEditSection,
   EmployerCastingRolesEditSection,
@@ -46,16 +45,16 @@ const EmployerCastingPage = () => {
       label: t('employer_castings.dashboard.remunerations.title'),
       render: () => <EmployerCastingRemunerationEditSection sectionId={remunerationSectionId} />,
     },
+    {
+      key: 'checkout',
+      label: t('employer_castings.dashboard.checkout.checkout_and_publish'),
+      render: () => <EmployerCastingCheckoutEditSection />,
+    },
   ];
 
   return (
     <EmployerCastingIdsProvider value={data}>
-      <DashboardShell
-        title={t('employer_castings.dashboard.title_edit')}
-        sections={sections}
-        contentHeader={<CastingToolBar />}
-        mobileNavBottomBar={<CastingBottomBar />}
-      />
+      <DashboardShell title={t('employer_castings.dashboard.title_edit')} sections={sections} />
     </EmployerCastingIdsProvider>
   );
 };

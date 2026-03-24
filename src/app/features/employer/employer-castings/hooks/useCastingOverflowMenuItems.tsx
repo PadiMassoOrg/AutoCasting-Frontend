@@ -31,16 +31,25 @@ type Visibility = {
 
 const VISIBILITY_BY_STATUS: Record<string, Visibility> = {
   [CASTING_STATUS_DRAFT]: { details: false, applicants: false, copyLink: false, edit: true, delete: true },
-  [CASTING_STATUS_CLOSED]: { details: true, applicants: true, copyLink: false, edit: false, delete: true },
-  [CASTING_STATUS_PAUSED]: { details: true, applicants: true, copyLink: true, edit: true, delete: true },
-  [CASTING_STATUS_PUBLISHED]: { details: true, applicants: true, copyLink: true, edit: true, delete: true },
-  [CASTING_STATUS_ARCHIVED]: { details: true, applicants: true, copyLink: false, edit: false, delete: true },
+  [CASTING_STATUS_CLOSED]: { details: false, applicants: true, copyLink: false, edit: false, delete: true },
+  [CASTING_STATUS_PAUSED]: { details: false, applicants: true, copyLink: true, edit: false, delete: true },
+  [CASTING_STATUS_PUBLISHED]: { details: true, applicants: true, copyLink: true, edit: false, delete: true },
+  [CASTING_STATUS_ARCHIVED]: { details: false, applicants: false, copyLink: false, edit: false, delete: true },
 };
 
 function resolveVisibility(statusCode?: string | null): Visibility {
-  if (!statusCode) return { details: true, applicants: false, copyLink: false, edit: false, delete: true };
+  if (!statusCode) {
+    return { details: true, applicants: false, copyLink: false, edit: false, delete: true };
+  }
+
   return (
-    VISIBILITY_BY_STATUS[statusCode] ?? { details: true, applicants: false, copyLink: false, edit: false, delete: true }
+    VISIBILITY_BY_STATUS[statusCode] ?? {
+      details: true,
+      applicants: false,
+      copyLink: false,
+      edit: false,
+      delete: true,
+    }
   );
 }
 
