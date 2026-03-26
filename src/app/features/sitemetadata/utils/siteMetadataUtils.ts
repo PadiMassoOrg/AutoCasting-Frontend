@@ -65,12 +65,15 @@ export const CASTING_APPLICATION_STATUS_COLOR_VAR_BY_CODE: StatusColorMap = {
 // Modal Config
 // ==========================================================
 
-export type CastingStatusChangeModalConfig = {
+export type CastingActionConfirmationModalConfig = {
   titleKey: string;
   descriptionKey: string;
   description2Key?: string;
   confirmButtonKey: string;
+  confirmButtonVariant?: 'primary' | 'danger';
 };
+
+export type CastingStatusChangeModalConfig = CastingActionConfirmationModalConfig;
 
 export const CASTING_STATUS_CHANGE_MODAL_CONFIG_BY_CODE: Record<string, CastingStatusChangeModalConfig> = {
   [CASTING_STATUS_PUBLISHED]: {
@@ -97,6 +100,14 @@ export const CASTING_STATUS_CHANGE_MODAL_CONFIG_BY_CODE: Record<string, CastingS
     description2Key: 'employer_castings.casting_card.status.archived.description_2',
     confirmButtonKey: 'employer_castings.casting_card.status.archived.confirm_button',
   },
+};
+
+export const CASTING_DELETE_MODAL_CONFIG: CastingActionConfirmationModalConfig = {
+  titleKey: 'employer_castings.casting_card.delete.title',
+  descriptionKey: 'employer_castings.casting_card.delete.description',
+  description2Key: 'employer_castings.casting_card.delete.description_2',
+  confirmButtonKey: 'employer_castings.casting_card.delete.confirm_button',
+  confirmButtonVariant: 'danger',
 };
 
 // ==========================================================

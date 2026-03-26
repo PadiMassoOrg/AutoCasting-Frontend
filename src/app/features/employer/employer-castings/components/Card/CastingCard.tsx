@@ -10,13 +10,14 @@ import { formatLocalDate } from '../../../../../shared/utils/formatUtils';
 import StatusDropdown from '../../../../sitemetadata/component/StatusDropdown';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import {
+  CASTING_DELETE_MODAL_CONFIG,
   CASTING_STATUS_ORDER,
   getCastingStatusChangeModalConfig,
 } from '../../../../sitemetadata/utils/siteMetadataUtils';
 import { useCastingStatusActions } from '../../hooks/status/useCastingStatusActions';
 import { useCastingOverflowMenuItems } from '../../hooks/useCastingOverflowMenuItems';
 import type { CastingCardResponse } from '../../types/employerCastings.types';
-import CastingStatusChangeModal from '../Modal/CastingStatusChangeModal';
+import CastingActionConfirmationModal from '../Modal/CastingActionConfirmationModal';
 
 const CastingCard = ({
   data,
@@ -40,12 +41,32 @@ const CastingCard = ({
   const editCastingPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/editor`;
   const applicantsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/applicants`;
 
+  const openDeleteModal = () => {
+    if (!onDelete) return;
+
+    openModal(
+      <CastingActionConfirmationModal
+        descriptionKey={CASTING_DELETE_MODAL_CONFIG.descriptionKey}
+        description2Key={CASTING_DELETE_MODAL_CONFIG.description2Key}
+        confirmButtonKey={CASTING_DELETE_MODAL_CONFIG.confirmButtonKey}
+        confirmButtonVariant={CASTING_DELETE_MODAL_CONFIG.confirmButtonVariant}
+        onCancel={closeModal}
+        onConfirm={async () => {
+          await onDelete(id);
+          closeModal();
+        }}
+      />,
+      t(CASTING_DELETE_MODAL_CONFIG.titleKey),
+      'lg'
+    );
+  };
+
   const items = useCastingOverflowMenuItems({
     employerCastingDetailsPath,
     publicCastingDetailsPath,
     editCastingPath,
     statusCode: status?.stringCode,
-    onDelete: onDelete ? () => onDelete(id) : undefined,
+    onDelete: onDelete ? openDeleteModal : undefined,
     deleteDisabled,
     onApplicants: () => navigate(applicantsPath),
   });
@@ -60,10 +81,11 @@ const CastingCard = ({
     if (!config) return;
 
     openModal(
-      <CastingStatusChangeModal
+      <CastingActionConfirmationModal
         descriptionKey={config.descriptionKey}
         description2Key={config.description2Key}
         confirmButtonKey={config.confirmButtonKey}
+        confirmButtonVariant={config.confirmButtonVariant}
         isPending={isStatusPending}
         onCancel={closeModal}
         onConfirm={async () => {

@@ -822,6 +822,12 @@
           "description_2": "Podrás seguir viendo su información y los postulantes recibidos, pero no podrá editarse ni volver a publicarse.",
           "confirm_button": "Archivar Casting"
         }
+      },
+      "delete": {
+        "title": "Eliminar Casting",
+        "description": "Este casting será eliminado permanentemente. Se perderán todos los datos, incluidos los postulantes.",
+        "description_2": "Si querés conservar la información del casting, podés cerrarlo y archivarlo en lugar de eliminarlo.",
+        "confirm_button": "Eliminar Casting"
       }
     },
     "dashboard": {
