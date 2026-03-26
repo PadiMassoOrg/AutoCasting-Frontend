@@ -9,6 +9,7 @@ import {
   CASTING_STATUS_DRAFT,
   CASTING_STATUS_PAUSED,
   CASTING_STATUS_PUBLISHED,
+  isCastingEditable,
 } from '../../../sitemetadata/utils/siteMetadataUtils';
 
 type Params = {
@@ -29,19 +30,23 @@ type Visibility = {
   delete: boolean;
 };
 
-const VISIBILITY_BY_STATUS: Record<string, Visibility> = {
-  [CASTING_STATUS_DRAFT]: { details: false, applicants: false, copyLink: false, edit: true, delete: true },
-  [CASTING_STATUS_CLOSED]: { details: true, applicants: true, copyLink: false, edit: false, delete: true },
-  [CASTING_STATUS_PAUSED]: { details: true, applicants: true, copyLink: true, edit: true, delete: true },
-  [CASTING_STATUS_PUBLISHED]: { details: true, applicants: true, copyLink: true, edit: true, delete: true },
-  [CASTING_STATUS_ARCHIVED]: { details: true, applicants: true, copyLink: false, edit: false, delete: true },
+const VISIBILITY_BY_STATUS: Record<string, Omit<Visibility, 'edit'>> = {
+  [CASTING_STATUS_DRAFT]: { details: false, applicants: false, copyLink: false, delete: true },
+  [CASTING_STATUS_CLOSED]: { details: false, applicants: true, copyLink: false, delete: true },
+  [CASTING_STATUS_PAUSED]: { details: false, applicants: true, copyLink: true, delete: true },
+  [CASTING_STATUS_PUBLISHED]: { details: true, applicants: true, copyLink: true, delete: true },
+  [CASTING_STATUS_ARCHIVED]: { details: false, applicants: false, copyLink: false, delete: true },
 };
 
 function resolveVisibility(statusCode?: string | null): Visibility {
-  if (!statusCode) return { details: true, applicants: false, copyLink: false, edit: false, delete: true };
-  return (
-    VISIBILITY_BY_STATUS[statusCode] ?? { details: true, applicants: false, copyLink: false, edit: false, delete: true }
-  );
+  const base = !statusCode
+    ? { details: true, applicants: false, copyLink: false, delete: true }
+    : (VISIBILITY_BY_STATUS[statusCode] ?? { details: true, applicants: false, copyLink: false, delete: true });
+
+  return {
+    ...base,
+    edit: isCastingEditable(statusCode ? { stringCode: statusCode } : null),
+  };
 }
 
 export const useCastingOverflowMenuItems = ({
@@ -85,18 +90,17 @@ export const useCastingOverflowMenuItems = ({
           alert(t('general.copied'));
         },
       },
-    ];
-
-    items.push({
-      key: 'edit',
-      label: t('general.edit'),
-      iconName: 'edit',
-      disabled: !v.edit || !editCastingPath,
-      onSelect: () => {
-        if (!editCastingPath) return;
-        navigate(editCastingPath);
+      {
+        key: 'edit',
+        label: t('general.edit'),
+        iconName: 'edit',
+        disabled: !v.edit || !editCastingPath,
+        onSelect: () => {
+          if (!editCastingPath) return;
+          navigate(editCastingPath);
+        },
       },
-    });
+    ];
 
     if (onDelete) {
       items.push({ type: 'separator', key: 'sep-1' } as OverflowMenuItem);

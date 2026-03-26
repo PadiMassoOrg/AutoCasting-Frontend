@@ -9,7 +9,7 @@ export const useCreateEmptyCastingMutation = () => {
   return useMutation<string, any, any>({
     mutationFn: () => createEmptyCasting(),
     onSuccess: (slug) => {
-      navigate(`${ROUTES.EMPLOYER_CASTING}/${slug}`);
+      navigate(`${ROUTES.EMPLOYER_CASTING}/${slug}/editor`);
     },
   });
 };

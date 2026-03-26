@@ -2,15 +2,20 @@ import { FormInputField, FormSelectField, Label } from 'autocasting-ui-library-p
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { useTranslation } from 'react-i18next';
-import { BooleanYesNoRadioGroup, RangeCalendar, TextareaField } from '../../../../../shared/components/Form';
-import { useCommittedNullableBooleanValue } from '../../../../../shared/components/Form/hooks/useCommittedBooleanValue';
-import { parseLocalISODate, toLocalISO } from '../../../../../shared/components/Form/RangeCalendar';
-import { capitalize } from '../../../../../shared/utils/formatUtils';
-import { onSelect, useCommittedText, useCommittedUuid, useIsoDateField } from '../../../../../shared/utils/formUtils';
-import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
-import { useCastingBasicInfoAutosave } from '../../hooks/autosaves';
-import { getCastingBasicInfoSchema } from '../../schemas/castingBasicInfoSchema';
-import type { CastingSectionBasicInfo } from '../../types/employerCastings.types';
+import { BooleanYesNoRadioGroup, RangeCalendar, TextareaField } from '../../../../../../shared/components/Form';
+import { useCommittedNullableBooleanValue } from '../../../../../../shared/components/Form/hooks/useCommittedBooleanValue';
+import { parseLocalISODate, toLocalISO } from '../../../../../../shared/components/Form/RangeCalendar';
+import { capitalize } from '../../../../../../shared/utils/formatUtils';
+import {
+  onSelect,
+  useCommittedText,
+  useCommittedUuid,
+  useIsoDateField,
+} from '../../../../../../shared/utils/formUtils';
+import { useCachedSiteMetadataOption } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
+import { useCastingBasicInfoAutosave } from '../../../hooks/autosaves';
+import { getCastingBasicInfoSchema } from '../../../schemas/castingBasicInfoSchema';
+import type { CastingSectionBasicInfo } from '../../../types/employerCastings.types';
 
 type Errors = {
   title?: string | null;
@@ -239,6 +244,29 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         />
       )}
 
+      <BooleanYesNoRadioGroup
+        label={t('employer_castings.dashboard.basic_info.has_wardrobe_fitting')}
+        value={hasWardrobeFitting.value}
+        onChange={(next) => hasWardrobeFitting.onChange(next)}
+        name="hasWardrobeFitting"
+        required
+      />
+
+      {hasWardrobeFitting.value === true && (
+        <FormInputField
+          id="wardrobeFittingText"
+          label={t('employer_castings.dashboard.basic_info.wardrobe_fitting_details')}
+          labelClassName="font-semibold text-base"
+          placeholder={t('general.placeholder.wardrobe_fitting')}
+          value={wardrobeFittingText.value}
+          onChange={wardrobeFittingText.onChange}
+          onBlur={wardrobeFittingText.onBlur}
+          onKeyDown={wardrobeFittingText.onKeyDown}
+          error={errors.wardrobeFittingText ?? undefined}
+          required
+        />
+      )}
+
       <div className="flex flex-col gap-2">
         <div className="flex">
           <Label className="text-sm font-semibold">
@@ -279,29 +307,6 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
           />
         </div>
       </div>
-
-      <BooleanYesNoRadioGroup
-        label={t('employer_castings.dashboard.basic_info.has_wardrobe_fitting')}
-        value={hasWardrobeFitting.value}
-        onChange={(next) => hasWardrobeFitting.onChange(next)}
-        name="hasWardrobeFitting"
-        required
-      />
-
-      {hasWardrobeFitting.value === true && (
-        <FormInputField
-          id="wardrobeFittingText"
-          label={t('employer_castings.dashboard.basic_info.wardrobe_fitting_details')}
-          labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.wardrobe_fitting')}
-          value={wardrobeFittingText.value}
-          onChange={wardrobeFittingText.onChange}
-          onBlur={wardrobeFittingText.onBlur}
-          onKeyDown={wardrobeFittingText.onKeyDown}
-          error={errors.wardrobeFittingText ?? undefined}
-          required
-        />
-      )}
 
       <RangeCalendar
         label={t('employer_castings.dashboard.basic_info.shooting_dates')}

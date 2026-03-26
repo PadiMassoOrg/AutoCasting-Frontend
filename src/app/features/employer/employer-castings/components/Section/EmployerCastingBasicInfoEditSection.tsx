@@ -4,7 +4,7 @@ import { SectionCard, SectionTitle } from '../../../../../shared/components/Sect
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
 import { useSectionBasicInfo } from '../../hooks/section/useSectionBasicInfo';
-import CastingBasicInfoForm from '../Form/CastingBasicInfoForm';
+import CastingBasicInfoForm from '../Form/BasicInfo/CastingBasicInfoForm';
 
 const EmployerCastingBasicInfoEditSection = ({ sectionId }: { sectionId: string }) => {
   const { data, isLoading, error } = useSectionBasicInfo(sectionId);

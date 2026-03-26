@@ -26,6 +26,7 @@
     "finalize": "Finalizar",
     "edit": "Editar",
     "publish": "Publicar",
+    "pay_and_publish": "Pagar y Publicar",
     "publish_casting": "Publicar Casting",
     "copied": "Copaiado con éxito.",
     "logout": "Cerrar Sesión",
@@ -45,6 +46,8 @@
     "delete_confirm": "Estás por borrar",
     "status": "Estado",
     "view_details": "Ver Detalles",
+    "total": "Total",
+    "roles": "Roles",
     "placeholder": {
       "stage_name": "Ricardo Darín",
       "role_name": "Lali",
@@ -794,7 +797,37 @@
     },
     "casting_card": {
       "status": {
-        "status": "Estado"
+        "status": "Estado",
+        "published": {
+          "title": "Publicar Casting",
+          "description": "El casting volverá a aparecer en el buscador y comenzará nuevamente a recibir postulaciones.",
+          "description_2": "Esto solo es posible si la fecha de cierre del casting aún no fue alcanzada.",
+          "confirm_button": "Publicar Casting"
+        },
+        "paused": {
+          "title": "Pausar Casting",
+          "description": "El casting dejará de recibir nuevas postulaciones y dejará de aparecer en el buscador de castings.",
+          "description_2": "Podrás volver a publicarlo más adelante si la fecha de cierre aún no fue alcanzada.",
+          "confirm_button": "Pausar Casting"
+        },
+        "closed": {
+          "title": "Cerrar Casting Definitivamente",
+          "description": "El casting se cerrará inmediatamente y no podrá volver a publicarse. No se aceptarán nuevas postulaciones y el casting dejará de aparecer en el buscador.",
+          "description_2": "Podrás seguir viendo los postulantes recibidos hasta el momento. Si querés detener temporalmente el casting, podés pausarlo en lugar de cerrarlo.",
+          "confirm_button": "Cerrar Casting"
+        },
+        "archived": {
+          "title": "Archivar Casting",
+          "description": "El casting será archivado.",
+          "description_2": "Podrás seguir viendo su información y los postulantes recibidos, pero no podrá editarse ni volver a publicarse.",
+          "confirm_button": "Archivar Casting"
+        }
+      },
+      "delete": {
+        "title": "Eliminar Casting",
+        "description": "Este casting será eliminado permanentemente. Se perderán todos los datos, incluidos los postulantes.",
+        "description_2": "Si querés conservar la información del casting, podés cerrarlo y archivarlo en lugar de eliminarlo.",
+        "confirm_button": "Eliminar Casting"
       }
     },
     "dashboard": {
@@ -843,6 +876,21 @@
         "remuneration": {
           "pay_rate_type_label": "Tipo de tarifa",
           "amount_label": "Monto"
+        }
+      },
+      "checkout": {
+        "checkout_and_publish": "Finalizar y Publicar",
+        "subtitle": "Revisá el resumen. Cuando pagues, tu casting se publica automáticamente.",
+        "checkout_summary": {
+          "title": "Resumen del Casting",
+          "coupon": "Cupón",
+          "beta_discount": "100% Version Beta",
+          "beta_total": "$0 ARS"
+        },
+        "checkout_payment": {
+          "title": "Finalización de Compra",
+          "beta_total": "$0 ARS",
+          "disclaimer": "Al pagar, tu casting se publica automáticamente."
         }
       }
     }

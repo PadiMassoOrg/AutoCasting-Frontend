@@ -63,8 +63,8 @@ const TalentCastingApplicationFilterBar = ({ filters, onFiltersChange, orderBy, 
 
   return (
     <section className="flex flex-row items-center justify-between gap-3">
-      <article className="flex flex-row items-center gap-2">
-        <div className="w-[240px] mr-2">
+      <article className="w-full flex flex-col sm:flex-row gap-2">
+        <div className="w-full sm:w-[240px]">
           <SearchInput
             value={searchInput}
             onChange={setSearchInput}
@@ -83,22 +83,21 @@ const TalentCastingApplicationFilterBar = ({ filters, onFiltersChange, orderBy, 
           />
         </div>
 
-        <OverflowMenu
-          items={filterItems}
-          align="start"
-          side="bottom"
-          trigger={() => <TextDropdownTrigger label={t('general.filter.filter')} open />}
-        />
-
-        <OverflowMenu
-          items={orderItems}
-          align="start"
-          side="bottom"
-          trigger={() => <TextDropdownTrigger label={t('general.order.order')} open />}
-        />
+        <div className="flex flex-row gap-2 pl-1">
+          <OverflowMenu
+            items={filterItems}
+            align="start"
+            side="bottom"
+            trigger={() => <TextDropdownTrigger label={t('general.filter.filter')} open />}
+          />
+          <OverflowMenu
+            items={orderItems}
+            align="start"
+            side="bottom"
+            trigger={() => <TextDropdownTrigger label={t('general.order.order')} open />}
+          />
+        </div>
       </article>
-
-      <article />
     </section>
   );
 };

@@ -62,6 +62,55 @@ export const CASTING_APPLICATION_STATUS_COLOR_VAR_BY_CODE: StatusColorMap = {
 };
 
 // ==========================================================
+// Modal Config
+// ==========================================================
+
+export type CastingActionConfirmationModalConfig = {
+  titleKey: string;
+  descriptionKey: string;
+  description2Key?: string;
+  confirmButtonKey: string;
+  confirmButtonVariant?: 'primary' | 'danger';
+};
+
+export type CastingStatusChangeModalConfig = CastingActionConfirmationModalConfig;
+
+export const CASTING_STATUS_CHANGE_MODAL_CONFIG_BY_CODE: Record<string, CastingStatusChangeModalConfig> = {
+  [CASTING_STATUS_PUBLISHED]: {
+    titleKey: 'employer_castings.casting_card.status.published.title',
+    descriptionKey: 'employer_castings.casting_card.status.published.description',
+    description2Key: 'employer_castings.casting_card.status.published.description_2',
+    confirmButtonKey: 'employer_castings.casting_card.status.published.confirm_button',
+  },
+  [CASTING_STATUS_PAUSED]: {
+    titleKey: 'employer_castings.casting_card.status.paused.title',
+    descriptionKey: 'employer_castings.casting_card.status.paused.description',
+    description2Key: 'employer_castings.casting_card.status.paused.description_2',
+    confirmButtonKey: 'employer_castings.casting_card.status.paused.confirm_button',
+  },
+  [CASTING_STATUS_CLOSED]: {
+    titleKey: 'employer_castings.casting_card.status.closed.title',
+    descriptionKey: 'employer_castings.casting_card.status.closed.description',
+    description2Key: 'employer_castings.casting_card.status.closed.description_2',
+    confirmButtonKey: 'employer_castings.casting_card.status.closed.confirm_button',
+  },
+  [CASTING_STATUS_ARCHIVED]: {
+    titleKey: 'employer_castings.casting_card.status.archived.title',
+    descriptionKey: 'employer_castings.casting_card.status.archived.description',
+    description2Key: 'employer_castings.casting_card.status.archived.description_2',
+    confirmButtonKey: 'employer_castings.casting_card.status.archived.confirm_button',
+  },
+};
+
+export const CASTING_DELETE_MODAL_CONFIG: CastingActionConfirmationModalConfig = {
+  titleKey: 'employer_castings.casting_card.delete.title',
+  descriptionKey: 'employer_castings.casting_card.delete.description',
+  description2Key: 'employer_castings.casting_card.delete.description_2',
+  confirmButtonKey: 'employer_castings.casting_card.delete.confirm_button',
+  confirmButtonVariant: 'danger',
+};
+
+// ==========================================================
 // Utils
 // ==========================================================
 
@@ -71,6 +120,14 @@ export const isCastingStatusPublished = (m?: { stringCode?: string | null } | nu
 
 export const isCastingStatusArchived = (m?: { stringCode?: string | null } | null): boolean => {
   return m?.stringCode === CASTING_STATUS_ARCHIVED;
+};
+
+export const isCastingStatusIncomplete = (m?: { stringCode?: string | null } | null): boolean => {
+  return m?.stringCode === CASTING_STATUS_DRAFT;
+};
+
+export const isCastingEditable = (m?: { stringCode?: string | null } | null): boolean => {
+  return isCastingStatusIncomplete(m);
 };
 
 export function resolveCastingStatusColorVar(stringCode?: string | null): string | null {
@@ -167,4 +224,13 @@ export const collapseTalentCastingApplicationStatusIdsForDisplay = ({
       return selectedSet.has(status.id);
     })
     .map((status) => status.id);
+};
+
+export const getCastingStatusChangeModalConfig = (
+  status?: Pick<SiteMetadataObject, 'stringCode'> | null
+): CastingStatusChangeModalConfig | null => {
+  const stringCode = status?.stringCode;
+  if (!stringCode) return null;
+
+  return CASTING_STATUS_CHANGE_MODAL_CONFIG_BY_CODE[stringCode] ?? null;
 };

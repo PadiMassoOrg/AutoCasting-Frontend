@@ -5,6 +5,7 @@ import type { EmployerCastingsFiltersState } from '../components/Filter/Employer
 import type {
   CastingCardResponse,
   CastingSectionBasicInfo,
+  CastingSectionCheckout,
   CastingSectionRemunerations,
   CastingSectionRequirements,
   CastingSectionRoles,
@@ -29,6 +30,7 @@ export const CASTING_SECTION_BASIC_INFO_CACHE_KEY = ['cache-casting-section-basi
 export const CASTING_SECTION_ROLES_CACHE_KEY = ['cache-casting-section-roles'] as const;
 export const CASTING_SECTION_REQUIREMENTS_CACHE_KEY = ['cache-casting-section-requirements'] as const;
 export const CASTING_SECTION_REMUNERATIONS_CACHE_KEY = ['cache-casting-section-remunerations'] as const;
+export const CASTING_SECTION_CHECKOUT_CACHE_KEY = ['cache-casting-section-checkout'] as const;
 
 export type GetMyCastingsArgs = {
   page: number;
@@ -148,6 +150,12 @@ export async function patchCastingRoleRemuneration(payload: CastingRoleRemunerat
   const { data } = await api.patch(API_ROUTES.CASTING_REMUNERATION_REMUENRATIONS, body);
   return data;
 }
+
+// Checkout
+export const getSectionCheckoutSummary = async (id: string): Promise<CastingSectionCheckout> => {
+  const response = await api.get(`${API_ROUTES.EMPLOYER_CASTING}/${id}/checkout-summary`);
+  return response.data;
+};
 
 // Casting Statuses
 export const publishCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {

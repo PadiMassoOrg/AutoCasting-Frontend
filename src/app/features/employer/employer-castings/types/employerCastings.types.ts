@@ -116,6 +116,22 @@ export type BaseCastingRemuneration = {
   amount: number;
 };
 
+export type CastingCheckoutRole = {
+  id: string;
+  roleName: string;
+  roleType: SiteMetadataObject;
+};
+
+export type CastingSectionCheckout = {
+  id: string;
+  defaultCode: string;
+  castingTitle: string;
+  projectType: SiteMetadataObject;
+  castingModality: SiteMetadataObject;
+  applicationDeadline: string;
+  roles: CastingCheckoutRole[];
+};
+
 /* ======================
    Export & DeepNullable
    ====================== */
