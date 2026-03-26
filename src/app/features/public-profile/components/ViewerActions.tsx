@@ -1,12 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import ButtonRow from '../../../shared/components/ButtonRow/ButtonRow';
 import { Icon } from '../../../shared/components/Icon/Icon';
 import { isBrowser } from '../../../shared/utils/domUtils';
 import { whatsappLink } from '../../../shared/utils/formatUtils';
 import { shareUrl } from '../../../shared/utils/shareUtils';
 import { usePublicProfile } from '../hooks/usePublicProfile';
+import { ButtonRow } from 'autocasting-ui-library-padimasso';
 
 type Props = { className?: string };
 

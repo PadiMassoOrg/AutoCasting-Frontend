@@ -1,10 +1,7 @@
-// src/app/features/onboarding/components/talent/TalentConfirmationStep.tsx
-
-import { Button, Label } from 'autocasting-ui-library-padimasso';
+import { Button, ButtonRow, Label } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
-import ButtonRow from '../../../../shared/components/ButtonRow/ButtonRow';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { WizardStep } from '../../../../shared/components/Wizard';
 import type { WizardStepProps } from '../../../../shared/components/Wizard/WizardStep';

@@ -1,4 +1,4 @@
-import ButtonRow from '../../../shared/components/ButtonRow/ButtonRow';
+import { ButtonRow } from 'autocasting-ui-library-padimasso';
 import { Icon } from '../../../shared/components/Icon/Icon';
 import { normalizeExternalUrl } from '../../../shared/utils/formatUtils';
 import { getSocialMediaIconName } from '../../talent/talent-profile-edit/components/Form/SocialMedia/SocialMediaIconMapper';
