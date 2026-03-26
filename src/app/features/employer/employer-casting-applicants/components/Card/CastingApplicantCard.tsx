@@ -1,6 +1,5 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { Icon, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { InlineList } from '../../../../../shared/components/InlineList';
 import { SectionCard } from '../../../../../shared/components/Section';
 import { ROUTES } from '../../../../../shared/lib/routes';

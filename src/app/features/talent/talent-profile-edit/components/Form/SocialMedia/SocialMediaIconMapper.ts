@@ -1,4 +1,4 @@
-import type { IconName } from '../../../../../../shared/components/Icon/Icon';
+import type { IconName } from 'autocasting-ui-library-padimasso';
 
 export const SOCIAL_MEDIA_ICON_BY_CODE: Record<string, IconName> = {
   'sitemetadata.social_media.instagram': 'instagram',

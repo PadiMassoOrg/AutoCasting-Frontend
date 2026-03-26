@@ -1,7 +1,6 @@
-import { Button } from 'autocasting-ui-library-padimasso';
+import { Button, HilighterSvg } from 'autocasting-ui-library-padimasso';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import HilighterSvg from '../../../../shared/icons/HilighterSvg';
 import { ROUTES } from '../../../../shared/lib/routes';
 import heroImg from '../../images/landing-hero.png';
 

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Chip, StatusChip } from '../../../../../shared/components/Chip';
-import { Icon } from '../../../../../shared/components/Icon/Icon';
+import { Icon } from 'autocasting-ui-library-padimasso';
 import { SectionCard } from '../../../../../shared/components/Section';
 import { formatCastingModalityText, formatLocalDate } from '../../../../../shared/utils/formatUtils';
 import { normalizeCastingStatusForDisplay } from '../../../../sitemetadata/utils/siteMetadataUtils';

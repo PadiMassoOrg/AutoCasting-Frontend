@@ -1,5 +1,5 @@
 import { ButtonRow } from 'autocasting-ui-library-padimasso';
-import { Icon } from '../../../shared/components/Icon/Icon';
+import { Icon } from 'autocasting-ui-library-padimasso';
 import { normalizeExternalUrl } from '../../../shared/utils/formatUtils';
 import { getSocialMediaIconName } from '../../talent/talent-profile-edit/components/Form/SocialMedia/SocialMediaIconMapper';
 import type { ProfileSocialMedia } from '../../talent/talent-profile-edit/types/talentProfile.types';

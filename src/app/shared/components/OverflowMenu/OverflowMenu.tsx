@@ -1,6 +1,6 @@
+import { Icon } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { Icon } from '../Icon/Icon';
 import type { OverflowMenuAlign, OverflowMenuItem, OverflowMenuSide } from './overflowmenu.types';
 
 type Props = {

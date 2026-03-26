@@ -1,7 +1,6 @@
+import { Icon } from 'autocasting-ui-library-padimasso';
 import clsx from 'clsx';
 import { type ReactNode, useEffect, useRef } from 'react';
-
-import { Icon } from '../Icon/Icon';
 
 type DetailsViewProps = {
   open: boolean;

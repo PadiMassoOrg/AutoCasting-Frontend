@@ -1,6 +1,6 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { Icon } from '../../../../shared/components/Icon/Icon';
+import { Icon } from 'autocasting-ui-library-padimasso';
 import { formatMemberSince, normalizeExternalUrl } from '../../../../shared/utils/formatUtils';
 import { getSocialMediaIconName } from '../../../talent/talent-profile-edit/components/Form/SocialMedia/SocialMediaIconMapper';
 import type { EmployerInfo } from '../../types/publicCasting.types';

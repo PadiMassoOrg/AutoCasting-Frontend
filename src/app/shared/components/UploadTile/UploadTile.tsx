@@ -1,6 +1,6 @@
+import { Icon } from 'autocasting-ui-library-padimasso';
 import clsx from 'clsx';
 import React, { forwardRef, useCallback, useRef, useState, type ChangeEvent, type DragEvent } from 'react';
-import { Icon } from '../Icon/Icon';
 
 export type UploadTileClasses = Partial<{
   root: string;

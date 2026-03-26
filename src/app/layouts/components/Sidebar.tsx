@@ -7,7 +7,7 @@ import { ROUTES } from '../../shared/lib/routes';
 
 import clsx from 'clsx';
 import { USER_MODE_TALENT, useUserMode } from '../../context/UserModeContext';
-import { Icon } from '../../shared/components/Icon/Icon';
+import { Icon } from 'autocasting-ui-library-padimasso';
 import Waves from '../../shared/icons/wave.svg';
 import UserModeSwitcher from './UserModeSwitcher';
 

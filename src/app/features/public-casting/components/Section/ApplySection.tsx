@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useModal } from '../../../../context/ModalContext';
 import { USER_MODE_TALENT, useUserMode } from '../../../../context/UserModeContext';
-import { Icon } from '../../../../shared/components/Icon/Icon';
+import { Icon } from 'autocasting-ui-library-padimasso';
 import { getAuthToken } from '../../../../shared/lib/cookies';
 import { ROUTES } from '../../../../shared/lib/routes';
 import { useCastingApplicationMutation } from '../../hooks/useCastingApplicationMutation';

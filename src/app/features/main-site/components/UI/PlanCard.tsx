@@ -1,7 +1,6 @@
-import { Button, Separator } from 'autocasting-ui-library-padimasso';
+import { Button, HilighterSvg, Separator } from 'autocasting-ui-library-padimasso';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import HilighterSvg from '../../../../shared/icons/HilighterSvg';
 import checkSimple from '../../../../shared/icons/check_simple.svg';
 
 export type PlanKey = 'free' | 'pro' | string;

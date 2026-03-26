@@ -217,7 +217,7 @@ export const collapseTalentCastingApplicationStatusIdsForDisplay = ({
       if (status.stringCode === CASTING_STATUS_CLOSED) {
         return Boolean(
           (closedStatus?.id && selectedSet.has(closedStatus.id)) ||
-            (archivedStatus?.id && selectedSet.has(archivedStatus.id))
+          (archivedStatus?.id && selectedSet.has(archivedStatus.id))
         );
       }
 

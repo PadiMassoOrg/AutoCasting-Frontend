@@ -13,7 +13,7 @@ import clsx from 'clsx';
 import { useModal } from '../../context/ModalContext';
 import { USER_MODE_TALENT, useUserMode } from '../../context/UserModeContext';
 import { LogoutModal } from '../../features/auth/components';
-import { Icon } from '../../shared/components/Icon/Icon';
+import { Icon } from 'autocasting-ui-library-padimasso';
 import { jwtDecoder } from '../../shared/utils/jwtDecoder';
 
 type NavbarVariant = 'icons' | 'icons-labels' | 'labels';

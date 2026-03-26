@@ -1,6 +1,6 @@
+import { Icon } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDebouncedValue } from '../../hooks/useDebounceValue';
-import { Icon } from '../Icon/Icon';
 
 type Props = {
   value?: string;
