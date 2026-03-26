@@ -72,8 +72,8 @@ const EmployerCastingsFilterBar = ({ filters, onFiltersChange, orderBy, onOrderB
 
   return (
     <section className="flex flex-row items-center justify-between gap-3">
-      <article className="flex flex-row items-center gap-2">
-        <div className="w-[240px] mr-2">
+      <article className="w-full flex flex-col sm:flex-row gap-2">
+        <div className="w-full sm:w-[240px]">
           <SearchInput
             value={searchInput}
             onChange={setSearchInput}
@@ -91,7 +91,7 @@ const EmployerCastingsFilterBar = ({ filters, onFiltersChange, orderBy, onOrderB
             placeholder={t('general.search')}
           />
         </div>
-        <>
+        <div className="flex flex-row gap-2 pl-1">
           <OverflowMenu
             items={filterItems}
             align="start"
@@ -99,14 +99,13 @@ const EmployerCastingsFilterBar = ({ filters, onFiltersChange, orderBy, onOrderB
             trigger={() => <TextDropdownTrigger label={t('general.filter.filter')} open />}
             menuClassName="max-w-[90%]"
           />
-
           <OverflowMenu
             items={orderItems}
             align="start"
             side="bottom"
             trigger={() => <TextDropdownTrigger label={t('general.order.order')} open />}
           />
-        </>
+        </div>
       </article>
     </section>
   );
