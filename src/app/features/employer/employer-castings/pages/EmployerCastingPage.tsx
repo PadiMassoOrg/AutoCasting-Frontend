@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { DashboardShell } from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
+import { ROUTES } from '../../../../shared/lib/routes';
+import { isCastingEditable } from '../../../sitemetadata/utils/siteMetadataUtils';
 import {
   EmployerCastingBasicInfoEditSection,
   EmployerCastingCheckoutEditSection,
@@ -21,6 +23,10 @@ const EmployerCastingPage = () => {
 
   if (isLoading || !data) return null;
   if (error) return <ServerError />;
+
+  if (!isCastingEditable(data.castingStatus)) {
+    return <Navigate to={ROUTES.EMPLOYER_CASTINGS} replace />;
+  }
 
   const { basicInfoSectionId, rolesSectionId, requirementsSectionId, remunerationSectionId } = data;
 

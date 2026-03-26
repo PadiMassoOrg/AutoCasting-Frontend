@@ -91,6 +91,7 @@ const EmployerCastingsFilterBar = ({ filters, onFiltersChange, orderBy, onOrderB
             placeholder={t('general.search')}
           />
         </div>
+
         <div className="flex flex-row gap-2 pl-1">
           <OverflowMenu
             items={filterItems}

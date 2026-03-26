@@ -49,7 +49,7 @@ const CastingCheckoutSummaryForm = ({ data }: { data: CastingSectionCheckout }) 
           {roles.length > 0 ? (
             roles.map((role) => {
               return (
-                <div className="flex flex-row items-center justify-between">
+                <div className="flex flex-row items-center justify-between" key={role.id}>
                   <p className="text-sm">{role.roleName}</p>
                   <p className="text-sm">{t(role.roleType.stringCode)}</p>
                 </div>

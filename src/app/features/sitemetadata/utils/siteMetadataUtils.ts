@@ -111,6 +111,14 @@ export const isCastingStatusArchived = (m?: { stringCode?: string | null } | nul
   return m?.stringCode === CASTING_STATUS_ARCHIVED;
 };
 
+export const isCastingStatusIncomplete = (m?: { stringCode?: string | null } | null): boolean => {
+  return m?.stringCode === CASTING_STATUS_DRAFT;
+};
+
+export const isCastingEditable = (m?: { stringCode?: string | null } | null): boolean => {
+  return isCastingStatusIncomplete(m);
+};
+
 export function resolveCastingStatusColorVar(stringCode?: string | null): string | null {
   if (!stringCode) return null;
   return CASTING_STATUS_COLOR_VAR_BY_CODE[stringCode] ?? null;
