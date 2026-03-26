@@ -797,7 +797,31 @@
     },
     "casting_card": {
       "status": {
-        "status": "Estado"
+        "status": "Estado",
+        "published": {
+          "title": "Publicar Casting",
+          "description": "El casting volverá a aparecer en el buscador y comenzará nuevamente a recibir postulaciones.",
+          "description_2": "Esto solo es posible si la fecha de cierre del casting aún no fue alcanzada.",
+          "confirm_button": "Publicar Casting"
+        },
+        "paused": {
+          "title": "Pausar Casting",
+          "description": "El casting dejará de recibir nuevas postulaciones y dejará de aparecer en el buscador de castings.",
+          "description_2": "Podrás volver a publicarlo más adelante si la fecha de cierre aún no fue alcanzada.",
+          "confirm_button": "Pausar Casting"
+        },
+        "closed": {
+          "title": "Cerrar Casting Definitivamente",
+          "description": "El casting se cerrará inmediatamente y no podrá volver a publicarse. No se aceptarán nuevas postulaciones y el casting dejará de aparecer en el buscador.",
+          "description_2": "Podrás seguir viendo los postulantes recibidos hasta el momento. Si querés detener temporalmente el casting, podés pausarlo en lugar de cerrarlo.",
+          "confirm_button": "Cerrar Casting"
+        },
+        "archived": {
+          "title": "Archivar Casting",
+          "description": "El casting será archivado.",
+          "description_2": "Podrás seguir viendo su información y los postulantes recibidos, pero no podrá editarse ni volver a publicarse.",
+          "confirm_button": "Archivar Casting"
+        }
       }
     },
     "dashboard": {

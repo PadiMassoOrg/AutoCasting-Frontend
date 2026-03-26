@@ -1,6 +1,7 @@
 import { Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useModal } from '../../../../../context/ModalContext';
 import { Chip } from '../../../../../shared/components/Chip';
 import { OverflowMenu } from '../../../../../shared/components/OverflowMenu';
 import { SectionCard } from '../../../../../shared/components/Section';
@@ -8,10 +9,14 @@ import { ROUTES } from '../../../../../shared/lib/routes';
 import { formatLocalDate } from '../../../../../shared/utils/formatUtils';
 import StatusDropdown from '../../../../sitemetadata/component/StatusDropdown';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
-import { CASTING_STATUS_ORDER } from '../../../../sitemetadata/utils/siteMetadataUtils';
+import {
+  CASTING_STATUS_ORDER,
+  getCastingStatusChangeModalConfig,
+} from '../../../../sitemetadata/utils/siteMetadataUtils';
 import { useCastingStatusActions } from '../../hooks/status/useCastingStatusActions';
 import { useCastingOverflowMenuItems } from '../../hooks/useCastingOverflowMenuItems';
 import type { CastingCardResponse } from '../../types/employerCastings.types';
+import CastingStatusChangeModal from '../Modal/CastingStatusChangeModal';
 
 const CastingCard = ({
   data,
@@ -24,6 +29,7 @@ const CastingCard = ({
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { openModal, closeModal } = useModal();
 
   const { id, title, defaultCode, creationDate, applicationDeadline, projectType, status, allowedStatusCodes } = data;
 
@@ -34,7 +40,6 @@ const CastingCard = ({
   const editCastingPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/editor`;
   const applicantsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/applicants`;
 
-  // IMPORTANT: We prefer disabled options (items exist but are disabled), so we pass statusCode to the hook.
   const items = useCastingOverflowMenuItems({
     employerCastingDetailsPath,
     publicCastingDetailsPath,
@@ -48,9 +53,27 @@ const CastingCard = ({
   const castingStatusOptions = useCachedSiteMetadataOption('castingStatusOptions', t, undefined, { raw: true });
   const isMetadataReady = Array.isArray(castingStatusOptions) && castingStatusOptions.length > 0;
 
-  const handleSelectStatus = async (nextStatus: { id: string; stringCode: string; categoryStringCode?: string }) => {
+  const handleSelectStatus = (nextStatus: { id: string; stringCode: string; categoryStringCode?: string }) => {
     if (isStatusPending) return;
-    await setStatus(nextStatus, { id, slug: defaultCode });
+
+    const config = getCastingStatusChangeModalConfig(nextStatus);
+    if (!config) return;
+
+    openModal(
+      <CastingStatusChangeModal
+        descriptionKey={config.descriptionKey}
+        description2Key={config.description2Key}
+        confirmButtonKey={config.confirmButtonKey}
+        isPending={isStatusPending}
+        onCancel={closeModal}
+        onConfirm={async () => {
+          await setStatus(nextStatus, { id, slug: defaultCode });
+          closeModal();
+        }}
+      />,
+      t(config.titleKey),
+      'lg'
+    );
   };
 
   return (
@@ -71,7 +94,7 @@ const CastingCard = ({
           {isMetadataReady ? (
             <StatusDropdown
               value={status}
-              allowedCodes={allowedStatusCodes ?? []} // [] => none allowed (dropdown disabled by StatusDropdown semantics)
+              allowedCodes={allowedStatusCodes ?? []}
               allOptions={castingStatusOptions}
               order={CASTING_STATUS_ORDER}
               onSelect={handleSelectStatus}

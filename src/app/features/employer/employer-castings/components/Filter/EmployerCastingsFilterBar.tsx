@@ -91,24 +91,23 @@ const EmployerCastingsFilterBar = ({ filters, onFiltersChange, orderBy, onOrderB
             placeholder={t('general.search')}
           />
         </div>
+        <>
+          <OverflowMenu
+            items={filterItems}
+            align="start"
+            side="bottom"
+            trigger={() => <TextDropdownTrigger label={t('general.filter.filter')} open />}
+            menuClassName="max-w-[90%]"
+          />
 
-        <OverflowMenu
-          items={filterItems}
-          align="start"
-          side="bottom"
-          trigger={() => <TextDropdownTrigger label={t('general.filter.filter')} open />}
-          menuClassName="max-w-[90%]"
-        />
-
-        <OverflowMenu
-          items={orderItems}
-          align="start"
-          side="bottom"
-          trigger={() => <TextDropdownTrigger label={t('general.order.order')} open />}
-        />
+          <OverflowMenu
+            items={orderItems}
+            align="start"
+            side="bottom"
+            trigger={() => <TextDropdownTrigger label={t('general.order.order')} open />}
+          />
+        </>
       </article>
-
-      <article />
     </section>
   );
 };
