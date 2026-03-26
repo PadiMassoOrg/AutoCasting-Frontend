@@ -1,6 +1,6 @@
+import { ChevronLeft, ChevronRight } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronLeft, ChevronRight } from '../Chevron';
 
 type Props = {
   open: boolean;

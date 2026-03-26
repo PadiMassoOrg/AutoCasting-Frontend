@@ -1,7 +1,6 @@
-// shared/components/Section/SectionTitle.tsx
+import { ChevronLeft } from 'autocasting-ui-library-padimasso';
 import type { ReactNode } from 'react';
 import { useDashboardShell } from '../../../layouts/components/DashboardShell';
-import { ChevronLeft } from '../Chevron';
 
 type SectionTitleProps = {
   title: ReactNode;

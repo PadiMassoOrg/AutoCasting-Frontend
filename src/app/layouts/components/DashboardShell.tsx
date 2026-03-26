@@ -1,7 +1,6 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { ChevronRight, Separator } from 'autocasting-ui-library-padimasso';
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { ChevronRight } from '../../shared/components/Chevron';
 import { LG_SCREEN_SIZE, useMedia } from '../../shared/hooks/useMedia';
 
 export type DashboardSection<Key extends string = string> = {

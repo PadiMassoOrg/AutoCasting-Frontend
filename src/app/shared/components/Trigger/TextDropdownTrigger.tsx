@@ -1,4 +1,4 @@
-import { ChevronUpDown } from '../Chevron';
+import { ChevronUpDown } from 'autocasting-ui-library-padimasso';
 
 export const TextDropdownTrigger = ({ label, open }: { label: string; open: boolean }) => (
   <span className="flex items-center gap-1 cursor-pointer select-none">
