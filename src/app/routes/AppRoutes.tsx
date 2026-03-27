@@ -11,7 +11,7 @@ import { PublicProfilePage } from '../features/public-profile/pages';
 import { TalentDatabasePage } from '../features/talent-database/pages';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
 import { EmptyLayout, NavigationLayout, ScrollContentLayout } from '../layouts';
-import { ScrollToTop } from '../shared/components/ScrollToTop/ScrollToTop';
+import { ScrollToTop } from '../shared/components/ScrollToTop';
 import { getAuthToken } from '../shared/lib/cookies';
 import { ROUTES } from '../shared/lib/routes';
 import ProtectedRoute from './ProtectedRoute';

@@ -1,8 +1,7 @@
-import { Button, Label } from 'autocasting-ui-library-padimasso';
+import { Button, Icon, Label } from 'autocasting-ui-library-padimasso';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DashboardSection, DashboardShell } from '../../../../layouts/components';
-import { Icon } from '../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../shared/components/Section';
 import { CastingCard } from '../components/Card';
 import EmployerCastingsFilterBar, {

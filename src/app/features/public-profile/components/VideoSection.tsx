@@ -1,5 +1,5 @@
+import { VideoPreviewCard } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import VideoPreviewCard from '../../../shared/components/Video/VideoPreviewCard';
 import { LG_SCREEN_SIZE, useMedia, XL_SCREEN_SIZE } from '../../../shared/hooks/useMedia';
 import type { Media } from '../../talent/talent-profile-edit/types/talentProfile.types';
 

@@ -1,6 +1,6 @@
+import { Icon } from 'autocasting-ui-library-padimasso';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Icon } from '../../../../../../shared/components/Icon/Icon';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
 import { getSocialMediaSchema } from '../../../schemas/socialMediaSchema';
 import type { LinkState, SocialMediaLinksPayload } from './SocialMediaForm';

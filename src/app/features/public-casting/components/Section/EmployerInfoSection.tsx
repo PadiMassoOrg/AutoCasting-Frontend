@@ -1,10 +1,8 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { Chip, Icon, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { Icon } from '../../../../shared/components/Icon/Icon';
 import { formatMemberSince, normalizeExternalUrl } from '../../../../shared/utils/formatUtils';
 import { getSocialMediaIconName } from '../../../talent/talent-profile-edit/components/Form/SocialMedia/SocialMediaIconMapper';
 import type { EmployerInfo } from '../../types/publicCasting.types';
-import { Chip } from '../../../../shared/components/Chip';
 
 const EmployerInfoSection = ({ data }: { data: EmployerInfo }) => {
   const { t } = useTranslation();

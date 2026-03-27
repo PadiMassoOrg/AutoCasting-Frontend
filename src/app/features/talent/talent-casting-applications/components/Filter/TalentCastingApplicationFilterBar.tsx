@@ -1,8 +1,6 @@
+import { OverflowMenu, SearchInput, TextDropdownTrigger } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { OverflowMenu } from '../../../../../shared/components/OverflowMenu';
-import SearchInput from '../../../../../shared/components/Search/SearchInput';
-import { TextDropdownTrigger } from '../../../../../shared/components/Trigger/TextDropdownTrigger';
 import { AUDITABLE_ORDER_BY } from '../../../../../shared/types/orderBy.types';
 import type { TalentCastingApplicationsOrderBy } from '../../types/talentCastingApplicationFilters.types';
 import TalentCastingApplicationFilterMenuContent from './TalentCastingApplicationFilterMenuContent';

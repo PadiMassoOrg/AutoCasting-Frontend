@@ -1,7 +1,6 @@
+import { Chip, Icon } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { Icon } from '../../../../shared/components/Icon/Icon';
 import type { CastingBasicInfoSection } from '../../types/publicCasting.types';
-import { Chip } from '../../../../shared/components/Chip';
 
 const BasicInfoSection = ({ data }: { data: CastingBasicInfoSection }) => {
   const { t } = useTranslation();

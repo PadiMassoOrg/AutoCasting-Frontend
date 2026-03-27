@@ -1,8 +1,7 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { ChevronUpDown, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../../context/LanguageContext';
-import { ChevronUpDown } from '../../../shared/components/Chevron';
 
 type Faq = { id: string; q: string; a: string };
 

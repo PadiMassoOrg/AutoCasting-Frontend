@@ -1,5 +1,5 @@
+import { Icon } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { Icon } from '../../../../shared/components/Icon/Icon';
 import { PlanCard } from '../../components/UI';
 
 const PlanSection = () => {

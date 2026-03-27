@@ -1,10 +1,7 @@
-import { Button, ButtonRow, Label } from 'autocasting-ui-library-padimasso';
+import { Button, ButtonRow, Icon, Label, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
-import { Icon } from '../../../../shared/components/Icon/Icon';
-import { WizardStep } from '../../../../shared/components/Wizard';
-import type { WizardStepProps } from '../../../../shared/components/Wizard/WizardStep';
 import Logo from '../../../../shared/icons/og-image.svg';
 import { useMeData } from '../../../auth/hooks/useMeData';
 import { useUpdateOnboardingMutation } from '../../hooks/useUpdateOnboardingMutation';

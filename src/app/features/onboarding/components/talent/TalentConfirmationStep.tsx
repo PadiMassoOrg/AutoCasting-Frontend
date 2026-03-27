@@ -1,10 +1,7 @@
-import { Button, ButtonRow, Label } from 'autocasting-ui-library-padimasso';
+import { Button, ButtonRow, Icon, Label, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
-import { Icon } from '../../../../shared/components/Icon/Icon';
-import { WizardStep } from '../../../../shared/components/Wizard';
-import type { WizardStepProps } from '../../../../shared/components/Wizard/WizardStep';
 import Logo from '../../../../shared/icons/og-image.svg';
 import { useMeData } from '../../../auth/hooks/useMeData';
 import { useUpdateOnboardingMutation } from '../../hooks/useUpdateOnboardingMutation';
@@ -73,10 +70,10 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
             <div className="text-center flex flex-col gap-1">
               <h1 className="text-2xl font-semibold mb-3">{t('onboarding.talent.confirmation_step.header')}</h1>
               <p className="text-sm">{t('onboarding.talent.confirmation_step.subtitle')}</p>
-              <p className="text-sm mt-4">
+              <div className="text-sm mt-4">
                 {t('onboarding.common.edit_profile_label')}
                 <ButtonRow items={[<Icon variant="primary" name="profile" />]} className="mt-2"></ButtonRow>
-              </p>
+              </div>
             </div>
 
             {serverError && (

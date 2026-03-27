@@ -1,9 +1,7 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { Chip, OverflowMenu, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../../../../context/ModalContext';
-import { Chip } from '../../../../../shared/components/Chip';
-import { OverflowMenu } from '../../../../../shared/components/OverflowMenu';
 import { SectionCard } from '../../../../../shared/components/Section';
 import { ROUTES } from '../../../../../shared/lib/routes';
 import { formatLocalDate } from '../../../../../shared/utils/formatUtils';

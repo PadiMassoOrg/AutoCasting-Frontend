@@ -1,6 +1,6 @@
+import { Wizard } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Wizard } from '../../../shared/components/Wizard';
 import { getAuthToken } from '../../../shared/lib/cookies';
 import { ROUTES } from '../../../shared/lib/routes';
 import { jwtDecoder } from '../../../shared/utils/jwtDecoder';

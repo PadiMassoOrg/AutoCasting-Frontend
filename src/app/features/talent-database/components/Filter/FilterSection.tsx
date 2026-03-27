@@ -1,6 +1,6 @@
+import { ChevronUpDown } from 'autocasting-ui-library-padimasso';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { ChevronUpDown } from '../../../../shared/components/Chevron';
 
 type Props = {
   title: string;

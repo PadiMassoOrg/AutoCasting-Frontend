@@ -2,7 +2,7 @@ import { Button } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
 import { DashboardSection } from '../../../../../layouts/components';
-import { Icon } from '../../../../../shared/components/Icon/Icon';
+import { Icon } from 'autocasting-ui-library-padimasso';
 import { SectionCard, SectionTitle } from '../../../../../shared/components/Section';
 import { useCreditAutosave } from '../../hooks/autosaves';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';

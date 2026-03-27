@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../../context/ModalContext';
-import { Icon } from '../../../../../../shared/components/Icon/Icon';
+import { Icon } from 'autocasting-ui-library-padimasso';
 import { useEducationDeleteAutosave, useEducationPatchAutosave } from '../../../hooks/autosaves';
 import type { Education } from '../../../types/talentProfile.types';
 import EducationDeleteModal from './EducationDeleteModal';

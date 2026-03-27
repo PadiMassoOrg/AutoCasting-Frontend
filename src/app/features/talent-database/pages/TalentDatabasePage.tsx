@@ -1,10 +1,8 @@
+import { Icon, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Icon } from '../../../shared/components/Icon/Icon';
-import { useDebouncedValue } from '../../../shared/hooks/useDebounceValue';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
-import { useViewportVhVar } from '../../../shared/hooks/useViewportVhVar';
 import { PublicProfileDetailsView } from '../../public-profile/pages';
 import { MobileFiltersDrawer, TalentCard, TalentFilterBar } from '../components';
 import { getTalentDatabase } from '../services/talentDatabaseService';

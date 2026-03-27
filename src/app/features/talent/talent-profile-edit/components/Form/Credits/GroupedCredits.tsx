@@ -1,7 +1,6 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { Icon, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Icon } from '../../../../../../shared/components/Icon/Icon';
 import type { Credit } from '../../../types/talentProfile.types';
 
 const ORDER_KEYS = [

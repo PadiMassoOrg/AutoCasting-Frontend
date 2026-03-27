@@ -1,11 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
+import { Button, FormInputField, Label, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
-import { WizardStep } from '../../../../shared/components/Wizard';
-import type { WizardStepProps } from '../../../../shared/components/Wizard/WizardStep';
 import { usePatchTalentBasicInfoMutation } from '../../../talent/talent-profile-edit/hooks/usePatchTalentBasicInfoMutation';
 import { useTalentProfile } from '../../../talent/talent-profile-edit/hooks/useTalentProfile';
 import { type TalentBasicInfoValues, getTalentBasicInfoSchema } from '../../schemas/talentBasicInfoStepSchema';

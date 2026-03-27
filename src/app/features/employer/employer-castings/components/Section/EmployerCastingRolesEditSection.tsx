@@ -1,10 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { Label } from 'autocasting-ui-library-padimasso';
+import { Icon, Label } from 'autocasting-ui-library-padimasso';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
 import { DashboardSection } from '../../../../../layouts/components';
-import { Icon } from '../../../../../shared/components/Icon/Icon';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useEmployerCastingIds } from '../../context/EmployerCastingContext';

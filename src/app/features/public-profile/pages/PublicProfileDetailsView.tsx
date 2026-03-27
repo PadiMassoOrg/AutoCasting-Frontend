@@ -1,11 +1,8 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { DetailsView, Icon, ImageCarousel, Separator } from 'autocasting-ui-library-padimasso';
 import type { JSX } from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import DetailsView from '../../../shared/components/DetailsView/DetailsView';
-import { Icon } from '../../../shared/components/Icon/Icon';
-import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import ProfileInfoCarousel from '../../public-profile/components/Details/ProfileInfoCarousel';
 import VideoSection from '../../public-profile/components/VideoSection';

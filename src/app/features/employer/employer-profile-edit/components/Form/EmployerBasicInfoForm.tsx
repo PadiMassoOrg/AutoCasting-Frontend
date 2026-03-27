@@ -1,9 +1,8 @@
-import { FormInputField, FormSelectField, Label, Separator } from 'autocasting-ui-library-padimasso';
+import { FormInputField, FormSelectField, Label, Separator, UploadTile } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useEmployerLogoPatch } from '../../../../../integrations/supabase/media/hooks/useEmployerLogoPatch';
 import { TextareaField } from '../../../../../shared/components/Form';
-import UploadTile from '../../../../../shared/components/UploadTile/UploadTile';
 import { useCommittedText, useCommittedUuid } from '../../../../../shared/utils/formUtils';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { SocialMediaForm } from '../../../../talent/talent-profile-edit/components/Form/SocialMedia';

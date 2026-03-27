@@ -1,7 +1,6 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { ChevronUpDown, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChevronUpDown } from '../../../../shared/components/Chevron';
 import type { Credit } from '../../../talent/talent-profile-edit/types/talentProfile.types';
 
 const ORDER_KEYS = [

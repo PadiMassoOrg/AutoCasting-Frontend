@@ -1,12 +1,8 @@
-import { Button, Label } from 'autocasting-ui-library-padimasso';
+import { Button, Label, UploadTile, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
-import { WizardStep } from '../../../../shared/components/Wizard';
-import type { WizardStepProps } from '../../../../shared/components/Wizard/WizardStep';
-
 import { useEmployerLogoPatch } from '../../../../integrations/supabase/media/hooks/useEmployerLogoPatch';
-import UploadTile from '../../../../shared/components/UploadTile/UploadTile';
 import { useEmployerProfile } from '../../../employer/employer-profile-edit/hooks/useEmployerProfile';
 import { fileSchema } from '../../../talent/talent-profile-edit/schemas/mediaSchema';
 
