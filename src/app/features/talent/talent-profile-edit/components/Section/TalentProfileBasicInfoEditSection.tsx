@@ -20,7 +20,7 @@ const TalentProfileBasicInfoEditSection = ({ profile }: { profile: TalentProfile
         <BasicInfoForm data={profile.basicInfo} professionsMeta={professions} />
         <Separator className="opacity-20 my-8" />
         <ContactForm data={profile.contact} />
-        <Separator className="opacity-20 my-8" />
+        <Separator className="opacity-20 mb-8 mt-4" />
         <SocialMediaForm data={profile.socialMedia} onSaveLinks={(payload) => socialMediaAutosave.immediate(payload)} />
       </SectionCard>
     </DashboardSection>

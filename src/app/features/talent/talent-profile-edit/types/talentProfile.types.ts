@@ -49,7 +49,6 @@ export type BaseProfileBasicInfo = {
 export type BaseProfileContact = {
   id: string;
   email: string;
-  phoneNumber: string;
 };
 
 export type SocialMediaLink = {

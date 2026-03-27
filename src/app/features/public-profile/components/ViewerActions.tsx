@@ -3,7 +3,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { isBrowser } from '../../../shared/utils/domUtils';
-import { whatsappLink } from '../../../shared/utils/formatUtils';
 import { shareUrl } from '../../../shared/utils/shareUtils';
 import { usePublicProfile } from '../hooks/usePublicProfile';
 
@@ -16,11 +15,6 @@ export default function ViewerActions({ className }: Props) {
 
   const url = isBrowser ? window.location.href : '';
 
-  const text = data?.basicInfo?.stageName
-    ? t('profile.share.whatsapp_text', { name: data.basicInfo.stageName })
-    : t('profile.share.whatsapp_text_fallback');
-
-  const waUrl = data?.contact?.phoneNumber ? whatsappLink(data.contact.phoneNumber, text) : null;
   const mailtoUrl = data?.contact?.email ? `mailto:${data.contact.email}` : null;
 
   const handleShare = async () => {
@@ -33,22 +27,6 @@ export default function ViewerActions({ className }: Props) {
   };
 
   const items: React.ReactNode[] = [];
-
-  if (waUrl) {
-    items.push(
-      <a
-        key="wa"
-        href={waUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={t('profile.share.whatsapp')}
-        title="WhatsApp"
-        className="inline-flex"
-      >
-        <Icon name="whatsapp" />
-      </a>
-    );
-  }
 
   if (mailtoUrl) {
     items.push(
