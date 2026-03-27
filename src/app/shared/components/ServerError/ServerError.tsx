@@ -1,9 +1,8 @@
-import { Button } from 'autocasting-ui-library-padimasso';
+import { Button, FullscreenCenter } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import image from '../../icons/500.svg';
 import { ROUTES } from '../../lib/routes';
-import { FullscreenCenter } from '../Structure';
 
 const ServerError = () => {
   const { t } = useTranslation();

@@ -1,7 +1,7 @@
 import { ChevronUpDown, OverflowMenu, type OverflowMenuItem } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import type { SiteMetadataObject } from '../../../features/sitemetadata/types/sitemetadata.types';
-import StatusChip from '../../../shared/components/Chip/StatusChip';
+import { CastingStatusChip } from '../../../shared/components/Chip';
 
 type Props = {
   value: SiteMetadataObject;
@@ -53,7 +53,7 @@ export default function StatusDropdown({
     return options.map<OverflowMenuItem>((opt) => ({
       type: 'item',
       key: String(opt.stringCode ?? opt.id),
-      label: <StatusChip status={opt} variant="inline" align="spaced" />,
+      label: <CastingStatusChip status={opt} variant="inline" align="spaced" />,
       onSelect: () => onSelect(opt),
       closeOnSelect: true,
     }));
@@ -73,7 +73,7 @@ export default function StatusDropdown({
             trigDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
           ].join(' ')}
         >
-          <StatusChip status={value} variant="inline" />
+          <CastingStatusChip status={value} variant="inline" />
           <ChevronUpDown open={open} sizePx={18} className="text-[var(--color-primary-black)]" />
         </div>
       )}

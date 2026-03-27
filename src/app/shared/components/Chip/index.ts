@@ -1,2 +1,2 @@
-import StatusChip from './StatusChip';
-export { StatusChip };
+import CastingStatusChip from './CastingStatusChip';
+export { CastingStatusChip };

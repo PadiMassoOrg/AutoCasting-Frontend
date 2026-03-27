@@ -1,8 +1,8 @@
+import { useViewportVhVar } from 'autocasting-ui-library-padimasso';
 import { Outlet } from 'react-router-dom';
 import { MaintenanceBanner } from '../shared/components/MaintenanceBanner/MaintenanceBanner';
 import { useChromeBoxHeights } from '../shared/hooks/useChomeBoxHeights';
 import { LG_SCREEN_SIZE, useMedia } from '../shared/hooks/useMedia';
-import { useViewportVhVar } from '../shared/hooks/useViewportVhVar';
 import Navbar from './components/Navbar';
 
 export default function ScrollContentLayout() {

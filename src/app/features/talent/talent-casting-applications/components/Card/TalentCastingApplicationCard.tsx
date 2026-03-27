@@ -1,6 +1,6 @@
 import { Chip, Icon } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { StatusChip } from '../../../../../shared/components/Chip';
+import { CastingStatusChip } from '../../../../../shared/components/Chip';
 import { SectionCard } from '../../../../../shared/components/Section';
 import { formatCastingModalityText, formatLocalDate } from '../../../../../shared/utils/formatUtils';
 import { normalizeCastingStatusForDisplay } from '../../../../sitemetadata/utils/siteMetadataUtils';
@@ -31,7 +31,7 @@ const TalentCastingApplicationCard = ({ data }: { data: TalentCastingApplication
         {/* Title and Status */}
         <div className="flex flex-row items-center justify-between">
           <h2 className="font-bold min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap">{roleName}</h2>
-          <StatusChip status={displayCastingStatus!}></StatusChip>
+          <CastingStatusChip status={displayCastingStatus!}></CastingStatusChip>
         </div>
         {/* Employer */}
         <div className="flex flex-row items-center gap-2">

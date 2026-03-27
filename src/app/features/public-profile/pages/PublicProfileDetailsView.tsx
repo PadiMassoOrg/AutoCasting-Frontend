@@ -1,4 +1,4 @@
-import { DetailsView, Icon, Separator, ImageCarousel } from 'autocasting-ui-library-padimasso';
+import { DetailsView, Icon, ImageCarousel, Separator } from 'autocasting-ui-library-padimasso';
 import type { JSX } from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
