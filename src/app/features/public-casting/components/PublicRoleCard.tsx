@@ -1,7 +1,6 @@
-import { Button, ChevronUpDown, Separator } from 'autocasting-ui-library-padimasso';
+import { Button, ChevronUpDown, Chip, Separator } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Chip } from '../../../shared/components/Chip';
 import { formatBooleanLabeled, formatCurrencyAmount } from '../../../shared/utils/formatUtils';
 import type { CastingRole } from '../types/publicCasting.types';
 

@@ -1,10 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { Label } from 'autocasting-ui-library-padimasso';
+import { Label, UploadTile } from 'autocasting-ui-library-padimasso';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useProfileMediaDelete } from '../../../../../integrations/supabase/media/hooks/useProfileMediaDelete';
 import { useProfileMediaPatch } from '../../../../../integrations/supabase/media/hooks/useProfileMediaPatch';
-import UploadTile from '../../../../../shared/components/UploadTile/UploadTile';
 import { fileSchema, OTHER_SLOTS, otherIndexSchema } from '../../schemas/mediaSchema';
 import { TALENT_PROFILE_CACHE_KEY } from '../../services/talentProfileService';
 import type { Media } from '../../types/talentProfile.types';

@@ -1,6 +1,6 @@
+import { Spinner } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import image from '../../icons/loading_icon.svg';
-import Spinner from '../Spinner/Spinner';
 import { FullscreenCenter } from '../Structure';
 
 const PageLoading = () => {

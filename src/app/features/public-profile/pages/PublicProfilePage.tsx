@@ -1,6 +1,5 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { ImageCarousel, Separator } from 'autocasting-ui-library-padimasso';
 import { useParams } from 'react-router-dom';
-import ImageCarousel from '../../../shared/components/ImageCarousel/ImageCarousel';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { LG_SCREEN_SIZE, useMedia, XL_SCREEN_SIZE } from '../../../shared/hooks/useMedia';
 import { TalentProfileModeToggle } from '../../talent/talent-profile-edit/components';

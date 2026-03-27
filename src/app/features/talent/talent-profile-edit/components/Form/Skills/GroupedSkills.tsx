@@ -1,7 +1,6 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { Chip, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Chip } from '../../../../../../shared/components/Chip';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
 
 const ORDER_KEYS = [

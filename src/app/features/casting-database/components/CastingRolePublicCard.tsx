@@ -1,7 +1,6 @@
-import { Button, ChevronRight, Separator } from 'autocasting-ui-library-padimasso';
+import { Button, ChevronRight, Chip, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Chip } from '../../../shared/components/Chip';
 import { useMedia, XL_SCREEN_SIZE } from '../../../shared/hooks/useMedia';
 import { ROUTES } from '../../../shared/lib/routes';
 import { formatAgeRange } from '../../../shared/utils/formatUtils';

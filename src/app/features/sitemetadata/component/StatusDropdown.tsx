@@ -1,9 +1,7 @@
-import { ChevronUpDown } from 'autocasting-ui-library-padimasso';
+import { ChevronUpDown, OverflowMenu, type OverflowMenuItem } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import type { SiteMetadataObject } from '../../../features/sitemetadata/types/sitemetadata.types';
 import StatusChip from '../../../shared/components/Chip/StatusChip';
-import { OverflowMenu } from '../../../shared/components/OverflowMenu';
-import type { OverflowMenuItem } from '../../../shared/components/OverflowMenu/overflowmenu.types';
 
 type Props = {
   value: SiteMetadataObject;

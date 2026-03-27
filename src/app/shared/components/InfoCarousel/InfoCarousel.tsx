@@ -1,6 +1,6 @@
+import { Pills } from 'autocasting-ui-library-padimasso';
 import { type TFunction } from 'i18next';
 import React from 'react';
-import Pills from '../../../features/public-profile/components/Pills/Pills';
 import { useCarouselPills, type CountGetters, type PillKeyBase } from '../../hooks/useCarouselPills';
 
 type Renderers<K extends PillKeyBase, D> = Record<K, (data: D) => React.ReactNode>;

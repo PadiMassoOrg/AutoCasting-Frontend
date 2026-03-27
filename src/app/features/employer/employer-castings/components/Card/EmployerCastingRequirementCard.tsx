@@ -1,7 +1,6 @@
-import { Icon } from 'autocasting-ui-library-padimasso';
+import { Chip, Icon } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
-import { Chip } from '../../../../../shared/components/Chip';
 import type { RadioOption } from '../../../../../shared/components/Form/RadioGroupField';
 import { SectionCard } from '../../../../../shared/components/Section';
 import { useCastingRequirementDeleteAutosave, useCastingRequirementPatchAutosave } from '../../hooks/autosaves';

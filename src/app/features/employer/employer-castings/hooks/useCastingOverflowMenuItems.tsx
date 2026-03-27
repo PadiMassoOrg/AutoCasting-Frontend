@@ -1,7 +1,7 @@
+import type { OverflowMenuItem } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import type { OverflowMenuItem } from '../../../../shared/components/OverflowMenu';
 import { copyToClipboardGraceful } from '../../../../shared/utils/domUtils';
 import {
   CASTING_STATUS_ARCHIVED,
