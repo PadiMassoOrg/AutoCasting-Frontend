@@ -855,7 +855,8 @@
         "edit": "Editar Rol",
         "delete": "¿Seguro deseas eliminar este rol?",
         "role": {
-          "role_name": "Nombre del Rol"
+          "role_name": "Nombre del Rol",
+          "talent_profession": "Profesión del talento"
         }
       },
       "requirements": {

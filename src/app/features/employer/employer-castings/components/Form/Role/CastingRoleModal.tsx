@@ -345,7 +345,9 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
 
       <div>
         <div className="flex mb-1.5">
-          <Label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</Label>
+          <Label className="text-sm font-semibold">
+            {t('employer_castings.dashboard.roles.role.talent_profession')}
+          </Label>
           <span className="text-red-500 ml-1" aria-hidden="true">
             *
           </span>

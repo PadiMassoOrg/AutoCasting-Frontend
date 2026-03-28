@@ -63,7 +63,7 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
   const actionButtonRender = () => (
     <span onClick={handleOpenModal} className="flex flex-row items-center justify-center gap-2 cursor-pointer">
       <Icon name="plus" variant="primary" size={16} />
-      <span className="text-base font-semibold text-[var(--color-primary-purple)]">{t('general.add')}</span>
+      <span className="text-base font-semibold text-(--color-primary-purple)">{t('general.add')}</span>
     </span>
   );
 
@@ -73,7 +73,7 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
       {(data.roles?.length ?? 0) > 0 ? (
         data.roles?.map((role) => <EmployerCastingRoleCard data={role} key={role.id} />)
       ) : (
-        <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
+        <Label className="w-full text-center text-(--color-secondary-grey-fonts) pt-10">
           {t('employer_castings.page.empty_roles')}
         </Label>
       )}
