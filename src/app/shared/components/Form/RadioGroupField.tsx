@@ -1,4 +1,5 @@
 import { Label } from 'autocasting-ui-library-padimasso';
+import clsx from 'clsx';
 import type { HTMLAttributes } from 'react';
 import { useId } from 'react';
 
@@ -41,10 +42,10 @@ function renderRadioInput(checked: boolean, props: React.InputHTMLAttributes<HTM
           h-6 w-6
           rounded-full
           border
-          border-[var(--color-secondary-outline)]
+          border-(--color-secondary-outline)
           appearance-none
           cursor-pointer
-          checked:border-[var(--color-primary-purple)]
+          checked:border-(--color-primary-purple)
           bg-white
           transition-colors
           disabled:cursor-not-allowed
@@ -56,7 +57,7 @@ function renderRadioInput(checked: boolean, props: React.InputHTMLAttributes<HTM
           absolute
           h-3 w-3
           rounded-full
-          bg-[var(--color-primary-purple)]
+          bg-(--color-primary-purple)
           scale-0
           peer-checked:scale-100
           transition-transform
@@ -74,10 +75,11 @@ const RadioGroupField = <TMeta,>({
   name,
   onValueChange,
 
-  wrapperClassName = 'flex flex-col',
-  labelClassName = 'text-sm font-semibold mb-3',
-  optionsWrapperClassName = 'flex flex-col gap-2',
-  optionClassName = 'flex items-center gap-2 text-sm',
+  wrapperClassName,
+  labelClassName,
+  optionsWrapperClassName,
+  optionClassName,
+  legendClassName,
 
   required = false,
   className,
@@ -87,10 +89,15 @@ const RadioGroupField = <TMeta,>({
   const uid = useId();
   const groupName = (name ?? 'radio') + '__' + uid;
 
+  const finalWrapperClassName = clsx('flex flex-col', wrapperClassName);
+  const finalLabelClassName = clsx('text-sm font-semibold mb-3', labelClassName);
+  const finalOptionsWrapperClassName = clsx('flex flex-col gap-2', optionsWrapperClassName);
+  const finalOptionClassName = clsx('flex items-center gap-2 text-sm', optionClassName);
+
   return (
-    <div className={[wrapperClassName, className].filter(Boolean).join(' ')} {...rest}>
+    <div className={clsx(finalWrapperClassName, className)} {...rest}>
       {label ? (
-        <Label className={labelClassName}>
+        <Label className={finalLabelClassName}>
           {label}
           {required ? (
             <span className="text-red-500 ml-1" aria-hidden="true">
@@ -100,7 +107,7 @@ const RadioGroupField = <TMeta,>({
         </Label>
       ) : null}
 
-      <div className={optionsWrapperClassName}>
+      <div className={finalOptionsWrapperClassName}>
         {options.map((opt) => {
           const isDisabled = disabled || Boolean(opt.disabled);
           const checked = opt.value === value;
@@ -110,7 +117,7 @@ const RadioGroupField = <TMeta,>({
             <label
               key={opt.value}
               htmlFor={id}
-              className={[optionClassName, isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'].join(' ')}
+              className={clsx(finalOptionClassName, isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer')}
             >
               {renderRadioInput(checked, {
                 id,
@@ -129,7 +136,7 @@ const RadioGroupField = <TMeta,>({
         })}
       </div>
 
-      <div className="min-h-[25px]" />
+      <div className="min-h-6.25" />
     </div>
   );
 };

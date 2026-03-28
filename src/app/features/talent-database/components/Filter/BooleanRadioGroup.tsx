@@ -47,10 +47,11 @@ export default function BooleanRadioGroup({
           h-6 w-6
           rounded-full
           border
-          border-[var(--color-secondary-outline)]
+          text-sm
+          border-(--color-secondary-outline)
           appearance-none
           cursor-pointer
-          checked:border-[var(--color-primary-purple)]
+          checked:border-(--color-primary-purple)
           bg-white
           transition-colors
         "
@@ -61,7 +62,7 @@ export default function BooleanRadioGroup({
           absolute
           h-3 w-3
           rounded-full
-          bg-[var(--color-primary-purple)]
+          bg-(--color-primary-purple)
           scale-0
           peer-checked:scale-100
           transition-transform
@@ -103,7 +104,7 @@ export default function BooleanRadioGroup({
         </label>
       </div>
 
-      <div className="min-h-[25px]" />
+      <div className="min-h-6.25" />
     </fieldset>
   );
 }

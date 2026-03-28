@@ -40,7 +40,7 @@ const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: stri
             value={selectedCompensationTypeId}
             options={compensationTypeOptions}
             optionsWrapperClassName="w-full flex flex-row items-center gap-4 lg:gap-8"
-            optionClassName="flex items-center gap-2 text-sm lg:text-base"
+            optionClassName="flex items-center gap-2"
             onValueChange={(nextId) => {
               if (!nextId) return;
               if (nextId === selectedCompensationTypeId) return;
