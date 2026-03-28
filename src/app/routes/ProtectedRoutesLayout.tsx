@@ -8,22 +8,17 @@ import TalentCastingApplicationsPage from '../features/talent/talent-casting-app
 import { TalentProfileEditPage } from '../features/talent/talent-profile-edit/pages';
 import { TalentProfileSettingsPage } from '../features/talent/talent-profile-settings/pages';
 import { NavigationLayout, ScrollContentLayout } from '../layouts';
-import { getAuthToken } from '../shared/lib/cookies';
 import { ROUTES } from '../shared/lib/routes';
-import { jwtDecoder } from '../shared/utils/jwtDecoder';
 
 export default function ProtectedRoutesLayout() {
   const { data: meData, isLoading } = useMeData();
-  const jwt = getAuthToken();
-  const decoded = jwt ? jwtDecoder(jwt) : null;
-  const talentProfileSlug = decoded?.talentProfileSlug;
 
   if (isLoading || !meData) {
     return null;
   }
 
   const effectiveDashboardRoute =
-    meData.activeMode === 'EMPLOYER' ? ROUTES.EMPLOYER_CASTINGS : talentProfileSlug && ROUTES.TALENT_APPLIED_CASTINGS;
+    meData.activeMode === 'EMPLOYER' ? ROUTES.EMPLOYER_CASTINGS : ROUTES.TALENT_APPLIED_CASTINGS;
 
   return (
     <Routes>
