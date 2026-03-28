@@ -171,12 +171,12 @@
     },
     "ethnicity": {
       "afro_descendant": "Afrodescendiente",
-      "asian": "Asiática / Asiático",
-      "white_caucasian": "Blanca / Caucásica",
-      "indigenous_native": "Indígena / Originaria",
-      "latino_hispanic": "Latina / Latino / Hispana / Hispano",
+      "asian": "Asiático",
+      "white_caucasian": "Blanco / Caucásico",
+      "indigenous_native": "Indígena / Originario",
+      "latino_hispanic": "Latino / Hispano",
       "middle_east_north_africa": "Medio Oriente / Norte de África",
-      "mixed": "Mixta / Mestiza",
+      "mixed": "Mixto / Mestizo",
       "prefer_not_to_say": "Prefiero no especificar"
     },
     "category": {
@@ -526,7 +526,8 @@
     },
     "common": {
       "of": "de",
-      "edit_profile_label": "Para editar tu informacion hace click en:"
+      "edit_profile_label": "Para editar tu informacion hace click en:",
+      "edit_profile_label_profile": "Tu Perfil"
     },
     "talent": {
       "step1": {

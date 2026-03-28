@@ -67,13 +67,13 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
             </div>
 
             {/* Contenido principal */}
-            <div className="text-center flex flex-col gap-1">
+            <div className="flex flex-col items-center gap-4 text-center">
               <h1 className="text-2xl font-semibold">{t('onboarding.employer.confirmation_step.header')}</h1>
               <p className="text-sm">{t('onboarding.employer.confirmation_step.subtitle')}</p>
-              <p className="text-sm mt-4">
-                {t('onboarding.common.edit_profile_label')}
-                <ButtonRow items={[<Icon variant="primary" name="profile" />]} className="mt-2"></ButtonRow>
-              </p>
+              <span className="flex flex-row items-center gap-2 ">
+                <p className="text-sm"> {t('onboarding.common.edit_profile_label_profile')}</p>
+                <ButtonRow items={[<Icon variant="primary" name="profile" />]}></ButtonRow>
+              </span>
             </div>
 
             {serverError && (
