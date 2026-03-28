@@ -1,8 +1,6 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
-
-const UUID_RX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const SAFE_TEXT_RX = /^[A-Za-zÀ-ÿ0-9 ]+$/;
+import { NAME_RX, UUID_RX } from '../../../../shared/utils/schemaUtils';
 
 export const getCastingRoleSchema = (t: TFunction) =>
   z
@@ -17,8 +15,8 @@ export const getCastingRoleSchema = (t: TFunction) =>
         .string()
         .trim()
         .min(1, { message: t('validation.required') })
-        .max(50, { message: t('validation.invalid') })
-        .regex(SAFE_TEXT_RX, { message: t('validation.invalid') }),
+        .max(255, { message: t('validation.max_char') })
+        .regex(NAME_RX, { message: t('validation.invalid') }),
 
       roleType: z
         .string({ required_error: t('validation.required') })

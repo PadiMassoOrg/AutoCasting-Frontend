@@ -34,15 +34,42 @@ z.setErrorMap(zodI18nErrorMap);
 export const creaditSchema = z.object({
   id: z.string().optional(),
   productionTypeId: z.string().min(1),
-  projectName: z.string().trim().min(1),
-  producerName: z.string().trim().min(1),
-  role: z.string().trim().min(1),
-  year: z.string().min(1).regex(/^\d+$/),
+  projectName: z
+    .string()
+    .trim()
+    .min(1)
+    .max(255, { message: i18next.t('validation.max_char') }),
+  producerName: z
+    .string()
+    .trim()
+    .min(1)
+    .max(255, { message: i18next.t('validation.max_char') }),
+  role: z
+    .string()
+    .trim()
+    .min(1)
+    .max(255, { message: i18next.t('validation.max_char') }),
+  year: z
+    .string()
+    .min(1)
+    .max(255, { message: i18next.t('validation.max_char') })
+    .regex(/^\d+$/),
 });
 
 export const educationSchema = z.object({
   id: z.string().optional(),
-  institution: z.string().min(1),
-  courseName: z.string().trim().min(1),
-  graduationYear: z.string().min(1).regex(/^\d+$/),
+  institution: z
+    .string()
+    .min(1)
+    .max(255, { message: i18next.t('validation.max_char') }),
+  courseName: z
+    .string()
+    .trim()
+    .min(1)
+    .max(255, { message: i18next.t('validation.max_char') }),
+  graduationYear: z
+    .string()
+    .min(1)
+    .max(255, { message: i18next.t('validation.max_char') })
+    .regex(/^\d+$/),
 });

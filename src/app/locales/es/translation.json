@@ -96,6 +96,7 @@
   "validation": {
     "uuid_invalid": "Valor inválido.",
     "invalid": "Valor inválido.",
+    "email_invalid": "Email inválido.",
     "url_invalid": "Ingresa una URL válida.",
     "required": "Campo obligatorio.",
     "number": "Solo números.",
@@ -104,6 +105,8 @@
     "year_out_of_range": "El año debe estar entre {{min}} y {{max}}.",
     "month_invalid": "Mes inválido.",
     "day_invalid": "Día inválido.",
+    "max_char": "El texto es demasiado largo.",
+    "max_length": "El texto es muy largo.",
     "type_image": "El archivo debe ser una imagen.",
     "max_size": "El archivo supera el tamaño máximo de {{mb}}MB."
   },

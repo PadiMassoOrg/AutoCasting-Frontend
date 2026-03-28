@@ -1,7 +1,6 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
-
-const UUID_RX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+import { UUID_RX } from '../../../../shared/utils/schemaUtils';
 
 const LETTERS_1_2_RX = /^[A-Za-z]{1,3}$/;
 const DIGITS_1_3_RX = /^\d{1,3}$/;

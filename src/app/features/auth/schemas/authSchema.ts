@@ -3,23 +3,39 @@ import { z } from 'zod';
 
 export const getLoginSchema = () => {
   return z.object({
-    email: z.string().email({
-      message: i18next.t('auth.validation.email'),
-    }),
-    password: z.string().min(6, {
-      message: i18next.t('auth.validation.password_min'),
-    }),
+    email: z
+      .string()
+      .trim()
+      .min(1, { message: i18next.t('validation.required') })
+      .max(255, { message: i18next.t('validation.max_char') })
+      .email({
+        message: i18next.t('auth.validation.email'),
+      }),
+    password: z
+      .string()
+      .min(6, {
+        message: i18next.t('auth.validation.password_min'),
+      })
+      .max(255, { message: i18next.t('validation.max_char') }),
   });
 };
 
 export const getRegisterSchema = () => {
   return z.object({
-    email: z.string().email({
-      message: i18next.t('auth.validation.email'),
-    }),
-    password: z.string().min(6, {
-      message: i18next.t('auth.validation.password_min'),
-    }),
+    email: z
+      .string()
+      .trim()
+      .min(1, { message: i18next.t('validation.required') })
+      .max(255, { message: i18next.t('validation.max_char') })
+      .email({
+        message: i18next.t('auth.validation.email'),
+      }),
+    password: z
+      .string()
+      .min(6, {
+        message: i18next.t('auth.validation.password_min'),
+      })
+      .max(255, { message: i18next.t('validation.max_char') }),
   });
 };
 
