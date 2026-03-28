@@ -80,7 +80,7 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
 
       {open && (
         <div
-          className={`absolute z-20 p-2 rounded-lg bg-white shadow-lg border border-[var(--color-primary-light-grey)] flex gap-2 flex-wrap ${
+          className={`absolute z-20 p-2 rounded-lg bg-white shadow-lg border border-(--color-primary-light-grey) flex gap-2 flex-wrap ${
             openUpwards ? 'bottom-full mb-2' : 'mt-2'
           }`}
         >
@@ -90,8 +90,8 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
               <button
                 key={opt.id}
                 type="button"
-                className={`w-8 h-8 rounded-md flex items-center justify-center hover:bg-[var(--color-primary-light-grey)] ${
-                  opt.id === value ? 'ring-2 ring-[var(--color-primary)]' : ''
+                className={`w-8 h-8 rounded-md flex items-center justify-center hover:bg-(--color-primary-light-grey) ${
+                  opt.id === value ? 'ring-2 ring-(--color-primary)' : ''
                 }`}
                 onClick={() => {
                   onChange(opt.id);
@@ -230,7 +230,7 @@ const SocialMediaRow = ({
   return (
     <div className="flex items-center gap-2 w-full">
       <div className="flex-1">
-        <div className="flex items-center gap-3 w-full rounded-2xl border border-[var(--color-primary-light-grey)] px-5 h-14 py-3">
+        <div className="flex items-center gap-3 w-full rounded-2xl border border-(--color-primary-light-grey) px-5 h-14 py-3">
           <SocialMediaIconSelect
             allOptions={allOptions}
             usedOptionIds={usedOptionIds}
@@ -238,11 +238,11 @@ const SocialMediaRow = ({
             onChange={handleChangeOption}
           />
 
-          <div className="w-px h-8 bg-[var(--color-primary-light-grey)]" />
+          <div className="w-px h-8 bg-(--color-primary-light-grey)" />
 
           <input
             id={`social-url-${value.optionId}`}
-            className="flex-1 min-w-0 text-sm text-[var(--color-primary-text)] placeholder:text-[var(--color-primary-grey)] border-none outline-none focus:outline-none focus:ring-0"
+            className="flex-1 min-w-0 text-sm text-(--color-primary-text) placeholder:text-(--color-secondary-grey) border-none outline-none focus:outline-none focus:ring-0"
             placeholder={t('general.placeholder.url')}
             value={url}
             onChange={(e) => setUrl(e.target.value)}
@@ -251,7 +251,7 @@ const SocialMediaRow = ({
           />
         </div>
 
-        {error && <p className="mt-1 pl-2 text-sm text-[var(--color-alert-error)]">{error}</p>}
+        {error && <p className="mt-1 pl-2 text-sm text-(--color-alert-error)">{error}</p>}
       </div>
 
       <Icon name="delete" variant="danger" onClick={handleDelete} className="self-center" size={20} />
