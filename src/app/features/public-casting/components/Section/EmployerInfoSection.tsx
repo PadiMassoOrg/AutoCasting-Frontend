@@ -25,8 +25,23 @@ const EmployerInfoSection = ({ data }: { data: EmployerInfo }) => {
       })
       .filter(Boolean) ?? [];
 
+  const websiteUrl = data.websiteUrl && (
+    <a href={data.websiteUrl} target="_blank" rel="noopener noreferrer">
+      <Icon name="web" variant="primary" />
+    </a>
+  );
+
+  const allIcons = (
+    <div className="flex flex-row justify-end gap-2">
+      {websiteUrl}
+      {socialMediaItems}
+    </div>
+  );
+
+  console.log(data.websiteUrl);
+
   return (
-    <article className="w-full rounded-xl border border-[var(--color-secondary-outline)] bg-white py-4 px-5 flex flex-col gap-4">
+    <article className="w-full rounded-xl border border-(--color-secondary-outline) bg-white py-4 px-5 flex flex-col gap-4">
       <div className="flex flex-row items-center gap-2">
         <img src={data.imageUrl!} className="w-14 h-14 rounded-full object-cover"></img>
         <div className="flex flex-col gap-1">
@@ -49,7 +64,7 @@ const EmployerInfoSection = ({ data }: { data: EmployerInfo }) => {
       </div>
       <div className="mt-8">
         <Separator className="opacity-20 my-3" />
-        <div className="flex flex-row justify-end gap-2">{socialMediaItems}</div>
+        {allIcons}
       </div>
     </article>
   );
