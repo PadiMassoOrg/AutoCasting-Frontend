@@ -1,7 +1,7 @@
 {
   "company": {
     "site": "autocasting",
-    "trademark": "© 2025 Auto-Casting · Buenos Aires, AR.",
+    "trademark": "© 2025 Autocasting · Buenos Aires, AR.",
     "linkedIn": "https://www.linkedin.com/feed",
     "instagram": "https://www.instagram.com"
   },
@@ -656,7 +656,7 @@
       "project": "Nombre del proyecto",
       "project_placeholder": "Ej. Hamlet, Stranger Things…",
       "director": "Director/Productora",
-      "director_placeholder": "Ej. Steven Spilberg, Netflix…",
+      "director_placeholder": "Ej. Steven Spielberg, Netflix…",
       "role": "Rol",
       "role_placeholder": "Hamlet, Protagónico, Grupal...",
       "year": "Año"
