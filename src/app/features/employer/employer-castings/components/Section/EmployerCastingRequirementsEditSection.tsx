@@ -1,4 +1,4 @@
-import { Icon, Label } from 'autocasting-ui-library-padimasso';
+import { Button, Icon, Label } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
@@ -107,8 +107,12 @@ const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: stri
       onClick={handleOpenModal}
       className={`flex flex-row items-center justify-center gap-2 ${roleOptions.length === 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
     >
-      <Icon name="plus" variant="primary" size={16} />
-      <span className="text-base font-semibold text-[var(--color-primary-purple)]">{t('general.add')}</span>
+      <Button variant="primary">
+        <span className="flex flex-row items-center gap-2">
+          <Icon name="plus" variant="white" size={16}></Icon>
+          {t('general.add')}
+        </span>
+      </Button>
     </span>
   );
 

@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { Icon, Label } from 'autocasting-ui-library-padimasso';
+import { Button, Icon, Label } from 'autocasting-ui-library-padimasso';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
@@ -62,8 +62,12 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
 
   const actionButtonRender = () => (
     <span onClick={handleOpenModal} className="flex flex-row items-center justify-center gap-2 cursor-pointer">
-      <Icon name="plus" variant="primary" size={16} />
-      <span className="text-base font-semibold text-(--color-primary-purple)">{t('general.add')}</span>
+      <Button variant="primary">
+        <span className="flex flex-row items-center gap-2">
+          <Icon name="plus" variant="white" size={16}></Icon>
+          {t('employer_castings.dashboard.roles.add_new')}
+        </span>
+      </Button>
     </span>
   );
 
