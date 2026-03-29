@@ -29,6 +29,22 @@ type Errors = {
 
 const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
   const { t, i18n } = useTranslation();
+  const getApplicationDeadlineError = useCallback(
+    (iso: string) => {
+      if (!iso) return null;
+
+      const today = new Date();
+      const todayIso = [
+        today.getFullYear(),
+        String(today.getMonth() + 1).padStart(2, '0'),
+        String(today.getDate()).padStart(2, '0'),
+      ].join('-');
+
+      return iso < todayIso ? t('validation.application_deadline_past') : null;
+    },
+    [t]
+  );
+
   const projectTypeOptions = useCachedSiteMetadataOption('projectTypeOptions', t);
   const castingModalityOptions = useCachedSiteMetadataOption('castingModalityOptions', t);
   const autosave = useCastingBasicInfoAutosave(data.id);
@@ -121,11 +137,25 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
   const applicationDeadline = useIsoDateField(
     data.applicationDeadline ?? '',
     (iso) => {
-      setErrors((e) => ({ ...e, birth: null }));
+      setErrors((e) => ({ ...e, applicationDeadline: null }));
+      if (getApplicationDeadlineError(iso)) return;
+
       autosave.immediate({ id: data.id, applicationDeadline: iso });
     },
     600
   );
+
+  const applicationDeadlineIso = useMemo(() => {
+    if (!applicationDeadline.year || !applicationDeadline.month || !applicationDeadline.day) return '';
+    return `${applicationDeadline.year}-${applicationDeadline.month}-${applicationDeadline.day}`;
+  }, [applicationDeadline.year, applicationDeadline.month, applicationDeadline.day]);
+
+  const applicationDeadlineError = useMemo(
+    () => getApplicationDeadlineError(applicationDeadlineIso),
+    [applicationDeadlineIso, getApplicationDeadlineError]
+  );
+  
+  const applicationDeadlineDayError = errors.applicationDeadline?.day ?? applicationDeadlineError ?? undefined;
 
   const yearOptions = useMemo(
     () =>
@@ -285,7 +315,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
             onChange={(e) => onSelect((v) => applicationDeadline.onDay(v))(e)}
             onBlur={(e) => applicationDeadline.onAnyBlur(e)}
             options={applicationDeadline.dayOptions}
-            error={errors.applicationDeadline?.day ?? undefined}
+            error={applicationDeadlineDayError}
           />
           <FormSelectField
             id="applicationDeadline-month"
