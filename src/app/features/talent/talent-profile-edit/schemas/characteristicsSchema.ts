@@ -45,7 +45,6 @@ const buildSizeOrTextOptional = lettersOr3DigitsOptional;
 export const getCharacteristicsSchema = (t: TFunction) =>
   z.object({
     heightCm: buildOptionalInt20to300(t),
-    weightKg: buildOptionalInt20to300(t),
 
     hairColorId: buildOptionalUuid(t),
     eyeColorId: buildOptionalUuid(t),

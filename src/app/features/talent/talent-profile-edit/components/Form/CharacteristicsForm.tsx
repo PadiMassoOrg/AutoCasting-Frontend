@@ -27,7 +27,6 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
   type Errs = Partial<
     Record<
       | 'heightCm'
-      | 'weightKg'
       | 'hairColorId'
       | 'eyeColorId'
       | 'ethnicityId'
@@ -57,19 +56,6 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         heightCm: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
       }));
       if (r.success) autosave.immediate({ heightCm: r.data as number | undefined });
-    },
-    { allowNull: true }
-  );
-
-  const weightKg = useCommittedInt(
-    data.weightKg ?? null,
-    (v) => {
-      const r = schema.shape.weightKg.safeParse(v ?? '');
-      setErrors((e) => ({
-        ...e,
-        weightKg: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
-      }));
-      if (r.success) autosave.immediate({ weightKg: r.data as number | undefined });
     },
     { allowNull: true }
   );
@@ -259,17 +245,6 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           onBlur={heightCm.onBlur}
           onKeyDown={heightCm.onKeyDown}
           error={heightCm.error || errors.heightCm || undefined}
-        />
-        <FormInputField
-          id="weightKg"
-          label={t('profile.characteristics.weightKg')}
-          labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.dash')}
-          value={weightKg.value}
-          onChange={weightKg.onChange}
-          onBlur={weightKg.onBlur}
-          onKeyDown={weightKg.onKeyDown}
-          error={weightKg.error || errors.weightKg || undefined}
         />
       </article>
 

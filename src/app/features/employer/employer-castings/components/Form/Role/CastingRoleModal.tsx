@@ -17,7 +17,6 @@ import type { EmployerCastingRoleCardResponse } from '../../../types/employerCas
 
 type DraftRoleCharacteristicsForm = {
   heightCm: string;
-  weightKg: string;
   ethnicityId: string;
   hairColorId: string;
   eyeColorId: string;
@@ -40,7 +39,6 @@ export type DraftCastingRole = {
   skillIds: string[];
   characteristics?: {
     heightCm?: number | null;
-    weightKg?: number | null;
     ethnicityId?: string | null;
     hairColorId?: string | null;
     eyeColorId?: string | null;
@@ -122,7 +120,6 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
 
   const makeEmptyCharacteristics = (): DraftRoleCharacteristicsForm => ({
     heightCm: '',
-    weightKg: '',
     ethnicityId: '',
     hairColorId: '',
     eyeColorId: '',
@@ -162,11 +159,9 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
             const ch: any = (r as any)?.characteristics;
 
             const height = ch?.heightCm ?? ch?.height ?? ch?.height_cm ?? ch?.heightCM ?? null;
-            const weight = ch?.weightKg ?? ch?.weight ?? ch?.weight_kg ?? ch?.weightKG ?? null;
 
             return {
               heightCm: height != null ? String(height) : '',
-              weightKg: weight != null ? String(weight) : '',
               ethnicityId: pickAnyId(ch, ['ethnicityId', 'ethnicity', 'ethnicityOption']),
               hairColorId: pickAnyId(ch, ['hairColorId', 'hairColor', 'hairColorOption']),
               eyeColorId: pickAnyId(ch, ['eyeColorId', 'eyeColor', 'eyeColorOption']),
@@ -218,7 +213,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
     };
 
   const onChNumChange =
-    (k: 'heightCm' | 'weightKg'): React.ChangeEventHandler<HTMLInputElement> =>
+    (k: 'heightCm'): React.ChangeEventHandler<HTMLInputElement> =>
     (e) => {
       const digits = toDigitsMax3(e.target.value);
       onChangeCh(k, digits);
@@ -265,7 +260,6 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
       mode === 'edit'
         ? true
         : ch.heightCm.trim() !== '' ||
-          ch.weightKg.trim() !== '' ||
           ch.ethnicityId.trim() !== '' ||
           ch.hairColorId.trim() !== '' ||
           ch.eyeColorId.trim() !== '' ||
@@ -277,7 +271,6 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
     const characteristicsPayload = shouldSendCharacteristics
       ? {
           heightCm: toIntOrNull(ch.heightCm),
-          weightKg: toIntOrNull(ch.weightKg),
           ethnicityId: ch.ethnicityId.trim() ? ch.ethnicityId : null,
           hairColorId: ch.hairColorId.trim() ? ch.hairColorId : null,
           eyeColorId: ch.eyeColorId.trim() ? ch.eyeColorId : null,
@@ -313,7 +306,6 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
 
     return (
       (ch.heightCm.trim() !== '' ? 1 : 0) +
-      (ch.weightKg.trim() !== '' ? 1 : 0) +
       (ch.ethnicityId.trim() !== '' ? 1 : 0) +
       (ch.hairColorId.trim() !== '' ? 1 : 0) +
       (ch.eyeColorId.trim() !== '' ? 1 : 0) +
@@ -440,13 +432,6 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
               placeholder="cm"
               value={form.characteristics.heightCm}
               onChange={onChNumChange('heightCm')}
-            />
-            <FormInputField
-              id="weightKg"
-              inputMode="numeric"
-              placeholder="kg"
-              value={form.characteristics.weightKg}
-              onChange={onChNumChange('weightKg')}
             />
           </div>
         </div>

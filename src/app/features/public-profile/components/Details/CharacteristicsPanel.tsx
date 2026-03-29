@@ -9,7 +9,6 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
 
   const keys = [
     'height',
-    'weight',
     'hairColor',
     'eyeColor',
     'chest',
@@ -27,7 +26,6 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
 
   const propMap: Record<(typeof keys)[number], keyof Characteristics | string> = {
     height: 'heightCm',
-    weight: 'weightKg',
     hairColor: 'hairColor',
     eyeColor: 'eyeColor',
     chest: 'chestCm',
