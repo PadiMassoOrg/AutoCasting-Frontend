@@ -74,7 +74,7 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
                 {t('onboarding.common.edit_profile_label')}
                 <span className="flex flex-row items-center gap-2 ">
                   <p className="text-sm"> {t('onboarding.common.edit_profile_label_profile')}</p>
-                  <ButtonRow items={[<Icon variant="primary" name="profile" />]}></ButtonRow>
+                  <ButtonRow items={[<Icon variant="primary" name="profile" className="cursor-default" />]}></ButtonRow>
                 </span>
               </div>
             </div>
