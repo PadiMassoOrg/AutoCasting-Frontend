@@ -9,6 +9,7 @@ export type BooleanRadioGroupProps = {
   value: boolean | null | undefined;
   onChange: (next: boolean | null | undefined) => void;
   anyValue?: 'undefined' | 'null';
+  anyLabelKey?: string;
   name?: string;
   className?: string;
   legendClassName?: string;
@@ -20,6 +21,7 @@ export default function BooleanRadioGroup({
   value,
   onChange,
   anyValue = 'undefined',
+  anyLabelKey = 'general.indistinct',
   name,
   className = 'flex flex-col gap-1',
   legendClassName = 'text-[14px] font-semibold',
@@ -82,7 +84,7 @@ export default function BooleanRadioGroup({
             name: groupName,
             onChange: () => onChange(anyNext),
           })}
-          <span className="cursor-pointer select-none">{t('general.all')}</span>
+          <span className="cursor-pointer select-none">{t(anyLabelKey)}</span>
         </label>
 
         <label htmlFor={idYes} className={optionClassName}>
