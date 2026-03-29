@@ -154,7 +154,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
     () => getApplicationDeadlineError(applicationDeadlineIso),
     [applicationDeadlineIso, getApplicationDeadlineError]
   );
-  
+
   const applicationDeadlineDayError = errors.applicationDeadline?.day ?? applicationDeadlineError ?? undefined;
 
   const yearOptions = useMemo(
