@@ -1,4 +1,4 @@
-import { ButtonRow, Icon } from 'autocasting-ui-library-padimasso';
+import { ButtonRow, Icon, showToast } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { shareUrl } from '../../../shared/utils/shareUtils';
 import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
@@ -9,18 +9,16 @@ type Props = {
 
 export default function ProfileShareActions({ data }: Props) {
   const { t } = useTranslation();
-
   const { contact, publicSlug } = data;
 
   const url = `${window.location.origin}/profile/${publicSlug}`;
-
   const mailtoUrl = contact?.email ? `mailto:${contact.email}` : null;
 
   const handleShare = async () => {
     await shareUrl({
       url,
-      onCopied: () => alert(t('general.copied')),
-      onError: () => alert(t('general.error')),
+      onCopied: () => showToast({ title: t('general.copied'), description: t('general.copied'), type: 'default' }),
+      onError: () => showToast({ title: t('general.error'), description: t('general.error'), type: 'danger' }),
     });
   };
 

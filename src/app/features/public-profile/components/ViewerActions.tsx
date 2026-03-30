@@ -1,4 +1,4 @@
-import { ButtonRow, Icon } from 'autocasting-ui-library-padimasso';
+import { ButtonRow, Icon, showToast } from 'autocasting-ui-library-padimasso';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -18,11 +18,10 @@ export default function ViewerActions({ className }: Props) {
   const mailtoUrl = data?.contact?.email ? `mailto:${data.contact.email}` : null;
 
   const handleShare = async () => {
-    // TODO: Implementar TOAST
     await shareUrl({
       url,
-      onCopied: () => alert(t('general.copied')),
-      onError: () => alert(t('general.error')),
+      onCopied: () => showToast({ title: t('general.copied'), description: t('general.copied'), type: 'default' }),
+      onError: () => showToast({ title: t('general.error'), description: t('general.error'), type: 'danger' }),
     });
   };
 
