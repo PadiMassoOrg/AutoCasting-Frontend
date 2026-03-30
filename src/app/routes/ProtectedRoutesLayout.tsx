@@ -24,16 +24,20 @@ export default function ProtectedRoutesLayout() {
     <Routes>
       <Route element={<ScrollContentLayout />}>
         <Route path={ROUTES.DASHBOARD} element={<Navigate to={effectiveDashboardRoute} replace />} />
-        {/* Talent */}
-        <Route path={ROUTES.TALENT} element={<TalentProfileEditPage />} />
-        <Route path={ROUTES.TALENT_SETTINGS} element={<TalentProfileSettingsPage />} />
         <Route path={ROUTES.TALENT_APPLIED_CASTINGS} element={<TalentCastingApplicationsPage />} />
 
         {/* Employer */}
         <Route path={ROUTES.EMPLOYER} element={<EmployerProfileEditPage />} />
         <Route path={ROUTES.EMPLOYER_CASTINGS} element={<EmployerCastingsPage />} />
-        <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/editor'} element={<EmployerCastingPage />} />
         <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/applicants'} element={<EmployerCastingApplicantsPage />} />
+      </Route>
+      <Route element={<ScrollContentLayout variant="dashboard-shell" />}>
+        {/* Talent */}
+        <Route path={ROUTES.TALENT} element={<TalentProfileEditPage />} />
+        <Route path={ROUTES.TALENT_SETTINGS} element={<TalentProfileSettingsPage />} />
+
+        {/* Employer */}
+        <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/editor'} element={<EmployerCastingPage />} />
       </Route>
       <Route element={<NavigationLayout />}>
         <Route

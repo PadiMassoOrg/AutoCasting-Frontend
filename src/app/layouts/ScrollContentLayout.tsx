@@ -5,12 +5,20 @@ import { useChromeBoxHeights } from '../shared/hooks/useChomeBoxHeights';
 import { LG_SCREEN_SIZE, useMedia } from '../shared/hooks/useMedia';
 import Navbar from './components/Navbar';
 
-export default function ScrollContentLayout() {
+type ScrollContentLayoutProps = {
+  variant?: 'default' | 'dashboard-shell';
+};
+
+export default function ScrollContentLayout({ variant = 'default' }: ScrollContentLayoutProps) {
   useViewportVhVar();
   const { header, footer } = useChromeBoxHeights();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
 
   const contentHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
+  const mainClassName =
+    variant === 'dashboard-shell'
+      ? 'w-full min-w-0 h-full overflow-y-auto bg-(--color-secondary-white) p-6 lg:overflow-hidden lg:p-0'
+      : 'w-full min-w-0 h-full overflow-y-auto bg-(--color-secondary-white) p-6 lg:p-[56px]';
 
   return (
     <>
@@ -25,10 +33,7 @@ export default function ScrollContentLayout() {
           isDesktop ? { top: `${header}px`, bottom: `${footer}px`, height: contentHeight } : { height: contentHeight }
         }
       >
-        <main
-          data-scroll-root
-          className="w-full min-w-0 h-full overflow-y-auto bg-(--color-secondary-white) p-6 lg:p-[56px]"
-        >
+        <main data-scroll-root className={mainClassName}>
           <Outlet />
         </main>
       </div>
