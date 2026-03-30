@@ -103,17 +103,12 @@ const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: stri
   };
 
   const actionButtonRender = () => (
-    <span
-      onClick={handleOpenModal}
-      className={`flex flex-row items-center justify-center gap-2 ${roleOptions.length === 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
-    >
-      <Button variant="primary">
-        <span className="flex flex-row items-center gap-2">
-          <Icon name="plus" variant="white" size={16}></Icon>
-          {t('general.add')}
-        </span>
-      </Button>
-    </span>
+    <Button variant="primary" disabled={roleOptions.length === 0} onClick={handleOpenModal}>
+      <span className="flex flex-row items-center gap-2">
+        <Icon name="plus" variant="white" size={16}></Icon>
+        {t('general.add')}
+      </span>
+    </Button>
   );
 
   return (

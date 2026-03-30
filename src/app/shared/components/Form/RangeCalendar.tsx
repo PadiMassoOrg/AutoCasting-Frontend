@@ -111,7 +111,7 @@ export function RangeCalendar({
             return s ? s[0].toLocaleUpperCase(lang) + s.slice(1) : s;
           },
         }}
-        className="w-full p-2 bg-[var(--color-secondary-white)] rounded-2xl border border-[var(--color-secondary-outline)] overflow-hidden"
+        className="w-full p-2 bg-(--color-secondary-white) rounded-2xl border border-(--color-secondary-outline) overflow-hidden"
         styles={{
           root: { width: '100%' },
           months: { width: '100%' },
@@ -121,11 +121,15 @@ export function RangeCalendar({
       />
 
       {clearable && (value?.from || value?.to) ? (
-        <button type="button" onClick={onClear} className="min-h-[25px] cursor-pointer text-sm underline font-light">
+        <button
+          type="button"
+          onClick={onClear}
+          className="min-h-[25px] cursor-pointer text-sm underline font-light text-start p-2"
+        >
           Limpiar
         </button>
       ) : (
-        <div className="min-h-[25px]" />
+        <div className="min-h-6.25" />
       )}
     </div>
   );

@@ -61,14 +61,12 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
   };
 
   const actionButtonRender = () => (
-    <span onClick={handleOpenModal} className="flex flex-row items-center justify-center gap-2 cursor-pointer">
-      <Button variant="primary">
-        <span className="flex flex-row items-center gap-2">
-          <Icon name="plus" variant="white" size={16}></Icon>
-          {t('employer_castings.dashboard.roles.add_new')}
-        </span>
-      </Button>
-    </span>
+    <Button variant="primary" onClick={handleOpenModal}>
+      <span className="flex flex-row items-center gap-2">
+        <Icon name="plus" variant="white" size={16}></Icon>
+        {t('employer_castings.dashboard.roles.add_new')}
+      </span>
+    </Button>
   );
 
   return (
