@@ -25,7 +25,10 @@ export default function ScrollContentLayout() {
           isDesktop ? { top: `${header}px`, bottom: `${footer}px`, height: contentHeight } : { height: contentHeight }
         }
       >
-        <main data-scroll-root className="w-full min-w-0 h-full overflow-y-auto">
+        <main
+          data-scroll-root
+          className="w-full min-w-0 h-full overflow-y-auto bg-(--color-secondary-white) p-6 lg:p-[56px]"
+        >
           <Outlet />
         </main>
       </div>

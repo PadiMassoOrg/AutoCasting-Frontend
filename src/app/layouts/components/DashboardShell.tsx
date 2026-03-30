@@ -85,8 +85,8 @@ function DashboardShell<Key extends string = string>({
     return (
       <DashboardShellContext.Provider value={ctxValue}>
         <section className="w-full h-full min-h-0 flex flex-col bg-(--color-secondary-white)">
-          <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
-            <div className="w-full max-w-[1500px] mx-auto p-6">{children}</div>
+          <article className="flex-1 min-w-0 h-full overscroll-contain [-webkit-overflow-scrolling:touch]">
+            <div className="w-full max-w-[1500px] mx-auto pb-20 lg:pb-0">{children}</div>
           </article>
         </section>
       </DashboardShellContext.Provider>
@@ -100,7 +100,7 @@ function DashboardShell<Key extends string = string>({
     return (
       <DashboardShellContext.Provider value={ctxValue}>
         <section className="w-full h-full bg-(--color-secondary-white) relative">
-          <div className={['w-full max-w-[550px] mx-auto h-full pt-2 px-6', bottomPad].filter(Boolean).join(' ')}>
+          <div className={['w-full max-w-[550px] mx-auto h-full', bottomPad].filter(Boolean).join(' ')}>
             {title && <h1 className="my-6 text-2xl font-semibold text-(--color-primary-black) text-center">{title}</h1>}
 
             <div className="w-full bg-(--color-primary-white) rounded-2xl border border-(--color-secondary-outline) shadow-sm overflow-hidden">

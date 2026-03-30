@@ -178,12 +178,12 @@ const CastingDatabasePage = () => {
   const isFetchingNextPage = items.length > 0 && loading;
 
   return (
-    <section className="w-full h-full min-h-0 bg-[var(--color-secondary-white)]">
+    <section className="w-full h-full min-h-0 bg-(--color-secondary-white)">
       <div className="h-full w-full flex flex-col">
         <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col lg:flex-row gap-6 overflow-hidden">
           {/* Desktop Filter Bar */}
           {isDesktop && filtersOpen && (
-            <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-[var(--color-primary-white)] border-r border-[var(--color-secondary-outline)]">
+            <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-(--color-primary-white) border-r border-(--color-secondary-outline)">
               <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5">
                 <CastingFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
               </div>
@@ -192,7 +192,7 @@ const CastingDatabasePage = () => {
 
           <div
             ref={cardsScrollRef}
-            className="p-6 sm:px-[56px] w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
+            className="w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
           >
             <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
               <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
@@ -202,7 +202,7 @@ const CastingDatabasePage = () => {
                 onClick={() => setMobileOpen(true)}
                 aria-label={t('general.filters.open')}
               >
-                <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
+                <span className="w-12 h-12 flex items-center justify-center bg-(--color-primary-white) rounded-lg">
                   <Icon name="filter" variant="primary" size={20} />
                 </span>
               </button>
@@ -219,14 +219,14 @@ const CastingDatabasePage = () => {
                 <h2 className="text-sm font-light hover:text-(--color-primary-purple)">
                   {filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
                 </h2>
-                <span className="w-11 h-11 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
+                <span className="w-11 h-11 flex items-center justify-center bg-(--color-primary-white) rounded-lg">
                   <Icon name="filter" variant="primary" />
                 </span>
               </button>
             </div>
 
             {error ? (
-              <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
+              <p className="py-18 text-center font-normal text-(--color-alert-error)">{t('state.server_err')}</p>
             ) : (
               <>
                 <article className="flex flex-col gap-10">
@@ -247,12 +247,10 @@ const CastingDatabasePage = () => {
                 </article>
 
                 {showEmptyState && (
-                  <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">
-                    {t('state.no_results')}
-                  </p>
+                  <p className="py-18 text-center font-light text-(--color-secondary-grey)">{t('state.no_results')}</p>
                 )}
                 {isFetchingNextPage && (
-                  <p className="py-10 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
+                  <p className="py-10 text-center font-light text-(--color-secondary-grey)" aria-live="polite">
                     {t('state.loading')}
                   </p>
                 )}
