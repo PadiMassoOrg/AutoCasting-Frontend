@@ -3,7 +3,6 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import NoNavigationLayout from '../../../layouts/NoNavigationLayout';
 import { LinkLogo } from '../../../shared/components/LinkLogo';
-import logo from '../../../shared/icons/og-image.svg';
 import { RegisterForm } from '../components';
 import LoginForm from '../components/LoginForm';
 import { useGoogleLoginMutation } from '../hooks/useGoogleLoginMutation';
