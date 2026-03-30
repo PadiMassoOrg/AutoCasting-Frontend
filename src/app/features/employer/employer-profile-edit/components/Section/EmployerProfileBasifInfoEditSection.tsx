@@ -8,7 +8,7 @@ const EmployerProfileBasicInfoEditSection = ({ data }: { data: EmployerProfileRe
   const { t } = useTranslation();
 
   return (
-    <DashboardSection>
+    <DashboardSection className="max-w-[850px] m-auto">
       <SectionTitle title={t('profile.page.profile')} />
       <SectionCard>
         <EmployerBasicInfoForm data={data.basicInfo} profileId={data.id} />
