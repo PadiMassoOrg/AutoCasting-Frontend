@@ -143,7 +143,7 @@ export function TalentFilterBar({
         )}
       </header>
 
-      <Separator className="opacity-20 mt-5" />
+      <Separator className="opacity-20 mt-12" />
 
       <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <FormInputField

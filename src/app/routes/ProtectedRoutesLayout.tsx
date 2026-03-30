@@ -31,7 +31,7 @@ export default function ProtectedRoutesLayout() {
         <Route path={ROUTES.EMPLOYER_CASTINGS} element={<EmployerCastingsPage />} />
         <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/applicants'} element={<EmployerCastingApplicantsPage />} />
       </Route>
-      <Route element={<ScrollContentLayout variant="dashboard-shell" />}>
+      <Route element={<ScrollContentLayout variant="desktop-full-bleed" />}>
         {/* Talent */}
         <Route path={ROUTES.TALENT} element={<TalentProfileEditPage />} />
         <Route path={ROUTES.TALENT_SETTINGS} element={<TalentProfileSettingsPage />} />

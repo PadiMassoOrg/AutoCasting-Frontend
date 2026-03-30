@@ -6,7 +6,7 @@ import { LG_SCREEN_SIZE, useMedia } from '../shared/hooks/useMedia';
 import Navbar from './components/Navbar';
 
 type ScrollContentLayoutProps = {
-  variant?: 'default' | 'dashboard-shell';
+  variant?: 'default' | 'desktop-full-bleed';
 };
 
 export default function ScrollContentLayout({ variant = 'default' }: ScrollContentLayoutProps) {
@@ -15,10 +15,10 @@ export default function ScrollContentLayout({ variant = 'default' }: ScrollConte
   const isDesktop = useMedia(LG_SCREEN_SIZE);
 
   const contentHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
-  const mainClassName =
-    variant === 'dashboard-shell'
-      ? 'w-full min-w-0 h-full overflow-y-auto bg-(--color-secondary-white) p-6 lg:overflow-hidden lg:p-0'
-      : 'w-full min-w-0 h-full overflow-y-auto bg-(--color-secondary-white) p-6 lg:p-[56px]';
+  const isDesktopFullBleed = variant === 'desktop-full-bleed';
+  const mainClassName = isDesktopFullBleed
+    ? 'w-full min-w-0 h-full overflow-y-auto bg-(--color-secondary-white) p-6 lg:overflow-hidden lg:p-0'
+    : 'w-full min-w-0 h-full overflow-y-auto bg-(--color-secondary-white) p-6 lg:p-[56px]';
 
   return (
     <>
