@@ -50,7 +50,7 @@
     "total": "Total",
     "roles": "Roles",
     "placeholder": {
-      "stage_name": "Ricardo Darín",
+      "stage_name": "Escribe tu nombre completo aquí...",
       "role_name": "Nombre del Rol",
       "description": "Descripción",
       "select": "Seleccionar",

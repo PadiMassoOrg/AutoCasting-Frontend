@@ -43,10 +43,6 @@ export default function AuthenticationPage() {
             </ul>
             <h2 className="font-bold text-lg mt-8">{t('auth.page.text_resaltador')}</h2>
           </div>
-          <aside className="self-center mt-32 flex flex-col items-center gap-2">
-            <img src={logo} alt="" className="w-14" />
-            <p className="text-sm font-bold">{t('company.site')}</p>
-          </aside>
         </article>
 
         {/* Forms */}

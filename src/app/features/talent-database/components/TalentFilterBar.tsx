@@ -126,7 +126,7 @@ export function TalentFilterBar({
         {isDesktop ? (
           <button
             type="button"
-            className="cursor-pointer text-xs underline font-light text-[var(--color-primary-purple)]"
+            className="cursor-pointer text-xs font-light hover:text-[var(--color-primary-purple)]"
             onClick={handleReset}
           >
             {t('general.filter.reset')}
