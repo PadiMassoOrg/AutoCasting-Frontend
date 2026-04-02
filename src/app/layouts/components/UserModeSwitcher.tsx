@@ -1,4 +1,4 @@
-import { Icon } from 'autocasting-ui-library-padimasso';
+import { Icon, Tooltip } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -11,11 +11,12 @@ import { ROUTES } from '../../shared/lib/routes';
 import { jwtDecoder } from '../../shared/utils/jwtDecoder';
 
 type ModeSwitcherProps = {
+  showTooltip?: boolean;
   showLabel?: boolean;
   onAfterToggle?: () => void;
 };
 
-function UserModeSwitcher({ showLabel = false, onAfterToggle }: ModeSwitcherProps) {
+function UserModeSwitcher({ showLabel = false, onAfterToggle, showTooltip = false }: ModeSwitcherProps) {
   const { t } = useTranslation();
   const { data: meData } = useMeData();
   const { mode, setMode } = useUserMode();
@@ -72,7 +73,7 @@ function UserModeSwitcher({ showLabel = false, onAfterToggle }: ModeSwitcherProp
     );
   };
 
-  return (
+  const content = (
     <span
       className={
         'flex flex-row items-center gap-2 cursor-pointer transition-colors ' +
@@ -86,6 +87,16 @@ function UserModeSwitcher({ showLabel = false, onAfterToggle }: ModeSwitcherProp
       {showLabel && modeLabel}
     </span>
   );
+
+  if (showTooltip) {
+    return (
+      <Tooltip title={t('general.tooltips.switch_mode')} position="bottomLeft">
+        {content}
+      </Tooltip>
+    );
+  }
+
+  return content;
 }
 
 export default UserModeSwitcher;

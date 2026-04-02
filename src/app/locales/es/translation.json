@@ -49,6 +49,19 @@
     "view_details": "Ver Detalles",
     "total": "Total",
     "roles": "Roles",
+    "tooltips": {
+      "home": "Autocasting",
+      "talent_database": "Catálogo",
+      "casting_database": "Castings",
+      "employer_castings": "Mis Castings",
+      "switch_mode": "Cambiar modo",
+      "talent_applied_castings": "Mis Postulaciones",
+      "profile": "Mi Perfil",
+      "view_profile": "Ver Perfil",
+      "settings": "Herramientas",
+      "filters": "Filtros",
+      "logout": "Salir"
+    },
     "placeholder": {
       "stage_name": "Escribe tu nombre completo aquí...",
       "role_name": "Nombre del Rol",
@@ -370,8 +383,8 @@
       "unpaid": "Sin remuneración"
     },
     "currency": {
-      "ars": "ARS",
-      "usd": "USD"
+      "ars": "ARS $",
+      "usd": "USD $"
     },
     "application_status": {
       "blank": "No Visto",
