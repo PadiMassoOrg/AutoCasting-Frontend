@@ -1,22 +1,25 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, FormInputField, Label, Separator } from 'autocasting-ui-library-padimasso';
-import { useState } from 'react';
+import { Button, FormInputField, Separator } from 'autocasting-ui-library-padimasso';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../context/ModalContext';
+import { useToast } from '../../../../context/ToastContext';
+import { handleBackendFormError } from '../../../../shared/utils/backendErrorHandling';
 import { useChangePasswordMutation } from '../hooks/useChangePasswordMutation';
 import { getChangePasswordSchema, type ChangePasswordValues } from '../schemas/accountSchema';
 import ChangePasswordSuccessModal from './ChangePasswordSuccessModal';
 
 const ChangePasswordForm = () => {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const { closeModal, openModal } = useModal();
   const changePasswordMutation = useChangePasswordMutation();
-  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<ChangePasswordValues>({
     resolver: zodResolver(getChangePasswordSchema()),
@@ -31,7 +34,7 @@ const ChangePasswordForm = () => {
   };
 
   const onSubmit = async (data: ChangePasswordValues) => {
-    setServerError(null);
+    clearErrors();
     changePasswordMutation.mutate(
       {
         oldPassword: data.oldPassword,
@@ -43,8 +46,22 @@ const ChangePasswordForm = () => {
           handleSuccessModal();
         },
         onError: (err: any) => {
-          const message = err?.response?.data?.message || t('state.server_err');
-          setServerError(message);
+          handleBackendFormError({
+            error: err,
+            t,
+            setError,
+            showToast: (message) =>
+              showToast({
+                title: t('general.error'),
+                description: message,
+                type: 'danger',
+              }),
+            messageFieldMap: {
+              'server_error.auth.invalid_credentials': 'oldPassword',
+              'server_error.auth.current_password_mismatch': 'oldPassword',
+            },
+            generalFieldFallback: 'oldPassword',
+          });
         },
       }
     );
@@ -59,7 +76,7 @@ const ChangePasswordForm = () => {
         labelClassName="font-semibold"
         placeholder={t('********')}
         {...register('oldPassword')}
-        error={errors.newPassword?.message}
+        error={errors.oldPassword?.message}
       />
       <FormInputField
         id="password"
@@ -88,11 +105,6 @@ const ChangePasswordForm = () => {
           {changePasswordMutation.isPending ? t('state.loading') : t('general.save')}
         </Button>
       </div>
-      {serverError && (
-        <Label variant="error" className="pl-1">
-          {serverError}
-        </Label>
-      )}
     </form>
   );
 };

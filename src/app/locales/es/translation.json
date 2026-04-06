@@ -26,6 +26,7 @@
     "apply": "Aplicar",
     "finalize": "Finalizar",
     "edit": "Editar",
+    "error": "Error",
     "publish": "Publicar",
     "pay_and_publish": "Pagar y Publicar",
     "publish_casting": "Publicar Casting",
@@ -135,6 +136,65 @@
     "server_err": "Ocurrió un error, intente nuevamente.",
     "switch_to_talent": "Soy Talento",
     "switch_to_employer": "Busco Talento"
+  },
+  "server_error": {
+    "auth": {
+      "access_denied": "No tienes permisos para realizar esta acción.",
+      "current_password_mismatch": "La contraseña actual no coincide.",
+      "email_invalid": "Email inválido.",
+      "invalid_credentials": "Usuario o contraseña incorrectos.",
+      "invalid_principal": "No se pudo validar la sesión actual.",
+      "invalid_token": "El enlace no es válido.",
+      "not_authenticated": "Debes iniciar sesión para continuar.",
+      "password_length": "La contraseña no cumple con la longitud mínima.",
+      "password_reset_external": "Esta cuenta no permite restablecer la contraseña desde aquí.",
+      "required_field": "Campo obligatorio.",
+      "token_expired": "El enlace ya expiró.",
+      "user_exists": "Ya existe una cuenta con este email.",
+      "user_not_found": "No encontramos un usuario con ese email."
+    },
+    "oauth": {
+      "google": {
+        "failure": "No se pudo iniciar sesión con Google.",
+        "user_missing_email": "Tu cuenta de Google no tiene un email disponible."
+      },
+      "role_missing": "Falta configurar el rol de acceso."
+    },
+    "general": {
+      "validation_failed": "Hay campos con errores. Revísalos e inténtalo nuevamente.",
+      "missing_parameter": "Falta un parámetro requerido: {0}",
+      "invalid_parameter": "El parámetro enviado no es válido: {0}",
+      "invalid_request_body": "El cuerpo de la solicitud no tiene un formato válido.",
+      "method_not_allowed": "La acción solicitada no está permitida.",
+      "resource_not_found": "No encontramos el recurso solicitado.",
+      "endpoint_not_found": "El endpoint solicitado no existe.",
+      "data_integrity_violation": "No se pudo completar la acción porque los datos entran en conflicto.",
+      "unexpected": "Ocurrió un error inesperado."
+    },
+    "castings": {
+      "role": {
+        "mismatch": "Los requisitos seleccionados no coinciden con el rol."
+      }
+    },
+    "casting": {
+      "role": {
+        "requirement": {
+          "already_exists": "Ya existe un requerimiento para ese rol."
+        }
+      }
+    },
+    "mail": {
+      "send_failed": "No se pudo enviar el email."
+    },
+    "legal": {
+      "current_document": {
+        "not_found": "No encontramos el documento legal actual."
+      },
+      "document": {
+        "not_found": "No encontramos el documento legal solicitado."
+      },
+      "hash_generation_failed": "No se pudo generar la firma del documento legal."
+    }
   },
   "buttons": {
     "cancel": "Cancelar",

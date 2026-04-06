@@ -9,6 +9,18 @@ const api = axios.create({
   withCredentials: true,
 });
 
+const AUTH_REDIRECT_EXCLUDED_PATHS = new Set([
+  API_ROUTES.AUTH_LOGIN,
+  API_ROUTES.AUTH_REGISTER,
+  API_ROUTES.FORGOT_PASSWORD,
+  API_ROUTES.RESET_PASSWORD,
+]);
+
+const shouldSkip401Redirect = (url?: string) => {
+  if (!url) return false;
+  return Array.from(AUTH_REDIRECT_EXCLUDED_PATHS).some((path) => url.includes(path));
+};
+
 // --- Request ---
 api.interceptors.request.use((config) => {
   const lang = i18n.language;
@@ -26,8 +38,9 @@ api.interceptors.response.use(
   (r) => r,
   async (error: AxiosError) => {
     const status = error.response?.status;
+    const url = error.config?.url;
 
-    if (status === 401 && !redirectedOn401) {
+    if (status === 401 && !redirectedOn401 && !shouldSkip401Redirect(url)) {
       redirectedOn401 = true;
       clearAuthToken();
       queryClient.clear();

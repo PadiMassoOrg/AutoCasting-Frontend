@@ -1,20 +1,36 @@
 import { GoogleButton } from 'autocasting-ui-library-padimasso';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
+import { useToast } from '../../../context/ToastContext';
 import NoNavigationLayout from '../../../layouts/NoNavigationLayout';
 import { LinkLogo } from '../../../shared/components/LinkLogo';
+import { handleBackendActionError } from '../../../shared/utils/backendErrorHandling';
 import { RegisterForm } from '../components';
 import LoginForm from '../components/LoginForm';
 import { useGoogleLoginMutation } from '../hooks/useGoogleLoginMutation';
 
 export default function AuthenticationPage() {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const googleLoginMutation = useGoogleLoginMutation();
   const [searchParams, setSearchParams] = useSearchParams();
   const mode = searchParams.get('mode') === 'register' ? 'register' : 'login';
 
   const handleGoogleLogin = () => {
-    googleLoginMutation.mutate();
+    googleLoginMutation.mutate(undefined, {
+      onError: (error) => {
+        handleBackendActionError({
+          error,
+          t,
+          showToast: (message) =>
+            showToast({
+              title: t('general.error'),
+              description: message,
+              type: 'danger',
+            }),
+        });
+      },
+    });
   };
 
   const switchTo = (next: 'login' | 'register') => setSearchParams({ mode: next });
