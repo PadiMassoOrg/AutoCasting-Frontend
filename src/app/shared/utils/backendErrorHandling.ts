@@ -25,6 +25,7 @@ type HandleBackendFormErrorOptions<TFieldValues extends FieldValues> = {
   showToast?: (message: string) => void;
   fieldMap?: FieldMap<Path<TFieldValues>>;
   messageFieldMap?: MessageFieldMap<Path<TFieldValues>>;
+  toastOnlyMessageKeys?: string[];
   generalFieldFallback?: Path<TFieldValues>;
 };
 
@@ -36,6 +37,7 @@ type HandleBackendLocalFieldOrToastErrorOptions<TFieldKey extends string> = {
   showToast?: (message: string) => void;
   fieldMap?: FieldMap<TFieldKey>;
   messageFieldMap?: MessageFieldMap<TFieldKey>;
+  toastOnlyMessageKeys?: string[];
   generalFieldFallback?: TFieldKey;
 };
 
@@ -143,6 +145,7 @@ export const handleBackendFormError = <TFieldValues extends FieldValues>({
   showToast,
   fieldMap,
   messageFieldMap,
+  toastOnlyMessageKeys,
   generalFieldFallback,
 }: HandleBackendFormErrorOptions<TFieldValues>) => {
   const payload = getBackendErrorPayload(error);
@@ -158,6 +161,13 @@ export const handleBackendFormError = <TFieldValues extends FieldValues>({
     });
     setInlineError?.(null);
     return 'field' as const;
+  }
+
+  const toastOnly = payload.message?.message ? toastOnlyMessageKeys?.includes(payload.message.message) : false;
+  if (toastOnly && payload.message) {
+    setInlineError?.(null);
+    showToast?.(renderBackendMessageDescriptor(payload.message, t));
+    return 'toast' as const;
   }
 
   const mappedField = payload.message?.message ? messageFieldMap?.[payload.message.message] : null;
@@ -205,6 +215,7 @@ export const handleBackendLocalFieldOrToastError = <TFieldKey extends string>({
   showToast,
   fieldMap,
   messageFieldMap,
+  toastOnlyMessageKeys,
   generalFieldFallback,
 }: HandleBackendLocalFieldOrToastErrorOptions<TFieldKey>) => {
   const payload = getBackendErrorPayload(error);
@@ -217,6 +228,13 @@ export const handleBackendLocalFieldOrToastError = <TFieldKey extends string>({
     });
     setInlineError?.(null);
     return 'field' as const;
+  }
+
+  const toastOnly = payload.message?.message ? toastOnlyMessageKeys?.includes(payload.message.message) : false;
+  if (toastOnly && payload.message) {
+    setInlineError?.(null);
+    showToast?.(renderBackendMessageDescriptor(payload.message, t));
+    return 'toast' as const;
   }
 
   const mappedField = payload.message?.message ? messageFieldMap?.[payload.message.message] : null;

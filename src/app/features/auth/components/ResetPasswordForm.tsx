@@ -68,9 +68,9 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
             },
             messageFieldMap: {
               'server_error.auth.invalid_token': 'password',
-              'server_error.auth.token_expired': 'password',
               'server_error.auth.password_reset_external': 'password',
             },
+            toastOnlyMessageKeys: ['server_error.auth.token_expired', 'auth.token_expired'],
             generalFieldFallback: 'password',
           });
         },
