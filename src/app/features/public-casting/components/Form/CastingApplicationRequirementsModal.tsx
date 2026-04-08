@@ -8,7 +8,7 @@ import type { CastingApplicationRequest } from '../../types/requests';
 type Props = {
   requirements: CastingRequirement[];
   onCancel: () => void;
-  onApply: (body: CastingApplicationRequest) => Promise<void> | void;
+  onApply: (body: CastingApplicationRequest) => void;
 };
 
 type DraftSubmission = {
@@ -94,7 +94,7 @@ const CastingApplicationRequirementsModal = ({ requirements, onCancel, onApply }
       })),
     };
 
-    await onApply(body);
+    onApply(body);
   };
 
   return (

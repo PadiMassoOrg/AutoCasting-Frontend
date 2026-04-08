@@ -48,16 +48,20 @@ const ApplySection = ({
     navigate(ROUTES.CASTING_DATABASE);
   };
 
+  const openConfirmationModal = () => {
+    openModal(
+      <CastingApplicationConfirmationModal onConfirm={handleConfirmation} />,
+      t('application.confirmation_modal.title'),
+      'lg'
+    );
+  };
+
   const callBackendDirect = () => {
     apply.mutate(
       { roleId, slug: slug! },
       {
         onSuccess: () => {
-          openModal(
-            <CastingApplicationConfirmationModal onConfirm={handleConfirmation} />,
-            t('application.confirmation_modal.title'),
-            'lg'
-          );
+          openConfirmationModal();
         },
       }
     );
@@ -68,11 +72,8 @@ const ApplySection = ({
       { roleId, slug: slug!, request: body },
       {
         onSuccess: () => {
-          openModal(
-            <CastingApplicationConfirmationModal onConfirm={handleConfirmation} />,
-            t('application.confirmation_modal.title'),
-            'lg'
-          );
+          closeModal();
+          openConfirmationModal();
         },
       }
     );
@@ -94,10 +95,7 @@ const ApplySection = ({
       <CastingApplicationRequirementsModal
         requirements={requirements}
         onCancel={closeModal}
-        onApply={(body) => {
-          callBackendWithBody(body);
-          closeModal();
-        }}
+        onApply={callBackendWithBody}
       />,
       t('application.modal.title'),
       'lg'
