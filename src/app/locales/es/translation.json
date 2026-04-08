@@ -1019,6 +1019,7 @@
         "casting_modality": "Modalidad del Casting",
         "casting_modality_on_site": "Locación Casting Presencial",
         "application_deadline": "Fecha límite para postulación",
+        "application_deadline_incomplete": "Completa día, mes y año para guardar la fecha.",
         "has_wardrobe_fitting": "¿Habrá prueba de vestuario?",
         "wardrobe_fitting_details": "Detalle de Prueba de Vestuario",
         "shooting_dates": "Fechas de rodaje/Disponibilidad (Rango)",
