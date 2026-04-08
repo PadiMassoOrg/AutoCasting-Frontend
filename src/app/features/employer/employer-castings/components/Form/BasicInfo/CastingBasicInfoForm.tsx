@@ -140,11 +140,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
 
   const isOnSite = selectedCastingModalityStringCodeTranslation === ON_SITE_CODE;
 
-  const applicationDeadline = useIsoDateField(
-    data.applicationDeadline ?? '',
-    () => {},
-    600
-  );
+  const applicationDeadline = useIsoDateField(data.applicationDeadline ?? '', () => {}, 600);
 
   const applicationDeadlineIso = useMemo(() => {
     if (!applicationDeadline.year || !applicationDeadline.month || !applicationDeadline.day) return '';
@@ -161,7 +157,9 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
     !applicationDeadlineIso && !!(applicationDeadline.day || applicationDeadline.month || applicationDeadline.year);
   const applicationDeadlineFieldError =
     applicationDeadlineDayError ??
-    (shouldShowApplicationDeadlineHint ? t('employer_castings.dashboard.basic_info.application_deadline_incomplete') : undefined);
+    (shouldShowApplicationDeadlineHint
+      ? t('employer_castings.dashboard.basic_info.application_deadline_incomplete')
+      : undefined);
 
   const commitApplicationDeadline = useCallback(() => {
     if (!applicationDeadlineIso) return;
