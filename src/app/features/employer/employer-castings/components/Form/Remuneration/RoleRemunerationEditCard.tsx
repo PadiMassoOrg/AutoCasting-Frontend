@@ -6,10 +6,17 @@ import { useCachedSiteMetadataOption } from '../../../../../sitemetadata/hooks/u
 import { useCastingRoleRemunerationPatchAutosave } from '../../../hooks/autosaves';
 import { getCastingRoleRemunerationSchema } from '../../../schemas/formSchema';
 
+const toComparableAmount = (value: unknown): number | null => {
+  if (value == null || value === '') return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
 const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data: any }) => {
   const payRateTypeOptions = useCachedSiteMetadataOption('payRateTypeOptions', t);
   const currencyTypeOptions = useCachedSiteMetadataOption('currencyOptions', t);
   const autosave = useCastingRoleRemunerationPatchAutosave(sectionId);
+  const backendFieldErrors = autosave.fieldErrors as Record<string, string | undefined>;
 
   const schema = useMemo(() => getCastingRoleRemunerationSchema(t), []);
 
@@ -27,12 +34,22 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
   const [currencyId, setCurrencyId] = useState<string>(initialCurrencyId);
   const [amount, setAmount] = useState<string>(String(initialAmount ?? ''));
   const [amountError, setAmountError] = useState<string | undefined>(undefined);
+  const [lastSentPayRateTypeId, setLastSentPayRateTypeId] = useState<string>(initialPayRateTypeId);
+  const [lastSentCurrencyId, setLastSentCurrencyId] = useState<string>(initialCurrencyId);
+  const [lastSentAmount, setLastSentAmount] = useState<number | null>(toComparableAmount(data.amount));
 
   useEffect(() => {
-    setPayRateTypeId(data.payRateType?.id ?? '');
-    setCurrencyId(data.currency?.id ?? '');
+    const nextPayRateTypeId = data.payRateType?.id ?? '';
+    const nextCurrencyId = data.currency?.id ?? '';
+    const nextAmount = data.amount ?? null;
+
+    setPayRateTypeId(nextPayRateTypeId);
+    setCurrencyId(nextCurrencyId);
     setAmount(String(data.amount ?? ''));
     setAmountError(undefined);
+    setLastSentPayRateTypeId(nextPayRateTypeId);
+    setLastSentCurrencyId(nextCurrencyId);
+    setLastSentAmount(toComparableAmount(nextAmount));
   }, [data.id, data.payRateType?.id, data.currency?.id, data.amount]);
 
   const isUnpaid = Boolean(unpaidOptionId) && payRateTypeId === unpaidOptionId;
@@ -52,6 +69,9 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
 
       if (unpaidOptionId && next === unpaidOptionId) {
         clearAmountState();
+        if (next === lastSentPayRateTypeId && lastSentAmount == null) return;
+        setLastSentPayRateTypeId(next);
+        setLastSentAmount(null);
         autosave.immediate({
           id: data.id,
           payRateTypeId: next,
@@ -60,12 +80,15 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
         return;
       }
 
+      if (next === lastSentPayRateTypeId) return;
+
+      setLastSentPayRateTypeId(next);
       autosave.immediate({
         id: data.id,
         payRateTypeId: next,
       });
     },
-    [autosave, clearAmountState, data.id, unpaidOptionId]
+    [autosave, clearAmountState, data.id, lastSentAmount, lastSentPayRateTypeId, unpaidOptionId]
   );
 
   const handleCurrencyChange = useCallback(
@@ -76,12 +99,15 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
       setCurrencyId(next);
       setAmountError(undefined);
 
+      if (next === lastSentCurrencyId) return;
+
+      setLastSentCurrencyId(next);
       autosave.immediate({
         id: data.id,
         currencyId: next,
       });
     },
-    [autosave, data.id]
+    [autosave, data.id, lastSentCurrencyId]
   );
 
   const handleAmountChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,6 +133,9 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
         return;
       }
 
+      if (lastSentAmount === null) return;
+
+      setLastSentAmount(null);
       autosave.immediate({ id: data.id, amount: null });
       return;
     }
@@ -128,8 +157,13 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
       return;
     }
 
+    if (lastSentAmount === num) return;
+
+    setLastSentAmount(num);
     autosave.immediate({ id: data.id, amount: num });
-  }, [amount, autosave, currencyId, data.id, payRateTypeId, schema]);
+  }, [amount, autosave, currencyId, data.id, lastSentAmount, payRateTypeId, schema]);
+
+  const resolveError = (field: string, local?: string) => local ?? backendFieldErrors[field] ?? undefined;
 
   return (
     <SectionCard>
@@ -144,6 +178,7 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
           options={payRateTypeOptions}
           label={t('employer_castings.dashboard.remunerations.remuneration.pay_rate_type_label')}
           labelClassName="font-semibold text-base"
+          error={resolveError('payRateTypeId')}
           required
         />
       </div>
@@ -167,6 +202,7 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
                 value={currencyId}
                 onChange={handleCurrencyChange}
                 options={currencyTypeOptions}
+                error={resolveError('currencyId')}
               />
             </div>
 
@@ -177,7 +213,7 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
                 value={amount}
                 onChange={handleAmountChange}
                 onBlur={handleAmountBlur}
-                error={amountError}
+                error={resolveError('amount', amountError)}
               />
             </div>
           </div>
