@@ -1,49 +1,114 @@
-// shared/hooks/useSectionAutosave.ts
 import { useMutation, useQueryClient, type QueryKey } from '@tanstack/react-query';
 import { useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useToast } from '../../../../context/ToastContext';
+import { handleBackendLocalFieldOrToastError } from '../../../../shared/utils/backendErrorHandling';
 import { TALENT_PROFILE_CACHE_KEY } from '../services/talentProfileService';
 
 type OnSuccessUpdate<TResult> = (draft: any, updated: TResult) => any;
 type RefetchType = 'active' | 'inactive' | 'all';
 
-export function useSectionAutosave<TPayload, TResult>({
+export function useSectionAutosave<TPayload, TResult, TFieldKey extends string = string>({
   mutationFn,
   delay = 800,
   onSuccessUpdate,
   cacheKeys = [TALENT_PROFILE_CACHE_KEY],
   invalidateOnSuccess = 'active',
-  extraInvalidateKeys = [], // 👈 NUEVO
+  extraInvalidateKeys = [],
+  fieldMap,
+  messageFieldMap,
+  generalFieldFallback,
 }: {
   mutationFn: (payload: TPayload) => Promise<TResult>;
   delay?: number;
   onSuccessUpdate: OnSuccessUpdate<TResult>;
   cacheKeys?: ReadonlyArray<QueryKey>;
   invalidateOnSuccess?: false | RefetchType;
-  extraInvalidateKeys?: ReadonlyArray<QueryKey>; // 👈 NUEVO
+  extraInvalidateKeys?: ReadonlyArray<QueryKey>;
+  fieldMap?: Partial<Record<string, TFieldKey>>;
+  messageFieldMap?: Partial<Record<string, TFieldKey>>;
+  generalFieldFallback?: TFieldKey;
 }) {
+  const { t } = useTranslation();
+  const { showToast } = useToast();
   const qc = useQueryClient();
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pending = useRef<TPayload | null>(null);
+  const lastToastRef = useRef<{ message: string; at: number } | null>(null);
   const [saving, setSaving] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<TFieldKey, string>>>({});
+
+  const clearFieldError = useCallback((field: TFieldKey) => {
+    setFieldErrors((prev) => {
+      if (!(field in prev)) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  }, []);
+
+  const clearAllBackendErrors = useCallback(() => {
+    setFieldErrors({});
+  }, []);
+
+  const setFieldError = useCallback((field: TFieldKey, message?: string) => {
+    setFieldErrors((prev) => {
+      const next = { ...prev };
+      if (!message) delete next[field];
+      else next[field] = message;
+      return next;
+    });
+  }, []);
+
+  const routeMutationError = useCallback(
+    (error: unknown) => {
+      setSaving('error');
+      handleBackendLocalFieldOrToastError({
+        error,
+        t,
+        setFieldError,
+        showToast: (message) => {
+          const now = Date.now();
+          const lastToast = lastToastRef.current;
+
+          if (lastToast && lastToast.message === message && now - lastToast.at < 500) {
+            return;
+          }
+
+          lastToastRef.current = { message, at: now };
+          showToast({
+            title: t('general.error'),
+            description: message,
+            type: 'danger',
+          });
+        },
+        fieldMap,
+        messageFieldMap,
+        generalFieldFallback,
+      });
+    },
+    [fieldMap, generalFieldFallback, messageFieldMap, setFieldError, showToast, t]
+  );
 
   const mutation = useMutation({
     mutationFn,
     onMutate: async () => {
+      console.log('useSectionAutosave: onMutate called - setting saving to "saving"');
+      clearAllBackendErrors();
       setSaving('saving');
+      console.log('useSectionAutosave: saving state set to "saving"');
       pending.current = null;
     },
     onSuccess: (updated) => {
-      // 1) actualizo SOLO las cacheKeys indicadas
+      clearAllBackendErrors();
       for (const key of cacheKeys) {
         qc.setQueriesData({ queryKey: key }, (prev: any) => onSuccessUpdate(prev, updated));
       }
-      // 2) invalido mis cacheKeys si querés
       if (invalidateOnSuccess) {
         for (const key of cacheKeys) {
           qc.invalidateQueries({ queryKey: key, refetchType: invalidateOnSuccess });
         }
       }
-      // 3) y además invalido OTRAS keys (p.ej. públicas)
       for (const k of extraInvalidateKeys) {
         qc.invalidateQueries({ queryKey: k, refetchType: 'active' });
       }
@@ -51,7 +116,7 @@ export function useSectionAutosave<TPayload, TResult>({
       setSaving('saved');
       setTimeout(() => setSaving('idle'), 1200);
     },
-    onError: () => setSaving('error'),
+    onError: routeMutationError,
   });
 
   const flush = useCallback(() => {
@@ -61,6 +126,20 @@ export function useSectionAutosave<TPayload, TResult>({
     }
     if (pending.current) mutation.mutate(pending.current);
   }, [mutation]);
+
+  const submit = useCallback(
+    async (payload: TPayload) => {
+      console.log('useSectionAutosave: submit called with payload:', payload);
+      pending.current = null;
+      if (timer.current) {
+        clearTimeout(timer.current);
+        timer.current = null;
+      }
+      console.log('useSectionAutosave: calling mutation.mutateAsync');
+      return mutation.mutateAsync(payload);
+    },
+    [mutation]
+  );
 
   const schedule = useCallback(
     (payload: TPayload) => {
@@ -83,5 +162,14 @@ export function useSectionAutosave<TPayload, TResult>({
     [mutation]
   );
 
-  return { saving, schedule, immediate, flush };
+  return {
+    saving,
+    fieldErrors,
+    clearFieldError,
+    clearAllBackendErrors,
+    schedule,
+    immediate,
+    flush,
+    submit,
+  };
 }

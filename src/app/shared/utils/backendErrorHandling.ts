@@ -1,5 +1,5 @@
-import type { FieldValues, Path, UseFormSetError } from 'react-hook-form';
 import type { TFunction } from 'i18next';
+import type { FieldValues, Path, UseFormSetError } from 'react-hook-form';
 
 export type BackendMessageDescriptor = {
   message: string;
@@ -259,8 +259,8 @@ export const handleBackendLocalFieldOrToastError = <TFieldKey extends string>({
   }
 
   if (payload.message && shouldInlineBackendError(payload)) {
-    setInlineError?.(message);
-    return 'inline' as const;
+    showToast?.(message);
+    return 'toast' as const;
   }
 
   setInlineError?.(null);

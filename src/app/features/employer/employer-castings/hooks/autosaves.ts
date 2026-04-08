@@ -59,6 +59,10 @@ export function useCastingRoleCreateAutosave(sectionId: string) {
     delay: 200,
     cacheKeys: [key],
     invalidateOnSuccess: 'active',
+    fieldMap: {
+      roleTypeId: 'roleType',
+      genderId: 'gender',
+    },
     onSuccessUpdate: (prev, created) => {
       const prevSection = normalizeRolesSection(prev);
       const prevRoles = prevSection.roles ?? [];
@@ -77,6 +81,10 @@ export function useCastingRolePatchAutosave(sectionId: string) {
     delay: 200,
     cacheKeys: [key],
     invalidateOnSuccess: false,
+    fieldMap: {
+      roleTypeId: 'roleType',
+      genderId: 'gender',
+    },
     onSuccessUpdate: (prev, updated) => {
       const prevSection = normalizeRolesSection(prev);
       const prevRoles = prevSection.roles ?? [];

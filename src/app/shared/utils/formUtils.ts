@@ -128,8 +128,11 @@ export function useIsoDateField(
   );
 
   const onAnyBlur: FocusEventHandler<HTMLSelectElement> = () => {
-    clear();
-    commit(year, month, day);
+    // Only commit immediately on blur if there's no pending debounced commit
+    if (!debounce.current) {
+      commit(year, month, day);
+    }
+    // If there's a pending debounce, let it run naturally
   };
 
   const daysInThisMonth = getDaysInMonth(year, month);

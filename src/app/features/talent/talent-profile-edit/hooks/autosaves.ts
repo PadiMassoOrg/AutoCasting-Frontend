@@ -44,6 +44,9 @@ export function useBasicInfoAutosave() {
     onSuccessUpdate: (prev: TalentProfileResponse, updated) => ({ ...prev, basicInfo: updated }),
     cacheKeys: [TALENT_PROFILE_CACHE_KEY],
     invalidateOnSuccess: 'active',
+    fieldMap: {
+      professionIds: 'professions',
+    },
   });
 }
 
@@ -109,6 +112,9 @@ export function useCreditAutosave() {
     delay: 200,
     cacheKeys: [TALENT_PROFILE_CACHE_KEY, PROFILE_CREDITS_CACHE_KEY],
     invalidateOnSuccess: false,
+    fieldMap: {
+      productionTypeId: 'productionType',
+    },
     onSuccessUpdate: (prev, created) => {
       if (Array.isArray(prev)) {
         return [...prev, created];
@@ -127,6 +133,9 @@ export function useCreditPatchAutosave() {
     delay: 200,
     cacheKeys: [TALENT_PROFILE_CACHE_KEY, PROFILE_CREDITS_CACHE_KEY],
     invalidateOnSuccess: false,
+    fieldMap: {
+      productionTypeId: 'productionType',
+    },
     onSuccessUpdate: (prev, updated) => {
       const replace = (arr: Credit[]) => arr.map((c) => (c.id === updated.id ? updated : c));
       if (Array.isArray(prev)) return replace(prev);

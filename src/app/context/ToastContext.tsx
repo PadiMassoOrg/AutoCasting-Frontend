@@ -36,7 +36,7 @@ export const useToast = () => {
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   return (
-    <LibraryToastProvider>
+    <LibraryToastProvider defaultDurationMs={4500}>
       <ToastContextBridge>{children}</ToastContextBridge>
     </LibraryToastProvider>
   );
