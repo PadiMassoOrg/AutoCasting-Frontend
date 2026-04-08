@@ -197,7 +197,8 @@ const CastingRequirementModal = ({
     await onSave(draft);
   };
 
-  const resolveError = (field: CastingRequirementFormKey, local?: string) => local ?? backendErrors?.[field] ?? undefined;
+  const resolveError = (field: CastingRequirementFormKey, local?: string) =>
+    local ?? backendErrors?.[field] ?? undefined;
 
   const isCreateSaveDisabled = useMemo(() => {
     if (mode !== 'create') return false;
