@@ -1,8 +1,7 @@
-import { Button } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
 import { DashboardSection } from '../../../../../layouts/components';
-import { Icon } from 'autocasting-ui-library-padimasso';
+import { Button, Icon } from 'autocasting-ui-library-padimasso';
 import { SectionCard, SectionTitle } from '../../../../../shared/components/Section';
 import { useCreditAutosave } from '../../hooks/autosaves';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';
@@ -19,8 +18,8 @@ const TalentProfileCreditsEditSection = ({ profile }: { profile: TalentProfileRe
       <CreditModal
         mode="create"
         onCancel={closeModal}
-        onSave={(draft) => {
-          createMut.immediate(draft);
+        onSave={async (draft) => {
+          await createMut.submit(draft);
           closeModal();
         }}
       />,

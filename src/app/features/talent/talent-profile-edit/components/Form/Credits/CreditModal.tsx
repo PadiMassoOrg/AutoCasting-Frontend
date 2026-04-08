@@ -20,7 +20,6 @@ type Props = {
   onSave: (draft: DraftCredit) => Promise<void> | void;
   onCancel: () => void;
 };
-
 export default function CreditModal({ mode, initial, onSave, onCancel }: Props) {
   const { t } = useTranslation();
   const creditSchema = useMemo(() => getCreditSchema(t), [t]);
@@ -102,7 +101,6 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
       <FormSelectField
         id="productionType"
         label={t('profile.credits.production_type')}
-        labelClassName="font-semibold"
         required
         placeholder={t('profile.credits.production_type_placeholder')}
         value={form.productionTypeId}
