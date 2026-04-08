@@ -143,7 +143,9 @@
       "current_password_mismatch": "La contraseña actual no coincide.",
       "email_invalid": "Email inválido.",
       "invalid_credentials": "Usuario o contraseña incorrectos.",
+      "invalid_plan": "Plan inválido.",
       "invalid_principal": "No se pudo validar la sesión actual.",
+      "invalid_role": "Rol inválido.",
       "invalid_token": "El enlace no es válido.",
       "not_authenticated": "Debes iniciar sesión para continuar.",
       "password_length": "La contraseña no cumple con la longitud mínima.",
@@ -167,21 +169,115 @@
       "invalid_request_body": "El cuerpo de la solicitud no tiene un formato válido.",
       "method_not_allowed": "La acción solicitada no está permitida.",
       "resource_not_found": "No encontramos el recurso solicitado.",
+      "required_one": "Debes seleccionar al menos uno.",
+      "role_id_required": "Debes proporcionar un roleId.",
+      "slug_required": "Debes proporcionar un slug.",
       "endpoint_not_found": "El endpoint solicitado no existe.",
       "data_integrity_violation": "No se pudo completar la acción porque los datos entran en conflicto.",
       "unexpected": "Ocurrió un error inesperado."
     },
+    "applications": {
+      "already_applied": "No puedes aplicar dos veces al mismo casting.",
+      "id_required": "Debes proporcionar un applicationId.",
+      "not_found_or_forbidden": "No encontramos la postulación solicitada o no tienes permisos para verla.",
+      "requirement_invalid": "Requerimiento inválido.",
+      "requirements_missing": "Faltan requerimientos por completar.",
+      "status_required": "Debes proporcionar un status."
+    },
     "castings": {
+      "deadline_passed": "El casting ha finalizado.",
+      "deadline_required": "Se requiere una fecha límite de postulación.",
+      "invalid_status_transition": "No está permitido el cambio de estado.",
+      "not_found": "No se encuentra el casting.",
+      "not_publishable": "No se puede publicar el casting.",
+      "section": {
+        "mismatch": "La sectionId no coincide con la sección del casting.",
+        "not_found": "No se encuentra la sección del casting."
+      },
       "role": {
         "mismatch": "Los requisitos seleccionados no coinciden con el rol."
       }
     },
     "casting": {
+      "id_required": "Debes proporcionar un castingId.",
+      "slug_required": "Debes proporcionar un slug del casting.",
       "role": {
+        "not_found": "No se encuentra el rol.",
+        "remuneration": {
+          "not_found": "No se encuentra la remuneración."
+        },
+        "required": "Debes enviar roleIds.",
         "requirement": {
           "already_exists": "Ya existe un requerimiento para ese rol."
         }
       }
+    },
+    "profile": {
+      "not_found": "No se encuentra el perfil."
+    },
+    "credit": {
+      "forbidden": "No es posible visualizar el crédito.",
+      "not_found": "No se encuentra el crédito."
+    },
+    "education": {
+      "forbidden": "No es posible visualizar la educación.",
+      "not_found": "No se encuentra la educación."
+    },
+    "sitemetadata": {
+      "application_status": {
+        "not_found": "No se encontró el estado de aplicación."
+      },
+      "casting_compensation_type": {
+        "not_found": "No se encontró el tipo de compensación del casting."
+      },
+      "casting_modality": {
+        "not_found": "No se encontró la modalidad del casting."
+      },
+      "casting_role": {
+        "not_found": "No se encontró el tipo de rol."
+      },
+      "casting_section_status": {
+        "not_found": "No se encontró el estado de sección del casting."
+      },
+      "casting_status": {
+        "not_found": "No se encontró el estado del casting."
+      },
+      "color": {
+        "not_found": "No se encontró el color seleccionado."
+      },
+      "company_type": {
+        "not_found": "No se encontró el tipo de empresa."
+      },
+      "currency": {
+        "not_found": "No se encontró el tipo de moneda."
+      },
+      "diet": {
+        "not_found": "No se encontró la dieta seleccionada."
+      },
+      "ethnicity": {
+        "not_found": "No se encontró la etnicidad seleccionada."
+      },
+      "gender": {
+        "not_found": "No se encontró el género seleccionado."
+      },
+      "pay_rate_type": {
+        "not_found": "No se encontró el tipo de tarifa."
+      },
+      "production_type": {
+        "not_found": "No se encontró el tipo de producción."
+      },
+      "profession": {
+        "invalid_ids": "No se encontró la profesión seleccionada."
+      },
+      "project_type": {
+        "not_found": "No se encontró el tipo de proyecto."
+      },
+      "skill": {
+        "invalid_ids": "No se encontró la habilidad seleccionada."
+      }
+    },
+    "social_media_option": {
+      "not_found": "No se encontró la opción de red social."
     },
     "mail": {
       "send_failed": "No se pudo enviar el email."
