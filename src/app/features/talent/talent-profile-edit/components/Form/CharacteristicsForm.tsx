@@ -16,6 +16,7 @@ import type { Characteristics } from '../../types/talentProfile.types';
 export default function CharacteristicsForm({ data }: { data: Characteristics }) {
   const { t } = useTranslation();
   const autosave = useCharacteristicsAutosave();
+  const backendFieldErrors = autosave.fieldErrors as Record<string, string | undefined>;
 
   const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
   const ethnicityOptions = useCachedSiteMetadataOption('ethnicityOptions', t);
@@ -231,6 +232,8 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
     { allowNull: true }
   );
 
+  const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
+
   return (
     <div className="flex flex-col gap-2">
       {/* Altura / Peso */}
@@ -244,7 +247,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           onChange={heightCm.onChange}
           onBlur={heightCm.onBlur}
           onKeyDown={heightCm.onKeyDown}
-          error={heightCm.error || errors.heightCm || undefined}
+          error={heightCm.error || resolveError('heightCm', errors.heightCm)}
         />
       </article>
 
@@ -258,7 +261,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         onChange={ethnicity.onChange}
         onBlur={ethnicity.onBlur}
         options={ethnicityOptions}
-        error={errors.ethnicityId ?? undefined}
+        error={resolveError('ethnicityId', errors.ethnicityId)}
       />
 
       {/* Hair color */}
@@ -271,7 +274,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         onChange={hair.onChange}
         onBlur={hair.onBlur}
         options={hairOptions}
-        error={errors.hairColorId ?? undefined}
+        error={resolveError('hairColorId', errors.hairColorId)}
       />
 
       {/* Eye color */}
@@ -284,7 +287,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         onChange={eye.onChange}
         onBlur={eye.onBlur}
         options={eyeOptions}
-        error={errors.eyeColorId ?? undefined}
+        error={resolveError('eyeColorId', errors.eyeColorId)}
       />
 
       {/* Medidas */}
@@ -298,7 +301,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           onChange={chestCm.onChange}
           onBlur={chestCm.onBlur}
           onKeyDown={chestCm.onKeyDown}
-          error={errors.chestCm ?? undefined}
+          error={resolveError('chestCm', errors.chestCm)}
         />
         <FormInputField
           id="waistCm"
@@ -309,7 +312,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           onChange={waistCm.onChange}
           onBlur={waistCm.onBlur}
           onKeyDown={waistCm.onKeyDown}
-          error={errors.waistCm ?? undefined}
+          error={resolveError('waistCm', errors.waistCm)}
         />
         <FormInputField
           id="hipCm"
@@ -320,7 +323,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           onChange={hipCm.onChange}
           onBlur={hipCm.onBlur}
           onKeyDown={hipCm.onKeyDown}
-          error={errors.hipCm ?? undefined}
+          error={resolveError('hipCm', errors.hipCm)}
         />
       </article>
 
@@ -334,7 +337,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           onChange={shirtSize.onChange}
           onBlur={shirtSize.onBlur}
           onKeyDown={shirtSize.onKeyDown}
-          error={errors.shirtSize ?? undefined}
+          error={resolveError('shirtSize', errors.shirtSize)}
         />
         <FormInputField
           id="pantSize"
@@ -345,7 +348,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           onChange={pantSize.onChange}
           onBlur={pantSize.onBlur}
           onKeyDown={pantSize.onKeyDown}
-          error={errors.pantSize ?? undefined}
+          error={resolveError('pantSize', errors.pantSize)}
         />
       </article>
 
@@ -359,7 +362,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           onChange={dressSize.onChange}
           onBlur={dressSize.onBlur}
           onKeyDown={dressSize.onKeyDown}
-          error={errors.dressSize ?? undefined}
+          error={resolveError('dressSize', errors.dressSize)}
         />
         <FormInputField
           id="shoeSize"
@@ -370,7 +373,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
           onChange={shoeSize.onChange}
           onBlur={shoeSize.onBlur}
           onKeyDown={shoeSize.onKeyDown}
-          error={errors.shoeSize ?? undefined}
+          error={resolveError('shoeSize', errors.shoeSize)}
         />
       </article>
 
@@ -414,7 +417,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         onChange={diet.onChange}
         onBlur={diet.onBlur}
         options={dietOptions}
-        error={errors.dietOptionId ?? undefined}
+        error={resolveError('dietOptionId', errors.dietOptionId)}
       />
     </div>
   );
