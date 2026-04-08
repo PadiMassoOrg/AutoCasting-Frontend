@@ -19,8 +19,8 @@ const TalentProfileEducationEditSection = ({ profile }: { profile: TalentProfile
       <EducationModal
         mode="create"
         onCancel={closeModal}
-        onSave={(draft) => {
-          createMut.immediate(draft);
+        onSave={async (draft) => {
+          await createMut.submit(draft);
           closeModal();
         }}
       />,
