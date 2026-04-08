@@ -46,12 +46,14 @@ export default function BasicInfoForm({
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
   const autosave = useBasicInfoAutosave();
   const schema = useMemo(() => getBasicInfoSchema(t), [t]);
+  const backendFieldErrors = autosave.fieldErrors as Record<string, string | undefined>;
   const YEAR_END = new Date().getFullYear();
   const YEAR_START = YEAR_END - 80;
 
   const [profErrors, setProfErrors] = useState<string | null>(null);
   const [birthError, setBirthError] = useState<string | null>(() => getBirthDateError(data.birthDate ?? ''));
   const [errors, setErrors] = useState<Errors>({});
+  const [lastSentBirthDate, setLastSentBirthDate] = useState(data.birthDate ?? '');
 
   const stageName = useCommittedText(
     data.stageName ?? '',
@@ -86,7 +88,8 @@ export default function BasicInfoForm({
       const nextBirthError = getBirthDateError(iso);
       setBirthError(nextBirthError);
       if (nextBirthError) return;
-
+      if (iso === lastSentBirthDate) return;
+      setLastSentBirthDate(iso);
       setErrors((e) => ({ ...e, birth: null }));
       autosave.immediate({ birthDate: iso });
     },
@@ -119,6 +122,7 @@ export default function BasicInfoForm({
     }
   );
   const birthDayError = errors.birth?.day ?? birthError ?? undefined;
+  const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
 
   return (
     <div className="w-full flex flex-col gap-2">
@@ -131,7 +135,7 @@ export default function BasicInfoForm({
         onChange={stageName.onChange}
         onBlur={stageName.onBlur}
         onKeyDown={stageName.onKeyDown}
-        error={errors.stageName ?? undefined}
+        error={resolveError('stageName', errors.stageName)}
       />
 
       <FormSelectField
@@ -143,7 +147,7 @@ export default function BasicInfoForm({
         onChange={gender.onChange}
         onBlur={gender.onBlur}
         options={genderOptions}
-        error={errors.genderId ?? undefined}
+        error={resolveError('genderId', errors.genderId)}
       />
 
       <div className="flex flex-col gap-2">
@@ -161,7 +165,7 @@ export default function BasicInfoForm({
               birth.onAnyBlur(e);
             }}
             options={birth.dayOptions}
-            error={birthDayError}
+            error={resolveError('birthDate', birthDayError)}
           />
           <FormSelectField
             id="birth-month"
@@ -175,7 +179,7 @@ export default function BasicInfoForm({
               birth.onAnyBlur(e);
             }}
             options={monthOptions}
-            error={errors.birth?.month ?? undefined}
+            error={resolveError('birthDate', errors.birth?.month)}
           />
           <FormSelectField
             id="birth-year"
@@ -189,7 +193,7 @@ export default function BasicInfoForm({
               birth.onAnyBlur(e);
             }}
             options={yearOptions}
-            error={errors.birth?.year ?? undefined}
+            error={resolveError('birthDate', errors.birth?.year)}
           />
         </div>
       </div>
@@ -217,7 +221,9 @@ export default function BasicInfoForm({
             );
           })}
         </div>
-        {profErrors && <span className="text-sm text-red-600">{profErrors}</span>}
+        {(profErrors || resolveError('professions')) && (
+          <span className="text-sm text-red-600">{profErrors ?? resolveError('professions')}</span>
+        )}
       </div>
     </div>
   );
