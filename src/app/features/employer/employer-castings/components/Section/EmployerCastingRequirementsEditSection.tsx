@@ -9,6 +9,7 @@ import ServerError from '../../../../../shared/components/ServerError/ServerErro
 import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
 import { useCastingRequirementCreateAutosave } from '../../hooks/autosaves';
+import type { CastingRequirementFormKey } from '../../schemas/formSchema';
 import { useSectionRequirements } from '../../hooks/section/useSectionRequirements';
 import { useSectionRoles } from '../../hooks/section/useSectionRoles';
 import type { EmployerCastingRequirementCardResponse } from '../../types/employerCastings.types';
@@ -81,7 +82,9 @@ const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: stri
         sectionId={sectionId}
         roleOptions={roleOptions}
         disabledRoleIds={disabledRoleIds}
-        onSave={(draft) => {
+        backendErrors={createRequirementMutation.fieldErrors as Partial<Record<CastingRequirementFormKey, string>>}
+        clearBackendFieldError={createRequirementMutation.clearFieldError as (field: CastingRequirementFormKey) => void}
+        onSave={async (draft) => {
           if (draft.mode !== 'create') return;
 
           const payload: CastingRequirementUpsertRequest = {
@@ -92,7 +95,8 @@ const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: stri
             description: draft.description?.trim() ? draft.description.trim() : undefined,
           };
 
-          createRequirementMutation.immediate(payload);
+          const result = await createRequirementMutation.submit(payload).catch(() => null);
+          if (!result) return;
           closeModal();
         }}
         onCancel={closeModal}

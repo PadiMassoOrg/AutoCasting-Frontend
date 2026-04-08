@@ -122,6 +122,10 @@ export function useCastingRequirementCreateAutosave(sectionId: string) {
     delay: 200,
     cacheKeys: [key],
     invalidateOnSuccess: false,
+    messageFieldMap: {
+      'server_error.casting.role.requirement.already_exists': 'roleIds',
+      'server_error.castings.role.mismatch': 'roleIds',
+    },
     onSuccessUpdate: (prev, created) => {
       const prevSection = normalizeRequirementsSection(prev);
       const prevReqs = prevSection.requirements ?? [];
@@ -149,6 +153,10 @@ export function useCastingRequirementPatchAutosave(sectionId: string) {
     delay: 200,
     cacheKeys: [key],
     invalidateOnSuccess: false,
+    messageFieldMap: {
+      'server_error.casting.role.requirement.already_exists': 'roleIds',
+      'server_error.castings.role.mismatch': 'roleIds',
+    },
     onSuccessUpdate: (prev, updated) => {
       const prevSection = normalizeRequirementsSection(prev);
       const prevReqs = normalizeReqArray(prevSection.requirements ?? []);
