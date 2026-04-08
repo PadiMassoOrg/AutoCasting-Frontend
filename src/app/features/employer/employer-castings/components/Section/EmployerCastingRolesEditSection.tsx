@@ -10,6 +10,7 @@ import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
 import { useCastingRoleCreateAutosave } from '../../hooks/autosaves';
 import { useSectionRoles } from '../../hooks/section/useSectionRoles';
+import type { CastingRoleFormKey } from '../../schemas/formSchema';
 import { EMPLOYER_CASTING_CACHE_KEY } from '../../services/employerCastingService';
 import { EmployerCastingRoleCard } from '../Card';
 import CastingRoleModal from '../Form/Role/CastingRoleModal';
@@ -48,8 +49,11 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
     openModal(
       <CastingRoleModal
         mode="create"
-        onSave={(draft) => {
-          createRoleMutation.immediate(draft);
+        backendErrors={createRoleMutation.fieldErrors as Partial<Record<CastingRoleFormKey, string>>}
+        clearBackendFieldError={createRoleMutation.clearFieldError as (field: CastingRoleFormKey) => void}
+        onSave={async (draft) => {
+          const result = await createRoleMutation.submit(draft).catch(() => null);
+          if (!result) return;
           closeModal();
         }}
         onCancel={closeModal}

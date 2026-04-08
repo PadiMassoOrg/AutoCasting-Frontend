@@ -61,9 +61,19 @@ type Props = {
   onSave: (draft: DraftCastingRole) => Promise<void> | void;
   onCancel: () => void;
   sectionId: string;
+  backendErrors?: Partial<Record<CastingRoleFormKey, string>>;
+  clearBackendFieldError?: (field: CastingRoleFormKey) => void;
 };
 
-export default function CastingRoleModal({ mode, initial, onSave, onCancel, sectionId }: Props) {
+export default function CastingRoleModal({
+  mode,
+  initial,
+  onSave,
+  onCancel,
+  sectionId,
+  backendErrors,
+  clearBackendFieldError,
+}: Props) {
   const { t } = useTranslation();
   const castingRoleSchema = useMemo(() => getCastingRoleSchema(t), [t]);
 
@@ -198,7 +208,10 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
       return null;
     })();
 
-    if (mapKey) setErrors((e) => ({ ...e, [mapKey]: undefined }));
+    if (mapKey) {
+      setErrors((e) => ({ ...e, [mapKey]: undefined }));
+      clearBackendFieldError?.(mapKey);
+    }
   };
 
   const onChangeCh = <K extends keyof DraftRoleCharacteristicsForm>(k: K, v: DraftRoleCharacteristicsForm[K]) => {
@@ -322,6 +335,8 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
     return new Set(selected).size;
   }, [form.skillIds]);
 
+  const resolveError = (field: CastingRoleFormKey) => errors[field] ?? backendErrors?.[field];
+
   return (
     <article className="flex flex-col">
       <FormInputField
@@ -351,7 +366,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
           selected={form.professionIds}
           onChange={(next) => onChange('professionIds', next)}
           maxPanelHeight="16rem"
-          error={errors.professionIds}
+          error={resolveError('professionIds')}
         />
       </div>
 
@@ -364,7 +379,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
         value={form.roleTypeId}
         onChange={(e) => onChange('roleTypeId', e.target.value)}
         options={roleTypeOptions}
-        error={errors.roleType}
+        error={resolveError('roleType')}
       />
 
       <FormSelectField
@@ -376,7 +391,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
         value={form.genderId}
         onChange={(e) => onChange('genderId', e.target.value)}
         options={genderOptions}
-        error={errors.gender}
+        error={resolveError('gender')}
       />
 
       <div className="flex flex-col">
@@ -394,7 +409,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
             placeholder={t('general.placeholder.min')}
             value={form.ageMin}
             onChange={onAgeChange('ageMin')}
-            error={errors.ageMin}
+            error={resolveError('ageMin')}
           />
           <FormInputField
             id="ageMax"
@@ -402,7 +417,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
             placeholder={t('general.placeholder.max')}
             value={form.ageMax}
             onChange={onAgeChange('ageMax')}
-            error={errors.ageMax}
+            error={resolveError('ageMax')}
           />
         </div>
       </div>
@@ -415,7 +430,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
         onChange={(e) => onChange('description', e.target.value)}
         onBlur={() => {}}
         onKeyDown={() => {}}
-        error={errors.description}
+        error={resolveError('description')}
       />
 
       <Separator className="opacity-20 mt-6" />

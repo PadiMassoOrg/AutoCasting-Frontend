@@ -31,13 +31,19 @@ export const getCastingRoleSchema = (t: TFunction) =>
         .regex(UUID_RX, { message: t('validation.uuid_invalid') }),
 
       ageMin: z
-        .number({ required_error: t('validation.required') })
+        .number({
+          required_error: t('validation.required'),
+          invalid_type_error: t('validation.required'),
+        })
         .int({ message: t('validation.number_invalid') })
         .min(0, { message: t('validation.number_invalid') })
         .max(99, { message: t('validation.number_invalid') }),
 
       ageMax: z
-        .number({ required_error: t('validation.required') })
+        .number({
+          required_error: t('validation.required'),
+          invalid_type_error: t('validation.required'),
+        })
         .int({ message: t('validation.number_invalid') })
         .min(0, { message: t('validation.number_invalid') })
         .max(99, { message: t('validation.number_invalid') }),
