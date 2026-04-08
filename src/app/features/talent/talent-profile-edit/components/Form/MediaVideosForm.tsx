@@ -9,6 +9,7 @@ import type { Media } from '../../types/talentProfile.types';
 const MediaVideosForm = ({ data }: { data: Media }) => {
   const { t } = useTranslation();
   const autosave = useMediaAutosave();
+  const backendFieldErrors = autosave.fieldErrors as Record<string, string | undefined>;
 
   const schema = useMemo(() => getMediaVideosSchema(t), [t]);
 
@@ -41,8 +42,10 @@ const MediaVideosForm = ({ data }: { data: Media }) => {
     { trim: true }
   );
 
+  const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
+
   return (
-    <div className="w-full flex flex-col gap-5">
+    <div className="w-full flex flex-col">
       <FormInputField
         id="introduction"
         labelClassName="font-semibold text-base"
@@ -52,7 +55,7 @@ const MediaVideosForm = ({ data }: { data: Media }) => {
         onChange={introduction.onChange}
         onBlur={introduction.onBlur}
         onKeyDown={introduction.onKeyDown}
-        error={errors.intro ?? undefined}
+        error={resolveError('introductionVideoUrl', errors.intro)}
       />
 
       <FormInputField
@@ -64,7 +67,7 @@ const MediaVideosForm = ({ data }: { data: Media }) => {
         onChange={videoreel.onChange}
         onBlur={videoreel.onBlur}
         onKeyDown={videoreel.onKeyDown}
-        error={errors.reel ?? undefined}
+        error={resolveError('showReelVideoUrl', errors.reel)}
       />
     </div>
   );
