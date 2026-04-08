@@ -1,5 +1,5 @@
 import { Button } from 'autocasting-ui-library-padimasso';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
 import { DashboardSection } from '../../../../../layouts/components';
@@ -16,14 +16,9 @@ const TalentProfileSkillsEditSection = ({ profile }: { profile: TalentProfileRes
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
   const autosave = useSkillsAutosave();
+  const skillOptions = useCachedSiteMetadataOption('skills', t);
 
   const [skills, setSkills] = useState<SiteMetadataObject[]>(profile.skills ?? []);
-
-  useEffect(() => {
-    setSkills(profile.skills ?? []);
-  }, [JSON.stringify((profile.skills ?? []).map((s) => s.id))]);
-
-  const skillOptions = useCachedSiteMetadataOption('skills', t);
 
   const handleOpenModal = () => {
     openModal(
@@ -43,11 +38,9 @@ const TalentProfileSkillsEditSection = ({ profile }: { profile: TalentProfileRes
   };
 
   const handleRemoveSkill = (id: string) => {
-    setSkills((prev) => {
-      const next = prev.filter((s) => s.id !== id);
-      autosave.immediate({ skillIds: next.map((s) => s.id) });
-      return next;
-    });
+    const next = skills.filter((s) => s.id !== id);
+    setSkills(next);
+    autosave.immediate({ skillIds: next.map((s) => s.id) });
   };
 
   const actionButtonRender = () => (
