@@ -1,12 +1,13 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
+import { UUID_RX } from '../../../../shared/utils/schemaUtils';
 
 const baseUrlField = (t: TFunction) =>
   z
     .string()
     .trim()
+    .min(1, { message: t('validation.required') })
     .superRefine((s, ctx) => {
-      if (!s) return; // vacío = "sin validar / borrar"
       try {
         const u = new URL(s);
         if (u.protocol !== 'http:' && u.protocol !== 'https:') {
@@ -19,7 +20,22 @@ const baseUrlField = (t: TFunction) =>
 
 export const getSocialMediaSchema = (t: TFunction) =>
   z.object({
-    url: baseUrlField(t), // 👈 ahora existe shape.url
+    url: baseUrlField(t),
+  });
+
+export const getSocialMediaRowSchema = (t: TFunction) =>
+  z.object({
+    optionId: z
+      .string({
+        required_error: t('validation.required'),
+        invalid_type_error: t('validation.required'),
+      })
+      .trim()
+      .min(1, { message: t('validation.required') })
+      .regex(UUID_RX, { message: t('validation.uuid_invalid') }),
+    url: baseUrlField(t),
   });
 
 export type SocialMediaValues = z.infer<ReturnType<typeof getSocialMediaSchema>>;
+export type SocialMediaRowValues = z.infer<ReturnType<typeof getSocialMediaRowSchema>>;
+export type SocialMediaRowFormKey = keyof SocialMediaRowValues;
