@@ -54,8 +54,8 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
   return (
     <section className="w-full relative max-w-[400px]">
       <WizardStep>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-[80vh] lg:min-h-[65vh] flex-col justify-between">
-          <div>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex min-h-[85vh] lg:min-h-[70vh] flex-col justify-between">
+          <div className="flex flex-col">
             {/* Header */}
             <div className="w-full flex flex-col items-center gap-4 mb-2">
               <button
@@ -79,7 +79,7 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
               </p>
             </div>
 
-            <div className="w-full mb-4 flex flex-col gap-2">
+            <div className="w-full mb-4 flex flex-col gap-2 flex-1">
               <div className="text-center mb-4">
                 <h1 className="text-2xl font-semibold mb-3">{t('onboarding.talent.step1.header')}</h1>
                 <p className="text-sm">{t('onboarding.talent.step1.subtitle')}</p>
@@ -96,8 +96,8 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
             </div>
           </div>
 
-          <div>
-            <div className="flex justify-between items-center gap-4 mb-6">
+          <div className="flex flex-col gap-6">
+            <div className="flex justify-between items-center gap-4">
               <Button variant="outline" type="button" onClick={onBackToModeSelector}>
                 {t('buttons.back')}
               </Button>

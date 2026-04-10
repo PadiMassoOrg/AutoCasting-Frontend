@@ -86,7 +86,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
     <section className="w-full relative max-w-[400px]">
       <WizardStep>
         <form onSubmit={handleSubmit} className="flex min-h-[85vh] lg:min-h-[70vh] flex-col justify-between">
-          <div>
+          <div className="flex flex-col">
             <div className="w-full flex flex-col items-center gap-4 mb-2">
               <button
                 type="button"
@@ -108,7 +108,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
               </p>
             </div>
 
-            <div className="w-full flex flex-col">
+            <div className="w-full flex flex-col flex-1">
               <div className="text-center">
                 <h1 className="text-2xl font-semibold my-1">{t('onboarding.talent.step2.header')}</h1>
                 <p className="text-sm">{t('onboarding.talent.step2.subtitle')}</p>
@@ -142,8 +142,8 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
             </div>
           </div>
 
-          <div>
-            <div className="flex justify-between items-center gap-4 mb-6">
+          <div className="flex flex-col gap-6">
+            <div className="flex justify-between items-center gap-4">
               <Button variant="outline" type="button" onClick={handleBackClick}>
                 {t('buttons.back')}
               </Button>

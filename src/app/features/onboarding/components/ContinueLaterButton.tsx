@@ -57,8 +57,9 @@ function ContinueLaterButton() {
 
   return (
     <button
+      type="button"
       onClick={handleClick}
-      className="mt-12 w-full cursor-pointer text-sm flex flex-row items-center justify-center gap-4 text-[var(--color-primary-purple)]"
+      className="w-full cursor-pointer text-sm flex flex-row items-center justify-center gap-4 text-[var(--color-primary-purple)]"
     >
       <Icon name="arrowLongLeft" variant="primary" />
       <span>{t('onboarding.mode_selector.go_back')}</span>
