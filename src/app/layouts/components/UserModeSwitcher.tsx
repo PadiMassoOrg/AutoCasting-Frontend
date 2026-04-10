@@ -6,9 +6,7 @@ import { USER_MODE_EMPLOYER, USER_MODE_TALENT, useUserMode } from '../../context
 import { useMeData } from '../../features/auth/hooks/useMeData';
 import type { ActiveMode } from '../../features/auth/types/auth.types';
 import { useUpdateOnboardingMutation } from '../../features/onboarding/hooks/useUpdateOnboardingMutation';
-import { getAuthToken } from '../../shared/lib/cookies';
-import { ROUTES } from '../../shared/lib/routes';
-import { jwtDecoder } from '../../shared/utils/jwtDecoder';
+import { getDashboardRouteForActiveMode } from '../../shared/lib/routes';
 
 type ModeSwitcherProps = {
   showTooltip?: boolean;
@@ -24,10 +22,6 @@ function UserModeSwitcher({ showLabel = false, onAfterToggle, showTooltip = fals
   const { mutate: updateOnboarding, isPending } = useUpdateOnboardingMutation();
   const navigate = useNavigate();
 
-  const token = getAuthToken();
-  const decoded = token ? jwtDecoder(token) : null;
-  const talentProfileSlug = decoded?.talentProfileSlug;
-
   const modeLabel = mode === USER_MODE_TALENT ? t('state.switch_to_employer') : t('state.switch_to_talent');
 
   const handleClick = () => {
@@ -35,6 +29,7 @@ function UserModeSwitcher({ showLabel = false, onAfterToggle, showTooltip = fals
 
     const nextMode = mode === USER_MODE_TALENT ? USER_MODE_EMPLOYER : USER_MODE_TALENT;
     const nextActiveMode: ActiveMode = nextMode === USER_MODE_TALENT ? 'TALENT' : 'EMPLOYER';
+    const nextDashboardRoute = getDashboardRouteForActiveMode(nextActiveMode);
 
     let talentOnboardingStatus = meData.talentOnboardingStatus;
     let employerOnboardingStatus = meData.employerOnboardingStatus;
@@ -56,17 +51,7 @@ function UserModeSwitcher({ showLabel = false, onAfterToggle, showTooltip = fals
       {
         onSuccess: () => {
           setMode(nextMode);
-
-          if (nextActiveMode === 'TALENT') {
-            if (talentProfileSlug) {
-              navigate(`${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}`);
-            } else {
-              navigate(ROUTES.TALENT);
-            }
-          } else {
-            navigate(ROUTES.DASHBOARD);
-          }
-
+          navigate(nextDashboardRoute);
           onAfterToggle?.();
         },
       }

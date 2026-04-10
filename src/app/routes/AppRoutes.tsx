@@ -1,4 +1,7 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Route, BrowserRouter as Router, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { USER_MODE_EMPLOYER, USER_MODE_TALENT, useUserMode } from '../context/UserModeContext';
+import { useAuthToken } from '../features/auth/hooks/useAuthToken';
 import { useMeData } from '../features/auth/hooks/useMeData';
 import { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage } from '../features/auth/pages';
 import CastingDatabasePage from '../features/casting-database/pages/CastingDatabasePage';
@@ -12,7 +15,8 @@ import { TalentDatabasePage } from '../features/talent-database/pages';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
 import { EmptyLayout, NavigationLayout, ScrollContentLayout } from '../layouts';
 import { ScrollToTop } from '../shared/components/ScrollToTop';
-import { getAuthToken } from '../shared/lib/cookies';
+import { clearClientSession } from '../shared/lib/authSession';
+import { getAuthTokenExpirationTime } from '../shared/lib/cookies';
 import { ROUTES } from '../shared/lib/routes';
 import ProtectedRoute from './ProtectedRoute';
 import ProtectedRoutesLayout from './ProtectedRoutesLayout';
@@ -22,12 +26,69 @@ function RouteTracker() {
   return null;
 }
 
+function isProtectedPath(pathname: string) {
+  return pathname.startsWith(ROUTES.DASHBOARD);
+}
+
+function AuthSessionWatcher() {
+  const token = useAuthToken();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      if (isProtectedPath(location.pathname)) {
+        navigate(ROUTES.HOME, { replace: true });
+      }
+      return;
+    }
+
+    const expirationTime = getAuthTokenExpirationTime(token);
+    if (!expirationTime) return;
+
+    const msUntilExpiration = expirationTime - Date.now();
+
+    if (msUntilExpiration <= 0) {
+      clearClientSession();
+      if (isProtectedPath(location.pathname)) {
+        navigate(ROUTES.HOME, { replace: true });
+      }
+      return;
+    }
+
+    const timerId = window.setTimeout(() => {
+      const wasProtectedPath = isProtectedPath(location.pathname);
+      clearClientSession();
+      if (wasProtectedPath) {
+        navigate(ROUTES.HOME, { replace: true });
+      }
+    }, msUntilExpiration);
+
+    return () => window.clearTimeout(timerId);
+  }, [token, location.pathname, navigate]);
+
+  return null;
+}
+
 function AppRoutesContent() {
-  const token = getAuthToken();
-  const { data: meData, isLoading } = useMeData();
+  const token = useAuthToken();
+  const { data: meData } = useMeData();
+  const { mode, setMode } = useUserMode();
 
   const hasToken = !!token;
   const hasMeData = !!meData;
+  const activeMode = meData?.activeMode;
+
+  useEffect(() => {
+    if (!activeMode) {
+      return;
+    }
+
+    const nextMode = activeMode === 'EMPLOYER' ? USER_MODE_EMPLOYER : USER_MODE_TALENT;
+    if (mode !== nextMode) {
+      setMode(nextMode);
+    }
+  }, [activeMode, mode, setMode]);
 
   const needsInitialWizard = hasToken && hasMeData && meData.activeMode === null;
   const needsTalentWizard =
@@ -36,10 +97,6 @@ function AppRoutesContent() {
     hasToken && hasMeData && meData.activeMode === 'EMPLOYER' && meData.employerOnboardingStatus !== 'COMPLETED';
 
   const shouldForceWizard = hasToken && hasMeData && (needsInitialWizard || needsTalentWizard || needsEmployerWizard);
-
-  if (hasToken && (isLoading || !hasMeData)) {
-    return null;
-  }
 
   if (shouldForceWizard) {
     return (
@@ -88,6 +145,7 @@ function AppRoutesContent() {
 export default function AppRoutes() {
   return (
     <Router>
+      <AuthSessionWatcher />
       <RouteTracker />
       <ScrollToTop />
       <AppRoutesContent />

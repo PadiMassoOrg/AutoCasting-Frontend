@@ -1,5 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 
+export { QUERY_CACHE_PERSIST_KEY } from './storageKeys';
+
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

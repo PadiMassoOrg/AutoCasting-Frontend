@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { useAuthToken } from '../features/auth/hooks/useAuthToken';
 import { useMeData } from '../features/auth/hooks/useMeData';
 import EmployerCastingApplicantsPage from '../features/employer/employer-casting-applicants/pages/EmployerCastingApplicantsPage';
 import { EmployerCastingPage, EmployerCastingsPage } from '../features/employer/employer-castings/pages';
@@ -8,17 +9,25 @@ import TalentCastingApplicationsPage from '../features/talent/talent-casting-app
 import { TalentProfileEditPage } from '../features/talent/talent-profile-edit/pages';
 import { TalentProfileSettingsPage } from '../features/talent/talent-profile-settings/pages';
 import { NavigationLayout, ScrollContentLayout } from '../layouts';
-import { ROUTES } from '../shared/lib/routes';
+import { getDashboardRouteForActiveMode, ROUTES } from '../shared/lib/routes';
 
 export default function ProtectedRoutesLayout() {
-  const { data: meData, isLoading } = useMeData();
+  const token = useAuthToken();
+  const { data: meData, isError, isLoading } = useMeData();
 
-  if (isLoading || !meData) {
+  if (!token) {
+    return <Navigate to={ROUTES.HOME} replace />;
+  }
+
+  if (isLoading) {
     return null;
   }
 
-  const effectiveDashboardRoute =
-    meData.activeMode === 'EMPLOYER' ? ROUTES.EMPLOYER_CASTINGS : ROUTES.TALENT_APPLIED_CASTINGS;
+  if (isError || !meData) {
+    return <Navigate to={ROUTES.HOME} replace />;
+  }
+
+  const effectiveDashboardRoute = getDashboardRouteForActiveMode(meData.activeMode);
 
   return (
     <Routes>

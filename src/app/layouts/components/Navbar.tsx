@@ -2,9 +2,9 @@ import { Button, Tooltip } from 'autocasting-ui-library-padimasso';
 import { forwardRef, type HTMLAttributes, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, matchPath, useLocation } from 'react-router-dom';
+import { useAuthToken } from '../../features/auth/hooks/useAuthToken';
 import { logout } from '../../features/auth/services/authService';
 import { LinkLogo } from '../../shared/components/LinkLogo';
-import { getAuthToken } from '../../shared/lib/cookies';
 import { ROUTES } from '../../shared/lib/routes';
 import { Sidebar } from './';
 import UserModeSwitcher from './UserModeSwitcher';
@@ -24,7 +24,7 @@ type NavbarProps = HTMLAttributes<HTMLElement> & {
 const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className = '', variant, ...props }, ref) {
   const { t } = useTranslation();
   const location = useLocation();
-  const isAuth = getAuthToken();
+  const isAuth = useAuthToken();
   const { mode } = useUserMode();
   const jwt = isAuth ? jwtDecoder(isAuth) : null;
   const { openModal, closeModal } = useModal();

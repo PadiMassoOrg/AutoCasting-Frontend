@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getAuthToken } from '../../../../../shared/lib/cookies';
+import { useAuthToken } from '../../../../auth/hooks/useAuthToken';
 import {
   CASTING_SECTION_REMUNERATIONS_CACHE_KEY,
   getSectionRemunerationsById,
@@ -7,12 +7,12 @@ import {
 import type { CastingSectionRemunerations } from '../../types/employerCastings.types';
 
 export const useSectionRemunerations = (sectionId: string) => {
-  const token = getAuthToken();
+  const token = useAuthToken();
 
   return useQuery<CastingSectionRemunerations>({
     queryKey: [...CASTING_SECTION_REMUNERATIONS_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'],
     queryFn: () => getSectionRemunerationsById(sectionId),
-    enabled: !!sectionId,
+    enabled: !!sectionId && !!token,
     staleTime: 0,
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,

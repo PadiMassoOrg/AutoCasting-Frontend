@@ -30,6 +30,10 @@ export const ROUTES = {
   INSTAGRAM_URL: 'https://www.instagram.com/',
 };
 
+export const getDashboardRouteForActiveMode = (activeMode: 'TALENT' | 'EMPLOYER' | null) => {
+  return activeMode === 'EMPLOYER' ? ROUTES.EMPLOYER_CASTINGS : ROUTES.TALENT_APPLIED_CASTINGS;
+};
+
 export const USER_ROUTES = [
   {
     id: 1,

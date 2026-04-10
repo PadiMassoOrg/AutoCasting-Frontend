@@ -14,11 +14,11 @@ import { ModalProvider } from './app/context/ModalContext';
 import { ToastProvider } from './app/context/ToastContext';
 import { UserModeProvider } from './app/context/UserModeContext';
 import { AppRoutes } from './app/routes';
-import { queryClient } from './app/shared/lib/queryClient';
+import { QUERY_CACHE_PERSIST_KEY, queryClient } from './app/shared/lib/queryClient';
 
 const persister = createAsyncStoragePersister({
   storage: window.localStorage,
-  key: 'pm-query-cache',
+  key: QUERY_CACHE_PERSIST_KEY,
   throttleTime: 1500, // ayuda a evitar snapshots “intermedios”
 });
 

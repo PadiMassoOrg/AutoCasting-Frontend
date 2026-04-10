@@ -1,8 +1,7 @@
 import api from '../../../shared/lib/axios';
-import { clearAuthToken, getAuthToken } from '../../../shared/lib/cookies';
-import { queryClient } from '../../../shared/lib/queryClient';
-import { API_ROUTES, ROUTES } from '../../../shared/lib/routes';
-import { TALENT_PROFILE_CACHE_KEY } from '../../talent/talent-profile-edit/services/talentProfileService';
+import { getAuthToken } from '../../../shared/lib/cookies';
+import { forceLogoutRedirect } from '../../../shared/lib/authSession';
+import { API_ROUTES } from '../../../shared/lib/routes';
 import type {
   AuthenticationResponse,
   ForgotPasswordRequest,
@@ -34,12 +33,7 @@ export const meData = async (): Promise<MeDataResponse> => {
     const { data } = await api.get<MeDataResponse>(API_ROUTES.AUTH_ME_DATA);
     return data;
   } catch (error: any) {
-    const status = error?.response?.status;
-
-    if (status === 401 || status === 403 || status === 409) {
-      logout();
-    }
-
+    logout();
     throw error;
   }
 };
@@ -60,8 +54,5 @@ export const resetPassword = async (data: ResetPasswordRequest) => {
 };
 
 export const logout = () => {
-  clearAuthToken();
-  queryClient.removeQueries({ queryKey: ME_DATA_CACHE_KEY });
-  queryClient.removeQueries({ queryKey: [TALENT_PROFILE_CACHE_KEY] });
-  window.location.href = ROUTES.HOME;
+  forceLogoutRedirect();
 };
