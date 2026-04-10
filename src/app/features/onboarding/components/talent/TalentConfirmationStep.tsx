@@ -1,5 +1,4 @@
-import { Button, ButtonRow, Icon, Label, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
-import { useState } from 'react';
+import { Button, ButtonRow, Icon, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
 import Logo from '../../../../shared/icons/og-image.svg';
@@ -14,11 +13,8 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
   const { t } = useTranslation();
   const { data: meData } = useMeData();
   const { mutate: updateOnboarding, isPending } = useUpdateOnboardingMutation();
-  const [serverError, setServerError] = useState<string | null>(null);
 
   const handleConfirm = () => {
-    setServerError(null);
-
     updateOnboarding(
       {
         activeMode: 'TALENT',
@@ -28,10 +24,6 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
       {
         onSuccess: () => {
           onGoToProfile();
-        },
-        onError: (err: any) => {
-          const message = err?.response?.data?.message || t('state.server_err');
-          setServerError(message);
         },
       }
     );
@@ -78,14 +70,6 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
                 </span>
               </div>
             </div>
-
-            {serverError && (
-              <div className="mt-4">
-                <Label variant="error" className="pl-1">
-                  {serverError}
-                </Label>
-              </div>
-            )}
           </div>
 
           <div>

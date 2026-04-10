@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, FormInputField, Label, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
-import { useEffect, useState } from 'react';
+import { Button, FormInputField, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
@@ -15,8 +15,7 @@ type Props = WizardStepProps & {
 function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, totalSteps = 1, progress = 0 }: Props) {
   const { t } = useTranslation();
   const { data: profile, isPending: profilePending } = useTalentProfile();
-  const { mutate: patchBasicInfo, isPending } = usePatchTalentBasicInfoMutation();
-  const [serverError, setServerError] = useState<string | null>(null);
+  const { submit, fieldErrors, clearFieldError, isPending } = usePatchTalentBasicInfoMutation();
   const savedStageName = profile?.basicInfo?.stageName ?? '';
 
   const {
@@ -38,21 +37,14 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
     }
   }, [savedStageName, reset]);
 
-  const onSubmit = (data: TalentBasicInfoValues) => {
-    setServerError(null);
+  const stageNameRegister = register('stageName', {
+    onChange: () => clearFieldError('stageName'),
+  });
 
-    patchBasicInfo(
-      { stageName: data.stageName },
-      {
-        onSuccess: () => {
-          goNext?.();
-        },
-        onError: (err: any) => {
-          const message = err?.response?.data?.message || t('state.server_err');
-          setServerError(message);
-        },
-      }
-    );
+  const onSubmit = async (data: TalentBasicInfoValues) => {
+    const result = await submit({ stageName: data.stageName }).catch(() => null);
+    if (!result) return;
+    goNext?.();
   };
 
   if (profilePending && !profile) return null;
@@ -98,16 +90,10 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
                 type="text"
                 placeholder={t('general.placeholder.stage_name')}
                 className="bg-[var(--color-primary-white)]"
-                {...register('stageName')}
-                error={errors.stageName?.message}
+                {...stageNameRegister}
+                error={errors.stageName?.message ?? fieldErrors.stageName}
               />
             </div>
-
-            {serverError && (
-              <Label variant="error" className="pl-1">
-                {serverError}
-              </Label>
-            )}
           </div>
 
           <div>

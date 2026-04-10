@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
 
 import { useProfileMediaPatch } from '../../../../integrations/supabase/media/hooks/useProfileMediaPatch';
+import { getBackendErrorMessage } from '../../../../shared/utils/backendErrorHandling';
 import { useTalentProfile } from '../../../talent/talent-profile-edit/hooks/useTalentProfile';
 import { fileSchema } from '../../../talent/talent-profile-edit/schemas/mediaSchema';
 
@@ -52,7 +53,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
           setBust((prev) => prev + 1);
         },
         onError: (err: any) => {
-          const msg = err?.response?.data?.message || err?.message || t('state.server_err');
+          const msg = getBackendErrorMessage(err, t);
           setErrHeadshot(msg);
         },
       }

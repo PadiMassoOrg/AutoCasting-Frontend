@@ -3,6 +3,7 @@ import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
 import { useEmployerLogoPatch } from '../../../../integrations/supabase/media/hooks/useEmployerLogoPatch';
+import { getBackendErrorMessage } from '../../../../shared/utils/backendErrorHandling';
 import { useEmployerProfile } from '../../../employer/employer-profile-edit/hooks/useEmployerProfile';
 import { fileSchema } from '../../../talent/talent-profile-edit/schemas/mediaSchema';
 
@@ -58,7 +59,7 @@ function EmployerMediaStep({
           setBust((prev) => prev + 1);
         },
         onError: (err: any) => {
-          const msg = err?.response?.data?.message || err?.message || t('state.server_err');
+          const msg = getBackendErrorMessage(err, t);
           setErrImage(msg);
         },
       }
