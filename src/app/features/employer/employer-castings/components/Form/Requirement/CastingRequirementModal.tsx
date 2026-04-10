@@ -35,6 +35,8 @@ type Props = {
   sectionId: string;
   roleOptions?: RadioOption[];
   disabledRoleIds?: string[];
+  backendErrors?: Partial<Record<CastingRequirementFormKey, string>>;
+  clearBackendFieldError?: (field: CastingRequirementFormKey) => void;
 };
 
 type FormState = {
@@ -58,6 +60,8 @@ const CastingRequirementModal = ({
   sectionId,
   roleOptions = [],
   disabledRoleIds = [],
+  backendErrors,
+  clearBackendFieldError,
 }: Props) => {
   const { t } = useTranslation();
   const requirementSchema = useMemo(() => getCastingRequirementSchema(t), [t]);
@@ -125,7 +129,10 @@ const CastingRequirementModal = ({
       return null;
     })();
 
-    if (mapKey) setErrors((e) => ({ ...e, [mapKey]: undefined }));
+    if (mapKey) {
+      setErrors((e) => ({ ...e, [mapKey]: undefined }));
+      clearBackendFieldError?.(mapKey);
+    }
   };
 
   const validateAndSave = async () => {
@@ -190,6 +197,9 @@ const CastingRequirementModal = ({
     await onSave(draft);
   };
 
+  const resolveError = (field: CastingRequirementFormKey, local?: string) =>
+    local ?? backendErrors?.[field] ?? undefined;
+
   const isCreateSaveDisabled = useMemo(() => {
     if (mode !== 'create') return false;
     if ((form.selectedRoleIds ?? []).length <= 0) return true;
@@ -208,7 +218,7 @@ const CastingRequirementModal = ({
           lockedValues={lockedRoleIds}
           mustSelectOne
           onChange={(next) => onChange('selectedRoleIds', next ?? [])}
-          error={errors.roleIds}
+          error={resolveError('roleIds', errors.roleIds)}
         />
       ) : (
         <RadioGroupField
@@ -236,12 +246,12 @@ const CastingRequirementModal = ({
         />
       </div>
 
-      {!errors.media ? (
+      {!resolveError('media', errors.media) ? (
         <div className="min-h-[25px]" />
       ) : (
         <div className="min-h-[25px]">
           <Label id={`${mediaErrorId}-error`} variant="error" className="mt-0.5">
-            {errors.media}
+            {resolveError('media', errors.media)}
           </Label>
         </div>
       )}
@@ -253,7 +263,7 @@ const CastingRequirementModal = ({
           placeholder={t('general.placeholder.about')}
           value={form.description}
           onChange={(e) => onChange('description', (e?.target?.value ?? '') as string)}
-          error={errors.description}
+          error={resolveError('description', errors.description)}
         />
         <div className="min-h-[25px]" />
       </div>

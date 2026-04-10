@@ -29,10 +29,27 @@ type Errors = {
 
 const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
   const { t, i18n } = useTranslation();
+  const getApplicationDeadlineError = useCallback(
+    (iso: string) => {
+      if (!iso) return null;
+
+      const today = new Date();
+      const todayIso = [
+        today.getFullYear(),
+        String(today.getMonth() + 1).padStart(2, '0'),
+        String(today.getDate()).padStart(2, '0'),
+      ].join('-');
+
+      return iso < todayIso ? t('validation.application_deadline_past') : null;
+    },
+    [t]
+  );
+
   const projectTypeOptions = useCachedSiteMetadataOption('projectTypeOptions', t);
   const castingModalityOptions = useCachedSiteMetadataOption('castingModalityOptions', t);
   const autosave = useCastingBasicInfoAutosave(data.id);
   const schema = useMemo(() => getCastingBasicInfoSchema(t), [t]);
+  const backendFieldErrors = autosave.fieldErrors as Record<string, string | undefined>;
 
   const ON_SITE_CODE = t('sitemetadata.casting_modality.on_site');
   const YEAR_START = new Date().getFullYear();
@@ -40,6 +57,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
 
   const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [errors, setErrors] = useState<Errors>({});
+  const [lastSentApplicationDeadline, setLastSentApplicationDeadline] = useState(data.applicationDeadline ?? '');
 
   const savedRange = useMemo(
     () => toRangeFromData(data.shootingStartDate, data.shootingEndDate),
@@ -52,6 +70,10 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
       return prev;
     });
   }, [data.id, savedRange?.from?.getTime(), savedRange?.to?.getTime()]);
+
+  useEffect(() => {
+    setLastSentApplicationDeadline(data.applicationDeadline ?? '');
+  }, [data.id, data.applicationDeadline]);
 
   const title = useCommittedText(
     data.title ?? '',
@@ -118,14 +140,38 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
 
   const isOnSite = selectedCastingModalityStringCodeTranslation === ON_SITE_CODE;
 
-  const applicationDeadline = useIsoDateField(
-    data.applicationDeadline ?? '',
-    (iso) => {
-      setErrors((e) => ({ ...e, birth: null }));
-      autosave.immediate({ id: data.id, applicationDeadline: iso });
-    },
-    600
+  const applicationDeadline = useIsoDateField(data.applicationDeadline ?? '', () => {}, 600);
+
+  const applicationDeadlineIso = useMemo(() => {
+    if (!applicationDeadline.year || !applicationDeadline.month || !applicationDeadline.day) return '';
+    return `${applicationDeadline.year}-${applicationDeadline.month}-${applicationDeadline.day}`;
+  }, [applicationDeadline.year, applicationDeadline.month, applicationDeadline.day]);
+
+  const applicationDeadlineError = useMemo(
+    () => getApplicationDeadlineError(applicationDeadlineIso),
+    [applicationDeadlineIso, getApplicationDeadlineError]
   );
+
+  const applicationDeadlineDayError = errors.applicationDeadline?.day ?? applicationDeadlineError ?? undefined;
+  const shouldShowApplicationDeadlineHint =
+    !applicationDeadlineIso && !!(applicationDeadline.day || applicationDeadline.month || applicationDeadline.year);
+  const applicationDeadlineFieldError =
+    applicationDeadlineDayError ??
+    (shouldShowApplicationDeadlineHint
+      ? t('employer_castings.dashboard.basic_info.application_deadline_incomplete')
+      : undefined);
+
+  const commitApplicationDeadline = useCallback(() => {
+    if (!applicationDeadlineIso) return;
+
+    const nextApplicationDeadlineError = getApplicationDeadlineError(applicationDeadlineIso);
+    if (nextApplicationDeadlineError) return;
+    if (applicationDeadlineIso === lastSentApplicationDeadline) return;
+
+    setLastSentApplicationDeadline(applicationDeadlineIso);
+    setErrors((e) => ({ ...e, applicationDeadline: null }));
+    autosave.immediate({ id: data.id, applicationDeadline: applicationDeadlineIso });
+  }, [applicationDeadlineIso, autosave, data.id, getApplicationDeadlineError, lastSentApplicationDeadline]);
 
   const yearOptions = useMemo(
     () =>
@@ -188,6 +234,8 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
     });
   }, [autosave, data.id]);
 
+  const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
+
   return (
     <div className="w-full flex flex-col">
       <FormInputField
@@ -199,7 +247,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         onChange={title.onChange}
         onBlur={title.onBlur}
         onKeyDown={title.onKeyDown}
-        error={errors.title ?? undefined}
+        error={resolveError('title', errors.title)}
         required
       />
 
@@ -212,7 +260,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         onChange={projectType.onChange}
         onBlur={projectType.onBlur}
         options={projectTypeOptions}
-        error={errors.projectTypeId ?? undefined}
+        error={resolveError('projectTypeId', errors.projectTypeId)}
         required
       />
 
@@ -225,7 +273,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         onChange={castingModality.onChange}
         onBlur={castingModality.onBlur}
         options={castingModalityOptions}
-        error={errors.castingModalityId ?? undefined}
+        error={resolveError('castingModalityId', errors.castingModalityId)}
         required
       />
 
@@ -239,7 +287,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
           onChange={castingModalityText.onChange}
           onBlur={castingModalityText.onBlur}
           onKeyDown={castingModalityText.onKeyDown}
-          error={errors.castingModalityText ?? undefined}
+          error={resolveError('castingModalityText', errors.castingModalityText)}
           required
         />
       )}
@@ -262,7 +310,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
           onChange={wardrobeFittingText.onChange}
           onBlur={wardrobeFittingText.onBlur}
           onKeyDown={wardrobeFittingText.onKeyDown}
-          error={errors.wardrobeFittingText ?? undefined}
+          error={resolveError('wardrobeFittingText', errors.wardrobeFittingText)}
           required
         />
       )}
@@ -282,28 +330,37 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
             id="applicationDeadline-day"
             placeholder={t('general.placeholder.day')}
             value={applicationDeadline.day}
-            onChange={(e) => onSelect((v) => applicationDeadline.onDay(v))(e)}
-            onBlur={(e) => applicationDeadline.onAnyBlur(e)}
+            onChange={(e) => {
+              setErrors((prev) => ({ ...prev, applicationDeadline: null }));
+              onSelect((v) => applicationDeadline.setDay(v))(e);
+            }}
+            onBlur={commitApplicationDeadline}
             options={applicationDeadline.dayOptions}
-            error={errors.applicationDeadline?.day ?? undefined}
+            error={resolveError('applicationDeadline', applicationDeadlineFieldError)}
           />
           <FormSelectField
             id="applicationDeadline-month"
             placeholder={t('general.placeholder.month')}
             value={applicationDeadline.month}
-            onChange={(e) => onSelect((v) => applicationDeadline.onMonth(v))(e)}
-            onBlur={(e) => applicationDeadline.onAnyBlur(e)}
+            onChange={(e) => {
+              setErrors((prev) => ({ ...prev, applicationDeadline: null }));
+              onSelect((v) => applicationDeadline.setMonth(v))(e);
+            }}
+            onBlur={commitApplicationDeadline}
             options={monthOptions}
-            error={errors.applicationDeadline?.month ?? undefined}
+            error={resolveError('applicationDeadline', errors.applicationDeadline?.month)}
           />
           <FormSelectField
             id="applicationDeadline-year"
             placeholder={t('general.placeholder.year')}
             value={applicationDeadline.year}
-            onChange={(e) => onSelect((v) => applicationDeadline.onYear(v))(e)}
-            onBlur={(e) => applicationDeadline.onAnyBlur(e)}
+            onChange={(e) => {
+              setErrors((prev) => ({ ...prev, applicationDeadline: null }));
+              onSelect((v) => applicationDeadline.setYear(v))(e);
+            }}
+            onBlur={commitApplicationDeadline}
             options={yearOptions}
-            error={errors.applicationDeadline?.year ?? undefined}
+            error={resolveError('applicationDeadline', errors.applicationDeadline?.year)}
           />
         </div>
       </div>
@@ -327,7 +384,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         onChange={description.onChange}
         onBlur={description.onBlur}
         onKeyDown={description.onKeyDown}
-        error={errors.description}
+        error={resolveError('description', errors.description)}
       />
     </div>
   );

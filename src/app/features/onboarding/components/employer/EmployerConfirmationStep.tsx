@@ -1,5 +1,4 @@
-import { Button, ButtonRow, Icon, Label, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
-import { useState } from 'react';
+import { Button, ButtonRow, Icon, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
 import Logo from '../../../../shared/icons/og-image.svg';
@@ -14,11 +13,8 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
   const { t } = useTranslation();
   const { data: meData } = useMeData();
   const { mutate: updateOnboarding, isPending } = useUpdateOnboardingMutation();
-  const [serverError, setServerError] = useState<string | null>(null);
 
   const handleConfirm = () => {
-    setServerError(null);
-
     updateOnboarding(
       {
         activeMode: 'EMPLOYER',
@@ -28,10 +24,6 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
       {
         onSuccess: () => {
           onGoToProfile();
-        },
-        onError: (err: any) => {
-          const message = err?.response?.data?.message || t('state.server_err');
-          setServerError(message);
         },
       }
     );
@@ -67,22 +59,14 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
             </div>
 
             {/* Contenido principal */}
-            <div className="text-center flex flex-col gap-1">
+            <div className="flex flex-col items-center gap-4 text-center">
               <h1 className="text-2xl font-semibold">{t('onboarding.employer.confirmation_step.header')}</h1>
               <p className="text-sm">{t('onboarding.employer.confirmation_step.subtitle')}</p>
-              <p className="text-sm mt-4">
-                {t('onboarding.common.edit_profile_label')}
-                <ButtonRow items={[<Icon variant="primary" name="profile" />]} className="mt-2"></ButtonRow>
-              </p>
+              <span className="flex flex-row items-center gap-2 ">
+                <p className="text-sm"> {t('onboarding.common.edit_profile_label_profile')}</p>
+                <ButtonRow items={[<Icon variant="primary" name="profile" className="cursor-default" />]}></ButtonRow>
+              </span>
             </div>
-
-            {serverError && (
-              <div className="mt-4">
-                <Label variant="error" className="pl-1">
-                  {serverError}
-                </Label>
-              </div>
-            )}
           </div>
 
           <div>

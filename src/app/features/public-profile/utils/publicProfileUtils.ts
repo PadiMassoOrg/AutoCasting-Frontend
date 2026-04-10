@@ -4,7 +4,6 @@ import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.t
 export function formatCharacteristicValue(key: string, raw: unknown, t: TFunction) {
   if (raw == null || raw.toString().length == 0) return '-';
   if (key === 'height') return `${raw} cm`;
-  if (key === 'weight') return `${raw} kg`;
   if (key === 'hairColor' || key === 'eyeColor' || key === 'diet') {
     const obj = raw as SiteMetadataObject;
     return t(obj.stringCode);

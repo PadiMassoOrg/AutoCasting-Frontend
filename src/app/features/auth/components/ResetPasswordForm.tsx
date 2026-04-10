@@ -1,11 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
-import { useState } from 'react';
+import { Button, FormInputField } from 'autocasting-ui-library-padimasso';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../../context/ModalContext';
+import { useToast } from '../../../context/ToastContext';
 import { ROUTES } from '../../../shared/lib/routes';
+import { handleBackendFormError } from '../../../shared/utils/backendErrorHandling';
 import ChangePasswordSuccessModal from '../../talent/talent-profile-settings/components/ChangePasswordSuccessModal';
 import { useResetPasswordMutation } from '../hooks/useResetPasswordMutation';
 import { getResetPasswordSchema, type ResetPasswordValues } from '../schemas/authSchema';
@@ -13,14 +14,15 @@ import { getResetPasswordSchema, type ResetPasswordValues } from '../schemas/aut
 const ResetPasswordForm = ({ token }: { token: string }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const resetPasswordMutation = useResetPasswordMutation();
   const { openModal, closeModal } = useModal();
-
-  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<ResetPasswordValues>({
     resolver: zodResolver(getResetPasswordSchema()),
@@ -40,19 +42,37 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
   };
 
   const onSubmit = async (data: ResetPasswordValues) => {
-    setServerError(null);
+    clearErrors();
     resetPasswordMutation.mutate(
       {
         token: token,
-        newPassword: data.confirmPassword,
+        newPassword: data.password,
       },
       {
         onSuccess: () => {
           handleSuccessModal();
         },
         onError: (err: any) => {
-          const message = err?.response?.data?.message || t('state.server_err');
-          setServerError(message);
+          handleBackendFormError({
+            error: err,
+            t,
+            setError,
+            showToast: (message) =>
+              showToast({
+                title: t('general.error'),
+                description: message,
+                type: 'danger',
+              }),
+            fieldMap: {
+              newPassword: 'password',
+            },
+            messageFieldMap: {
+              'server_error.auth.invalid_token': 'password',
+              'server_error.auth.password_reset_external': 'password',
+            },
+            toastOnlyMessageKeys: ['server_error.auth.token_expired', 'auth.token_expired'],
+            generalFieldFallback: 'password',
+          });
         },
       }
     );
@@ -77,11 +97,6 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
       <Button type="submit" className="w-full">
         {resetPasswordMutation.isPending ? t('state.loading') : t('general.save')}
       </Button>
-      {serverError && (
-        <Label variant="error" className="pl-1">
-          {serverError}
-        </Label>
-      )}
     </form>
   );
 };

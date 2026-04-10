@@ -37,6 +37,11 @@
     --color-secondary-grey-fonts: #6c6e7c;
     /* Alert Colors */
     --color-alert-error: #ef0c0c;
+    /* Hover Colors */
+    --hover-color-primary: #8752f1;
+    --hover-color-danger: #f84a4a;
+    --hover-color-primary-outline: #8752f1;
+    --hover-color-outline: #73737d;
     /* Fonts */
     --font-inter: 'Inter', sans-serif;
     --font-serif: 'Source Serif 4', serif;

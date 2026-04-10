@@ -12,15 +12,20 @@ import { useCastingRemunerationsSectionAutosave } from '../../hooks/autosaves';
 import { useSectionRemunerations } from '../../hooks/section/useSectionRemunerations';
 import RoleRemunerationEditCard from '../Form/Remuneration/RoleRemunerationEditCard';
 
+const normalizeNotes = (value: string | null | undefined) => (value ?? '').trim();
+
 const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: string }) => {
   const { data, isLoading, error } = useSectionRemunerations(sectionId);
   const compensationTypeOptions = useCachedSiteMetadataOption('castingCompensationTypeOptions', t);
   const sectionAutosave = useCastingRemunerationsSectionAutosave(sectionId);
 
   const [notes, setNotes] = useState<string>('');
+  const [lastSentNotes, setLastSentNotes] = useState<string>('');
 
   useEffect(() => {
-    setNotes(data?.notes ?? '');
+    const nextNotes = data?.notes ?? '';
+    setNotes(nextNotes);
+    setLastSentNotes(normalizeNotes(nextNotes));
   }, [data?.id, data?.notes]);
 
   useSyncCastingSectionStatus('remuneration', data?.sectionStatus);
@@ -40,7 +45,7 @@ const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: stri
             value={selectedCompensationTypeId}
             options={compensationTypeOptions}
             optionsWrapperClassName="w-full flex flex-row items-center gap-4 lg:gap-8"
-            optionClassName="flex items-center gap-2 text-sm lg:text-base"
+            optionClassName="flex items-center gap-2"
             onValueChange={(nextId) => {
               if (!nextId) return;
               if (nextId === selectedCompensationTypeId) return;
@@ -64,10 +69,13 @@ const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: stri
                 value={notes}
                 onChange={(e) => setNotes((e?.target?.value ?? '') as string)}
                 onBlur={() => {
+                  const normalizedNotes = normalizeNotes(notes);
+                  if (normalizedNotes === lastSentNotes) return;
+                  setLastSentNotes(normalizedNotes);
                   sectionAutosave.immediate({
                     id: sectionId,
                     castingCompensationTypeId: selectedCompensationTypeId,
-                    notes,
+                    notes: normalizedNotes,
                   });
                 }}
               />

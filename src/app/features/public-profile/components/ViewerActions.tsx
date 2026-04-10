@@ -1,9 +1,8 @@
-import { ButtonRow, Icon } from 'autocasting-ui-library-padimasso';
+import { ButtonRow, Icon, showToast } from 'autocasting-ui-library-padimasso';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { isBrowser } from '../../../shared/utils/domUtils';
-import { whatsappLink } from '../../../shared/utils/formatUtils';
 import { shareUrl } from '../../../shared/utils/shareUtils';
 import { usePublicProfile } from '../hooks/usePublicProfile';
 
@@ -16,39 +15,17 @@ export default function ViewerActions({ className }: Props) {
 
   const url = isBrowser ? window.location.href : '';
 
-  const text = data?.basicInfo?.stageName
-    ? t('profile.share.whatsapp_text', { name: data.basicInfo.stageName })
-    : t('profile.share.whatsapp_text_fallback');
-
-  const waUrl = data?.contact?.phoneNumber ? whatsappLink(data.contact.phoneNumber, text) : null;
   const mailtoUrl = data?.contact?.email ? `mailto:${data.contact.email}` : null;
 
   const handleShare = async () => {
-    // TODO: Implementar TOAST
     await shareUrl({
       url,
-      onCopied: () => alert(t('general.copied')),
-      onError: () => alert(t('general.error')),
+      onCopied: () => showToast({ title: t('general.copied'), description: t('general.copied'), type: 'default' }),
+      onError: () => showToast({ title: t('general.error'), description: t('general.error'), type: 'danger' }),
     });
   };
 
   const items: React.ReactNode[] = [];
-
-  if (waUrl) {
-    items.push(
-      <a
-        key="wa"
-        href={waUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={t('profile.share.whatsapp')}
-        title="WhatsApp"
-        className="inline-flex"
-      >
-        <Icon name="whatsapp" />
-      </a>
-    );
-  }
 
   if (mailtoUrl) {
     items.push(

@@ -58,7 +58,7 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
     <div className="flex flex-col min-w-0">
       <h2 className="text-2xl font-bold truncate">{basicInfo?.stageName}</h2>
       {professions && (
-        <span className="flex flex-wrap items-center text-sm text-[var(--color-secondary-grey)]">{professions}</span>
+        <span className="flex flex-wrap items-center text-sm text-(--color-secondary-grey)">{professions}</span>
       )}
     </div>
   );

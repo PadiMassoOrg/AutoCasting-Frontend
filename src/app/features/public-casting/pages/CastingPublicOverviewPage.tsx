@@ -47,16 +47,20 @@ const PublicCastingOverviewPage = () => {
     navigate(ROUTES.CASTING_DATABASE);
   };
 
+  const openConfirmationModal = () => {
+    openModal(
+      <CastingApplicationConfirmationModal onConfirm={handleConfirmation} />,
+      t('application.confirmation_modal.title'),
+      'lg'
+    );
+  };
+
   const callBackendDirect = (roleId: string) => {
     apply.mutate(
       { roleId, slug: slug! },
       {
         onSuccess: () => {
-          openModal(
-            <CastingApplicationConfirmationModal onConfirm={handleConfirmation} />,
-            t('application.confirmation_modal.title'),
-            'lg'
-          );
+          openConfirmationModal();
         },
       }
     );
@@ -67,11 +71,8 @@ const PublicCastingOverviewPage = () => {
       { roleId, slug: slug!, request: body },
       {
         onSuccess: () => {
-          openModal(
-            <CastingApplicationConfirmationModal onConfirm={handleConfirmation} />,
-            t('application.confirmation_modal.title'),
-            'lg'
-          );
+          closeModal();
+          openConfirmationModal();
         },
       }
     );
@@ -101,7 +102,6 @@ const PublicCastingOverviewPage = () => {
         onCancel={closeModal}
         onApply={(body) => {
           callBackendWithBody(role.id, body);
-          closeModal();
         }}
       />,
       t('application.modal.title'),

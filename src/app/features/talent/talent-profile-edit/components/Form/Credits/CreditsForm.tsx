@@ -19,8 +19,8 @@ export default function CreditsForm({ data }: { data: Credit[] }) {
         mode="edit"
         initial={credit}
         onCancel={closeModal}
-        onSave={(draft) => {
-          patchMut.immediate(draft);
+        onSave={async (draft) => {
+          await patchMut.submit(draft);
           closeModal();
         }}
       />,
@@ -34,8 +34,8 @@ export default function CreditsForm({ data }: { data: Credit[] }) {
       <CreditDeleteModal
         credit={credit}
         onCancel={closeModal}
-        onConfirm={() => {
-          deleteMut.immediate({ id: credit.id });
+        onConfirm={async () => {
+          await deleteMut.submit({ id: credit.id });
           closeModal();
         }}
       />,

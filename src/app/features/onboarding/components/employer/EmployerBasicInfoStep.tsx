@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, FormInputField, Label, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
-import { useEffect, useState } from 'react';
+import { Button, FormInputField, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
@@ -15,8 +15,7 @@ type Props = WizardStepProps & {
 function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, totalSteps = 1, progress = 0 }: Props) {
   const { t } = useTranslation();
   const { data: profile, isPending: profilePending } = useEmployerProfile();
-  const { mutate: patchBasicInfo, isPending } = usePatchEmployerBasicInfoMutation();
-  const [serverError, setServerError] = useState<string | null>(null);
+  const { submit, fieldErrors, clearFieldError, isPending } = usePatchEmployerBasicInfoMutation();
 
   const savedCompanyName = profile?.basicInfo?.companyName ?? '';
   const savedTaxNumber = profile?.basicInfo?.taxNumber ?? '';
@@ -44,25 +43,20 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
     }
   }, [profile, savedCompanyName, savedTaxNumber, reset]);
 
-  const onSubmit = (data: EmployerBasicInfoValues) => {
-    setServerError(null);
+  const companyNameRegister = register('companyName', {
+    onChange: () => clearFieldError('companyName'),
+  });
+  const taxNumberRegister = register('taxNumber', {
+    onChange: () => clearFieldError('taxNumber'),
+  });
 
-    patchBasicInfo(
-      {
-        companyName: data.companyName,
-        taxNumber: data.taxNumber,
-      },
-      {
-        onSuccess: () => {
-          goNext?.();
-        },
-        onError: (err: unknown) => {
-          const anyErr = err as any;
-          const message = anyErr?.response?.data?.message || t('state.server_err');
-          setServerError(message);
-        },
-      }
-    );
+  const onSubmit = async (data: EmployerBasicInfoValues) => {
+    const result = await submit({
+      companyName: data.companyName,
+      taxNumber: data.taxNumber,
+    }).catch(() => null);
+    if (!result) return;
+    goNext?.();
   };
 
   const handleNextClick = handleSubmit(onSubmit);
@@ -107,8 +101,8 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
               type="text"
               placeholder={t('general.placeholder.company_name')}
               className="bg-[var(--color-primary-white)]"
-              {...register('companyName')}
-              error={errors.companyName?.message}
+              {...companyNameRegister}
+              error={errors.companyName?.message ?? fieldErrors.companyName}
             />
 
             <FormInputField
@@ -116,18 +110,12 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
               type="text"
               placeholder={t('general.placeholder.tax_number')}
               className="bg-[var(--color-primary-white)]"
-              {...register('taxNumber')}
-              error={errors.taxNumber?.message}
+              {...taxNumberRegister}
+              error={errors.taxNumber?.message ?? fieldErrors.taxNumber}
             />
             <p className="text-[var(--color-secondary-grey-fonts)] text-xs italic pl-2 pt-1">
               {t('onboarding.employer.step1.tax_disclaimer')}
             </p>
-
-            {serverError && (
-              <Label variant="error" className="pl-1 mt-3">
-                {serverError}
-              </Label>
-            )}
           </form>
 
           <div className="flex justify-between items-center gap-4 mb-6">

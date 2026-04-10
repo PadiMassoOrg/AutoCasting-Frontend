@@ -17,7 +17,6 @@ import type { EmployerCastingRoleCardResponse } from '../../../types/employerCas
 
 type DraftRoleCharacteristicsForm = {
   heightCm: string;
-  weightKg: string;
   ethnicityId: string;
   hairColorId: string;
   eyeColorId: string;
@@ -40,7 +39,6 @@ export type DraftCastingRole = {
   skillIds: string[];
   characteristics?: {
     heightCm?: number | null;
-    weightKg?: number | null;
     ethnicityId?: string | null;
     hairColorId?: string | null;
     eyeColorId?: string | null;
@@ -63,9 +61,19 @@ type Props = {
   onSave: (draft: DraftCastingRole) => Promise<void> | void;
   onCancel: () => void;
   sectionId: string;
+  backendErrors?: Partial<Record<CastingRoleFormKey, string>>;
+  clearBackendFieldError?: (field: CastingRoleFormKey) => void;
 };
 
-export default function CastingRoleModal({ mode, initial, onSave, onCancel, sectionId }: Props) {
+export default function CastingRoleModal({
+  mode,
+  initial,
+  onSave,
+  onCancel,
+  sectionId,
+  backendErrors,
+  clearBackendFieldError,
+}: Props) {
   const { t } = useTranslation();
   const castingRoleSchema = useMemo(() => getCastingRoleSchema(t), [t]);
 
@@ -122,7 +130,6 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
 
   const makeEmptyCharacteristics = (): DraftRoleCharacteristicsForm => ({
     heightCm: '',
-    weightKg: '',
     ethnicityId: '',
     hairColorId: '',
     eyeColorId: '',
@@ -162,11 +169,9 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
             const ch: any = (r as any)?.characteristics;
 
             const height = ch?.heightCm ?? ch?.height ?? ch?.height_cm ?? ch?.heightCM ?? null;
-            const weight = ch?.weightKg ?? ch?.weight ?? ch?.weight_kg ?? ch?.weightKG ?? null;
 
             return {
               heightCm: height != null ? String(height) : '',
-              weightKg: weight != null ? String(weight) : '',
               ethnicityId: pickAnyId(ch, ['ethnicityId', 'ethnicity', 'ethnicityOption']),
               hairColorId: pickAnyId(ch, ['hairColorId', 'hairColor', 'hairColorOption']),
               eyeColorId: pickAnyId(ch, ['eyeColorId', 'eyeColor', 'eyeColorOption']),
@@ -203,7 +208,10 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
       return null;
     })();
 
-    if (mapKey) setErrors((e) => ({ ...e, [mapKey]: undefined }));
+    if (mapKey) {
+      setErrors((e) => ({ ...e, [mapKey]: undefined }));
+      clearBackendFieldError?.(mapKey);
+    }
   };
 
   const onChangeCh = <K extends keyof DraftRoleCharacteristicsForm>(k: K, v: DraftRoleCharacteristicsForm[K]) => {
@@ -218,7 +226,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
     };
 
   const onChNumChange =
-    (k: 'heightCm' | 'weightKg'): React.ChangeEventHandler<HTMLInputElement> =>
+    (k: 'heightCm'): React.ChangeEventHandler<HTMLInputElement> =>
     (e) => {
       const digits = toDigitsMax3(e.target.value);
       onChangeCh(k, digits);
@@ -265,7 +273,6 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
       mode === 'edit'
         ? true
         : ch.heightCm.trim() !== '' ||
-          ch.weightKg.trim() !== '' ||
           ch.ethnicityId.trim() !== '' ||
           ch.hairColorId.trim() !== '' ||
           ch.eyeColorId.trim() !== '' ||
@@ -277,7 +284,6 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
     const characteristicsPayload = shouldSendCharacteristics
       ? {
           heightCm: toIntOrNull(ch.heightCm),
-          weightKg: toIntOrNull(ch.weightKg),
           ethnicityId: ch.ethnicityId.trim() ? ch.ethnicityId : null,
           hairColorId: ch.hairColorId.trim() ? ch.hairColorId : null,
           eyeColorId: ch.eyeColorId.trim() ? ch.eyeColorId : null,
@@ -313,7 +319,6 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
 
     return (
       (ch.heightCm.trim() !== '' ? 1 : 0) +
-      (ch.weightKg.trim() !== '' ? 1 : 0) +
       (ch.ethnicityId.trim() !== '' ? 1 : 0) +
       (ch.hairColorId.trim() !== '' ? 1 : 0) +
       (ch.eyeColorId.trim() !== '' ? 1 : 0) +
@@ -330,6 +335,8 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
     return new Set(selected).size;
   }, [form.skillIds]);
 
+  const resolveError = (field: CastingRoleFormKey) => errors[field] ?? backendErrors?.[field];
+
   return (
     <article className="flex flex-col">
       <FormInputField
@@ -345,7 +352,9 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
 
       <div>
         <div className="flex mb-1.5">
-          <Label className="text-sm font-semibold">{t('talent.filter.basic_info.profession')}</Label>
+          <Label className="text-sm font-semibold">
+            {t('employer_castings.dashboard.roles.role.talent_profession')}
+          </Label>
           <span className="text-red-500 ml-1" aria-hidden="true">
             *
           </span>
@@ -357,7 +366,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
           selected={form.professionIds}
           onChange={(next) => onChange('professionIds', next)}
           maxPanelHeight="16rem"
-          error={errors.professionIds}
+          error={resolveError('professionIds')}
         />
       </div>
 
@@ -370,7 +379,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
         value={form.roleTypeId}
         onChange={(e) => onChange('roleTypeId', e.target.value)}
         options={roleTypeOptions}
-        error={errors.roleType}
+        error={resolveError('roleType')}
       />
 
       <FormSelectField
@@ -382,7 +391,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
         value={form.genderId}
         onChange={(e) => onChange('genderId', e.target.value)}
         options={genderOptions}
-        error={errors.gender}
+        error={resolveError('gender')}
       />
 
       <div className="flex flex-col">
@@ -400,7 +409,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
             placeholder={t('general.placeholder.min')}
             value={form.ageMin}
             onChange={onAgeChange('ageMin')}
-            error={errors.ageMin}
+            error={resolveError('ageMin')}
           />
           <FormInputField
             id="ageMax"
@@ -408,7 +417,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
             placeholder={t('general.placeholder.max')}
             value={form.ageMax}
             onChange={onAgeChange('ageMax')}
-            error={errors.ageMax}
+            error={resolveError('ageMax')}
           />
         </div>
       </div>
@@ -421,7 +430,7 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
         onChange={(e) => onChange('description', e.target.value)}
         onBlur={() => {}}
         onKeyDown={() => {}}
-        error={errors.description}
+        error={resolveError('description')}
       />
 
       <Separator className="opacity-20 mt-6" />
@@ -438,13 +447,6 @@ export default function CastingRoleModal({ mode, initial, onSave, onCancel, sect
               placeholder="cm"
               value={form.characteristics.heightCm}
               onChange={onChNumChange('heightCm')}
-            />
-            <FormInputField
-              id="weightKg"
-              inputMode="numeric"
-              placeholder="kg"
-              value={form.characteristics.weightKg}
-              onChange={onChNumChange('weightKg')}
             />
           </div>
         </div>

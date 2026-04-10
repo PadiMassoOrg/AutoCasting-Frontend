@@ -4,6 +4,7 @@ import { useModal } from '../../../../../context/ModalContext';
 import type { RadioOption } from '../../../../../shared/components/Form/RadioGroupField';
 import { SectionCard } from '../../../../../shared/components/Section';
 import { useCastingRequirementDeleteAutosave, useCastingRequirementPatchAutosave } from '../../hooks/autosaves';
+import type { CastingRequirementFormKey } from '../../schemas/formSchema';
 import type { EmployerCastingRequirementCardResponse } from '../../types/employerCastings.types';
 import CastingRequirementDeleteModal from '../Form/Requirement/CastingRequirementDeleteModal';
 import CastingRequirementModal from '../Form/Requirement/CastingRequirementModal';
@@ -31,17 +32,23 @@ const EmployerCastingRequirementCard = ({
         initial={data}
         sectionId={sectionId}
         roleOptions={roleOptions}
-        onSave={(draft) => {
+        backendErrors={patchRequirement.fieldErrors as Partial<Record<CastingRequirementFormKey, string>>}
+        clearBackendFieldError={patchRequirement.clearFieldError as (field: CastingRequirementFormKey) => void}
+        onSave={async (draft) => {
           if (draft.mode !== 'edit') return;
 
-          patchRequirement.immediate({
-            id: draft.id,
-            requirementsSectionId: draft.requirementsSectionId,
-            roleIds: draft.roleIds,
-            requiresAudio: draft.requiresAudio,
-            requiresVideo: draft.requiresVideo,
-            description: draft.description?.trim() ? draft.description.trim() : undefined,
-          });
+          const result = await patchRequirement
+            .submit({
+              id: draft.id,
+              requirementsSectionId: draft.requirementsSectionId,
+              roleIds: draft.roleIds,
+              requiresAudio: draft.requiresAudio,
+              requiresVideo: draft.requiresVideo,
+              description: draft.description?.trim() ? draft.description.trim() : undefined,
+            })
+            .catch(() => null);
+
+          if (!result) return;
 
           closeModal();
         }}
@@ -57,8 +64,8 @@ const EmployerCastingRequirementCard = ({
       <CastingRequirementDeleteModal
         data={data}
         onCancel={closeModal}
-        onConfirm={() => {
-          deleteRequirement.immediate({ id: data.id });
+        onConfirm={async () => {
+          await deleteRequirement.submit({ id: data.id });
           closeModal();
         }}
       />,

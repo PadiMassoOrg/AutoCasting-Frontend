@@ -8,41 +8,36 @@ import TalentCastingApplicationsPage from '../features/talent/talent-casting-app
 import { TalentProfileEditPage } from '../features/talent/talent-profile-edit/pages';
 import { TalentProfileSettingsPage } from '../features/talent/talent-profile-settings/pages';
 import { NavigationLayout, ScrollContentLayout } from '../layouts';
-import { getAuthToken } from '../shared/lib/cookies';
 import { ROUTES } from '../shared/lib/routes';
-import { jwtDecoder } from '../shared/utils/jwtDecoder';
 
 export default function ProtectedRoutesLayout() {
   const { data: meData, isLoading } = useMeData();
-  const jwt = getAuthToken();
-  const decoded = jwt ? jwtDecoder(jwt) : null;
-  const talentProfileSlug = decoded?.talentProfileSlug;
 
   if (isLoading || !meData) {
     return null;
   }
 
   const effectiveDashboardRoute =
-    meData.activeMode === 'EMPLOYER'
-      ? ROUTES.EMPLOYER_CASTINGS
-      : talentProfileSlug
-        ? `${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}`
-        : ROUTES.TALENT;
+    meData.activeMode === 'EMPLOYER' ? ROUTES.EMPLOYER_CASTINGS : ROUTES.TALENT_APPLIED_CASTINGS;
 
   return (
     <Routes>
       <Route element={<ScrollContentLayout />}>
         <Route path={ROUTES.DASHBOARD} element={<Navigate to={effectiveDashboardRoute} replace />} />
-        {/* Talent */}
-        <Route path={ROUTES.TALENT} element={<TalentProfileEditPage />} />
-        <Route path={ROUTES.TALENT_SETTINGS} element={<TalentProfileSettingsPage />} />
         <Route path={ROUTES.TALENT_APPLIED_CASTINGS} element={<TalentCastingApplicationsPage />} />
 
         {/* Employer */}
         <Route path={ROUTES.EMPLOYER} element={<EmployerProfileEditPage />} />
         <Route path={ROUTES.EMPLOYER_CASTINGS} element={<EmployerCastingsPage />} />
-        <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/editor'} element={<EmployerCastingPage />} />
         <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/applicants'} element={<EmployerCastingApplicantsPage />} />
+      </Route>
+      <Route element={<ScrollContentLayout variant="desktop-full-bleed" />}>
+        {/* Talent */}
+        <Route path={ROUTES.TALENT} element={<TalentProfileEditPage />} />
+        <Route path={ROUTES.TALENT_SETTINGS} element={<TalentProfileSettingsPage />} />
+
+        {/* Employer */}
+        <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/editor'} element={<EmployerCastingPage />} />
       </Route>
       <Route element={<NavigationLayout />}>
         <Route

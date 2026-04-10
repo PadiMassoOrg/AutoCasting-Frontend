@@ -1,4 +1,4 @@
-import { Icon, Label } from 'autocasting-ui-library-padimasso';
+import { Button, Icon, Label } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
@@ -9,6 +9,7 @@ import ServerError from '../../../../../shared/components/ServerError/ServerErro
 import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
 import { useCastingRequirementCreateAutosave } from '../../hooks/autosaves';
+import type { CastingRequirementFormKey } from '../../schemas/formSchema';
 import { useSectionRequirements } from '../../hooks/section/useSectionRequirements';
 import { useSectionRoles } from '../../hooks/section/useSectionRoles';
 import type { EmployerCastingRequirementCardResponse } from '../../types/employerCastings.types';
@@ -81,7 +82,9 @@ const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: stri
         sectionId={sectionId}
         roleOptions={roleOptions}
         disabledRoleIds={disabledRoleIds}
-        onSave={(draft) => {
+        backendErrors={createRequirementMutation.fieldErrors as Partial<Record<CastingRequirementFormKey, string>>}
+        clearBackendFieldError={createRequirementMutation.clearFieldError as (field: CastingRequirementFormKey) => void}
+        onSave={async (draft) => {
           if (draft.mode !== 'create') return;
 
           const payload: CastingRequirementUpsertRequest = {
@@ -92,7 +95,8 @@ const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: stri
             description: draft.description?.trim() ? draft.description.trim() : undefined,
           };
 
-          createRequirementMutation.immediate(payload);
+          const result = await createRequirementMutation.submit(payload).catch(() => null);
+          if (!result) return;
           closeModal();
         }}
         onCancel={closeModal}
@@ -103,13 +107,12 @@ const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: stri
   };
 
   const actionButtonRender = () => (
-    <span
-      onClick={handleOpenModal}
-      className={`flex flex-row items-center justify-center gap-2 ${roleOptions.length === 0 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
-    >
-      <Icon name="plus" variant="primary" size={16} />
-      <span className="text-base font-semibold text-[var(--color-primary-purple)]">{t('general.add')}</span>
-    </span>
+    <Button variant="primary" disabled={roleOptions.length === 0} onClick={handleOpenModal}>
+      <span className="flex flex-row items-center gap-2">
+        <Icon name="plus" variant="white" size={16}></Icon>
+        {t('general.add')}
+      </span>
+    </Button>
   );
 
   return (

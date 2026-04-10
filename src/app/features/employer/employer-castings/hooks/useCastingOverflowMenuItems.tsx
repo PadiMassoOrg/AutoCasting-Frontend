@@ -1,4 +1,4 @@
-import type { OverflowMenuItem } from 'autocasting-ui-library-padimasso';
+import { showToast, type OverflowMenuItem } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -87,7 +87,7 @@ export const useCastingOverflowMenuItems = ({
         onSelect: async () => {
           const url = new URL(publicCastingDetailsPath, window.location.origin).toString();
           await copyToClipboardGraceful(url);
-          alert(t('general.copied'));
+          showToast({ title: t('general.copied'), description: t('general.copied'), type: 'default' });
         },
       },
       {

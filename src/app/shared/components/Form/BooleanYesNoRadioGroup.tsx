@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,15 +21,19 @@ export default function BooleanYesNoRadioGroup({
   value,
   onChange,
   name,
-  className = 'flex flex-col gap-1',
-  legendClassName = 'text-[14px] font-semibold',
-  optionClassName = 'flex items-center gap-2 text-[14px] font-semibold',
+  className,
+  legendClassName,
+  optionClassName,
   disabled = false,
   required = false,
 }: BooleanYesNoRadioGroupProps) {
   const { t } = useTranslation();
   const uid = useId();
   const groupName = (name ?? 'bool') + '__' + uid;
+
+  const finalClassName = clsx('flex flex-col gap-1', className);
+  const finalLegendClassName = clsx('text-[14px] font-semibold', legendClassName);
+  const finalOptionClassName = clsx('flex items-center gap-2 text-[14px] font-semibold', optionClassName);
 
   const idYes = `${groupName}-yes`;
   const idNo = `${groupName}-no`;
@@ -45,10 +50,10 @@ export default function BooleanYesNoRadioGroup({
           h-6 w-6
           rounded-full
           border
-          border-[var(--color-secondary-outline)]
+          border-(--color-secondary-outline)
           appearance-none
           cursor-pointer
-          checked:border-[var(--color-primary-purple)]
+          checked:border-(--color-primary-purple)
           bg-white
           transition-colors
           disabled:cursor-not-allowed
@@ -61,7 +66,7 @@ export default function BooleanYesNoRadioGroup({
           absolute
           h-3 w-3
           rounded-full
-          bg-[var(--color-primary-purple)]
+          bg-(--color-primary-purple)
           scale-0
           peer-checked:scale-100
           transition-transform
@@ -71,8 +76,8 @@ export default function BooleanYesNoRadioGroup({
   );
 
   return (
-    <fieldset className={className}>
-      <legend className={legendClassName}>
+    <fieldset className={finalClassName}>
+      <legend className={finalLegendClassName}>
         {label}
         {required ? (
           <span className="text-red-500 ml-1" aria-hidden="true">
@@ -84,7 +89,7 @@ export default function BooleanYesNoRadioGroup({
       {/* Horizontal yes/no */}
       <div className="mt-2 pl-1 flex flex-row items-center gap-6">
         {/* Sí */}
-        <label htmlFor={idYes} className={optionClassName}>
+        <label htmlFor={idYes} className={finalOptionClassName}>
           {renderRadioInput(value === true, {
             id: idYes,
             name: groupName,
@@ -94,7 +99,7 @@ export default function BooleanYesNoRadioGroup({
         </label>
 
         {/* No */}
-        <label htmlFor={idNo} className={optionClassName}>
+        <label htmlFor={idNo} className={finalOptionClassName}>
           {renderRadioInput(value === false, {
             id: idNo,
             name: groupName,
@@ -104,7 +109,7 @@ export default function BooleanYesNoRadioGroup({
         </label>
       </div>
 
-      <div className="min-h-[25px]" />
+      <div className="min-h-6.25" />
     </fieldset>
   );
 }

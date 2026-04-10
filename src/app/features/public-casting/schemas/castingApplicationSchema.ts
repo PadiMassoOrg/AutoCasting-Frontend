@@ -1,8 +1,7 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
+import { UUID_RX } from '../../../shared/utils/schemaUtils';
 import type { CastingRequirement } from '../types/publicCasting.types';
-
-const UUID_RX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const optionalUrl = (t: TFunction) =>
   z

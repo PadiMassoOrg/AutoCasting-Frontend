@@ -1,9 +1,9 @@
-import { Icon } from 'autocasting-ui-library-padimasso';
+import { Icon, Label } from 'autocasting-ui-library-padimasso';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import type { UseFormRegisterReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
-import { getSocialMediaSchema } from '../../../schemas/socialMediaSchema';
-import type { LinkState, SocialMediaLinksPayload } from './SocialMediaForm';
+import type { LinkState } from './SocialMediaForm';
 import { getSocialMediaIconName } from './SocialMediaIconMapper';
 
 type SocialMediaIconSelectProps = {
@@ -18,13 +18,9 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
   const [openUpwards, setOpenUpwards] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const optionsForThisRow = allOptions.filter((opt) => !usedOptionIds.has(opt.id) || opt.id === value);
+  const optionsForThisRow = allOptions;
 
-  const selectedOption =
-    optionsForThisRow.find((o) => o.id === value) ??
-    allOptions.find((o) => o.id === value) ??
-    optionsForThisRow[0] ??
-    null;
+  const selectedOption = allOptions.find((o) => o.id === value) ?? null;
 
   const selectedIcon = selectedOption ? getSocialMediaIconName(selectedOption.stringCode) : undefined;
 
@@ -80,22 +76,26 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
 
       {open && (
         <div
-          className={`absolute z-20 p-2 rounded-lg bg-white shadow-lg border border-[var(--color-primary-light-grey)] flex gap-2 flex-wrap ${
+          className={`absolute z-20 p-2 rounded-lg bg-white shadow-lg border border-(--color-primary-light-grey) flex gap-2 flex-wrap ${
             openUpwards ? 'bottom-full mb-2' : 'mt-2'
           }`}
         >
           {optionsForThisRow.map((opt) => {
             const icon = getSocialMediaIconName(opt.stringCode);
+            const isDisabled = usedOptionIds.has(opt.id) && opt.id !== value;
             return (
               <button
                 key={opt.id}
                 type="button"
-                className={`w-8 h-8 rounded-md flex items-center justify-center hover:bg-[var(--color-primary-light-grey)] ${
-                  opt.id === value ? 'ring-2 ring-[var(--color-primary)]' : ''
-                }`}
+                disabled={isDisabled}
+                className={`w-8 h-8 rounded-md flex items-center justify-center hover:bg-(--color-primary-light-grey) ${
+                  opt.id === value ? 'ring-2 ring-(--color-primary)' : ''
+                } ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onClick={() => {
-                  onChange(opt.id);
-                  setOpen(false);
+                  if (!isDisabled) {
+                    onChange(opt.id);
+                    setOpen(false);
+                  }
                 }}
                 title={opt.stringCode}
               >
@@ -113,32 +113,28 @@ type SocialMediaRowProps = {
   allOptions: SiteMetadataObject[];
   usedOptionIds: Set<string>;
   value: LinkState;
-  onChange: (next: LinkState) => void;
+  urlField: UseFormRegisterReturn;
+  optionIdField: UseFormRegisterReturn;
+  errorMessage?: string;
+  onOptionChange: (nextId: string) => void;
   onDelete: () => void;
-  initialUrlsById: Record<string, string | null>;
-  onSaveLinks: (payload: SocialMediaLinksPayload) => void;
+  onBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
+  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 };
 
 const SocialMediaRow = ({
   allOptions,
   usedOptionIds,
   value,
-  onChange,
+  urlField,
+  optionIdField,
+  errorMessage,
+  onOptionChange,
   onDelete,
-  initialUrlsById,
-  onSaveLinks,
+  onBlur,
+  onKeyDown,
 }: SocialMediaRowProps) => {
   const { t } = useTranslation();
-  const schema = useMemo(() => getSocialMediaSchema(t), [t]);
-
-  const [error, setError] = useState<string | null>(null);
-  const [url, setUrl] = useState<string>(value.url ?? '');
-
-  const previousOptionIdRef = useRef<string | null>(value.optionId);
-
-  useEffect(() => {
-    setUrl(value.url ?? '');
-  }, [value.url]);
 
   const optionsForThisRow = useMemo(
     () => allOptions.filter((opt) => !usedOptionIds.has(opt.id) || opt.id === value.optionId),
@@ -150,112 +146,46 @@ const SocialMediaRow = ({
 
   if (!selectedOption) return null;
 
-  const commitUrl = () => {
-    const result = schema.shape.url.safeParse(url);
-    setError(result.success ? null : (result.error.errors[0]?.message ?? t('validation.url_invalid')));
-    if (!result.success) return;
-
-    const trimmed = url.trim();
-    const nextUrl = trimmed === '' ? null : trimmed;
-    const currentOptionId = selectedOption.id;
-
-    const payload: SocialMediaLinksPayload = {
-      links: [],
-    };
-
-    if (previousOptionIdRef.current && previousOptionIdRef.current !== currentOptionId) {
-      payload.links.push({
-        optionId: previousOptionIdRef.current,
-        url: null,
-      });
-    }
-
-    payload.links.push({
-      optionId: currentOptionId,
-      url: nextUrl,
-    });
-
-    if (payload.links.length > 0) {
-      onSaveLinks(payload);
-    }
-
-    previousOptionIdRef.current = currentOptionId;
-
-    onChange({
-      optionId: currentOptionId,
-      url: nextUrl,
-    });
-  };
-
-  const handleBlur = () => {
-    commitUrl();
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      commitUrl();
-    }
-  };
-
-  const handleChangeOption = (nextOptionId: string) => {
-    if (nextOptionId === value.optionId) return;
-
-    previousOptionIdRef.current = value.optionId;
-
-    const previousPersistedUrl = initialUrlsById[nextOptionId] ?? null;
-
-    setUrl(previousPersistedUrl ?? '');
-    setError(null);
-
-    onChange({
-      optionId: nextOptionId,
-      url: previousPersistedUrl,
-    });
-  };
-
-  const handleDelete = () => {
-    onSaveLinks({
-      links: [
-        {
-          optionId: selectedOption.id,
-          url: null,
-        },
-      ],
-    });
-
-    onDelete();
-  };
-
   return (
-    <div className="flex items-center gap-2 w-full">
-      <div className="flex-1">
-        <div className="flex items-center gap-3 w-full rounded-2xl border border-[var(--color-primary-light-grey)] px-5 h-14 py-3">
-          <SocialMediaIconSelect
-            allOptions={allOptions}
-            usedOptionIds={usedOptionIds}
-            value={value.optionId}
-            onChange={handleChangeOption}
-          />
-
-          <div className="w-px h-8 bg-[var(--color-primary-light-grey)]" />
-
-          <input
-            id={`social-url-${value.optionId}`}
-            className="flex-1 min-w-0 text-sm text-[var(--color-primary-text)] placeholder:text-[var(--color-primary-grey)] border-none outline-none focus:outline-none focus:ring-0"
-            placeholder={t('general.placeholder.url')}
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-          />
+    <>
+      <div className="flex items-center gap-2 w-full">
+        <div className="flex-1">
+          <div className="flex items-center gap-3 w-full rounded-2xl border border-(--color-primary-light-grey) px-5 h-14 py-3">
+            <SocialMediaIconSelect
+              allOptions={allOptions}
+              usedOptionIds={usedOptionIds}
+              value={value.optionId}
+              onChange={onOptionChange}
+            />
+            <div className="w-px h-8 bg-(--color-primary-light-grey)" />
+            <input type="hidden" {...optionIdField} />
+            <div className="w-full flex flex-row items-center justify-between">
+              <input
+                id={`social-url-${value.optionId}`}
+                className="flex-1 min-w-0 text-sm text-(--color-primary-text) placeholder:text-(--color-secondary-grey) border-none outline-none focus:outline-none focus:ring-0"
+                placeholder={t('general.placeholder.url')}
+                {...urlField}
+                onBlur={(e) => {
+                  urlField.onBlur?.(e);
+                  onBlur(e);
+                }}
+                onKeyDown={(e) => {
+                  onKeyDown(e);
+                }}
+              />
+            </div>
+          </div>
         </div>
-
-        {error && <p className="mt-1 pl-2 text-sm text-[var(--color-alert-error)]">{error}</p>}
+        <Icon name="delete" variant="danger" onClick={onDelete} className="self-center" size={20} />
       </div>
-
-      <Icon name="delete" variant="danger" onClick={handleDelete} className="self-center" size={20} />
-    </div>
+      {!errorMessage ? (
+        <div className="min-h-[25px]" />
+      ) : (
+        <div className="min-h-[25px]">
+          <Label variant="error">{errorMessage}</Label>
+        </div>
+      )}
+    </>
   );
 };
 

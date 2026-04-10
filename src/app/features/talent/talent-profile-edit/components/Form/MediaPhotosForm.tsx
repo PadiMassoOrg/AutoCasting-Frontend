@@ -7,6 +7,7 @@ import { useProfileMediaPatch } from '../../../../../integrations/supabase/media
 import { fileSchema, OTHER_SLOTS, otherIndexSchema } from '../../schemas/mediaSchema';
 import { TALENT_PROFILE_CACHE_KEY } from '../../services/talentProfileService';
 import type { Media } from '../../types/talentProfile.types';
+import { getBackendErrorMessage } from '../../../../../shared/utils/backendErrorHandling';
 
 export default function MediaPhotosForm({ media, supabaseId }: { media: Media; supabaseId: string }) {
   const qc = useQueryClient();
@@ -92,6 +93,11 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
             prev ? { ...prev, media: updated } : prev
           );
         },
+        onError: (error) => {
+          const message = getBackendErrorMessage(error, t);
+          if (slot === 'headshot') setErrHeadshot(message);
+          else setErrFullbody(message);
+        },
         onSettled: () =>
           setPending((prev) => {
             const n = new Set(prev);
@@ -145,6 +151,10 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
             prev ? { ...prev, media: updated } : prev
           );
         },
+        onError: (error) => {
+          const message = getBackendErrorMessage(error, t);
+          setErrOther((m) => ({ ...m, [index]: message }));
+        },
         onSettled: () =>
           setOtherPending((p) => {
             const n = new Set(p);
@@ -171,8 +181,9 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
       qc.setQueriesData({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
         prev ? { ...prev, media: updated } : prev
       );
-    } catch {
+    } catch (error) {
       setRemovedHeadshot(false);
+      showGlobalError(getBackendErrorMessage(error, t));
     }
   };
 
@@ -192,8 +203,9 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
       qc.setQueriesData({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
         prev ? { ...prev, media: updated } : prev
       );
-    } catch {
+    } catch (error) {
       setRemovedFullbody(false);
+      showGlobalError(getBackendErrorMessage(error, t));
     }
   };
 
@@ -218,6 +230,13 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
       qc.setQueriesData({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
         prev ? { ...prev, media: updated } : prev
       );
+    } catch (error) {
+      setRemovedOthers((s) => {
+        const n = new Set(s);
+        n.delete(index);
+        return n;
+      });
+      showGlobalError(getBackendErrorMessage(error, t));
     } finally {
       setOtherPending((s) => {
         const n = new Set(s);

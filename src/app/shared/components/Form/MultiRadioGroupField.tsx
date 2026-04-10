@@ -1,4 +1,5 @@
 import { Label } from 'autocasting-ui-library-padimasso';
+import clsx from 'clsx';
 import type { HTMLAttributes } from 'react';
 import React, { useEffect, useId, useMemo, useRef } from 'react';
 import type { RadioOption } from './RadioGroupField';
@@ -47,10 +48,10 @@ const MultiRadioGroupField = ({
 
   mustSelectOne = false,
 
-  wrapperClassName = 'flex flex-col',
-  labelClassName = 'text-sm font-semibold mb-3',
-  optionsWrapperClassName = 'flex flex-col gap-2',
-  optionClassName = 'flex items-center gap-2 text-sm',
+  wrapperClassName,
+  labelClassName,
+  optionsWrapperClassName,
+  optionClassName,
 
   required = false,
   className,
@@ -58,6 +59,11 @@ const MultiRadioGroupField = ({
 }: Props) => {
   const uid = useId();
   const groupName = (name ?? 'multi-radio') + '__' + uid;
+
+  const finalWrapperClassName = clsx('flex flex-col', wrapperClassName);
+  const finalLabelClassName = clsx('text-sm font-semibold mb-3', labelClassName);
+  const finalOptionsWrapperClassName = clsx('flex flex-col gap-2', optionsWrapperClassName);
+  const finalOptionClassName = clsx('flex items-center gap-2 text-sm', optionClassName);
 
   const normalizedDisabled = useMemo(() => {
     const s = new Set<string>();
@@ -155,11 +161,12 @@ const MultiRadioGroupField = ({
           h-6 w-6
           rounded-full
           border
-          border-[var(--color-secondary-outline)]
+          border-(--color-secondary-outline)
           appearance-none
           cursor-pointer
-          checked:border-[var(--color-primary-purple)]
+          checked:border-(--color-primary-purple)
           bg-white
+          text-sm
           transition-colors
           disabled:cursor-not-allowed
         "
@@ -171,7 +178,7 @@ const MultiRadioGroupField = ({
           absolute
           h-3 w-3
           rounded-full
-          bg-[var(--color-primary-purple)]
+          bg-(--color-primary-purple)
           scale-0
           peer-checked:scale-100
           transition-transform
@@ -182,9 +189,9 @@ const MultiRadioGroupField = ({
 
   return (
     <>
-      <div className={[wrapperClassName, className].filter(Boolean).join(' ')} {...rest}>
+      <div className={clsx(finalWrapperClassName, className)} {...rest}>
         {label ? (
-          <Label className={labelClassName}>
+          <Label className={finalLabelClassName}>
             {label}
             {required ? (
               <span className="text-red-500 ml-1" aria-hidden="true">
@@ -194,7 +201,7 @@ const MultiRadioGroupField = ({
           </Label>
         ) : null}
 
-        <div className={optionsWrapperClassName}>
+        <div className={finalOptionsWrapperClassName}>
           {options.map((opt) => {
             const value = toKey(opt.value);
             const locked = isLocked(opt);
@@ -206,7 +213,7 @@ const MultiRadioGroupField = ({
               <label
                 key={value}
                 htmlFor={id}
-                className={[optionClassName, isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'].join(' ')}
+                className={clsx(finalOptionClassName, isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer')}
               >
                 {renderCircleCheckbox(checked, {
                   id,
@@ -226,9 +233,9 @@ const MultiRadioGroupField = ({
       </div>
 
       {!error ? (
-        <div className="min-h-[25px]" />
+        <div className="min-h-6.25" />
       ) : (
-        <div className="min-h-[25px]">
+        <div className="min-h-6.25">
           <Label id={`${errorId}-error`} variant="error" className="mt-0.5">
             {error}
           </Label>

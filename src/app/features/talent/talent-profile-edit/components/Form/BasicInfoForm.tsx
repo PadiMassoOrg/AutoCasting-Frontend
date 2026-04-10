@@ -30,14 +30,30 @@ export default function BasicInfoForm({
   professionsMeta: SiteMetadataObject[];
 }) {
   const { t, i18n } = useTranslation();
+  const getBirthDateError = (iso: string) => {
+    if (!iso) return null;
+
+    const today = new Date();
+    const todayIso = [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, '0'),
+      String(today.getDate()).padStart(2, '0'),
+    ].join('-');
+
+    return iso > todayIso ? t('validation.birth_date_future') : null;
+  };
+
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
   const autosave = useBasicInfoAutosave();
   const schema = useMemo(() => getBasicInfoSchema(t), [t]);
+  const backendFieldErrors = autosave.fieldErrors as Record<string, string | undefined>;
   const YEAR_END = new Date().getFullYear();
   const YEAR_START = YEAR_END - 80;
 
   const [profErrors, setProfErrors] = useState<string | null>(null);
+  const [birthError, setBirthError] = useState<string | null>(() => getBirthDateError(data.birthDate ?? ''));
   const [errors, setErrors] = useState<Errors>({});
+  const [lastSentBirthDate, setLastSentBirthDate] = useState(data.birthDate ?? '');
 
   const stageName = useCommittedText(
     data.stageName ?? '',
@@ -69,6 +85,11 @@ export default function BasicInfoForm({
   const birth = useIsoDateField(
     data.birthDate ?? '',
     (iso) => {
+      const nextBirthError = getBirthDateError(iso);
+      setBirthError(nextBirthError);
+      if (nextBirthError) return;
+      if (iso === lastSentBirthDate) return;
+      setLastSentBirthDate(iso);
       setErrors((e) => ({ ...e, birth: null }));
       autosave.immediate({ birthDate: iso });
     },
@@ -100,6 +121,8 @@ export default function BasicInfoForm({
       if (r.success) autosave.immediate({ professionIds: next });
     }
   );
+  const birthDayError = errors.birth?.day ?? birthError ?? undefined;
+  const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
 
   return (
     <div className="w-full flex flex-col gap-2">
@@ -112,7 +135,7 @@ export default function BasicInfoForm({
         onChange={stageName.onChange}
         onBlur={stageName.onBlur}
         onKeyDown={stageName.onKeyDown}
-        error={errors.stageName ?? undefined}
+        error={resolveError('stageName', errors.stageName)}
       />
 
       <FormSelectField
@@ -124,7 +147,7 @@ export default function BasicInfoForm({
         onChange={gender.onChange}
         onBlur={gender.onBlur}
         options={genderOptions}
-        error={errors.genderId ?? undefined}
+        error={resolveError('genderId', errors.genderId)}
       />
 
       <div className="flex flex-col gap-2">
@@ -135,39 +158,42 @@ export default function BasicInfoForm({
             placeholder={t('general.placeholder.day')}
             value={birth.day}
             onChange={(e) => {
+              setBirthError(null);
               onSelect((v) => birth.onDay(v))(e);
             }}
             onBlur={(e) => {
               birth.onAnyBlur(e);
             }}
             options={birth.dayOptions}
-            error={errors.birth?.day ?? undefined}
+            error={resolveError('birthDate', birthDayError)}
           />
           <FormSelectField
             id="birth-month"
             placeholder={t('general.placeholder.month')}
             value={birth.month}
             onChange={(e) => {
+              setBirthError(null);
               onSelect((v) => birth.onMonth(v))(e);
             }}
             onBlur={(e) => {
               birth.onAnyBlur(e);
             }}
             options={monthOptions}
-            error={errors.birth?.month ?? undefined}
+            error={resolveError('birthDate', errors.birth?.month)}
           />
           <FormSelectField
             id="birth-year"
             placeholder={t('general.placeholder.year')}
             value={birth.year}
             onChange={(e) => {
+              setBirthError(null);
               onSelect((v) => birth.onYear(v))(e);
             }}
             onBlur={(e) => {
               birth.onAnyBlur(e);
             }}
             options={yearOptions}
-            error={errors.birth?.year ?? undefined}
+            error={resolveError('birthDate', errors.birth?.year)}
           />
         </div>
       </div>
@@ -195,7 +221,9 @@ export default function BasicInfoForm({
             );
           })}
         </div>
-        {profErrors && <span className="text-sm text-red-600">{profErrors}</span>}
+        {(profErrors || resolveError('professions')) && (
+          <span className="text-sm text-red-600">{profErrors ?? resolveError('professions')}</span>
+        )}
       </div>
     </div>
   );

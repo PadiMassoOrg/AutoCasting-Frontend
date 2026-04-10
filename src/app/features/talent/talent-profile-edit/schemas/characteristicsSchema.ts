@@ -1,26 +1,31 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
-
-const UUID_RX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+import { UUID_RX } from '../../../../shared/utils/schemaUtils';
 
 const LETTERS_1_2_RX = /^[A-Za-z]{1,3}$/;
 const DIGITS_1_3_RX = /^\d{1,3}$/;
 
-const buildInt20to300 = (t: TFunction) =>
-  z.preprocess(
-    (v) => (v === '' || v == null ? undefined : Number(v)),
+/**
+ * Nullable integer validator that preserves null/undefined distinction
+ * @param t Translation function
+ * @param min Minimum value (inclusive)
+ * @param max Maximum value (inclusive)
+ */
+const buildOptionalInt = (t: TFunction, min: number, max: number) =>
+  z.union([
+    z.literal('').transform(() => null),
+    z.null(),
+    z.undefined().transform(() => undefined),
     z
-      .number({ invalid_type_error: t('validation.number') })
+      .number()
       .int({ message: t('validation.number') })
-      .min(20, { message: t('validation.invalid') })
-      .max(300, { message: t('validation.invalid') })
-  );
+      .min(min, { message: t('validation.invalid') })
+      .max(max, { message: t('validation.invalid') }),
+  ]);
 
-const buildOptionalInt20to300 = (t: TFunction) =>
-  z
-    .union([buildInt20to300(t), z.literal(''), z.null(), z.undefined()])
-    .transform((v) => (v === '' || v == null ? undefined : (v as number)));
-
+/**
+ * Nullable UUID validator
+ */
 const buildOptionalUuid = (t: TFunction) =>
   z
     .string()
@@ -29,38 +34,41 @@ const buildOptionalUuid = (t: TFunction) =>
     .optional()
     .or(z.literal('').transform(() => undefined));
 
-const lettersOr3DigitsOptional = (t: TFunction) =>
-  z
-    .string()
-    .trim()
-    .transform((s) => (s === '' ? undefined : s))
-    .refine((s) => s === undefined || LETTERS_1_2_RX.test(s) || DIGITS_1_3_RX.test(s), {
-      message: t('validation.invalid'),
-    })
-    .optional();
-
-export const buildMeasureNumOrText = lettersOr3DigitsOptional;
-
-const buildSizeOrTextOptional = lettersOr3DigitsOptional;
+/**
+ * Nullable string validator that preserves null/undefined distinction for measures and sizes
+ * @param t Translation function
+ * @param pattern Optional regex pattern to validate (e.g., /^[A-Za-z]{1,3}$/)
+ */
+const buildOptionalString = (t: TFunction, pattern?: RegExp) =>
+  z.union([
+    z.literal('').transform(() => null),
+    z.null(),
+    z.undefined().transform(() => undefined),
+    z
+      .string()
+      .trim()
+      .refine((s) => !pattern || pattern.test(s), {
+        message: t('validation.invalid'),
+      }),
+  ]);
 
 export const getCharacteristicsSchema = (t: TFunction) =>
   z.object({
-    heightCm: buildOptionalInt20to300(t),
-    weightKg: buildOptionalInt20to300(t),
+    heightCm: buildOptionalInt(t, 20, 300),
+    weightKg: buildOptionalInt(t, 0, 500),
 
     hairColorId: buildOptionalUuid(t),
     eyeColorId: buildOptionalUuid(t),
-
     ethnicityId: buildOptionalUuid(t),
 
-    chestCm: buildMeasureNumOrText(t),
-    waistCm: buildMeasureNumOrText(t),
-    hipCm: buildMeasureNumOrText(t),
+    chestCm: buildOptionalString(t, new RegExp(`${LETTERS_1_2_RX.source}|${DIGITS_1_3_RX.source}`)),
+    waistCm: buildOptionalString(t, new RegExp(`${LETTERS_1_2_RX.source}|${DIGITS_1_3_RX.source}`)),
+    hipCm: buildOptionalString(t, new RegExp(`${LETTERS_1_2_RX.source}|${DIGITS_1_3_RX.source}`)),
 
-    shirtSize: buildSizeOrTextOptional(t),
-    pantSize: buildSizeOrTextOptional(t),
-    dressSize: buildSizeOrTextOptional(t),
-    shoeSize: buildSizeOrTextOptional(t),
+    shirtSize: buildOptionalString(t, new RegExp(`${LETTERS_1_2_RX.source}|${DIGITS_1_3_RX.source}`)),
+    pantSize: buildOptionalString(t, new RegExp(`${LETTERS_1_2_RX.source}|${DIGITS_1_3_RX.source}`)),
+    dressSize: buildOptionalString(t, new RegExp(`${LETTERS_1_2_RX.source}|${DIGITS_1_3_RX.source}`)),
+    shoeSize: buildOptionalString(t, new RegExp(`${LETTERS_1_2_RX.source}|${DIGITS_1_3_RX.source}`)),
 
     tattoo: z.union([z.boolean(), z.enum(['true', 'false']).transform((v) => v === 'true')]).optional(),
     passport: z.union([z.boolean(), z.enum(['true', 'false']).transform((v) => v === 'true')]).optional(),

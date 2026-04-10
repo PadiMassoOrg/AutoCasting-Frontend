@@ -1,6 +1,5 @@
 import type { DeepNullableExceptId } from '../../../../shared/utils/typeUtils';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
-import type { ProfileProgress } from '../services/computeProfileProgress';
 
 export type TalentBaseProfileResponse = {
   id: string;
@@ -49,7 +48,6 @@ export type BaseProfileBasicInfo = {
 export type BaseProfileContact = {
   id: string;
   email: string;
-  phoneNumber: string;
 };
 
 export type SocialMediaLink = {
@@ -72,7 +70,6 @@ export type BaseCharacteristics = {
   heightCm: number;
   ethnicity: SiteMetadataObject;
   ethnicityId: string;
-  weightKg: number;
   hairColor: SiteMetadataObject;
   hairColorId: string;
   eyeColor: SiteMetadataObject;
@@ -124,5 +121,5 @@ export type ProfileSocialMedia = { links: SocialMediaLink[] };
 export type Media = DeepNullableExceptId<BaseMedia>;
 export type Characteristics = DeepNullableExceptId<BaseCharacteristics>;
 
-export type TalentProfileResponse = TalentBaseProfileResponse & { progress: ProfileProgress };
+export type TalentProfileResponse = TalentBaseProfileResponse;
 export type TalentPublicProfileResponse = TalentBasePublicProfileResponse;

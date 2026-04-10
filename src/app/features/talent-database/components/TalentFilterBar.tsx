@@ -126,7 +126,7 @@ export function TalentFilterBar({
         {isDesktop ? (
           <button
             type="button"
-            className="cursor-pointer text-xs underline font-light text-[var(--color-primary-purple)]"
+            className="cursor-pointer text-xs font-light hover:text-[var(--color-primary-purple)]"
             onClick={handleReset}
           >
             {t('general.filter.reset')}
@@ -143,7 +143,7 @@ export function TalentFilterBar({
         )}
       </header>
 
-      <Separator className="opacity-20 mt-5" />
+      <Separator className="opacity-20 mt-12" />
 
       <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <FormInputField

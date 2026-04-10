@@ -178,86 +178,87 @@ const CastingDatabasePage = () => {
   const isFetchingNextPage = items.length > 0 && loading;
 
   return (
-    <section className="w-full h-full min-h-0 bg-[var(--color-secondary-white)]">
+    <section className="w-full h-full min-h-0 bg-(--color-secondary-white)">
       <div className="h-full w-full flex flex-col">
-        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col lg:flex-row gap-6 overflow-hidden">
-          {/* Desktop Filter Bar */}
+        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0">
           {isDesktop && filtersOpen && (
-            <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-[var(--color-primary-white)] border-r border-[var(--color-secondary-outline)]">
+            <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-(--color-primary-white) border-r border-(--color-secondary-outline)">
               <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5">
                 <CastingFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
               </div>
             </aside>
           )}
 
-          <div
-            ref={cardsScrollRef}
-            className="p-6 sm:px-[56px] w-full max-w-[1500px] m-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
-          >
-            <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
-              <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
-              <button
-                type="button"
-                className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
-                onClick={() => setMobileOpen(true)}
-                aria-label={t('general.filters.open')}
-              >
-                <span className="w-12 h-12 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
-                  <Icon name="filter" variant="primary" size={20} />
-                </span>
-              </button>
-            </article>
+          <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[56px] lg:py-[56px]">
+            <div
+              ref={cardsScrollRef}
+              className="w-full max-w-[1500px] mx-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
+            >
+              <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
+                <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
+                <button
+                  type="button"
+                  className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
+                  onClick={() => setMobileOpen(true)}
+                  aria-label={t('general.filters.open')}
+                >
+                  <span className="w-12 h-12 flex items-center justify-center bg-(--color-primary-white) rounded-lg">
+                    <Icon name="filter" variant="primary" size={20} />
+                  </span>
+                </button>
+              </article>
 
-            <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
-              <button
-                type="button"
-                className="cursor-pointer inline-flex items-center gap-3"
-                onClick={() => setFiltersOpen((v) => !v)}
-                aria-pressed={filtersOpen}
-              >
-                <h2 className="text-sm font-light underline text-[var(--color-primary-purple)]">
-                  {filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
-                </h2>
-                <span className="w-11 h-11 flex items-center justify-center bg-[var(--color-primary-white)] rounded-lg">
-                  <Icon name="filter" variant="primary" />
-                </span>
-              </button>
-            </div>
+              <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
+                <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
+                <button
+                  type="button"
+                  className="cursor-pointer inline-flex items-center gap-3"
+                  onClick={() => setFiltersOpen((v) => !v)}
+                  aria-pressed={filtersOpen}
+                >
+                  <h2 className="text-sm font-light hover:text-(--color-primary-purple)">
+                    {filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
+                  </h2>
+                  <span className="w-11 h-11 flex items-center justify-center bg-(--color-primary-white) rounded-lg">
+                    <Icon name="filter" variant="primary" />
+                  </span>
+                </button>
+              </div>
 
-            {error ? (
-              <p className="py-18 text-center font-normal text-[var(--color-alert-error)]">{t('state.server_err')}</p>
-            ) : (
-              <>
-                <article className="flex flex-col gap-10">
-                  {showInitialSkeletons &&
-                    Array.from({ length: pageSize }).map((_, i) => (
-                      <div key={`casting-skeleton-${i}`} className="w-full">
-                        <div className="animate-pulse w-full h-40 bg-neutral-100 rounded-lg" />
+              {error ? (
+                <p className="py-18 text-center font-normal text-(--color-alert-error)">{t('state.server_err')}</p>
+              ) : (
+                <>
+                  <article className="flex flex-col gap-10">
+                    {showInitialSkeletons &&
+                      Array.from({ length: pageSize }).map((_, i) => (
+                        <div key={`casting-skeleton-${i}`} className="w-full">
+                          <div className="animate-pulse w-full h-40 bg-neutral-100 rounded-lg" />
+                        </div>
+                      ))}
+
+                    {items.map((it) => (
+                      <div key={it.id} className="w-full">
+                        <CastingRolePublicCard item={it} />
                       </div>
                     ))}
 
-                  {items.map((it) => (
-                    <div key={it.id} className="w-full">
-                      <CastingRolePublicCard item={it} />
-                    </div>
-                  ))}
+                    <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
+                  </article>
 
-                  <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
-                </article>
-
-                {showEmptyState && (
-                  <p className="py-18 text-center font-light text-[var(--color-secondary-grey)]">
-                    {t('state.no_results')}
-                  </p>
-                )}
-                {isFetchingNextPage && (
-                  <p className="py-10 text-center font-light text-[var(--color-secondary-grey)]" aria-live="polite">
-                    {t('state.loading')}
-                  </p>
-                )}
-              </>
-            )}
+                  {showEmptyState && (
+                    <p className="py-18 text-center font-light text-(--color-secondary-grey)">
+                      {t('state.no_results')}
+                    </p>
+                  )}
+                  {isFetchingNextPage && (
+                    <p className="py-10 text-center font-light text-(--color-secondary-grey)" aria-live="polite">
+                      {t('state.loading')}
+                    </p>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         </div>
 

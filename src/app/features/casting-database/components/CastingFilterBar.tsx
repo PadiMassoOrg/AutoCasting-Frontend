@@ -120,7 +120,11 @@ export function CastingFilterBar({
       <header className="flex items-center justify-between pb-2">
         <h4 className="text-[14px] font-semibold">{t('general.filter.title')}</h4>
         {isDesktop ? (
-          <button type="button" className="cursor-pointer text-xs underline font-light" onClick={handleReset}>
+          <button
+            type="button"
+            className="cursor-pointer text-xs font-light hover:text-(--color-primary-purple)"
+            onClick={handleReset}
+          >
             {t('general.filter.reset')}
           </button>
         ) : (

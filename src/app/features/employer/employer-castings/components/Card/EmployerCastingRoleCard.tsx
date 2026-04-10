@@ -4,6 +4,7 @@ import { useModal } from '../../../../../context/ModalContext';
 import { SectionCard } from '../../../../../shared/components/Section';
 import { formatAgeRange } from '../../../../../shared/utils/formatUtils';
 import { useCastingRoleDeleteAutosave, useCastingRolePatchAutosave } from '../../hooks/autosaves';
+import type { CastingRoleFormKey } from '../../schemas/formSchema';
 import type { EmployerCastingRoleCardResponse } from '../../types/employerCastings.types';
 import CastingRoleDeleteModal from '../Form/Role/CastingRoleDeleteModal';
 import CastingRoleModal from '../Form/Role/CastingRoleModal';
@@ -21,8 +22,11 @@ const EmployerCastingRoleCard = ({ data }: { data: EmployerCastingRoleCardRespon
       <CastingRoleModal
         mode="edit"
         initial={data}
-        onSave={(draft) => {
-          patchRole.immediate({ ...draft, id: draft.id! });
+        backendErrors={patchRole.fieldErrors as Partial<Record<CastingRoleFormKey, string>>}
+        clearBackendFieldError={patchRole.clearFieldError as (field: CastingRoleFormKey) => void}
+        onSave={async (draft) => {
+          const result = await patchRole.submit({ ...draft, id: draft.id! }).catch(() => null);
+          if (!result) return;
           closeModal();
         }}
         onCancel={closeModal}
@@ -38,8 +42,8 @@ const EmployerCastingRoleCard = ({ data }: { data: EmployerCastingRoleCardRespon
       <CastingRoleDeleteModal
         data={data}
         onCancel={closeModal}
-        onConfirm={() => {
-          deleteRole.immediate({ id: data.id });
+        onConfirm={async () => {
+          await deleteRole.submit({ id: data.id });
           closeModal();
         }}
       />,

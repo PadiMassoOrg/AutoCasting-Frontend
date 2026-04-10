@@ -1,21 +1,21 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
-import { useState } from 'react';
+import { Button, FormInputField } from 'autocasting-ui-library-padimasso';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ForgottenPasswordForm } from '.';
 import { useModal } from '../../../context/ModalContext';
+import { useToast } from '../../../context/ToastContext';
 import { ROUTES } from '../../../shared/lib/routes';
+import { handleBackendFormError } from '../../../shared/utils/backendErrorHandling';
 import { useLoginMutation } from '../hooks/useLoginMutation';
 import { getLoginSchema, type LoginFormValues } from '../schemas/authSchema';
 
 export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const { t } = useTranslation();
   const { openModal } = useModal();
+  const { showToast } = useToast();
   const loginMutation = useLoginMutation();
-
-  const [serverError, setServerError] = useState<string | null>(null);
 
   const handleForgottenPass = () => {
     openModal(<ForgottenPasswordForm />, t('auth.page.forgotten_pass'), 'lg');
@@ -24,17 +24,32 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(getLoginSchema()),
   });
 
   const onSubmit = (data: LoginFormValues) => {
-    setServerError(null);
+    clearErrors();
     loginMutation.mutate(data, {
       onError: (err: any) => {
-        const message = err?.response?.data?.message || t('state.server_err');
-        setServerError(message);
+        handleBackendFormError({
+          error: err,
+          t,
+          setError,
+          showToast: (message) =>
+            showToast({
+              title: t('general.error'),
+              description: message,
+              type: 'danger',
+            }),
+          messageFieldMap: {
+            'server_error.auth.invalid_credentials': 'password',
+          },
+          generalFieldFallback: 'password',
+        });
       },
     });
   };
@@ -67,12 +82,6 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
       <Button type="submit" className="mt-4 mb-2 cursor-pointer">
         {loginMutation.isPending ? t('state.loading') : t('auth.login.submit')}
       </Button>
-
-      {serverError && (
-        <Label variant="error" className="pl-1">
-          {serverError}
-        </Label>
-      )}
 
       <h2 className="mb-6 text-xs font-light text-center">
         {t('auth.page.disclaimer_terms_login')}{' '}

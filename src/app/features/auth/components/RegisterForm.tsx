@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, FormInputField, Label } from 'autocasting-ui-library-padimasso';
-import { useState } from 'react';
+import { Button, FormInputField } from 'autocasting-ui-library-padimasso';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { useToast } from '../../../context/ToastContext';
 import { ROUTES } from '../../../shared/lib/routes';
+import { handleBackendFormError } from '../../../shared/utils/backendErrorHandling';
 import { useRegisterMutation } from '../hooks/useRegisterMutation';
 import { getRegisterSchema, type RegisterFormValues } from '../schemas/authSchema';
 
@@ -14,24 +15,38 @@ type RegisterFormProps = {
 
 export default function RegisterForm({ onSwitch }: RegisterFormProps) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const registerMutation = useRegisterMutation();
-
-  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(getRegisterSchema()),
   });
 
   const onSubmit = (data: RegisterFormValues) => {
-    setServerError(null);
+    clearErrors();
     registerMutation.mutate(data, {
       onError: (err: any) => {
-        const message = err?.response?.data?.message || t('state.server_err');
-        setServerError(message);
+        handleBackendFormError({
+          error: err,
+          t,
+          setError,
+          showToast: (message) =>
+            showToast({
+              title: t('general.error'),
+              description: message,
+              type: 'danger',
+            }),
+          messageFieldMap: {
+            'server_error.auth.user_exists': 'email',
+          },
+          generalFieldFallback: 'password',
+        });
       },
     });
   };
@@ -58,12 +73,6 @@ export default function RegisterForm({ onSwitch }: RegisterFormProps) {
       <Button type="submit" className="my-2 cursor-pointer">
         {registerMutation.isPending ? t('state.loading') : t('auth.register.submit')}
       </Button>
-
-      {serverError && (
-        <div className="text-center my-2">
-          <Label variant="error">{serverError}</Label>
-        </div>
-      )}
 
       <h2 className="mb-6 text-xs font-light text-center">
         {t('auth.page.disclaimer_terms_register')}{' '}

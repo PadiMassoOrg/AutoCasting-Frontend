@@ -1,13 +1,14 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
-
-const UUID_RX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+import { NAME_RX, UUID_RX } from '../../../../shared/utils/schemaUtils';
 
 export function getBasicInfoSchema(t: TFunction) {
   const stageName = z
     .string()
     .trim()
-    .min(1, { message: t('validation.required') });
+    .min(1, { message: t('validation.required') })
+    .max(255, { message: t('validation.max_char') })
+    .regex(NAME_RX, { message: t('validation.invalid') });
 
   const genderId = z
     .string()

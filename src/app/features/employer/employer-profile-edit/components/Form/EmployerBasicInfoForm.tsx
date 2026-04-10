@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useEmployerLogoPatch } from '../../../../../integrations/supabase/media/hooks/useEmployerLogoPatch';
 import { TextareaField } from '../../../../../shared/components/Form';
+import { getBackendErrorMessage } from '../../../../../shared/utils/backendErrorHandling';
 import { useCommittedText, useCommittedUuid } from '../../../../../shared/utils/formUtils';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { SocialMediaForm } from '../../../../talent/talent-profile-edit/components/Form/SocialMedia';
@@ -34,6 +35,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   const socialMediaAutosave = useEmployerSocialMediaAutosave();
   const schema = useMemo(() => getEmployerBasicInfoSchema(t), [t]);
   const companyTypeOptions = useCachedSiteMetadataOption('companyTypeOptions', t);
+  const backendFieldErrors = autosave.fieldErrors as Record<string, string | undefined>;
 
   const [errors, setErrors] = useState<Errors>({});
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -161,8 +163,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
           setBust((prev) => prev + 1);
         },
         onError: (err: unknown) => {
-          const anyErr = err as any;
-          const msg = anyErr?.response?.data?.message || anyErr?.message || t('state.server_err');
+          const msg = getBackendErrorMessage(err, t);
           setErrImage(msg);
           setErrors((e) => ({ ...e, imageUrl: msg }));
         },
@@ -182,6 +183,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   const isLogoBusy = uploadPending;
 
   const socialMediaData: ProfileSocialMedia = (data.socialMedia ?? { links: [] }) as ProfileSocialMedia;
+  const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
 
   return (
     <div className="w-full flex flex-col gap-1">
@@ -196,7 +198,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
             onChange={companyName.onChange}
             onBlur={companyName.onBlur}
             onKeyDown={companyName.onKeyDown}
-            error={errors.companyName ?? undefined}
+            error={resolveError('companyName', errors.companyName)}
           />
 
           <FormInputField
@@ -208,7 +210,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
             onChange={taxNumber.onChange}
             onBlur={taxNumber.onBlur}
             onKeyDown={taxNumber.onKeyDown}
-            error={errors.taxNumber ?? undefined}
+            error={resolveError('taxNumber', errors.taxNumber)}
           />
 
           <FormSelectField
@@ -220,7 +222,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
             onChange={companyType.onChange}
             onBlur={companyType.onBlur}
             options={companyTypeOptions}
-            error={errors.companyTypeId ?? undefined}
+            error={resolveError('companyTypeId', errors.companyTypeId)}
           />
         </div>
 
@@ -261,7 +263,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
         onChange={companyEmail.onChange}
         onBlur={companyEmail.onBlur}
         onKeyDown={companyEmail.onKeyDown}
-        error={errors.companyEmail ?? undefined}
+        error={resolveError('companyEmail', errors.companyEmail)}
       />
 
       <FormInputField
@@ -273,7 +275,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
         onChange={address.onChange}
         onBlur={address.onBlur}
         onKeyDown={address.onKeyDown}
-        error={errors.address ?? undefined}
+        error={resolveError('address', errors.address)}
       />
 
       <FormInputField
@@ -285,7 +287,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
         onChange={websiteUrl.onChange}
         onBlur={websiteUrl.onBlur}
         onKeyDown={websiteUrl.onKeyDown}
-        error={errors.websiteUrl ?? undefined}
+        error={resolveError('websiteUrl', errors.websiteUrl)}
       />
 
       <TextareaField
@@ -296,7 +298,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
         onChange={about.onChange}
         onBlur={about.onBlur}
         onKeyDown={about.onKeyDown}
-        error={errors.about}
+        error={resolveError('about', errors.about)}
       />
 
       <Separator className="opacity-20 my-8" />

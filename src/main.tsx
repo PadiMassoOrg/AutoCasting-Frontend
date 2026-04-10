@@ -11,6 +11,7 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import MetadataBootstrap from './app/bootstrap/MetadataBootstrap';
 import { LanguageProvider } from './app/context/LanguageContext';
 import { ModalProvider } from './app/context/ModalContext';
+import { ToastProvider } from './app/context/ToastContext';
 import { UserModeProvider } from './app/context/UserModeContext';
 import { AppRoutes } from './app/routes';
 import { queryClient } from './app/shared/lib/queryClient';
@@ -50,11 +51,13 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     >
       <MetadataBootstrap />
       <UserModeProvider>
-        <ModalProvider>
-          <LanguageProvider>
-            <AppRoutes />
-          </LanguageProvider>
-        </ModalProvider>
+        <ToastProvider>
+          <ModalProvider>
+            <LanguageProvider>
+              <AppRoutes />
+            </LanguageProvider>
+          </ModalProvider>
+        </ToastProvider>
       </UserModeProvider>
     </PersistQueryClientProvider>
   </React.StrictMode>

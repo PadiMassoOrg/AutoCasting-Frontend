@@ -1,21 +1,36 @@
 import { GoogleButton } from 'autocasting-ui-library-padimasso';
 import { Trans, useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
+import { useToast } from '../../../context/ToastContext';
 import NoNavigationLayout from '../../../layouts/NoNavigationLayout';
 import { LinkLogo } from '../../../shared/components/LinkLogo';
-import logo from '../../../shared/icons/og-image.svg';
+import { handleBackendActionError } from '../../../shared/utils/backendErrorHandling';
 import { RegisterForm } from '../components';
 import LoginForm from '../components/LoginForm';
 import { useGoogleLoginMutation } from '../hooks/useGoogleLoginMutation';
 
 export default function AuthenticationPage() {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const googleLoginMutation = useGoogleLoginMutation();
   const [searchParams, setSearchParams] = useSearchParams();
   const mode = searchParams.get('mode') === 'register' ? 'register' : 'login';
 
   const handleGoogleLogin = () => {
-    googleLoginMutation.mutate();
+    googleLoginMutation.mutate(undefined, {
+      onError: (error) => {
+        handleBackendActionError({
+          error,
+          t,
+          showToast: (message) =>
+            showToast({
+              title: t('general.error'),
+              description: message,
+              type: 'danger',
+            }),
+        });
+      },
+    });
   };
 
   const switchTo = (next: 'login' | 'register') => setSearchParams({ mode: next });
@@ -43,10 +58,6 @@ export default function AuthenticationPage() {
             </ul>
             <h2 className="font-bold text-lg mt-8">{t('auth.page.text_resaltador')}</h2>
           </div>
-          <aside className="self-center mt-32 flex flex-col items-center gap-2">
-            <img src={logo} alt="" className="w-14" />
-            <p className="text-sm font-bold">{t('company.site')}</p>
-          </aside>
         </article>
 
         {/* Forms */}

@@ -2,7 +2,6 @@ import { Icon, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { InlineList } from '../../../../../shared/components/InlineList';
 import { SectionCard } from '../../../../../shared/components/Section';
-import { ROUTES } from '../../../../../shared/lib/routes';
 import StatusDropdown from '../../../../sitemetadata/component/StatusDropdown';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { CASTING_APPLICATION_STATUS_ORDER } from '../../../../sitemetadata/utils/siteMetadataUtils';
@@ -46,10 +45,6 @@ const CastingApplicantCard = ({ data, onOpenDetails }: Props) => {
     await setStatus(nextStatus, { applicationId, castingSlug });
   };
 
-  const handlePublicProfileRedirect = () => {
-    window.location.href = ROUTES.PUBLIC_PROFILE + '/' + talentPublicSlug;
-  };
-
   const handleOpenDetails = () => {
     onOpenDetails(talentPublicSlug);
   };
@@ -77,7 +72,7 @@ const CastingApplicantCard = ({ data, onOpenDetails }: Props) => {
               >
                 <Icon name="mail" variant="default" />
               </a>
-              <Icon name="view" variant="default" onClick={handlePublicProfileRedirect} />
+              <Icon name="view" variant="default" onClick={handleOpenDetails} />
             </div>
           </div>
           <InlineList items={talentProfessions} />
@@ -88,7 +83,7 @@ const CastingApplicantCard = ({ data, onOpenDetails }: Props) => {
 
       {/* Application Status */}
       <div className="flex flex-row items-center justify-between">
-        <p className="text-sm text-[var(--color-secondary-gray)]">{t('general.status')}:</p>
+        <p className="text-sm text-(--color-secondary-gray)">{t('general.status')}:</p>
         {isMetadataReady ? (
           <StatusDropdown
             value={applicationStatus}
@@ -107,7 +102,7 @@ const CastingApplicantCard = ({ data, onOpenDetails }: Props) => {
 
       {/* Role */}
       <div className="flex flex-row items-center justify-between min-h-[28px]">
-        <p className="text-sm text-[var(--color-secondary-gray)]">{t('casting.role_section.role.role')}:</p>
+        <p className="text-sm text-(--color-secondary-gray)">{t('casting.role_section.role.role')}:</p>
         <p className="text-sm text-black">{castingRoleName}</p>
       </div>
 
@@ -115,13 +110,13 @@ const CastingApplicantCard = ({ data, onOpenDetails }: Props) => {
 
       {/* Requirements */}
       <div className="flex flex-row items-center justify-between">
-        <p className="text-sm text-[var(--color-secondary-gray)]">
+        <p className="text-sm text-(--color-secondary-gray)">
           {t('employer_casting_applicants.applicant_card.actings')}:
         </p>
 
         {requirementSubmissions.length === 0 ? (
           <span className="rounded-full py-2 px-4 flex items-center gap-1">
-            <p className="text-xs font-semibold text-[var(--color-primary-purple)]">-</p>
+            <p className="text-xs font-semibold text-(--color-primary-purple)">-</p>
           </span>
         ) : (
           requirementSubmissions.map((requirement) => (
@@ -131,10 +126,10 @@ const CastingApplicantCard = ({ data, onOpenDetails }: Props) => {
                   href={requirement.audioUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-full py-2 px-4 flex items-center gap-1 bg-[var(--color-primary-light-grey)]"
+                  className="rounded-full py-2 px-4 flex items-center gap-1 bg-(--color-primary-light-grey)"
                 >
                   <Icon name="play" variant="primary" size={14} />
-                  <p className="text-xs font-semibold text-[var(--color-primary-purple)]">
+                  <p className="text-xs font-semibold text-(--color-primary-purple)">
                     {t('employer_casting_applicants.applicant_card.audio')}
                   </p>
                 </a>
@@ -145,10 +140,10 @@ const CastingApplicantCard = ({ data, onOpenDetails }: Props) => {
                   href={requirement.videoUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-full py-2 px-4 flex items-center gap-1 bg-[var(--color-primary-light-grey)]"
+                  className="rounded-full py-2 px-4 flex items-center gap-1 bg-(--color-primary-light-grey)"
                 >
                   <Icon name="play" variant="primary" size={14} />
-                  <p className="text-xs font-semibold text-[var(--color-primary-purple)]">
+                  <p className="text-xs font-semibold text-(--color-primary-purple)">
                     {t('employer_casting_applicants.applicant_card.video')}
                   </p>
                 </a>

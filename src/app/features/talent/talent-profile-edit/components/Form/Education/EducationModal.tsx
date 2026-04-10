@@ -80,7 +80,7 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
       return;
     }
 
-    await onSave({ ...form, ...parsed.data });
+    await onSave({ ...form });
   };
 
   return (

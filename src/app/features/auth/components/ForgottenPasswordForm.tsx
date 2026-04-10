@@ -1,22 +1,24 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, FormInputField, Label, Separator } from 'autocasting-ui-library-padimasso';
-import { useState } from 'react';
+import { Button, FormInputField, Separator } from 'autocasting-ui-library-padimasso';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../context/ModalContext';
+import { useToast } from '../../../context/ToastContext';
+import { handleBackendFormError } from '../../../shared/utils/backendErrorHandling';
 import { useForgotPasswordMutation } from '../hooks/useForgotPasswordMutation';
 import { getForgottenPasswordSchema, type ForgottenPasswordValues } from '../schemas/authSchema';
 
 export default function ForgottenPasswordForm() {
   const { openModal, closeModal } = useModal();
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const forgotPasswordMutation = useForgotPasswordMutation();
-
-  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<ForgottenPasswordValues>({
     resolver: zodResolver(getForgottenPasswordSchema()),
@@ -27,15 +29,28 @@ export default function ForgottenPasswordForm() {
   };
 
   const onSubmit = (data: ForgottenPasswordValues) => {
-    setServerError(null);
+    clearErrors();
     forgotPasswordMutation.mutate(data, {
       onSuccess: () => {
         closeModal();
         handleSuccessModal();
       },
       onError: (err: any) => {
-        const message = err?.response?.data?.message || t('state.server_err');
-        setServerError(message);
+        handleBackendFormError({
+          error: err,
+          t,
+          setError,
+          showToast: (message) =>
+            showToast({
+              title: t('general.error'),
+              description: message,
+              type: 'danger',
+            }),
+          messageFieldMap: {
+            'server_error.auth.user_not_found': 'email',
+          },
+          generalFieldFallback: 'email',
+        });
       },
     });
   };
@@ -52,11 +67,6 @@ export default function ForgottenPasswordForm() {
           error={errors.email?.message}
           {...register('email')}
         />
-        {serverError && (
-          <Label variant="error" className="pl-1">
-            {serverError}
-          </Label>
-        )}
         <Separator className="opacity-20 mt-6 mb-10" />
         <div className="flex gap-2">
           <Button variant="outline" onClick={closeModal}>

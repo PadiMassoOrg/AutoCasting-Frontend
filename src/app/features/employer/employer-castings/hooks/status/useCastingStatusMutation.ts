@@ -1,4 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
+import { useToast } from '../../../../../context/ToastContext';
+import { handleBackendActionError } from '../../../../../shared/utils/backendErrorHandling';
 import {
   EMPLOYER_CASTINGS_LIST_CACHE_KEY,
   EMPLOYER_CASTING_CACHE_KEY,
@@ -23,6 +26,8 @@ const mutationByAction: Record<CastingStatusAction, (v: { id: string }) => Promi
 };
 
 export const useCastingStatusMutation = (action: CastingStatusAction) => {
+  const { t } = useTranslation();
+  const { showToast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation<EmployerCastingEditorResponse, unknown, Vars>({
@@ -35,6 +40,18 @@ export const useCastingStatusMutation = (action: CastingStatusAction) => {
           queryKey: [...EMPLOYER_CASTING_CACHE_KEY, variables.slug],
         });
       }
+    },
+    onError: (error) => {
+      handleBackendActionError({
+        error,
+        t,
+        showToast: (message) =>
+          showToast({
+            title: t('general.error'),
+            description: message,
+            type: 'danger',
+          }),
+      });
     },
   });
 };

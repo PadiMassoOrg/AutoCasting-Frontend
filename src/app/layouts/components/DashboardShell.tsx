@@ -84,9 +84,9 @@ function DashboardShell<Key extends string = string>({
   if (!hasSections) {
     return (
       <DashboardShellContext.Provider value={ctxValue}>
-        <section className="w-full h-full min-h-0 flex flex-col bg-[var(--color-secondary-white)]">
-          <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
-            <div className="w-full max-w-[1350px] mx-auto p-6">{children}</div>
+        <section className="w-full h-full min-h-0 flex flex-col bg-(--color-secondary-white)">
+          <article className="flex-1 min-w-0 h-full overscroll-contain [-webkit-overflow-scrolling:touch]">
+            <div className="w-full max-w-[1500px] mx-auto pb-20 lg:pb-0">{children}</div>
           </article>
         </section>
       </DashboardShellContext.Provider>
@@ -99,13 +99,11 @@ function DashboardShell<Key extends string = string>({
 
     return (
       <DashboardShellContext.Provider value={ctxValue}>
-        <section className="w-full h-full bg-[var(--color-secondary-white)] relative">
-          <div className={['w-full max-w-[500px] mx-auto h-full pt-2 px-6', bottomPad].filter(Boolean).join(' ')}>
-            {title && (
-              <h1 className="my-6 text-2xl font-semibold text-[var(--color-primary-black)] text-center">{title}</h1>
-            )}
+        <section className="w-full h-full bg-(--color-secondary-white) relative">
+          <div className={['w-full max-w-[550px] mx-auto h-full', bottomPad].filter(Boolean).join(' ')}>
+            {title && <h1 className="my-6 text-2xl font-semibold text-(--color-primary-black) text-center">{title}</h1>}
 
-            <div className="w-full bg-[var(--color-primary-white)] rounded-2xl border border-[var(--color-secondary-outline)] shadow-sm overflow-hidden">
+            <div className="w-full bg-(--color-primary-white) rounded-2xl border border-(--color-secondary-outline) shadow-sm overflow-hidden">
               {sections!.map((item, index) => (
                 <button
                   key={item.key}
@@ -116,7 +114,7 @@ function DashboardShell<Key extends string = string>({
                   }}
                   className={[
                     'cursor-pointer w-full flex items-center justify-between px-6 py-4 text-sm font-medium',
-                    index !== sections!.length - 1 && 'border-b border-[var(--color-secondary-outline)]',
+                    index !== sections!.length - 1 && 'border-b border-(--color-secondary-outline)',
                   ]
                     .filter(Boolean)
                     .join(' ')}
@@ -136,7 +134,7 @@ function DashboardShell<Key extends string = string>({
           </div>
 
           {mobileNavBottomBar && (
-            <div className="fixed left-0 right-0 bottom-0 z-[50] bg-[var(--color-primary-white)] border-t border-[var(--color-secondary-outline)]">
+            <div className="fixed left-0 right-0 bottom-0 z-50 bg-(--color-primary-white) border-t border-(--color-secondary-outline)">
               <div
                 className="w-full mx-auto p-3"
                 style={{
@@ -155,11 +153,11 @@ function DashboardShell<Key extends string = string>({
   // Desktop + Content
   return (
     <DashboardShellContext.Provider value={ctxValue}>
-      <section className="w-full h-full min-h-0 flex flex-col lg:flex-row gap-0 bg-[var(--color-secondary-white)]">
+      <section className="w-full h-full min-h-0 flex flex-col lg:flex-row gap-0 bg-(--color-secondary-white)">
         {isDesktop && (
-          <aside className="hidden lg:block w-[265px] shrink-0 border-r border-[var(--color-secondary-outline)] bg-[var(--color-primary-white)]">
+          <aside className="hidden lg:block w-[265px] shrink-0 border-r border-(--color-secondary-outline) bg-(--color-primary-white)">
             <div className="h-full flex flex-col py-2">
-              {title && <h2 className="px-4 pt-6 pb-4 text-lg font-bold text-[var(--color-primary-black)]">{title}</h2>}
+              {title && <h2 className="px-4 pt-6 pb-4 text-lg font-bold text-(--color-primary-black)">{title}</h2>}
 
               <nav className="px-3 pb-4 flex flex-col gap-1.5">
                 {sections!.map((item) => {
@@ -172,8 +170,8 @@ function DashboardShell<Key extends string = string>({
                       className={[
                         'flex items-center gap-2 rounded-lg px-4 py-4 text-sm font-semibold cursor-pointer w-full text-left',
                         selected
-                          ? 'bg-[var(--color-secondary-white)] text-[var(--color-primary-purple)]'
-                          : 'text-[var(--color-primary-black)] hover:bg-[var(--color-secondary-white)] hover:text-[var(--color-primary-purple)]',
+                          ? 'bg-(--color-secondary-white) text-(--color-primary-purple)'
+                          : 'text-(--color-primary-black) hover:bg-(--color-secondary-white) hover:text-(--color-primary-purple)',
                       ].join(' ')}
                     >
                       {item.icon && <span className="w-5 h-5">{item.icon}</span>}

@@ -69,7 +69,7 @@ function AppRoutesContent() {
         <Route path={ROUTES.PUBLIC_CASTING + '/:slug/roles/:roleId'} element={<CastingDetailsPage mode="public" />} />
         <Route path={ROUTES.PUBLIC_CASTING + '/:slug'} element={<CastingPublicOverviewPage />} />
       </Route>
-      <Route element={<ScrollContentLayout />}>
+      <Route element={<ScrollContentLayout variant="desktop-full-bleed" />}>
         <Route path={ROUTES.TALENT_DATABASE} element={<TalentDatabasePage />} />
         <Route path={ROUTES.CASTING_DATABASE} element={<CastingDatabasePage />} />
       </Route>

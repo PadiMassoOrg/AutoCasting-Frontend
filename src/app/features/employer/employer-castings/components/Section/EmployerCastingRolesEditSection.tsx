@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { Icon, Label } from 'autocasting-ui-library-padimasso';
+import { Button, Icon, Label } from 'autocasting-ui-library-padimasso';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
@@ -10,6 +10,7 @@ import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
 import { useCastingRoleCreateAutosave } from '../../hooks/autosaves';
 import { useSectionRoles } from '../../hooks/section/useSectionRoles';
+import type { CastingRoleFormKey } from '../../schemas/formSchema';
 import { EMPLOYER_CASTING_CACHE_KEY } from '../../services/employerCastingService';
 import { EmployerCastingRoleCard } from '../Card';
 import CastingRoleModal from '../Form/Role/CastingRoleModal';
@@ -48,8 +49,11 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
     openModal(
       <CastingRoleModal
         mode="create"
-        onSave={(draft) => {
-          createRoleMutation.immediate(draft);
+        backendErrors={createRoleMutation.fieldErrors as Partial<Record<CastingRoleFormKey, string>>}
+        clearBackendFieldError={createRoleMutation.clearFieldError as (field: CastingRoleFormKey) => void}
+        onSave={async (draft) => {
+          const result = await createRoleMutation.submit(draft).catch(() => null);
+          if (!result) return;
           closeModal();
         }}
         onCancel={closeModal}
@@ -61,10 +65,12 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
   };
 
   const actionButtonRender = () => (
-    <span onClick={handleOpenModal} className="flex flex-row items-center justify-center gap-2 cursor-pointer">
-      <Icon name="plus" variant="primary" size={16} />
-      <span className="text-base font-semibold text-[var(--color-primary-purple)]">{t('general.add')}</span>
-    </span>
+    <Button variant="primary" onClick={handleOpenModal}>
+      <span className="flex flex-row items-center gap-2">
+        <Icon name="plus" variant="white" size={16}></Icon>
+        {t('employer_castings.dashboard.roles.add_new')}
+      </span>
+    </Button>
   );
 
   return (
@@ -73,7 +79,7 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
       {(data.roles?.length ?? 0) > 0 ? (
         data.roles?.map((role) => <EmployerCastingRoleCard data={role} key={role.id} />)
       ) : (
-        <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
+        <Label className="w-full text-center text-(--color-secondary-grey-fonts) pt-10">
           {t('employer_castings.page.empty_roles')}
         </Label>
       )}

@@ -107,9 +107,7 @@ const CastingCard = ({
 
       <div className="w-full flex flex-col items-center gap-2 text-sm">
         <div className="w-full flex flex-row items-center justify-between">
-          <p className="text-[var(--color-secondary-grey-fonts)]">
-            {t('employer_castings.casting_card.status.status')}:
-          </p>
+          <p className="text-(--color-secondary-grey-fonts)">{t('employer_castings.casting_card.status.status')}:</p>
 
           {isMetadataReady ? (
             <StatusDropdown
@@ -126,17 +124,17 @@ const CastingCard = ({
         </div>
 
         <div className="w-full flex flex-row items-center justify-between">
-          <p className="text-[var(--color-secondary-grey-fonts)]">{t('general.creation_date')}:</p>
+          <p className="text-(--color-secondary-grey-fonts)">{t('general.creation_date')}:</p>
           <span>{formatLocalDate(creationDate, 'dayMonth')}</span>
         </div>
 
         <div className="w-full flex flex-row items-center justify-between">
-          <p className="text-[var(--color-secondary-grey-fonts)]">{t('general.limit_date')}:</p>
+          <p className="text-(--color-secondary-grey-fonts)">{t('general.limit_date')}:</p>
           <span>{formatLocalDate(applicationDeadline, 'dayMonth')}</span>
         </div>
 
         <div className="w-full flex flex-row items-center justify-between">
-          <p className="text-[var(--color-secondary-grey-fonts)]">{t('casting.basic_info.project_type')}:</p>
+          <p className="text-(--color-secondary-grey-fonts)">{t('casting.basic_info.project_type')}:</p>
           {projectType?.stringCode ? <Chip label={t(projectType.stringCode)} /> : <span>-</span>}
         </div>
       </div>

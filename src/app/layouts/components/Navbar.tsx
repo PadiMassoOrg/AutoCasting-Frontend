@@ -1,4 +1,4 @@
-import { Button } from 'autocasting-ui-library-padimasso';
+import { Button, Tooltip } from 'autocasting-ui-library-padimasso';
 import { forwardRef, type HTMLAttributes, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, matchPath, useLocation } from 'react-router-dom';
@@ -9,11 +9,11 @@ import { ROUTES } from '../../shared/lib/routes';
 import { Sidebar } from './';
 import UserModeSwitcher from './UserModeSwitcher';
 
+import { Icon } from 'autocasting-ui-library-padimasso';
 import clsx from 'clsx';
 import { useModal } from '../../context/ModalContext';
 import { USER_MODE_TALENT, useUserMode } from '../../context/UserModeContext';
 import { LogoutModal } from '../../features/auth/components';
-import { Icon } from 'autocasting-ui-library-padimasso';
 import { jwtDecoder } from '../../shared/utils/jwtDecoder';
 
 type NavbarVariant = 'icons' | 'icons-labels' | 'labels';
@@ -81,6 +81,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
       className={`w-full bg-[var(--color-primary-white)] border-[var(--color-secondary-outline)] border-b ${className}`}
     >
       <div className="relative py-3 px-8 bg-[var(--color-primary-white)]">
+        {/* Mobile */}
         <div className="lg:hidden w-full flex flex-row items-center justify-between">
           <LinkLogo horizontal path={ROUTES.HOME} />
           <button
@@ -92,6 +93,8 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
             <Icon name="burger" />
           </button>
         </div>
+
+        {/* Sidebar */}
         <Sidebar
           open={menuOpen}
           onClose={() => setMenuOpen(false)}
@@ -99,25 +102,34 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
           isAuthenticated={isAuth != null}
         />
 
+        {/* Desktop */}
         <div className="hidden lg:flex flex-row items-center justify-between ">
           <div className="flex flex-row items-center">
             <LinkLogo horizontal path={ROUTES.HOME} />
             <div className="ml-16 flex flex-row items-center gap-2">
               <Link to={ROUTES.TALENT_DATABASE}>
                 <span className={clsx(baseClass, activeTalentDatabase && activeClass)}>
-                  {showIcons && <Icon name="catalog" variant={activeTalentDatabase ? 'primary' : 'default'} />}
+                  {showIcons && (
+                    <Tooltip title={t('general.tooltips.talent_database')} position="bottomLeft" nudgeX={-10}>
+                      <Icon name="catalog" variant={activeTalentDatabase ? 'primary' : 'default'} />
+                    </Tooltip>
+                  )}
                   {showLabels && t('routes.talent-database')}
                 </span>
               </Link>
               <Link to={ROUTES.CASTING_DATABASE}>
                 <span className={clsx(baseClass, activeCastingDatabase && activeClass)}>
-                  {showIcons && <Icon name="clapper" variant={activeCastingDatabase ? 'primary' : 'default'} />}
+                  {showIcons && (
+                    <Tooltip title={t('general.tooltips.casting_database')} position="bottomLeft" nudgeX={-10}>
+                      <Icon name="clapper" variant={activeCastingDatabase ? 'primary' : 'default'} />
+                    </Tooltip>
+                  )}
                   {showLabels && t('routes.casting-database')}
                 </span>
               </Link>
               {isAuth && (
                 <span className="ml-2">
-                  <UserModeSwitcher showLabel></UserModeSwitcher>
+                  <UserModeSwitcher showLabel showTooltip></UserModeSwitcher>
                 </span>
               )}
             </div>
@@ -134,66 +146,80 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
               </>
             ) : mode == USER_MODE_TALENT ? (
               <div className="flex flex-row gap-2 items-center h-full">
-                <Link to={ROUTES.TALENT_APPLIED_CASTINGS}>
-                  <span className={clsx(baseClass, activeAppliedCastings && activeClass)}>
-                    {showIcons && (
-                      <Icon name="file" variant={activeAppliedCastings ? 'primary' : 'default'} className="w-6" />
-                    )}
-                    {showLabels && t('routes.talent-applied-castings')}
-                  </span>
-                </Link>
-                <Link to={ROUTES.TALENT}>
-                  <span className={clsx(baseClass, activeTalentProfile && activeClass)}>
-                    {showIcons && (
-                      <Icon name="profile" variant={activeTalentProfile ? 'primary' : 'default'} className="w-6" />
-                    )}
-                    {showLabels && t('routes.profile')}
-                  </span>
-                </Link>
-                <Link to={profileUrl}>
-                  <span className={clsx(baseClass, activePublicProfile && activeClass)}>
-                    {showIcons && <Icon name="view" variant={activePublicProfile ? 'primary' : 'default'} />}
-                    {showLabels && t('routes.profile')}
-                  </span>
-                </Link>
-                <Link to={ROUTES.TALENT_SETTINGS}>
-                  <span className={clsx(baseClass, activeSettings && activeClass)}>
-                    {showIcons && <Icon name="settings" variant={activeSettings ? 'primary' : 'default'} />}
-                    {showLabels && t('routes.settings')}
-                  </span>
-                </Link>
+                <Tooltip title={t('general.tooltips.talent_applied_castings')} position="bottomLeft" nudgeY={-8}>
+                  <Link to={ROUTES.TALENT_APPLIED_CASTINGS}>
+                    <span className={clsx(baseClass, activeAppliedCastings && activeClass)}>
+                      {showIcons && (
+                        <Icon name="file" variant={activeAppliedCastings ? 'primary' : 'default'} className="w-6" />
+                      )}
+                      {showLabels && t('routes.talent-applied-castings')}
+                    </span>
+                  </Link>
+                </Tooltip>
+                <Tooltip title={t('general.tooltips.profile')} position="bottomLeft" nudgeY={-8}>
+                  <Link to={ROUTES.TALENT}>
+                    <span className={clsx(baseClass, activeTalentProfile && activeClass)}>
+                      {showIcons && (
+                        <Icon name="profile" variant={activeTalentProfile ? 'primary' : 'default'} className="w-6" />
+                      )}
+                      {showLabels && t('routes.profile')}
+                    </span>
+                  </Link>
+                </Tooltip>
+                <Tooltip title={t('general.tooltips.view_profile')} position="bottomRight" nudgeY={-8}>
+                  <Link to={profileUrl}>
+                    <span className={clsx(baseClass, activePublicProfile && activeClass)}>
+                      {showIcons && <Icon name="view" variant={activePublicProfile ? 'primary' : 'default'} />}
+                      {showLabels && t('routes.profile')}
+                    </span>
+                  </Link>
+                </Tooltip>
+                <Tooltip title={t('general.tooltips.settings')} position="bottomRight" nudgeY={-8}>
+                  <Link to={ROUTES.TALENT_SETTINGS}>
+                    <span className={clsx(baseClass, activeSettings && activeClass)}>
+                      {showIcons && <Icon name="settings" variant={activeSettings ? 'primary' : 'default'} />}
+                      {showLabels && t('routes.settings')}
+                    </span>
+                  </Link>
+                </Tooltip>
               </div>
             ) : (
               <div className="flex flex-row gap-2 items-center h-full">
-                <Link to={ROUTES.EMPLOYER_CASTINGS}>
-                  <span className={clsx(baseClass, activeEmployerCastings && activeClass)}>
-                    {showIcons && (
-                      <Icon
-                        name="clapperManage"
-                        variant={activeEmployerCastings ? 'primary' : 'default'}
-                        className="w-6"
-                      />
-                    )}
-                    {showLabels && t('routes.employer_castings')}
-                  </span>
-                </Link>
-                <Link to={ROUTES.EMPLOYER}>
-                  <span className={clsx(baseClass, activeEmployerProfile && activeClass)}>
-                    {showIcons && (
-                      <Icon name="profile" variant={activeEmployerProfile ? 'primary' : 'default'} className="w-6" />
-                    )}
-                    {showLabels && t('routes.profile')}
-                  </span>
-                </Link>
+                <Tooltip title={t('general.tooltips.employer_castings')} position="bottomRight" nudgeY={-8}>
+                  <Link to={ROUTES.EMPLOYER_CASTINGS}>
+                    <span className={clsx(baseClass, activeEmployerCastings && activeClass)}>
+                      {showIcons && (
+                        <Icon
+                          name="clapperManage"
+                          variant={activeEmployerCastings ? 'primary' : 'default'}
+                          className="w-6"
+                        />
+                      )}
+                      {showLabels && t('routes.employer_castings')}
+                    </span>
+                  </Link>
+                </Tooltip>
+                <Tooltip title={t('general.tooltips.profile')} position="bottomRight" nudgeY={-8}>
+                  <Link to={ROUTES.EMPLOYER}>
+                    <span className={clsx(baseClass, activeEmployerProfile && activeClass)}>
+                      {showIcons && (
+                        <Icon name="profile" variant={activeEmployerProfile ? 'primary' : 'default'} className="w-6" />
+                      )}
+                      {showLabels && t('routes.profile')}
+                    </span>
+                  </Link>
+                </Tooltip>
               </div>
             )}
             {isAuth && (
-              <span
-                className="ml-2 cursor-pointer flex flex-row items-center gap-2 text-[var(--color-alert-error)]"
-                onClick={logoutModal}
-              >
-                <Icon name="logout" variant="danger" /> {showLabels && t('routes.logout')}
-              </span>
+              <Tooltip title={t('general.tooltips.logout')} position="bottomRight" nudgeY={-2}>
+                <span
+                  className="ml-2 cursor-pointer flex flex-row items-center gap-2 text-[var(--color-alert-error)]"
+                  onClick={logoutModal}
+                >
+                  <Icon name="logout" variant="danger" /> {showLabels && t('routes.logout')}
+                </span>
+              </Tooltip>
             )}
           </div>
         </div>

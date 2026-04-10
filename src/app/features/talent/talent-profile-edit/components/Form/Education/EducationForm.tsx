@@ -18,8 +18,8 @@ export default function EducationForm({ data }: { data: Education[] }) {
         mode="edit"
         initial={education}
         onCancel={closeModal}
-        onSave={(draft) => {
-          patchMut.immediate(draft);
+        onSave={async (draft) => {
+          await patchMut.submit(draft);
           closeModal();
         }}
       />,
@@ -33,8 +33,8 @@ export default function EducationForm({ data }: { data: Education[] }) {
       <EducationDeleteModal
         education={education}
         onCancel={closeModal}
-        onConfirm={() => {
-          deleteMut.immediate({ id: education.id });
+        onConfirm={async () => {
+          await deleteMut.submit({ id: education.id });
           closeModal();
         }}
       />,
