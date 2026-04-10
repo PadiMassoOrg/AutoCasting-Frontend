@@ -42,7 +42,9 @@ function OnboardingWizard() {
         <TalentMediaStep />
         <TalentConfirmationStep
           onGoToProfile={() =>
-            navigate(talentProfileSlug ? `${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}` : ROUTES.TALENT)
+            navigate(
+              talentProfileSlug ? `${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}` : ROUTES.TALENT_APPLIED_CASTINGS
+            )
           }
         />
       </Wizard>
@@ -54,7 +56,7 @@ function OnboardingWizard() {
       <Wizard key="employer-flow">
         <EmployerBasicInfoStep onBackToModeSelector={() => setCurrentFlow('MODE')} />
         <EmployerMediaStep />
-        <EmployerConfirmationStep onGoToProfile={() => navigate(ROUTES.EMPLOYER)} />
+        <EmployerConfirmationStep onGoToProfile={() => navigate(ROUTES.EMPLOYER_CASTINGS)} />
       </Wizard>
     );
   }
