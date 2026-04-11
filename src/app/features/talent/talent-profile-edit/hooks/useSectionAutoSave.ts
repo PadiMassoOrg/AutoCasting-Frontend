@@ -15,6 +15,7 @@ export function useSectionAutosave<TPayload, TResult, TFieldKey extends string =
   cacheKeys = [TALENT_PROFILE_CACHE_KEY],
   invalidateOnSuccess = 'active',
   extraInvalidateKeys = [],
+  lastModifiedCacheKeys = [],
   fieldMap,
   messageFieldMap,
   generalFieldFallback,
@@ -25,6 +26,7 @@ export function useSectionAutosave<TPayload, TResult, TFieldKey extends string =
   cacheKeys?: ReadonlyArray<QueryKey>;
   invalidateOnSuccess?: false | RefetchType;
   extraInvalidateKeys?: ReadonlyArray<QueryKey>;
+  lastModifiedCacheKeys?: ReadonlyArray<QueryKey>;
   fieldMap?: Partial<Record<string, TFieldKey>>;
   messageFieldMap?: Partial<Record<string, TFieldKey>>;
   generalFieldFallback?: TFieldKey;
@@ -101,8 +103,14 @@ export function useSectionAutosave<TPayload, TResult, TFieldKey extends string =
     },
     onSuccess: (updated) => {
       clearAllBackendErrors();
+      const modifiedAt = readModifiedAt(updated);
       for (const key of cacheKeys) {
-        qc.setQueriesData({ queryKey: key }, (prev: any) => onSuccessUpdate(prev, updated));
+        qc.setQueriesData({ queryKey: key }, (prev: any) =>
+          applyModifiedAt(onSuccessUpdate(prev, updated), modifiedAt)
+        );
+      }
+      for (const key of lastModifiedCacheKeys) {
+        qc.setQueriesData({ queryKey: key }, (prev: any) => applyModifiedAt(prev, modifiedAt));
       }
       if (invalidateOnSuccess) {
         for (const key of cacheKeys) {
@@ -172,4 +180,28 @@ export function useSectionAutosave<TPayload, TResult, TFieldKey extends string =
     flush,
     submit,
   };
+}
+
+function readModifiedAt(value: unknown): string | null {
+  if (!value) return null;
+  if (Array.isArray(value)) {
+    return value.reduce<string | null>((max, item) => maxIso(max, readModifiedAt(item)), null);
+  }
+
+  if (typeof value !== 'object') return null;
+  const modifiedAt = (value as { modifiedAt?: unknown }).modifiedAt;
+  return typeof modifiedAt === 'string' && modifiedAt ? modifiedAt : null;
+}
+
+function applyModifiedAt(value: unknown, modifiedAt: string | null): unknown {
+  if (!modifiedAt || !value || typeof value !== 'object' || Array.isArray(value)) return value;
+  return { ...(value as Record<string, unknown>), modifiedAt: maxIso((value as any).modifiedAt, modifiedAt) };
+}
+
+function maxIso(a: unknown, b: unknown): string | null {
+  const left = typeof a === 'string' && a ? a : null;
+  const right = typeof b === 'string' && b ? b : null;
+  if (!left) return right;
+  if (!right) return left;
+  return right > left ? right : left;
 }

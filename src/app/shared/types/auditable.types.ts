@@ -7,3 +7,5 @@ export type Auditable = {
 };
 
 export type WithAuditable<T> = T & Auditable;
+
+export type LastModifiedResponse = Pick<Auditable, 'modifiedAt'>;

@@ -1,5 +1,6 @@
 import api from '../../../../shared/lib/axios';
 import { API_ROUTES } from '../../../../shared/lib/routes';
+import type { LastModifiedResponse } from '../../../../shared/types/auditable.types';
 import type { EducationRequest } from '../types/requests';
 import type { Education } from '../types/talentProfile.types';
 import { TALENT_PROFILE_CACHE_KEY } from './talentProfileService';
@@ -19,6 +20,7 @@ export const patchEducation = async (payload: EducationRequest): Promise<Educati
 };
 
 // DELETE
-export const deleteEducation = async (id: string): Promise<void> => {
-  await api.delete(API_ROUTES.EDUCATION + `/${id}`); // 204 OK
+export const deleteEducation = async (id: string): Promise<LastModifiedResponse> => {
+  const response = await api.delete(API_ROUTES.EDUCATION + `/${id}`);
+  return response.data;
 };

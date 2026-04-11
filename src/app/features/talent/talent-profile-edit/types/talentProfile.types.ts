@@ -1,3 +1,4 @@
+import type { WithAuditable } from '../../../../shared/types/auditable.types';
 import type { DeepNullableExceptId } from '../../../../shared/utils/typeUtils';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 
@@ -113,13 +114,14 @@ export type BaseEducation = {
 /* ======================
    Export & DeepNullable
    ====================== */
-export type Credit = BaseCredit;
-export type Education = BaseEducation;
-export type TalentProfileBasicInfo = DeepNullableExceptId<BaseProfileBasicInfo>;
-export type TalentProfileContact = DeepNullableExceptId<BaseProfileContact>;
-export type ProfileSocialMedia = { links: SocialMediaLink[] };
-export type Media = DeepNullableExceptId<BaseMedia>;
-export type Characteristics = DeepNullableExceptId<BaseCharacteristics>;
+export type Credit = WithAuditable<BaseCredit>;
+export type Education = WithAuditable<BaseEducation>;
+export type TalentProfileBasicInfo = WithAuditable<DeepNullableExceptId<BaseProfileBasicInfo>>;
+export type TalentProfileContact = WithAuditable<DeepNullableExceptId<BaseProfileContact>>;
+export type ProfileSocialMedia = WithAuditable<{ links: SocialMediaLink[] }>;
+export type Media = WithAuditable<DeepNullableExceptId<BaseMedia>>;
+export type Characteristics = WithAuditable<DeepNullableExceptId<BaseCharacteristics>>;
+export type SkillsResponse = WithAuditable<{ skills: SiteMetadataObject[] }>;
 
-export type TalentProfileResponse = TalentBaseProfileResponse;
+export type TalentProfileResponse = WithAuditable<TalentBaseProfileResponse>;
 export type TalentPublicProfileResponse = TalentBasePublicProfileResponse;

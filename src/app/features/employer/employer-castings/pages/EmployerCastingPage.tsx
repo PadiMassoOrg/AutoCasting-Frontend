@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router-dom';
 import { DashboardShell } from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { ROUTES } from '../../../../shared/lib/routes';
+import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
 import { isCastingEditable } from '../../../sitemetadata/utils/siteMetadataUtils';
 import {
   EmployerCastingBasicInfoEditSection,
@@ -20,6 +22,16 @@ const EmployerCastingPage = () => {
   const { slug } = useParams<{ slug: string }>();
 
   const { data, isLoading, error } = useEmployerCastingEditorBySlug(slug);
+
+  useEffect(() => {
+    if (data?.modifiedAt) {
+      console.log(
+        'employer casting modifiedAt',
+        data.modifiedAt,
+        formatLastSavedDateTime(data.modifiedAt, (key, options) => t(key, options))
+      );
+    }
+  }, [data?.modifiedAt, t]);
 
   if (isLoading || !data) return null;
   if (error) return <ServerError />;

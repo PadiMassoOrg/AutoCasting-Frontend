@@ -1,4 +1,4 @@
-import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
+import type { LastModifiedResponse } from '../../../../shared/types/auditable.types';
 import { createNewCredit, deleteCredit, patchCredit, PROFILE_CREDITS_CACHE_KEY } from '../services/creditsService';
 import {
   createNewEducation,
@@ -31,6 +31,7 @@ import type {
   Education,
   Media,
   ProfileSocialMedia,
+  SkillsResponse,
   TalentProfileBasicInfo,
   TalentProfileContact,
   TalentProfileResponse,
@@ -94,12 +95,12 @@ export function useCharacteristicsAutosave() {
 }
 
 export function useSkillsAutosave() {
-  return useSectionAutosave<SkillsPatchRequest, SiteMetadataObject[]>({
+  return useSectionAutosave<SkillsPatchRequest, SkillsResponse>({
     mutationFn: patchSkills,
     delay: 200,
     onSuccessUpdate: (prev, updated) => ({
       ...prev,
-      skills: updated,
+      skills: updated.skills,
     }),
     cacheKeys: [TALENT_PROFILE_CACHE_KEY],
     invalidateOnSuccess: 'active',
@@ -145,10 +146,10 @@ export function useCreditPatchAutosave() {
 }
 
 export function useCreditDeleteAutosave() {
-  return useSectionAutosave<{ id: string }, { id: string }>({
+  return useSectionAutosave<{ id: string }, { id: string } & LastModifiedResponse>({
     mutationFn: async ({ id }) => {
-      await deleteCredit(id);
-      return { id };
+      const result = await deleteCredit(id);
+      return { id, modifiedAt: result.modifiedAt };
     },
     delay: 0,
     cacheKeys: [TALENT_PROFILE_CACHE_KEY, PROFILE_CREDITS_CACHE_KEY],
@@ -194,10 +195,10 @@ export function useEducationPatchAutosave() {
 }
 
 export function useEducationDeleteAutosave() {
-  return useSectionAutosave<{ id: string }, { id: string }>({
+  return useSectionAutosave<{ id: string }, { id: string } & LastModifiedResponse>({
     mutationFn: async ({ id }) => {
-      await deleteEducation(id);
-      return { id };
+      const result = await deleteEducation(id);
+      return { id, modifiedAt: result.modifiedAt };
     },
     delay: 0,
     cacheKeys: [TALENT_PROFILE_CACHE_KEY, PROFILE_EDUCATION_CACHE_KEY],

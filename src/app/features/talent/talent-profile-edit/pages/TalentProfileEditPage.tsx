@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DashboardShell } from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
+import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
 import { TalentProfileModeToggle } from '../components';
 import {
   TalentProfileCreditsEditSection,
@@ -16,6 +18,16 @@ import { useTalentProfile } from '../hooks/useTalentProfile';
 export default function TalentProfileEditPage() {
   const { t } = useTranslation();
   const { data, error, isLoading } = useTalentProfile();
+
+  useEffect(() => {
+    if (data?.modifiedAt) {
+      console.log(
+        'talent profile modifiedAt',
+        data.modifiedAt,
+        formatLastSavedDateTime(data.modifiedAt, (key, options) => t(key, options))
+      );
+    }
+  }, [data?.modifiedAt, t]);
 
   if (isLoading || !data) return null;
   if (error) return <ServerError />;
