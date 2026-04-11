@@ -95,10 +95,8 @@ export function useSectionAutosave<TPayload, TResult, TFieldKey extends string =
   const mutation = useMutation({
     mutationFn,
     onMutate: async () => {
-      console.log('useSectionAutosave: onMutate called - setting saving to "saving"');
       clearAllBackendErrors();
       setSaving('saving');
-      console.log('useSectionAutosave: saving state set to "saving"');
       pending.current = null;
     },
     onSuccess: (updated) => {
@@ -137,13 +135,11 @@ export function useSectionAutosave<TPayload, TResult, TFieldKey extends string =
 
   const submit = useCallback(
     async (payload: TPayload) => {
-      console.log('useSectionAutosave: submit called with payload:', payload);
       pending.current = null;
       if (timer.current) {
         clearTimeout(timer.current);
         timer.current = null;
       }
-      console.log('useSectionAutosave: calling mutation.mutateAsync');
       return mutation.mutateAsync(payload);
     },
     [mutation]
