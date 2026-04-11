@@ -19,16 +19,6 @@ export default function TalentProfileEditPage() {
   const { t } = useTranslation();
   const { data, error, isLoading } = useTalentProfile();
 
-  useEffect(() => {
-    if (data?.modifiedAt) {
-      console.log(
-        'talent profile modifiedAt',
-        data.modifiedAt,
-        formatLastSavedDateTime(data.modifiedAt, (key, options) => t(key, options))
-      );
-    }
-  }, [data?.modifiedAt, t]);
-
   if (isLoading || !data) return null;
   if (error) return <ServerError />;
 
@@ -65,10 +55,24 @@ export default function TalentProfileEditPage() {
     },
   ];
 
+  const bottomSectionRenderer = () => {
+    return (
+      <div className="text-sm text-(--color-secondary-gray)">
+        <p>{t('general.datetime.last_saved')}:</p>
+        <p>{formatLastSavedDateTime(data.modifiedAt, t)}</p>
+      </div>
+    );
+  };
+
   return (
     <div className="relative h-full flex flex-col">
       <div className="flex-1 min-h-0">
-        <DashboardShell title={t('profile.page.profile')} sections={sections} initialKey="basic" />
+        <DashboardShell
+          title={t('profile.page.profile')}
+          sections={sections}
+          initialKey="basic"
+          bottomSection={bottomSectionRenderer()}
+        />
       </div>
       <TalentProfileModeToggle></TalentProfileModeToggle>
     </div>

@@ -46,7 +46,8 @@
     "creation_date": "Fecha de creación",
     "limit_date": "Fecha límite",
     "datetime": {
-      "last_saved": "Último guardado: {{day}} de {{month}}, {{year}} {{time}}",
+      "last_saved": "Último guardado",
+      "last_saved_formatted": "{{day}} de {{month}}, {{year}} {{time}}",
       "am": "AM",
       "pm": "PM",
       "months": {

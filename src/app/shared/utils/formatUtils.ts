@@ -130,7 +130,7 @@ export function formatLastSavedDateTime(value: string | Date | null | undefined,
   const timeLabel = `${hour12}:${minutes} ${periodLabel}`;
 
   if (t) {
-    return t('general.datetime.last_saved', {
+    return t('general.datetime.last_saved_formatted', {
       day: date.getDate(),
       month: monthLabel,
       year: date.getFullYear(),

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router-dom';
 import { DashboardShell } from '../../../../layouts/components';
@@ -22,16 +21,6 @@ const EmployerCastingPage = () => {
   const { slug } = useParams<{ slug: string }>();
 
   const { data, isLoading, error } = useEmployerCastingEditorBySlug(slug);
-
-  useEffect(() => {
-    if (data?.modifiedAt) {
-      console.log(
-        'employer casting modifiedAt',
-        data.modifiedAt,
-        formatLastSavedDateTime(data.modifiedAt, (key, options) => t(key, options))
-      );
-    }
-  }, [data?.modifiedAt, t]);
 
   if (isLoading || !data) return null;
   if (error) return <ServerError />;
@@ -70,9 +59,22 @@ const EmployerCastingPage = () => {
     },
   ];
 
+  const bottomSectionRenderer = () => {
+    return (
+      <div className="text-sm text-(--color-secondary-gray)">
+        <p>{t('general.datetime.last_saved')}:</p>
+        <p>{formatLastSavedDateTime(data.modifiedAt, t)}</p>
+      </div>
+    );
+  };
+
   return (
     <EmployerCastingIdsProvider value={data}>
-      <DashboardShell title={t('employer_castings.dashboard.title_edit')} sections={sections} />
+      <DashboardShell
+        title={t('employer_castings.dashboard.title_edit')}
+        sections={sections}
+        bottomSection={bottomSectionRenderer()}
+      />
     </EmployerCastingIdsProvider>
   );
 };
