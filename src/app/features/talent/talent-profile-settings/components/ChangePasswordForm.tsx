@@ -77,6 +77,7 @@ const ChangePasswordForm = () => {
         placeholder={t('********')}
         {...register('oldPassword')}
         error={errors.oldPassword?.message}
+        autoComplete="old-password"
       />
       <FormInputField
         id="password"
@@ -86,6 +87,7 @@ const ChangePasswordForm = () => {
         placeholder={t('********')}
         {...register('newPassword')}
         error={errors.newPassword?.message}
+        autoComplete="new-password"
       />
       <FormInputField
         id="confirmPassword"
@@ -95,6 +97,7 @@ const ChangePasswordForm = () => {
         labelClassName="font-semibold"
         {...register('confirmPassword')}
         error={errors.confirmPassword?.message}
+        autoComplete="new-password"
       />
       <Separator className="opacity-20 my-4"></Separator>
       <div className="flex gap-2">
