@@ -84,7 +84,7 @@ function DashboardShell<Key extends string = string>({
   if (!hasSections) {
     return (
       <DashboardShellContext.Provider value={ctxValue}>
-        <section className="w-full h-full min-h-0 flex flex-col bg-(--color-secondary-white) p-6 lg:p-0">
+        <section className="w-full h-full min-h-0 flex flex-col bg-(--color-secondary-white)">
           <article className="flex-1 min-w-0 h-full overscroll-contain [-webkit-overflow-scrolling:touch]">
             <div className="w-full max-w-[1500px] mx-auto pb-20 lg:pb-0">{children}</div>
           </article>
@@ -99,7 +99,7 @@ function DashboardShell<Key extends string = string>({
 
     return (
       <DashboardShellContext.Provider value={ctxValue}>
-        <section className="w-full h-full bg-(--color-secondary-white) relative px-6">
+        <section className="w-full h-full bg-(--color-secondary-white) relative">
           <div className={['w-full max-w-[550px] mx-auto h-full', bottomPad].filter(Boolean).join(' ')}>
             {title && <h1 className="my-6 text-2xl font-semibold text-(--color-primary-black) text-center">{title}</h1>}
 
@@ -186,8 +186,8 @@ function DashboardShell<Key extends string = string>({
           </aside>
         )}
 
-        <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch] pt-8">
-          <div className="w-full max-w-[1500px] mx-auto px-4 lg:px-8 lg:py-5 pb-6">
+        <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch] lg:pt-8">
+          <div className="w-full max-w-[1500px] mx-auto lg:px-8 lg:py-5 pb-6">
             {!isDesktop && mobileView === 'content' && currentSection && (
               <div>
                 {contentHeader}

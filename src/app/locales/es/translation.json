@@ -355,12 +355,12 @@
   },
   "sitemetadata": {
     "gender": {
+      "indistinct": "Indistinto",
       "male": "Hombre",
       "female": "Mujer",
       "male_trans": "Hombre Trans",
       "female_trans": "Mujer Trans",
-      "non_binary": "No Binario",
-      "other": "Otros"
+      "non_binary": "No Binario"
     },
     "ethnicity": {
       "afro_descendant": "Afrodescendiente",
@@ -556,6 +556,7 @@
       "per_month": "Por mes",
       "per_season": "Por temporada / función",
       "to_be_agreed": "A convenir",
+      "cooperative_project": "Proyecto cooperativo",
       "unpaid": "Sin remuneración"
     },
     "currency": {
