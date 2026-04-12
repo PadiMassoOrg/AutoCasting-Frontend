@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, FormInputField } from 'autocasting-ui-library-padimasso';
+import { Button, FormInputField, FormPasswordField } from 'autocasting-ui-library-padimasso';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -61,10 +61,9 @@ export default function RegisterForm({ onSwitch }: RegisterFormProps) {
         autoComplete="email"
         {...register('email')}
       />
-      <FormInputField
+      <FormPasswordField
         id="password"
         placeholder={t('auth.register.password')}
-        type="password"
         autoComplete="current-password"
         error={errors.password?.message}
         {...register('password')}

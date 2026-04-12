@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, FormInputField } from 'autocasting-ui-library-padimasso';
+import { Button, FormPasswordField } from 'autocasting-ui-library-padimasso';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -80,16 +80,14 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md mx-auto space-y-2">
-      <FormInputField
+      <FormPasswordField
         id="password"
-        type="password"
         placeholder={t('auth.reset_password.new')}
         {...register('password')}
         error={errors.password?.message}
       />
-      <FormInputField
+      <FormPasswordField
         id="confirmPassword"
-        type="password"
         placeholder={t('auth.reset_password.repeat')}
         {...register('confirmPassword')}
         error={errors.confirmPassword?.message}
