@@ -9,7 +9,7 @@ export default function ScrollContentLayout({ variant = 'default' }: ScrollConte
   const isDesktopFullBleed = variant === 'desktop-full-bleed';
   const contentClassName = isDesktopFullBleed
     ? 'w-full min-w-0 bg-(--color-secondary-white) p-6 lg:p-0'
-    : 'w-full min-w-0 bg-(--color-secondary-white) p-6 lg:p-[56px]';
+    : 'w-full min-w-0 bg-(--color-secondary-white) p-6 lg:py-[24px] lg:px-[40px]';
 
   return (
     <DocumentScrollLayout contentClassName={contentClassName}>
