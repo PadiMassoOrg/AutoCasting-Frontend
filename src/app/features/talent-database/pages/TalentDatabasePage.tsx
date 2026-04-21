@@ -66,6 +66,7 @@ export default function TalentDatabasePage() {
 
   const sentinelRef = useRef<HTMLDivElement>(null);
   const cardsGridRef = useRef<HTMLElement>(null);
+  const resizeRafRef = useRef<number | null>(null);
   const [gridCols, setGridCols] = useState(1);
 
   const fetchPage = useCallback(
@@ -138,14 +139,15 @@ export default function TalentDatabasePage() {
     const gridEl = cardsGridRef.current;
     if (!gridEl) return;
 
-    const maxCols = filtersOpen ? 3 : 4;
+    const maxCols = filtersOpen ? 4 : 4;
     const computeCols = (width: number) => {
       const estimated = Math.floor((width + GRID_GAP_PX) / (MIN_CARD_WIDTH_PX + GRID_GAP_PX));
       return Math.max(1, Math.min(maxCols, estimated));
     };
 
     const updateCols = (width: number) => {
-      setGridCols(computeCols(width));
+      const nextCols = computeCols(width);
+      setGridCols((prev) => (prev === nextCols ? prev : nextCols));
     };
 
     updateCols(gridEl.getBoundingClientRect().width);
@@ -153,11 +155,19 @@ export default function TalentDatabasePage() {
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0];
       if (!entry) return;
-      updateCols(entry.contentRect.width);
+      if (resizeRafRef.current !== null) cancelAnimationFrame(resizeRafRef.current);
+      resizeRafRef.current = requestAnimationFrame(() => {
+        updateCols(entry.contentRect.width);
+        resizeRafRef.current = null;
+      });
     });
 
     observer.observe(gridEl);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (resizeRafRef.current !== null) cancelAnimationFrame(resizeRafRef.current);
+      resizeRafRef.current = null;
+    };
   }, [filtersOpen]);
 
   useEffect(() => {
