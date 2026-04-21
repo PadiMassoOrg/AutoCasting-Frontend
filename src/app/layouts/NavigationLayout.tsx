@@ -1,20 +1,12 @@
 import { Outlet } from 'react-router-dom';
-import { MaintenanceBanner } from '../shared/components/MaintenanceBanner/MaintenanceBanner';
-import { Navbar } from './components';
+import DocumentScrollLayout from './DocumentScrollLayout';
 
 export default function NavigationLayout() {
   return (
-    <div className="fixed inset-0 flex flex-col overflow-hidden bg-[var(--color-secondary-white)]">
-      <header data-site-header className="z-[40] w-full bg-[var(--color-primary-white)]">
-        <MaintenanceBanner />
-        <Navbar id="app-navbar" />
-      </header>
-
-      <main data-scroll-root className="flex-1 w-full min-w-0 overflow-y-auto">
-        <div className="w-full max-w-[1650px] mx-auto p-6 lg:p-[56px]">
-          <Outlet />
-        </div>
-      </main>
-    </div>
+    <DocumentScrollLayout contentClassName="w-full min-w-0 bg-(--color-secondary-white)">
+      <div className="w-full max-w-[1650px] mx-auto p-6 lg:p-[56px]">
+        <Outlet />
+      </div>
+    </DocumentScrollLayout>
   );
 }

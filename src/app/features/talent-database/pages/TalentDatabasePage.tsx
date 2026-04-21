@@ -2,7 +2,6 @@ import { Icon, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-librar
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
-import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { PublicProfileDetailsView } from '../../public-profile/pages';
 import { MobileFiltersDrawer, TalentCard, TalentFilterBar } from '../components';
 import { getTalentDatabase } from '../services/talentDatabaseService';
@@ -60,17 +59,7 @@ export default function TalentDatabasePage() {
   const requestIdRef = useRef(0);
   const fetchingNextRef = useRef(false);
 
-  const cardsScrollRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
-  const scrollRootRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
-  }, []);
-
-  useScrollExitOnEdge(cardsScrollRef, {
-    forwardTo: isDesktop ? cardsScrollRef : scrollRootRef,
-  });
 
   const fetchPage = useCallback(
     async (p: number, replace = false) => {
@@ -107,7 +96,7 @@ export default function TalentDatabasePage() {
   );
 
   useEffect(() => {
-    cardsScrollRef.current?.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0, behavior: 'auto' });
     inflightRef.current?.abort();
     inflightRef.current = null;
     setItems([]);
@@ -121,9 +110,8 @@ export default function TalentDatabasePage() {
   const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    const root = cardsScrollRef.current;
     const target = sentinelRef.current;
-    if (!root || !target) return;
+    if (!target) return;
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -132,7 +120,7 @@ export default function TalentDatabasePage() {
         if (!hasNext || loading || fetchingNextRef.current || error) return;
         fetchPage(page, false);
       },
-      { root, rootMargin: '600px 0px 800px 0px', threshold: 0 }
+      { root: null, rootMargin: '600px 0px 800px 0px', threshold: 0 }
     );
 
     io.observe(target);
@@ -140,15 +128,15 @@ export default function TalentDatabasePage() {
   }, [hasNext, loading, page, fetchPage, error]);
 
   useEffect(() => {
-    const box = cardsScrollRef.current;
-    if (!box || error) return;
+    if (error) return;
 
     let cancelled = false;
     (async () => {
       let tries = 0;
       if (items.length === 0 && loading) return;
 
-      while (!cancelled && hasNext && box.scrollHeight <= box.clientHeight + SCROLL_EPS && tries < MAX_AUTOFILL_PAGES) {
+      const root = (document.scrollingElement || document.documentElement) as HTMLElement;
+      while (!cancelled && hasNext && root.scrollHeight <= root.clientHeight + SCROLL_EPS && tries < MAX_AUTOFILL_PAGES) {
         tries += 1;
         await fetchPage(page, false);
         await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
@@ -203,10 +191,7 @@ export default function TalentDatabasePage() {
           )}
 
           <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[56px] lg:py-[56px]">
-            <div
-              ref={cardsScrollRef}
-              className="w-full max-w-[1500px] mx-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
-            >
+            <div className="w-full max-w-[1500px] mx-auto flex-1 min-h-0 h-full">
               <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
                 <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
                 <button
