@@ -102,7 +102,7 @@ export type BaseCastingRemunerationsSection = {
   id: string;
   sectionStatus: SiteMetadataObject;
   compensationType: SiteMetadataObject;
-  notes: string;
+  notes: string | null;
   remunerations: EmployerCastingRemunerationCardResponse[];
 };
 

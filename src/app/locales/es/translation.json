@@ -556,8 +556,8 @@
       "per_month": "Por mes",
       "per_season": "Por temporada / función",
       "to_be_agreed": "A convenir",
-      "cooperative_project": "Proyecto cooperativo",
-      "unpaid": "Sin remuneración"
+      "unpaid": "Sin remuneración",
+      "collaborative": "Proyecto cooperativo"
     },
     "currency": {
       "ars": "ARS $",

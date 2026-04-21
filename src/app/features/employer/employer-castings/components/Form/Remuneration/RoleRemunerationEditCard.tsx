@@ -3,6 +3,7 @@ import { t } from 'i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SectionCard } from '../../../../../../shared/components/Section';
 import { useCachedSiteMetadataOption } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
+import { getRoleRemunerationVisiblePayRateTypeOptions } from '../../../../../sitemetadata/utils/siteMetadataUtils';
 import { useCastingRoleRemunerationPatchAutosave } from '../../../hooks/autosaves';
 import { getCastingRoleRemunerationSchema } from '../../../schemas/formSchema';
 
@@ -34,7 +35,19 @@ const formatAmountFromNumber = (value: unknown): string => {
 };
 
 const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data: any }) => {
-  const payRateTypeOptions = useCachedSiteMetadataOption('payRateTypeOptions', t);
+  const payRateTypeOptionsRaw = useCachedSiteMetadataOption('payRateTypeOptions', t, null, { raw: true });
+  const visiblePayRateTypeOptions = useMemo(
+    () => getRoleRemunerationVisiblePayRateTypeOptions(payRateTypeOptionsRaw),
+    [payRateTypeOptionsRaw]
+  );
+  const payRateTypeOptions = useMemo(
+    () =>
+      visiblePayRateTypeOptions.map((option) => ({
+        value: option.id,
+        label: t(option.stringCode),
+      })),
+    [visiblePayRateTypeOptions, t]
+  );
   const currencyTypeOptions = useCachedSiteMetadataOption('currencyOptions', t);
   const autosave = useCastingRoleRemunerationPatchAutosave(sectionId);
   const backendFieldErrors = autosave.fieldErrors as Record<string, string | undefined>;

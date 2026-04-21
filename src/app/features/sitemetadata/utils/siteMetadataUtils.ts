@@ -21,6 +21,9 @@ export const CASTING_APPLICATION_STATUS_VIEWED = 'sitemetadata.application_statu
 // Gender
 export const GENDER_INDISTINCT = 'sitemetadata.gender.indistinct' as const;
 
+// Pay Rate Type
+export const PAY_RATE_TYPE_COLLABORATIVE = 'sitemetadata.pay_rate_type.collaborative' as const;
+
 // Ordered Lists
 export const CASTING_STATUS_ORDER = [
   CASTING_STATUS_PUBLISHED,
@@ -129,6 +132,15 @@ export const getTalentVisibleGenderOptions = (items?: SiteMetadataObject[] | nul
   return filterSiteMetadataByStringCodes({
     items,
     excludedStringCodes: [GENDER_INDISTINCT],
+  });
+};
+
+export const getRoleRemunerationVisiblePayRateTypeOptions = (
+  items?: SiteMetadataObject[] | null
+): SiteMetadataObject[] => {
+  return filterSiteMetadataByStringCodes({
+    items,
+    excludedStringCodes: [PAY_RATE_TYPE_COLLABORATIVE],
   });
 };
 
