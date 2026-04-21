@@ -34,15 +34,15 @@ export default function TalentCard({ item, onClick }: Props) {
     <article
       onClick={handleClick}
       className="
-        group w-full h-auto
-        sm:w-[280px] md:h-[380px]
+        group w-full h-[380px]
+        sm:w-[280px]
         cursor-pointer rounded-xl border border-[var(--color-secondary-outline)] bg-white p-4
         flex flex-col gap-3
       "
     >
       <div
         className="
-          relative w-full overflow-hidden rounded-xl
+          relative w-full overflow-hidden rounded-xl transition-all duration-150 ease-in-out
           h-[280px] md:h-full md:group-hover:h-[280px] md:group-focus-within:h-[280px]
         "
       >
@@ -50,6 +50,7 @@ export default function TalentCard({ item, onClick }: Props) {
         <ButtonRow
           className="
             absolute top-4 right-4 z-10 items-center justify-center
+            transition-all duration-150 ease-in-out
             opacity-100 pointer-events-auto
             md:opacity-0 md:pointer-events-none
             md:group-hover:opacity-100 md:group-hover:pointer-events-auto
@@ -64,7 +65,7 @@ export default function TalentCard({ item, onClick }: Props) {
       </div>
       <div
         className="
-          flex flex-col
+          flex flex-col transition-all duration-150 ease-in-out
           opacity-100 max-h-none
           md:opacity-0 md:max-h-0 md:overflow-hidden md:pointer-events-none
           md:group-hover:opacity-100 md:group-hover:max-h-none md:group-hover:pointer-events-auto
@@ -74,7 +75,7 @@ export default function TalentCard({ item, onClick }: Props) {
         <h3 className="text-2xl sm:text-xl font-semibold leading-tight line-clamp-1">{stageName}</h3>
         <div className="flex flex-wrap gap-2 mt-1">
           {displayedProfessions.map((profession) => (
-            <Chip label={t(profession.stringCode)}></Chip>
+            <Chip key={profession.id} label={t(profession.stringCode ?? '')}></Chip>
           ))}
         </div>
       </div>
