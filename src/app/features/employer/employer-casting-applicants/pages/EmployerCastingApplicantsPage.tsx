@@ -1,5 +1,5 @@
 import { Label } from 'autocasting-ui-library-padimasso';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { DashboardSection, DashboardShell } from '../../../../layouts/components';
@@ -8,6 +8,7 @@ import { LG_SCREEN_SIZE, useMedia } from '../../../../shared/hooks/useMedia';
 import { PublicProfileDetailsView } from '../../../public-profile/pages';
 import { CastingApplicantCard } from '../components/Card';
 import CastingApplicantsFilterBar from '../components/Filter/CastingApplicantsFilterBar';
+import CastingApplicantsDataGrid from '../components/Table/CastingApplicantsDataGrid';
 import { useEmployerCastingApplicants } from '../hooks/useEmployerCastingApplicants';
 import type {
   EmployerCastingApplicantsFiltersState,
@@ -27,19 +28,27 @@ const EmployerCastingApplicantsPage = () => {
     search: undefined,
   });
   const [orderBy, setOrderBy] = useState<EmployerCastingApplicantsOrderBy>('CREATION_DATE_DESC');
+  const [page, setPage] = useState(0);
+  const pageSize = 10;
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [selectedPublicSlug, setSelectedPublicSlug] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
   const args = useMemo(
     () => ({
       slug,
-      page: 0,
-      size: 10,
+      page,
+      size: pageSize,
       filters,
       orderBy,
     }),
-    [slug, filters, orderBy]
+    [slug, page, filters, orderBy]
   );
+
+  useEffect(() => {
+    setPage(0);
+    setSelectedRowKeys([]);
+  }, [slug, filters, orderBy]);
 
   const { data } = useEmployerCastingApplicants(args);
   const applicants = data?.items ?? [];
@@ -67,22 +76,37 @@ const EmployerCastingApplicantsPage = () => {
           onOrderByChange={setOrderBy}
         />
 
-        <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">
-          {applicants.length > 0 ? (
-            applicants.map((i) => (
-              <CastingApplicantCard
-                key={i.applicationId}
-                data={i}
+        {applicants.length > 0 ? (
+          isDesktop ? (
+            <div className="w-full flex flex-col gap-6">
+              <CastingApplicantsDataGrid
+                data={applicants}
+                page={data?.page ?? page}
+                hasNext={data?.hasNext ?? false}
+                onPageChange={setPage}
                 isDesktop={isDesktop}
                 onOpenDetails={handleOpenDetails}
+                selectedRowKeys={selectedRowKeys}
+                onSelectedRowKeysChange={setSelectedRowKeys}
               />
-            ))
+            </div>
           ) : (
-            <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
-              {t('employer_casting_applicants.page.empty_page')}
-            </Label>
-          )}
-        </div>
+            <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">
+              {applicants.map((i) => (
+                <CastingApplicantCard
+                  key={i.applicationId}
+                  data={i}
+                  isDesktop={isDesktop}
+                  onOpenDetails={handleOpenDetails}
+                />
+              ))}
+            </div>
+          )
+        ) : (
+          <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
+            {t('employer_casting_applicants.page.empty_page')}
+          </Label>
+        )}
       </DashboardSection>
 
       {isDesktop && (
