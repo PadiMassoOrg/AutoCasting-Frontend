@@ -188,7 +188,7 @@ const CastingDatabasePage = () => {
             </aside>
           )}
 
-          <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[56px] lg:py-[56px]">
+          <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[40px] lg:py-[24px]">
             <div className="w-full max-w-[1500px] mx-auto flex-1 min-h-0 h-full">
               <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
                 <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
