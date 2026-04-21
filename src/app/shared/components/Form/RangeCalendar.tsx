@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect } from 'react';
-import { DayPicker, formatCaption, type DateRange } from 'react-day-picker';
+import { DayPicker, formatCaption, type DateRange, type OnSelectHandler } from 'react-day-picker';
 import { DATE_FNS_LOCALE_BY_LANG, useLanguage, WEEKDAYS_SHORT_BY_LANG } from '../../../context/LanguageContext';
 
 type RangeCalendarProps = {
@@ -17,6 +17,7 @@ type RangeCalendarProps = {
 };
 
 const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
+const toStartOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 
 const getTargetMonth = (range?: DateRange) => {
   if (range?.from) return startOfMonth(range.from);
@@ -64,18 +65,25 @@ export function RangeCalendar({
     });
   }, [value?.from?.getTime(), value?.to?.getTime()]);
 
-  const handleSelect = React.useCallback(
-    (next: DateRange | undefined) => {
-      onChange(next);
+  const handleSelect: OnSelectHandler<DateRange | undefined> = React.useCallback(
+    (next, triggerDate) => {
+      let resolved = next;
 
-      const target = getTargetMonth(next);
+      // If a full range is already selected, start a new range from the next clicked day.
+      if (value?.from && value?.to && triggerDate) {
+        resolved = { from: toStartOfDay(triggerDate), to: undefined };
+      }
+
+      onChange(resolved);
+
+      const target = getTargetMonth(resolved);
       if (month.getFullYear() !== target.getFullYear() || month.getMonth() !== target.getMonth()) {
         setMonth(target);
       }
 
-      if (next?.from && next?.to) onCommit?.(next.from, next.to);
+      if (resolved?.from && resolved?.to) onCommit?.(resolved.from, resolved.to);
     },
-    [onChange, onCommit, month]
+    [onChange, onCommit, month, value?.from?.getTime(), value?.to?.getTime()]
   );
 
   return (
