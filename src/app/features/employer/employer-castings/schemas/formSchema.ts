@@ -135,10 +135,11 @@ export const getCastingRequirementSchema = (t: TFunction) =>
 export const getCastingRoleRemunerationSchema = (t: TFunction) =>
   z.object({
     amount: z
-      .number({ invalid_type_error: t('validation.number_invalid') })
-      .finite({ message: t('validation.number_invalid') })
-      .min(0, { message: t('validation.number_invalid') })
-      .nullable(),
+      .string()
+      .trim()
+      .min(1, { message: t('validation.required') })
+      .refine((value) => parseCurrencyAmount(value) !== null, { message: t('validation.number_invalid') })
+      .refine((value) => hasValidDigitsForBackend(value), { message: t('validation.number_invalid') }),
   });
 
 export type CastingRoleFormValues = z.infer<ReturnType<typeof getCastingRoleSchema>>;
@@ -149,3 +150,18 @@ export type CastingRequirementFormKey = keyof CastingRequirementFormValues | 'me
 
 export type CastingRoleRemunerationFormValues = z.infer<ReturnType<typeof getCastingRoleRemunerationSchema>>;
 export type CastingRoleRemunerationFormKey = keyof CastingRoleRemunerationFormValues;
+
+function parseCurrencyAmount(value: string): number | null {
+  const normalized = value.replace(/\s/g, '').replace(',', '.');
+  if (!normalized) return null;
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function hasValidDigitsForBackend(value: string): boolean {
+  const normalized = value.replace(/\s/g, '');
+  const [intPartRaw, fracPart = ''] = normalized.split(',');
+  const intPart = intPartRaw.replace(/^0+(?=\d)/, '');
+  const integerDigits = intPart.length === 0 ? 1 : intPart.length;
+  return integerDigits <= 10 && fracPart.length <= 2;
+}

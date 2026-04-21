@@ -6,7 +6,7 @@ import { useProfileMediaDelete } from '../../../../../integrations/supabase/medi
 import { useProfileMediaPatch } from '../../../../../integrations/supabase/media/hooks/useProfileMediaPatch';
 import { fileSchema, OTHER_SLOTS, otherIndexSchema } from '../../schemas/mediaSchema';
 import { TALENT_PROFILE_CACHE_KEY } from '../../services/talentProfileService';
-import type { Media } from '../../types/talentProfile.types';
+import type { Media, TalentProfileResponse } from '../../types/talentProfile.types';
 import { getBackendErrorMessage } from '../../../../../shared/utils/backendErrorHandling';
 
 export default function MediaPhotosForm({ media, supabaseId }: { media: Media; supabaseId: string }) {
@@ -89,8 +89,9 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
           setBust((prev) => ({ ...prev, [slot]: (prev[slot] ?? 0) + 1 }));
           if (slot === 'headshot') setRemovedHeadshot(false);
           if (slot === 'fullbody') setRemovedFullbody(false);
-          qc.setQueriesData({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
-            prev ? { ...prev, media: updated } : prev
+          qc.setQueriesData(
+            { queryKey: TALENT_PROFILE_CACHE_KEY, exact: false },
+            (prev: TalentProfileResponse | undefined) => mergeMediaUpdate(prev, updated)
           );
         },
         onError: (error) => {
@@ -147,8 +148,9 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
             n.delete(index);
             return n;
           });
-          qc.setQueriesData({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
-            prev ? { ...prev, media: updated } : prev
+          qc.setQueriesData(
+            { queryKey: TALENT_PROFILE_CACHE_KEY, exact: false },
+            (prev: TalentProfileResponse | undefined) => mergeMediaUpdate(prev, updated)
           );
         },
         onError: (error) => {
@@ -178,8 +180,9 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
       setLiveMedia(updated);
       setPreview((p) => ({ ...p, headshot: undefined }));
       setRemovedHeadshot(false);
-      qc.setQueriesData({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
-        prev ? { ...prev, media: updated } : prev
+      qc.setQueriesData(
+        { queryKey: TALENT_PROFILE_CACHE_KEY, exact: false },
+        (prev: TalentProfileResponse | undefined) => mergeMediaUpdate(prev, updated)
       );
     } catch (error) {
       setRemovedHeadshot(false);
@@ -200,8 +203,9 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
       setLiveMedia(updated);
       setPreview((p) => ({ ...p, fullbody: undefined }));
       setRemovedFullbody(false);
-      qc.setQueriesData({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
-        prev ? { ...prev, media: updated } : prev
+      qc.setQueriesData(
+        { queryKey: TALENT_PROFILE_CACHE_KEY, exact: false },
+        (prev: TalentProfileResponse | undefined) => mergeMediaUpdate(prev, updated)
       );
     } catch (error) {
       setRemovedFullbody(false);
@@ -227,8 +231,9 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
         n.delete(index);
         return n;
       });
-      qc.setQueriesData({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
-        prev ? { ...prev, media: updated } : prev
+      qc.setQueriesData(
+        { queryKey: TALENT_PROFILE_CACHE_KEY, exact: false },
+        (prev: TalentProfileResponse | undefined) => mergeMediaUpdate(prev, updated)
       );
     } catch (error) {
       setRemovedOthers((s) => {
@@ -361,3 +366,9 @@ const withBust = (url: string | null | undefined, bust?: number): string | undef
   if (!bust) return url;
   return url.includes('?') ? `${url}&b=${bust}` : `${url}?b=${bust}`;
 };
+
+const mergeMediaUpdate = (
+  prev: TalentProfileResponse | undefined,
+  updated: Media
+): TalentProfileResponse | undefined =>
+  prev ? { ...prev, media: updated, modifiedAt: updated.modifiedAt ?? prev.modifiedAt } : prev;

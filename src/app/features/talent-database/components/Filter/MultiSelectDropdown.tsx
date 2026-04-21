@@ -1,5 +1,5 @@
 import { Label, Separator } from 'autocasting-ui-library-padimasso';
-import React, { useId, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useScrollExitOnEdge } from '../../../../shared/hooks/useScrollExitOnEdge';
 
@@ -14,6 +14,7 @@ type BaseProps<T> = {
   forwardScrollToRef?: React.RefObject<HTMLElement | null>;
   required?: boolean;
   hideSelectAll?: boolean;
+  disableCloseOnClickOutside?: boolean;
 };
 
 type MultipleSelectProps = {
@@ -45,6 +46,7 @@ export default function MultiSelectDropdown<T>({
   forwardScrollToRef,
   required = false,
   hideSelectAll = false,
+  disableCloseOnClickOutside = false,
   ...rest
 }: MultiSelectDropdownProps<T>) {
   const { t } = useTranslation();
@@ -71,6 +73,7 @@ export default function MultiSelectDropdown<T>({
   };
 
   const panelRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Ref dummy para cumplir tipos cuando forwardScrollToRef viene undefined
   const noopForwardRef = useRef<HTMLElement | null>(null);
@@ -79,13 +82,27 @@ export default function MultiSelectDropdown<T>({
   // Hook SIEMPRE llamado (no condicional)
   useScrollExitOnEdge(panelRef, { forwardTo });
 
+  useEffect(() => {
+    if (!open || disableCloseOnClickOutside) return;
+
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (containerRef.current?.contains(target)) return;
+      setOpen(false);
+    };
+
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [disableCloseOnClickOutside, open]);
+
   const containerBorder = error ? 'border-red-500' : 'border-[var(--color-secondary-outline)]';
   const errorId = useId();
   const describedBy = error ? `${errorId}-error` : undefined;
 
   return (
     <>
-      <div className={`w-full rounded-xl border ${containerBorder} bg-white ${className}`}>
+      <div ref={containerRef} className={`w-full rounded-xl border ${containerBorder} bg-white ${className}`}>
         {/* Header */}
         <button
           type="button"

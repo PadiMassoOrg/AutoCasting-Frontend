@@ -48,7 +48,7 @@ const CastingDetailsPage = ({ mode }: Props) => {
     }
 
     return (
-      <div className="relative pt-3 pb-24 flex flex-col gap-3">
+      <div className="relative pt-3 pb-10 flex flex-col gap-3">
         <BasicInfoSection data={casting.basicInfoSection} />
         <Separator className="opacity-0 my-1" />
         <RolesSection data={casting.rolesSection} />

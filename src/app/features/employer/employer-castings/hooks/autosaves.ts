@@ -1,6 +1,8 @@
 import { getAuthToken } from '../../../../shared/lib/cookies';
 import { useSectionAutosave } from '../../../talent/talent-profile-edit/hooks/useSectionAutoSave';
+import { useEmployerCastingIds } from '../context/EmployerCastingContext';
 import {
+  EMPLOYER_CASTING_CACHE_KEY,
   CASTING_SECTION_BASIC_INFO_CACHE_KEY,
   CASTING_SECTION_REMUNERATIONS_CACHE_KEY,
   CASTING_SECTION_REQUIREMENTS_CACHE_KEY,
@@ -39,11 +41,13 @@ import type {
 export function useCastingBasicInfoAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_BASIC_INFO_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
+  const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
 
   return useSectionAutosave<CastingBasicInfoPatchRequest, CastingSectionBasicInfo>({
     mutationFn: patchCastingBasicInfo,
     delay: 800,
     cacheKeys: [key],
+    lastModifiedCacheKeys,
     invalidateOnSuccess: false,
     onSuccessUpdate: (_prev, updated) => updated as CastingSectionBasicInfo,
   });
@@ -53,11 +57,13 @@ export function useCastingBasicInfoAutosave(sectionId: string) {
 export function useCastingRoleCreateAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_ROLES_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
+  const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
 
   return useSectionAutosave<CastingRoleUpsertRequest, EmployerCastingRoleCardResponse>({
     mutationFn: createNewRole,
     delay: 200,
     cacheKeys: [key],
+    lastModifiedCacheKeys,
     invalidateOnSuccess: 'active',
     fieldMap: {
       roleTypeId: 'roleType',
@@ -75,11 +81,13 @@ export function useCastingRoleCreateAutosave(sectionId: string) {
 export function useCastingRolePatchAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_ROLES_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
+  const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
 
   return useSectionAutosave<CastingRolePatchRequest, EmployerCastingRoleCardResponse>({
     mutationFn: patchCastingRole,
     delay: 200,
     cacheKeys: [key],
+    lastModifiedCacheKeys,
     invalidateOnSuccess: false,
     fieldMap: {
       roleTypeId: 'roleType',
@@ -97,11 +105,13 @@ export function useCastingRolePatchAutosave(sectionId: string) {
 export function useCastingRoleDeleteAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_ROLES_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
+  const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
 
   return useSectionAutosave<CastingRoleDeleteRequest, { id: string }>({
     mutationFn: deleteCastingRole,
     delay: 0,
     cacheKeys: [key],
+    lastModifiedCacheKeys,
     invalidateOnSuccess: 'active',
     onSuccessUpdate: (prev, { id }) => {
       const prevSection = normalizeRolesSection(prev);
@@ -116,11 +126,13 @@ export function useCastingRoleDeleteAutosave(sectionId: string) {
 export function useCastingRequirementCreateAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_REQUIREMENTS_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
+  const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
 
   return useSectionAutosave<CastingRequirementUpsertRequest, EmployerCastingRequirementCardResponse[]>({
     mutationFn: createBulkRequirement,
     delay: 200,
     cacheKeys: [key],
+    lastModifiedCacheKeys,
     invalidateOnSuccess: false,
     messageFieldMap: {
       'server_error.casting.role.requirement.already_exists': 'roleIds',
@@ -147,11 +159,13 @@ export function useCastingRequirementCreateAutosave(sectionId: string) {
 export function useCastingRequirementPatchAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_REQUIREMENTS_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
+  const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
 
   return useSectionAutosave<CastingRequirementPatchRequest, EmployerCastingRequirementCardResponse>({
     mutationFn: patchCastingRequirement,
     delay: 200,
     cacheKeys: [key],
+    lastModifiedCacheKeys,
     invalidateOnSuccess: false,
     messageFieldMap: {
       'server_error.casting.role.requirement.already_exists': 'roleIds',
@@ -176,11 +190,13 @@ export function useCastingRequirementPatchAutosave(sectionId: string) {
 export function useCastingRequirementDeleteAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_REQUIREMENTS_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
+  const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
 
   return useSectionAutosave<CastingRequirementDeleteRequest, { id: string }>({
     mutationFn: deleteCastingRequirement,
     delay: 0,
     cacheKeys: [key],
+    lastModifiedCacheKeys,
     invalidateOnSuccess: false,
     onSuccessUpdate: (prev, { id }) => {
       const prevSection = normalizeRequirementsSection(prev);
@@ -195,11 +211,13 @@ export function useCastingRequirementDeleteAutosave(sectionId: string) {
 export function useCastingRemunerationsSectionAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_REMUNERATIONS_CACHE_KEY, sectionId, token ?? 'no-token'];
+  const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
 
   return useSectionAutosave<CastingSectionRemunerationPatchRequest, CastingSectionRemunerations>({
     mutationFn: patchCastingSectionRemuneration,
     delay: 200,
     cacheKeys: [key],
+    lastModifiedCacheKeys,
     invalidateOnSuccess: false,
     onSuccessUpdate: (prev, updated) => ({ ...(prev as any), ...(updated as any) }) as CastingSectionRemunerations,
   });
@@ -208,11 +226,13 @@ export function useCastingRemunerationsSectionAutosave(sectionId: string) {
 export function useCastingRoleRemunerationPatchAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_REMUNERATIONS_CACHE_KEY, sectionId, token ?? 'no-token'];
+  const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
 
   return useSectionAutosave<CastingRoleRemunerationPatchRequest, any>({
     mutationFn: patchCastingRoleRemuneration,
     delay: 200,
     cacheKeys: [key],
+    lastModifiedCacheKeys,
     invalidateOnSuccess: 'active',
     onSuccessUpdate: (prev, updated) => {
       const prevSection = normalizeRemunerationsSection(prev);
@@ -233,6 +253,11 @@ const normalizeRolesSection = (v: any): CastingSectionRoles => {
     ...(any ?? {}),
     roles: Array.isArray(any?.roles) ? any.roles : [],
   } as CastingSectionRoles;
+};
+
+const useCastingEditorLastModifiedCacheKeys = () => {
+  const { defaultCode } = useEmployerCastingIds();
+  return [[...EMPLOYER_CASTING_CACHE_KEY, defaultCode]];
 };
 
 const normalizeRequirementsSection = (v: any): CastingSectionRequirements => {

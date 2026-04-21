@@ -187,8 +187,8 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
 
   return (
     <div className="w-full flex flex-col gap-1">
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-center lg:gap-20">
-        <div className="flex flex-col gap-1">
+      <div className="relative flex flex-col lg:gap-2 lg:block">
+        <div className="flex flex-col gap-1 lg:pr-[280px]">
           <FormInputField
             id="companyName"
             label={t('employer_profile.basic_info.company_name')}
@@ -226,31 +226,33 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
           />
         </div>
 
-        <div className="flex flex-col gap-2 items-start lg:items-center">
-          <Label className="text-sm font-semibold self-start">{t('employer_profile.basic_info.image')}</Label>
-          <div className="w-[210px] aspect-[3/4]">
-            <UploadTile
-              value={logoUrl}
-              previewUrl={previewUrl}
-              onSelect={handleSelectLogo}
-              onDeleteClick={handleDeleteLogo}
-              disabled={isLogoBusy}
-              busy={isLogoBusy}
-              busyText={t('state.loading')}
-              accept="image/*"
-              maxSizeMB={8}
-              objectFit="cover"
-              multiple={false}
-              openOnClick={!isLogoBusy}
-              className="w-full h-full"
-            />
-          </div>
+        <div className="w-full max-w-[240px] lg:absolute lg:top-0 lg:right-0 lg:h-full lg:w-[240px]">
+          <div className="grid gap-1 lg:h-full lg:min-h-0 lg:grid-rows-[auto_minmax(0,1fr)_25px]">
+            <Label className="w-full self-start text-sm font-semibold">{t('employer_profile.basic_info.image')}</Label>
+            <div className="w-full aspect-[3/4] lg:h-full lg:min-h-0 lg:aspect-auto">
+              <UploadTile
+                value={logoUrl}
+                previewUrl={previewUrl}
+                onSelect={handleSelectLogo}
+                onDeleteClick={handleDeleteLogo}
+                disabled={isLogoBusy}
+                busy={isLogoBusy}
+                busyText={t('state.loading')}
+                accept="image/*"
+                maxSizeMB={8}
+                objectFit="cover"
+                multiple={false}
+                openOnClick={!isLogoBusy}
+                className="w-full h-full"
+              />
+            </div>
 
-          {errImage ? (
-            <span className="text-xs text-red-600 max-h-[25px]">{errImage}</span>
-          ) : (
-            <div className="min-h-[25px]" />
-          )}
+            {errImage ? (
+              <span className="w-full max-h-[25px] text-xs text-red-600">{errImage}</span>
+            ) : (
+              <div className="min-h-[25px] w-full" />
+            )}
+          </div>
         </div>
       </div>
 

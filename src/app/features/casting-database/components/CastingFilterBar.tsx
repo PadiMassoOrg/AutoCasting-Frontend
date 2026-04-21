@@ -8,6 +8,7 @@ import {
   useCachedSiteMetadataSlice,
 } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
+import { getTalentVisibleGenderOptions } from '../../sitemetadata/utils/siteMetadataUtils';
 import { BooleanRadioGroup, FilterSection } from '../../talent-database/components/Filter';
 import MultiSelectDropdown from '../../talent-database/components/Filter/MultiSelectDropdown';
 import type { CastingFiltersQS } from '../types/casting-database.types';
@@ -27,13 +28,24 @@ export function CastingFilterBar({
 }) {
   const { t } = useTranslation();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
-  const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
+  const genderOptionsRaw = useCachedSiteMetadataSlice('genderOptions');
   const ethnicityOptions = useCachedSiteMetadataOption('ethnicityOptions', t);
   const professionsRaw = useCachedSiteMetadataSlice('professions');
   const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
   const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye_color');
   const skillsRaw = useCachedSiteMetadataSlice('skills');
   const projectTypesRaw = useCachedSiteMetadataSlice('projectTypeOptions');
+
+  const visibleGenderOptions = useMemo(() => getTalentVisibleGenderOptions(genderOptionsRaw), [genderOptionsRaw]);
+
+  const genderOptions = useMemo(
+    () =>
+      visibleGenderOptions.map((option) => ({
+        value: option.id,
+        label: t(option.stringCode),
+      })),
+    [visibleGenderOptions, t]
+  );
 
   const skillsByCat = useMemo(() => {
     const groups = new Map<string, SiteMetadataObject[]>();

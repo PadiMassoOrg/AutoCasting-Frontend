@@ -1,7 +1,6 @@
 import api from '../../../../shared/lib/axios';
 import { API_ROUTES } from '../../../../shared/lib/routes';
 import { stripUndefined } from '../../../../shared/utils/stripUndefined';
-import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 import type {
   BasicInfoPatchRequest,
   CharacteristicsPatchRequest,
@@ -14,6 +13,7 @@ import type {
   Characteristics,
   Media,
   ProfileSocialMedia,
+  SkillsResponse,
   TalentProfileBasicInfo,
   TalentProfileContact,
   TalentProfileResponse,
@@ -54,7 +54,7 @@ export async function patchCharacteristics(payload: CharacteristicsPatchRequest)
   return data;
 }
 
-export async function patchSkills(payload: SkillsPatchRequest): Promise<SiteMetadataObject[]> {
+export async function patchSkills(payload: SkillsPatchRequest): Promise<SkillsResponse> {
   const { data } = await api.patch(API_ROUTES.TALENT_SKILLS, payload);
   return data;
 }

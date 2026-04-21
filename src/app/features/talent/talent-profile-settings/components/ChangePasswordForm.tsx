@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, FormInputField, Separator } from 'autocasting-ui-library-padimasso';
+import { Button, FormPasswordField, Separator } from 'autocasting-ui-library-padimasso';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../context/ModalContext';
@@ -69,32 +69,32 @@ const ChangePasswordForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md mx-auto">
-      <FormInputField
+      <FormPasswordField
         id="oldPassword"
-        type="password"
         label={t('settings.page.account.change_pass_modal.actual_pass')}
         labelClassName="font-semibold"
         placeholder={t('********')}
         {...register('oldPassword')}
         error={errors.oldPassword?.message}
+        autoComplete="old-password"
       />
-      <FormInputField
+      <FormPasswordField
         id="password"
-        type="password"
         label={t('settings.page.account.change_pass_modal.new_pass')}
         labelClassName="font-semibold"
         placeholder={t('********')}
         {...register('newPassword')}
         error={errors.newPassword?.message}
+        autoComplete="new-password"
       />
-      <FormInputField
+      <FormPasswordField
         id="confirmPassword"
-        type="password"
         placeholder={t('********')}
         label={t('settings.page.account.change_pass_modal.repeat_new_pass')}
         labelClassName="font-semibold"
         {...register('confirmPassword')}
         error={errors.confirmPassword?.message}
+        autoComplete="new-password"
       />
       <Separator className="opacity-20 my-4"></Separator>
       <div className="flex gap-2">

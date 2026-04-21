@@ -32,10 +32,11 @@ export const useCastingStatusMutation = (action: CastingStatusAction) => {
 
   return useMutation<EmployerCastingEditorResponse, unknown, Vars>({
     mutationFn: ({ id }) => mutationByAction[action]({ id }),
-    onSuccess: async (_data, variables) => {
+    onSuccess: async (data, variables) => {
       await queryClient.invalidateQueries({ queryKey: EMPLOYER_CASTINGS_LIST_CACHE_KEY });
 
       if (variables.slug) {
+        queryClient.setQueriesData({ queryKey: [...EMPLOYER_CASTING_CACHE_KEY, variables.slug] }, data);
         await queryClient.invalidateQueries({
           queryKey: [...EMPLOYER_CASTING_CACHE_KEY, variables.slug],
         });

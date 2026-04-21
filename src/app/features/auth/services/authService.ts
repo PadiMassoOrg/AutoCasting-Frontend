@@ -29,13 +29,8 @@ export const meData = async (): Promise<MeDataResponse> => {
     throw new Error('NO_TOKEN');
   }
 
-  try {
-    const { data } = await api.get<MeDataResponse>(API_ROUTES.AUTH_ME_DATA);
-    return data;
-  } catch (error: any) {
-    logout();
-    throw error;
-  }
+  const { data } = await api.get<MeDataResponse>(API_ROUTES.AUTH_ME_DATA);
+  return data;
 };
 
 export const googleLogin = async () => {

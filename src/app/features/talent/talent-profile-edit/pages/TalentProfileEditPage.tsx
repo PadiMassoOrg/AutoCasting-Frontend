@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { DashboardShell } from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
+import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
 import { TalentProfileModeToggle } from '../components';
 import {
   TalentProfileCreditsEditSection,
@@ -53,10 +54,24 @@ export default function TalentProfileEditPage() {
     },
   ];
 
+  const bottomSectionRenderer = () => {
+    return (
+      <div className="text-sm text-(--color-secondary-gray)">
+        <p>{t('general.datetime.last_saved')}:</p>
+        <p>{formatLastSavedDateTime(data.modifiedAt, t)}</p>
+      </div>
+    );
+  };
+
   return (
     <div className="relative h-full flex flex-col">
       <div className="flex-1 min-h-0">
-        <DashboardShell title={t('profile.page.profile')} sections={sections} initialKey="basic" />
+        <DashboardShell
+          title={t('profile.page.profile')}
+          sections={sections}
+          initialKey="basic"
+          bottomSection={bottomSectionRenderer()}
+        />
       </div>
       <TalentProfileModeToggle></TalentProfileModeToggle>
     </div>

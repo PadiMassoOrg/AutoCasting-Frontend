@@ -38,8 +38,6 @@ const EmployerInfoSection = ({ data }: { data: EmployerInfo }) => {
     </div>
   );
 
-  console.log(data.websiteUrl);
-
   return (
     <article className="w-full rounded-xl border border-(--color-secondary-outline) bg-white py-4 px-5 flex flex-col gap-4">
       <div className="flex flex-row items-center gap-2">

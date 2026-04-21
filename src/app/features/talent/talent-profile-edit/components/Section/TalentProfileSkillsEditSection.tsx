@@ -1,11 +1,11 @@
 import { Button } from 'autocasting-ui-library-padimasso';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
 import { DashboardSection } from '../../../../../layouts/components';
 import { Icon } from 'autocasting-ui-library-padimasso';
 import { SectionCard, SectionTitle } from '../../../../../shared/components/Section';
-import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
+import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
 import { useSkillsAutosave } from '../../hooks/autosaves';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';
@@ -16,18 +16,26 @@ const TalentProfileSkillsEditSection = ({ profile }: { profile: TalentProfileRes
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
   const autosave = useSkillsAutosave();
-  const skillOptions = useCachedSiteMetadataOption('skills', t);
+  const skillsRaw = (useCachedSiteMetadataSlice('skills') as SiteMetadataObject[] | undefined) ?? [];
 
   const [skills, setSkills] = useState<SiteMetadataObject[]>(profile.skills ?? []);
+
+  const skillsById = useMemo(() => {
+    const map = new Map<string, SiteMetadataObject>();
+    skillsRaw.forEach((skill) => map.set(skill.id, skill));
+    return map;
+  }, [skillsRaw]);
 
   const handleOpenModal = () => {
     openModal(
       <NewSkillModal
         initial={skills}
-        allOptions={skillOptions}
-        onSave={(next) => {
-          setSkills(next);
-          autosave.immediate({ skillIds: next.map((s) => s.id) });
+        onSave={(nextIds) => {
+          const nextSkills = nextIds
+            .map((id) => skillsById.get(id))
+            .filter((skill): skill is SiteMetadataObject => !!skill);
+          setSkills(nextSkills);
+          autosave.immediate({ skillIds: nextIds });
           closeModal();
         }}
         onCancel={closeModal}

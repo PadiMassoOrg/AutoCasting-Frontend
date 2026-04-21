@@ -8,6 +8,7 @@ import {
   useCachedSiteMetadataSlice,
 } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
+import { getTalentVisibleGenderOptions } from '../../sitemetadata/utils/siteMetadataUtils';
 import type { TalentFiltersQS } from '../types/talent-database.types';
 import { BooleanRadioGroup, FilterSection } from './Filter';
 import MultiSelectDropdown from './Filter/MultiSelectDropdown';
@@ -27,12 +28,24 @@ export function TalentFilterBar({
 }) {
   const { t } = useTranslation();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
-  const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
+
+  const genderOptionsRaw = useCachedSiteMetadataSlice('genderOptions');
   const ethnicityOptions = useCachedSiteMetadataOption('ethnicityOptions', t);
   const professionsRaw = useCachedSiteMetadataSlice('professions');
   const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
   const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye_color');
   const skillsRaw = useCachedSiteMetadataSlice('skills');
+
+  const visibleGenderOptions = useMemo(() => getTalentVisibleGenderOptions(genderOptionsRaw), [genderOptionsRaw]);
+
+  const genderOptions = useMemo(
+    () =>
+      visibleGenderOptions.map((option) => ({
+        value: option.id,
+        label: t(option.stringCode),
+      })),
+    [visibleGenderOptions, t]
+  );
 
   const skillsByCat = useMemo(() => {
     const groups = new Map<string, SiteMetadataObject[]>();
@@ -54,13 +67,11 @@ export function TalentFilterBar({
     [skillsByCat]
   );
 
-  // TODO: Verificar si queremos seguir manejandolo de esta manera
   const genderOptionsWithUnspecified = useMemo(
     () => [{ value: 'NULL', label: t('general.all') }, ...genderOptions],
     [genderOptions, t]
   );
 
-  // TODO: Verificar si queremos seguir manejandolo de esta manera
   const ethnicityOptionsWithUnspecified = useMemo(
     () => [{ value: 'NULL', label: t('general.all') }, ...ethnicityOptions],
     [ethnicityOptions, t]

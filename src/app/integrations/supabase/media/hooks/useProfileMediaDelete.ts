@@ -49,7 +49,10 @@ export function useProfileMediaDelete() {
     },
 
     onSuccess: (updated) => {
-      qc.setQueryData(TALENT_PROFILE_CACHE_KEY, (prev: any) => (prev ? { ...prev, media: updated } : prev));
+      qc.setQueriesData({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
+        prev ? { ...prev, media: updated, modifiedAt: updated.modifiedAt ?? prev.modifiedAt } : prev
+      );
+      qc.invalidateQueries({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false, refetchType: 'active' });
     },
   });
 }

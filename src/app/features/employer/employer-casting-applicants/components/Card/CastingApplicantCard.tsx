@@ -1,5 +1,6 @@
 import { Icon, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
+import { ROUTES } from '../../../../../shared/lib/routes';
 import { InlineList } from '../../../../../shared/components/InlineList';
 import { SectionCard } from '../../../../../shared/components/Section';
 import StatusDropdown from '../../../../sitemetadata/component/StatusDropdown';
@@ -10,10 +11,11 @@ import type { EmployerCastingApplicantCardResponse } from '../../types/employerC
 
 type Props = {
   data: EmployerCastingApplicantCardResponse;
+  isDesktop: boolean;
   onOpenDetails: (talentPublicSlug: string) => void | Promise<void>;
 };
 
-const CastingApplicantCard = ({ data, onOpenDetails }: Props) => {
+const CastingApplicantCard = ({ data, isDesktop, onOpenDetails }: Props) => {
   const { t } = useTranslation();
   const { setStatus, isPending } = useCastingApplicationStatusActions();
 
@@ -46,7 +48,12 @@ const CastingApplicantCard = ({ data, onOpenDetails }: Props) => {
   };
 
   const handleOpenDetails = () => {
-    onOpenDetails(talentPublicSlug);
+    if (isDesktop) {
+      onOpenDetails(talentPublicSlug);
+      return;
+    }
+
+    window.location.href = ROUTES.PUBLIC_PROFILE + '/' + talentPublicSlug;
   };
 
   return (

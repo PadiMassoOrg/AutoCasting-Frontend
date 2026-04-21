@@ -12,7 +12,10 @@ import { useCastingRemunerationsSectionAutosave } from '../../hooks/autosaves';
 import { useSectionRemunerations } from '../../hooks/section/useSectionRemunerations';
 import RoleRemunerationEditCard from '../Form/Remuneration/RoleRemunerationEditCard';
 
-const normalizeNotes = (value: string | null | undefined) => (value ?? '').trim();
+const normalizeNotesForSave = (value: string | null | undefined): string | null => {
+  const trimmed = (value ?? '').trim();
+  return trimmed.length > 0 ? trimmed : null;
+};
 
 const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: string }) => {
   const { data, isLoading, error } = useSectionRemunerations(sectionId);
@@ -20,12 +23,12 @@ const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: stri
   const sectionAutosave = useCastingRemunerationsSectionAutosave(sectionId);
 
   const [notes, setNotes] = useState<string>('');
-  const [lastSentNotes, setLastSentNotes] = useState<string>('');
+  const [lastSentNotes, setLastSentNotes] = useState<string | null>(null);
 
   useEffect(() => {
     const nextNotes = data?.notes ?? '';
     setNotes(nextNotes);
-    setLastSentNotes(normalizeNotes(nextNotes));
+    setLastSentNotes(normalizeNotesForSave(nextNotes));
   }, [data?.id, data?.notes]);
 
   useSyncCastingSectionStatus('remuneration', data?.sectionStatus);
@@ -69,7 +72,7 @@ const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: stri
                 value={notes}
                 onChange={(e) => setNotes((e?.target?.value ?? '') as string)}
                 onBlur={() => {
-                  const normalizedNotes = normalizeNotes(notes);
+                  const normalizedNotes = normalizeNotesForSave(notes);
                   if (normalizedNotes === lastSentNotes) return;
                   setLastSentNotes(normalizedNotes);
                   sectionAutosave.immediate({

@@ -30,12 +30,12 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
   };
 
   return (
-    <section className="w-full  relative max-w-[400px]">
+    <section className="w-full relative max-w-[400px]">
       <WizardStep>
-        <div className="flex flex-col min-h-[90vh] lg:min-h-[65vh] justify-between">
-          <div>
+        <div className="flex min-h-[85vh] lg:min-h-[70vh] flex-col justify-between">
+          <div className="flex flex-col">
             {/* Header */}
-            <div className="w-full flex flex-col items-center gap-4">
+            <div className="w-full flex flex-col items-center gap-4 mb-6">
               <img src={Logo} className="w-14" />
               <button
                 type="button"
@@ -46,7 +46,7 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
             </div>
 
             {/* Progress */}
-            <div className="flex flex-col gap-1 mb-2">
+            <div className="flex flex-col gap-1 mb-8">
               <div className="w-full h-[9px] rounded-full bg-[var(--color-secondary-offwhite)] overflow-hidden">
                 <div
                   className="h-[9px] bg-[var(--color-primary-purple)] transition-all"
@@ -59,17 +59,19 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
             </div>
 
             {/* Contenido principal */}
-            <div className="flex flex-col items-center gap-4 text-center">
-              <h1 className="text-2xl font-semibold">{t('onboarding.employer.confirmation_step.header')}</h1>
+            <div className="text-center flex flex-col gap-1 flex-1">
+              <h1 className="text-2xl font-semibold mb-3">{t('onboarding.employer.confirmation_step.header')}</h1>
               <p className="text-sm">{t('onboarding.employer.confirmation_step.subtitle')}</p>
-              <span className="flex flex-row items-center gap-2 ">
-                <p className="text-sm"> {t('onboarding.common.edit_profile_label_profile')}</p>
-                <ButtonRow items={[<Icon variant="primary" name="profile" className="cursor-default" />]}></ButtonRow>
-              </span>
+              <div className="text-sm mt-4 flex flex-col items-center gap-4">
+                <span className="flex flex-row items-center gap-2">
+                  <p className="text-sm">{t('onboarding.common.edit_profile_label_profile')}</p>
+                  <ButtonRow items={[<Icon variant="primary" name="profile" className="cursor-default" />]}></ButtonRow>
+                </span>
+              </div>
             </div>
           </div>
 
-          <div>
+          <div className="flex flex-col gap-6">
             <div className="flex justify-between items-center gap-4">
               <Button variant="outline" type="button" onClick={goBack}>
                 {t('buttons.back')}

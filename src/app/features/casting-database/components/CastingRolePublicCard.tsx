@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useMedia, XL_SCREEN_SIZE } from '../../../shared/hooks/useMedia';
 import { ROUTES } from '../../../shared/lib/routes';
 import { formatAgeRange } from '../../../shared/utils/formatUtils';
+import { GENDER_INDISTINCT } from '../../sitemetadata/utils/siteMetadataUtils';
 import type { CastingRolePublicCardResponse } from '../types/casting-database.types';
 
 type Props = {
@@ -29,6 +30,14 @@ const CastingRolePublicCard = ({ item }: Props) => {
     defaultCode,
   } = item;
 
+  const genderRenderer = (stringcode: string) => {
+    return (
+      <Chip
+        label={stringcode === GENDER_INDISTINCT ? t('profile.basic_info.gender') + ': ' + t(stringcode) : t(stringcode)}
+      />
+    );
+  };
+
   if (!isDesktop) {
     return (
       <article className="w-full rounded-xl border border-[var(--color-secondary-outline)] bg-white p-5 flex flex-col gap-3">
@@ -53,7 +62,7 @@ const CastingRolePublicCard = ({ item }: Props) => {
           })}
 
           <Chip label={t(roleType.stringCode)} />
-          <Chip label={t(gender.stringCode)} />
+          {genderRenderer(gender.stringCode)}
           <Chip label={formatAgeRange(ageMin, ageMax, t)} />
         </div>
         <Separator className="opacity-20"></Separator>
@@ -66,6 +75,7 @@ const CastingRolePublicCard = ({ item }: Props) => {
       </article>
     );
   }
+
   if (isDesktop) {
     return (
       <article className="w-full rounded-xl border border-[var(--color-secondary-outline)] bg-white py-4 px-10 flex flex-col gap-4">
@@ -88,7 +98,7 @@ const CastingRolePublicCard = ({ item }: Props) => {
               return <Chip label={t(p.stringCode)} key={p.id} />;
             })}
             <Chip label={t(roleType.stringCode)} />
-            <Chip label={t(gender.stringCode)} />
+            {genderRenderer(gender.stringCode)}
             <Chip label={formatAgeRange(ageMin, ageMax, t)} />
           </div>
           <Button asChild variant="primary" className="max-w-[180px]">

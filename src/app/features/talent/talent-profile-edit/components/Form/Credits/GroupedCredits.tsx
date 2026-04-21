@@ -62,7 +62,7 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
 
         return (
           <div key={catKey}>
-            <div className="w-full py-6">
+            <div className="w-full">
               <span
                 onClick={() => {
                   const y = window.scrollY;
@@ -82,14 +82,22 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
                   {list.map((c) => (
                     <article key={c.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3">
                       <div className="flex flex-row justify-between">
-                        <div className="grow">
+                        <div className="grow min-w-0">
                           <div className="flex items-center justify-between gap-4">
-                            <h4 className="font-semibold text-base lg:text-[14px] leading-snug">{c.projectName}</h4>
+                            <h4
+                              className="font-semibold text-base lg:text-[14px] leading-snug truncate min-w-0"
+                              title={c.projectName || ''}
+                            >
+                              {c.projectName}
+                            </h4>
                             <span className="shrink-0 rounded-lg border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px] font-light tracking-wide">
                               {c.year}
                             </span>
                           </div>
-                          <div className="mt-3 text-base lg:text-[14px] font-light text-[var(--color-secondary-grey-fonts)]">
+                          <div
+                            className="mt-3 text-base lg:text-[14px] font-light text-[var(--color-secondary-grey-fonts)] truncate"
+                            title={`${c.role || ''}${c.producerName ? ` — ${c.producerName}` : ''}`}
+                          >
                             {c.role}
                             {c.producerName ? ` — ${c.producerName}` : ''}
                           </div>
@@ -104,7 +112,7 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
                 </article>
               )}
             </div>
-            <Separator className="opacity-20" />
+            <Separator className="opacity-20 my-4" />
           </div>
         );
       })}

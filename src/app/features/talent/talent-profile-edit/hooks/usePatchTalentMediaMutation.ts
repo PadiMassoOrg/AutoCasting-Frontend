@@ -16,6 +16,7 @@ export const usePatchTalentMediaMutation = () => {
             ? {
                 ...prev,
                 media: updatedMedia,
+                modifiedAt: updatedMedia.modifiedAt ?? prev.modifiedAt,
               }
             : prev
       );

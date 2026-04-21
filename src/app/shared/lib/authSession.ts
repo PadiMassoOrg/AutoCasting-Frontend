@@ -17,6 +17,6 @@ export const clearClientSession = () => {
 };
 
 export const forceLogoutRedirect = () => {
-  clearClientSession();
   window.location.replace(ROUTES.HOME);
+  clearClientSession();
 };

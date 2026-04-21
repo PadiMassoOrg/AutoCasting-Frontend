@@ -1,5 +1,6 @@
 import api from '../../../../shared/lib/axios';
 import { API_ROUTES } from '../../../../shared/lib/routes';
+import type { LastModifiedResponse } from '../../../../shared/types/auditable.types';
 import type { CreditRequest } from '../types/requests';
 import type { Credit } from '../types/talentProfile.types';
 import { TALENT_PROFILE_CACHE_KEY } from './talentProfileService';
@@ -19,6 +20,7 @@ export const patchCredit = async (payload: CreditRequest): Promise<Credit> => {
 };
 
 // DELETE
-export const deleteCredit = async (id: string): Promise<void> => {
-  await api.delete(API_ROUTES.CREDIT + `/${id}`); // 204 OK
+export const deleteCredit = async (id: string): Promise<LastModifiedResponse> => {
+  const response = await api.delete(API_ROUTES.CREDIT + `/${id}`);
+  return response.data;
 };

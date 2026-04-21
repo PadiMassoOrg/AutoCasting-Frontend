@@ -45,6 +45,26 @@
     "back": "Volver",
     "creation_date": "Fecha de creación",
     "limit_date": "Fecha límite",
+    "datetime": {
+      "last_saved": "Último guardado",
+      "last_saved_formatted": "{{day}} de {{month}}, {{year}} {{time}}",
+      "am": "AM",
+      "pm": "PM",
+      "months": {
+        "january": "Enero",
+        "february": "Febrero",
+        "march": "Marzo",
+        "april": "Abril",
+        "may": "Mayo",
+        "june": "Junio",
+        "july": "Julio",
+        "august": "Agosto",
+        "september": "Septiembre",
+        "october": "Octubre",
+        "november": "Noviembre",
+        "december": "Diciembre"
+      }
+    },
     "delete_confirm": "Estás por borrar",
     "status": "Estado",
     "view_details": "Ver Detalles",
@@ -335,12 +355,12 @@
   },
   "sitemetadata": {
     "gender": {
+      "indistinct": "Indistinto",
       "male": "Hombre",
       "female": "Mujer",
       "male_trans": "Hombre Trans",
       "female_trans": "Mujer Trans",
-      "non_binary": "No Binario",
-      "other": "Otros"
+      "non_binary": "No Binario"
     },
     "ethnicity": {
       "afro_descendant": "Afrodescendiente",
@@ -536,7 +556,8 @@
       "per_month": "Por mes",
       "per_season": "Por temporada / función",
       "to_be_agreed": "A convenir",
-      "unpaid": "Sin remuneración"
+      "unpaid": "Sin remuneración",
+      "collaborative": "Proyecto cooperativo"
     },
     "currency": {
       "ars": "ARS $",

@@ -11,9 +11,10 @@ export default function SectionTitle({ title, action }: SectionTitleProps) {
   const { isDesktop, hasSections, goToNav } = useDashboardShell();
 
   const showBack = !isDesktop && hasSections;
+  const stackActionOnMobile = !isDesktop && Boolean(action);
 
   return (
-    <div className="flex flex-row gap-4 items-center justify-between">
+    <div className={stackActionOnMobile ? 'flex flex-col gap-3' : 'flex flex-row gap-4 items-center justify-between'}>
       <div className="flex items-center gap-2 min-w-0">
         {showBack ? (
           <button type="button" onClick={goToNav} className="cursor-pointer flex items-center gap-1">
@@ -25,7 +26,7 @@ export default function SectionTitle({ title, action }: SectionTitleProps) {
         )}
       </div>
 
-      {action ? <div className="shrink-0">{action}</div> : null}
+      {action ? <div className={stackActionOnMobile ? 'w-full [&>*]:w-full' : 'shrink-0'}>{action}</div> : null}
     </div>
   );
 }

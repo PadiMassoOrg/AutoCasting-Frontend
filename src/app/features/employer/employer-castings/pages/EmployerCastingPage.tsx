@@ -4,6 +4,7 @@ import { DashboardShell } from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { ROUTES } from '../../../../shared/lib/routes';
+import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
 import { isCastingEditable } from '../../../sitemetadata/utils/siteMetadataUtils';
 import {
   EmployerCastingBasicInfoEditSection,
@@ -58,9 +59,22 @@ const EmployerCastingPage = () => {
     },
   ];
 
+  const bottomSectionRenderer = () => {
+    return (
+      <div className="text-sm text-(--color-secondary-gray)">
+        <p>{t('general.datetime.last_saved')}:</p>
+        <p>{formatLastSavedDateTime(data.modifiedAt, t)}</p>
+      </div>
+    );
+  };
+
   return (
     <EmployerCastingIdsProvider value={data}>
-      <DashboardShell title={t('employer_castings.dashboard.title_edit')} sections={sections} />
+      <DashboardShell
+        title={t('employer_castings.dashboard.title_edit')}
+        sections={sections}
+        bottomSection={bottomSectionRenderer()}
+      />
     </EmployerCastingIdsProvider>
   );
 };

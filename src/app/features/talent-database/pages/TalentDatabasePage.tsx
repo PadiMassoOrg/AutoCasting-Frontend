@@ -1,8 +1,8 @@
 import { Icon, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useChromeBoxHeights } from '../../../shared/hooks/useChomeBoxHeights';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
-import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { PublicProfileDetailsView } from '../../public-profile/pages';
 import { MobileFiltersDrawer, TalentCard, TalentFilterBar } from '../components';
 import { getTalentDatabase } from '../services/talentDatabaseService';
@@ -32,12 +32,16 @@ const initialFilters: TalentFiltersQS = {
 
 const MAX_AUTOFILL_PAGES = 6;
 const SCROLL_EPS = 8;
+const GRID_GAP_PX = 16;
+const MIN_CARD_WIDTH_PX = 260;
 
 export default function TalentDatabasePage() {
   useViewportVhVar();
   const { t } = useTranslation(undefined, { useSuspense: false });
+  const { header, footer } = useChromeBoxHeights();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
+  const desktopFilterHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
 
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
   const debouncedFilters = useDebouncedValue(filters, 350);
@@ -60,17 +64,10 @@ export default function TalentDatabasePage() {
   const requestIdRef = useRef(0);
   const fetchingNextRef = useRef(false);
 
-  const cardsScrollRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
-  const scrollRootRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
-  }, []);
-
-  useScrollExitOnEdge(cardsScrollRef, {
-    forwardTo: isDesktop ? cardsScrollRef : scrollRootRef,
-  });
+  const cardsGridRef = useRef<HTMLElement>(null);
+  const resizeRafRef = useRef<number | null>(null);
+  const [gridCols, setGridCols] = useState(1);
 
   const fetchPage = useCallback(
     async (p: number, replace = false) => {
@@ -107,7 +104,7 @@ export default function TalentDatabasePage() {
   );
 
   useEffect(() => {
-    cardsScrollRef.current?.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0, behavior: 'auto' });
     inflightRef.current?.abort();
     inflightRef.current = null;
     setItems([]);
@@ -121,9 +118,8 @@ export default function TalentDatabasePage() {
   const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    const root = cardsScrollRef.current;
     const target = sentinelRef.current;
-    if (!root || !target) return;
+    if (!target) return;
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -132,7 +128,7 @@ export default function TalentDatabasePage() {
         if (!hasNext || loading || fetchingNextRef.current || error) return;
         fetchPage(page, false);
       },
-      { root, rootMargin: '600px 0px 800px 0px', threshold: 0 }
+      { root: null, rootMargin: '600px 0px 800px 0px', threshold: 0 }
     );
 
     io.observe(target);
@@ -140,15 +136,55 @@ export default function TalentDatabasePage() {
   }, [hasNext, loading, page, fetchPage, error]);
 
   useEffect(() => {
-    const box = cardsScrollRef.current;
-    if (!box || error) return;
+    const gridEl = cardsGridRef.current;
+    if (!gridEl) return;
+
+    const maxCols = filtersOpen ? 4 : 4;
+    const computeCols = (width: number) => {
+      const estimated = Math.floor((width + GRID_GAP_PX) / (MIN_CARD_WIDTH_PX + GRID_GAP_PX));
+      return Math.max(1, Math.min(maxCols, estimated));
+    };
+
+    const updateCols = (width: number) => {
+      const nextCols = computeCols(width);
+      setGridCols((prev) => (prev === nextCols ? prev : nextCols));
+    };
+
+    updateCols(gridEl.getBoundingClientRect().width);
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      if (resizeRafRef.current !== null) cancelAnimationFrame(resizeRafRef.current);
+      resizeRafRef.current = requestAnimationFrame(() => {
+        updateCols(entry.contentRect.width);
+        resizeRafRef.current = null;
+      });
+    });
+
+    observer.observe(gridEl);
+    return () => {
+      observer.disconnect();
+      if (resizeRafRef.current !== null) cancelAnimationFrame(resizeRafRef.current);
+      resizeRafRef.current = null;
+    };
+  }, [filtersOpen]);
+
+  useEffect(() => {
+    if (error) return;
 
     let cancelled = false;
     (async () => {
       let tries = 0;
       if (items.length === 0 && loading) return;
 
-      while (!cancelled && hasNext && box.scrollHeight <= box.clientHeight + SCROLL_EPS && tries < MAX_AUTOFILL_PAGES) {
+      const root = (document.scrollingElement || document.documentElement) as HTMLElement;
+      while (
+        !cancelled &&
+        hasNext &&
+        root.scrollHeight <= root.clientHeight + SCROLL_EPS &&
+        tries < MAX_AUTOFILL_PAGES
+      ) {
         tries += 1;
         await fetchPage(page, false);
         await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
@@ -193,20 +229,20 @@ export default function TalentDatabasePage() {
   return (
     <section className="w-full h-full min-h-0 bg-(--color-secondary-white)">
       <div className="h-full w-full flex flex-col">
-        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0">
+        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0 lg:overflow-visible">
           {isDesktop && filtersOpen && (
-            <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-(--color-primary-white) border-r border-(--color-secondary-outline)">
-              <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5">
+            <aside
+              className="hidden lg:flex lg:flex-col lg:w-[330px] self-stretch bg-(--color-primary-white) border-r border-(--color-secondary-outline) lg:sticky lg:self-start"
+              style={{ top: `${header}px`, height: desktopFilterHeight }}
+            >
+              <div className="flex-1 h-full min-h-0 overflow-y-auto overscroll-contain p-5">
                 <TalentFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
               </div>
             </aside>
           )}
 
-          <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[56px] lg:py-[56px]">
-            <div
-              ref={cardsScrollRef}
-              className="w-full max-w-[1500px] mx-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
-            >
+          <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[40px] lg:py-[24px]">
+            <div className="w-full max-w-[1500px] mx-auto flex-1 min-h-0 h-full">
               <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
                 <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
                 <button
@@ -242,21 +278,25 @@ export default function TalentDatabasePage() {
                 <p className="py-18 text-center font-normal text-(--color-alert-error)">{t('state.server_err')}</p>
               ) : (
                 <>
-                  <article className="flex flex-wrap gap-6 items-stretch">
+                  <article
+                    ref={cardsGridRef}
+                    className="grid gap-4 items-stretch"
+                    style={{ gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))` }}
+                  >
                     {showInitialSkeletons &&
                       Array.from({ length: pageSize }).map((_, i) => (
-                        <div key={`skeleton-${i}`} className="w-full sm:w-[280px]">
-                          <div className="animate-pulse w-full h-full bg-neutral-100 rounded-lg" />
+                        <div key={`skeleton-${i}`} className="w-full">
+                          <div className="animate-pulse w-full h-[400px] bg-neutral-100 rounded-lg" />
                         </div>
                       ))}
 
                     {gridItems.map((it) => (
-                      <div key={it.id} className="w-full sm:w-[280px]">
+                      <div key={it.id} className="w-full">
                         <TalentCard item={it} onClick={isDesktop ? () => handleOpenDetails(it) : undefined} />
                       </div>
                     ))}
 
-                    <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
+                    <div ref={sentinelRef} aria-hidden="true" className="h-px w-full col-span-full" />
                   </article>
 
                   {showEmptyState && (

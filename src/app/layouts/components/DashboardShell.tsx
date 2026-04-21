@@ -1,6 +1,7 @@
-import { ChevronRight, Separator } from 'autocasting-ui-library-padimasso';
+import { ChevronRight } from 'autocasting-ui-library-padimasso';
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useChromeBoxHeights } from '../../shared/hooks/useChomeBoxHeights';
 import { LG_SCREEN_SIZE, useMedia } from '../../shared/hooks/useMedia';
 
 export type DashboardSection<Key extends string = string> = {
@@ -30,7 +31,9 @@ function DashboardShell<Key extends string = string>({
   mobileNavBottomBar,
 }: DashboardShellProps<Key>) {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
+  const { header, footer } = useChromeBoxHeights();
   const hasSections = !!(sections && sections.length > 0);
+  const desktopViewportHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
 
   const [activeKey, setActiveKey] = useState<Key | null>((initialKey as Key) ?? sections?.[0]?.key ?? null);
   const [mobileView, setMobileView] = useState<'nav' | 'content'>('nav');
@@ -84,9 +87,9 @@ function DashboardShell<Key extends string = string>({
   if (!hasSections) {
     return (
       <DashboardShellContext.Provider value={ctxValue}>
-        <section className="w-full h-full min-h-0 flex flex-col bg-(--color-secondary-white)">
-          <article className="flex-1 min-w-0 h-full overscroll-contain [-webkit-overflow-scrolling:touch]">
-            <div className="w-full max-w-[1500px] mx-auto pb-20 lg:pb-0">{children}</div>
+        <section className="w-full flex flex-col bg-(--color-secondary-white)">
+          <article className="min-w-0">
+            <div className="w-full max-w-[1500px] mx-auto lg:pb-0">{children}</div>
           </article>
         </section>
       </DashboardShellContext.Provider>
@@ -99,8 +102,8 @@ function DashboardShell<Key extends string = string>({
 
     return (
       <DashboardShellContext.Provider value={ctxValue}>
-        <section className="w-full h-full bg-(--color-secondary-white) relative">
-          <div className={['w-full max-w-[550px] mx-auto h-full', bottomPad].filter(Boolean).join(' ')}>
+        <section className="w-full bg-(--color-secondary-white) relative">
+          <div className={['w-full max-w-[550px] mx-auto', bottomPad].filter(Boolean).join(' ')}>
             {title && <h1 className="my-6 text-2xl font-semibold text-(--color-primary-black) text-center">{title}</h1>}
 
             <div className="w-full bg-(--color-primary-white) rounded-2xl border border-(--color-secondary-outline) shadow-sm overflow-hidden">
@@ -124,13 +127,6 @@ function DashboardShell<Key extends string = string>({
                 </button>
               ))}
             </div>
-
-            {bottomSection && !mobileNavBottomBar && (
-              <>
-                <Separator className="opacity-0 my-20" />
-                <footer className="mt-10">{bottomSection}</footer>
-              </>
-            )}
           </div>
 
           {mobileNavBottomBar && (
@@ -153,13 +149,22 @@ function DashboardShell<Key extends string = string>({
   // Desktop + Content
   return (
     <DashboardShellContext.Provider value={ctxValue}>
-      <section className="w-full h-full min-h-0 flex flex-col lg:flex-row gap-0 bg-(--color-secondary-white)">
+      <section
+        className="w-full flex flex-col lg:flex-row gap-0 bg-(--color-secondary-white)"
+        style={isDesktop ? { minHeight: desktopViewportHeight } : undefined}
+      >
         {isDesktop && (
-          <aside className="hidden lg:block w-[265px] shrink-0 border-r border-(--color-secondary-outline) bg-(--color-primary-white)">
+          <aside
+            className="hidden lg:block w-[265px] shrink-0 border-r border-(--color-secondary-outline) bg-(--color-primary-white) lg:sticky"
+            style={{
+              top: `${header}px`,
+              height: desktopViewportHeight,
+            }}
+          >
             <div className="h-full flex flex-col py-2">
               {title && <h2 className="px-4 pt-6 pb-4 text-lg font-bold text-(--color-primary-black)">{title}</h2>}
 
-              <nav className="px-3 pb-4 flex flex-col gap-1.5">
+              <nav className="px-3 pb-4 flex-1 min-h-0 overflow-y-auto flex flex-col gap-1.5">
                 {sections!.map((item) => {
                   const selected = item.key === activeKey;
                   return (
@@ -181,13 +186,13 @@ function DashboardShell<Key extends string = string>({
                 })}
               </nav>
 
-              {bottomSection && <footer className="mt-auto p-4">{bottomSection}</footer>}
+              {bottomSection && <footer className="mt-auto shrink-0 p-4">{bottomSection}</footer>}
             </div>
           </aside>
         )}
 
-        <article className="flex-1 min-w-0 h-full overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch] pt-8">
-          <div className="w-full max-w-[1500px] mx-auto px-4 lg:px-8 lg:py-5 pb-6">
+        <article className="flex-1 min-w-0 lg:pt-8">
+          <div className="w-full max-w-[1500px] mx-auto lg:px-8 lg:py-5 pb-6">
             {!isDesktop && mobileView === 'content' && currentSection && (
               <div>
                 {contentHeader}
@@ -195,7 +200,7 @@ function DashboardShell<Key extends string = string>({
               </div>
             )}
             {isDesktop && currentSection && (
-              <div className="h-full flex flex-col gap-4 max-w-[850px] m-auto">
+              <div className="flex flex-col gap-4 max-w-[850px] m-auto">
                 {contentHeader}
                 {currentSection.render()}
               </div>

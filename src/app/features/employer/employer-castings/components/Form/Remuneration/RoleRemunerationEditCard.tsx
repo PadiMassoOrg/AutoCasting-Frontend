@@ -1,19 +1,53 @@
-import { FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
+import { FormCurrencyField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SectionCard } from '../../../../../../shared/components/Section';
 import { useCachedSiteMetadataOption } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
+import { getRoleRemunerationVisiblePayRateTypeOptions } from '../../../../../sitemetadata/utils/siteMetadataUtils';
 import { useCastingRoleRemunerationPatchAutosave } from '../../../hooks/autosaves';
 import { getCastingRoleRemunerationSchema } from '../../../schemas/formSchema';
 
 const toComparableAmount = (value: unknown): number | null => {
+  return parseCurrencyAmount(value);
+};
+
+const parseCurrencyAmount = (value: unknown): number | null => {
   if (value == null || value === '') return null;
-  const parsed = Number(value);
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+  if (typeof value !== 'string') return null;
+  const normalized = value.replace(/\s/g, '').replace(',', '.');
+  if (!normalized) return null;
+  const parsed = Number(normalized);
   return Number.isFinite(parsed) ? parsed : null;
 };
 
+const formatAmountFromNumber = (value: unknown): string => {
+  const parsed = parseCurrencyAmount(value);
+  if (parsed == null) return '';
+  const cents = Math.round(parsed * 100);
+  const intPart = Math.floor(cents / 100)
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  const fracPart = Math.abs(cents % 100)
+    .toString()
+    .padStart(2, '0');
+  return `${intPart},${fracPart}`;
+};
+
 const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data: any }) => {
-  const payRateTypeOptions = useCachedSiteMetadataOption('payRateTypeOptions', t);
+  const payRateTypeOptionsRaw = useCachedSiteMetadataOption('payRateTypeOptions', t, null, { raw: true });
+  const visiblePayRateTypeOptions = useMemo(
+    () => getRoleRemunerationVisiblePayRateTypeOptions(payRateTypeOptionsRaw),
+    [payRateTypeOptionsRaw]
+  );
+  const payRateTypeOptions = useMemo(
+    () =>
+      visiblePayRateTypeOptions.map((option) => ({
+        value: option.id,
+        label: t(option.stringCode),
+      })),
+    [visiblePayRateTypeOptions, t]
+  );
   const currencyTypeOptions = useCachedSiteMetadataOption('currencyOptions', t);
   const autosave = useCastingRoleRemunerationPatchAutosave(sectionId);
   const backendFieldErrors = autosave.fieldErrors as Record<string, string | undefined>;
@@ -28,11 +62,11 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
 
   const initialPayRateTypeId = data.payRateType?.id ?? '';
   const initialCurrencyId = data.currency?.id ?? '';
-  const initialAmount = data.amount ?? '';
+  const initialAmount = formatAmountFromNumber(data.amount);
 
   const [payRateTypeId, setPayRateTypeId] = useState<string>(initialPayRateTypeId);
   const [currencyId, setCurrencyId] = useState<string>(initialCurrencyId);
-  const [amount, setAmount] = useState<string>(String(initialAmount ?? ''));
+  const [amount, setAmount] = useState<string>(initialAmount);
   const [amountError, setAmountError] = useState<string | undefined>(undefined);
   const [lastSentPayRateTypeId, setLastSentPayRateTypeId] = useState<string>(initialPayRateTypeId);
   const [lastSentCurrencyId, setLastSentCurrencyId] = useState<string>(initialCurrencyId);
@@ -45,7 +79,7 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
 
     setPayRateTypeId(nextPayRateTypeId);
     setCurrencyId(nextCurrencyId);
-    setAmount(String(data.amount ?? ''));
+    setAmount(formatAmountFromNumber(data.amount));
     setAmountError(undefined);
     setLastSentPayRateTypeId(nextPayRateTypeId);
     setLastSentCurrencyId(nextCurrencyId);
@@ -118,37 +152,8 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
   const handleAmountBlur = useCallback(() => {
     const v = (amount ?? '').trim();
 
-    // Empty => validate with amount=null, then persist null
-    if (!v) {
-      const parsed = schema.safeParse({
-        id: data.id,
-        payRateTypeId,
-        currencyId,
-        amount: null,
-      });
-
-      if (!parsed.success) {
-        const msg = parsed.error.flatten().fieldErrors?.amount?.[0];
-        setAmountError(msg);
-        return;
-      }
-
-      if (lastSentAmount === null) return;
-
-      setLastSentAmount(null);
-      autosave.immediate({ id: data.id, amount: null });
-      return;
-    }
-
-    const normalized = v.replace(',', '.');
-    const num = Number(normalized);
-    const candidate = Number.isFinite(num) ? num : Number.NaN;
-
     const parsed = schema.safeParse({
-      id: data.id,
-      payRateTypeId,
-      currencyId,
-      amount: candidate,
+      amount: v,
     });
 
     if (!parsed.success) {
@@ -157,11 +162,19 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
       return;
     }
 
+    const num = parseCurrencyAmount(v);
+    if (num == null) {
+      setAmountError(t('validation.number_invalid'));
+      return;
+    }
+
+    setAmount(formatAmountFromNumber(num));
+
     if (lastSentAmount === num) return;
 
     setLastSentAmount(num);
     autosave.immediate({ id: data.id, amount: num });
-  }, [amount, autosave, currencyId, data.id, lastSentAmount, payRateTypeId, schema]);
+  }, [amount, autosave, data.id, lastSentAmount, schema]);
 
   const resolveError = (field: string, local?: string) => local ?? backendFieldErrors[field] ?? undefined;
 
@@ -207,7 +220,7 @@ const RoleRemunerationEditCard = ({ sectionId, data }: { sectionId: string; data
             </div>
 
             <div className="flex-1">
-              <FormInputField
+              <FormCurrencyField
                 id={`amount-${data.id}`}
                 placeholder="0"
                 value={amount}

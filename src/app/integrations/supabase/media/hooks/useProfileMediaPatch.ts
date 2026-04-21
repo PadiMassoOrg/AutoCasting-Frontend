@@ -62,7 +62,7 @@ export function useProfileMediaPatch(profileId: string) {
     },
     onSuccess: (updatedMedia) => {
       qc.setQueriesData({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false }, (prev: any) =>
-        prev ? { ...prev, media: updatedMedia } : prev
+        prev ? { ...prev, media: updatedMedia, modifiedAt: updatedMedia.modifiedAt ?? prev.modifiedAt } : prev
       );
       qc.invalidateQueries({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false, refetchType: 'active' });
     },

@@ -1,5 +1,6 @@
 import api from '../../../../shared/lib/axios';
 import { API_ROUTES } from '../../../../shared/lib/routes';
+import type { LastModifiedResponse } from '../../../../shared/types/auditable.types';
 import { stripUndefined } from '../../../../shared/utils/stripUndefined';
 import type { EmployerCastingsFiltersState } from '../components/Filter/EmployerCastingsFilterBar';
 import type {
@@ -102,9 +103,9 @@ export async function patchCastingRole(req: CastingRolePatchRequest) {
   return res.data;
 }
 
-export async function deleteCastingRole({ id }: { id: string }) {
-  await api.delete(`${API_ROUTES.CASTING_ROLE}/${id}`);
-  return { id };
+export async function deleteCastingRole({ id }: { id: string }): Promise<{ id: string } & LastModifiedResponse> {
+  const { data } = await api.delete(`${API_ROUTES.CASTING_ROLE}/${id}`);
+  return { id, modifiedAt: data.modifiedAt };
 }
 
 // Requirements
@@ -126,9 +127,9 @@ export async function patchCastingRequirement(req: CastingRequirementPatchReques
   return res.data;
 }
 
-export async function deleteCastingRequirement({ id }: { id: string }) {
-  await api.delete(`${API_ROUTES.CASTING_REQUIREMENT}/${id}`);
-  return { id };
+export async function deleteCastingRequirement({ id }: { id: string }): Promise<{ id: string } & LastModifiedResponse> {
+  const { data } = await api.delete(`${API_ROUTES.CASTING_REQUIREMENT}/${id}`);
+  return { id, modifiedAt: data.modifiedAt };
 }
 
 // Remunerations

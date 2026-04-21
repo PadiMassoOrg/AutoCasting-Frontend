@@ -1,8 +1,8 @@
 import { Icon, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useChromeBoxHeights } from '../../../shared/hooks/useChomeBoxHeights';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
-import { useScrollExitOnEdge } from '../../../shared/hooks/useScrollExitOnEdge';
 import { CastingFilterBar, CastingMobileFiltersDrawer, CastingRolePublicCard } from '../components';
 import { getCastingDatabase } from '../services/castingDatabaseService';
 import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';
@@ -37,8 +37,10 @@ const initialFilters: CastingFiltersQS = {
 const CastingDatabasePage = () => {
   useViewportVhVar();
   const { t } = useTranslation(undefined, { useSuspense: false });
+  const { header, footer } = useChromeBoxHeights();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
+  const desktopFilterHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
 
   const [filters, setFilters] = useState<CastingFiltersQS>(initialFilters);
   const debouncedFilters = useDebouncedValue(filters, 350);
@@ -59,17 +61,7 @@ const CastingDatabasePage = () => {
   const requestIdRef = useRef(0);
   const fetchingNextRef = useRef(false);
 
-  const cardsScrollRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
-  const scrollRootRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    scrollRootRef.current = (document.scrollingElement || document.documentElement) as HTMLElement;
-  }, []);
-
-  useScrollExitOnEdge(cardsScrollRef, {
-    forwardTo: isDesktop ? cardsScrollRef : scrollRootRef,
-  });
 
   const fetchPage = useCallback(
     async (p: number, replace = false) => {
@@ -106,7 +98,7 @@ const CastingDatabasePage = () => {
   );
 
   useEffect(() => {
-    cardsScrollRef.current?.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0, behavior: 'auto' });
     inflightRef.current?.abort();
     inflightRef.current = null;
     setItems([]);
@@ -120,9 +112,8 @@ const CastingDatabasePage = () => {
   const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    const root = cardsScrollRef.current;
     const target = sentinelRef.current;
-    if (!root || !target) return;
+    if (!target) return;
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -131,7 +122,7 @@ const CastingDatabasePage = () => {
         if (!hasNext || loading || fetchingNextRef.current || error) return;
         fetchPage(page, false);
       },
-      { root, rootMargin: '600px 0px 800px 0px', threshold: 0 }
+      { root: null, rootMargin: '600px 0px 800px 0px', threshold: 0 }
     );
 
     io.observe(target);
@@ -139,15 +130,20 @@ const CastingDatabasePage = () => {
   }, [hasNext, loading, page, fetchPage, error]);
 
   useEffect(() => {
-    const box = cardsScrollRef.current;
-    if (!box || error) return;
+    if (error) return;
 
     let cancelled = false;
     (async () => {
       let tries = 0;
       if (items.length === 0 && loading) return;
 
-      while (!cancelled && hasNext && box.scrollHeight <= box.clientHeight + SCROLL_EPS && tries < MAX_AUTOFILL_PAGES) {
+      const root = (document.scrollingElement || document.documentElement) as HTMLElement;
+      while (
+        !cancelled &&
+        hasNext &&
+        root.scrollHeight <= root.clientHeight + SCROLL_EPS &&
+        tries < MAX_AUTOFILL_PAGES
+      ) {
         tries += 1;
         await fetchPage(page, false);
         await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
@@ -180,20 +176,20 @@ const CastingDatabasePage = () => {
   return (
     <section className="w-full h-full min-h-0 bg-(--color-secondary-white)">
       <div className="h-full w-full flex flex-col">
-        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0">
+        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0 lg:overflow-visible">
           {isDesktop && filtersOpen && (
-            <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-(--color-primary-white) border-r border-(--color-secondary-outline)">
-              <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5">
+            <aside
+              className="hidden lg:flex lg:flex-col lg:w-[330px] self-stretch bg-(--color-primary-white) border-r border-(--color-secondary-outline) lg:sticky lg:self-start"
+              style={{ top: `${header}px`, height: desktopFilterHeight }}
+            >
+              <div className="flex-1 h-full min-h-0 overflow-y-auto overscroll-contain p-5">
                 <CastingFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
               </div>
             </aside>
           )}
 
-          <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[56px] lg:py-[56px]">
-            <div
-              ref={cardsScrollRef}
-              className="w-full max-w-[1500px] mx-auto flex-1 min-h-0 h-full overflow-auto overscroll-contain scrollbar-hide [-webkit-overflow-scrolling:touch]"
-            >
+          <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[40px] lg:py-[24px]">
+            <div className="w-full max-w-[1500px] mx-auto flex-1 min-h-0 h-full">
               <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
                 <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
                 <button

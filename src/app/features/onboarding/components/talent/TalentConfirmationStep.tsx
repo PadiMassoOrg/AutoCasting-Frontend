@@ -32,8 +32,8 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
   return (
     <section className="w-full relative max-w-[400px]">
       <WizardStep>
-        <div className="flex min-h-[85vh] lg:min-h-[70vh] flex-col justify-between gap-10">
-          <div>
+        <div className="flex min-h-[85vh] lg:min-h-[70vh] flex-col justify-between">
+          <div className="flex flex-col">
             {/* Header */}
             <div className="w-full flex flex-col items-center gap-4 mb-6">
               <img src={Logo} className="w-14" />
@@ -59,7 +59,7 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
             </div>
 
             {/* Contenido principal */}
-            <div className="text-center flex flex-col gap-1">
+            <div className="text-center flex flex-col gap-1 flex-1">
               <h1 className="text-2xl font-semibold mb-3">{t('onboarding.talent.confirmation_step.header')}</h1>
               <p className="text-sm">{t('onboarding.talent.confirmation_step.subtitle')}</p>
               <div className="text-sm mt-4 flex flex-col items-center gap-4">
@@ -72,8 +72,8 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
             </div>
           </div>
 
-          <div>
-            <div className="flex justify-between items-center gap-4 mb-6">
+          <div className="flex flex-col gap-6">
+            <div className="flex justify-between items-center gap-4">
               <Button variant="outline" type="button" onClick={goBack}>
                 {t('buttons.back')}
               </Button>

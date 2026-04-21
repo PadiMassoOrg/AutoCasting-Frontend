@@ -18,6 +18,12 @@ export const CASTING_APPLICATION_STATUS_SELECTED = 'sitemetadata.application_sta
 export const CASTING_APPLICATION_STATUS_NOT_PROCEEDING = 'sitemetadata.application_status.not_proceeding' as const;
 export const CASTING_APPLICATION_STATUS_VIEWED = 'sitemetadata.application_status.viewed' as const;
 
+// Gender
+export const GENDER_INDISTINCT = 'sitemetadata.gender.indistinct' as const;
+
+// Pay Rate Type
+export const PAY_RATE_TYPE_COLLABORATIVE = 'sitemetadata.pay_rate_type.collaborative' as const;
+
 // Ordered Lists
 export const CASTING_STATUS_ORDER = [
   CASTING_STATUS_PUBLISHED,
@@ -33,13 +39,6 @@ export const CASTING_APPLICATION_STATUS_ORDER = [
   CASTING_APPLICATION_STATUS_NOT_PROCEEDING,
   CASTING_APPLICATION_STATUS_VIEWED,
   CASTING_APPLICATION_STATUS_BLANK,
-];
-
-// Display
-export const DISPLAYABLE_CASTING_STATUS_ORDER = [
-  CASTING_STATUS_PUBLISHED,
-  CASTING_STATUS_PAUSED,
-  CASTING_STATUS_CLOSED,
 ];
 
 // Colors
@@ -108,6 +107,41 @@ export const CASTING_DELETE_MODAL_CONFIG: CastingActionConfirmationModalConfig =
   description2Key: 'employer_castings.casting_card.delete.description_2',
   confirmButtonKey: 'employer_castings.casting_card.delete.confirm_button',
   confirmButtonVariant: 'danger',
+};
+
+// ==========================================================
+// Generic Metadata Helpers
+// ==========================================================
+
+export const filterSiteMetadataByStringCodes = ({
+  items,
+  excludedStringCodes,
+}: {
+  items?: SiteMetadataObject[] | null;
+  excludedStringCodes?: string[] | null;
+}): SiteMetadataObject[] => {
+  if (!items?.length) return [];
+  if (!excludedStringCodes?.length) return [...items];
+
+  const excludedSet = new Set(excludedStringCodes);
+  return items.filter((item) => !excludedSet.has(item.stringCode));
+};
+
+// Context-specific helper example
+export const getTalentVisibleGenderOptions = (items?: SiteMetadataObject[] | null): SiteMetadataObject[] => {
+  return filterSiteMetadataByStringCodes({
+    items,
+    excludedStringCodes: [GENDER_INDISTINCT],
+  });
+};
+
+export const getRoleRemunerationVisiblePayRateTypeOptions = (
+  items?: SiteMetadataObject[] | null
+): SiteMetadataObject[] => {
+  return filterSiteMetadataByStringCodes({
+    items,
+    excludedStringCodes: [PAY_RATE_TYPE_COLLABORATIVE],
+  });
 };
 
 // ==========================================================

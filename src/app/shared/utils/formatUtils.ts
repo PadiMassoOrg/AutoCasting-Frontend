@@ -56,10 +56,27 @@ export function formatAgeRange(min: number, max: number, t: (k: string) => strin
 // Dates
 // ==============================================
 type DateFormatVariant = 'numeric' | 'short' | 'long' | 'dayMonth';
+type TranslateFn = (key: string, options?: Record<string, unknown>) => string;
+
+const MONTH_KEYS = [
+  'january',
+  'february',
+  'march',
+  'april',
+  'may',
+  'june',
+  'july',
+  'august',
+  'september',
+  'october',
+  'november',
+  'december',
+] as const;
 
 function parseIsoDate(raw?: string | null): Date | null {
   if (!raw) return null;
-  const d = new Date(raw);
+  const normalized = raw.replace(/(\.\d{3})\d+/, '$1');
+  const d = new Date(normalized);
   if (Number.isNaN(d.getTime())) return null;
   return d;
 }
@@ -94,6 +111,34 @@ export function formatLocalDate(
 
   const raw = new Intl.DateTimeFormat(locale, options).format(date);
   return capitalizeDateLabel(raw);
+}
+
+export function formatLastSavedDateTime(value: string | Date | null | undefined, t?: TranslateFn): string {
+  if (!value) return '';
+
+  const date = typeof value === 'string' ? parseIsoDate(value) : value;
+  if (!date || Number.isNaN(date.getTime())) return '';
+
+  const monthKey = MONTH_KEYS[date.getMonth()];
+  const monthLabel = t
+    ? t(`general.datetime.months.${monthKey}`)
+    : capitalizeDateLabel(new Intl.DateTimeFormat('es-AR', { month: 'long' }).format(date));
+  const hour24 = date.getHours();
+  const hour12 = hour24 % 12 || 12;
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const periodLabel = t ? t(hour24 >= 12 ? 'general.datetime.pm' : 'general.datetime.am') : hour24 >= 12 ? 'PM' : 'AM';
+  const timeLabel = `${hour12}:${minutes} ${periodLabel}`;
+
+  if (t) {
+    return t('general.datetime.last_saved_formatted', {
+      day: date.getDate(),
+      month: monthLabel,
+      year: date.getFullYear(),
+      time: timeLabel,
+    });
+  }
+
+  return `${date.getDate()} de ${monthLabel}, ${date.getFullYear()} ${timeLabel}`;
 }
 
 // ==============================================
