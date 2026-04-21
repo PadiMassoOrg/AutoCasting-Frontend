@@ -15,7 +15,7 @@ export default function DocumentScrollLayout({ children, contentClassName }: Doc
 
   return (
     <div className="w-full min-h-[calc(var(--app-vh,1vh)*100)] bg-(--color-secondary-white)">
-      <header data-site-header className="fixed inset-x-0 top-0 z-[80]">
+      <header data-site-header className="fixed inset-x-0 top-0 z-[120]">
         <MaintenanceBanner />
         <Navbar id="app-navbar" />
       </header>

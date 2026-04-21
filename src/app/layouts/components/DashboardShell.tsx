@@ -127,13 +127,6 @@ function DashboardShell<Key extends string = string>({
                 </button>
               ))}
             </div>
-
-            {bottomSection && !mobileNavBottomBar && (
-              <>
-                <Separator className="opacity-0 my-20" />
-                <footer className="mt-10">{bottomSection}</footer>
-              </>
-            )}
           </div>
 
           {mobileNavBottomBar && (
