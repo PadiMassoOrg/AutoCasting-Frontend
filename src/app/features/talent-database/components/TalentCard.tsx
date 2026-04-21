@@ -34,8 +34,7 @@ export default function TalentCard({ item, onClick }: Props) {
     <article
       onClick={handleClick}
       className="
-        group w-full h-[380px]
-        sm:w-[280px]
+        group w-full h-[400px]
         cursor-pointer rounded-xl border border-[var(--color-secondary-outline)] bg-white p-4
         flex flex-col gap-3
       "
@@ -43,7 +42,7 @@ export default function TalentCard({ item, onClick }: Props) {
       <div
         className="
           relative w-full overflow-hidden rounded-xl transition-all duration-150 ease-in-out
-          h-[280px] md:h-full md:group-hover:h-[280px] md:group-focus-within:h-[280px]
+          h-[300px] md:h-full md:group-hover:h-[300px] md:group-focus-within:h-[300px]
         "
       >
         <img src={img} alt={stageName ?? 'profile image'} loading="lazy" className="h-full w-full object-cover" />

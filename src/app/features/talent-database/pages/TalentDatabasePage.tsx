@@ -32,6 +32,8 @@ const initialFilters: TalentFiltersQS = {
 
 const MAX_AUTOFILL_PAGES = 6;
 const SCROLL_EPS = 8;
+const GRID_GAP_PX = 16;
+const MIN_CARD_WIDTH_PX = 260;
 
 export default function TalentDatabasePage() {
   useViewportVhVar();
@@ -63,6 +65,8 @@ export default function TalentDatabasePage() {
   const fetchingNextRef = useRef(false);
 
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const cardsGridRef = useRef<HTMLElement>(null);
+  const [gridCols, setGridCols] = useState(1);
 
   const fetchPage = useCallback(
     async (p: number, replace = false) => {
@@ -129,6 +133,32 @@ export default function TalentDatabasePage() {
     io.observe(target);
     return () => io.disconnect();
   }, [hasNext, loading, page, fetchPage, error]);
+
+  useEffect(() => {
+    const gridEl = cardsGridRef.current;
+    if (!gridEl) return;
+
+    const maxCols = filtersOpen ? 3 : 4;
+    const computeCols = (width: number) => {
+      const estimated = Math.floor((width + GRID_GAP_PX) / (MIN_CARD_WIDTH_PX + GRID_GAP_PX));
+      return Math.max(1, Math.min(maxCols, estimated));
+    };
+
+    const updateCols = (width: number) => {
+      setGridCols(computeCols(width));
+    };
+
+    updateCols(gridEl.getBoundingClientRect().width);
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      updateCols(entry.contentRect.width);
+    });
+
+    observer.observe(gridEl);
+    return () => observer.disconnect();
+  }, [filtersOpen]);
 
   useEffect(() => {
     if (error) return;
@@ -238,21 +268,25 @@ export default function TalentDatabasePage() {
                 <p className="py-18 text-center font-normal text-(--color-alert-error)">{t('state.server_err')}</p>
               ) : (
                 <>
-                  <article className="flex flex-wrap gap-6 items-stretch">
+                  <article
+                    ref={cardsGridRef}
+                    className="grid gap-4 items-stretch"
+                    style={{ gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))` }}
+                  >
                     {showInitialSkeletons &&
                       Array.from({ length: pageSize }).map((_, i) => (
-                        <div key={`skeleton-${i}`} className="w-full sm:w-[280px]">
-                          <div className="animate-pulse w-full h-full bg-neutral-100 rounded-lg" />
+                        <div key={`skeleton-${i}`} className="w-full">
+                          <div className="animate-pulse w-full h-[400px] bg-neutral-100 rounded-lg" />
                         </div>
                       ))}
 
                     {gridItems.map((it) => (
-                      <div key={it.id} className="w-full sm:w-[280px]">
+                      <div key={it.id} className="w-full">
                         <TalentCard item={it} onClick={isDesktop ? () => handleOpenDetails(it) : undefined} />
                       </div>
                     ))}
 
-                    <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
+                    <div ref={sentinelRef} aria-hidden="true" className="h-px w-full col-span-full" />
                   </article>
 
                   {showEmptyState && (
