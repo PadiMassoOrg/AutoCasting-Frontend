@@ -1,4 +1,4 @@
-import { ChevronRight, Separator } from 'autocasting-ui-library-padimasso';
+import { ChevronRight } from 'autocasting-ui-library-padimasso';
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useChromeBoxHeights } from '../../shared/hooks/useChomeBoxHeights';

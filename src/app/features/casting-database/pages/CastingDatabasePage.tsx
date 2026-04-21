@@ -1,6 +1,7 @@
 import { Icon, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useChromeBoxHeights } from '../../../shared/hooks/useChomeBoxHeights';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
 import { CastingFilterBar, CastingMobileFiltersDrawer, CastingRolePublicCard } from '../components';
 import { getCastingDatabase } from '../services/castingDatabaseService';
@@ -36,8 +37,10 @@ const initialFilters: CastingFiltersQS = {
 const CastingDatabasePage = () => {
   useViewportVhVar();
   const { t } = useTranslation(undefined, { useSuspense: false });
+  const { header, footer } = useChromeBoxHeights();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
+  const desktopFilterHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
 
   const [filters, setFilters] = useState<CastingFiltersQS>(initialFilters);
   const debouncedFilters = useDebouncedValue(filters, 350);
@@ -173,10 +176,13 @@ const CastingDatabasePage = () => {
   return (
     <section className="w-full h-full min-h-0 bg-(--color-secondary-white)">
       <div className="h-full w-full flex flex-col">
-        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0">
+        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0 lg:overflow-visible">
           {isDesktop && filtersOpen && (
-            <aside className="hidden lg:flex lg:flex-col lg:w-[330px] h-full bg-(--color-primary-white) border-r border-(--color-secondary-outline)">
-              <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5">
+            <aside
+              className="hidden lg:flex lg:flex-col lg:w-[330px] self-stretch bg-(--color-primary-white) border-r border-(--color-secondary-outline) lg:sticky lg:self-start"
+              style={{ top: `${header}px`, height: desktopFilterHeight }}
+            >
+              <div className="flex-1 h-full min-h-0 overflow-y-auto overscroll-contain p-5">
                 <CastingFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
               </div>
             </aside>
