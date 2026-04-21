@@ -136,7 +136,12 @@ export default function TalentDatabasePage() {
       if (items.length === 0 && loading) return;
 
       const root = (document.scrollingElement || document.documentElement) as HTMLElement;
-      while (!cancelled && hasNext && root.scrollHeight <= root.clientHeight + SCROLL_EPS && tries < MAX_AUTOFILL_PAGES) {
+      while (
+        !cancelled &&
+        hasNext &&
+        root.scrollHeight <= root.clientHeight + SCROLL_EPS &&
+        tries < MAX_AUTOFILL_PAGES
+      ) {
         tries += 1;
         await fetchPage(page, false);
         await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
