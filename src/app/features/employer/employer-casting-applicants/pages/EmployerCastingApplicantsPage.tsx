@@ -70,7 +70,7 @@ const EmployerCastingApplicantsPage = () => {
         <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">
           {applicants.length > 0 ? (
             applicants.map((i) => (
-              <CastingApplicantCard key={i.applicationId} data={i} onOpenDetails={handleOpenDetails} />
+              <CastingApplicantCard key={i.applicationId} data={i} isDesktop={isDesktop} onOpenDetails={handleOpenDetails} />
             ))
           ) : (
             <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
