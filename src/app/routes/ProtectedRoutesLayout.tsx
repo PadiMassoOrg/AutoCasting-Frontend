@@ -13,7 +13,7 @@ import { getDashboardRouteForActiveMode, ROUTES } from '../shared/lib/routes';
 
 export default function ProtectedRoutesLayout() {
   const token = useAuthToken();
-  const { data: meData, isError, isLoading } = useMeData();
+  const { data: meData, isLoading } = useMeData();
 
   if (!token) {
     return <Navigate to={ROUTES.HOME} replace />;
@@ -23,11 +23,7 @@ export default function ProtectedRoutesLayout() {
     return null;
   }
 
-  if (isError || !meData) {
-    return <Navigate to={ROUTES.HOME} replace />;
-  }
-
-  const effectiveDashboardRoute = getDashboardRouteForActiveMode(meData.activeMode);
+  const effectiveDashboardRoute = getDashboardRouteForActiveMode(meData?.activeMode ?? null);
 
   return (
     <Routes>
