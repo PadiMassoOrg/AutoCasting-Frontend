@@ -57,7 +57,7 @@ const CastingApplicantCard = ({ data, isDesktop, onOpenDetails }: Props) => {
   };
 
   return (
-    <SectionCard className="lg:min-w-[415px]">
+    <SectionCard className="md:w-[415px]">
       {/* Profile and Status */}
       <div className="flex flex-row items-center gap-3 min-w-0">
         <img src={talentHeadshotImageUrl} alt={talentStageName} className="w-10 h-10 rounded-full object-cover" />

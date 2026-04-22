@@ -68,6 +68,8 @@
     "delete_confirm": "Estás por borrar",
     "status": "Estado",
     "view_details": "Ver Detalles",
+    "actions": "Acciones",
+    "applicant": "Postulante",
     "total": "Total",
     "roles": "Roles",
     "tooltips": {
@@ -1052,6 +1054,7 @@
         "edit": "Editar Rol",
         "delete": "¿Seguro deseas eliminar este rol?",
         "role": {
+          "role": "Rol",
           "role_name": "Nombre del Rol",
           "talent_profession": "Profesión del talento"
         }
