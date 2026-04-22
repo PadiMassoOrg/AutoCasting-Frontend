@@ -54,9 +54,9 @@ const CastingApplicantsDataGrid = ({
     () => [
       {
         id: 'talent',
-        header: t('general.tooltips.view_profile'),
+        header: t('general.applicant'),
         render: (row) => (
-          <div className="flex items-center gap-3 min-w-0">
+          <div className="inline-flex items-center gap-3 min-w-0">
             <img
               src={row.talentHeadshotImageUrl}
               alt={row.talentStageName}
@@ -65,7 +65,7 @@ const CastingApplicantsDataGrid = ({
             <button
               type="button"
               onClick={() => handleOpenDetails(row.talentPublicSlug)}
-              className="text-left font-semibold hover:underline hover:text-[var(--color-primary-purple)]"
+              className="cursor-pointer font-semibold hover:underline hover:text-[var(--color-primary-purple)]"
             >
               {row.talentStageName}
             </button>
@@ -74,15 +74,15 @@ const CastingApplicantsDataGrid = ({
       },
       {
         id: 'role',
-        header: t('casting.role_section.role.role'),
-        accessor: 'castingRoleName',
-        className: 'font-semibold',
+        header: t('employer_castings.dashboard.roles.role.role'),
+        name: 'castingRoleName',
+        cellContentClassName: 'font-semibold',
       },
       {
         id: 'requirements',
         header: t('employer_castings.dashboard.requirements.requirements'),
         render: (row) => (
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="inline-flex items-center gap-2">
             {row.requirementSubmissions.length === 0 ? (
               <span className="text-xs font-semibold text-[var(--color-secondary-grey-fonts)]">-</span>
             ) : (
@@ -121,6 +121,8 @@ const CastingApplicantsDataGrid = ({
       {
         id: 'status',
         header: t('general.status'),
+        width: 200,
+        contentAlignment: 'right',
         render: (row) =>
           isMetadataReady ? (
             <StatusDropdown
@@ -136,9 +138,6 @@ const CastingApplicantsDataGrid = ({
           ) : (
             <div className="h-9 w-32 rounded-md bg-[rgba(0,0,0,0.06)] animate-pulse" />
           ),
-        headerClassName: 'w-[250px]',
-        headerJustify: 'start',
-        justify: 'end',
       },
     ],
     [applicationStatusOptions, isMetadataReady, isPending, setStatus, t]
@@ -146,12 +145,11 @@ const CastingApplicantsDataGrid = ({
 
   const actions = useMemo(
     () => ({
-      header: t('employer_castings.actions.view_details'),
-      widthClassName: 'w-[150px]',
+      header: t('general.actions'),
       items: (row: EmployerCastingApplicantCardResponse): OverflowMenuItem[] => [
         {
           key: `send-email-${row.applicationId}`,
-          label: t('profile.share.email'),
+          label: t('profile.basic_info.email'),
           iconName: 'mail',
           onSelect: () => {
             window.location.href = `mailto:${row.talentEmail}`;
@@ -159,8 +157,8 @@ const CastingApplicantsDataGrid = ({
         },
         {
           key: `view-profile-${row.applicationId}`,
-          label: t('general.tooltips.view_profile'),
-          iconName: 'view',
+          label: t('profile.page.view_profile'),
+          iconName: 'open',
           onSelect: () => handleOpenDetails(row.talentPublicSlug),
         },
       ],
