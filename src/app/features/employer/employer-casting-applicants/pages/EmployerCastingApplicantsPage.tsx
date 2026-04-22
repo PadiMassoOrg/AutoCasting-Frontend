@@ -29,7 +29,7 @@ const EmployerCastingApplicantsPage = () => {
   });
   const [orderBy, setOrderBy] = useState<EmployerCastingApplicantsOrderBy>('CREATION_DATE_DESC');
   const [page, setPage] = useState(0);
-  const pageSize = 10;
+  const pageSize = 8;
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [selectedPublicSlug, setSelectedPublicSlug] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
