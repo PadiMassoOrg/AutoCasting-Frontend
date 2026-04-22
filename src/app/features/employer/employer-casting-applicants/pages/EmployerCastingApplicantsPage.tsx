@@ -30,7 +30,6 @@ const EmployerCastingApplicantsPage = () => {
   const [orderBy, setOrderBy] = useState<EmployerCastingApplicantsOrderBy>('CREATION_DATE_DESC');
   const [page, setPage] = useState(0);
   const pageSize = 8;
-  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [selectedPublicSlug, setSelectedPublicSlug] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
@@ -47,7 +46,6 @@ const EmployerCastingApplicantsPage = () => {
 
   useEffect(() => {
     setPage(0);
-    setSelectedRowKeys([]);
   }, [slug, filters, orderBy]);
 
   const { data } = useEmployerCastingApplicants(args);
@@ -85,8 +83,7 @@ const EmployerCastingApplicantsPage = () => {
                 hasNext={data?.hasNext ?? false}
                 onPageChange={setPage}
                 onOpenDetails={handleOpenDetails}
-                selectedRowKeys={selectedRowKeys}
-                onSelectedRowKeysChange={setSelectedRowKeys}
+                enableBulkSelection
               />
             </div>
           ) : (

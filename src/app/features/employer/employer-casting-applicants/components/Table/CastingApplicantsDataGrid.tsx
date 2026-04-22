@@ -14,8 +14,9 @@ type Props = {
   hasNext: boolean;
   onPageChange: (nextPage: number) => void;
   onOpenDetails: (talentPublicSlug: string) => void | Promise<void>;
-  selectedRowKeys: string[];
-  onSelectedRowKeysChange: (next: string[]) => void;
+  enableBulkSelection?: boolean;
+  selectedRowKeys?: string[];
+  onSelectedRowKeysChange?: (next: string[]) => void;
 };
 
 const CastingApplicantsDataGrid = ({
@@ -24,6 +25,7 @@ const CastingApplicantsDataGrid = ({
   hasNext,
   onPageChange,
   onOpenDetails,
+  enableBulkSelection = false,
   selectedRowKeys,
   onSelectedRowKeysChange,
 }: Props) => {
@@ -169,11 +171,16 @@ const CastingApplicantsDataGrid = ({
       columns={columns}
       data={data}
       rowKey="applicationId"
-      selection={{
-        selectedRowKeys,
-        onSelectedRowKeysChange,
-        headerAriaLabel: t('general.select_all'),
-      }}
+      enableBulkSelection={enableBulkSelection}
+      selection={
+        selectedRowKeys && onSelectedRowKeysChange
+          ? {
+              selectedRowKeys,
+              onSelectedRowKeysChange,
+              headerAriaLabel: t('general.select_all'),
+            }
+          : undefined
+      }
       actions={actions}
       emptyMessage={t('employer_casting_applicants.page.empty_page')}
       pagination={{
