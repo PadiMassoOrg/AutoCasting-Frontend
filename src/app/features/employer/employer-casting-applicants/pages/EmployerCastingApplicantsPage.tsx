@@ -84,14 +84,13 @@ const EmployerCastingApplicantsPage = () => {
                 page={data?.page ?? page}
                 hasNext={data?.hasNext ?? false}
                 onPageChange={setPage}
-                isDesktop={isDesktop}
                 onOpenDetails={handleOpenDetails}
                 selectedRowKeys={selectedRowKeys}
                 onSelectedRowKeysChange={setSelectedRowKeys}
               />
             </div>
           ) : (
-            <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">
+            <div className="w-full flex flex-col flex-wrap gap-6 md:flex-row">
               {applicants.map((i) => (
                 <CastingApplicantCard
                   key={i.applicationId}

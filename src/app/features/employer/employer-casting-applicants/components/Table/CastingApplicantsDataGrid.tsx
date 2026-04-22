@@ -1,5 +1,5 @@
-import { DataGrid, type DataGridColumn, type OverflowMenuItem } from 'autocasting-ui-library-padimasso';
-import { useCallback, useMemo } from 'react';
+import { DataGrid, Icon, type DataGridColumn, type OverflowMenuItem } from 'autocasting-ui-library-padimasso';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../../../../shared/lib/routes';
 import StatusDropdown from '../../../../sitemetadata/component/StatusDropdown';
@@ -13,7 +13,6 @@ type Props = {
   page: number;
   hasNext: boolean;
   onPageChange: (nextPage: number) => void;
-  isDesktop: boolean;
   onOpenDetails: (talentPublicSlug: string) => void | Promise<void>;
   selectedRowKeys: string[];
   onSelectedRowKeysChange: (next: string[]) => void;
@@ -24,7 +23,6 @@ const CastingApplicantsDataGrid = ({
   page,
   hasNext,
   onPageChange,
-  isDesktop,
   onOpenDetails,
   selectedRowKeys,
   onSelectedRowKeysChange,
@@ -37,18 +35,6 @@ const CastingApplicantsDataGrid = ({
   });
 
   const isMetadataReady = Array.isArray(applicationStatusOptions) && applicationStatusOptions.length > 0;
-
-  const handleOpenDetails = useCallback(
-    (talentPublicSlug: string) => {
-      if (isDesktop) {
-        onOpenDetails(talentPublicSlug);
-        return;
-      }
-
-      window.location.href = `${ROUTES.PUBLIC_PROFILE}/${talentPublicSlug}`;
-    },
-    [isDesktop, onOpenDetails]
-  );
 
   const columns = useMemo<DataGridColumn<EmployerCastingApplicantCardResponse>[]>(
     () => [
@@ -64,8 +50,9 @@ const CastingApplicantsDataGrid = ({
             />
             <button
               type="button"
-              onClick={() => handleOpenDetails(row.talentPublicSlug)}
-              className="cursor-pointer font-semibold hover:underline hover:text-[var(--color-primary-purple)]"
+              onClick={() => onOpenDetails(row.talentPublicSlug)}
+              className="cursor-pointer font-semibold hover:underline hover:text-[var(--color-primary-purple)] block flex-1 min-w-0 truncate text-left"
+              title={row.talentStageName}
             >
               {row.talentStageName}
             </button>
@@ -76,40 +63,45 @@ const CastingApplicantsDataGrid = ({
         id: 'role',
         header: t('employer_castings.dashboard.roles.role.role'),
         name: 'castingRoleName',
-        cellContentClassName: 'font-semibold',
+        cellContentClassName: 'font-semibold truncate',
       },
       {
         id: 'requirements',
         header: t('employer_castings.dashboard.requirements.requirements'),
         render: (row) => (
-          <div className="inline-flex items-center gap-2">
+          <div className="flex flex-row items-center justify-between">
             {row.requirementSubmissions.length === 0 ? (
-              <span className="text-xs font-semibold text-[var(--color-secondary-grey-fonts)]">-</span>
+              <span className="rounded-full py-2 px-4 flex items-center gap-1">
+                <p className="text-xs font-semibold text-(--color-primary-purple)">-</p>
+              </span>
             ) : (
               row.requirementSubmissions.map((requirement) => (
-                <div key={requirement.castingRequirementId} className="flex items-center gap-2">
+                <div key={requirement.castingRequirementId} className="flex flex-row items-center gap-2 cursor-pointer">
                   {requirement.requiresAudio && (
                     <a
                       href={requirement.audioUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-full py-1 px-3 flex items-center gap-1 bg-(--color-primary-light-grey)"
+                      className="rounded-full py-2 px-4 flex items-center gap-1 bg-(--color-primary-light-grey)"
                     >
-                      <span className="text-xs font-semibold text-(--color-primary-purple)">
+                      <Icon name="play" variant="primary" size={14} />
+                      <p className="text-xs font-semibold text-(--color-primary-purple)">
                         {t('employer_casting_applicants.applicant_card.audio')}
-                      </span>
+                      </p>
                     </a>
                   )}
+
                   {requirement.requiresVideo && (
                     <a
                       href={requirement.videoUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-full py-1 px-3 flex items-center gap-1 bg-(--color-primary-light-grey)"
+                      className="rounded-full py-2 px-4 flex items-center gap-1 bg-(--color-primary-light-grey)"
                     >
-                      <span className="text-xs font-semibold text-(--color-primary-purple)">
+                      <Icon name="play" variant="primary" size={14} />
+                      <p className="text-xs font-semibold text-(--color-primary-purple)">
                         {t('employer_casting_applicants.applicant_card.video')}
-                      </span>
+                      </p>
                     </a>
                   )}
                 </div>
@@ -159,11 +151,13 @@ const CastingApplicantsDataGrid = ({
           key: `view-profile-${row.applicationId}`,
           label: t('profile.page.view_profile'),
           iconName: 'open',
-          onSelect: () => handleOpenDetails(row.talentPublicSlug),
+          onSelect: () => {
+            window.location.href = `${ROUTES.PUBLIC_PROFILE}/${row.talentPublicSlug}`;
+          },
         },
       ],
     }),
-    [handleOpenDetails, t]
+    [t]
   );
 
   return (
