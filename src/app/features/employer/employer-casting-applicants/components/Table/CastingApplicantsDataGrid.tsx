@@ -42,7 +42,7 @@ const CastingApplicantsDataGrid = ({
         id: 'talent',
         header: t('general.applicant'),
         render: (row) => (
-          <div className="inline-flex items-center gap-3 min-w-0">
+          <div className="flex w-full items-center gap-3 min-w-0">
             <img
               src={row.talentHeadshotImageUrl}
               alt={row.talentStageName}
@@ -62,8 +62,12 @@ const CastingApplicantsDataGrid = ({
       {
         id: 'role',
         header: t('employer_castings.dashboard.roles.role.role'),
-        name: 'castingRoleName',
-        cellContentClassName: 'font-semibold truncate',
+        cellContentClassName: 'font-semibold min-w-0',
+        render: (row) => (
+          <span className="block w-full truncate" title={row.castingRoleName}>
+            {row.castingRoleName}
+          </span>
+        ),
       },
       {
         id: 'requirements',
