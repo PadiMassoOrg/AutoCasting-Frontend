@@ -7,15 +7,8 @@ import type { EmployerCastingApplicantCardResponse } from '../../types/employerC
 
 const CastingApplicantGalleryCard = ({ data }: { data: EmployerCastingApplicantCardResponse }) => {
   const { t } = useTranslation();
-  const {
-    applicationId,
-    talentHeadshotImageUrl,
-    talentStageName,
-    castingSlug,
-    applicationStatus,
-    talentProfessions,
-    castingRoleName,
-  } = data;
+  const { applicationId, talentHeadshotImageUrl, talentStageName, castingSlug, applicationStatus, castingRoleName } =
+    data;
 
   const { setStatus, isPending } = useCastingApplicationStatusActions();
   const applicationStatusOptions = useCachedSiteMetadataOption('castingApplicationStatusOptions', t, undefined, {
@@ -23,7 +16,6 @@ const CastingApplicantGalleryCard = ({ data }: { data: EmployerCastingApplicantC
   });
 
   const isMetadataReady = Array.isArray(applicationStatusOptions) && applicationStatusOptions.length > 0;
-  const displayedProfessions = (talentProfessions ?? []).filter(Boolean).slice(0, 2);
 
   const handleSelectApplicationStatus = async (nextStatus: {
     id: string;

@@ -17,6 +17,13 @@ export type GetEmployerApplicantsArgs = {
   orderBy: EmployerCastingApplicantsOrderBy;
 };
 
+const getEmployerApplicantsFiltersKey = (filters: EmployerCastingApplicantsFiltersState) =>
+  JSON.stringify({
+    search: (filters.search ?? '').trim() || undefined,
+    roleId: filters.roleId,
+    applicationStatusIdTokens: filters.applicationStatusIdTokens ?? [],
+  });
+
 export const getEmployerCastingApplicantsQueryKey = ({
   slug,
   page,
@@ -24,15 +31,19 @@ export const getEmployerCastingApplicantsQueryKey = ({
   filters,
   orderBy,
 }: GetEmployerApplicantsArgs) =>
-  [...EMPLOYER_CASTING_APPLICANTS_CACHE_KEY, slug, page, size, orderBy, JSON.stringify(filters ?? {})] as const;
+  [
+    ...EMPLOYER_CASTING_APPLICANTS_CACHE_KEY,
+    slug,
+    page,
+    size,
+    orderBy,
+    getEmployerApplicantsFiltersKey(filters),
+  ] as const;
 
-export async function getEmployerApplicantsByCastingSlug({
-  slug,
-  page,
-  size,
-  filters,
-  orderBy,
-}: GetEmployerApplicantsArgs) {
+export async function getEmployerApplicantsByCastingSlug(
+  { slug, page, size, filters, orderBy }: GetEmployerApplicantsArgs,
+  opts?: { signal?: AbortSignal }
+) {
   const qs = new URLSearchParams();
 
   qs.set('page', String(page));
@@ -41,12 +52,15 @@ export async function getEmployerApplicantsByCastingSlug({
 
   const q = (filters.search ?? '').trim();
   if (q.length) qs.set('q', q);
+  if (filters.roleId) qs.set('roleId', filters.roleId);
 
   (filters.applicationStatusIdTokens ?? []).forEach((token: string) => qs.append('applicationStatusId', token));
-  (filters.professionIds ?? []).forEach((id: string) => qs.append('professionId', id));
 
   const { data } = await api.get<SliceResponse<EmployerCastingApplicantCardResponse>>(
-    API_ROUTES.EMPLOYER_CASTING_APPLICANTS(slug) + `?${qs.toString()}`
+    API_ROUTES.EMPLOYER_CASTING_APPLICANTS(slug) + `?${qs.toString()}`,
+    {
+      signal: opts?.signal,
+    }
   );
 
   return data;

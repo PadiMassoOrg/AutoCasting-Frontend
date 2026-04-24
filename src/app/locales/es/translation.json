@@ -71,6 +71,7 @@
     "actions": "Acciones",
     "applicant": "Postulante",
     "total": "Total",
+    "role": "Rol",
     "roles": "Roles",
     "tooltips": {
       "home": "Autocasting",
@@ -128,6 +129,9 @@
       "deadline_asc": "Fecha límite (más cercana)",
       "application_desc": "Fecha de postulación (más reciente)",
       "application_asc": "Fecha de postulación (más antigua)"
+    },
+    "group": {
+      "byRole": "Separar por roles"
     }
   },
   "validation": {

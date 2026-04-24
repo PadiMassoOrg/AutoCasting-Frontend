@@ -1,67 +1,109 @@
-import { OverflowMenu, SearchInput, TextDropdownTrigger } from 'autocasting-ui-library-padimasso';
+import { ChevronUpDown, OverflowMenu, SearchInput, type OverflowMenuItem } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AUDITABLE_ORDER_BY } from '../../../../../shared/types/orderBy.types';
-import type { EmployerCastingApplicantsOrderBy } from '../../types/employerCastingApplicantsFilter.types';
-import CastingApplicantsFilterMenuContent from './CastingApplicantsFilterMenuContent';
+import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
+import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
+import CastingStatusChip from '../../../../../shared/components/Chip/CastingStatusChip';
+import CheckboxField from '../../../../../shared/components/Form/CheckboxField';
+import type { EmployerCastingApplicantsFiltersState } from '../../types/employerCastingApplicantsFilter.types';
 
-export type EmployerCastingApplicantsFiltersState = {
-  applicationStatusIdTokens?: string[];
-  professionIds?: string[];
-  search?: string;
+type RoleOption = {
+  value: string;
+  label: string;
 };
 
 type Props = {
   filters: EmployerCastingApplicantsFiltersState;
   onFiltersChange: (next: EmployerCastingApplicantsFiltersState) => void;
-  orderBy: EmployerCastingApplicantsOrderBy;
-  onOrderByChange: (next: EmployerCastingApplicantsOrderBy) => void;
+  roleOptions: RoleOption[];
+  isGalleryMode: boolean;
+  separateByRoles: boolean;
+  onSeparateByRolesChange: (next: boolean) => void;
 };
 
-const CastingApplicantsFilterBar = ({ filters, onFiltersChange, orderBy, onOrderByChange }: Props) => {
+const triggerClassName =
+  'inline-flex items-center gap-1 bg-[var(--color-primary-light-grey)] rounded-full px-1.5 pl-2.5 py-1';
+
+const CastingApplicantsFilterBar = ({
+  filters,
+  onFiltersChange,
+  roleOptions,
+  isGalleryMode,
+  separateByRoles,
+  onSeparateByRolesChange,
+}: Props) => {
   const { t } = useTranslation();
   const [searchInput, setSearchInput] = useState(filters.search ?? '');
+
+  const applicationStatusesRaw = useCachedSiteMetadataSlice('castingApplicationStatusOptions') as
+    | SiteMetadataObject[]
+    | undefined;
 
   useEffect(() => {
     setSearchInput(filters.search ?? '');
   }, [filters.search]);
 
-  const filterItems = useMemo(
-    () => [
-      {
-        type: 'content' as const,
-        key: 'filters-content',
-        content: <CastingApplicantsFilterMenuContent value={filters} onChange={onFiltersChange} />,
-      },
-    ],
-    [filters, onFiltersChange]
+  const selectedStatusId = filters.applicationStatusIdTokens?.[0];
+
+  const selectedStatus = useMemo(
+    () => (applicationStatusesRaw ?? []).find((status) => status.id === selectedStatusId),
+    [applicationStatusesRaw, selectedStatusId]
   );
 
-  const orderItems = useMemo(() => {
-    const mkLabel = (active: boolean, text: string) => (
-      <span className={active ? 'text-[var(--color-primary-purple)]' : 'text-[var(--color-primary-black)]'}>
-        {text}
-      </span>
-    );
+  const selectedRoleId = filters.roleId;
+  const selectedRole = useMemo(
+    () => roleOptions.find((role) => role.value === selectedRoleId),
+    [roleOptions, selectedRoleId]
+  );
 
-    return [
+  const statusItems = useMemo<OverflowMenuItem[]>(() => {
+    const items: OverflowMenuItem[] = [
       {
-        key: AUDITABLE_ORDER_BY.CREATION_DATE_DESC,
-        label: mkLabel(orderBy === AUDITABLE_ORDER_BY.CREATION_DATE_DESC, t('general.order.application_desc')),
-        onSelect: () => onOrderByChange(AUDITABLE_ORDER_BY.CREATION_DATE_DESC as EmployerCastingApplicantsOrderBy),
-      },
-      {
-        key: AUDITABLE_ORDER_BY.CREATION_DATE_ASC,
-        label: mkLabel(orderBy === AUDITABLE_ORDER_BY.CREATION_DATE_ASC, t('general.order.application_asc')),
-        onSelect: () => onOrderByChange(AUDITABLE_ORDER_BY.CREATION_DATE_ASC as EmployerCastingApplicantsOrderBy),
+        type: 'item',
+        key: 'all-status',
+        label: <span>{t('general.all')}</span>,
+        onSelect: () => onFiltersChange({ ...filters, applicationStatusIdTokens: undefined }),
       },
     ];
-  }, [orderBy, onOrderByChange, t]);
+
+    (applicationStatusesRaw ?? []).forEach((status) => {
+      items.push({
+        type: 'item',
+        key: status.id,
+        label: <CastingStatusChip status={status} variant="inline" align="spaced" />,
+        onSelect: () => onFiltersChange({ ...filters, applicationStatusIdTokens: [status.id] }),
+      });
+    });
+
+    return items;
+  }, [applicationStatusesRaw, filters, onFiltersChange, t]);
+
+  const roleItems = useMemo<OverflowMenuItem[]>(() => {
+    const items: OverflowMenuItem[] = [
+      {
+        type: 'item',
+        key: 'all-roles',
+        label: <span>{t('general.all')}</span>,
+        onSelect: () => onFiltersChange({ ...filters, roleId: undefined }),
+      },
+    ];
+
+    roleOptions.forEach((role) => {
+      items.push({
+        type: 'item',
+        key: role.value,
+        label: <span>{role.label}</span>,
+        onSelect: () => onFiltersChange({ ...filters, roleId: role.value }),
+      });
+    });
+
+    return items;
+  }, [filters, onFiltersChange, roleOptions, t]);
 
   return (
-    <section className="flex flex-row items-center justify-between gap-3">
-      <article className="w-full flex flex-col sm:flex-row gap-2">
-        <div className="w-full sm:w-[240px]">
+    <section className="flex flex-row items-center justify-between gap-2">
+      <article className="w-full flex flex-col lg:flex-row lg:items-center gap-4">
+        <div className="w-full lg:w-[250px]">
           <SearchInput
             value={searchInput}
             onChange={setSearchInput}
@@ -79,21 +121,66 @@ const CastingApplicantsFilterBar = ({ filters, onFiltersChange, orderBy, onOrder
             placeholder={t('general.search')}
           />
         </div>
-        <div className="flex flex-row gap-2 pl-1">
-          <OverflowMenu
-            items={filterItems}
-            align="start"
-            side="bottom"
-            trigger={() => <TextDropdownTrigger label={t('general.filter.filter')} open />}
-            menuClassName="max-w-[90%]"
-          />
 
-          <OverflowMenu
-            items={orderItems}
-            align="start"
-            side="bottom"
-            trigger={() => <TextDropdownTrigger label={t('general.order.order')} open />}
-          />
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-1">
+            <span className="text-sm">{t('general.status')}:</span>
+            <OverflowMenu
+              align="start"
+              side="bottom"
+              items={statusItems}
+              menuClassName="!min-w-0 !w-fit"
+              trigger={({ open, disabled }) => (
+                <div
+                  className={[triggerClassName, disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'].join(
+                    ' '
+                  )}
+                >
+                  {selectedStatus ? (
+                    <CastingStatusChip status={selectedStatus} variant="inline" />
+                  ) : (
+                    <span className="text-sm px-1">{t('general.all')}</span>
+                  )}
+                  {!selectedStatus && (
+                    <span
+                      className="inline-block h-5 w-5 rounded-full"
+                      style={{ backgroundColor: 'var(--color-secondary-outline)' }}
+                    />
+                  )}
+                  <ChevronUpDown open={open} sizePx={18} className="text-[var(--color-primary-black)]" />
+                </div>
+              )}
+            />
+          </div>
+
+          <div className="flex items-center gap-1">
+            <span className="text-sm">{t('general.role')}:</span>
+            <OverflowMenu
+              align="start"
+              side="bottom"
+              items={roleItems}
+              menuClassName="min-w-[220px]"
+              trigger={({ open, disabled }) => (
+                <div
+                  className={[triggerClassName, disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'].join(
+                    ' '
+                  )}
+                >
+                  <span className="text-sm px-1">{selectedRole?.label ?? t('general.all')}</span>
+                  <ChevronUpDown open={open} sizePx={18} className="text-[var(--color-primary-black)]" />
+                </div>
+              )}
+            />
+          </div>
+
+          {isGalleryMode && (
+            <CheckboxField
+              id="separate-by-roles"
+              label={t('general.group.byRole')}
+              checked={separateByRoles}
+              onCheckedChange={onSeparateByRolesChange}
+            />
+          )}
         </div>
       </article>
     </section>
