@@ -1,4 +1,4 @@
-import { Label } from 'autocasting-ui-library-padimasso';
+import { IconViewSwitcher, Label } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -14,6 +14,9 @@ import type {
   EmployerCastingApplicantsFiltersState,
   EmployerCastingApplicantsOrderBy,
 } from '../types/employerCastingApplicantsFilter.types';
+import CastingApplicantsGallery from '../components/Gallery/CastingApplicantsGallery';
+
+type ApplicantsViewMode = 'table' | 'gallery';
 
 const EmployerCastingApplicantsPage = () => {
   const { t } = useTranslation();
@@ -32,6 +35,7 @@ const EmployerCastingApplicantsPage = () => {
   const pageSize = 8;
   const [selectedPublicSlug, setSelectedPublicSlug] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<ApplicantsViewMode>('table');
 
   const args = useMemo(
     () => ({
@@ -62,46 +66,59 @@ const EmployerCastingApplicantsPage = () => {
     setSelectedPublicSlug(null);
   }, []);
 
+  const resolvedViewMode: ApplicantsViewMode = isDesktop ? viewMode : 'table';
+
   return (
     <DashboardShell>
       <DashboardSection>
         <SectionTitle title={t('employer_casting_applicants.page.title') + ' ' + title} />
 
-        <CastingApplicantsFilterBar
-          filters={filters}
-          onFiltersChange={setFilters}
-          orderBy={orderBy}
-          onOrderByChange={setOrderBy}
-        />
+        <div className="flex items-center gap-3">
+          <div className="flex-1 min-w-0">
+            <CastingApplicantsFilterBar
+              filters={filters}
+              onFiltersChange={setFilters}
+              orderBy={orderBy}
+              onOrderByChange={setOrderBy}
+            />
+          </div>
+          {isDesktop && (
+            <IconViewSwitcher
+              items={['table', 'gallery']}
+              defaultSelected="table"
+              onChange={(next) => setViewMode(next)}
+            />
+          )}
+        </div>
 
-        {applicants.length > 0 ? (
-          isDesktop ? (
-            <div className="w-full flex flex-col gap-6">
-              <CastingApplicantsDataGrid
-                data={applicants}
-                page={data?.page ?? page}
-                hasNext={data?.hasNext ?? false}
-                onPageChange={setPage}
-                onOpenDetails={handleOpenDetails}
-                enableBulkSelection
-              />
-            </div>
-          ) : (
-            <div className="w-full flex flex-col flex-wrap gap-6 md:flex-row">
-              {applicants.map((i) => (
-                <CastingApplicantCard
-                  key={i.applicationId}
-                  data={i}
-                  isDesktop={isDesktop}
-                  onOpenDetails={handleOpenDetails}
-                />
-              ))}
-            </div>
-          )
-        ) : (
-          <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
+        {applicants.length === 0 ? (
+          <Label className="w-full text-center text-(--color-secondary-grey-fonts) pt-10">
             {t('employer_casting_applicants.page.empty_page')}
           </Label>
+        ) : resolvedViewMode === 'gallery' ? (
+          <CastingApplicantsGallery></CastingApplicantsGallery>
+        ) : isDesktop ? (
+          <div className="w-full flex flex-col gap-6">
+            <CastingApplicantsDataGrid
+              data={applicants}
+              page={data?.page ?? page}
+              hasNext={data?.hasNext ?? false}
+              onPageChange={setPage}
+              onOpenDetails={handleOpenDetails}
+              enableBulkSelection
+            />
+          </div>
+        ) : (
+          <div className="w-full flex flex-col flex-wrap gap-6 md:flex-row">
+            {applicants.map((i) => (
+              <CastingApplicantCard
+                key={i.applicationId}
+                data={i}
+                isDesktop={isDesktop}
+                onOpenDetails={handleOpenDetails}
+              />
+            ))}
+          </div>
         )}
       </DashboardSection>
 
