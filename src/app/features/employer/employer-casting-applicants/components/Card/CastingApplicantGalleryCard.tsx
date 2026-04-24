@@ -4,19 +4,10 @@ import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useC
 import { CASTING_APPLICATION_STATUS_ORDER } from '../../../../sitemetadata/utils/siteMetadataUtils';
 import { useCastingApplicationStatusActions } from '../../hooks/status/useCastingApplicationStatusActions';
 import type { EmployerCastingApplicantCardResponse } from '../../types/employerCastingApplicants.types';
-import { Chip } from 'autocasting-ui-library-padimasso';
 
 const CastingApplicantGalleryCard = ({ data }: { data: EmployerCastingApplicantCardResponse }) => {
   const { t } = useTranslation();
-  const {
-    applicationId,
-    talentHeadshotImageUrl,
-    talentStageName,
-    castingSlug,
-    applicationStatus,
-    talentProfessions,
-    castingRoleName,
-  } = data;
+  const { applicationId, talentHeadshotImageUrl, talentStageName, castingSlug, applicationStatus } = data;
 
   const { setStatus, isPending } = useCastingApplicationStatusActions();
   const applicationStatusOptions = useCachedSiteMetadataOption('castingApplicationStatusOptions', t, undefined, {
@@ -24,7 +15,6 @@ const CastingApplicantGalleryCard = ({ data }: { data: EmployerCastingApplicantC
   });
 
   const isMetadataReady = Array.isArray(applicationStatusOptions) && applicationStatusOptions.length > 0;
-  const displayedProfessions = (talentProfessions ?? []).filter(Boolean).slice(0, 2);
 
   const handleSelectApplicationStatus = async (nextStatus: {
     id: string;
@@ -38,7 +28,7 @@ const CastingApplicantGalleryCard = ({ data }: { data: EmployerCastingApplicantC
   return (
     <article
       className="
-        group w-full h-[450px]
+        group w-full h-[400px]
         cursor-pointer
         rounded-xl border border-[var(--color-secondary-outline)] bg-white p-4
         flex flex-col gap-3
@@ -47,7 +37,7 @@ const CastingApplicantGalleryCard = ({ data }: { data: EmployerCastingApplicantC
       <div
         className="
           relative w-full overflow-hidden rounded-xl transition-all duration-150 ease-in-out
-          h-[350px] md:h-full md:group-hover:h-[350px] md:group-focus-within:h-[350px]
+          h-[300px] md:h-full md:group-hover:h-[300px] md:group-focus-within:h-[300px]
         "
       >
         <img
@@ -89,8 +79,7 @@ const CastingApplicantGalleryCard = ({ data }: { data: EmployerCastingApplicantC
           md:group-focus-within:opacity-100 md:group-focus-within:max-h-none md:group-focus-within:pointer-events-auto
         "
       >
-        <h3 className="text-2xl sm:text-xl font-semibold leading-tight line-clamp-1">{talentStageName}</h3>
-        <p className="text-sm font-light text-[var(--color-secondary-grey-fonts)]">{castingRoleName}</p>
+        <h3 className="text-2xl font-semibold">{talentStageName}</h3>
       </div>
     </article>
   );
