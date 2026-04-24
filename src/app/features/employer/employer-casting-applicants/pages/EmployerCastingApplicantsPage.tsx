@@ -96,7 +96,7 @@ const EmployerCastingApplicantsPage = () => {
             {t('employer_casting_applicants.page.empty_page')}
           </Label>
         ) : resolvedViewMode === 'gallery' ? (
-          <CastingApplicantsGallery></CastingApplicantsGallery>
+          <CastingApplicantsGallery data={applicants}></CastingApplicantsGallery>
         ) : isDesktop ? (
           <div className="w-full flex flex-col gap-6">
             <CastingApplicantsDataGrid
