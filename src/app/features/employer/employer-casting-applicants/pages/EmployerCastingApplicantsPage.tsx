@@ -85,7 +85,7 @@ const EmployerCastingApplicantsPage = () => {
           {isDesktop && (
             <IconViewSwitcher
               items={['table', 'gallery']}
-              defaultSelected="table"
+              defaultSelected={viewMode}
               onChange={(next) => setViewMode(next)}
             />
           )}
