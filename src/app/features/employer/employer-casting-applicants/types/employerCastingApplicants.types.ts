@@ -24,3 +24,17 @@ export type EmployerCastingApplicantCardResponse = {
   applicationStatus: SiteMetadataObject;
   requirementSubmissions: ApplicantRequirementSubmissionRow[];
 };
+
+export type EmployerCastingApplicantsRoleSliceResponse = {
+  roleId: string;
+  roleName: string;
+  items: EmployerCastingApplicantCardResponse[];
+  hasNext: boolean;
+  page: number;
+  size: number;
+};
+
+export type EmployerCastingApplicantsGroupedResponse = {
+  castingSlug: string;
+  roles: EmployerCastingApplicantsRoleSliceResponse[];
+};

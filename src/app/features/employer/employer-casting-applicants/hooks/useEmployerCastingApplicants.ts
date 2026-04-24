@@ -6,13 +6,13 @@ import {
   type GetEmployerApplicantsArgs,
 } from '../services/employerCastingApplicantsService';
 
-export const useEmployerCastingApplicants = (args: GetEmployerApplicantsArgs) => {
+export const useEmployerCastingApplicants = (args: GetEmployerApplicantsArgs, opts?: { enabled?: boolean }) => {
   const token = getAuthToken();
 
   return useQuery({
     queryKey: getEmployerCastingApplicantsQueryKey(args),
     queryFn: () => getEmployerApplicantsByCastingSlug(args),
-    enabled: !!token && !!args.slug,
+    enabled: (opts?.enabled ?? true) && !!token && !!args.slug,
     staleTime: 0,
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,

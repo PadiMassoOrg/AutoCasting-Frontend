@@ -1,4 +1,4 @@
-import { Label } from 'autocasting-ui-library-padimasso';
+import { IconViewSwitcher, Label } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -6,14 +6,21 @@ import { DashboardSection, DashboardShell } from '../../../../layouts/components
 import { SectionTitle } from '../../../../shared/components/Section';
 import { LG_SCREEN_SIZE, useMedia } from '../../../../shared/hooks/useMedia';
 import { PublicProfileDetailsView } from '../../../public-profile/pages';
+import { useSectionRoles } from '../../employer-castings/hooks/section/useSectionRoles';
+import { useEmployerCastingEditorBySlug } from '../../employer-castings/hooks/useEmployerCastingDetailsBySlug';
 import { CastingApplicantCard } from '../components/Card';
 import CastingApplicantsFilterBar from '../components/Filter/CastingApplicantsFilterBar';
+import CastingApplicantsGallery from '../components/Gallery/CastingApplicantsGallery';
+import CastingApplicantsGalleryGrouped from '../components/Gallery/CastingApplicantsGalleryGrouped';
 import CastingApplicantsDataGrid from '../components/Table/CastingApplicantsDataGrid';
 import { useEmployerCastingApplicants } from '../hooks/useEmployerCastingApplicants';
-import type {
-  EmployerCastingApplicantsFiltersState,
-  EmployerCastingApplicantsOrderBy,
-} from '../types/employerCastingApplicantsFilter.types';
+import { useEmployerCastingApplicantsInfinite } from '../hooks/useEmployerCastingApplicantsInfinite';
+import { useEmployerCastingApplicantsGrouped } from '../hooks/useEmployerCastingApplicantsGrouped';
+import { getEmployerApplicantsByCastingSlug } from '../services/employerCastingApplicantsService';
+import type { EmployerCastingApplicantsRoleSliceResponse } from '../types/employerCastingApplicants.types';
+import type { EmployerCastingApplicantsFiltersState } from '../types/employerCastingApplicantsFilter.types';
+
+type ApplicantsViewMode = 'table' | 'gallery';
 
 const EmployerCastingApplicantsPage = () => {
   const { t } = useTranslation();
@@ -24,33 +31,103 @@ const EmployerCastingApplicantsPage = () => {
 
   const [filters, setFilters] = useState<EmployerCastingApplicantsFiltersState>({
     applicationStatusIdTokens: undefined,
-    professionIds: undefined,
+    roleId: undefined,
     search: undefined,
   });
-  const [orderBy, setOrderBy] = useState<EmployerCastingApplicantsOrderBy>('CREATION_DATE_DESC');
+  const orderBy = 'CREATION_DATE_DESC' as const;
   const [page, setPage] = useState(0);
-  const pageSize = 8;
+  const tablePageSize = 8;
+  const galleryPageSize = 12;
+  const groupedPerRoleSize = 5;
   const [selectedPublicSlug, setSelectedPublicSlug] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<ApplicantsViewMode>('table');
+  const [separateByRoles, setSeparateByRoles] = useState(false);
+  const [groupedRolesState, setGroupedRolesState] = useState<EmployerCastingApplicantsRoleSliceResponse[]>([]);
+  const [loadingRoleIds, setLoadingRoleIds] = useState<Record<string, boolean>>({});
 
-  const args = useMemo(
+  const resolvedViewMode: ApplicantsViewMode = isDesktop ? viewMode : 'table';
+  const isGalleryDesktop = isDesktop && resolvedViewMode === 'gallery';
+  const shouldUseGroupedGallery = isGalleryDesktop && separateByRoles && !filters.roleId;
+
+  const tableArgs = useMemo(
     () => ({
       slug,
       page,
-      size: pageSize,
+      size: tablePageSize,
       filters,
       orderBy,
     }),
     [slug, page, filters, orderBy]
   );
 
+  const galleryArgs = useMemo(
+    () => ({
+      slug,
+      size: galleryPageSize,
+      filters,
+      orderBy,
+    }),
+    [slug, filters, orderBy]
+  );
+
+  const groupedArgs = useMemo(
+    () => ({
+      slug,
+      perRoleSize: groupedPerRoleSize,
+      filters,
+      orderBy,
+    }),
+    [slug, filters, orderBy]
+  );
+
   useEffect(() => {
     setPage(0);
-  }, [slug, filters, orderBy]);
+  }, [slug, filters]);
 
-  const { data } = useEmployerCastingApplicants(args);
-  const applicants = data?.items ?? [];
+  const { data: tableData } = useEmployerCastingApplicants(tableArgs, { enabled: !isGalleryDesktop });
+
+  const {
+    data: galleryData,
+    fetchNextPage,
+    hasNextPage: galleryHasNextPage,
+    isFetchingNextPage: isGalleryFetchingNextPage,
+    isLoading: isGalleryLoading,
+  } = useEmployerCastingApplicantsInfinite(galleryArgs, { enabled: isGalleryDesktop });
+
+  const { data: groupedData, isLoading: isGroupedLoading } = useEmployerCastingApplicantsGrouped(groupedArgs, {
+    enabled: shouldUseGroupedGallery,
+  });
+
+  useEffect(() => {
+    if (!shouldUseGroupedGallery) return;
+    setGroupedRolesState(groupedData?.roles ?? []);
+    setLoadingRoleIds({});
+  }, [groupedData?.roles, shouldUseGroupedGallery]);
+
+  const applicants = useMemo(
+    () =>
+      isGalleryDesktop ? (galleryData?.pages ?? []).flatMap((slice) => slice.items ?? []) : (tableData?.items ?? []),
+    [galleryData?.pages, isGalleryDesktop, tableData?.items]
+  );
+
+  const groupedApplicantsCount = useMemo(
+    () => groupedRolesState.reduce((acc, role) => acc + (role.items?.length ?? 0), 0),
+    [groupedRolesState]
+  );
   const title = applicants.length > 0 ? `${applicants[0].castingTitle}` : '';
+
+  const { data: castingEditor } = useEmployerCastingEditorBySlug(slug);
+  const rolesSectionId = castingEditor?.rolesSectionId ?? '';
+  const { data: rolesSection } = useSectionRoles(rolesSectionId);
+
+  const roleOptions = useMemo(
+    () =>
+      (rolesSection?.roles ?? [])
+        .map((role) => ({ value: role.id, label: role.roleName }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+    [rolesSection?.roles]
+  );
 
   const handleOpenDetails = useCallback((talentPublicSlug: string) => {
     setSelectedPublicSlug(talentPublicSlug);
@@ -62,46 +139,141 @@ const EmployerCastingApplicantsPage = () => {
     setSelectedPublicSlug(null);
   }, []);
 
+  const handleGalleryReachEnd = useCallback(() => {
+    if (!galleryHasNextPage || isGalleryFetchingNextPage) return;
+    void fetchNextPage();
+  }, [fetchNextPage, galleryHasNextPage, isGalleryFetchingNextPage]);
+
+  const showGalleryEmpty =
+    isGalleryDesktop &&
+    (shouldUseGroupedGallery
+      ? !isGroupedLoading && groupedApplicantsCount === 0
+      : !isGalleryLoading && applicants.length === 0);
+
+  const handleGroupedRoleReachEnd = useCallback(
+    (roleId: string) => {
+      if (!shouldUseGroupedGallery || !roleId) return;
+      if (loadingRoleIds[roleId]) return;
+
+      const role = groupedRolesState.find((r) => r.roleId === roleId);
+      if (!role || !role.hasNext) return;
+
+      setLoadingRoleIds((prev) => ({ ...prev, [roleId]: true }));
+
+      void getEmployerApplicantsByCastingSlug({
+        slug,
+        page: role.page + 1,
+        size: groupedPerRoleSize,
+        filters: {
+          ...filters,
+          roleId,
+        },
+        orderBy,
+      })
+        .then((nextSlice) => {
+          setGroupedRolesState((prev) =>
+            prev.map((current) => {
+              if (current.roleId !== roleId) return current;
+              return {
+                ...current,
+                items: [...current.items, ...(nextSlice.items ?? [])],
+                hasNext: nextSlice.hasNext,
+                page: nextSlice.page,
+                size: nextSlice.size,
+              };
+            })
+          );
+        })
+        .finally(() => {
+          setLoadingRoleIds((prev) => {
+            const copy = { ...prev };
+            delete copy[roleId];
+            return copy;
+          });
+        });
+    },
+    [filters, groupedPerRoleSize, groupedRolesState, loadingRoleIds, orderBy, shouldUseGroupedGallery, slug]
+  );
+
   return (
     <DashboardShell>
       <DashboardSection>
         <SectionTitle title={t('employer_casting_applicants.page.title') + ' ' + title} />
 
-        <CastingApplicantsFilterBar
-          filters={filters}
-          onFiltersChange={setFilters}
-          orderBy={orderBy}
-          onOrderByChange={setOrderBy}
-        />
+        <div className="flex items-center gap-3">
+          <div className="flex-1 min-w-0">
+            <CastingApplicantsFilterBar
+              filters={filters}
+              onFiltersChange={setFilters}
+              roleOptions={roleOptions}
+              isGalleryMode={resolvedViewMode === 'gallery'}
+              separateByRoles={separateByRoles}
+              onSeparateByRolesChange={setSeparateByRoles}
+            />
+          </div>
+          {isDesktop && (
+            <IconViewSwitcher
+              items={['table', 'gallery']}
+              defaultSelected={viewMode}
+              onChange={(next) => setViewMode(next)}
+            />
+          )}
+        </div>
 
-        {applicants.length > 0 ? (
-          isDesktop ? (
-            <div className="w-full flex flex-col gap-6">
-              <CastingApplicantsDataGrid
-                data={applicants}
-                page={data?.page ?? page}
-                hasNext={data?.hasNext ?? false}
-                onPageChange={setPage}
-                onOpenDetails={handleOpenDetails}
-                enableBulkSelection
-              />
-            </div>
-          ) : (
-            <div className="w-full flex flex-col flex-wrap gap-6 md:flex-row">
-              {applicants.map((i) => (
-                <CastingApplicantCard
-                  key={i.applicationId}
-                  data={i}
-                  isDesktop={isDesktop}
-                  onOpenDetails={handleOpenDetails}
-                />
-              ))}
-            </div>
-          )
-        ) : (
-          <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
+        {(resolvedViewMode === 'gallery' ? showGalleryEmpty : applicants.length === 0) ? (
+          <Label className="w-full text-center text-(--color-secondary-grey-fonts) pt-10">
             {t('employer_casting_applicants.page.empty_page')}
           </Label>
+        ) : resolvedViewMode === 'gallery' ? (
+          shouldUseGroupedGallery ? (
+            isGroupedLoading ? (
+              <p className="py-8 text-center font-light text-(--color-secondary-grey)" aria-live="polite">
+                {t('state.loading')}
+              </p>
+            ) : (
+              <CastingApplicantsGalleryGrouped
+                roles={groupedRolesState}
+                onReachRoleEnd={handleGroupedRoleReachEnd}
+                loadingRoleIds={loadingRoleIds}
+              />
+            )
+          ) : (
+            <>
+              <CastingApplicantsGallery
+                data={applicants}
+                hasNext={galleryHasNextPage}
+                isLoadingNext={isGalleryFetchingNextPage}
+                onReachEnd={handleGalleryReachEnd}
+              />
+              {isGalleryFetchingNextPage && (
+                <p className="py-8 text-center font-light text-(--color-secondary-grey)" aria-live="polite">
+                  {t('state.loading')}
+                </p>
+              )}
+            </>
+          )
+        ) : isDesktop ? (
+          <div className="w-full flex flex-col gap-6">
+            <CastingApplicantsDataGrid
+              data={applicants}
+              page={tableData?.page ?? page}
+              hasNext={tableData?.hasNext ?? false}
+              onPageChange={setPage}
+              onOpenDetails={handleOpenDetails}
+              enableBulkSelection
+            />
+          </div>
+        ) : (
+          <div className="w-full flex flex-col flex-wrap gap-6 md:flex-row">
+            {applicants.map((i) => (
+              <CastingApplicantCard
+                key={i.applicationId}
+                data={i}
+                isDesktop={isDesktop}
+                onOpenDetails={handleOpenDetails}
+              />
+            ))}
+          </div>
         )}
       </DashboardSection>
 

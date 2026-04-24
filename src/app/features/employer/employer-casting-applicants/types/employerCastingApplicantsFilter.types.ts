@@ -22,7 +22,6 @@ export type EmployerCastingApplicantsOrderBy =
  */
 export type EmployerCastingApplicantsFiltersState = {
   search?: string;
-  roleIds?: string[];
+  roleId?: string;
   applicationStatusIdTokens?: string[];
-  professionIds?: string[];
 };

@@ -103,6 +103,8 @@ export const API_ROUTES = {
   CLOSE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/close`,
   ARCHIVE_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/archive`,
   EMPLOYER_CASTING_APPLICANTS: (castingSlug: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingSlug}/applicants`,
+  EMPLOYER_CASTING_APPLICANTS_GROUPED: (castingSlug: string) =>
+    `${API_ROUTES.EMPLOYER_CASTING}/${castingSlug}/applicants/grouped`,
   // Application Status
   EMPLOYER_CASTING_APPLICATIONS: '/employer/applications',
   PRESELECT_APPLICATION: (applicationId: string) =>

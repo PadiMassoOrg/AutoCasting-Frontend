@@ -1,7 +1,10 @@
 import api from '../../../../shared/lib/axios';
 import { API_ROUTES } from '../../../../shared/lib/routes';
 import type { SliceResponse } from '../../../../shared/types/sliceResponse.types';
-import type { EmployerCastingApplicantCardResponse } from '../types/employerCastingApplicants.types';
+import type {
+  EmployerCastingApplicantCardResponse,
+  EmployerCastingApplicantsGroupedResponse,
+} from '../types/employerCastingApplicants.types';
 import type {
   EmployerCastingApplicantsFiltersState,
   EmployerCastingApplicantsOrderBy,
@@ -17,6 +20,20 @@ export type GetEmployerApplicantsArgs = {
   orderBy: EmployerCastingApplicantsOrderBy;
 };
 
+export type GetEmployerApplicantsGroupedArgs = {
+  slug: string;
+  perRoleSize: number;
+  filters: EmployerCastingApplicantsFiltersState;
+  orderBy: EmployerCastingApplicantsOrderBy;
+};
+
+const getEmployerApplicantsFiltersKey = (filters: EmployerCastingApplicantsFiltersState) =>
+  JSON.stringify({
+    search: (filters.search ?? '').trim() || undefined,
+    roleId: filters.roleId,
+    applicationStatusIdTokens: filters.applicationStatusIdTokens ?? [],
+  });
+
 export const getEmployerCastingApplicantsQueryKey = ({
   slug,
   page,
@@ -24,29 +41,74 @@ export const getEmployerCastingApplicantsQueryKey = ({
   filters,
   orderBy,
 }: GetEmployerApplicantsArgs) =>
-  [...EMPLOYER_CASTING_APPLICANTS_CACHE_KEY, slug, page, size, orderBy, JSON.stringify(filters ?? {})] as const;
+  [
+    ...EMPLOYER_CASTING_APPLICANTS_CACHE_KEY,
+    slug,
+    page,
+    size,
+    orderBy,
+    getEmployerApplicantsFiltersKey(filters),
+  ] as const;
 
-export async function getEmployerApplicantsByCastingSlug({
+export const getEmployerCastingApplicantsGroupedQueryKey = ({
   slug,
-  page,
-  size,
+  perRoleSize,
   filters,
   orderBy,
-}: GetEmployerApplicantsArgs) {
+}: GetEmployerApplicantsGroupedArgs) =>
+  [
+    ...EMPLOYER_CASTING_APPLICANTS_CACHE_KEY,
+    slug,
+    'grouped',
+    perRoleSize,
+    orderBy,
+    getEmployerApplicantsFiltersKey(filters),
+  ] as const;
+
+const appendCommonApplicantsFilters = (qs: URLSearchParams, filters: EmployerCastingApplicantsFiltersState) => {
+  const q = (filters.search ?? '').trim();
+  if (q.length) qs.set('q', q);
+  if (filters.roleId) qs.set('roleId', filters.roleId);
+
+  (filters.applicationStatusIdTokens ?? []).forEach((token: string) => qs.append('applicationStatusId', token));
+};
+
+export async function getEmployerApplicantsByCastingSlug(
+  { slug, page, size, filters, orderBy }: GetEmployerApplicantsArgs,
+  opts?: { signal?: AbortSignal }
+) {
   const qs = new URLSearchParams();
 
   qs.set('page', String(page));
   qs.set('size', String(size));
   qs.set('orderBy', orderBy);
-
-  const q = (filters.search ?? '').trim();
-  if (q.length) qs.set('q', q);
-
-  (filters.applicationStatusIdTokens ?? []).forEach((token: string) => qs.append('applicationStatusId', token));
-  (filters.professionIds ?? []).forEach((id: string) => qs.append('professionId', id));
+  appendCommonApplicantsFilters(qs, filters);
 
   const { data } = await api.get<SliceResponse<EmployerCastingApplicantCardResponse>>(
-    API_ROUTES.EMPLOYER_CASTING_APPLICANTS(slug) + `?${qs.toString()}`
+    API_ROUTES.EMPLOYER_CASTING_APPLICANTS(slug) + `?${qs.toString()}`,
+    {
+      signal: opts?.signal,
+    }
+  );
+
+  return data;
+}
+
+export async function getEmployerApplicantsByCastingSlugGrouped(
+  { slug, perRoleSize, filters, orderBy }: GetEmployerApplicantsGroupedArgs,
+  opts?: { signal?: AbortSignal }
+) {
+  const qs = new URLSearchParams();
+
+  qs.set('perRoleSize', String(perRoleSize));
+  qs.set('orderBy', orderBy);
+  appendCommonApplicantsFilters(qs, filters);
+
+  const { data } = await api.get<EmployerCastingApplicantsGroupedResponse>(
+    API_ROUTES.EMPLOYER_CASTING_APPLICANTS_GROUPED(slug) + `?${qs.toString()}`,
+    {
+      signal: opts?.signal,
+    }
   );
 
   return data;
