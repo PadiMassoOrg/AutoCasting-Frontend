@@ -1,10 +1,10 @@
 import { ChevronUpDown, OverflowMenu, SearchInput, type OverflowMenuItem } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
-import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
 import CastingStatusChip from '../../../../../shared/components/Chip/CastingStatusChip';
 import CheckboxField from '../../../../../shared/components/Form/CheckboxField';
+import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
+import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
 import type { EmployerCastingApplicantsFiltersState } from '../../types/employerCastingApplicantsFilter.types';
 
 type RoleOption = {
@@ -51,6 +51,8 @@ const CastingApplicantsFilterBar = ({
   );
 
   const selectedRoleId = filters.roleId;
+  const isRoleFiltered = !!selectedRoleId;
+  const isSeparateByRolesChecked = isRoleFiltered || separateByRoles;
   const selectedRole = useMemo(
     () => roleOptions.find((role) => role.value === selectedRoleId),
     [roleOptions, selectedRoleId]
@@ -129,12 +131,12 @@ const CastingApplicantsFilterBar = ({
               align="start"
               side="bottom"
               items={statusItems}
-              menuClassName="!min-w-0 !w-fit"
               trigger={({ open, disabled }) => (
                 <div
-                  className={[triggerClassName, disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'].join(
-                    ' '
-                  )}
+                  className={[
+                    triggerClassName,
+                    disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer bg-[var(--color-primary-white)]',
+                  ].join(' ')}
                 >
                   {selectedStatus ? (
                     <CastingStatusChip status={selectedStatus} variant="inline" />
@@ -162,9 +164,10 @@ const CastingApplicantsFilterBar = ({
               menuClassName="min-w-[220px]"
               trigger={({ open, disabled }) => (
                 <div
-                  className={[triggerClassName, disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'].join(
-                    ' '
-                  )}
+                  className={[
+                    triggerClassName,
+                    disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer bg-[var(--color-primary-white)]',
+                  ].join(' ')}
                 >
                   <span className="text-sm px-1">{selectedRole?.label ?? t('general.all')}</span>
                   <ChevronUpDown open={open} sizePx={18} className="text-[var(--color-primary-black)]" />
@@ -177,7 +180,8 @@ const CastingApplicantsFilterBar = ({
             <CheckboxField
               id="separate-by-roles"
               label={t('general.group.byRole')}
-              checked={separateByRoles}
+              checked={isSeparateByRolesChecked}
+              disabled={isRoleFiltered}
               onCheckedChange={onSeparateByRolesChange}
             />
           )}

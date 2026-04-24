@@ -53,9 +53,6 @@ const CastingApplicantGalleryCard = ({ data }: { data: EmployerCastingApplicantC
             absolute top-4 right-4 z-10 items-center justify-center
             transition-all duration-150 ease-in-out
             opacity-100 pointer-events-auto
-            md:opacity-0 md:pointer-events-none
-            md:group-hover:opacity-100 md:group-hover:pointer-events-auto
-            md:group-focus-within:opacity-100 md:group-focus-within:pointer-events-auto
           "
           >
             <StatusDropdown
