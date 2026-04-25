@@ -40,8 +40,9 @@ api.interceptors.response.use(
   async (error: AxiosError) => {
     const status = error.response?.status;
     const url = error.config?.url;
+    const hasToken = !!getAuthToken();
 
-    if (status === 401 && !redirectedOn401 && !shouldSkip401Redirect(url)) {
+    if (status === 401 && hasToken && !redirectedOn401 && !shouldSkip401Redirect(url)) {
       redirectedOn401 = true;
       forceLogoutRedirect();
       return Promise.reject(error);
