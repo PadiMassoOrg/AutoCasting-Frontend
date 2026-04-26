@@ -4,6 +4,7 @@ import type { ProfileSocialMedia } from '../../../talent/talent-profile-edit/typ
 
 export type BaseEmployerProfileResponse = {
   id: string;
+  email: string;
   userAccountProvider: string;
   roleStringCode: string;
   planStringCode: string;

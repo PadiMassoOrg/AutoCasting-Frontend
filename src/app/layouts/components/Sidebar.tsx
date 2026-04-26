@@ -44,6 +44,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
   // Employer
   const activeEmployerProfile = isRouteActive(ROUTES.EMPLOYER, true);
   const activeEmployerCastings = isRouteActive(ROUTES.EMPLOYER_CASTINGS, true);
+  const activeEmployerSettings = isRouteActive(ROUTES.EMPLOYER_SETTINGS, true);
 
   useEffect(() => {
     if (!open) return;
@@ -143,10 +144,20 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                             {t('routes.employer_castings')}
                           </span>
                         </Link>
+                      </li>
+                      <li onClick={onClose}>
                         <Link to={ROUTES.EMPLOYER}>
                           <span className={clsx(baseClass, activeEmployerProfile && activeClass)}>
                             <Icon name="profile" variant={activeEmployerProfile ? 'primary' : 'default'} />{' '}
                             {t('routes.profile')}
+                          </span>
+                        </Link>
+                      </li>
+                      <li onClick={onClose}>
+                        <Link to={ROUTES.EMPLOYER_SETTINGS}>
+                          <span className={clsx(baseClass, activeEmployerSettings && activeClass)}>
+                            <Icon name="settings" variant={activeEmployerSettings ? 'primary' : 'default'} />{' '}
+                            {t('routes.settings')}
                           </span>
                         </Link>
                       </li>

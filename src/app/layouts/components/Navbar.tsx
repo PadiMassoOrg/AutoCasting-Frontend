@@ -73,6 +73,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
   // Employer
   const activeEmployerProfile = isRouteActive(ROUTES.EMPLOYER, true);
   const activeEmployerCastings = isRouteActive(ROUTES.EMPLOYER_CASTINGS, true);
+  const activeEmployerSettings = isRouteActive(ROUTES.EMPLOYER_SETTINGS, true);
 
   return (
     <nav
@@ -206,6 +207,14 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                         <Icon name="profile" variant={activeEmployerProfile ? 'primary' : 'default'} className="w-6" />
                       )}
                       {showLabels && t('routes.profile')}
+                    </span>
+                  </Link>
+                </Tooltip>
+                <Tooltip title={t('general.tooltips.settings')} position="bottomRight" nudgeY={-8}>
+                  <Link to={ROUTES.EMPLOYER_SETTINGS}>
+                    <span className={clsx(baseClass, activeEmployerSettings && activeClass)}>
+                      {showIcons && <Icon name="settings" variant={activeEmployerSettings ? 'primary' : 'default'} />}
+                      {showLabels && t('routes.settings')}
                     </span>
                   </Link>
                 </Tooltip>

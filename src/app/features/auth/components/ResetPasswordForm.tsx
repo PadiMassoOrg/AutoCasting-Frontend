@@ -7,7 +7,7 @@ import { useModal } from '../../../context/ModalContext';
 import { useToast } from '../../../context/ToastContext';
 import { ROUTES } from '../../../shared/lib/routes';
 import { handleBackendFormError } from '../../../shared/utils/backendErrorHandling';
-import ChangePasswordSuccessModal from '../../talent/talent-profile-settings/components/ChangePasswordSuccessModal';
+import { ChangePasswordSuccessModal } from '../change-password/components';
 import { useResetPasswordMutation } from '../hooks/useResetPasswordMutation';
 import { getResetPasswordSchema, type ResetPasswordValues } from '../schemas/authSchema';
 

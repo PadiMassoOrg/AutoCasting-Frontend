@@ -6,7 +6,7 @@ import { useModal } from '../../../../context/ModalContext';
 import { useToast } from '../../../../context/ToastContext';
 import { handleBackendFormError } from '../../../../shared/utils/backendErrorHandling';
 import { useChangePasswordMutation } from '../hooks/useChangePasswordMutation';
-import { getChangePasswordSchema, type ChangePasswordValues } from '../schemas/accountSchema';
+import { getChangePasswordSchema, type ChangePasswordValues } from '../schemas/changePasswordSchema';
 import ChangePasswordSuccessModal from './ChangePasswordSuccessModal';
 
 const ChangePasswordForm = () => {

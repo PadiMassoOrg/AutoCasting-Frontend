@@ -4,6 +4,7 @@ import { useMeData } from '../features/auth/hooks/useMeData';
 import EmployerCastingApplicantsPage from '../features/employer/employer-casting-applicants/pages/EmployerCastingApplicantsPage';
 import { EmployerCastingPage, EmployerCastingsPage } from '../features/employer/employer-castings/pages';
 import { EmployerProfileEditPage } from '../features/employer/employer-profile-edit/pages';
+import { EmployerProfileSettingsPage } from '../features/employer/employer-profile-settings/pages';
 import { CastingDetailsPage } from '../features/public-casting/pages';
 import TalentCastingApplicationsPage from '../features/talent/talent-casting-applications/pages/TalentCastingApplicationsPage';
 import { TalentProfileEditPage } from '../features/talent/talent-profile-edit/pages';
@@ -43,6 +44,7 @@ export default function ProtectedRoutesLayout() {
 
         {/* Employer */}
         <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/editor'} element={<EmployerCastingPage />} />
+        <Route path={ROUTES.EMPLOYER_SETTINGS} element={<EmployerProfileSettingsPage />} />
       </Route>
       <Route element={<NavigationLayout />}>
         <Route
