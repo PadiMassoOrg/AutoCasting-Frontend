@@ -1,9 +1,9 @@
 import type { ForgottenPasswordValues, LoginFormValues, RegisterFormValues } from '../schemas/authSchema';
 
 // Request
-export type RegisterRequest = RegisterFormValues;
+export type RegisterRequest = Pick<RegisterFormValues, 'email' | 'password'>;
 
-export type LoginRequest = LoginFormValues;
+export type LoginRequest = Pick<LoginFormValues, 'email' | 'password'>;
 
 export type RoleRequest = {
   role: string;
