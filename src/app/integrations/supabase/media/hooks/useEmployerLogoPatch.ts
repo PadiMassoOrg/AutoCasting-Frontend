@@ -5,6 +5,7 @@ import {
 } from '../../../../features/employer/employer-profile-edit/services/employerProfileService';
 import type { EmployerProfileBasicInfo } from '../../../../features/employer/employer-profile-edit/types/employerProfile.types';
 import { SUPABASE } from '../../constants';
+import { assertImageSourceSize, optimizeImageForUpload } from '../lib/imageOptimization';
 import { uploadPublic, removeByPublicUrl } from '../lib/profile-media';
 
 type MutationArgs = { file: File; previousUrl?: string | null };
@@ -27,11 +28,13 @@ export function useEmployerLogoPatch(profileId: string) {
 
   return useMutation<EmployerProfileBasicInfo, unknown, MutationArgs>({
     mutationFn: async ({ file, previousUrl }) => {
-      if (!file.type.startsWith('image/')) throw new Error('Formato no soportado');
-      if (file.size > 8 * 1024 * 1024) throw new Error('Máximo 8MB');
+      if (!file.type.startsWith('image/')) throw new Error('validation.type_image');
+      assertImageSourceSize(file);
 
-      const key = buildStorageKey(profileId, file);
-      const { publicUrl } = await uploadPublic(key, file);
+      const optimizedFile = await optimizeImageForUpload(file, 'employer-logo');
+
+      const key = buildStorageKey(profileId, optimizedFile);
+      const { publicUrl } = await uploadPublic(key, optimizedFile);
 
       const updated = await patchEmployerBasicInfo({ imageUrl: publicUrl });
 

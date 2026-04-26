@@ -152,7 +152,8 @@
     "max_char": "El texto es demasiado largo.",
     "max_length": "El texto es muy largo.",
     "type_image": "El archivo debe ser una imagen.",
-    "max_size": "El archivo supera el tamaño máximo de {{mb}}MB."
+    "max_size": "El archivo supera el tamaño máximo de {{mb}}MB.",
+    "media_too_large_8mb": "El archivo supera el tamaño máximo de 8MB."
   },
   "state": {
     "no_results": "No se encontraron resultados.",

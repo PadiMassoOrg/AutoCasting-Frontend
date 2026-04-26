@@ -4,6 +4,7 @@ import {
   TALENT_PROFILE_CACHE_KEY,
 } from '../../../../features/talent/talent-profile-edit/services/talentProfileService';
 import { SUPABASE } from '../../constants';
+import { assertImageSourceSize, optimizeImageForUpload } from '../lib/imageOptimization';
 import { uploadPublic, removeByPublicUrl } from '../lib/profile-media';
 
 type Slot = 'headshot' | 'fullbody' | 'other';
@@ -34,11 +35,13 @@ export function useProfileMediaPatch(profileId: string) {
   return useMutation({
     mutationFn: async (args: MutationArgs) => {
       const { file, slot, previousUrl } = args;
-      if (!file.type.startsWith('image/')) throw new Error('Formato no soportado');
-      if (file.size > 8 * 1024 * 1024) throw new Error('Máximo 8MB');
+      if (!file.type.startsWith('image/')) throw new Error('validation.type_image');
+      assertImageSourceSize(file);
 
-      const key = buildStorageKey(profileId, slot, file);
-      const { publicUrl } = await uploadPublic(key, file);
+      const optimizedFile = await optimizeImageForUpload(file, 'talent-photo');
+
+      const key = buildStorageKey(profileId, slot, optimizedFile);
+      const { publicUrl } = await uploadPublic(key, optimizedFile);
 
       const payload: any = {};
       if (slot === 'headshot') payload.headshotImageUrl = publicUrl;

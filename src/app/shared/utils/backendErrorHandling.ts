@@ -89,6 +89,7 @@ const interpolateIndexedArgs = (value: string, args: string[]) =>
 export const getBackendErrorPayload = (error: unknown): BackendErrorPayload => {
   const anyError = error as any;
   const data = anyError?.response?.data;
+  const clientMessage = normalizeDescriptor(anyError?.message, anyError?.messageArgs);
 
   const status =
     typeof data?.status === 'number'
@@ -99,7 +100,7 @@ export const getBackendErrorPayload = (error: unknown): BackendErrorPayload => {
 
   return {
     status,
-    message: normalizeDescriptor(data?.message, data?.messageArgs),
+    message: normalizeDescriptor(data?.message, data?.messageArgs) ?? clientMessage,
     errors: normalizeFieldErrors(data?.errors),
     path: typeof data?.path === 'string' ? data.path : null,
     timestamp: typeof data?.timestamp === 'string' ? data.timestamp : null,
