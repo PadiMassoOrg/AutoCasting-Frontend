@@ -225,7 +225,7 @@ const CastingDatabasePage = () => {
                 <p className="py-18 text-center font-normal text-(--color-alert-error)">{t('state.server_err')}</p>
               ) : (
                 <>
-                  <article className="flex flex-col gap-10">
+                  <article className="flex flex-col gap-6">
                     {showInitialSkeletons &&
                       Array.from({ length: pageSize }).map((_, i) => (
                         <div key={`casting-skeleton-${i}`} className="w-full">
