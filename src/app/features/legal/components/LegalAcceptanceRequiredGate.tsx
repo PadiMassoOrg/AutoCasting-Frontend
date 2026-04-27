@@ -1,12 +1,15 @@
 import { Button, Modal, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 import { useToast } from '../../../context/ToastContext';
+import { useAuthToken } from '../../../features/auth/hooks/useAuthToken';
 import { acceptCurrentLegalDocuments } from '../../../features/auth/services/authService';
+import api from '../../../shared/lib/axios';
 import { forceLogoutRedirect } from '../../../shared/lib/authSession';
 import { getAuthToken } from '../../../shared/lib/cookies';
-import { registerLegalAcceptanceHandler } from '../../../shared/lib/legalAcceptanceGate';
-import { ROUTES } from '../../../shared/lib/routes';
+import { registerLegalAcceptanceHandler, requestLegalAcceptance } from '../../../shared/lib/legalAcceptanceGate';
+import { API_ROUTES, ROUTES } from '../../../shared/lib/routes';
 
 type LegalAcceptanceModalProps = {
   onAccepted: () => void;
@@ -96,9 +99,12 @@ const LegalAcceptanceRequiredModal = ({
 
 export default function LegalAcceptanceRequiredGate() {
   const { t } = useTranslation();
+  const location = useLocation();
+  const token = useAuthToken();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const resolverRef = useRef<((accepted: boolean) => void) | null>(null);
+  const legalCheckInFlightRef = useRef(false);
 
   const resolveAndClose = (accepted: boolean) => {
     resolverRef.current?.(accepted);
@@ -143,6 +149,57 @@ export default function LegalAcceptanceRequiredGate() {
       unregister();
     };
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const runProactiveLegalCheck = async () => {
+      if (!token || isLoggingOut) return;
+      if (!location.pathname.startsWith(ROUTES.DASHBOARD)) return;
+      if (legalCheckInFlightRef.current) return;
+
+      try {
+        legalCheckInFlightRef.current = true;
+        const { data } = await api.get<{ acceptedCurrent?: boolean }>(API_ROUTES.LEGAL_REQUIREMENTS, {
+          params: { locale: 'es' },
+        });
+
+        if (cancelled) return;
+        if (data?.acceptedCurrent === false) {
+          void requestLegalAcceptance();
+        }
+      } catch {
+        // noop: existing request-level 428 handling remains source of truth.
+      } finally {
+        legalCheckInFlightRef.current = false;
+      }
+    };
+
+    const onWindowFocus = () => {
+      void runProactiveLegalCheck();
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        void runProactiveLegalCheck();
+      }
+    };
+
+    const intervalId = window.setInterval(() => {
+      void runProactiveLegalCheck();
+    }, 15000);
+
+    window.addEventListener('focus', onWindowFocus);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    void runProactiveLegalCheck();
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+      window.removeEventListener('focus', onWindowFocus);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, [location.pathname, token, isLoggingOut]);
 
   return (
     <Modal isOpen={isOpen} onClose={handleCancelAndLogout} title={t('legal.acceptance_required_modal.title')} size="lg">

@@ -13,7 +13,6 @@ import { LanguageProvider } from './app/context/LanguageContext';
 import { ModalProvider } from './app/context/ModalContext';
 import { ToastProvider } from './app/context/ToastContext';
 import { UserModeProvider } from './app/context/UserModeContext';
-import LegalAcceptanceRequiredGate from './app/features/legal/components/LegalAcceptanceRequiredGate';
 import { AppRoutes } from './app/routes';
 import { QUERY_CACHE_PERSIST_KEY, queryClient } from './app/shared/lib/queryClient';
 
@@ -55,7 +54,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <ToastProvider>
           <ModalProvider>
             <LanguageProvider>
-              <LegalAcceptanceRequiredGate />
               <AppRoutes />
             </LanguageProvider>
           </ModalProvider>

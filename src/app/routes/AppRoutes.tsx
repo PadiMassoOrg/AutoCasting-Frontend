@@ -5,6 +5,7 @@ import { useAuthToken } from '../features/auth/hooks/useAuthToken';
 import { useMeData } from '../features/auth/hooks/useMeData';
 import { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage } from '../features/auth/pages';
 import CastingDatabasePage from '../features/casting-database/pages/CastingDatabasePage';
+import LegalAcceptanceRequiredGate from '../features/legal/components/LegalAcceptanceRequiredGate';
 import MainSiteLayout from '../features/main-site/layout/MainSiteLayout';
 import { PrivacyPage, SupportPage, TermsPage } from '../features/main-site/page';
 import MainSitePage from '../features/main-site/page/MainSitePage';
@@ -148,6 +149,7 @@ export default function AppRoutes() {
       <AuthSessionWatcher />
       <RouteTracker />
       <ScrollToTop />
+      <LegalAcceptanceRequiredGate />
       <AppRoutesContent />
     </Router>
   );
