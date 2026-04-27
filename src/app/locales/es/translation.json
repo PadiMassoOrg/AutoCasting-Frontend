@@ -1135,7 +1135,13 @@
     "privacy": "Políticas de Privacidad",
     "short_terms": "Términos",
     "short_privacy": "Políticas",
-    "download_pdf": "Descargar PDF oficial"
+    "download_pdf": "Descargar PDF oficial",
+    "acceptance_required_modal": {
+      "title": "Actualización legal requerida",
+      "description": "Para continuar, necesitás aceptar la última versión de Términos y Políticas de Privacidad.",
+      "accept_button": "Aceptar y continuar",
+      "accept_error": "No pudimos registrar la aceptación legal. Intentá nuevamente."
+    }
   },
   "support": {
     "title": "Soporte Técnico",
