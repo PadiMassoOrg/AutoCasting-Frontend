@@ -11,6 +11,8 @@ import { getAuthToken } from '../../../shared/lib/cookies';
 import { registerLegalAcceptanceHandler, requestLegalAcceptance } from '../../../shared/lib/legalAcceptanceGate';
 import { API_ROUTES, ROUTES } from '../../../shared/lib/routes';
 
+const LEGAL_REQUIREMENTS_CACHE_TTL_MS = 60_000; // 60s en memoria por sesión
+
 type LegalAcceptanceModalProps = {
   onAccepted: () => void;
   onCancel: () => void;
@@ -105,12 +107,19 @@ export default function LegalAcceptanceRequiredGate() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const resolverRef = useRef<((accepted: boolean) => void) | null>(null);
   const legalCheckInFlightRef = useRef(false);
+  const legalRequirementsCacheRef = useRef<{ acceptedCurrent: boolean; checkedAt: number } | null>(null);
 
   const resolveAndClose = (accepted: boolean) => {
     resolverRef.current?.(accepted);
     resolverRef.current = null;
     setIsOpen(false);
     setIsLoggingOut(false);
+    if (accepted) {
+      legalRequirementsCacheRef.current = {
+        acceptedCurrent: true,
+        checkedAt: Date.now(),
+      };
+    }
   };
 
   const handleCancelAndLogout = () => {
@@ -157,6 +166,16 @@ export default function LegalAcceptanceRequiredGate() {
       if (!token || isLoggingOut) return;
       if (!location.pathname.startsWith(ROUTES.DASHBOARD)) return;
       if (legalCheckInFlightRef.current) return;
+      if (isOpen) return;
+
+      const cache = legalRequirementsCacheRef.current;
+      if (
+        cache &&
+        cache.acceptedCurrent === true &&
+        Date.now() - cache.checkedAt < LEGAL_REQUIREMENTS_CACHE_TTL_MS
+      ) {
+        return;
+      }
 
       try {
         legalCheckInFlightRef.current = true;
@@ -165,6 +184,10 @@ export default function LegalAcceptanceRequiredGate() {
         });
 
         if (cancelled) return;
+        legalRequirementsCacheRef.current = {
+          acceptedCurrent: data?.acceptedCurrent === true,
+          checkedAt: Date.now(),
+        };
         if (data?.acceptedCurrent === false) {
           void requestLegalAcceptance();
         }
@@ -199,7 +222,7 @@ export default function LegalAcceptanceRequiredGate() {
       window.removeEventListener('focus', onWindowFocus);
       document.removeEventListener('visibilitychange', onVisibilityChange);
     };
-  }, [location.pathname, token, isLoggingOut]);
+  }, [location.pathname, token, isLoggingOut, isOpen]);
 
   return (
     <Modal isOpen={isOpen} onClose={handleCancelAndLogout} title={t('legal.acceptance_required_modal.title')} size="lg">
