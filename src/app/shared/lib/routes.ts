@@ -67,7 +67,9 @@ export const API_ROUTES = {
   USER_ONBOARDING: '/auth/onboarding',
   // Legal
   CURRENT_LEGAL_DOCUMENT: '/legal/current',
+  LEGAL_REQUIREMENTS: '/legal/requirements',
   ACCEPT_LEGAL_DOCUMENT: '/legal/accept',
+  ACCEPT_CURRENT_LEGAL_DOCUMENT: '/legal/accept-current',
   // Database
   TALENT_DATABASE: '/talent-database',
   CASTINGS_DATABASE: '/castings-database',

@@ -314,7 +314,12 @@
         "not_found": "No encontramos el documento legal actual."
       },
       "document": {
-        "not_found": "No encontramos el documento legal solicitado."
+        "not_found": "No encontramos el documento legal solicitado.",
+        "not_current": "Solo puedes aceptar documentos legales vigentes."
+      },
+      "acceptance": {
+        "required": "Debes aceptar la versión vigente de Términos y Política de Privacidad para continuar.",
+        "explicit_required": "Debes confirmar explícitamente tu aceptación de Términos y Política de Privacidad."
       },
       "hash_generation_failed": "No se pudo generar la firma del documento legal."
     }
@@ -1129,7 +1134,14 @@
     "terms": "Términos y Condiciones",
     "privacy": "Políticas de Privacidad",
     "short_terms": "Términos",
-    "short_privacy": "Políticas"
+    "short_privacy": "Políticas",
+    "download_pdf": "Descargar PDF oficial",
+    "acceptance_required_modal": {
+      "title": "Actualización legal requerida",
+      "description": "Para continuar, necesitás aceptar la última versión de Términos y Políticas de Privacidad.",
+      "accept_button": "Aceptar y continuar",
+      "accept_error": "No pudimos registrar la aceptación legal. Intentá nuevamente."
+    }
   },
   "support": {
     "title": "Soporte Técnico",

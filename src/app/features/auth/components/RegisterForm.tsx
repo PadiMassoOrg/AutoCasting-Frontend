@@ -30,25 +30,31 @@ export default function RegisterForm({ onSwitch }: RegisterFormProps) {
 
   const onSubmit = (data: RegisterFormValues) => {
     clearErrors();
-    registerMutation.mutate(data, {
-      onError: (err: any) => {
-        handleBackendFormError({
-          error: err,
-          t,
-          setError,
-          showToast: (message) =>
-            showToast({
-              title: t('general.error'),
-              description: message,
-              type: 'danger',
-            }),
-          messageFieldMap: {
-            'server_error.auth.user_exists': 'email',
-          },
-          generalFieldFallback: 'password',
-        });
+    registerMutation.mutate(
+      {
+        email: data.email,
+        password: data.password,
       },
-    });
+      {
+        onError: (err: any) => {
+          handleBackendFormError({
+            error: err,
+            t,
+            setError,
+            showToast: (message) =>
+              showToast({
+                title: t('general.error'),
+                description: message,
+                type: 'danger',
+              }),
+            messageFieldMap: {
+              'server_error.auth.user_exists': 'email',
+            },
+            generalFieldFallback: 'password',
+          });
+        },
+      }
+    );
   };
 
   return (

@@ -23,6 +23,37 @@ export const login = async (data: LoginRequest): Promise<AuthenticationResponse>
   return response.data;
 };
 
+export const acceptCurrentLegalDocuments = async (token: string, locale: string) => {
+  await api.post(
+    API_ROUTES.ACCEPT_CURRENT_LEGAL_DOCUMENT,
+    {
+      locale: locale?.startsWith('es') ? 'es' : 'es',
+      agreeTerms: true,
+      agreePrivacy: true,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+};
+
+export const loginAndAcceptLegal = async (data: LoginRequest, locale: string): Promise<AuthenticationResponse> => {
+  const response = await login(data);
+  await acceptCurrentLegalDocuments(response.token, locale);
+  return response;
+};
+
+export const registerAndAcceptLegal = async (
+  data: RegisterRequest,
+  locale: string
+): Promise<AuthenticationResponse> => {
+  const response = await register(data);
+  await acceptCurrentLegalDocuments(response.token, locale);
+  return response;
+};
+
 export const meData = async (): Promise<MeDataResponse> => {
   const token = getAuthToken();
   if (!token) {

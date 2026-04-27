@@ -33,25 +33,31 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
 
   const onSubmit = (data: LoginFormValues) => {
     clearErrors();
-    loginMutation.mutate(data, {
-      onError: (err: any) => {
-        handleBackendFormError({
-          error: err,
-          t,
-          setError,
-          showToast: (message) =>
-            showToast({
-              title: t('general.error'),
-              description: message,
-              type: 'danger',
-            }),
-          messageFieldMap: {
-            'server_error.auth.invalid_credentials': 'password',
-          },
-          generalFieldFallback: 'password',
-        });
+    loginMutation.mutate(
+      {
+        email: data.email,
+        password: data.password,
       },
-    });
+      {
+        onError: (err: any) => {
+          handleBackendFormError({
+            error: err,
+            t,
+            setError,
+            showToast: (message) =>
+              showToast({
+                title: t('general.error'),
+                description: message,
+                type: 'danger',
+              }),
+            messageFieldMap: {
+              'server_error.auth.invalid_credentials': 'password',
+            },
+            generalFieldFallback: 'password',
+          });
+        },
+      }
+    );
   };
 
   return (

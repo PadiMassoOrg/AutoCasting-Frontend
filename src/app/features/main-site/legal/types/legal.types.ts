@@ -1,6 +1,6 @@
 export type LegalDocument = {
   id: string;
-  type: 'TERMS' | 'POLICY';
+  type: 'TERMS' | 'PRIVACY' | 'COOKIES';
   locale: string;
   version: string;
   title: string;
@@ -8,4 +8,6 @@ export type LegalDocument = {
   effectiveAt: string;
   contentHtml: string;
   contentHash: string;
+  pdfDownloadUrl?: string | null;
+  pdfObjectKey?: string;
 };
