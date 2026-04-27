@@ -169,11 +169,7 @@ export default function LegalAcceptanceRequiredGate() {
       if (isOpen) return;
 
       const cache = legalRequirementsCacheRef.current;
-      if (
-        cache &&
-        cache.acceptedCurrent === true &&
-        Date.now() - cache.checkedAt < LEGAL_REQUIREMENTS_CACHE_TTL_MS
-      ) {
+      if (cache && cache.acceptedCurrent === true && Date.now() - cache.checkedAt < LEGAL_REQUIREMENTS_CACHE_TTL_MS) {
         return;
       }
 
