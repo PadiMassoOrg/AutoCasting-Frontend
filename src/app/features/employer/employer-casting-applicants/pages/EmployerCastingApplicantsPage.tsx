@@ -132,6 +132,11 @@ const EmployerCastingApplicantsPage = () => {
   const isBulkSelectionActive = selectedRowKeys.length > 0;
   const title = applicants.length > 0 ? `${applicants[0].castingTitle}` : '';
 
+  useEffect(() => {
+    if (!isBulkSelectionActive) return;
+    if (viewMode !== 'table') setViewMode('table');
+  }, [isBulkSelectionActive, viewMode]);
+
   const { data: castingEditor } = useEmployerCastingEditorBySlug(slug);
   const rolesSectionId = castingEditor?.rolesSectionId ?? '';
   const { data: rolesSection } = useSectionRoles(rolesSectionId);
@@ -257,7 +262,7 @@ const EmployerCastingApplicantsPage = () => {
               />
             )}
           </div>
-          {isDesktop && (
+          {isDesktop && !isBulkSelectionActive && (
             <IconViewSwitcher
               items={['table', 'gallery']}
               defaultSelected={viewMode}

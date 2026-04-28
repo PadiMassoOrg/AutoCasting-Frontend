@@ -88,8 +88,8 @@ const CastingApplicantsBulkActionsBar = ({
           </div>
         </div>
 
-        <button type="button" onClick={onClearSelection} className="inline-flex items-center justify-center">
-          <Icon name="burgerClose" size={20} />
+        <button type="button" onClick={onClearSelection}>
+          <Icon name="burgerClose" size={16} />
         </button>
       </article>
     </section>
