@@ -37,7 +37,7 @@ const CastingActionConfirmationModal = ({
         <Button variant="outline" onClick={onCancel} disabled={isPending} className="min-w-[180px]">
           {t('buttons.cancel')}
         </Button>
-        <Button variant={confirmButtonVariant} onClick={onConfirm} disabled={isPending} className="min-w-[180px]">
+        <Button variant={confirmButtonVariant} onClick={onConfirm} loading={isPending} className="min-w-[180px]">
           {t(confirmButtonKey)}
         </Button>
       </div>

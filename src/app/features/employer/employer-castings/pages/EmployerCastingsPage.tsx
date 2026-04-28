@@ -14,8 +14,8 @@ import type { EmployerCastingsOrderBy } from '../types/employerCastingsFilters.t
 
 const EmployerCastingsPage = () => {
   const { t } = useTranslation();
-  const { mutate: createEmptyCasting, isPending: isCreating } = useCreateEmptyCastingMutation();
-  const { mutate: deleteCasting, isPending: isDeleting } = useDeleteCastingMutation();
+  const { mutate: createEmptyCasting, isPending: isCreatePending } = useCreateEmptyCastingMutation();
+  const { mutate: deleteCasting, isPending: isDeletePending } = useDeleteCastingMutation();
 
   const [filters, setFilters] = useState<EmployerCastingsFiltersState>({
     projectTypeIds: undefined,
@@ -42,7 +42,7 @@ const EmployerCastingsPage = () => {
 
   const handleDelete = useCallback(
     (id: string) => {
-      if (isDeleting) return;
+      if (isDeletePending) return;
       setDeletingId(id);
       deleteCasting(
         { id },
@@ -51,14 +51,14 @@ const EmployerCastingsPage = () => {
         }
       );
     },
-    [deleteCasting, isDeleting]
+    [deleteCasting, isDeletePending]
   );
 
   const actionButtonRender = () => (
     <Button
       className="flex flex-row items-center justify-center gap-2"
       onClick={createEmptyCasting}
-      disabled={isCreating}
+      loading={isCreatePending}
     >
       <Icon name="plus" variant="white" size={16} />
       <span className="text-base font-medium">{t('employer_castings.page.create_casting')}</span>
@@ -84,7 +84,7 @@ const EmployerCastingsPage = () => {
                 key={i.id}
                 data={i}
                 onDelete={handleDelete}
-                deleteDisabled={isDeleting && deletingId === i.id}
+                deleteDisabled={isDeletePending && deletingId === i.id}
               />
             ))
           ) : (

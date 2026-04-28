@@ -88,11 +88,11 @@ const LegalAcceptanceRequiredModal = ({
       </h2>
       <Separator className="opacity-20 my-2" />
       <div className="flex gap-2">
-        <Button variant="outline" onClick={onCancel} disabled={isBusy}>
-          {isLoggingOut ? t('state.loading') : t('buttons.cancel')}
+        <Button variant="outline" onClick={onCancel}>
+          {t('buttons.cancel')}
         </Button>
-        <Button onClick={handleAccept} disabled={isBusy}>
-          {isSubmitting ? t('state.loading') : t('legal.acceptance_required_modal.accept_button')}
+        <Button onClick={handleAccept} disabled={isLoggingOut} loading={isSubmitting}>
+          {t('legal.acceptance_required_modal.accept_button')}
         </Button>
       </div>
     </article>

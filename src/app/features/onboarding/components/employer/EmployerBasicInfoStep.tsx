@@ -61,7 +61,7 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
 
   if (profilePending && !profile) return null;
 
-  const isNextDisabled = !isValid || isSubmitting || isPending;
+  const isNextDisabled = !isValid;
   const taxNumberError = errors.taxNumber?.message ?? fieldErrors.taxNumber;
 
   return (
@@ -130,8 +130,8 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
               <Button variant="outline" type="button" onClick={onBackToModeSelector}>
                 {t('buttons.back')}
               </Button>
-              <Button variant="primary" type="submit" disabled={isNextDisabled}>
-                {isSubmitting || isPending ? t('state.loading') : t('buttons.next')}
+              <Button variant="primary" type="submit" disabled={isNextDisabled} loading={isSubmitting || isPending}>
+                {t('buttons.next')}
               </Button>
             </div>
 

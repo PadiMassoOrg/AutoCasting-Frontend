@@ -72,7 +72,9 @@ export default function ForgottenPasswordForm() {
           <Button variant="outline" onClick={closeModal}>
             {t('buttons.cancel')}
           </Button>
-          <Button type="submit">{t('auth.forgotten_password.submit')}</Button>
+          <Button type="submit" loading={forgotPasswordMutation.isPending}>
+            {t('auth.forgotten_password.submit')}
+          </Button>
         </div>
       </form>
     </article>

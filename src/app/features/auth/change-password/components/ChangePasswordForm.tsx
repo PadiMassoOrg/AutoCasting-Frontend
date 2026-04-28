@@ -101,8 +101,8 @@ const ChangePasswordForm = () => {
         <Button variant="outline" onClick={closeModal}>
           {t('buttons.cancel')}
         </Button>
-        <Button type="submit" className="w-full">
-          {changePasswordMutation.isPending ? t('state.loading') : t('general.save')}
+        <Button type="submit" className="w-full" loading={changePasswordMutation.isPending}>
+          {t('general.save')}
         </Button>
       </div>
     </form>

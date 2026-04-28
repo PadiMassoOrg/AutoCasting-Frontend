@@ -84,8 +84,8 @@ export default function LoginForm({ onSwitch }: { onSwitch: () => void }) {
         </h2>
       </div>
 
-      <Button type="submit" className="mt-4 mb-2 cursor-pointer">
-        {loginMutation.isPending ? t('state.loading') : t('auth.login.submit')}
+      <Button type="submit" className="mt-4 mb-2 cursor-pointer" loading={loginMutation.isPending}>
+        {t('auth.login.submit')}
       </Button>
 
       <h2 className="mb-6 text-xs font-light text-center">

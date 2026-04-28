@@ -36,7 +36,7 @@ const CastingStatusChangeModal = ({
           {t('buttons.cancel')}
         </Button>
 
-        <Button variant="primary" onClick={onConfirm} disabled={isPending} className="min-w-[180px]">
+        <Button variant="primary" onClick={onConfirm} loading={isPending} className="min-w-[180px]">
           {t(confirmButtonKey)}
         </Button>
       </div>
