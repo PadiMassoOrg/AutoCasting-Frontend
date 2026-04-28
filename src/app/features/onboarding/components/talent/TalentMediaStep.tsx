@@ -110,8 +110,8 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
 
             <div className="w-full flex flex-col flex-1">
               <div className="text-center">
-                <h1 className="text-2xl font-semibold my-1">{t('onboarding.talent.step2.header')}</h1>
-                <p className="text-sm">{t('onboarding.talent.step2.subtitle')}</p>
+                <h1 className="text-2xl font-semibold my-1">{t('onboarding.talent.step_media.header')}</h1>
+                <p className="text-sm">{t('onboarding.talent.step_media.subtitle')}</p>
               </div>
 
               <div className="max-w-[165px] w-full self-center my-4 lg:my-8 lg:max-w-[195px] lg:items-center">

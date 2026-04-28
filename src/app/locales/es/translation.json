@@ -737,33 +737,37 @@
       "edit_profile_label_profile": "Tu Perfil"
     },
     "talent": {
-      "step1": {
+      "step_basic_info": {
         "header": "Indicanos tu nombre",
         "subtitle": "Así vamos armando tu perfil para que puedan encontrarte.",
         "stage_name_label": "Nombre y apellido"
       },
-      "step2": {
+      "step_profession": {
+        "header": "¿A qué te dedicás?",
+        "subtitle": "Seleccioná tus profesiones para ayudarte a encontrar oportunidades. Podés elegir más de una opción."
+      },
+      "step_media": {
         "header": "Subí tu foto de perfil",
         "subtitle": "Podés agregar tu foto de perfil o book. Después vas a poder subir más si querés."
       },
-      "confirmation_step": {
+      "step_confirmation": {
         "header": "¡Listo! Tu perfil empezó a tomar forma",
         "subtitle": "Ahora podés completar tus datos, sumar videos y empezar a postularte a castings."
       }
     },
     "employer": {
-      "step1": {
+      "step_basic_info": {
         "header": "Completá tus datos antes de comenzar",
         "subtitle": "Necesitamos esta info para validar tu cuenta y tus castings.",
         "companyName_label": "Nombre de la empresa / productora / usuario",
         "taxNumber_label": "CUIT / CUIL",
         "tax_disclaimer": "Lo usamos solo con fines de verificación. No lo compartimos con nadie."
       },
-      "step2": {
+      "step_media": {
         "header": "Subí tu logo o foto",
         "subtitle": "Podés cargar el logo de tu empresa, productora o una foto tuya si trabajás de manera independiente."
       },
-      "confirmation_step": {
+      "step_confirmation": {
         "header": "¡Listo! Tu cuenta ya está configurada",
         "subtitle": "Ahora podés crear tus castings, recibir postulaciones y gestionar todo desde tu panel."
       }

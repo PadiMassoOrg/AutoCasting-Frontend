@@ -60,8 +60,8 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
 
             {/* Contenido principal */}
             <div className="text-center flex flex-col gap-1 flex-1">
-              <h1 className="text-2xl font-semibold mb-3">{t('onboarding.employer.confirmation_step.header')}</h1>
-              <p className="text-sm">{t('onboarding.employer.confirmation_step.subtitle')}</p>
+              <h1 className="text-2xl font-semibold mb-3">{t('onboarding.employer.step_confirmation.header')}</h1>
+              <p className="text-sm">{t('onboarding.employer.step_confirmation.subtitle')}</p>
               <div className="text-sm mt-4 flex flex-col items-center gap-4">
                 <span className="flex flex-row items-center gap-2">
                   <p className="text-sm">{t('onboarding.common.edit_profile_label_profile')}</p>

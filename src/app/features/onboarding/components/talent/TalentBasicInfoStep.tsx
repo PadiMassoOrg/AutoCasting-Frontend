@@ -81,8 +81,8 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
 
             <div className="w-full mb-4 flex flex-col gap-2 flex-1">
               <div className="text-center mb-4">
-                <h1 className="text-2xl font-semibold mb-3">{t('onboarding.talent.step1.header')}</h1>
-                <p className="text-sm">{t('onboarding.talent.step1.subtitle')}</p>
+                <h1 className="text-2xl font-semibold mb-3">{t('onboarding.talent.step_basic_info.header')}</h1>
+                <p className="text-sm">{t('onboarding.talent.step_basic_info.subtitle')}</p>
               </div>
 
               <FormInputField

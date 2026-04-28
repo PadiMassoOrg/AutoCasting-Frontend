@@ -1,4 +1,4 @@
-import { FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
+import { FormInputField, FormSelectField, Label, ProfessionChip } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -205,19 +205,13 @@ export default function BasicInfoForm({
           {professionsMeta.map((p) => {
             const active = professions.values.includes(p.id);
             return (
-              <span
+              <ProfessionChip
                 key={p.id}
+                label={t(p.stringCode)}
+                selected={active}
                 onClick={() => professions.toggle(p.id)}
-                className={[
-                  'px-4 py-1 rounded-full whitespace-nowrap cursor-pointer bg-transparent border-1',
-                  active
-                    ? 'bg-transparent text-[var(--color-primary-purple)] border--[var(--color-primary-purple)]'
-                    : 'text-[var(--color-secondary-grey-fonts)] border-[var(--color-secondary-outline)]',
-                ].join(' ')}
                 title={t(p.stringCode)}
-              >
-                {t(p.stringCode)}
-              </span>
+              />
             );
           })}
         </div>

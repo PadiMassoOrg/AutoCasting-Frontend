@@ -60,8 +60,8 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
 
             {/* Contenido principal */}
             <div className="text-center flex flex-col gap-1 flex-1">
-              <h1 className="text-2xl font-semibold mb-3">{t('onboarding.talent.confirmation_step.header')}</h1>
-              <p className="text-sm">{t('onboarding.talent.confirmation_step.subtitle')}</p>
+              <h1 className="text-2xl font-semibold mb-3">{t('onboarding.talent.step_confirmation.header')}</h1>
+              <p className="text-sm">{t('onboarding.talent.step_confirmation.subtitle')}</p>
               <div className="text-sm mt-4 flex flex-col items-center gap-4">
                 {t('onboarding.common.edit_profile_label')}
                 <span className="flex flex-row items-center gap-2 ">

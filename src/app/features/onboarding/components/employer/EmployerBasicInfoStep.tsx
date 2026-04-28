@@ -92,8 +92,8 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
 
             <div className="w-full mb-4 flex flex-col gap-2 flex-1">
               <div className="text-center mb-4">
-                <h1 className="text-2xl font-semibold mb-1">{t('onboarding.employer.step1.header')}</h1>
-                <p className="text-sm">{t('onboarding.employer.step1.subtitle')}</p>
+                <h1 className="text-2xl font-semibold mb-1">{t('onboarding.employer.step_basic_info.header')}</h1>
+                <p className="text-sm">{t('onboarding.employer.step_basic_info.subtitle')}</p>
               </div>
 
               <FormInputField
@@ -119,7 +119,7 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
                     taxNumberError ? 'pt-1' : '-mt-[10px]'
                   }`}
                 >
-                  {t('onboarding.employer.step1.tax_disclaimer')}
+                  {t('onboarding.employer.step_basic_info.tax_disclaimer')}
                 </p>
               </div>
             </div>
