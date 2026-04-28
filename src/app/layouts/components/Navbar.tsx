@@ -128,11 +128,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                   {showLabels && t('routes.casting-database')}
                 </span>
               </Link>
-              {isAuth && (
-                <span className="ml-2">
-                  <UserModeSwitcher showLabel showTooltip></UserModeSwitcher>
-                </span>
-              )}
+              {isAuth && <UserModeSwitcher showTooltip></UserModeSwitcher>}
             </div>
           </div>
           <div className="flex flex-row gap-2 items-center text-nowrap">

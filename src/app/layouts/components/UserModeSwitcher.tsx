@@ -61,7 +61,7 @@ function UserModeSwitcher({ showLabel = false, onAfterToggle, showTooltip = fals
   const content = (
     <span
       className={
-        'flex flex-row items-center gap-2 cursor-pointer transition-colors ' +
+        'flex flex-row items-center gap-2 cursor-pointer transition-colors lg:p-2 lg:px-3 ' +
         (hovered ? 'text-[var(--color-primary-purple)]' : 'text-[var(--color-primary-black)]')
       }
       onClick={handleClick}
@@ -75,7 +75,7 @@ function UserModeSwitcher({ showLabel = false, onAfterToggle, showTooltip = fals
 
   if (showTooltip) {
     return (
-      <Tooltip title={t('general.tooltips.switch_mode')} position="bottomLeft">
+      <Tooltip title={modeLabel} position="bottomLeft" nudgeY={-10}>
         {content}
       </Tooltip>
     );

@@ -161,8 +161,8 @@
     "loading": "Cargando...",
     "loading_suggestions": "Cargando sugerencias...",
     "server_err": "Ocurrió un error, intente nuevamente.",
-    "switch_to_talent": "Soy Talento",
-    "switch_to_employer": "Busco Talento"
+    "switch_to_talent": "Cambiar a: Soy Talento",
+    "switch_to_employer": "Cambiar a: Busco Talento"
   },
   "server_error": {
     "auth": {

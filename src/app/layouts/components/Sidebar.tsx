@@ -5,9 +5,9 @@ import { Link, matchPath, useLocation } from 'react-router-dom';
 import { LinkLogo } from '../../shared/components/LinkLogo';
 import { ROUTES } from '../../shared/lib/routes';
 
+import { Icon } from 'autocasting-ui-library-padimasso';
 import clsx from 'clsx';
 import { USER_MODE_TALENT, useUserMode } from '../../context/UserModeContext';
-import { Icon } from 'autocasting-ui-library-padimasso';
 import Waves from '../../shared/icons/wave.svg';
 import UserModeSwitcher from './UserModeSwitcher';
 
@@ -88,7 +88,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                   </Link>
                 </li>
                 {isAuthenticated && (
-                  <li className="mt-1 p-3 px-4">
+                  <li className="p-2 px-4">
                     <UserModeSwitcher showLabel onAfterToggle={onClose} />
                   </li>
                 )}
