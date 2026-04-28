@@ -17,6 +17,7 @@ type Props = {
   enableBulkSelection?: boolean;
   selectedRowKeys?: string[];
   onSelectedRowKeysChange?: (next: string[]) => void;
+  totalCount?: number | null;
 };
 
 const CastingApplicantsDataGrid = ({
@@ -28,6 +29,7 @@ const CastingApplicantsDataGrid = ({
   enableBulkSelection = false,
   selectedRowKeys,
   onSelectedRowKeysChange,
+  totalCount,
 }: Props) => {
   const { t } = useTranslation();
   const { setStatus, isPending } = useCastingApplicationStatusActions();
@@ -187,7 +189,10 @@ const CastingApplicantsDataGrid = ({
         page,
         hasNext,
         onPageChange,
-        pageLabel: ({ page: currentPage }) => `Página ${currentPage + 1}`,
+        pageLabel: ({ page: currentPage }) =>
+          totalCount && totalCount > 0
+            ? `Página ${currentPage + 1} · ${totalCount} total`
+            : `Página ${currentPage + 1}`,
         previousLabel: 'Anterior',
         nextLabel: 'Siguiente',
       }}

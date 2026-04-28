@@ -9,6 +9,7 @@ import { PublicProfileDetailsView } from '../../../public-profile/pages';
 import { useSectionRoles } from '../../employer-castings/hooks/section/useSectionRoles';
 import { useEmployerCastingEditorBySlug } from '../../employer-castings/hooks/useEmployerCastingDetailsBySlug';
 import { CastingApplicantCard } from '../components/Card';
+import CastingApplicantsBulkActionsBar from '../components/Filter/CastingApplicantsBulkActionsBar';
 import CastingApplicantsFilterBar from '../components/Filter/CastingApplicantsFilterBar';
 import CastingApplicantsGallery from '../components/Gallery/CastingApplicantsGallery';
 import CastingApplicantsGalleryGrouped from '../components/Gallery/CastingApplicantsGalleryGrouped';
@@ -17,6 +18,8 @@ import { useEmployerCastingApplicants } from '../hooks/useEmployerCastingApplica
 import { useEmployerCastingApplicantsInfinite } from '../hooks/useEmployerCastingApplicantsInfinite';
 import { useEmployerCastingApplicantsGrouped } from '../hooks/useEmployerCastingApplicantsGrouped';
 import { getEmployerApplicantsByCastingSlug } from '../services/employerCastingApplicantsService';
+import { useCastingApplicationStatusActions } from '../hooks/status/useCastingApplicationStatusActions';
+import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 import type { EmployerCastingApplicantsRoleSliceResponse } from '../types/employerCastingApplicants.types';
 import type { EmployerCastingApplicantsFiltersState } from '../types/employerCastingApplicantsFilter.types';
 
@@ -45,6 +48,8 @@ const EmployerCastingApplicantsPage = () => {
   const [separateByRoles, setSeparateByRoles] = useState(false);
   const [groupedRolesState, setGroupedRolesState] = useState<EmployerCastingApplicantsRoleSliceResponse[]>([]);
   const [loadingRoleIds, setLoadingRoleIds] = useState<Record<string, boolean>>({});
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const { bulkSetStatusByCode, isPending: isBulkStatusPending } = useCastingApplicationStatusActions();
 
   const resolvedViewMode: ApplicantsViewMode = isDesktop ? viewMode : 'table';
   const isGalleryDesktop = isDesktop && resolvedViewMode === 'gallery';
@@ -115,6 +120,16 @@ const EmployerCastingApplicantsPage = () => {
     () => groupedRolesState.reduce((acc, role) => acc + (role.items?.length ?? 0), 0),
     [groupedRolesState]
   );
+  const totalApplicantsCount = tableData?.totalCount ?? applicants.length;
+  const selectedApplicants = useMemo(
+    () => applicants.filter((applicant) => selectedRowKeys.includes(applicant.applicationId)),
+    [applicants, selectedRowKeys]
+  );
+  const selectedApplicantEmails = useMemo(
+    () => selectedApplicants.map((applicant) => applicant.talentEmail),
+    [selectedApplicants]
+  );
+  const isBulkSelectionActive = selectedRowKeys.length > 0;
   const title = applicants.length > 0 ? `${applicants[0].castingTitle}` : '';
 
   const { data: castingEditor } = useEmployerCastingEditorBySlug(slug);
@@ -195,21 +210,52 @@ const EmployerCastingApplicantsPage = () => {
     [filters, groupedPerRoleSize, groupedRolesState, loadingRoleIds, orderBy, shouldUseGroupedGallery, slug]
   );
 
+  const handleSelectedRowKeysChange = useCallback(
+    (nextSelectedVisibleKeys: string[]) => {
+      const visibleIdsSet = new Set(applicants.map((applicant) => applicant.applicationId));
+      setSelectedRowKeys((previous) => {
+        const withoutCurrentPage = previous.filter((id) => !visibleIdsSet.has(id));
+        const nextVisibleUnique = Array.from(new Set(nextSelectedVisibleKeys));
+        return [...withoutCurrentPage, ...nextVisibleUnique];
+      });
+    },
+    [applicants]
+  );
+
+  const handleBulkStatusSelect = useCallback(
+    async (nextStatus: SiteMetadataObject) => {
+      if (!selectedRowKeys.length) return;
+      await bulkSetStatusByCode(nextStatus.stringCode, { applicationIds: selectedRowKeys, castingSlug: slug });
+      setSelectedRowKeys([]);
+    },
+    [bulkSetStatusByCode, selectedRowKeys, slug]
+  );
+
   return (
     <DashboardShell>
       <DashboardSection>
         <SectionTitle title={t('employer_casting_applicants.page.title') + ' ' + title} />
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-h-[56px]">
           <div className="flex-1 min-w-0">
-            <CastingApplicantsFilterBar
-              filters={filters}
-              onFiltersChange={setFilters}
-              roleOptions={roleOptions}
-              isGalleryMode={resolvedViewMode === 'gallery'}
-              separateByRoles={separateByRoles}
-              onSeparateByRolesChange={setSeparateByRoles}
-            />
+            {isBulkSelectionActive ? (
+              <CastingApplicantsBulkActionsBar
+                selectedCount={selectedRowKeys.length}
+                selectedEmails={selectedApplicantEmails}
+                onBulkStatusSelect={handleBulkStatusSelect}
+                onClearSelection={() => setSelectedRowKeys([])}
+                isPending={isBulkStatusPending}
+              />
+            ) : (
+              <CastingApplicantsFilterBar
+                filters={filters}
+                onFiltersChange={setFilters}
+                roleOptions={roleOptions}
+                isGalleryMode={resolvedViewMode === 'gallery'}
+                separateByRoles={separateByRoles}
+                onSeparateByRolesChange={setSeparateByRoles}
+              />
+            )}
           </div>
           {isDesktop && (
             <IconViewSwitcher
@@ -261,6 +307,11 @@ const EmployerCastingApplicantsPage = () => {
               onPageChange={setPage}
               onOpenDetails={handleOpenDetails}
               enableBulkSelection
+              selectedRowKeys={selectedRowKeys.filter((id) =>
+                applicants.some((applicant) => applicant.applicationId === id)
+              )}
+              onSelectedRowKeysChange={handleSelectedRowKeysChange}
+              totalCount={totalApplicantsCount}
             />
           </div>
         ) : (

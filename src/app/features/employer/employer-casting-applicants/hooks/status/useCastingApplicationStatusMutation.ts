@@ -5,22 +5,20 @@ import { handleBackendActionError } from '../../../../../shared/utils/backendErr
 import {
   EMPLOYER_CASTING_APPLICANTS_CACHE_KEY,
   blankApplication,
+  bulkSetApplicationsStatus,
   notProceedingApplication,
   preselectApplication,
   selectApplication,
   viewApplication,
 } from '../../services/employerCastingApplicantsService';
 
-export type CastingApplicationStatusAction = 'preselect' | 'select' | 'view' | 'notProceeding' | 'blank';
+export type CastingApplicationStatusAction = 'preselect' | 'select' | 'view' | 'notProceeding' | 'blank' | 'bulk';
 
-type Vars = { applicationId: string; castingSlug: string };
-
-const mutationByAction: Record<CastingApplicationStatusAction, (v: { applicationId: string }) => Promise<any>> = {
-  preselect: preselectApplication,
-  select: selectApplication,
-  view: viewApplication,
-  notProceeding: notProceedingApplication,
-  blank: blankApplication,
+type Vars = {
+  castingSlug: string;
+  applicationId?: string;
+  applicationIds?: string[];
+  applicationStatus?: string;
 };
 
 export const useCastingApplicationStatusMutation = (action: CastingApplicationStatusAction) => {
@@ -29,7 +27,31 @@ export const useCastingApplicationStatusMutation = (action: CastingApplicationSt
   const queryClient = useQueryClient();
 
   return useMutation<any, unknown, Vars>({
-    mutationFn: ({ applicationId }) => mutationByAction[action]({ applicationId }),
+    mutationFn: (vars) => {
+      if (action === 'bulk') {
+        return bulkSetApplicationsStatus({
+          applicationIds: vars.applicationIds ?? [],
+          applicationStatus: vars.applicationStatus ?? '',
+        });
+      }
+
+      if (!vars.applicationId) throw new Error('applicationId is required');
+
+      switch (action) {
+        case 'preselect':
+          return preselectApplication({ applicationId: vars.applicationId });
+        case 'select':
+          return selectApplication({ applicationId: vars.applicationId });
+        case 'view':
+          return viewApplication({ applicationId: vars.applicationId });
+        case 'notProceeding':
+          return notProceedingApplication({ applicationId: vars.applicationId });
+        case 'blank':
+          return blankApplication({ applicationId: vars.applicationId });
+        default:
+          return Promise.resolve();
+      }
+    },
     onSuccess: async (_data, variables) => {
       await queryClient.invalidateQueries({
         queryKey: [...EMPLOYER_CASTING_APPLICANTS_CACHE_KEY, variables.castingSlug],

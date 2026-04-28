@@ -117,4 +117,5 @@ export const API_ROUTES = {
     `${API_ROUTES.EMPLOYER_CASTING_APPLICATIONS}/${applicationId}/not-proceeding`,
   VIEW_APPLICATION: (applicationId: string) => `${API_ROUTES.EMPLOYER_CASTING_APPLICATIONS}/${applicationId}/view`,
   BLANK_APPLICATION: (applicationId: string) => `${API_ROUTES.EMPLOYER_CASTING_APPLICATIONS}/${applicationId}/blank`,
+  BULK_APPLICATION_STATUS: '/employer/applications/bulk/status',
 };

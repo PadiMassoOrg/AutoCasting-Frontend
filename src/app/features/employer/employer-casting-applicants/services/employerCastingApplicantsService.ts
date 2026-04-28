@@ -141,3 +141,17 @@ export async function blankApplication({ applicationId }: { applicationId: strin
   const res = await api.post(API_ROUTES.BLANK_APPLICATION(applicationId));
   return res.data;
 }
+
+export async function bulkSetApplicationsStatus({
+  applicationIds,
+  applicationStatus,
+}: {
+  applicationIds: string[];
+  applicationStatus: string;
+}) {
+  const res = await api.post(API_ROUTES.BULK_APPLICATION_STATUS, {
+    applicationIds,
+    applicationStatus,
+  });
+  return res.data;
+}

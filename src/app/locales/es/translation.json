@@ -1114,6 +1114,11 @@
       "title": "Postulantes",
       "empty_page": "Aún no hay postulantes para este casting."
     },
+    "bulk": {
+      "selected": "postulantes seleccionados",
+      "change_status": "Cambiar estado a:",
+      "select": "Seleccionar"
+    },
     "applicant_card": {
       "actings": "Acting",
       "audio": "Audio",

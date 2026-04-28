@@ -32,9 +32,15 @@ export function useCastingApplicationStatusActions() {
   const view = useCastingApplicationStatusMutation('view');
   const notProceeding = useCastingApplicationStatusMutation('notProceeding');
   const blank = useCastingApplicationStatusMutation('blank');
+  const bulk = useCastingApplicationStatusMutation('bulk');
 
   const isPending =
-    preselect.isPending || select.isPending || view.isPending || notProceeding.isPending || blank.isPending;
+    preselect.isPending ||
+    select.isPending ||
+    view.isPending ||
+    notProceeding.isPending ||
+    blank.isPending ||
+    bulk.isPending;
 
   const setStatus = async (next: SiteMetadataObject, params: SetStatusParams) => {
     const action = actionByStatusCode[next.stringCode];
@@ -66,9 +72,19 @@ export function useCastingApplicationStatusActions() {
     await setStatus({ id: stringCode, stringCode }, params);
   };
 
+  const bulkSetStatusByCode = async (stringCode: string, params: { applicationIds: string[]; castingSlug: string }) => {
+    if (!allowedStatusCodes.includes(stringCode)) return;
+    await bulk.mutateAsync({
+      applicationIds: params.applicationIds,
+      castingSlug: params.castingSlug,
+      applicationStatus: stringCode,
+    });
+  };
+
   return {
     setStatus,
     setStatusByCode,
+    bulkSetStatusByCode,
     isPending,
   };
 }
