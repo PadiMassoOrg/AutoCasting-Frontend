@@ -61,7 +61,7 @@ export default function AuthenticationPage() {
         </article>
 
         {/* Forms */}
-        <article className="w-full h-full m-auto flex flex-col justify-center sm:max-w-md xl:max-w-lg lg:bg-white lg:px-8 lg:rounded-xl lg:shadow-[0_0_8px_3px_rgba(0,0,0,0.06)] lg:min-h-[720px]">
+        <article className="w-full h-auto m-auto flex flex-col justify-center sm:max-w-md xl:max-w-lg lg:bg-white lg:px-8 lg:rounded-xl lg:shadow-[0_0_8px_3px_rgba(0,0,0,0.06)] lg:min-h-[720px]">
           <div className="flex flex-col gap-4 items-center pb-6">
             <LinkLogo />
           </div>
