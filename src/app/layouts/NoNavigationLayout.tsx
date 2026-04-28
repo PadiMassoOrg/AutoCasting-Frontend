@@ -6,11 +6,9 @@ export default function NoNavigationLayout({ children }: LayoutProps) {
   return (
     <div
       className={`
-        fixed inset-0 z-0
-        w-[100svw] h-[100svh]
-        lg:w-[100dvw] lg:h-[100dvh]
-        overflow-x-hidden overflow-y-auto
-        overscroll-y-contain
+        relative z-0
+        w-full min-h-[100svh]
+        lg:min-h-[100dvh]
         bg-[var(--color-primary-white)] 
       `}
       style={{
@@ -21,8 +19,10 @@ export default function NoNavigationLayout({ children }: LayoutProps) {
         scrollbarGutter: 'stable both-edges',
       }}
     >
-      <div className="w-full min-h-full flex justify-center items-start py-4">
-        <div className="w-[95%] max-w-[1366px] p-4 lg:p-0">{children}</div>
+      <div className="w-full min-h-[100svh] lg:min-h-[100dvh] flex">
+        <div className="w-[95%] max-w-[1366px] p-4 lg:p-0 m-auto">
+          <div className="w-full my-auto">{children}</div>
+        </div>
       </div>
     </div>
   );
