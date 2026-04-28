@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { MultiSelectDropdown } from '../../../../../talent-database/components/Filter';
 import { useCachedSiteMetadataSlice } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
+import { usePendingAction } from 'autocasting-ui-library-padimasso';
 
 export function NewSkillModal({
   initial,
@@ -16,6 +17,7 @@ export function NewSkillModal({
 }) {
   const { t } = useTranslation();
   const [selectedIds, setSelectedIds] = useState<string[]>(() => initial.map((s) => s.id));
+  const { isPending, execute } = usePendingAction();
   const skillsRaw = (useCachedSiteMetadataSlice('skills') as SiteMetadataObject[] | undefined) ?? [];
 
   const skillsByCat = useMemo(() => {
@@ -43,6 +45,8 @@ export function NewSkillModal({
     setSelectedIds(Array.from(new Set([...rest, ...nextIds])));
   };
 
+  const handleSave = async () => execute(() => onSave(selectedIds));
+
   return (
     <article className="flex flex-col gap-2">
       {skillsCats.map(({ catCode, list, idSet }) => {
@@ -68,7 +72,9 @@ export function NewSkillModal({
         <Button variant="outline" onClick={onCancel}>
           {t('buttons.cancel')}
         </Button>
-        <Button onClick={() => onSave(selectedIds)}>{t('buttons.save')}</Button>
+        <Button onClick={handleSave} loading={isPending}>
+          {t('buttons.save')}
+        </Button>
       </div>
     </article>
   );

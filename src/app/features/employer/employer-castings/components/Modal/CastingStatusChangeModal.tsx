@@ -32,7 +32,7 @@ const CastingStatusChangeModal = ({
       <Separator className="opacity-20 my-7" />
 
       <div className="flex flex-row gap-4">
-        <Button variant="outline" onClick={onCancel} disabled={isPending} className="min-w-[180px]">
+        <Button variant="outline" onClick={onCancel} className="min-w-[180px]">
           {t('buttons.cancel')}
         </Button>
 

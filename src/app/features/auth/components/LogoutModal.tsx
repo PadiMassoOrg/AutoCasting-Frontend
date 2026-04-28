@@ -1,13 +1,20 @@
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
+import { usePendingAction } from 'autocasting-ui-library-padimasso';
 
 type Props = {
-  onLogout: () => void;
+  onLogout: () => void | Promise<void>;
   onCancel: () => void;
 };
 
 const LogoutModal = ({ onLogout, onCancel }: Props) => {
   const { t } = useTranslation();
+  const { isPending, execute } = usePendingAction();
+
+  const handleLogout = async () => {
+    await execute(onLogout);
+  };
+
   return (
     <article className="flex flex-col gap-4">
       <p className="text-base">{t('auth.logout.modal_text')}</p>
@@ -17,7 +24,9 @@ const LogoutModal = ({ onLogout, onCancel }: Props) => {
         <Button variant="outline" onClick={onCancel}>
           {t('buttons.cancel')}
         </Button>
-        <Button onClick={onLogout}>{t('buttons.accept')}</Button>
+        <Button onClick={handleLogout} loading={isPending}>
+          {t('buttons.accept')}
+        </Button>
       </div>
     </article>
   );

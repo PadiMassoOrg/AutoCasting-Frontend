@@ -1,6 +1,7 @@
 import { Button, FormInputField, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePendingAction } from 'autocasting-ui-library-padimasso';
 import { getCastingApplicationSchema, type CastingApplicationFormValues } from '../../schemas/castingApplicationSchema';
 import type { CastingRequirement } from '../../types/publicCasting.types';
 import type { CastingApplicationRequest } from '../../types/requests';
@@ -8,7 +9,7 @@ import type { CastingApplicationRequest } from '../../types/requests';
 type Props = {
   requirements: CastingRequirement[];
   onCancel: () => void;
-  onApply: (body: CastingApplicationRequest) => void;
+  onApply: (body: CastingApplicationRequest) => void | Promise<void>;
 };
 
 type DraftSubmission = {
@@ -34,6 +35,7 @@ const makeInitial = (requirements: CastingRequirement[]): DraftForm => ({
 const CastingApplicationRequirementsModal = ({ requirements, onCancel, onApply }: Props) => {
   const { t } = useTranslation();
   const schema = useMemo(() => getCastingApplicationSchema(t, requirements), [t, requirements]);
+  const { isPending, execute } = usePendingAction();
 
   const [form, setForm] = useState<DraftForm>(() => makeInitial(requirements));
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -94,7 +96,7 @@ const CastingApplicationRequirementsModal = ({ requirements, onCancel, onApply }
       })),
     };
 
-    onApply(body);
+    await execute(() => onApply(body));
   };
 
   return (
@@ -157,7 +159,9 @@ const CastingApplicationRequirementsModal = ({ requirements, onCancel, onApply }
         <Button variant="primaryOutline" onClick={onCancel}>
           {t('general.back')}
         </Button>
-        <Button onClick={validateAndApply}>{t('general.apply')}</Button>
+        <Button onClick={validateAndApply} loading={isPending}>
+          {t('general.apply')}
+        </Button>
       </div>
     </article>
   );
