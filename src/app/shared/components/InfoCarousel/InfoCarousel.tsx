@@ -43,7 +43,7 @@ export default function InfoCarousel<K extends PillKeyBase, D>({
 
   return (
     <section className={`w-full min-w-0 h-full min-h-0 flex flex-col gap-3 ${className ?? ''}`}>
-      <Pills items={pills} value={active} onChange={setActive} />
+      <Pills items={pills} value={active} onChange={setActive} listClassName="pb-1" />
 
       <div className={`w-full flex-1 min-h-0 overflow-hidden rounded-xl ${panelWrapperClassName ?? ''}`}>
         <div
