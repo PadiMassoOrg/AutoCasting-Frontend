@@ -1,4 +1,4 @@
-import { Button, ChevronUpDown, Chip, Separator } from 'autocasting-ui-library-padimasso';
+import { Button, ChevronUpDown, TagChip, Separator } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatBooleanLabeled, formatCurrencyAmount } from '../../../shared/utils/formatUtils';
@@ -53,7 +53,7 @@ const PublicRoleCard = ({ data, showApplyButton = false, applyDisabled = false, 
         </span>
         <div className="flex flex-row flex-wrap gap-2">
           {headerChips.map((chip) => (
-            <Chip key={chip.key} label={t(chip.label)} />
+            <TagChip key={chip.key} label={t(chip.label)} />
           ))}
         </div>
       </div>
@@ -71,7 +71,7 @@ const PublicRoleCard = ({ data, showApplyButton = false, applyDisabled = false, 
               </h2>
               <div className="flex flex-row flex-wrap gap-2">
                 {characteristicsChips.map((chip) => (
-                  <Chip key={chip.key} label={t(chip.label)} />
+                  <TagChip key={chip.key} label={t(chip.label)} />
                 ))}
               </div>
             </div>
@@ -82,7 +82,7 @@ const PublicRoleCard = ({ data, showApplyButton = false, applyDisabled = false, 
               <h2 className="text-sm font-semibold">{t('casting.role_section.role.skills.skills')}:</h2>
               <div className="flex flex-row flex-wrap gap-2">
                 {skillsChips.map((chip) => (
-                  <Chip key={chip.key} label={t(chip.label)} />
+                  <TagChip key={chip.key} label={t(chip.label)} />
                 ))}
               </div>
             </div>

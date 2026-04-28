@@ -1,4 +1,4 @@
-import { Button, ChevronRight, Chip, Separator } from 'autocasting-ui-library-padimasso';
+import { Button, ChevronRight, TagChip, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useMedia, XL_SCREEN_SIZE } from '../../../shared/hooks/useMedia';
@@ -32,7 +32,7 @@ const CastingRolePublicCard = ({ item }: Props) => {
 
   const genderRenderer = (stringcode: string) => {
     return (
-      <Chip
+      <TagChip
         label={stringcode === GENDER_INDISTINCT ? t('profile.basic_info.gender') + ': ' + t(stringcode) : t(stringcode)}
       />
     );
@@ -53,17 +53,17 @@ const CastingRolePublicCard = ({ item }: Props) => {
         </div>
 
         <div className="flex flex-row gap-1 items-center">
-          <Chip label={t(projectType.stringCode)} />
-          <Chip label={t(castingModality.stringCode)} />
+          <TagChip label={t(projectType.stringCode)} />
+          <TagChip label={t(castingModality.stringCode)} />
         </div>
         <div className="flex flex-row gap-1 items-center flex-wrap">
           {professions.slice(-3).map((p) => {
-            return <Chip label={t(p.stringCode)} key={p.id} />;
+            return <TagChip label={t(p.stringCode)} key={p.id} />;
           })}
 
-          <Chip label={t(roleType.stringCode)} />
+          <TagChip label={t(roleType.stringCode)} />
           {genderRenderer(gender.stringCode)}
-          <Chip label={formatAgeRange(ageMin, ageMax, t)} />
+          <TagChip label={formatAgeRange(ageMin, ageMax, t)} />
         </div>
         <Separator className="opacity-20"></Separator>
         <Button asChild variant="primary">
@@ -88,18 +88,18 @@ const CastingRolePublicCard = ({ item }: Props) => {
             </div>
           </div>
           <div className="text-nowrap flex flex-row gap-1 items-center">
-            <Chip label={t(projectType.stringCode)} />
-            <Chip label={t(castingModality.stringCode)} />
+            <TagChip label={t(projectType.stringCode)} />
+            <TagChip label={t(castingModality.stringCode)} />
           </div>
         </div>
         <div className="flex flex-row items-end justify-between">
           <div className="flex flex-row gap-1 items-center">
             {professions.slice(-3).map((p) => {
-              return <Chip label={t(p.stringCode)} key={p.id} />;
+              return <TagChip label={t(p.stringCode)} key={p.id} />;
             })}
-            <Chip label={t(roleType.stringCode)} />
+            <TagChip label={t(roleType.stringCode)} />
             {genderRenderer(gender.stringCode)}
-            <Chip label={formatAgeRange(ageMin, ageMax, t)} />
+            <TagChip label={formatAgeRange(ageMin, ageMax, t)} />
           </div>
           <Button asChild variant="primary" className="max-w-[180px]">
             <Link to={`${ROUTES.PUBLIC_CASTING}/${defaultCode}/roles/${id}`}>

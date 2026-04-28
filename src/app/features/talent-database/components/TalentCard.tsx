@@ -1,4 +1,4 @@
-import { ButtonRow, Chip, Icon } from 'autocasting-ui-library-padimasso';
+import { ButtonRow, TagChip, Icon } from 'autocasting-ui-library-padimasso';
 import type { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../../../app/shared/lib/routes';
@@ -74,7 +74,7 @@ export default function TalentCard({ item, onClick }: Props) {
         <h3 className="text-2xl sm:text-xl font-semibold leading-tight line-clamp-1">{stageName}</h3>
         <div className="flex flex-wrap gap-2 mt-1">
           {displayedProfessions.map((profession) => (
-            <Chip key={profession.id} label={t(profession.stringCode ?? '')}></Chip>
+            <TagChip key={profession.id} label={t(profession.stringCode ?? '')}></TagChip>
           ))}
         </div>
       </div>

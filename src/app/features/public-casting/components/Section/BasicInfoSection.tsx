@@ -1,4 +1,4 @@
-import { Chip, Icon } from 'autocasting-ui-library-padimasso';
+import { TagChip, Icon } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import type { CastingBasicInfoSection } from '../../types/publicCasting.types';
 
@@ -18,8 +18,8 @@ const BasicInfoSection = ({ data }: { data: CastingBasicInfoSection }) => {
           <span></span>
         </div>
         <div className="flex flex-row items-center gap-1">
-          <Chip label={t(data.projectType!.stringCode!)} />
-          <Chip label={t(data.castingModality!.stringCode!)} />
+          <TagChip label={t(data.projectType!.stringCode!)} />
+          <TagChip label={t(data.castingModality!.stringCode!)} />
         </div>
       </article>
       {/* Location, Deadline, Shooting */}

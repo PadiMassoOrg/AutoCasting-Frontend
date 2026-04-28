@@ -1,4 +1,4 @@
-import { Chip, Separator } from 'autocasting-ui-library-padimasso';
+import { TagChip, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
@@ -76,7 +76,7 @@ function GroupedSkills({ skills, onRemove }: { skills: SiteMetadataObject[]; onR
               {isOpen && (
                 <div id={`skills-${cat}`} className="mt-3 flex flex-wrap gap-2">
                   {list.map((s) => (
-                    <Chip key={s.id} label={t(s.stringCode)} onRemove={() => onRemove && onRemove(s.id)}></Chip>
+                    <TagChip key={s.id} label={t(s.stringCode)} onRemove={() => onRemove && onRemove(s.id)}></TagChip>
                   ))}
                 </div>
               )}

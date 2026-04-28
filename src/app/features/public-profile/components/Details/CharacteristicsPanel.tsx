@@ -1,4 +1,4 @@
-import { Chip, Separator } from 'autocasting-ui-library-padimasso';
+import { TagChip, Separator } from 'autocasting-ui-library-padimasso';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Characteristics } from '../../../talent/talent-profile-edit/types/talentProfile.types';
@@ -54,7 +54,7 @@ export default function CharacteristicsPanel({ data }: { data: Characteristics }
             {dividerBefore.has(key) && <Separator className="opacity-20 my-1" />}
             <div className="flex items-center justify-between">
               <span className="font-semibold text-base lg:text-[14px]">{label}:</span>
-              <Chip label={t(value)} />
+              <TagChip label={t(value)} />
             </div>
           </React.Fragment>
         );

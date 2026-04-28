@@ -1,4 +1,4 @@
-import { Chip, Icon } from 'autocasting-ui-library-padimasso';
+import { TagChip, Icon } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
 import { SectionCard } from '../../../../../shared/components/Section';
@@ -62,14 +62,14 @@ const EmployerCastingRoleCard = ({ data }: { data: EmployerCastingRoleCardRespon
         </div>
       </div>
       <div className="flex flex-row items-center flex-wrap gap-2 mt-4">
-        <Chip label={t(gender.stringCode)}></Chip>
-        <Chip label={formatAgeRange(ageMin, ageMax, t)}></Chip>
+        <TagChip label={t(gender.stringCode)}></TagChip>
+        <TagChip label={formatAgeRange(ageMin, ageMax, t)}></TagChip>
         {professions.map((p) => (
-          <Chip label={t(p.stringCode)} key={p.id}></Chip>
+          <TagChip label={t(p.stringCode)} key={p.id}></TagChip>
         ))}
-        <Chip label={t(roleType.stringCode)}></Chip>
+        <TagChip label={t(roleType.stringCode)}></TagChip>
         {skills.map((s) => (
-          <Chip label={t(s.categoryStringCode!) + ': ' + t(s.stringCode)} key={s.id}></Chip>
+          <TagChip label={t(s.categoryStringCode!) + ': ' + t(s.stringCode)} key={s.id}></TagChip>
         ))}
       </div>
     </SectionCard>

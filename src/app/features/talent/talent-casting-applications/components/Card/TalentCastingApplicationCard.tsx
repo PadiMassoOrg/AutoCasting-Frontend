@@ -1,4 +1,4 @@
-import { Chip, Icon } from 'autocasting-ui-library-padimasso';
+import { TagChip, Icon } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { CastingStatusChip } from '../../../../../shared/components/Chip';
 import { SectionCard } from '../../../../../shared/components/Section';
@@ -40,8 +40,8 @@ const TalentCastingApplicationCard = ({ data }: { data: TalentCastingApplication
         </div>
         {/* Project Type and Modality */}
         <div className="flex flex-row items-center gap-2 flex-wrap">
-          <Chip label={t(castingProjectType.stringCode)}></Chip>
-          <Chip label={formatCastingModalityText(castingModality.stringCode, t)}></Chip>
+          <TagChip label={t(castingProjectType.stringCode)}></TagChip>
+          <TagChip label={formatCastingModalityText(castingModality.stringCode, t)}></TagChip>
         </div>
         {/* Location and Dates */}
         <div className="flex flex-col gap-2">
@@ -64,8 +64,8 @@ const TalentCastingApplicationCard = ({ data }: { data: TalentCastingApplication
         </div>
         {/* Role */}
         <div className="flex flex-row gap-2">
-          <Chip label={t(roleType.stringCode)}></Chip>
-          <Chip label={t(gender.stringCode)}></Chip>
+          <TagChip label={t(roleType.stringCode)}></TagChip>
+          <TagChip label={t(gender.stringCode)}></TagChip>
         </div>
       </div>
     </SectionCard>

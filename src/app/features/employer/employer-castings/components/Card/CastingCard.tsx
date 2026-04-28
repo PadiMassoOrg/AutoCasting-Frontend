@@ -1,4 +1,4 @@
-import { Chip, OverflowMenu, Separator } from 'autocasting-ui-library-padimasso';
+import { TagChip, OverflowMenu, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../../../../context/ModalContext';
@@ -135,7 +135,7 @@ const CastingCard = ({
 
         <div className="w-full flex flex-row items-center justify-between">
           <p className="text-(--color-secondary-grey-fonts)">{t('casting.basic_info.project_type')}:</p>
-          {projectType?.stringCode ? <Chip label={t(projectType.stringCode)} /> : <span>-</span>}
+          {projectType?.stringCode ? <TagChip label={t(projectType.stringCode)} /> : <span>-</span>}
         </div>
       </div>
     </SectionCard>

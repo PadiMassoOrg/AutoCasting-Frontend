@@ -1,4 +1,4 @@
-import { Button, Label, ProfessionChip, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
+import { Button, ChoiceChip, Label, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
@@ -98,7 +98,7 @@ const TalentProfessionStep = ({
                 <Label className="text-base font-semibold">{t('profile.basic_info.profession')}</Label>
                 <div className="flex flex-wrap gap-2">
                   {professionsMeta.map((profession) => (
-                    <ProfessionChip
+                    <ChoiceChip
                       className="bg-white"
                       key={profession.id}
                       label={t(profession.stringCode)}

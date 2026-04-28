@@ -1,4 +1,4 @@
-import { Chip, Icon } from 'autocasting-ui-library-padimasso';
+import { TagChip, Icon } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
 import type { RadioOption } from '../../../../../shared/components/Form/RadioGroupField';
@@ -83,10 +83,10 @@ const EmployerCastingRequirementCard = ({
 
             <div className="flex flex-row gap-2 items-center shrink-0">
               {requiresAudio ? (
-                <Chip label={t('employer_castings.dashboard.requirements.requirement.audio_true')} />
+                <TagChip label={t('employer_castings.dashboard.requirements.requirement.audio_true')} />
               ) : null}
               {requiresVideo ? (
-                <Chip label={t('employer_castings.dashboard.requirements.requirement.video_true')} />
+                <TagChip label={t('employer_castings.dashboard.requirements.requirement.video_true')} />
               ) : null}
             </div>
           </div>

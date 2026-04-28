@@ -1,4 +1,4 @@
-import { FormInputField, FormSelectField, Label, ProfessionChip } from 'autocasting-ui-library-padimasso';
+import { ChoiceChip, FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -205,7 +205,7 @@ export default function BasicInfoForm({
           {professionsMeta.map((p) => {
             const active = professions.values.includes(p.id);
             return (
-              <ProfessionChip
+              <ChoiceChip
                 key={p.id}
                 label={t(p.stringCode)}
                 selected={active}
