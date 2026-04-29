@@ -65,10 +65,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
   );
 
   useEffect(() => {
-    setRange((prev) => {
-      if (!prev?.from && !prev?.to) return savedRange;
-      return prev;
-    });
+    setRange(savedRange);
   }, [data.id, savedRange?.from?.getTime(), savedRange?.to?.getTime()]);
 
   useEffect(() => {
@@ -224,16 +221,6 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
     [autosave, data.id]
   );
 
-  const handleRangeClear = useCallback(() => {
-    setRange(undefined);
-
-    autosave.immediate({
-      id: data.id,
-      shootingStartDate: null,
-      shootingEndDate: null,
-    });
-  }, [autosave, data.id]);
-
   const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
 
   return (
@@ -370,11 +357,10 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         value={range}
         onChange={setRange}
         onCommit={handleRangeCommit}
-        onClear={handleRangeClear}
         required
       />
 
-      <div className="min-h-[5px]"></div>
+      <div className="min-h-[25px]"></div>
 
       <TextareaField
         id="description"

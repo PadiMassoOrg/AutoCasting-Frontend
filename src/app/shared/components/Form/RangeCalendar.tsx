@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useEffect } from 'react';
-import { DayPicker, formatCaption, type DateRange, type OnSelectHandler } from 'react-day-picker';
+import { DayPicker, formatCaption, type DateRange } from 'react-day-picker';
+import { useTranslation } from 'react-i18next';
 import { DATE_FNS_LOCALE_BY_LANG, useLanguage, WEEKDAYS_SHORT_BY_LANG } from '../../../context/LanguageContext';
 
 type RangeCalendarProps = {
@@ -10,15 +11,10 @@ type RangeCalendarProps = {
   onCommit?: (from: Date, to: Date) => void;
   weekStartsOn?: 0 | 1;
   className?: string;
-  onClear?: () => void;
-  clearable?: boolean;
-
   required?: boolean;
 };
 
 const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
-const toStartOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-
 const getTargetMonth = (range?: DateRange) => {
   if (range?.from) return startOfMonth(range.from);
   if (range?.to) return startOfMonth(range.to);
@@ -32,8 +28,6 @@ export function RangeCalendar({
   onCommit,
   weekStartsOn = 1,
   className,
-  onClear,
-  clearable = true,
   required = false,
 }: RangeCalendarProps) {
   const { lang } = useLanguage();
@@ -65,25 +59,16 @@ export function RangeCalendar({
     });
   }, [value?.from?.getTime(), value?.to?.getTime()]);
 
-  const handleSelect: OnSelectHandler<DateRange | undefined> = React.useCallback(
-    (next, triggerDate) => {
-      let resolved = next;
-
-      // If a full range is already selected, start a new range from the next clicked day.
-      if (value?.from && value?.to && triggerDate) {
-        resolved = { from: toStartOfDay(triggerDate), to: undefined };
-      }
-
-      onChange(resolved);
-
-      const target = getTargetMonth(resolved);
+  const handleSelect = React.useCallback(
+    (next: DateRange | undefined) => {
+      onChange(next);
+      const target = getTargetMonth(next);
       if (month.getFullYear() !== target.getFullYear() || month.getMonth() !== target.getMonth()) {
         setMonth(target);
       }
-
-      if (resolved?.from && resolved?.to) onCommit?.(resolved.from, resolved.to);
+      if (next?.from && next?.to) onCommit?.(next.from, next.to);
     },
-    [onChange, onCommit, month, value?.from?.getTime(), value?.to?.getTime()]
+    [onChange, onCommit, month]
   );
 
   return (
@@ -99,46 +84,48 @@ export function RangeCalendar({
         </div>
       ) : null}
 
-      <DayPicker
-        mode="range"
-        navLayout="around"
-        weekStartsOn={weekStartsOn}
-        month={month}
-        onMonthChange={setMonth}
-        selected={value}
-        onSelect={handleSelect}
-        numberOfMonths={1}
-        locale={locale}
-        startMonth={startMonthLimit}
-        endMonth={endMonthLimit}
-        disabled={[{ before: minDate }, { after: maxDate }]}
-        formatters={{
-          formatWeekdayName: (date) => weekdayLabels[date.getDay()],
-          formatCaption: (date, options, dateLib) => {
-            const s = formatCaption(date, options, dateLib);
-            return s ? s[0].toLocaleUpperCase(lang) + s.slice(1) : s;
-          },
-        }}
-        className="w-full p-2 bg-(--color-secondary-white) rounded-2xl border border-(--color-secondary-outline) overflow-hidden"
-        styles={{
-          root: { width: '100%' },
-          months: { width: '100%' },
-          month: { width: '100%' },
-          month_grid: { width: '100%', tableLayout: 'fixed' },
-        }}
-      />
-
-      {clearable && (value?.from || value?.to) ? (
-        <button
-          type="button"
-          onClick={onClear}
-          className="min-h-[25px] cursor-pointer text-sm underline font-light text-start p-2"
-        >
-          Limpiar
-        </button>
-      ) : (
-        <div className="min-h-6.25" />
-      )}
+      <div className="w-full bg-(--color-secondary-white) rounded-2xl border border-(--color-secondary-outline) overflow-hidden">
+        <DayPicker
+          mode="range"
+          navLayout="around"
+          weekStartsOn={weekStartsOn}
+          month={month}
+          onMonthChange={setMonth}
+          selected={value}
+          onSelect={handleSelect}
+          resetOnSelect
+          numberOfMonths={1}
+          locale={locale}
+          startMonth={startMonthLimit}
+          endMonth={endMonthLimit}
+          disabled={[{ before: minDate }, { after: maxDate }]}
+          formatters={{
+            formatWeekdayName: (date) => weekdayLabels[date.getDay()],
+            formatCaption: (date, options, dateLib) => {
+              const s = formatCaption(date, options, dateLib);
+              return s ? s[0].toLocaleUpperCase(lang) + s.slice(1) : s;
+            },
+          }}
+          className="w-full p-2"
+          classNames={{
+            chevron: 'rdp-chevron fill-[var(--color-primary-black)]',
+            month_caption: 'rdp-month_caption text-sm font-semibold',
+            caption_label: 'rdp-caption_label text-sm font-semibold',
+          }}
+          styles={{
+            root: { width: '100%' },
+            months: { width: '100%' },
+            month: { width: '100%' },
+            month_grid: { width: '100%', tableLayout: 'fixed' },
+          }}
+          style={
+            {
+              '--rdp-accent-color': 'var(--color-primary-purple)',
+              '--rdp-accent-background-color': 'var(--color-secondary-offwhite)',
+            } as React.CSSProperties
+          }
+        />
+      </div>
     </div>
   );
 }
