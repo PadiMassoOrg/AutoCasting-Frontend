@@ -56,13 +56,6 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
 
   const url = `${window.location.origin}/profile/${profile?.publicSlug ?? ''}`;
 
-  const loadingHeaderLeft = (
-    <div className="flex flex-col min-w-0">
-      <h2 className="text-2xl font-bold truncate invisible">placeholder</h2>
-      <span className="flex flex-wrap items-center text-sm text-(--color-secondary-grey) invisible">placeholder</span>
-    </div>
-  );
-
   const loadedHeaderLeft = (
     <div className="flex flex-col min-w-0">
       <h2 className="text-2xl font-bold truncate">{basicInfo?.stageName}</h2>
@@ -72,8 +65,6 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
     </div>
   );
 
-  const headerLeft = isLoading ? loadingHeaderLeft : loadedHeaderLeft;
-
   const headerRight = (
     <Link aria-label={t('profile.share.share_profile')} className="cursor-pointer" to={url}>
       {!isLoading && <Icon name="open" variant="primary" />}
@@ -81,7 +72,14 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
   );
 
   return (
-    <DetailsView open={open} onClose={onClose} headerLeft={headerLeft} headerRight={headerRight} loading={isLoading}>
+    <DetailsView
+      open={open}
+      onClose={onClose}
+      headerLeft={loadedHeaderLeft}
+      headerRight={headerRight}
+      loading={isLoading}
+      loadingHeaderHeightClassName="h-[52px]"
+    >
       <div className="flex flex-col gap-6">
         <div className="w-full flex flex-row items-center justify-between">
           {profile && <ProfileShareActions data={profile} />}
