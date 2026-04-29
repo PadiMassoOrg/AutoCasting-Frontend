@@ -73,6 +73,7 @@ const EmployerCastingPage = () => {
       <DashboardShell
         title={t('employer_castings.dashboard.title_edit')}
         sections={sections}
+        initialKey="basic"
         bottomSection={bottomSectionRenderer()}
       />
     </EmployerCastingIdsProvider>
