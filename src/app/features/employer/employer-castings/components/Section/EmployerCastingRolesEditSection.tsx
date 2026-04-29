@@ -3,7 +3,7 @@ import { Button, Icon, Label } from 'autocasting-ui-library-padimasso';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
-import { DashboardSection } from '../../../../../layouts/components';
+import { DashboardLoadingLabel, DashboardSection } from '../../../../../layouts/components';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
@@ -42,7 +42,13 @@ const EmployerCastingRolesEditSection = ({ sectionId }: { sectionId: string }) =
     }
   }, [currentCount, defaultCode, queryClient]);
 
-  if (isLoading || !data) return null;
+  if (isLoading || !data) {
+    return (
+      <DashboardSection>
+        <DashboardLoadingLabel />
+      </DashboardSection>
+    );
+  }
   if (error) return <ServerError />;
 
   const handleOpenModal = () => {

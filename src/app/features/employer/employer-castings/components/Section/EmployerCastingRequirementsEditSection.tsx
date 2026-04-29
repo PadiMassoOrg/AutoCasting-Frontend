@@ -2,7 +2,7 @@ import { Button, Icon, Label } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
-import { DashboardSection } from '../../../../../layouts/components';
+import { DashboardLoadingLabel, DashboardSection } from '../../../../../layouts/components';
 import type { RadioOption } from '../../../../../shared/components/Form/RadioGroupField';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
@@ -70,9 +70,21 @@ const EmployerCastingRequirementsEditSection = ({ sectionId }: { sectionId: stri
 
   useSyncCastingSectionStatus('requirements', requirementsSection?.sectionStatus);
 
-  if (isRequirementsLoading || isRolesLoading) return null;
+  if (isRequirementsLoading || isRolesLoading) {
+    return (
+      <DashboardSection>
+        <DashboardLoadingLabel />
+      </DashboardSection>
+    );
+  }
   if (requirementsError || rolesError) return <ServerError />;
-  if (!requirementsSection || !rolesSection) return null;
+  if (!requirementsSection || !rolesSection) {
+    return (
+      <DashboardSection>
+        <DashboardLoadingLabel />
+      </DashboardSection>
+    );
+  }
 
   const handleOpenModal = () => {
     if (roleOptions.length === 0) return;

@@ -1,4 +1,4 @@
-import { DashboardShell } from '../../../../layouts/components';
+import { DashboardLoadingLabel, DashboardSection, DashboardShell } from '../../../../layouts/components';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { EmployerProfileBasicInfoEditSection } from '../components/Section';
 import { useEmployerProfile } from '../hooks/useEmployerProfile';
@@ -6,8 +6,16 @@ import { useEmployerProfile } from '../hooks/useEmployerProfile';
 const EmployerProfileEditPage = () => {
   const { data, error, isLoading } = useEmployerProfile();
 
-  if (isLoading || !data) return null;
-  if (error) return <ServerError />;
+  if (error && !data) return <ServerError />;
+  if (isLoading || !data) {
+    return (
+      <DashboardShell>
+        <DashboardSection>
+          <DashboardLoadingLabel />
+        </DashboardSection>
+      </DashboardShell>
+    );
+  }
 
   return (
     <DashboardShell>

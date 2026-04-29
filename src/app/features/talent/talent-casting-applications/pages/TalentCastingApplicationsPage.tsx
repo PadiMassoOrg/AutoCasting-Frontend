@@ -1,4 +1,4 @@
-import { Label } from 'autocasting-ui-library-padimasso';
+import { Label, Skeleton } from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
 import { useMemo, useState } from 'react';
 import { DashboardSection, DashboardShell } from '../../../../layouts/components';
@@ -30,8 +30,9 @@ const TalentCastingApplications = () => {
     [filters, orderBy]
   );
 
-  const { data } = useTalentCastingApplications(args);
+  const { data, isLoading } = useTalentCastingApplications(args);
   const applications = data?.items ?? [];
+  const showInitialSkeletons = isLoading && applications.length === 0;
 
   return (
     <DashboardShell>
@@ -46,7 +47,13 @@ const TalentCastingApplications = () => {
         />
 
         <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">
-          {applications.length > 0 ? (
+          {showInitialSkeletons ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={`application-card-skeleton-${i}`} className="lg:min-w-[415px]">
+                <Skeleton className="h-[226px] w-full rounded-xl" />
+              </div>
+            ))
+          ) : applications.length > 0 ? (
             applications.map((i) => <TalentCastingApplicationCard key={i.castingRoleId} data={i} />)
           ) : (
             <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">

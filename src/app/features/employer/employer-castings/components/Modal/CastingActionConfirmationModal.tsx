@@ -34,10 +34,10 @@ const CastingActionConfirmationModal = ({
       <Separator className="opacity-20 my-7" />
 
       <div className="flex flex-col gap-2 md:flex-row md:gap-4">
-        <Button variant="outline" onClick={onCancel} disabled={isPending} className="min-w-[180px]">
+        <Button variant="outline" onClick={onCancel} className="min-w-[180px]">
           {t('buttons.cancel')}
         </Button>
-        <Button variant={confirmButtonVariant} onClick={onConfirm} disabled={isPending} className="min-w-[180px]">
+        <Button variant={confirmButtonVariant} onClick={onConfirm} loading={isPending} className="min-w-[180px]">
           {t(confirmButtonKey)}
         </Button>
       </div>

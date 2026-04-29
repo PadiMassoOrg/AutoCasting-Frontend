@@ -2,6 +2,7 @@ import { Button, FormInputField, FormSelectField, Separator } from 'autocasting-
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCachedSiteMetadataOption } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
+import { usePendingAction } from 'autocasting-ui-library-padimasso';
 import { getCreditSchema, type CreditFormKey, type CreditFormValues } from '../../../schemas/formSchema';
 import type { Credit } from '../../../types/talentProfile.types';
 
@@ -24,6 +25,7 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
   const { t } = useTranslation();
   const creditSchema = useMemo(() => getCreditSchema(t), [t]);
   const productionTypeOptions = useCachedSiteMetadataOption('productionTypeOptions', t);
+  const { isPending, execute } = usePendingAction();
 
   const makeEmpty = (): DraftCredit => ({
     productionTypeId: '',
@@ -93,7 +95,7 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
       return;
     }
 
-    await onSave({ ...form });
+    await execute(() => onSave({ ...form }));
   };
 
   return (
@@ -162,7 +164,9 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
         <Button variant="outline" onClick={onCancel}>
           {t('buttons.cancel')}
         </Button>
-        <Button onClick={validateAndSave}>{t('buttons.save')}</Button>
+        <Button onClick={validateAndSave} loading={isPending}>
+          {t('buttons.save')}
+        </Button>
       </div>
     </article>
   );

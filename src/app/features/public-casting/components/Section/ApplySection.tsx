@@ -41,7 +41,7 @@ const ApplySection = ({
   const hasRequirements = (requirements ?? []).length > 0;
 
   const isAlreadyApplied = Boolean(alreadyApplied);
-  const isDisabled = !showApplySection || apply.isPending || isAlreadyApplied;
+  const isDisabled = !showApplySection || isAlreadyApplied;
 
   const handleConfirmation = () => {
     closeModal();
@@ -147,7 +147,7 @@ const ApplySection = ({
       {shouldShowApplyAction && (
         <>
           <Separator className="opacity-20" />
-          <Button variant="primary" disabled={isDisabled} onClick={onClickApply}>
+          <Button variant="primary" disabled={isDisabled} loading={apply.isPending} onClick={onClickApply}>
             {t('general.apply')}
           </Button>
         </>

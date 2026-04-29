@@ -1,7 +1,7 @@
 import { Label } from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
-import { DashboardSection } from '../../../../../layouts/components';
+import { DashboardLoadingLabel, DashboardSection } from '../../../../../layouts/components';
 import { RadioGroupField } from '../../../../../shared/components/Form';
 import TextareaField from '../../../../../shared/components/Form/TextareaField';
 import { SectionCard, SectionTitle } from '../../../../../shared/components/Section';
@@ -33,7 +33,13 @@ const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: stri
 
   useSyncCastingSectionStatus('remuneration', data?.sectionStatus);
 
-  if (isLoading || !data) return null;
+  if (isLoading || !data) {
+    return (
+      <DashboardSection>
+        <DashboardLoadingLabel />
+      </DashboardSection>
+    );
+  }
   if (error) return <ServerError />;
 
   const selectedCompensationTypeId = data.compensationType.id;

@@ -1,6 +1,7 @@
 import { Button, FormInputField, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePendingAction } from 'autocasting-ui-library-padimasso';
 import { getEducationSchema, type EducationFormKey, type EducationFormValues } from '../../../schemas/formSchema';
 import type { Education } from '../../../types/talentProfile.types';
 
@@ -23,6 +24,7 @@ const SCHEMA_KEYS = ['institution', 'courseName', 'graduationYear'] as const;
 const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
   const { t } = useTranslation();
   const educationSchema = useMemo(() => getEducationSchema(t), [t]);
+  const { isPending, execute } = usePendingAction();
 
   const makeEmpty = (): DraftEducation => ({
     institution: '',
@@ -80,7 +82,7 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
       return;
     }
 
-    await onSave({ ...form });
+    await execute(() => onSave({ ...form }));
   };
 
   return (
@@ -128,7 +130,9 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
         <Button variant="outline" onClick={onCancel}>
           {t('buttons.cancel')}
         </Button>
-        <Button onClick={validateAndSave}>{t('buttons.save')}</Button>
+        <Button onClick={validateAndSave} loading={isPending}>
+          {t('buttons.save')}
+        </Button>
       </div>
     </article>
   );

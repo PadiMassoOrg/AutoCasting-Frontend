@@ -92,8 +92,8 @@ const ResetPasswordForm = ({ token }: { token: string }) => {
         {...register('confirmPassword')}
         error={errors.confirmPassword?.message}
       />
-      <Button type="submit" className="w-full">
-        {resetPasswordMutation.isPending ? t('state.loading') : t('general.save')}
+      <Button type="submit" className="w-full" loading={resetPasswordMutation.isPending}>
+        {t('general.save')}
       </Button>
     </form>
   );

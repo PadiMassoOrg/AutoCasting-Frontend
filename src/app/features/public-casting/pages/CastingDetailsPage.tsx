@@ -1,4 +1,5 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { Label, Separator } from 'autocasting-ui-library-padimasso';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
@@ -8,6 +9,7 @@ import { usePublicCastingDetails } from '../hooks/usePublicCastingDetails';
 type Props = { mode: 'public' | 'employer' };
 
 const CastingDetailsPage = ({ mode }: Props) => {
+  const { t } = useTranslation();
   const { slug, roleId } = useParams<{ slug: string; roleId?: string }>();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
 
@@ -18,7 +20,13 @@ const CastingDetailsPage = ({ mode }: Props) => {
   );
 
   if (mode === 'employer') {
-    if (employerQuery.isLoading || !employerQuery.data) return null;
+    if (employerQuery.isLoading || !employerQuery.data) {
+      return (
+        <Label className="w-full pt-10 flex items-center justify-center text-center text-[var(--color-secondary-grey-fonts)]">
+          {t('state.loading')}
+        </Label>
+      );
+    }
     if (employerQuery.error) return <ServerError />;
 
     const casting = employerQuery.data;
@@ -58,7 +66,13 @@ const CastingDetailsPage = ({ mode }: Props) => {
     );
   }
 
-  if (publicQuery.isLoading || !publicQuery.data) return null;
+  if (publicQuery.isLoading || !publicQuery.data) {
+    return (
+      <Label className="w-full pt-10 flex items-center justify-center text-center text-[var(--color-secondary-grey-fonts)]">
+        {t('state.loading')}
+      </Label>
+    );
+  }
   if (publicQuery.error) return <ServerError />;
 
   const casting = publicQuery.data.casting;

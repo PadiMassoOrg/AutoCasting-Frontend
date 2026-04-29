@@ -1,5 +1,9 @@
 import { useTranslation } from 'react-i18next';
-import { DashboardShell } from '../../../../layouts/components';
+import {
+  DashboardLoadingLabel,
+  DashboardSection as DashboardSectionBlock,
+  DashboardShell,
+} from '../../../../layouts/components';
 import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
@@ -18,43 +22,103 @@ export default function TalentProfileEditPage() {
   const { t } = useTranslation();
   const { data, error, isLoading } = useTalentProfile();
 
-  if (isLoading || !data) return null;
-  if (error) return <ServerError />;
+  if (error && !data) return <ServerError />;
 
-  const sections: DashboardSection[] = [
+  const loadingSections: DashboardSection[] = [
     {
       key: 'basic',
       label: t('profile.pills.basic_info'),
-      render: () => <TalentProfileBasicInfoEditSection profile={data} />,
+      render: () => (
+        <DashboardSectionBlock>
+          <DashboardLoadingLabel />
+        </DashboardSectionBlock>
+      ),
     },
     {
       key: 'media',
       label: t('profile.pills.media'),
-      render: () => <TalentProfileMediaEditSection media={data.media} supabaseId={data.id} />,
+      render: () => (
+        <DashboardSectionBlock>
+          <DashboardLoadingLabel />
+        </DashboardSectionBlock>
+      ),
     },
     {
       key: 'details',
       label: t('profile.pills.characteristics'),
-      render: () => <TalentProfileDetailsEditSection profile={data} />,
+      render: () => (
+        <DashboardSectionBlock>
+          <DashboardLoadingLabel />
+        </DashboardSectionBlock>
+      ),
     },
     {
       key: 'skills',
       label: t('profile.pills.skills'),
-      render: () => <TalentProfileSkillsEditSection profile={data} />,
+      render: () => (
+        <DashboardSectionBlock>
+          <DashboardLoadingLabel />
+        </DashboardSectionBlock>
+      ),
     },
     {
       key: 'credits',
       label: t('profile.pills.credits'),
-      render: () => <TalentProfileCreditsEditSection profile={data} />,
+      render: () => (
+        <DashboardSectionBlock>
+          <DashboardLoadingLabel />
+        </DashboardSectionBlock>
+      ),
     },
     {
       key: 'education',
       label: t('profile.pills.education'),
-      render: () => <TalentProfileEducationEditSection profile={data} />,
+      render: () => (
+        <DashboardSectionBlock>
+          <DashboardLoadingLabel />
+        </DashboardSectionBlock>
+      ),
     },
   ];
 
+  const sections: DashboardSection[] =
+    isLoading || !data
+      ? loadingSections
+      : [
+          {
+            key: 'basic',
+            label: t('profile.pills.basic_info'),
+            render: () => <TalentProfileBasicInfoEditSection profile={data} />,
+          },
+          {
+            key: 'media',
+            label: t('profile.pills.media'),
+            render: () => <TalentProfileMediaEditSection media={data.media} supabaseId={data.id} />,
+          },
+          {
+            key: 'details',
+            label: t('profile.pills.characteristics'),
+            render: () => <TalentProfileDetailsEditSection profile={data} />,
+          },
+          {
+            key: 'skills',
+            label: t('profile.pills.skills'),
+            render: () => <TalentProfileSkillsEditSection profile={data} />,
+          },
+          {
+            key: 'credits',
+            label: t('profile.pills.credits'),
+            render: () => <TalentProfileCreditsEditSection profile={data} />,
+          },
+          {
+            key: 'education',
+            label: t('profile.pills.education'),
+            render: () => <TalentProfileEducationEditSection profile={data} />,
+          },
+        ];
+
   const bottomSectionRenderer = () => {
+    if (!data) return;
     return (
       <div className="text-sm text-(--color-secondary-gray)">
         <p>{t('general.datetime.last_saved')}:</p>

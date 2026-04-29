@@ -1,4 +1,4 @@
-import { Icon, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-library-padimasso';
+import { Icon, Skeleton, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChromeBoxHeights } from '../../../shared/hooks/useChomeBoxHeights';
@@ -286,7 +286,7 @@ export default function TalentDatabasePage() {
                     {showInitialSkeletons &&
                       Array.from({ length: pageSize }).map((_, i) => (
                         <div key={`skeleton-${i}`} className="w-full">
-                          <div className="animate-pulse w-full h-[400px] bg-neutral-100 rounded-lg" />
+                          <Skeleton className="w-full h-[400px] rounded-xl" />
                         </div>
                       ))}
 

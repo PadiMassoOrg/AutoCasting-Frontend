@@ -49,7 +49,7 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
 
   if (profilePending && !profile) return null;
 
-  const isNextDisabled = !isValid || isSubmitting || isPending;
+  const isNextDisabled = !isValid;
 
   return (
     <section className="w-full relative max-w-[400px]">
@@ -101,8 +101,8 @@ function TalentBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, tota
               <Button variant="outline" type="button" onClick={onBackToModeSelector}>
                 {t('buttons.back')}
               </Button>
-              <Button variant="primary" type="submit" disabled={isNextDisabled}>
-                {isPending || isSubmitting ? t('state.loading') : t('buttons.next')}
+              <Button variant="primary" type="submit" disabled={isNextDisabled} loading={isPending || isSubmitting}>
+                {t('buttons.next')}
               </Button>
             </div>
             <ContinueLaterButton />

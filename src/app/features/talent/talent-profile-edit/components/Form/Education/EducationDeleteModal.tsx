@@ -1,5 +1,6 @@
 import { Button } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
+import { usePendingAction } from 'autocasting-ui-library-padimasso';
 import type { Education } from '../../../types/talentProfile.types';
 
 const EducationDeleteModal = ({
@@ -12,6 +13,11 @@ const EducationDeleteModal = ({
   onCancel: () => void;
 }) => {
   const { t } = useTranslation();
+  const { isPending, execute } = usePendingAction();
+
+  const handleConfirm = async () => {
+    await execute(onConfirm);
+  };
 
   return (
     <article className="flex flex-col gap-5">
@@ -22,7 +28,7 @@ const EducationDeleteModal = ({
         <Button variant="outline" onClick={onCancel}>
           {t('buttons.cancel')}
         </Button>
-        <Button variant="primary" onClick={onConfirm}>
+        <Button variant="primary" onClick={handleConfirm} loading={isPending}>
           {t('buttons.delete')}
         </Button>
       </div>

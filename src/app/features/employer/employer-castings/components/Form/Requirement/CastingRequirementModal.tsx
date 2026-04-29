@@ -1,6 +1,7 @@
 import { Button, Label, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePendingAction } from 'autocasting-ui-library-padimasso';
 import CheckboxField from '../../../../../../shared/components/Form/CheckboxField';
 import MultiRadioGroupField from '../../../../../../shared/components/Form/MultiRadioGroupField';
 import RadioGroupField, { type RadioOption } from '../../../../../../shared/components/Form/RadioGroupField';
@@ -65,6 +66,7 @@ const CastingRequirementModal = ({
 }: Props) => {
   const { t } = useTranslation();
   const requirementSchema = useMemo(() => getCastingRequirementSchema(t), [t]);
+  const { isPending, execute } = usePendingAction();
 
   const readInitialRoleId = (r?: EmployerCastingRequirementCardResponse): string => {
     const any = r as any;
@@ -172,7 +174,7 @@ const CastingRequirementModal = ({
         requiresVideo: parsed.data.requiresVideo,
         description: parsed.data.description,
       };
-      await onSave(draft);
+      await execute(() => onSave(draft));
       return;
     }
 
@@ -194,7 +196,7 @@ const CastingRequirementModal = ({
       description: parsed.data.description,
     };
 
-    await onSave(draft);
+    await execute(() => onSave(draft));
   };
 
   const resolveError = (field: CastingRequirementFormKey, local?: string) =>
@@ -278,6 +280,7 @@ const CastingRequirementModal = ({
         <Button
           type="button"
           disabled={mode === 'create' ? isCreateSaveDisabled : false}
+          loading={isPending}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();

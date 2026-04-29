@@ -26,7 +26,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
 
   const effectiveHeadshotUrl = isDeleted ? null : currentHeadshotUrl;
 
-  const canContinue = !uploadPending && (!!previewUrl || !!effectiveHeadshotUrl);
+  const canContinue = !!previewUrl || !!effectiveHeadshotUrl;
   const isBusy = uploadPending || profilePending || !profileId;
 
   const handleSelect = async (files: File[] | File) => {
@@ -147,8 +147,8 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
               <Button variant="outline" type="button" onClick={handleBackClick}>
                 {t('buttons.back')}
               </Button>
-              <Button variant="primary" type="submit" disabled={!canContinue || isBusy}>
-                {isBusy ? t('state.loading') : t('buttons.next')}
+              <Button variant="primary" type="submit" disabled={!canContinue} loading={isBusy}>
+                {t('buttons.next')}
               </Button>
             </div>
             <ContinueLaterButton />

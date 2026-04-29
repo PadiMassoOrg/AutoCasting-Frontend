@@ -32,7 +32,7 @@ function EmployerMediaStep({
 
   const effectiveImageUrl = isDeleted ? null : currentImageUrl;
 
-  const canContinue = !uploadPending && (!!previewUrl || !!effectiveImageUrl);
+  const canContinue = !!previewUrl || !!effectiveImageUrl;
   const isBusy = uploadPending || profilePending || !profileId;
 
   const handleSelect = async (files: File[] | File) => {
@@ -153,8 +153,8 @@ function EmployerMediaStep({
               <Button variant="outline" type="button" onClick={handleBackClick}>
                 {t('buttons.back')}
               </Button>
-              <Button variant="primary" type="submit" disabled={!canContinue || isBusy}>
-                {isBusy ? t('state.loading') : t('buttons.next')}
+              <Button variant="primary" type="submit" disabled={!canContinue} loading={isBusy}>
+                {t('buttons.next')}
               </Button>
             </div>
             <ContinueLaterButton />

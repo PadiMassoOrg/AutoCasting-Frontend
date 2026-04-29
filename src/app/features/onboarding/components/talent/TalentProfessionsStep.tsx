@@ -126,9 +126,10 @@ const TalentProfessionStep = ({
                 variant="primary"
                 type="button"
                 onClick={handleContinue}
-                disabled={selectedProfessionIds.length < 1 || isPending}
+                disabled={selectedProfessionIds.length < 1}
+                loading={isPending}
               >
-                {isPending ? t('state.loading') : t('buttons.next')}
+                {t('buttons.next')}
               </Button>
             </div>
             <ContinueLaterButton />

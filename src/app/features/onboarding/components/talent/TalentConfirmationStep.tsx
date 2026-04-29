@@ -77,8 +77,8 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
               <Button variant="outline" type="button" onClick={goBack}>
                 {t('buttons.back')}
               </Button>
-              <Button variant="primary" type="button" onClick={handleConfirm} disabled={isPending}>
-                {isPending ? t('state.loading') : t('buttons.to_profile')}
+              <Button variant="primary" type="button" onClick={handleConfirm} loading={isPending}>
+                {t('buttons.to_profile')}
               </Button>
             </div>
             <ContinueLaterButton />

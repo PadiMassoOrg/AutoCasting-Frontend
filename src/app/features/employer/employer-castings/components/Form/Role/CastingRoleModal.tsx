@@ -1,6 +1,7 @@
 import { Button, FormInputField, FormSelectField, Label, Separator } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePendingAction } from 'autocasting-ui-library-padimasso';
 import { TextareaField } from '../../../../../../shared/components/Form';
 import {
   useCachedSiteMetadataOption,
@@ -75,6 +76,7 @@ export default function CastingRoleModal({
   clearBackendFieldError,
 }: Props) {
   const { t } = useTranslation();
+  const { isPending, execute } = usePendingAction();
   const castingRoleSchema = useMemo(() => getCastingRoleSchema(t), [t]);
 
   const roleTypeOptions = useCachedSiteMetadataOption('roleTypeOptions', t);
@@ -308,7 +310,7 @@ export default function CastingRoleModal({
       characteristics: characteristicsPayload,
     };
 
-    await onSave(draft);
+    await execute(() => onSave(draft));
   };
 
   const hasAny = (arr?: unknown[]) => (arr?.length ?? 0) > 0;
@@ -555,6 +557,7 @@ export default function CastingRoleModal({
 
         <Button
           type="button"
+          loading={isPending}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();

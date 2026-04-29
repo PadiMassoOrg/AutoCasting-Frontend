@@ -75,8 +75,8 @@ export default function RegisterForm({ onSwitch }: RegisterFormProps) {
         {...register('password')}
       />
 
-      <Button type="submit" className="my-2 cursor-pointer">
-        {registerMutation.isPending ? t('state.loading') : t('auth.register.submit')}
+      <Button type="submit" className="my-2 cursor-pointer" loading={registerMutation.isPending}>
+        {t('auth.register.submit')}
       </Button>
 
       <h2 className="mb-6 text-xs font-light text-center">
