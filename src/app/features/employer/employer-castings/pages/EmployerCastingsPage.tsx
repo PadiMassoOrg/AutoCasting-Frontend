@@ -1,4 +1,4 @@
-import { Button, Icon, Label } from 'autocasting-ui-library-padimasso';
+import { Button, Icon, Label, Skeleton } from 'autocasting-ui-library-padimasso';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DashboardSection, DashboardShell } from '../../../../layouts/components';
@@ -35,8 +35,9 @@ const EmployerCastingsPage = () => {
     [filters, orderBy]
   );
 
-  const { data: myCastings } = useEmployerCastings(args);
+  const { data: myCastings, isLoading, isFetching } = useEmployerCastings(args);
   const castings = myCastings ?? [];
+  const showInitialSkeletons = (isLoading || isFetching) && myCastings == null;
 
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -78,7 +79,13 @@ const EmployerCastingsPage = () => {
         />
 
         <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">
-          {castings.length > 0 ? (
+          {showInitialSkeletons ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div key={`casting-card-skeleton-${i}`} className="lg:min-w-[415px]">
+                <Skeleton className="w-full h-[226px] rounded-xl" />
+              </div>
+            ))
+          ) : castings.length > 0 ? (
             castings.map((i) => (
               <CastingCard
                 key={i.id}

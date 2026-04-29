@@ -1,4 +1,4 @@
-import { Icon, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-library-padimasso';
+import { Icon, Skeleton, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useChromeBoxHeights } from '../../../shared/hooks/useChomeBoxHeights';
@@ -229,7 +229,7 @@ const CastingDatabasePage = () => {
                     {showInitialSkeletons &&
                       Array.from({ length: pageSize }).map((_, i) => (
                         <div key={`casting-skeleton-${i}`} className="w-full">
-                          <div className="animate-pulse w-full h-40 bg-neutral-100 rounded-lg" />
+                          <Skeleton className={`w-full ${isDesktop ? 'h-[176px]' : 'h-[228px]'} rounded-xl`} />
                         </div>
                       ))}
 

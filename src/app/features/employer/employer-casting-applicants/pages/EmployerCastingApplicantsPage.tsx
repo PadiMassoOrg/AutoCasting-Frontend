@@ -1,4 +1,4 @@
-import { IconViewSwitcher, Label } from 'autocasting-ui-library-padimasso';
+import { IconViewSwitcher, Label, Skeleton } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -90,7 +90,9 @@ const EmployerCastingApplicantsPage = () => {
     setPage(0);
   }, [slug, filters]);
 
-  const { data: tableData } = useEmployerCastingApplicants(tableArgs, { enabled: !isGalleryDesktop });
+  const { data: tableData, isLoading: isTableLoading } = useEmployerCastingApplicants(tableArgs, {
+    enabled: !isGalleryDesktop,
+  });
 
   const {
     data: galleryData,
@@ -169,6 +171,9 @@ const EmployerCastingApplicantsPage = () => {
     (shouldUseGroupedGallery
       ? !isGroupedLoading && groupedApplicantsCount === 0
       : !isGalleryLoading && applicants.length === 0);
+  const showTableInitialSkeletons = !isGalleryDesktop && isTableLoading && applicants.length === 0;
+  const showGalleryInitialSkeletons = isGalleryDesktop && !shouldUseGroupedGallery && isGalleryLoading;
+  const showGroupedInitialSkeletons = isGalleryDesktop && shouldUseGroupedGallery && isGroupedLoading;
 
   const handleGroupedRoleReachEnd = useCallback(
     (roleId: string) => {
@@ -271,16 +276,32 @@ const EmployerCastingApplicantsPage = () => {
           )}
         </div>
 
-        {(resolvedViewMode === 'gallery' ? showGalleryEmpty : applicants.length === 0) ? (
+        {(
+          resolvedViewMode === 'gallery'
+            ? showGalleryEmpty && !showGalleryInitialSkeletons && !showGroupedInitialSkeletons
+            : applicants.length === 0 && !showTableInitialSkeletons
+        ) ? (
           <Label className="w-full text-center text-(--color-secondary-grey-fonts) pt-10">
             {t('employer_casting_applicants.page.empty_page')}
           </Label>
         ) : resolvedViewMode === 'gallery' ? (
           shouldUseGroupedGallery ? (
-            isGroupedLoading ? (
-              <p className="py-8 text-center font-light text-(--color-secondary-grey)" aria-live="polite">
-                {t('state.loading')}
-              </p>
+            showGroupedInitialSkeletons ? (
+              <div className="w-full flex flex-col gap-6" aria-live="polite">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={`grouped-gallery-skeleton-${i}`} className="w-full">
+                    <Skeleton className="h-8 w-48 mb-3 rounded-md" />
+                    <div className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+                      {Array.from({ length: 3 }).map((__, j) => (
+                        <Skeleton
+                          key={`grouped-gallery-card-skeleton-${i}-${j}`}
+                          className="h-[450px] w-full rounded-xl"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : (
               <CastingApplicantsGalleryGrouped
                 roles={groupedRolesState}
@@ -290,12 +311,20 @@ const EmployerCastingApplicantsPage = () => {
             )
           ) : (
             <>
-              <CastingApplicantsGallery
-                data={applicants}
-                hasNext={galleryHasNextPage}
-                isLoadingNext={isGalleryFetchingNextPage}
-                onReachEnd={handleGalleryReachEnd}
-              />
+              {showGalleryInitialSkeletons ? (
+                <div className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3" aria-live="polite">
+                  {Array.from({ length: galleryPageSize }).map((_, i) => (
+                    <Skeleton key={`gallery-skeleton-${i}`} className="h-[450px] w-full rounded-xl" />
+                  ))}
+                </div>
+              ) : (
+                <CastingApplicantsGallery
+                  data={applicants}
+                  hasNext={galleryHasNextPage}
+                  isLoadingNext={isGalleryFetchingNextPage}
+                  onReachEnd={handleGalleryReachEnd}
+                />
+              )}
               {isGalleryFetchingNextPage && (
                 <p className="py-8 text-center font-light text-(--color-secondary-grey)" aria-live="polite">
                   {t('state.loading')}
@@ -305,30 +334,45 @@ const EmployerCastingApplicantsPage = () => {
           )
         ) : isDesktop ? (
           <div className="w-full flex flex-col gap-6">
-            <CastingApplicantsDataGrid
-              data={applicants}
-              page={tableData?.page ?? page}
-              hasNext={tableData?.hasNext ?? false}
-              onPageChange={setPage}
-              onOpenDetails={handleOpenDetails}
-              enableBulkSelection
-              selectedRowKeys={selectedRowKeys.filter((id) =>
-                applicants.some((applicant) => applicant.applicationId === id)
-              )}
-              onSelectedRowKeysChange={handleSelectedRowKeysChange}
-              totalCount={totalApplicantsCount}
-            />
+            {showTableInitialSkeletons ? (
+              <div className="w-full flex flex-col gap-3" aria-live="polite">
+                <Skeleton className="h-12 w-full rounded-lg" />
+                {Array.from({ length: tablePageSize }).map((_, i) => (
+                  <Skeleton key={`applicants-table-row-skeleton-${i}`} className="h-14 w-full rounded-lg" />
+                ))}
+              </div>
+            ) : (
+              <CastingApplicantsDataGrid
+                data={applicants}
+                page={tableData?.page ?? page}
+                hasNext={tableData?.hasNext ?? false}
+                onPageChange={setPage}
+                onOpenDetails={handleOpenDetails}
+                enableBulkSelection
+                selectedRowKeys={selectedRowKeys.filter((id) =>
+                  applicants.some((applicant) => applicant.applicationId === id)
+                )}
+                onSelectedRowKeysChange={handleSelectedRowKeysChange}
+                totalCount={totalApplicantsCount}
+              />
+            )}
           </div>
         ) : (
           <div className="w-full flex flex-col flex-wrap gap-6 md:flex-row">
-            {applicants.map((i) => (
-              <CastingApplicantCard
-                key={i.applicationId}
-                data={i}
-                isDesktop={isDesktop}
-                onOpenDetails={handleOpenDetails}
-              />
-            ))}
+            {showTableInitialSkeletons
+              ? Array.from({ length: tablePageSize }).map((_, i) => (
+                  <div key={`applicant-card-skeleton-${i}`} className="w-full md:w-[415px]">
+                    <Skeleton className="h-[320px] w-full rounded-xl" />
+                  </div>
+                ))
+              : applicants.map((i) => (
+                  <CastingApplicantCard
+                    key={i.applicationId}
+                    data={i}
+                    isDesktop={isDesktop}
+                    onOpenDetails={handleOpenDetails}
+                  />
+                ))}
           </div>
         )}
       </DashboardSection>
