@@ -1,6 +1,6 @@
 import { Label } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { DashboardSection } from '../../../../../layouts/components';
+import { DashboardLoadingLabel, DashboardSection } from '../../../../../layouts/components';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
@@ -13,7 +13,13 @@ const EmployerCastingCheckoutEditSection = () => {
   const { id: castingId } = useEmployerCastingIds();
   const { data, isLoading, error } = useSectionCheckout(castingId);
 
-  if (isLoading || !data) return null;
+  if (isLoading || !data) {
+    return (
+      <DashboardSection>
+        <DashboardLoadingLabel />
+      </DashboardSection>
+    );
+  }
   if (error) return <ServerError />;
 
   return (

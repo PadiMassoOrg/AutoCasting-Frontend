@@ -1,5 +1,5 @@
 import { t } from 'i18next';
-import { DashboardSection } from '../../../../../layouts/components';
+import { DashboardLoadingLabel, DashboardSection } from '../../../../../layouts/components';
 import { SectionCard, SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
@@ -11,7 +11,13 @@ const EmployerCastingBasicInfoEditSection = ({ sectionId }: { sectionId: string 
 
   useSyncCastingSectionStatus('basic', data?.sectionStatus);
 
-  if (isLoading || !data) return null;
+  if (isLoading || !data) {
+    return (
+      <DashboardSection>
+        <DashboardLoadingLabel />
+      </DashboardSection>
+    );
+  }
   if (error) return <ServerError />;
 
   return (
