@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 import { DayPicker, formatCaption, type DateRange } from 'react-day-picker';
-import { useTranslation } from 'react-i18next';
 import { DATE_FNS_LOCALE_BY_LANG, useLanguage, WEEKDAYS_SHORT_BY_LANG } from '../../../context/LanguageContext';
 
 type RangeCalendarProps = {
