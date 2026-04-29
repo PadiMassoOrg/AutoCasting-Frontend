@@ -176,7 +176,7 @@
       "invalid_token": "El enlace no es válido.",
       "not_authenticated": "Debes iniciar sesión para continuar.",
       "password_length": "La contraseña no cumple con la longitud mínima.",
-      "password_reset_external": "Esta cuenta no permite restablecer la contraseña desde aquí.",
+      "password_reset_external": "Si necesitás cambiar tu contraseña, hacelo desde la configuración de tu cuenta de Google.",
       "required_field": "Campo obligatorio.",
       "token_expired": "El enlace ya expiró.",
       "user_exists": "Ya existe una cuenta con este email.",
