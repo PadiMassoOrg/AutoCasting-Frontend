@@ -29,10 +29,12 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
   }, [profile]);
 
   if (!open) return null;
-  if (isLoading || !profile) return null;
   if (error) return <ServerError />;
+  if (!isLoading && !profile) return null;
 
-  const { basicInfo, media, socialMedia } = profile;
+  const basicInfo = profile?.basicInfo;
+  const media = profile?.media;
+  const socialMedia = profile?.socialMedia;
 
   const professions =
     basicInfo?.professions && basicInfo.professions.length > 0
@@ -52,9 +54,16 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
         }, [])
       : null;
 
-  const url = `${window.location.origin}/profile/${profile.publicSlug}`;
+  const url = `${window.location.origin}/profile/${profile?.publicSlug ?? ''}`;
 
-  const headerLeft = (
+  const loadingHeaderLeft = (
+    <div className="flex flex-col min-w-0">
+      <h2 className="text-2xl font-bold truncate invisible">placeholder</h2>
+      <span className="flex flex-wrap items-center text-sm text-(--color-secondary-grey) invisible">placeholder</span>
+    </div>
+  );
+
+  const loadedHeaderLeft = (
     <div className="flex flex-col min-w-0">
       <h2 className="text-2xl font-bold truncate">{basicInfo?.stageName}</h2>
       {professions && (
@@ -63,24 +72,26 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
     </div>
   );
 
+  const headerLeft = isLoading ? loadingHeaderLeft : loadedHeaderLeft;
+
   const headerRight = (
     <Link aria-label={t('profile.share.share_profile')} className="cursor-pointer" to={url}>
-      <Icon name="open" variant="primary" />
+      {!isLoading && <Icon name="open" variant="primary" />}
     </Link>
   );
 
   return (
-    <DetailsView open={open} onClose={onClose} headerLeft={headerLeft} headerRight={headerRight}>
+    <DetailsView open={open} onClose={onClose} headerLeft={headerLeft} headerRight={headerRight} loading={isLoading}>
       <div className="flex flex-col gap-6">
         <div className="w-full flex flex-row items-center justify-between">
-          <ProfileShareActions data={profile} />
-          <SocialMediaSection data={socialMedia} />
+          {profile && <ProfileShareActions data={profile} />}
+          {socialMedia && <SocialMediaSection data={socialMedia} />}
         </div>
         <ImageCarousel images={images.length > 0 ? images : null} isDesktop isDesktopXL />
         <Separator className="opacity-20 my-4" />
-        <ProfileInfoCarousel profile={profile} infoPanelFixedHeight={true} />
+        {profile && <ProfileInfoCarousel profile={profile} infoPanelFixedHeight={true} />}
         <Separator className="opacity-20 my-4" />
-        <VideoSection data={media} />
+        {media && <VideoSection data={media} />}
       </div>
     </DetailsView>
   );

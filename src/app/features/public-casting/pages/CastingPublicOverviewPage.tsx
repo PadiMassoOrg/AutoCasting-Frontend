@@ -1,4 +1,4 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { Label, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useModal } from '../../../context/ModalContext';
@@ -112,7 +112,13 @@ const PublicCastingOverviewPage = () => {
   const isRoleApplied = (role: CastingRole) => appliedIdsSet.has(role.id);
 
   if (publicOverviewQuery.isError) return <ServerError />;
-  if (publicOverviewQuery.isLoading || !casting) return null;
+  if (publicOverviewQuery.isLoading || !casting) {
+    return (
+      <Label className="w-full pt-10 flex items-center justify-center text-center text-[var(--color-secondary-grey-fonts)]">
+        {t('state.loading')}
+      </Label>
+    );
+  }
 
   const right = (
     <>

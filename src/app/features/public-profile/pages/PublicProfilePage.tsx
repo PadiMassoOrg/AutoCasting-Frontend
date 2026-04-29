@@ -1,4 +1,5 @@
-import { ImageCarousel, Separator } from 'autocasting-ui-library-padimasso';
+import { ImageCarousel, Label, Separator } from 'autocasting-ui-library-padimasso';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { LG_SCREEN_SIZE, useMedia, XL_SCREEN_SIZE } from '../../../shared/hooks/useMedia';
@@ -11,12 +12,19 @@ const NAVBAR = 70;
 const TOP_MARGIN = '5rem';
 
 const PublicProfilePage = () => {
+  const { t } = useTranslation();
   const { slug } = useParams<{ slug: string }>();
   const { data, error, isLoading } = usePublicProfile(slug);
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
 
-  if (isLoading || !data) return null;
+  if (isLoading || !data) {
+    return (
+      <Label className="w-full pt-10 flex items-center justify-center text-center text-[var(--color-secondary-grey-fonts)]">
+        {t('state.loading')}
+      </Label>
+    );
+  }
   if (error) return <ServerError />;
 
   const { socialMedia, media } = data;
