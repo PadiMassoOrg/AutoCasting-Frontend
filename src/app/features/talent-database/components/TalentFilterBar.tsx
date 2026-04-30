@@ -1,4 +1,11 @@
-import { BooleanRadioGroup, FormInputField, FormSelectField, Separator } from 'autocasting-ui-library-padimasso';
+import {
+  BooleanRadioGroup,
+  FilterSection,
+  FormInputField,
+  FormSelectField,
+  MultiSelectDropdown,
+  Separator,
+} from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
@@ -10,8 +17,6 @@ import {
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 import { getTalentVisibleGenderOptions } from '../../sitemetadata/utils/siteMetadataUtils';
 import type { TalentFiltersQS } from '../types/talent-database.types';
-import { FilterSection } from './Filter';
-import MultiSelectDropdown from './Filter/MultiSelectDropdown';
 
 export function TalentFilterBar({
   value,

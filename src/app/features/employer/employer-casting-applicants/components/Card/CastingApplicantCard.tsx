@@ -1,7 +1,6 @@
-import { Icon, SectionCard, Separator } from 'autocasting-ui-library-padimasso';
+import { Icon, InlineList, SectionCard, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../../../../shared/lib/routes';
-import { InlineList } from '../../../../../shared/components/InlineList';
 import StatusDropdown from '../../../../sitemetadata/component/StatusDropdown';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { CASTING_APPLICATION_STATUS_ORDER } from '../../../../sitemetadata/utils/siteMetadataUtils';
@@ -81,7 +80,7 @@ const CastingApplicantCard = ({ data, isDesktop, onOpenDetails }: Props) => {
               <Icon name="view" variant="default" onClick={handleOpenDetails} />
             </div>
           </div>
-          <InlineList items={talentProfessions} />
+          <InlineList items={talentProfessions.map((item) => ({ id: item.id, label: t(item.stringCode!) }))} />
         </div>
       </div>
 

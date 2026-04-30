@@ -1,7 +1,7 @@
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MultiSelectDropdown } from '../../../../../talent-database/components/Filter';
+import { MultiSelectDropdown } from 'autocasting-ui-library-padimasso';
 import { useCachedSiteMetadataSlice } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
 import { usePendingAction } from 'autocasting-ui-library-padimasso';

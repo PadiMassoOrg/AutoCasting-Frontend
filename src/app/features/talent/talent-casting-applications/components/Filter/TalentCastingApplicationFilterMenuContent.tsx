@@ -5,7 +5,7 @@ import {
   expandTalentCastingApplicationStatusIdsForBackend,
   getDisplayableCastingStatuses,
 } from '../../../../sitemetadata/utils/siteMetadataUtils';
-import { MultiSelectDropdown } from '../../../../talent-database/components/Filter';
+import { MultiSelectDropdown } from 'autocasting-ui-library-padimasso';
 import type { TalentCastingApplicationsFiltersState } from './TalentCastingApplicationFilterBar';
 
 export default function TalentCastingApplicationFilterMenuContent({

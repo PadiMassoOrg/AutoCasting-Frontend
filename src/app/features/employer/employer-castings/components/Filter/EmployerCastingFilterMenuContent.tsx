@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
-import { MultiSelectDropdown } from '../../../../talent-database/components/Filter';
+import { MultiSelectDropdown } from 'autocasting-ui-library-padimasso';
 import type { EmployerCastingsFiltersState } from './EmployerCastingsFilterBar';
 
 export default function EmployerCastingsFilterMenuContent({

@@ -1,9 +1,11 @@
 import {
   BooleanRadioGroup,
   Button,
+  FilterSection,
   FormInputField,
   FormSelectField,
   Label,
+  MultiSelectDropdown,
   Separator,
   TextareaField,
 } from 'autocasting-ui-library-padimasso';
@@ -15,7 +17,6 @@ import {
   useCachedSiteMetadataSlice,
 } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
-import { FilterSection, MultiSelectDropdown } from '../../../../../talent-database/components/Filter';
 import { getCastingRoleSchema, type CastingRoleFormKey, type CastingRoleFormValues } from '../../../schemas/formSchema';
 import type { EmployerCastingRoleCardResponse } from '../../../types/employerCastings.types';
 
