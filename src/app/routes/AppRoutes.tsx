@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { ScrollToTop } from 'autocasting-ui-library-padimasso';
 import { Route, BrowserRouter as Router, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { USER_MODE_EMPLOYER, USER_MODE_TALENT, useUserMode } from '../context/UserModeContext';
 import { useAuthToken } from '../features/auth/hooks/useAuthToken';
@@ -15,7 +16,6 @@ import { PublicProfilePage } from '../features/public-profile/pages';
 import { TalentDatabasePage } from '../features/talent-database/pages';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
 import { EmptyLayout, NavigationLayout, ScrollContentLayout } from '../layouts';
-import { ScrollToTop } from '../shared/components/ScrollToTop';
 import { clearClientSession } from '../shared/lib/authSession';
 import { getAuthTokenExpirationTime } from '../shared/lib/cookies';
 import { ROUTES } from '../shared/lib/routes';

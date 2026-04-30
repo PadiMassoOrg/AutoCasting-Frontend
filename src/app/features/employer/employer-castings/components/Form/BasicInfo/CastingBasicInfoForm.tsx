@@ -3,14 +3,15 @@ import {
   FormInputField,
   FormSelectField,
   Label,
+  parseLocalISODate,
   TextareaField,
+  toLocalISO,
+  useCommittedNullableBooleanValue,
 } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { useTranslation } from 'react-i18next';
-import { RangeCalendar } from '../../../../../../shared/components/Form';
-import { useCommittedNullableBooleanValue } from '../../../../../../shared/components/Form/hooks/useCommittedBooleanValue';
-import { parseLocalISODate, toLocalISO } from '../../../../../../shared/components/Form/RangeCalendar';
+import { RangeCalendar } from 'autocasting-ui-library-padimasso';
 import { capitalize } from '../../../../../../shared/utils/formatUtils';
 import {
   onSelect,
@@ -366,6 +367,7 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         value={range}
         onChange={setRange}
         onCommit={handleRangeCommit}
+        language={i18n.language}
         required
       />
 
