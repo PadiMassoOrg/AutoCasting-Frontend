@@ -1,7 +1,7 @@
 import { Button, ChevronRight, TagChip, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { useMedia, XL_SCREEN_SIZE } from '../../../shared/hooks/useMedia';
+import { useMedia, XL_SCREEN_SIZE } from 'autocasting-ui-library-padimasso';
 import { ROUTES } from '../../../shared/lib/routes';
 import { formatAgeRange } from '../../../shared/utils/formatUtils';
 import { GENDER_INDISTINCT } from '../../sitemetadata/utils/siteMetadataUtils';

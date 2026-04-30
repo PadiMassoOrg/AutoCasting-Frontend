@@ -1,6 +1,6 @@
 import { SectionCard } from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
-import { DashboardLoadingLabel, DashboardSection } from '../../../../../layouts/components';
+import { DashboardLoadingLabel, DashboardSection } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';

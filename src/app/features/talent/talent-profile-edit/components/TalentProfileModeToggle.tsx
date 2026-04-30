@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { matchPath, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Icon } from 'autocasting-ui-library-padimasso';
-import { LG_SCREEN_SIZE, useMedia } from '../../../../shared/hooks/useMedia';
+import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { ROUTES } from '../../../../shared/lib/routes';
 import { useMeData } from '../../../auth/hooks/useMeData';
 import { useTalentProfile } from '../hooks/useTalentProfile';

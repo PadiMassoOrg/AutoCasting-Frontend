@@ -2,7 +2,7 @@ import { Label, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import ServerError from '../../../shared/components/ServerError/ServerError';
-import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
+import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { ApplySection, BasicInfoSection, EmployerInfoSection, RolesSection } from '../components/Section';
 import { useEmployerCastingDetails } from '../hooks/useEmployerCastingDetails';
 import { usePublicCastingDetails } from '../hooks/usePublicCastingDetails';

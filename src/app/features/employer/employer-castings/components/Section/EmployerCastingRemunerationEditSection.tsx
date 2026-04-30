@@ -1,7 +1,7 @@
 import { Label, RadioGroupField, SectionCard, TextareaField } from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
-import { DashboardLoadingLabel, DashboardSection } from '../../../../../layouts/components';
+import { DashboardLoadingLabel, DashboardSection } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';

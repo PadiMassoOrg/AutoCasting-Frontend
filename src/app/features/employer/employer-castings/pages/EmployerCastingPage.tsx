@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router-dom';
-import { DashboardShell } from '../../../../layouts/components';
-import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
+import { DashboardShell } from 'autocasting-ui-library-padimasso';
+import type { DashboardShellSection } from 'autocasting-ui-library-padimasso';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { ROUTES } from '../../../../shared/lib/routes';
 import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
@@ -31,7 +31,7 @@ const EmployerCastingPage = () => {
 
   const { basicInfoSectionId, rolesSectionId, requirementsSectionId, remunerationSectionId } = data;
 
-  const sections: DashboardSection[] = [
+  const sections: DashboardShellSection[] = [
     {
       key: 'basic',
       label: t('employer_castings.dashboard.basic_info.basic_info'),

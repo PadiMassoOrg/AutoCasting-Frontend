@@ -1,7 +1,7 @@
 import { Label, Skeleton } from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
 import { useMemo, useState } from 'react';
-import { DashboardSection, DashboardShell } from '../../../../layouts/components';
+import { DashboardSection, DashboardShell } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../shared/components/Section';
 import TalentCastingApplicationCard from '../components/Card/TalentCastingApplicationCard';
 import TalentCastingApplicationFilterBar, {

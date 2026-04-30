@@ -1,8 +1,8 @@
 import { Icon, Skeleton, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useChromeBoxHeights } from '../../../shared/hooks/useChomeBoxHeights';
-import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
+import { useChromeBoxHeights } from 'autocasting-ui-library-padimasso';
+import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { CastingFilterBar, CastingMobileFiltersDrawer, CastingRolePublicCard } from '../components';
 import { getCastingDatabase } from '../services/castingDatabaseService';
 import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';

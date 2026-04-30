@@ -1,6 +1,6 @@
 import { ChevronLeft } from 'autocasting-ui-library-padimasso';
 import type { ReactNode } from 'react';
-import { useDashboardShell } from '../../../layouts/components/DashboardShell';
+import { useDashboardShell } from 'autocasting-ui-library-padimasso';
 
 type SectionTitleProps = {
   title: ReactNode;

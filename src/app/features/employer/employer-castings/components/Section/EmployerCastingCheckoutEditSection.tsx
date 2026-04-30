@@ -1,6 +1,6 @@
 import { Label } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { DashboardLoadingLabel, DashboardSection } from '../../../../../layouts/components';
+import { DashboardLoadingLabel, DashboardSection } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useEmployerCastingIds } from '../../context/EmployerCastingContext';

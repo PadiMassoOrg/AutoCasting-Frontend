@@ -1,6 +1,6 @@
 import { SectionCard, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { DashboardSection } from '../../../../../layouts/components';
+import { DashboardSection } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import { useSiteMetadataSlice } from '../../../../sitemetadata/hooks/useSiteMetadataSlice';
 import { useSocialMediaAutosave } from '../../hooks/autosaves';

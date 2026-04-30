@@ -1,6 +1,6 @@
 import { type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
+import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
 import SocialMediaSection from './SocialMediaSection';
 import ViewerActions from './ViewerActions';

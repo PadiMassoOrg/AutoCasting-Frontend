@@ -1,14 +1,14 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { DashboardShell } from '../../../../layouts/components';
-import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
+import { DashboardShell } from 'autocasting-ui-library-padimasso';
+import type { DashboardShellSection } from 'autocasting-ui-library-padimasso';
 import { ROUTES } from '../../../../shared/lib/routes';
 import { TalentSettingsSecuritySection } from '../components/Section';
 
 const TalentProfileSettingsPage = () => {
   const { t } = useTranslation();
 
-  const sections: DashboardSection[] = [
+  const sections: DashboardShellSection[] = [
     {
       key: 'security',
       label: t('settings.pills.security'),

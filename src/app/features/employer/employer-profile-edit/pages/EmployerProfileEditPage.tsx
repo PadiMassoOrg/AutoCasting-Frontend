@@ -1,4 +1,4 @@
-import { DashboardLoadingLabel, DashboardSection, DashboardShell } from '../../../../layouts/components';
+import { DashboardLoadingLabel, DashboardSection, DashboardShell } from 'autocasting-ui-library-padimasso';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { EmployerProfileBasicInfoEditSection } from '../components/Section';
 import { useEmployerProfile } from '../hooks/useEmployerProfile';

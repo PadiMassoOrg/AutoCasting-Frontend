@@ -1,7 +1,7 @@
 import { DocumentScrollLayoutShell, useViewportVhVar } from 'autocasting-ui-library-padimasso';
 import type { ReactNode } from 'react';
 import { MaintenanceBanner } from '../shared/components/MaintenanceBanner/MaintenanceBanner';
-import { useChromeBoxHeights } from '../shared/hooks/useChomeBoxHeights';
+import { useChromeBoxHeights } from 'autocasting-ui-library-padimasso';
 import Navbar from './components/Navbar';
 
 type DocumentScrollLayoutProps = {

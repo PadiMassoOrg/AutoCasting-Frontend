@@ -1,4 +1,4 @@
-import { DashboardLoadingLabel, DashboardSection } from '../../../../../layouts/components';
+import { DashboardLoadingLabel, DashboardSection } from 'autocasting-ui-library-padimasso';
 import { SettingsSecuritySection } from '../../../../auth/change-password/components';
 import { useEmployerProfile } from '../../../employer-profile-edit/hooks/useEmployerProfile';
 

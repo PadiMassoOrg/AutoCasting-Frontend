@@ -1,7 +1,7 @@
 import { Button, Icon, SectionCard } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
-import { DashboardSection } from '../../../../../layouts/components';
+import { DashboardSection } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import { useEducationAutosave } from '../../hooks/autosaves';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';

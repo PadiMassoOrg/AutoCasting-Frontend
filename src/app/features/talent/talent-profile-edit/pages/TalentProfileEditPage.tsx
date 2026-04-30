@@ -3,8 +3,8 @@ import {
   DashboardLoadingLabel,
   DashboardSection as DashboardSectionBlock,
   DashboardShell,
-} from '../../../../layouts/components';
-import type { DashboardSection } from '../../../../layouts/components/DashboardShell';
+} from 'autocasting-ui-library-padimasso';
+import type { DashboardShellSection } from 'autocasting-ui-library-padimasso';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
 import { TalentProfileModeToggle } from '../components';
@@ -24,7 +24,7 @@ export default function TalentProfileEditPage() {
 
   if (error && !data) return <ServerError />;
 
-  const loadingSections: DashboardSection[] = [
+  const loadingSections: DashboardShellSection[] = [
     {
       key: 'basic',
       label: t('profile.pills.basic_info'),
@@ -81,7 +81,7 @@ export default function TalentProfileEditPage() {
     },
   ];
 
-  const sections: DashboardSection[] =
+  const sections: DashboardShellSection[] =
     isLoading || !data
       ? loadingSections
       : [

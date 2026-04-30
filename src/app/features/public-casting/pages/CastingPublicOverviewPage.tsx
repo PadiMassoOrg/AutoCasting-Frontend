@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useModal } from '../../../context/ModalContext';
 import { USER_MODE_TALENT, useUserMode } from '../../../context/UserModeContext';
 import ServerError from '../../../shared/components/ServerError/ServerError';
-import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
+import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { getAuthToken } from '../../../shared/lib/cookies';
 import { ROUTES } from '../../../shared/lib/routes';
 import CastingApplicationConfirmationModal from '../components/Form/CastingApplicationConfirmationModal';

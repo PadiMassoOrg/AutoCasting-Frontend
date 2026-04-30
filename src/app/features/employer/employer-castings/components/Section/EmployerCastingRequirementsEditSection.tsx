@@ -2,7 +2,7 @@ import { Button, Icon, Label, type RadioOption } from 'autocasting-ui-library-pa
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
-import { DashboardLoadingLabel, DashboardSection } from '../../../../../layouts/components';
+import { DashboardLoadingLabel, DashboardSection } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useEmployerCastingIds } from '../../context/EmployerCastingContext';

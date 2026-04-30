@@ -1,11 +1,11 @@
+import { useChromeBoxHeights } from 'autocasting-ui-library-padimasso';
 import { Outlet } from 'react-router-dom';
 import { Navbar } from '../../../layouts/components';
-import { useChromeBoxHeights } from '../../../shared/hooks/useChomeBoxHeights';
 import PublicFooter from '../components/PublicFooter';
 
 const MainSiteLayout = () => {
   const { header } = useChromeBoxHeights();
-  const topSpacing = header + 56;
+  const topSpacing = header;
 
   return (
     <div className="min-h-screen flex flex-col">

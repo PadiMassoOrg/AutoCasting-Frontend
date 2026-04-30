@@ -2,9 +2,9 @@ import { IconViewSwitcher, Label, Skeleton } from 'autocasting-ui-library-padima
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { DashboardSection, DashboardShell } from '../../../../layouts/components';
+import { DashboardSection, DashboardShell } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../shared/components/Section';
-import { LG_SCREEN_SIZE, useMedia } from '../../../../shared/hooks/useMedia';
+import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { PublicProfileDetailsView } from '../../../public-profile/pages';
 import { useSectionRoles } from '../../employer-castings/hooks/section/useSectionRoles';
 import { useEmployerCastingEditorBySlug } from '../../employer-castings/hooks/useEmployerCastingDetailsBySlug';

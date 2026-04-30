@@ -1,7 +1,7 @@
 import { BooleanRadioGroup, FormInputField, FormSelectField, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
+import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { useCommittedInt } from '../../../shared/utils/formUtils';
 import {
   useCachedSiteMetadataOption,
