@@ -1,7 +1,6 @@
-import { FormInputField } from 'autocasting-ui-library-padimasso';
+import { FormInputField, SectionCard } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../context/ModalContext';
-import SectionCard from '../../../../shared/components/Section/SectionCard';
 import ChangePasswordForm from './ChangePasswordForm';
 
 type SettingsSecuritySectionProps = {

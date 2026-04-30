@@ -1,11 +1,16 @@
-import { Button, Label, Separator } from 'autocasting-ui-library-padimasso';
+import {
+  Button,
+  CheckboxField,
+  Label,
+  MultiRadioGroupField,
+  RadioGroupField,
+  Separator,
+  TextareaField,
+  type RadioOption,
+} from 'autocasting-ui-library-padimasso';
 import { useEffect, useId, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePendingAction } from 'autocasting-ui-library-padimasso';
-import CheckboxField from '../../../../../../shared/components/Form/CheckboxField';
-import MultiRadioGroupField from '../../../../../../shared/components/Form/MultiRadioGroupField';
-import RadioGroupField, { type RadioOption } from '../../../../../../shared/components/Form/RadioGroupField';
-import TextareaField from '../../../../../../shared/components/Form/TextareaField';
 import { getCastingRequirementSchema, type CastingRequirementFormKey } from '../../../schemas/formSchema';
 import type { EmployerCastingRequirementCardResponse } from '../../../types/employerCastings.types';
 
@@ -264,7 +269,9 @@ const CastingRequirementModal = ({
           label={t('employer_castings.dashboard.requirements.requirement.description')}
           placeholder={t('general.placeholder.about')}
           value={form.description}
-          onChange={(e) => onChange('description', (e?.target?.value ?? '') as string)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+            onChange('description', e.target.value ?? '')
+          }
           error={resolveError('description', errors.description)}
         />
         <div className="min-h-[25px]" />

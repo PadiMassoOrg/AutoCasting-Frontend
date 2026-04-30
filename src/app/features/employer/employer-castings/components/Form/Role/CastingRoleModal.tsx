@@ -1,18 +1,21 @@
-import { Button, FormInputField, FormSelectField, Label, Separator } from 'autocasting-ui-library-padimasso';
+import {
+  BooleanRadioGroup,
+  Button,
+  FormInputField,
+  FormSelectField,
+  Label,
+  Separator,
+  TextareaField,
+} from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePendingAction } from 'autocasting-ui-library-padimasso';
-import { TextareaField } from '../../../../../../shared/components/Form';
 import {
   useCachedSiteMetadataOption,
   useCachedSiteMetadataSlice,
 } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
-import {
-  BooleanRadioGroup,
-  FilterSection,
-  MultiSelectDropdown,
-} from '../../../../../talent-database/components/Filter';
+import { FilterSection, MultiSelectDropdown } from '../../../../../talent-database/components/Filter';
 import { getCastingRoleSchema, type CastingRoleFormKey, type CastingRoleFormValues } from '../../../schemas/formSchema';
 import type { EmployerCastingRoleCardResponse } from '../../../types/employerCastings.types';
 
@@ -429,7 +432,9 @@ export default function CastingRoleModal({
         label={t('general.placeholder.description')}
         placeholder={t('general.placeholder.about')}
         value={form.description}
-        onChange={(e) => onChange('description', e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+          onChange('description', e.target.value)
+        }
         onBlur={() => {}}
         onKeyDown={() => {}}
         error={resolveError('description')}
@@ -498,21 +503,33 @@ export default function CastingRoleModal({
             name="tattoo"
             label={t('profile.characteristics.tattoo')}
             value={form.characteristics.tattoo}
-            anyValue="null"
+            includeAnyOption
+            anyOptionLabel={t('general.indistinct')}
+            anyValueMode="null"
+            yesLabel={t('general.yes')}
+            noLabel={t('general.no')}
             onChange={(next) => onChangeCh('tattoo', next == null ? null : next)}
           />
           <BooleanRadioGroup
             name="passport"
             label={t('profile.characteristics.passport')}
             value={form.characteristics.passport}
-            anyValue="null"
+            includeAnyOption
+            anyOptionLabel={t('general.indistinct')}
+            anyValueMode="null"
+            yesLabel={t('general.yes')}
+            noLabel={t('general.no')}
             onChange={(next) => onChangeCh('passport', next == null ? null : next)}
           />
           <BooleanRadioGroup
             name="drivingLicense"
             label={t('profile.characteristics.drivingLicense')}
             value={form.characteristics.drivingLicense}
-            anyValue="null"
+            includeAnyOption
+            anyOptionLabel={t('general.indistinct')}
+            anyValueMode="null"
+            yesLabel={t('general.yes')}
+            noLabel={t('general.no')}
             onChange={(next) => onChangeCh('drivingLicense', next == null ? null : next)}
           />
         </div>

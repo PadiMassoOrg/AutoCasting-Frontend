@@ -1,7 +1,6 @@
-import { Button, Separator } from 'autocasting-ui-library-padimasso';
+import { Button, SectionCard, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { SectionCard } from '../../../../../../shared/components/Section';
 import { ROUTES } from '../../../../../../shared/lib/routes';
 import { CASTING_STATUS_PUBLISHED } from '../../../../../sitemetadata/utils/siteMetadataUtils';
 import { useEmployerCastingIds, useEmployerCastingPublishAllowed } from '../../../context/EmployerCastingContext';

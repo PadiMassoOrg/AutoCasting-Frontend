@@ -1,5 +1,5 @@
+import { InfoCarousel } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { InfoCarousel } from '../../../../shared/components/InfoCarousel';
 import type { TalentPublicProfileResponse } from '../../../talent/talent-profile-edit/types/talentProfile.types';
 import ProfileInfoPanelSwitch from './ProfileInfoPanelSwitch';
 
@@ -17,16 +17,22 @@ export default function ProfileInfoCarousel({
 }) {
   const { t } = useTranslation();
 
+  const labels: Record<PillKey, string> = {
+    characteristics: t('profile.pills.characteristics'),
+    skills: t('profile.pills.skills'),
+    credits: t('profile.pills.credits'),
+    education: t('profile.pills.education'),
+  };
+
   return (
     <InfoCarousel<PillKey, TalentPublicProfileResponse>
       data={profile}
       order={ORDER}
+      labels={labels}
       renderers={renderers}
       getCount={getCount}
-      t={t}
       className={className}
       defaultActive="characteristics"
-      translationPrefix="profile.pills"
       fixedHeight={infoPanelFixedHeight}
     />
   );

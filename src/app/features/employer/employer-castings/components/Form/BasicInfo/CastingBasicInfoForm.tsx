@@ -1,8 +1,14 @@
-import { FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
+import {
+  BooleanRadioGroup,
+  FormInputField,
+  FormSelectField,
+  Label,
+  TextareaField,
+} from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { useTranslation } from 'react-i18next';
-import { BooleanYesNoRadioGroup, RangeCalendar, TextareaField } from '../../../../../../shared/components/Form';
+import { RangeCalendar } from '../../../../../../shared/components/Form';
 import { useCommittedNullableBooleanValue } from '../../../../../../shared/components/Form/hooks/useCommittedBooleanValue';
 import { parseLocalISODate, toLocalISO } from '../../../../../../shared/components/Form/RangeCalendar';
 import { capitalize } from '../../../../../../shared/utils/formatUtils';
@@ -279,10 +285,13 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         />
       )}
 
-      <BooleanYesNoRadioGroup
+      <BooleanRadioGroup
         label={t('employer_castings.dashboard.basic_info.has_wardrobe_fitting')}
         value={hasWardrobeFitting.value}
-        onChange={(next) => hasWardrobeFitting.onChange(next)}
+        onChange={(next) => hasWardrobeFitting.onChange(next ?? null)}
+        yesLabel={t('general.yes')}
+        noLabel={t('general.no')}
+        includeAnyOption={false}
         name="hasWardrobeFitting"
         required
       />

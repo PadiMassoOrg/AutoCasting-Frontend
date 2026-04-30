@@ -1,8 +1,13 @@
-import { ChevronUpDown, OverflowMenu, SearchInput, type OverflowMenuItem } from 'autocasting-ui-library-padimasso';
+import {
+  CheckboxField,
+  ChevronUpDown,
+  OverflowMenu,
+  SearchInput,
+  type OverflowMenuItem,
+} from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CastingStatusChip from '../../../../../shared/components/Chip/CastingStatusChip';
-import CheckboxField from '../../../../../shared/components/Form/CheckboxField';
 import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
 import type { EmployerCastingApplicantsFiltersState } from '../../types/employerCastingApplicantsFilter.types';

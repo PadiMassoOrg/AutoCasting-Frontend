@@ -1,4 +1,4 @@
-import { FormInputField, FormSelectField, Separator } from 'autocasting-ui-library-padimasso';
+import { BooleanRadioGroup, FormInputField, FormSelectField, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
@@ -9,7 +9,7 @@ import {
 } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 import { getTalentVisibleGenderOptions } from '../../sitemetadata/utils/siteMetadataUtils';
-import { BooleanRadioGroup, FilterSection } from '../../talent-database/components/Filter';
+import { FilterSection } from '../../talent-database/components/Filter';
 import MultiSelectDropdown from '../../talent-database/components/Filter/MultiSelectDropdown';
 import type { CastingFiltersQS } from '../types/casting-database.types';
 
@@ -296,18 +296,30 @@ export function CastingFilterBar({
             label={t('profile.characteristics.tattoo')}
             value={value.tattoo}
             onChange={(next) => onChange({ ...value, tattoo: next })}
+            includeAnyOption
+            anyOptionLabel={t('general.indistinct')}
+            yesLabel={t('general.yes')}
+            noLabel={t('general.no')}
           />
           <BooleanRadioGroup
             name="passport"
             label={t('profile.characteristics.passport')}
             value={value.passport}
             onChange={(next) => onChange({ ...value, passport: next })}
+            includeAnyOption
+            anyOptionLabel={t('general.indistinct')}
+            yesLabel={t('general.yes')}
+            noLabel={t('general.no')}
           />
           <BooleanRadioGroup
             name="drivingLicense"
             label={t('profile.characteristics.drivingLicense')}
             value={value.drivingLicense}
             onChange={(next) => onChange({ ...value, drivingLicense: next })}
+            includeAnyOption
+            anyOptionLabel={t('general.indistinct')}
+            yesLabel={t('general.yes')}
+            noLabel={t('general.no')}
           />
         </div>
       </FilterSection>

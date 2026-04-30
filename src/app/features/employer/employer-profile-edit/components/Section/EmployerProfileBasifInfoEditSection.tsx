@@ -1,6 +1,7 @@
+import { SectionCard } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { DashboardSection } from '../../../../../layouts/components';
-import { SectionCard, SectionTitle } from '../../../../../shared/components/Section';
+import { SectionTitle } from '../../../../../shared/components/Section';
 import type { EmployerProfileResponse } from '../../types/employerProfile.types';
 import { EmployerBasicInfoForm } from '../Form';
 

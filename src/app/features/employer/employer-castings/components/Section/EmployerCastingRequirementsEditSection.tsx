@@ -1,9 +1,8 @@
-import { Button, Icon, Label } from 'autocasting-ui-library-padimasso';
+import { Button, Icon, Label, type RadioOption } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
 import { DashboardLoadingLabel, DashboardSection } from '../../../../../layouts/components';
-import type { RadioOption } from '../../../../../shared/components/Form/RadioGroupField';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useEmployerCastingIds } from '../../context/EmployerCastingContext';

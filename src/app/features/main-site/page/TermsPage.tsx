@@ -1,7 +1,7 @@
+import { PageLoading } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../../context/LanguageContext';
-import PageLoading from '../../../shared/components/PageLoading/PageLoading';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { useLegalDocuments } from '../legal/hooks/useLegalDocuments';
 

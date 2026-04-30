@@ -1,4 +1,4 @@
-import { FormInputField, FormSelectField, Separator } from 'autocasting-ui-library-padimasso';
+import { BooleanRadioGroup, FormInputField, FormSelectField, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LG_SCREEN_SIZE, useMedia } from '../../../shared/hooks/useMedia';
@@ -10,7 +10,7 @@ import {
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 import { getTalentVisibleGenderOptions } from '../../sitemetadata/utils/siteMetadataUtils';
 import type { TalentFiltersQS } from '../types/talent-database.types';
-import { BooleanRadioGroup, FilterSection } from './Filter';
+import { FilterSection } from './Filter';
 import MultiSelectDropdown from './Filter/MultiSelectDropdown';
 
 export function TalentFilterBar({
@@ -297,18 +297,30 @@ export function TalentFilterBar({
             label={t('profile.characteristics.tattoo')}
             value={value.tattoo}
             onChange={(next) => onChange({ ...value, tattoo: next })}
+            includeAnyOption
+            anyOptionLabel={t('general.indistinct')}
+            yesLabel={t('general.yes')}
+            noLabel={t('general.no')}
           />
           <BooleanRadioGroup
             name="passport"
             label={t('profile.characteristics.passport')}
             value={value.passport}
             onChange={(next) => onChange({ ...value, passport: next })}
+            includeAnyOption
+            anyOptionLabel={t('general.indistinct')}
+            yesLabel={t('general.yes')}
+            noLabel={t('general.no')}
           />
           <BooleanRadioGroup
             name="drivingLicense"
             label={t('profile.characteristics.drivingLicense')}
             value={value.drivingLicense}
             onChange={(next) => onChange({ ...value, drivingLicense: next })}
+            includeAnyOption
+            anyOptionLabel={t('general.indistinct')}
+            yesLabel={t('general.yes')}
+            noLabel={t('general.no')}
           />
         </div>
       </FilterSection>

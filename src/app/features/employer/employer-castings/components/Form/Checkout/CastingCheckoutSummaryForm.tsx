@@ -1,6 +1,5 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { SectionCard, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { SectionCard } from '../../../../../../shared/components/Section';
 import { formatLocalDate } from '../../../../../../shared/utils/formatUtils';
 import type { CastingSectionCheckout } from '../../../types/employerCastings.types';
 

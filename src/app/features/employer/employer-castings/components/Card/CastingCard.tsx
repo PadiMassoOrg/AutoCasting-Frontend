@@ -1,8 +1,7 @@
-import { TagChip, OverflowMenu, Separator } from 'autocasting-ui-library-padimasso';
+import { OverflowMenu, SectionCard, Separator, TagChip } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../../../../context/ModalContext';
-import { SectionCard } from '../../../../../shared/components/Section';
 import { ROUTES } from '../../../../../shared/lib/routes';
 import { formatLocalDate } from '../../../../../shared/utils/formatUtils';
 import StatusDropdown from '../../../../sitemetadata/component/StatusDropdown';

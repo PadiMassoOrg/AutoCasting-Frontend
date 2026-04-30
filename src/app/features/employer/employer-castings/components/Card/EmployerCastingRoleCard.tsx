@@ -1,7 +1,6 @@
-import { TagChip, Icon } from 'autocasting-ui-library-padimasso';
+import { Icon, SectionCard, TagChip } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
-import { SectionCard } from '../../../../../shared/components/Section';
 import { formatAgeRange } from '../../../../../shared/utils/formatUtils';
 import { useCastingRoleDeleteAutosave, useCastingRolePatchAutosave } from '../../hooks/autosaves';
 import type { CastingRoleFormKey } from '../../schemas/formSchema';

@@ -1,7 +1,6 @@
-import { FormCurrencyField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
+import { FormCurrencyField, FormSelectField, Label, SectionCard } from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { SectionCard } from '../../../../../../shared/components/Section';
 import { useCachedSiteMetadataOption } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { getRoleRemunerationVisiblePayRateTypeOptions } from '../../../../../sitemetadata/utils/siteMetadataUtils';
 import { useCastingRoleRemunerationPatchAutosave } from '../../../hooks/autosaves';

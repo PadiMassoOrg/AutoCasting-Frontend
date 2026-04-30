@@ -1,7 +1,6 @@
-import { TagChip, Icon } from 'autocasting-ui-library-padimasso';
+import { Icon, SectionCard, TagChip } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { CastingStatusChip } from '../../../../../shared/components/Chip';
-import { SectionCard } from '../../../../../shared/components/Section';
 import { formatCastingModalityText, formatLocalDate } from '../../../../../shared/utils/formatUtils';
 import { normalizeCastingStatusForDisplay } from '../../../../sitemetadata/utils/siteMetadataUtils';
 import type { TalentCastingApplicationCardResponse } from '../../types/talentCastingApplication.types';

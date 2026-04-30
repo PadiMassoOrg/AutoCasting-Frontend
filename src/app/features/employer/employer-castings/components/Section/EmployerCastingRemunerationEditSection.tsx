@@ -1,10 +1,8 @@
-import { Label } from 'autocasting-ui-library-padimasso';
+import { Label, RadioGroupField, SectionCard, TextareaField } from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { DashboardLoadingLabel, DashboardSection } from '../../../../../layouts/components';
-import { RadioGroupField } from '../../../../../shared/components/Form';
-import TextareaField from '../../../../../shared/components/Form/TextareaField';
-import { SectionCard, SectionTitle } from '../../../../../shared/components/Section';
+import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
@@ -76,7 +74,9 @@ const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: stri
                 label={t('employer_castings.dashboard.remunerations.collaborative.label')}
                 placeholder={t('employer_castings.dashboard.remunerations.collaborative.placeholder')}
                 value={notes}
-                onChange={(e) => setNotes((e?.target?.value ?? '') as string)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                  setNotes(e.target.value ?? '')
+                }
                 onBlur={() => {
                   const normalizedNotes = normalizeNotesForSave(notes);
                   if (normalizedNotes === lastSentNotes) return;

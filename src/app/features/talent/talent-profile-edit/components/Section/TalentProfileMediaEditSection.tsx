@@ -1,7 +1,7 @@
-import { Separator } from 'autocasting-ui-library-padimasso';
+import { SectionCard, Separator } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { DashboardSection } from '../../../../../layouts/components';
-import { SectionCard, SectionTitle } from '../../../../../shared/components/Section';
+import { SectionTitle } from '../../../../../shared/components/Section';
 import type { Media } from '../../types/talentProfile.types';
 import { MediaPhotosForm, MediaVideosForm } from '../Form';
 
