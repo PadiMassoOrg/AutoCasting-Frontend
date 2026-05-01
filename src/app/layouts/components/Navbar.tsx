@@ -14,7 +14,6 @@ import clsx from 'clsx';
 import { useModal } from '../../context/ModalContext';
 import { USER_MODE_TALENT, useUserMode } from '../../context/UserModeContext';
 import { LogoutModal } from '../../features/auth/components';
-import { jwtDecoder } from '../../shared/utils/jwtDecoder';
 
 type NavbarVariant = 'icons' | 'icons-labels' | 'labels';
 type NavbarProps = HTMLAttributes<HTMLElement> & {
@@ -24,13 +23,9 @@ type NavbarProps = HTMLAttributes<HTMLElement> & {
 const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className = '', variant, ...props }, ref) {
   const { t } = useTranslation();
   const location = useLocation();
+  const { openModal, closeModal } = useModal();
   const isAuth = useAuthToken();
   const { mode } = useUserMode();
-  const jwt = isAuth ? jwtDecoder(isAuth) : null;
-  const { openModal, closeModal } = useModal();
-
-  const talentProfileSlug = jwt?.talentProfileSlug;
-  const profileUrl = talentProfileSlug ? `${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}` : ROUTES.TALENT;
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -68,7 +63,6 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
   // Talent
   const activeAppliedCastings = isRouteActive(ROUTES.TALENT_APPLIED_CASTINGS, true);
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
-  const activePublicProfile = isRouteActive(profileUrl, true);
   const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
   // Employer
   const activeEmployerProfile = isRouteActive(ROUTES.EMPLOYER, true);
@@ -159,14 +153,6 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                       {showIcons && (
                         <Icon name="profile" variant={activeTalentProfile ? 'primary' : 'default'} className="w-6" />
                       )}
-                      {showLabels && t('routes.profile')}
-                    </span>
-                  </Link>
-                </Tooltip>
-                <Tooltip title={t('general.tooltips.view_profile')} position="bottomRight" nudgeY={-8}>
-                  <Link to={profileUrl}>
-                    <span className={clsx(baseClass, activePublicProfile && activeClass)}>
-                      {showIcons && <Icon name="view" variant={activePublicProfile ? 'primary' : 'default'} />}
                       {showLabels && t('routes.profile')}
                     </span>
                   </Link>
