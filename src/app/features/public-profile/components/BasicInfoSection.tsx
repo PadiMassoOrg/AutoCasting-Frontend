@@ -1,6 +1,7 @@
+import { Button, LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
+import { useOwnTalentProfileNavigation } from '../../talent/talent-profile-edit/hooks/useOwnTalentProfileNavigation';
 import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
 import SocialMediaSection from './SocialMediaSection';
 import ViewerActions from './ViewerActions';
@@ -9,6 +10,11 @@ const BasicInfoSection = ({ data }: { data: TalentPublicProfileResponse }) => {
   const { t } = useTranslation();
   const { basicInfo, socialMedia } = data;
   const isDesktop = useMedia(LG_SCREEN_SIZE);
+  const { isOwnPublicProfile, isTalentMode, goToEditProfile } = useOwnTalentProfileNavigation({
+    viewedPublicSlug: data.publicSlug,
+  });
+
+  const showEditProfileButton = isDesktop && isTalentMode && isOwnPublicProfile;
 
   return (
     <article className="flex flex-col w-full gap-1 mb-4 lg:gap-0">
@@ -20,6 +26,11 @@ const BasicInfoSection = ({ data }: { data: TalentPublicProfileResponse }) => {
           </div>
           <div className="flex flex-row items-center gap-4">
             <SocialMediaSection data={socialMedia!} />
+            {showEditProfileButton && (
+              <Button variant="primary" className="w-auto!" onClick={goToEditProfile}>
+                {t('profile.page.edit_profile')}
+              </Button>
+            )}
           </div>
         </div>
       ) : (
