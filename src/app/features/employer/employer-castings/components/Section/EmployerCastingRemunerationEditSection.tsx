@@ -25,7 +25,6 @@ const normalizeNotesForSave = (value: string | null | undefined): string | null 
 
 const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: string }) => {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
-
   const { data, isLoading, error } = useSectionRemunerations(sectionId);
   const compensationTypeOptions = useCachedSiteMetadataOption('castingCompensationTypeOptions', t);
   const sectionAutosave = useCastingRemunerationsSectionAutosave(sectionId);
