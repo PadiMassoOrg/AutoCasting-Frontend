@@ -1,6 +1,11 @@
-import { SectionCard } from 'autocasting-ui-library-padimasso';
+import {
+  DashboardLoadingLabel,
+  DashboardSection,
+  LG_SCREEN_SIZE,
+  SectionCard,
+  useMedia,
+} from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
-import { DashboardLoadingLabel, DashboardSection } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useSyncCastingSectionStatus } from '../../context/useSyncCastingSectionStatus';
@@ -9,6 +14,7 @@ import CastingBasicInfoForm from '../Form/BasicInfo/CastingBasicInfoForm';
 
 const EmployerCastingBasicInfoEditSection = ({ sectionId }: { sectionId: string }) => {
   const { data, isLoading, error } = useSectionBasicInfo(sectionId);
+  const isDesktop = useMedia(LG_SCREEN_SIZE);
 
   useSyncCastingSectionStatus('basic', data?.sectionStatus);
 
@@ -23,7 +29,7 @@ const EmployerCastingBasicInfoEditSection = ({ sectionId }: { sectionId: string 
 
   return (
     <DashboardSection>
-      <SectionTitle title={t('employer_castings.dashboard.basic_info.basic_info')} />
+      {!isDesktop && <SectionTitle title={t('employer_castings.dashboard.basic_info.basic_info')} />}
       <SectionCard>
         <CastingBasicInfoForm data={data} />
       </SectionCard>
