@@ -27,7 +27,7 @@ const EmployerProfileEditPage = () => {
     },
   ];
 
-  return <DashboardShell title={t('profile.page.profile')} sections={secitons}></DashboardShell>;
+  return <DashboardShell title={t('employer_profile.profile')} sections={secitons}></DashboardShell>;
 };
 
 export default EmployerProfileEditPage;
