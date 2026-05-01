@@ -1,6 +1,11 @@
-import { Label } from 'autocasting-ui-library-padimasso';
+import {
+  DashboardLoadingLabel,
+  DashboardSection,
+  Label,
+  LG_SCREEN_SIZE,
+  useMedia,
+} from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { DashboardLoadingLabel, DashboardSection } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
@@ -10,6 +15,8 @@ import CastingCheckoutSummaryForm from '../Form/Checkout/CastingCheckoutSummaryF
 
 const EmployerCastingCheckoutEditSection = () => {
   const { t } = useTranslation();
+  const isDesktop = useMedia(LG_SCREEN_SIZE);
+
   const { id: castingId } = useEmployerCastingIds();
   const { data, isLoading, error } = useSectionCheckout(castingId);
 
@@ -24,7 +31,7 @@ const EmployerCastingCheckoutEditSection = () => {
 
   return (
     <DashboardSection>
-      <SectionTitle title={t('employer_castings.dashboard.checkout.checkout_and_publish')} />
+      {!isDesktop && <SectionTitle title={t('employer_castings.dashboard.checkout.checkout_and_publish')} />}
       <Label className="mt-2 w-full text-[var(--color-secondary-grey-fonts)]">
         {t('employer_castings.dashboard.checkout.subtitle')}
       </Label>

@@ -1,8 +1,14 @@
-import { ImageCarousel, Label, Separator } from 'autocasting-ui-library-padimasso';
+import {
+  ImageCarousel,
+  Label,
+  LG_SCREEN_SIZE,
+  Separator,
+  useMedia,
+  XL_SCREEN_SIZE,
+} from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import ServerError from '../../../shared/components/ServerError/ServerError';
-import { LG_SCREEN_SIZE, useMedia, XL_SCREEN_SIZE } from 'autocasting-ui-library-padimasso';
 import { TalentProfileModeToggle } from '../../talent/talent-profile-edit/components';
 import { BasicInfoSection, SocialMediaSection, VideoSection, ViewerActions } from '../components';
 import ProfileInfoCarousel from '../components/Details/ProfileInfoCarousel';

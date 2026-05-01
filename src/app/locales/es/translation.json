@@ -890,6 +890,7 @@
     }
   },
   "employer_profile": {
+    "profile": "Mi Perfil",
     "basic_info": {
       "company_name": "Nombre del perfil o compañía",
       "tax_number": "CUIT / CUIL",

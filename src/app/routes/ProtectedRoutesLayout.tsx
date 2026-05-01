@@ -33,7 +33,6 @@ export default function ProtectedRoutesLayout() {
         <Route path={ROUTES.TALENT_APPLIED_CASTINGS} element={<TalentCastingApplicationsPage />} />
 
         {/* Employer */}
-        <Route path={ROUTES.EMPLOYER} element={<EmployerProfileEditPage />} />
         <Route path={ROUTES.EMPLOYER_CASTINGS} element={<EmployerCastingsPage />} />
         <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/applicants'} element={<EmployerCastingApplicantsPage />} />
       </Route>
@@ -43,6 +42,7 @@ export default function ProtectedRoutesLayout() {
         <Route path={ROUTES.TALENT_SETTINGS} element={<TalentProfileSettingsPage />} />
 
         {/* Employer */}
+        <Route path={ROUTES.EMPLOYER} element={<EmployerProfileEditPage />} />
         <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/editor'} element={<EmployerCastingPage />} />
         <Route path={ROUTES.EMPLOYER_SETTINGS} element={<EmployerProfileSettingsPage />} />
       </Route>

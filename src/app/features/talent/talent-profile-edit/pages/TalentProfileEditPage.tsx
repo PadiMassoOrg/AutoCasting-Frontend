@@ -1,10 +1,11 @@
-import { useTranslation } from 'react-i18next';
+import type { DashboardShellSection } from 'autocasting-ui-library-padimasso';
 import {
+  Button,
   DashboardLoadingLabel,
   DashboardSection as DashboardSectionBlock,
   DashboardShell,
 } from 'autocasting-ui-library-padimasso';
-import type { DashboardShellSection } from 'autocasting-ui-library-padimasso';
+import { useTranslation } from 'react-i18next';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
 import { TalentProfileModeToggle } from '../components';
@@ -16,11 +17,13 @@ import {
   TalentProfileSkillsEditSection,
 } from '../components/Section';
 import TalentProfileBasicInfoEditSection from '../components/Section/TalentProfileBasicInfoEditSection';
+import { useOwnTalentProfileNavigation } from '../hooks/useOwnTalentProfileNavigation';
 import { useTalentProfile } from '../hooks/useTalentProfile';
 
 export default function TalentProfileEditPage() {
   const { t } = useTranslation();
   const { data, error, isLoading } = useTalentProfile();
+  const { canViewPublicProfile, goToPublicProfile } = useOwnTalentProfileNavigation();
 
   if (error && !data) return <ServerError />;
 
@@ -117,6 +120,14 @@ export default function TalentProfileEditPage() {
           },
         ];
 
+  const titleActionsRenderer = () => {
+    return (
+      <Button variant="primary" disabled={!canViewPublicProfile} onClick={goToPublicProfile}>
+        {t('profile.page.view_profile')}
+      </Button>
+    );
+  };
+
   const bottomSectionRenderer = () => {
     if (!data) return;
     return (
@@ -132,6 +143,7 @@ export default function TalentProfileEditPage() {
       <div className="flex-1 min-h-0">
         <DashboardShell
           title={t('profile.page.profile')}
+          titleActions={titleActionsRenderer()}
           sections={sections}
           initialKey="basic"
           bottomSection={bottomSectionRenderer()}

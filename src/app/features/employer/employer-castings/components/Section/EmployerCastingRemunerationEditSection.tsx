@@ -1,7 +1,15 @@
-import { Label, RadioGroupField, SectionCard, TextareaField } from 'autocasting-ui-library-padimasso';
+import {
+  DashboardLoadingLabel,
+  DashboardSection,
+  Label,
+  LG_SCREEN_SIZE,
+  RadioGroupField,
+  SectionCard,
+  TextareaField,
+  useMedia,
+} from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
-import { DashboardLoadingLabel, DashboardSection } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
@@ -16,6 +24,7 @@ const normalizeNotesForSave = (value: string | null | undefined): string | null 
 };
 
 const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: string }) => {
+  const isDesktop = useMedia(LG_SCREEN_SIZE);
   const { data, isLoading, error } = useSectionRemunerations(sectionId);
   const compensationTypeOptions = useCachedSiteMetadataOption('castingCompensationTypeOptions', t);
   const sectionAutosave = useCastingRemunerationsSectionAutosave(sectionId);
@@ -45,7 +54,7 @@ const EmployerCastingRemunerationEditSection = ({ sectionId }: { sectionId: stri
 
   return (
     <DashboardSection>
-      <SectionTitle title={t('employer_castings.dashboard.remunerations.title')} />
+      {!isDesktop && <SectionTitle title={t('employer_castings.dashboard.remunerations.title')} />}
       {data.remunerations.length > 0 ? (
         <>
           <RadioGroupField
