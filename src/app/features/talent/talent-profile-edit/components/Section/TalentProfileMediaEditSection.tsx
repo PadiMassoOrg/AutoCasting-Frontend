@@ -1,4 +1,4 @@
-import { DashboardSection, LG_SCREEN_SIZE, SectionCard, Separator, useMedia } from 'autocasting-ui-library-padimasso';
+import { DashboardSection, LG_SCREEN_SIZE, SectionCard, useMedia } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import type { Media } from '../../types/talentProfile.types';
@@ -13,7 +13,6 @@ const TalentProfileMediaEditSection = ({ media, supabaseId }: { media: Media; su
       {!isDesktop && <SectionTitle title={t('profile.pills.media')} />}
       <SectionCard>
         <MediaPhotosForm media={media} supabaseId={supabaseId} />
-        <Separator className="opacity-20 mb-12" />
         <MediaVideosForm data={media} />
       </SectionCard>
     </DashboardSection>

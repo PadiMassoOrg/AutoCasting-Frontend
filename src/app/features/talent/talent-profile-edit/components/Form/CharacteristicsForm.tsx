@@ -235,190 +235,206 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
   const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
 
   return (
-    <div className="flex flex-col gap-2">
-      {/* Altura / Peso */}
-      <article className="h-full flex flex-row gap-4 items-center">
-        <FormInputField
-          id="heightCm"
-          label={t('profile.characteristics.heightCm')}
-          labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.dash')}
-          value={heightCm.value}
-          onChange={heightCm.onChange}
-          onBlur={heightCm.onBlur}
-          onKeyDown={heightCm.onKeyDown}
-          error={heightCm.error || resolveError('heightCm', errors.heightCm)}
-        />
-      </article>
+    <main className="flex flex-col lg:gap-6">
+      <section className="flex flex-col lg:flex-row lg:gap-8">
+        {/* Height + Hair Color */}
+        <article className="w-full flex flex-col">
+          <div className="flex-1">
+            <FormInputField
+              id="heightCm"
+              label={t('profile.characteristics.heightCm')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.dash')}
+              value={heightCm.value}
+              onChange={heightCm.onChange}
+              onBlur={heightCm.onBlur}
+              onKeyDown={heightCm.onKeyDown}
+              error={heightCm.error || resolveError('heightCm', errors.heightCm)}
+            />
+          </div>
+          <div className="flex-1">
+            <FormSelectField
+              id="hairColorId"
+              label={t('profile.characteristics.hairColor')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.select')}
+              value={hair.value}
+              onChange={hair.onChange}
+              onBlur={hair.onBlur}
+              options={hairOptions}
+              error={resolveError('hairColorId', errors.hairColorId)}
+            />
+          </div>
+        </article>
+        {/* Eyes + Ethnicity */}
+        <article className="w-full flex flex-col">
+          <div className="flex-1">
+            <FormSelectField
+              id="eyeColorId"
+              label={t('profile.characteristics.eyeColor')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.select')}
+              value={eye.value}
+              onChange={eye.onChange}
+              onBlur={eye.onBlur}
+              options={eyeOptions}
+              error={resolveError('eyeColorId', errors.eyeColorId)}
+            />
+          </div>
+          <div className="flex-1">
+            <FormSelectField
+              id="ethnicityId"
+              label={t('profile.characteristics.ethnicity')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.select')}
+              value={ethnicity.value}
+              onChange={ethnicity.onChange}
+              onBlur={ethnicity.onBlur}
+              options={ethnicityOptions}
+              error={resolveError('ethnicityId', errors.ethnicityId)}
+            />
+          </div>
+        </article>
+      </section>
 
-      {/* Ethnicity */}
-      <FormSelectField
-        id="ethnicityId"
-        label={t('profile.characteristics.ethnicity')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.select')}
-        value={ethnicity.value}
-        onChange={ethnicity.onChange}
-        onBlur={ethnicity.onBlur}
-        options={ethnicityOptions}
-        error={resolveError('ethnicityId', errors.ethnicityId)}
-      />
+      <section className="flex flex-col lg:flex-row lg:gap-8">
+        {/* Pants + Shoes + Shirt */}
+        <article className="w-full flex flex-col">
+          <div className="flex-1">
+            <FormInputField
+              id="pantSize"
+              label={t('profile.characteristics.pants')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.measure')}
+              value={pantSize.value}
+              onChange={pantSize.onChange}
+              onBlur={pantSize.onBlur}
+              onKeyDown={pantSize.onKeyDown}
+              error={resolveError('pantSize', errors.pantSize)}
+            />
+          </div>
+          <div className="flex-1">
+            <FormInputField
+              id="shoeSize"
+              label={t('profile.characteristics.shoes')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.measure')}
+              value={shoeSize.value}
+              onChange={shoeSize.onChange}
+              onBlur={shoeSize.onBlur}
+              onKeyDown={shoeSize.onKeyDown}
+              error={resolveError('shoeSize', errors.shoeSize)}
+            />
+          </div>
+          <div className="flex-1">
+            <FormInputField
+              id="shirtSize"
+              label={t('profile.characteristics.shirt')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.measure')}
+              value={shirtSize.value}
+              onChange={shirtSize.onChange}
+              onBlur={shirtSize.onBlur}
+              onKeyDown={shirtSize.onKeyDown}
+              error={resolveError('shirtSize', errors.shirtSize)}
+            />
+          </div>
+        </article>
+        {/* Chest + Hips + Dress */}
+        <article className="w-full flex flex-col">
+          <div className="flex-1">
+            <FormInputField
+              id="chestCm"
+              label={t('profile.characteristics.chest')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.measure')}
+              value={chestCm.value}
+              onChange={chestCm.onChange}
+              onBlur={chestCm.onBlur}
+              onKeyDown={chestCm.onKeyDown}
+              error={resolveError('chestCm', errors.chestCm)}
+            />
+          </div>
+          <div className="flex-1">
+            <FormInputField
+              id="hipCm"
+              label={t('profile.characteristics.hip')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.measure')}
+              value={hipCm.value}
+              onChange={hipCm.onChange}
+              onBlur={hipCm.onBlur}
+              onKeyDown={hipCm.onKeyDown}
+              error={resolveError('hipCm', errors.hipCm)}
+            />
+          </div>
+          <div className="flex-1">
+            <FormInputField
+              id="dressSize"
+              label={t('profile.characteristics.dress')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.measure')}
+              value={dressSize.value}
+              onChange={dressSize.onChange}
+              onBlur={dressSize.onBlur}
+              onKeyDown={dressSize.onKeyDown}
+              error={resolveError('dressSize', errors.dressSize)}
+            />
+          </div>
+        </article>
+      </section>
 
-      {/* Hair color */}
-      <FormSelectField
-        id="hairColorId"
-        label={t('profile.characteristics.hairColor')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.select')}
-        value={hair.value}
-        onChange={hair.onChange}
-        onBlur={hair.onBlur}
-        options={hairOptions}
-        error={resolveError('hairColorId', errors.hairColorId)}
-      />
-
-      {/* Eye color */}
-      <FormSelectField
-        id="eyeColorId"
-        label={t('profile.characteristics.eyeColor')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.select')}
-        value={eye.value}
-        onChange={eye.onChange}
-        onBlur={eye.onBlur}
-        options={eyeOptions}
-        error={resolveError('eyeColorId', errors.eyeColorId)}
-      />
-
-      {/* Medidas */}
-      <article className="flex flex-row gap-4 items-center">
-        <FormInputField
-          id="chestCm"
-          label={t('profile.characteristics.chest')}
-          labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.measure')}
-          value={chestCm.value}
-          onChange={chestCm.onChange}
-          onBlur={chestCm.onBlur}
-          onKeyDown={chestCm.onKeyDown}
-          error={resolveError('chestCm', errors.chestCm)}
-        />
-        <FormInputField
-          id="waistCm"
-          label={t('profile.characteristics.waist')}
-          labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.measure')}
-          value={waistCm.value}
-          onChange={waistCm.onChange}
-          onBlur={waistCm.onBlur}
-          onKeyDown={waistCm.onKeyDown}
-          error={resolveError('waistCm', errors.waistCm)}
-        />
-        <FormInputField
-          id="hipCm"
-          label={t('profile.characteristics.hip')}
-          labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.measure')}
-          value={hipCm.value}
-          onChange={hipCm.onChange}
-          onBlur={hipCm.onBlur}
-          onKeyDown={hipCm.onKeyDown}
-          error={resolveError('hipCm', errors.hipCm)}
-        />
-      </article>
-
-      <article className="flex flex-row gap-4 items-center">
-        <FormInputField
-          id="shirtSize"
-          label={t('profile.characteristics.shirt')}
-          labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.measure')}
-          value={shirtSize.value}
-          onChange={shirtSize.onChange}
-          onBlur={shirtSize.onBlur}
-          onKeyDown={shirtSize.onKeyDown}
-          error={resolveError('shirtSize', errors.shirtSize)}
-        />
-        <FormInputField
-          id="pantSize"
-          label={t('profile.characteristics.pants')}
-          labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.measure')}
-          value={pantSize.value}
-          onChange={pantSize.onChange}
-          onBlur={pantSize.onBlur}
-          onKeyDown={pantSize.onKeyDown}
-          error={resolveError('pantSize', errors.pantSize)}
-        />
-      </article>
-
-      <article className="flex flex-row gap-4 items-center">
-        <FormInputField
-          id="dressSize"
-          label={t('profile.characteristics.dress')}
-          labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.measure')}
-          value={dressSize.value}
-          onChange={dressSize.onChange}
-          onBlur={dressSize.onBlur}
-          onKeyDown={dressSize.onKeyDown}
-          error={resolveError('dressSize', errors.dressSize)}
-        />
-        <FormInputField
-          id="shoeSize"
-          label={t('profile.characteristics.shoes')}
-          labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.measure')}
-          value={shoeSize.value}
-          onChange={shoeSize.onChange}
-          onBlur={shoeSize.onBlur}
-          onKeyDown={shoeSize.onKeyDown}
-          error={resolveError('shoeSize', errors.shoeSize)}
-        />
-      </article>
-
-      {/* Booleanos */}
-      <article className="flex flex-row gap-4 items-center">
-        <FormSelectField
-          id="tattoo"
-          label={t('profile.characteristics.tattoo')}
-          labelClassName="font-semibold text-base"
-          value={tattoo.value}
-          onChange={tattoo.onChange}
-          options={getBooleanOptions(t)}
-        />
-
-        <FormSelectField
-          id="passport"
-          label={t('profile.characteristics.passport')}
-          labelClassName="font-semibold text-base"
-          value={passport.value}
-          onChange={passport.onChange}
-          options={getBooleanOptions(t)}
-        />
-      </article>
-
-      <FormSelectField
-        id="drivingLicense"
-        label={t('profile.characteristics.drivingLicense')}
-        labelClassName="font-semibold text-base"
-        value={drivingLicense.value}
-        onChange={drivingLicense.onChange}
-        options={getBooleanOptions(t)}
-      />
-
-      {/* Dieta */}
-      <FormSelectField
-        id="dietOptionId"
-        label={t('profile.characteristics.diet')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.select')}
-        value={diet.value}
-        onChange={diet.onChange}
-        onBlur={diet.onBlur}
-        options={dietOptions}
-        error={resolveError('dietOptionId', errors.dietOptionId)}
-      />
-    </div>
+      <section className="flex flex-col lg:flex-row lg:gap-8">
+        {/* Tattoo + License */}
+        <article className="w-full flex flex-col">
+          <div className="flex-1">
+            <FormSelectField
+              id="tattoo"
+              label={t('profile.characteristics.tattoo')}
+              labelClassName="font-semibold text-base"
+              value={tattoo.value}
+              onChange={tattoo.onChange}
+              options={getBooleanOptions(t)}
+            />
+          </div>
+          <div className="flex-1">
+            <FormSelectField
+              id="drivingLicense"
+              label={t('profile.characteristics.drivingLicense')}
+              labelClassName="font-semibold text-base"
+              value={drivingLicense.value}
+              onChange={drivingLicense.onChange}
+              options={getBooleanOptions(t)}
+            />
+          </div>
+        </article>
+        {/* Passport + Diet */}
+        <article className="w-full flex flex-col">
+          <div className="flex-1">
+            <FormSelectField
+              id="passport"
+              label={t('profile.characteristics.passport')}
+              labelClassName="font-semibold text-base"
+              value={passport.value}
+              onChange={passport.onChange}
+              options={getBooleanOptions(t)}
+            />
+          </div>
+          <div className="flex-1">
+            <FormSelectField
+              id="dietOptionId"
+              label={t('profile.characteristics.diet')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.select')}
+              value={diet.value}
+              onChange={diet.onChange}
+              onBlur={diet.onBlur}
+              options={dietOptions}
+              error={resolveError('dietOptionId', errors.dietOptionId)}
+            />
+          </div>
+        </article>
+      </section>
+    </main>
   );
 }

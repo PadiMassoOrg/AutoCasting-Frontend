@@ -4,7 +4,7 @@ import { SectionTitle } from '../../../../../shared/components/Section';
 import { useSiteMetadataSlice } from '../../../../sitemetadata/hooks/useSiteMetadataSlice';
 import { useSocialMediaAutosave } from '../../hooks/autosaves';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';
-import { BasicInfoForm, ContactForm } from '../Form';
+import { BasicInfoForm } from '../Form';
 import { SocialMediaForm } from '../Form/SocialMedia';
 
 const TalentProfileBasicInfoEditSection = ({ profile }: { profile: TalentProfileResponse }) => {
@@ -19,8 +19,6 @@ const TalentProfileBasicInfoEditSection = ({ profile }: { profile: TalentProfile
       <SectionCard>
         <BasicInfoForm data={profile.basicInfo} professionsMeta={professions} />
         <Separator className="opacity-20 my-8" />
-        <ContactForm data={profile.contact} />
-        <Separator className="opacity-20 mb-8 mt-4" />
         <SocialMediaForm data={profile.socialMedia} onSaveLinks={(payload) => socialMediaAutosave.immediate(payload)} />
       </SectionCard>
     </DashboardSection>
