@@ -1,7 +1,6 @@
-import { Button, Icon, SectionCard } from 'autocasting-ui-library-padimasso';
+import { Button, DashboardSection, Icon, SectionCard } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
-import { DashboardSection } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import { useEducationAutosave } from '../../hooks/autosaves';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';
@@ -30,8 +29,8 @@ const TalentProfileEducationEditSection = ({ profile }: { profile: TalentProfile
 
   const actionButtonRender = () => {
     return (
-      <Button onClick={openCreateModal} className="flex items-center justify-center gap-2">
-        <Icon name="plus" variant="white" size={16} />
+      <Button onClick={openCreateModal} variant="primaryOutline" className="flex items-center justify-center gap-2">
+        <Icon name="plus" variant="primary" size={16} />
         <span className="text-base font-medium">{t('profile.education.add_new')}</span>
       </Button>
     );

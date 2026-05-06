@@ -78,7 +78,7 @@ export default function GroupedCredits({ data, onEdit, onDelete }: Props) {
               </span>
 
               {isOpen && (
-                <article id={`credits-${catKey}`} className="mt-3 flex flex-col gap-4">
+                <article id={`credits-${catKey}`} className="mt-3 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
                   {list.map((c) => (
                     <article key={c.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3">
                       <div className="flex flex-row justify-between">

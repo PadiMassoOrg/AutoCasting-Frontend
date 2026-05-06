@@ -1,8 +1,7 @@
-import { Button, Icon, SectionCard } from 'autocasting-ui-library-padimasso';
+import { Button, DashboardSection, Icon, SectionCard } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
-import { DashboardSection } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
@@ -51,8 +50,12 @@ const TalentProfileSkillsEditSection = ({ profile }: { profile: TalentProfileRes
   };
 
   const actionButtonRender = () => (
-    <Button onClick={handleOpenModal} className="flex flex-row items-center justify-center gap-2">
-      <Icon name="plus" variant="white" size={16} />
+    <Button
+      onClick={handleOpenModal}
+      variant="primaryOutline"
+      className="flex flex-row items-center justify-center gap-2"
+    >
+      <Icon name="plus" variant="primary" size={16} />
       <span className="text-base font-medium">{t('profile.skills.add_new')}</span>
     </Button>
   );

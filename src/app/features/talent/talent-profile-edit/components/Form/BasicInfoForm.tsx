@@ -1,4 +1,4 @@
-import { ChoiceChip, FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
+import { ChoiceChip, FormInputField, FormSelectField, Label, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -197,6 +197,8 @@ export default function BasicInfoForm({
           />
         </div>
       </div>
+
+      <Separator className="opacity-20 mt-1 mb-4" />
 
       {/* Profesión */}
       <div className="flex flex-col gap-2">

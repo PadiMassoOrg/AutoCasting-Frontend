@@ -1,8 +1,6 @@
-import { Button, Icon } from 'autocasting-ui-library-padimasso';
-import { SectionCard } from 'autocasting-ui-library-padimasso';
+import { Button, DashboardSection, Icon, SectionCard } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
-import { DashboardSection } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../../shared/components/Section';
 import { useCreditAutosave } from '../../hooks/autosaves';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';
@@ -31,8 +29,12 @@ const TalentProfileCreditsEditSection = ({ profile }: { profile: TalentProfileRe
 
   const actionButtonRender = () => {
     return (
-      <Button onClick={openCreateModal} className="flex flex-row gap-2 items-center justify-center">
-        <Icon name="plus" variant="white" size={16} />
+      <Button
+        onClick={openCreateModal}
+        variant="primaryOutline"
+        className="flex flex-row gap-2 items-center justify-center"
+      >
+        <Icon name="plus" variant="primary" size={16} />
         <span className="text-base font-medium">{t('profile.credits.add_new')}</span>
       </Button>
     );

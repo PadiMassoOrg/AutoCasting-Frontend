@@ -196,26 +196,28 @@ export default function SocialMediaForm({ data, onSaveLinks }: SocialMediaFormPr
     <div className="w-full flex flex-col">
       <h3 className="font-bold text-base mb-4">{t('profile.basic_info.social_media')}</h3>
 
-      {fields.map((field, index) => (
-        <SocialMediaRow
-          key={field.id}
-          allOptions={allOptions}
-          usedOptionIds={usedIds}
-          value={{ optionId: watchedLinks[index]?.optionId || '', url: watchedLinks[index]?.url ?? null }}
-          urlField={register(`links.${index}.url`)}
-          optionIdField={register(`links.${index}.optionId`)}
-          errorMessage={errors.links?.[index]?.url?.message}
-          onOptionChange={(nextId) => handleOptionChange(index, nextId)}
-          onDelete={() => handleDeleteRow(index)}
-          onBlur={() => void handleSaveRow(index)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              void handleSaveRow(index);
-            }
-          }}
-        />
-      ))}
+      <div className="grid grid-cols-1 gap-x-8 lg:grid-cols-2">
+        {fields.map((field, index) => (
+          <SocialMediaRow
+            key={field.id}
+            allOptions={allOptions}
+            usedOptionIds={usedIds}
+            value={{ optionId: watchedLinks[index]?.optionId || '', url: watchedLinks[index]?.url ?? null }}
+            urlField={register(`links.${index}.url`)}
+            optionIdField={register(`links.${index}.optionId`)}
+            errorMessage={errors.links?.[index]?.url?.message}
+            onOptionChange={(nextId) => handleOptionChange(index, nextId)}
+            onDelete={() => handleDeleteRow(index)}
+            onBlur={() => void handleSaveRow(index)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                void handleSaveRow(index);
+              }
+            }}
+          />
+        ))}
+      </div>
 
       <Button
         type="button"
