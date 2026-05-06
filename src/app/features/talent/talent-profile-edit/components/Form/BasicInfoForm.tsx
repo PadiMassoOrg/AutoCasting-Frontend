@@ -126,90 +126,79 @@ export default function BasicInfoForm({
 
   return (
     <>
-      <section className="flex flex-col lg:flex-row lg:gap-8">
-        {/* Name + Fecha */}
-        <article className="w-full flex flex-col">
-          <div className="flex-1">
-            <FormInputField
-              id="stageName"
-              label={t('profile.basic_info.artistic_name')}
-              labelClassName="font-semibold text-base"
-              placeholder={t('general.placeholder.stage_name')}
-              value={stageName.value}
-              onChange={stageName.onChange}
-              onBlur={stageName.onBlur}
-              onKeyDown={stageName.onKeyDown}
-              error={resolveError('stageName', errors.stageName)}
-            />
-          </div>
-          <div className="flex flex-col gap-2 lg:flex-1">
-            <Label className="text-sm font-semibold">{t('profile.basic_info.birth_date')}</Label>
-            <div className="grid grid-cols-3 gap-2">
-              <FormSelectField
-                id="birth-day"
-                placeholder={t('general.placeholder.day')}
-                value={birth.day}
-                onChange={(e) => {
-                  setBirthError(null);
-                  onSelect((v) => birth.onDay(v))(e);
-                }}
-                onBlur={(e) => {
-                  birth.onAnyBlur(e);
-                }}
-                options={birth.dayOptions}
-                error={resolveError('birthDate', birthDayError)}
-              />
-              <FormSelectField
-                id="birth-month"
-                placeholder={t('general.placeholder.month')}
-                value={birth.month}
-                onChange={(e) => {
-                  setBirthError(null);
-                  onSelect((v) => birth.onMonth(v))(e);
-                }}
-                onBlur={(e) => {
-                  birth.onAnyBlur(e);
-                }}
-                options={monthOptions}
-                error={resolveError('birthDate', errors.birth?.month)}
-              />
-              <FormSelectField
-                id="birth-year"
-                placeholder={t('general.placeholder.year')}
-                value={birth.year}
-                onChange={(e) => {
-                  setBirthError(null);
-                  onSelect((v) => birth.onYear(v))(e);
-                }}
-                onBlur={(e) => {
-                  birth.onAnyBlur(e);
-                }}
-                options={yearOptions}
-                error={resolveError('birthDate', errors.birth?.year)}
-              />
-            </div>
-          </div>
-        </article>
+      <FormInputField
+        id="stageName"
+        label={t('profile.basic_info.artistic_name')}
+        labelClassName="font-semibold text-base"
+        placeholder={t('general.placeholder.stage_name')}
+        value={stageName.value}
+        onChange={stageName.onChange}
+        onBlur={stageName.onBlur}
+        onKeyDown={stageName.onKeyDown}
+        error={resolveError('stageName', errors.stageName)}
+      />
 
-        {/* Gender + Location */}
-        <article className="w-full flex flex-col">
-          <div className="flex-1">
-            <FormSelectField
-              id="genderId"
-              label={t('profile.basic_info.gender')}
-              labelClassName="font-semibold text-base"
-              placeholder={t('general.placeholder.select')}
-              value={gender.value}
-              onChange={gender.onChange}
-              onBlur={gender.onBlur}
-              options={genderOptions}
-              error={resolveError('genderId', errors.genderId)}
-            />
-          </div>
-        </article>
-      </section>
+      <FormSelectField
+        id="genderId"
+        label={t('profile.basic_info.gender')}
+        labelClassName="font-semibold text-base"
+        placeholder={t('general.placeholder.select')}
+        value={gender.value}
+        onChange={gender.onChange}
+        onBlur={gender.onBlur}
+        options={genderOptions}
+        error={resolveError('genderId', errors.genderId)}
+      />
 
-      <Separator className="opacity-20 mt-1 mb-4" />
+      <div className="flex flex-col gap-2 lg:flex-1">
+        <Label className="text-sm font-semibold">{t('profile.basic_info.birth_date')}</Label>
+        <div className="grid grid-cols-3 gap-2">
+          <FormSelectField
+            id="birth-day"
+            placeholder={t('general.placeholder.day')}
+            value={birth.day}
+            onChange={(e) => {
+              setBirthError(null);
+              onSelect((v) => birth.onDay(v))(e);
+            }}
+            onBlur={(e) => {
+              birth.onAnyBlur(e);
+            }}
+            options={birth.dayOptions}
+            error={resolveError('birthDate', birthDayError)}
+          />
+          <FormSelectField
+            id="birth-month"
+            placeholder={t('general.placeholder.month')}
+            value={birth.month}
+            onChange={(e) => {
+              setBirthError(null);
+              onSelect((v) => birth.onMonth(v))(e);
+            }}
+            onBlur={(e) => {
+              birth.onAnyBlur(e);
+            }}
+            options={monthOptions}
+            error={resolveError('birthDate', errors.birth?.month)}
+          />
+          <FormSelectField
+            id="birth-year"
+            placeholder={t('general.placeholder.year')}
+            value={birth.year}
+            onChange={(e) => {
+              setBirthError(null);
+              onSelect((v) => birth.onYear(v))(e);
+            }}
+            onBlur={(e) => {
+              birth.onAnyBlur(e);
+            }}
+            options={yearOptions}
+            error={resolveError('birthDate', errors.birth?.year)}
+          />
+        </div>
+      </div>
+
+      <Separator className="opacity-20 mt-2 mb-4" />
 
       {/* Profesión */}
       <div className="flex flex-col gap-2">
