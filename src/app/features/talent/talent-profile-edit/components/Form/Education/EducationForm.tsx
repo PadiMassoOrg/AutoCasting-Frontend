@@ -44,7 +44,7 @@ export default function EducationForm({ data }: { data: Education[] }) {
   };
 
   return (
-    <article className="flex flex-col gap-4">
+    <article className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
       {data.map((e) => (
         <article key={e.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3 lg:py-2">
           <div className="flex flex-row justify-between">
