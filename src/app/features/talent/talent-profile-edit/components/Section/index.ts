@@ -1,15 +1,20 @@
 import TalentProfileBasicInfoEditSection from './TalentProfileBasicInfoEditSection';
-import TalentProfileCreditsEditSection from './TalentProfileCreditsEditSection';
+import TalentProfileCreditsEditSection, { TalentProfileCreditsEditAction } from './TalentProfileCreditsEditSection';
 import TalentProfileDetailsEditSection from './TalentProfileDetailsEditSection';
-import TalentProfileEducationEditSection from './TalentProfileEducationEditSection';
+import TalentProfileEducationEditSection, {
+  TalentProfileEducationEditAction,
+} from './TalentProfileEducationEditSection';
 import TalentProfileMediaEditSection from './TalentProfileMediaEditSection';
-import TalentProfileSkillsEditSection from './TalentProfileSkillsEditSection';
+import TalentProfileSkillsEditSection, { TalentProfileSkillsEditAction } from './TalentProfileSkillsEditSection';
 
 export {
   TalentProfileBasicInfoEditSection,
   TalentProfileCreditsEditSection,
+  TalentProfileCreditsEditAction,
   TalentProfileDetailsEditSection,
   TalentProfileEducationEditSection,
+  TalentProfileEducationEditAction,
   TalentProfileMediaEditSection,
   TalentProfileSkillsEditSection,
+  TalentProfileSkillsEditAction,
 };

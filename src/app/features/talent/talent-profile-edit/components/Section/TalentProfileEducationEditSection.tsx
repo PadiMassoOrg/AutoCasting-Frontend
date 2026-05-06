@@ -1,13 +1,12 @@
-import { Button, DashboardSection, Icon, SectionCard } from 'autocasting-ui-library-padimasso';
+import { Button, Icon } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
-import { SectionTitle } from '../../../../../shared/components/Section';
 import { useEducationAutosave } from '../../hooks/autosaves';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';
 import { EducationForm } from '../Form';
 import EducationModal from '../Form/Education/EducationModal';
 
-const TalentProfileEducationEditSection = ({ profile }: { profile: TalentProfileResponse }) => {
+export function TalentProfileEducationEditAction() {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
   const createMut = useEducationAutosave();
@@ -27,25 +26,16 @@ const TalentProfileEducationEditSection = ({ profile }: { profile: TalentProfile
     );
   };
 
-  const actionButtonRender = () => {
-    return (
-      <Button onClick={openCreateModal} variant="primaryOutline" className="flex items-center justify-center gap-2">
-        <Icon name="plus" variant="primary" size={16} />
-        <span className="text-base font-medium">{t('profile.education.add_new')}</span>
-      </Button>
-    );
-  };
-
   return (
-    <DashboardSection>
-      <SectionTitle title={t('profile.pills.education')} action={actionButtonRender()} />
-      {profile.education.length > 0 && (
-        <SectionCard>
-          <EducationForm data={profile.education}></EducationForm>
-        </SectionCard>
-      )}
-    </DashboardSection>
+    <Button onClick={openCreateModal} variant="primaryOutline" className="flex items-center justify-center gap-2">
+      <Icon name="plus" variant="primary" size={16} />
+      <span className="text-base font-medium">{t('profile.education.add_new')}</span>
+    </Button>
   );
+}
+
+const TalentProfileEducationEditSection = ({ profile }: { profile: TalentProfileResponse }) => {
+  return profile.education.length > 0 ? <EducationForm data={profile.education}></EducationForm> : null;
 };
 
 export default TalentProfileEducationEditSection;

@@ -1,13 +1,12 @@
-import { Button, DashboardSection, Icon, SectionCard } from 'autocasting-ui-library-padimasso';
+import { Button, Icon } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../context/ModalContext';
-import { SectionTitle } from '../../../../../shared/components/Section';
 import { useCreditAutosave } from '../../hooks/autosaves';
 import type { TalentProfileResponse } from '../../types/talentProfile.types';
 import { CreditsForm } from '../Form';
 import CreditModal from '../Form/Credits/CreditModal';
 
-const TalentProfileCreditsEditSection = ({ profile }: { profile: TalentProfileResponse }) => {
+export function TalentProfileCreditsEditAction() {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
   const createMut = useCreditAutosave();
@@ -27,29 +26,20 @@ const TalentProfileCreditsEditSection = ({ profile }: { profile: TalentProfileRe
     );
   };
 
-  const actionButtonRender = () => {
-    return (
-      <Button
-        onClick={openCreateModal}
-        variant="primaryOutline"
-        className="flex flex-row gap-2 items-center justify-center"
-      >
-        <Icon name="plus" variant="primary" size={16} />
-        <span className="text-base font-medium">{t('profile.credits.add_new')}</span>
-      </Button>
-    );
-  };
-
   return (
-    <DashboardSection>
-      <SectionTitle title={t('profile.pills.credits')} action={actionButtonRender()} />
-      {profile.credits.length > 0 && (
-        <SectionCard>
-          <CreditsForm data={profile.credits}></CreditsForm>
-        </SectionCard>
-      )}
-    </DashboardSection>
+    <Button
+      onClick={openCreateModal}
+      variant="primaryOutline"
+      className="flex flex-row gap-2 items-center justify-center"
+    >
+      <Icon name="plus" variant="primary" size={16} />
+      <span className="text-base font-medium">{t('profile.credits.add_new')}</span>
+    </Button>
   );
+}
+
+const TalentProfileCreditsEditSection = ({ profile }: { profile: TalentProfileResponse }) => {
+  return profile.credits.length > 0 ? <CreditsForm data={profile.credits}></CreditsForm> : null;
 };
 
 export default TalentProfileCreditsEditSection;
