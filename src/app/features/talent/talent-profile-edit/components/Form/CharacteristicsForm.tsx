@@ -130,19 +130,6 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
     { trim: true }
   );
 
-  const waistCm = useCommittedText(
-    data.waistCm != null ? String(data.waistCm) : ((data as any).waistCm ?? ''),
-    (v) => {
-      const r = schema.shape.waistCm.safeParse(v);
-      setErrors((e) => ({
-        ...e,
-        waistCm: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
-      }));
-      if (r.success) autosave.immediate({ waistCm: r.data as any });
-    },
-    { trim: true }
-  );
-
   const hipCm = useCommittedText(
     data.hipCm != null ? String(data.hipCm) : ((data as any).hipCm ?? ''),
     (v) => {
