@@ -125,78 +125,89 @@ export default function BasicInfoForm({
   const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
 
   return (
-    <div className="w-full flex flex-col gap-2">
-      <FormInputField
-        id="stageName"
-        label={t('profile.basic_info.artistic_name')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.stage_name')}
-        value={stageName.value}
-        onChange={stageName.onChange}
-        onBlur={stageName.onBlur}
-        onKeyDown={stageName.onKeyDown}
-        error={resolveError('stageName', errors.stageName)}
-      />
+    <>
+      <section className="flex flex-col lg:flex-row lg:gap-8">
+        {/* Name + Fecha */}
+        <article className="w-full flex flex-col">
+          <div className="flex-1">
+            <FormInputField
+              id="stageName"
+              label={t('profile.basic_info.artistic_name')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.stage_name')}
+              value={stageName.value}
+              onChange={stageName.onChange}
+              onBlur={stageName.onBlur}
+              onKeyDown={stageName.onKeyDown}
+              error={resolveError('stageName', errors.stageName)}
+            />
+          </div>
+          <div className="flex flex-col gap-2 lg:flex-1">
+            <Label className="text-sm font-semibold">{t('profile.basic_info.birth_date')}</Label>
+            <div className="grid grid-cols-3 gap-2">
+              <FormSelectField
+                id="birth-day"
+                placeholder={t('general.placeholder.day')}
+                value={birth.day}
+                onChange={(e) => {
+                  setBirthError(null);
+                  onSelect((v) => birth.onDay(v))(e);
+                }}
+                onBlur={(e) => {
+                  birth.onAnyBlur(e);
+                }}
+                options={birth.dayOptions}
+                error={resolveError('birthDate', birthDayError)}
+              />
+              <FormSelectField
+                id="birth-month"
+                placeholder={t('general.placeholder.month')}
+                value={birth.month}
+                onChange={(e) => {
+                  setBirthError(null);
+                  onSelect((v) => birth.onMonth(v))(e);
+                }}
+                onBlur={(e) => {
+                  birth.onAnyBlur(e);
+                }}
+                options={monthOptions}
+                error={resolveError('birthDate', errors.birth?.month)}
+              />
+              <FormSelectField
+                id="birth-year"
+                placeholder={t('general.placeholder.year')}
+                value={birth.year}
+                onChange={(e) => {
+                  setBirthError(null);
+                  onSelect((v) => birth.onYear(v))(e);
+                }}
+                onBlur={(e) => {
+                  birth.onAnyBlur(e);
+                }}
+                options={yearOptions}
+                error={resolveError('birthDate', errors.birth?.year)}
+              />
+            </div>
+          </div>
+        </article>
 
-      <FormSelectField
-        id="genderId"
-        label={t('profile.basic_info.gender')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.select')}
-        value={gender.value}
-        onChange={gender.onChange}
-        onBlur={gender.onBlur}
-        options={genderOptions}
-        error={resolveError('genderId', errors.genderId)}
-      />
-
-      <div className="flex flex-col gap-2">
-        <Label className="text-sm font-semibold">{t('profile.basic_info.birth_date')}</Label>
-        <div className="grid grid-cols-3 gap-2">
-          <FormSelectField
-            id="birth-day"
-            placeholder={t('general.placeholder.day')}
-            value={birth.day}
-            onChange={(e) => {
-              setBirthError(null);
-              onSelect((v) => birth.onDay(v))(e);
-            }}
-            onBlur={(e) => {
-              birth.onAnyBlur(e);
-            }}
-            options={birth.dayOptions}
-            error={resolveError('birthDate', birthDayError)}
-          />
-          <FormSelectField
-            id="birth-month"
-            placeholder={t('general.placeholder.month')}
-            value={birth.month}
-            onChange={(e) => {
-              setBirthError(null);
-              onSelect((v) => birth.onMonth(v))(e);
-            }}
-            onBlur={(e) => {
-              birth.onAnyBlur(e);
-            }}
-            options={monthOptions}
-            error={resolveError('birthDate', errors.birth?.month)}
-          />
-          <FormSelectField
-            id="birth-year"
-            placeholder={t('general.placeholder.year')}
-            value={birth.year}
-            onChange={(e) => {
-              setBirthError(null);
-              onSelect((v) => birth.onYear(v))(e);
-            }}
-            onBlur={(e) => {
-              birth.onAnyBlur(e);
-            }}
-            options={yearOptions}
-            error={resolveError('birthDate', errors.birth?.year)}
-          />
-        </div>
-      </div>
+        {/* Gender + Location */}
+        <article className="w-full flex flex-col">
+          <div className="flex-1">
+            <FormSelectField
+              id="genderId"
+              label={t('profile.basic_info.gender')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.select')}
+              value={gender.value}
+              onChange={gender.onChange}
+              onBlur={gender.onBlur}
+              options={genderOptions}
+              error={resolveError('genderId', errors.genderId)}
+            />
+          </div>
+        </article>
+      </section>
 
       <Separator className="opacity-20 mt-1 mb-4" />
 
@@ -221,6 +232,6 @@ export default function BasicInfoForm({
           <span className="text-sm text-red-600">{profErrors ?? resolveError('professions')}</span>
         )}
       </div>
-    </div>
+    </>
   );
 }
