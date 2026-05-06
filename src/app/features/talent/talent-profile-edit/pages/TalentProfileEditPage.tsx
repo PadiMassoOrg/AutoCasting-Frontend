@@ -6,14 +6,16 @@ import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
 import { TalentProfileModeToggle } from '../components';
 import {
   TalentProfileCreditsEditSection,
-  TalentProfileCreditsEditAction,
   TalentProfileDetailsEditSection,
   TalentProfileEducationEditSection,
-  TalentProfileEducationEditAction,
   TalentProfileMediaEditSection,
   TalentProfileSkillsEditSection,
-  TalentProfileSkillsEditAction,
 } from '../components/Section';
+import {
+  TalentProfileCreditsEditAction,
+  TalentProfileEducationEditAction,
+  TalentProfileSkillsEditAction,
+} from '../components/Action';
 import TalentProfileBasicInfoEditSection from '../components/Section/TalentProfileBasicInfoEditSection';
 import { useOwnTalentProfileNavigation } from '../hooks/useOwnTalentProfileNavigation';
 import { useTalentProfile } from '../hooks/useTalentProfile';

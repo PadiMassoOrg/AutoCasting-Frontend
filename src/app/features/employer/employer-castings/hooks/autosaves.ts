@@ -58,6 +58,7 @@ export function useCastingRoleCreateAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_ROLES_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
   const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
+  const remunerationInvalidateKey = useCastingRemunerationsInvalidateKey();
 
   return useSectionAutosave<CastingRoleUpsertRequest, EmployerCastingRoleCardResponse>({
     mutationFn: createNewRole,
@@ -65,6 +66,7 @@ export function useCastingRoleCreateAutosave(sectionId: string) {
     cacheKeys: [key],
     lastModifiedCacheKeys,
     invalidateOnSuccess: 'active',
+    extraInvalidateKeys: [remunerationInvalidateKey],
     fieldMap: {
       roleTypeId: 'roleType',
       genderId: 'gender',
@@ -82,6 +84,7 @@ export function useCastingRolePatchAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_ROLES_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
   const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
+  const remunerationInvalidateKey = useCastingRemunerationsInvalidateKey();
 
   return useSectionAutosave<CastingRolePatchRequest, EmployerCastingRoleCardResponse>({
     mutationFn: patchCastingRole,
@@ -89,6 +92,7 @@ export function useCastingRolePatchAutosave(sectionId: string) {
     cacheKeys: [key],
     lastModifiedCacheKeys,
     invalidateOnSuccess: false,
+    extraInvalidateKeys: [remunerationInvalidateKey],
     fieldMap: {
       roleTypeId: 'roleType',
       genderId: 'gender',
@@ -106,6 +110,7 @@ export function useCastingRoleDeleteAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_ROLES_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
   const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
+  const remunerationInvalidateKey = useCastingRemunerationsInvalidateKey();
 
   return useSectionAutosave<CastingRoleDeleteRequest, { id: string }>({
     mutationFn: deleteCastingRole,
@@ -113,6 +118,7 @@ export function useCastingRoleDeleteAutosave(sectionId: string) {
     cacheKeys: [key],
     lastModifiedCacheKeys,
     invalidateOnSuccess: 'active',
+    extraInvalidateKeys: [remunerationInvalidateKey],
     onSuccessUpdate: (prev, { id }) => {
       const prevSection = normalizeRolesSection(prev);
       const prevRoles = prevSection.roles ?? [];
@@ -127,6 +133,7 @@ export function useCastingRequirementCreateAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_REQUIREMENTS_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
   const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
+  const remunerationInvalidateKey = useCastingRemunerationsInvalidateKey();
 
   return useSectionAutosave<CastingRequirementUpsertRequest, EmployerCastingRequirementCardResponse[]>({
     mutationFn: createBulkRequirement,
@@ -134,6 +141,7 @@ export function useCastingRequirementCreateAutosave(sectionId: string) {
     cacheKeys: [key],
     lastModifiedCacheKeys,
     invalidateOnSuccess: false,
+    extraInvalidateKeys: [remunerationInvalidateKey],
     messageFieldMap: {
       'server_error.casting.role.requirement.already_exists': 'roleIds',
       'server_error.castings.role.mismatch': 'roleIds',
@@ -160,6 +168,7 @@ export function useCastingRequirementPatchAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_REQUIREMENTS_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
   const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
+  const remunerationInvalidateKey = useCastingRemunerationsInvalidateKey();
 
   return useSectionAutosave<CastingRequirementPatchRequest, EmployerCastingRequirementCardResponse>({
     mutationFn: patchCastingRequirement,
@@ -167,6 +176,7 @@ export function useCastingRequirementPatchAutosave(sectionId: string) {
     cacheKeys: [key],
     lastModifiedCacheKeys,
     invalidateOnSuccess: false,
+    extraInvalidateKeys: [remunerationInvalidateKey],
     messageFieldMap: {
       'server_error.casting.role.requirement.already_exists': 'roleIds',
       'server_error.castings.role.mismatch': 'roleIds',
@@ -191,6 +201,7 @@ export function useCastingRequirementDeleteAutosave(sectionId: string) {
   const token = getAuthToken();
   const key = [...CASTING_SECTION_REQUIREMENTS_CACHE_KEY, sectionId ?? 'no-id', token ?? 'no-token'];
   const lastModifiedCacheKeys = useCastingEditorLastModifiedCacheKeys();
+  const remunerationInvalidateKey = useCastingRemunerationsInvalidateKey();
 
   return useSectionAutosave<CastingRequirementDeleteRequest, { id: string }>({
     mutationFn: deleteCastingRequirement,
@@ -198,6 +209,7 @@ export function useCastingRequirementDeleteAutosave(sectionId: string) {
     cacheKeys: [key],
     lastModifiedCacheKeys,
     invalidateOnSuccess: false,
+    extraInvalidateKeys: [remunerationInvalidateKey],
     onSuccessUpdate: (prev, { id }) => {
       const prevSection = normalizeRequirementsSection(prev);
       const prevReqs = normalizeReqArray(prevSection.requirements ?? []);
@@ -258,6 +270,12 @@ const normalizeRolesSection = (v: any): CastingSectionRoles => {
 const useCastingEditorLastModifiedCacheKeys = () => {
   const { defaultCode } = useEmployerCastingIds();
   return [[...EMPLOYER_CASTING_CACHE_KEY, defaultCode]];
+};
+
+const useCastingRemunerationsInvalidateKey = () => {
+  const token = getAuthToken();
+  const { remunerationSectionId } = useEmployerCastingIds();
+  return [...CASTING_SECTION_REMUNERATIONS_CACHE_KEY, remunerationSectionId ?? 'no-id', token ?? 'no-token'];
 };
 
 const normalizeRequirementsSection = (v: any): CastingSectionRequirements => {

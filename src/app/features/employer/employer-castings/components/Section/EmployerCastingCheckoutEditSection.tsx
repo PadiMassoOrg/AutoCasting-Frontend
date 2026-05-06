@@ -1,12 +1,5 @@
-import {
-  DashboardLoadingLabel,
-  DashboardSection,
-  Label,
-  LG_SCREEN_SIZE,
-  useMedia,
-} from 'autocasting-ui-library-padimasso';
+import { DashboardLoadingLabel, Label } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { SectionTitle } from '../../../../../shared/components/Section';
 import ServerError from '../../../../../shared/components/ServerError/ServerError';
 import { useEmployerCastingIds } from '../../context/EmployerCastingContext';
 import { useSectionCheckout } from '../../hooks/section/useSectionCheckout';
@@ -15,31 +8,22 @@ import CastingCheckoutSummaryForm from '../Form/Checkout/CastingCheckoutSummaryF
 
 const EmployerCastingCheckoutEditSection = () => {
   const { t } = useTranslation();
-  const isDesktop = useMedia(LG_SCREEN_SIZE);
-
   const { id: castingId } = useEmployerCastingIds();
   const { data, isLoading, error } = useSectionCheckout(castingId);
 
-  if (isLoading || !data) {
-    return (
-      <DashboardSection>
-        <DashboardLoadingLabel />
-      </DashboardSection>
-    );
-  }
+  if (isLoading || !data) return <DashboardLoadingLabel />;
   if (error) return <ServerError />;
 
   return (
-    <DashboardSection>
-      {!isDesktop && <SectionTitle title={t('employer_castings.dashboard.checkout.checkout_and_publish')} />}
-      <Label className="mt-2 w-full text-[var(--color-secondary-grey-fonts)]">
+    <article className="flex flex-col gap-8">
+      <Label className="w-full text-[var(--color-secondary-grey-fonts)]">
         {t('employer_castings.dashboard.checkout.subtitle')}
       </Label>
-      <div className="flex flex-col gap-6 w-full lg:flex-row lg:justify-between">
+      <div className="flex w-full flex-col gap-6 lg:flex-row lg:justify-between">
         <CastingCheckoutSummaryForm data={data} />
         <CastingCheckoutPaymentForm />
       </div>
-    </DashboardSection>
+    </article>
   );
 };
 

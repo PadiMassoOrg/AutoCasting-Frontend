@@ -13,6 +13,7 @@ import {
   EmployerCastingRequirementsEditSection,
   EmployerCastingRolesEditSection,
 } from '../components/Section';
+import { EmployerCastingRequirementsEditAction, EmployerCastingRolesEditAction } from '../components/Action';
 import { EmployerCastingIdsProvider } from '../context/EmployerCastingContext';
 import { useEmployerCastingEditorBySlug } from '../hooks/useEmployerCastingDetailsBySlug';
 
@@ -35,26 +36,33 @@ const EmployerCastingPage = () => {
     {
       key: 'basic',
       label: t('employer_castings.dashboard.basic_info.basic_info'),
+      sectionTitle: t('employer_castings.dashboard.basic_info.basic_info'),
       render: () => <EmployerCastingBasicInfoEditSection sectionId={basicInfoSectionId} />,
     },
     {
       key: 'roles',
       label: t('employer_castings.dashboard.roles.roles'),
+      sectionTitle: t('employer_castings.dashboard.roles.roles'),
+      sectionActions: <EmployerCastingRolesEditAction sectionId={rolesSectionId} />,
       render: () => <EmployerCastingRolesEditSection sectionId={rolesSectionId} />,
     },
     {
       key: 'requirements',
       label: t('employer_castings.dashboard.requirements.requirements'),
+      sectionTitle: t('employer_castings.dashboard.requirements.requirements'),
+      sectionActions: <EmployerCastingRequirementsEditAction sectionId={requirementsSectionId} />,
       render: () => <EmployerCastingRequirementsEditSection sectionId={requirementsSectionId} />,
     },
     {
       key: 'remuneration',
       label: t('employer_castings.dashboard.remunerations.title'),
+      sectionTitle: t('employer_castings.dashboard.remunerations.title'),
       render: () => <EmployerCastingRemunerationEditSection sectionId={remunerationSectionId} />,
     },
     {
       key: 'checkout',
       label: t('employer_castings.dashboard.checkout.checkout_and_publish'),
+      sectionTitle: t('employer_castings.dashboard.checkout.checkout_and_publish'),
       render: () => <EmployerCastingCheckoutEditSection />,
     },
   ];
