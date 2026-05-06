@@ -412,16 +412,6 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
         <article className="w-full flex flex-col">
           <div className="flex-1">
             <FormSelectField
-              id="passport"
-              label={t('profile.characteristics.passport')}
-              labelClassName="font-semibold text-base"
-              value={passport.value}
-              onChange={passport.onChange}
-              options={getBooleanOptions(t)}
-            />
-          </div>
-          <div className="flex-1">
-            <FormSelectField
               id="dietOptionId"
               label={t('profile.characteristics.diet')}
               labelClassName="font-semibold text-base"
@@ -431,6 +421,16 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
               onBlur={diet.onBlur}
               options={dietOptions}
               error={resolveError('dietOptionId', errors.dietOptionId)}
+            />
+          </div>
+          <div className="flex-1">
+            <FormSelectField
+              id="passport"
+              label={t('profile.characteristics.passport')}
+              labelClassName="font-semibold text-base"
+              value={passport.value}
+              onChange={passport.onChange}
+              options={getBooleanOptions(t)}
             />
           </div>
         </article>
