@@ -99,7 +99,7 @@ const SocialMediaIconSelect = ({ allOptions, usedOptionIds, value, onChange }: S
                 }}
                 title={opt.stringCode}
               >
-                {icon && <Icon name={icon} size={16} />}
+                {icon && <Icon name={icon} size={14} />}
               </button>
             );
           })}
@@ -150,7 +150,7 @@ const SocialMediaRow = ({
     <div className="w-full min-w-0">
       <div className="flex items-center gap-2 w-full">
         <div className="flex-1">
-          <div className="flex items-center gap-3 w-full rounded-2xl border border-(--color-primary-light-grey) px-5 h-14 py-3">
+          <div className="flex items-center gap-3 w-full rounded-2xl border border-(--color-primary-light-grey) px-5 h-12">
             <SocialMediaIconSelect
               allOptions={allOptions}
               usedOptionIds={usedOptionIds}
@@ -176,7 +176,7 @@ const SocialMediaRow = ({
             </div>
           </div>
         </div>
-        <Icon name="delete" variant="danger" onClick={onDelete} className="self-center" size={20} />
+        <Icon name="delete" variant="danger" onClick={onDelete} className="self-center" size={18} />
       </div>
       {!errorMessage ? (
         <div className="min-h-[25px]" />

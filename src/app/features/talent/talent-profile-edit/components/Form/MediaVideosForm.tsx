@@ -45,7 +45,7 @@ const MediaVideosForm = ({ data }: { data: Media }) => {
   const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
 
   return (
-    <div className="w-full flex flex-col lg:flex-row lg:gap-8">
+    <div className="w-full flex flex-col xl:flex-row xl:gap-4">
       <div className="flex-1">
         <FormInputField
           id="introduction"

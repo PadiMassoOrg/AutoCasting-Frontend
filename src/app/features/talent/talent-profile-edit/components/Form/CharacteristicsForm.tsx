@@ -223,7 +223,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
 
   return (
     <main className="flex flex-col">
-      <section className="flex flex-col lg:flex-row lg:gap-8">
+      <section className="flex flex-col lg:flex-row lg:gap-4">
         {/* Height + Hair Color */}
         <article className="w-full flex flex-col">
           <div className="flex-1">
@@ -286,7 +286,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
 
       <Separator className="opacity-20 mt-3 mb-8" />
 
-      <section className="flex flex-col lg:flex-row lg:gap-8">
+      <section className="flex flex-col lg:flex-row lg:gap-4">
         {/* Pants + Shoes + Shirt */}
         <article className="w-full flex flex-col">
           <div className="flex-1">
@@ -375,7 +375,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
 
       <Separator className="opacity-20 mt-3 mb-8" />
 
-      <section className="flex flex-col lg:flex-row lg:gap-8">
+      <section className="flex flex-col lg:flex-row lg:gap-4">
         {/* Tattoo + License */}
         <article className="w-full flex flex-col">
           <div className="flex-1">
