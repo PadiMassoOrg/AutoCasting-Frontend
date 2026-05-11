@@ -46,12 +46,12 @@ export default function EducationForm({ data }: { data: Education[] }) {
   return (
     <article className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       {data.map((e) => (
-        <article key={e.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3 lg:py-2">
+        <article key={e.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3">
           <div className="flex flex-row justify-between">
-            <div className="grow">
-              <div className="flex items-start justify-between gap-4">
+            <div className="grow min-w-0">
+              <div className="flex items-center justify-between gap-4">
                 <h4
-                  className="font-semibold text-base lg:text-[14px] leading-snug line-clamp-2 min-h-[2.75rem] lg:min-h-[2.2rem]"
+                  className="font-semibold text-base lg:text-[14px] leading-snug truncate min-w-0"
                   title={e.courseName}
                 >
                   {e.courseName}
@@ -61,13 +61,13 @@ export default function EducationForm({ data }: { data: Education[] }) {
                 </span>
               </div>
               <div
-                className="mt-3 lg:mt-2 text-base lg:text-[14px] font-light text-[var(--color-secondary-grey-fonts)] line-clamp-2 min-h-[3rem] lg:min-h-[2.2rem]"
+                className="mt-3 text-base lg:text-[14px] font-light text-[var(--color-secondary-grey-fonts)] truncate"
                 title={e.institution}
               >
                 {e.institution}
               </div>
             </div>
-            <div className="flex flex-col justify-center items-center gap-4 min-w-8 ml-3 pl-3 border-l border-[var(--color-secondary-outline)]">
+            <div className="flex flex-col justify-around items-center ml-3 pl-3 border-l border-[var(--color-secondary-outline)]">
               <Icon name="delete" variant="danger" size={20} onClick={() => openDeleteModal(e)} />
               <Icon name="edit" variant="primary" size={20} onClick={() => openEditModal(e)} />
             </div>
