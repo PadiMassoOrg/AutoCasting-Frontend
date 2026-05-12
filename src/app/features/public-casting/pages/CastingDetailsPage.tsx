@@ -6,6 +6,7 @@ import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { ApplySection, BasicInfoSection, EmployerInfoSection, RolesSection } from '../components/Section';
 import { useEmployerCastingDetails } from '../hooks/useEmployerCastingDetails';
 import { usePublicCastingDetails } from '../hooks/usePublicCastingDetails';
+import type { CastingRequirement, CastingRole } from '../types/publicCasting.types';
 type Props = { mode: 'public' | 'employer' };
 
 const CastingDetailsPage = ({ mode }: Props) => {
@@ -30,12 +31,15 @@ const CastingDetailsPage = ({ mode }: Props) => {
     if (employerQuery.error) return <ServerError />;
 
     const casting = employerQuery.data;
+    const selectedRole = (casting.roles ?? []).find((role) => role.id === roleId) ?? null;
+    const requirements: CastingRequirement[] = toRequirements(selectedRole);
+    const employerInfo = casting.employerInfo;
     const right = (
       <>
-        <EmployerInfoSection data={casting.employerInfo} />
+        {employerInfo && <EmployerInfoSection data={employerInfo} />}
         <ApplySection
-          employer={casting.employerInfo.companyName!}
-          requirements={casting.requirementsSection.requirements ?? []}
+          employer={employerInfo?.companyName ?? ''}
+          requirements={requirements}
           roleId={roleId ?? ''}
           alreadyApplied={false}
         />
@@ -46,9 +50,9 @@ const CastingDetailsPage = ({ mode }: Props) => {
       return (
         <main className="flex flex-row gap-10">
           <section className="flex-1">
-            <BasicInfoSection data={casting.basicInfoSection} />
+            <BasicInfoSection data={casting} />
             <Separator className="opacity-0 my-2" />
-            <RolesSection data={casting.rolesSection} />
+            <RolesSection data={casting.roles ?? []} />
           </section>
           <section className="flex flex-col gap-6 w-[350px]">{right}</section>
         </main>
@@ -57,9 +61,9 @@ const CastingDetailsPage = ({ mode }: Props) => {
 
     return (
       <div className="relative pt-3 pb-10 flex flex-col gap-3">
-        <BasicInfoSection data={casting.basicInfoSection} />
+        <BasicInfoSection data={casting} />
         <Separator className="opacity-0 my-1" />
-        <RolesSection data={casting.rolesSection} />
+        <RolesSection data={casting.roles ?? []} />
         <Separator className="opacity-20 my-4" />
         {right}
       </div>
@@ -77,13 +81,16 @@ const CastingDetailsPage = ({ mode }: Props) => {
 
   const casting = publicQuery.data.casting;
   const alreadyApplied = Boolean(publicQuery.data.alreadyApplied);
+  const selectedRole = (casting.roles ?? []).find((role) => role.id === roleId) ?? null;
+  const requirements: CastingRequirement[] = toRequirements(selectedRole);
+  const employerInfo = casting.employerInfo;
 
   const right = (
     <>
-      <EmployerInfoSection data={casting.employerInfo} />
+      {employerInfo && <EmployerInfoSection data={employerInfo} />}
       <ApplySection
-        employer={casting.employerInfo.companyName!}
-        requirements={casting.requirementsSection.requirements ?? []}
+        employer={employerInfo?.companyName ?? ''}
+        requirements={requirements}
         roleId={roleId!}
         alreadyApplied={alreadyApplied}
       />
@@ -94,9 +101,9 @@ const CastingDetailsPage = ({ mode }: Props) => {
     return (
       <main className="flex flex-row gap-10">
         <section className="flex-1">
-          <BasicInfoSection data={casting.basicInfoSection} />
+          <BasicInfoSection data={casting} />
           <Separator className="opacity-0 my-2" />
-          <RolesSection data={casting.rolesSection} />
+          <RolesSection data={casting.roles ?? []} />
         </section>
         <section className="flex flex-col gap-6 w-[350px]">{right}</section>
       </main>
@@ -105,13 +112,28 @@ const CastingDetailsPage = ({ mode }: Props) => {
 
   return (
     <div className="relative pt-3 pb-24 flex flex-col gap-3">
-      <BasicInfoSection data={casting.basicInfoSection} />
+      <BasicInfoSection data={casting} />
       <Separator className="opacity-0 my-1" />
-      <RolesSection data={casting.rolesSection} />
+      <RolesSection data={casting.roles ?? []} />
       <Separator className="opacity-20 my-4" />
       {right}
     </div>
   );
+};
+
+const toRequirements = (role: CastingRole | null): CastingRequirement[] => {
+  if (!role?.id) return [];
+  if (!role.requiresAudio && !role.requiresVideo) return [];
+
+  return [
+    {
+      id: role.id,
+      roleId: role.id,
+      description: role.requirementDescription ?? '',
+      requiresAudio: role.requiresAudio,
+      requiresVideo: role.requiresVideo,
+    },
+  ];
 };
 
 export default CastingDetailsPage;

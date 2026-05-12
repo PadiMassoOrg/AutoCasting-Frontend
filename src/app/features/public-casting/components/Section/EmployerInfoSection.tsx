@@ -9,12 +9,12 @@ const EmployerInfoSection = ({ data }: { data: EmployerInfo }) => {
 
   const socialMediaItems =
     data.socialMedia?.links
-      ?.filter((link) => !!link.url && link.url.trim().length > 0)
-      .map((link) => {
+      ?.filter((link: { url: string }) => !!link.url && link.url.trim().length > 0)
+      .map((link: { optionId: string; stringCode: string; url: string }) => {
         const href = normalizeExternalUrl(link.url);
         if (!href) return null;
 
-        const iconName = getSocialMediaIconName(link.stringCode!);
+        const iconName = getSocialMediaIconName(link.stringCode);
         if (!iconName) return null;
 
         return (
@@ -41,10 +41,10 @@ const EmployerInfoSection = ({ data }: { data: EmployerInfo }) => {
   return (
     <article className="w-full rounded-xl border border-(--color-secondary-outline) bg-white py-4 px-5 flex flex-col gap-4">
       <div className="flex flex-row items-center gap-2">
-        <img src={data.imageUrl!} className="w-14 h-14 rounded-full object-cover"></img>
+        <img src={data.imageUrl ?? ''} className="w-14 h-14 rounded-full object-cover"></img>
         <div className="flex flex-col gap-1">
           <h2 className="text-lg font-semibold">{data.companyName}</h2>
-          {data.companyType && <TagChip label={t(data.companyType?.stringCode!)} />}
+          {data.companyType?.stringCode && <TagChip label={t(data.companyType.stringCode)} />}
         </div>
       </div>
       <Separator className="opacity-20 my-1" />

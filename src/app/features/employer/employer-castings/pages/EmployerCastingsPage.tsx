@@ -2,19 +2,20 @@ import { Button, Icon, Label, Skeleton } from 'autocasting-ui-library-padimasso'
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DashboardSection, DashboardShell } from 'autocasting-ui-library-padimasso';
+import { useNavigate } from 'react-router-dom';
 import { SectionTitle } from '../../../../shared/components/Section';
+import { ROUTES } from '../../../../shared/lib/routes';
 import { CastingCard } from '../components/Card';
 import EmployerCastingsFilterBar, {
   type EmployerCastingsFiltersState,
 } from '../components/Filter/EmployerCastingsFilterBar';
-import { useCreateEmptyCastingMutation } from '../hooks/useCreateEmptyCastingMutation';
 import { useDeleteCastingMutation } from '../hooks/useDeleteCastingMutation';
 import { useEmployerCastings } from '../hooks/useEmployerCastings';
 import type { EmployerCastingsOrderBy } from '../types/employerCastingsFilters.types';
 
 const EmployerCastingsPage = () => {
   const { t } = useTranslation();
-  const { mutate: createEmptyCasting, isPending: isCreatePending } = useCreateEmptyCastingMutation();
+  const navigate = useNavigate();
   const { mutate: deleteCasting, isPending: isDeletePending } = useDeleteCastingMutation();
 
   const [filters, setFilters] = useState<EmployerCastingsFiltersState>({
@@ -58,8 +59,7 @@ const EmployerCastingsPage = () => {
   const actionButtonRender = () => (
     <Button
       className="flex flex-row items-center justify-center gap-2"
-      onClick={createEmptyCasting}
-      loading={isCreatePending}
+      onClick={() => navigate(`${ROUTES.EMPLOYER_CASTING}/new/editor`)}
     >
       <Icon name="plus" variant="white" size={16} />
       <span className="text-base font-medium">{t('employer_castings.page.create_casting')}</span>

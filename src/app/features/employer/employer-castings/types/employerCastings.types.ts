@@ -1,7 +1,4 @@
-import type { WithAuditable } from '../../../../shared/types/auditable.types';
-import type { DeepNullableExceptId } from '../../../../shared/utils/typeUtils';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
-import type { Characteristics } from '../../../talent/talent-profile-edit/types/talentProfile.types';
 
 export type BaseCastingCard = {
   id: string;
@@ -14,113 +11,129 @@ export type BaseCastingCard = {
   allowedStatusCodes: string[];
 };
 
-export type BaseCastingResponse = {
+export type CastingCheckoutRole = {
   id: string;
-  defaultCode: string;
-  castingStatus: SiteMetadataObject;
-  basicInfoSection: CastingSectionBasicInfo;
-  rolesSection: CastingSectionRoles;
-  requirementsSection: CastingSectionRequirements;
-  remunerationSection: CastingSectionRemunerations;
+  roleName: string;
+  roleType: SiteMetadataObject;
 };
 
-export type BaseEmployerCastingEditorResponse = {
+export type CastingEmployerInfoResponse = {
+  id: string;
+  companyName: string | null;
+  companyType: SiteMetadataObject | null;
+  imageUrl: string | null;
+  socialMedia: {
+    links: Array<{
+      optionId: string;
+      stringCode: string;
+      url: string;
+    }>;
+    modifiedAt: string | null;
+  } | null;
+  totalCastings: number | null;
+  memberSince: string | null;
+  websiteUrl: string | null;
+};
+
+export type CastingRoleCharacteristicsResponse = {
+  id: string;
+  heightCm: number | null;
+  ethnicity: SiteMetadataObject | null;
+  weightKg: number | null;
+  hairColor: SiteMetadataObject | null;
+  eyeColor: SiteMetadataObject | null;
+  chestCm: string | null;
+  waistCm: string | null;
+  hipCm: string | null;
+  shirtSize: string | null;
+  pantSize: string | null;
+  dressSize: string | null;
+  shoeSize: string | null;
+  tattoo: boolean | null;
+  passport: boolean | null;
+  drivingLicense: boolean | null;
+  dietOption: SiteMetadataObject | null;
+};
+
+export type CastingRoleRemunerationResponse = {
+  isComplete: boolean;
+  payRateType: SiteMetadataObject | null;
+  currency: SiteMetadataObject | null;
+  amount: number | null;
+  notes: string | null;
+  modifiedAt: string | null;
+};
+
+export type CastingRoleResponse = {
+  id: string;
+  castingId: string;
+  roleName: string;
+  roleType: SiteMetadataObject | null;
+  gender: SiteMetadataObject | null;
+  ageMin: number | null;
+  ageMax: number | null;
+  description: string | null;
+  professions: SiteMetadataObject[];
+  characteristics: CastingRoleCharacteristicsResponse | null;
+  skills: SiteMetadataObject[];
+  remuneration: CastingRoleRemunerationResponse | null;
+  requiresAudio: boolean;
+  requiresVideo: boolean;
+  requirementDescription: string | null;
+  modifiedAt: string | null;
+};
+
+export type EmployerCastingDetailsResponse = {
   id: string;
   defaultCode: string;
-  castingStatus: SiteMetadataObject;
-  basicInfoSectionId: string;
-  rolesSectionId: string;
-  requirementsSectionId: string;
-  remunerationSectionId: string;
-  basicInfoSectionStatus: SiteMetadataObject;
-  rolesSectionStatus: SiteMetadataObject;
-  requirementsSectionStatus: SiteMetadataObject;
-  remunerationSectionStatus: SiteMetadataObject;
+  castingStatus: SiteMetadataObject | null;
+  employerInfo: CastingEmployerInfoResponse | null;
+  title: string | null;
+  projectType: SiteMetadataObject | null;
+  castingModality: SiteMetadataObject | null;
+  locationText: string | null;
+  applicationDeadline: string | null;
+  hasWardrobeFitting: boolean | null;
+  wardrobeFittingText: string | null;
+  shootingStartDate: string | null;
+  shootingEndDate: string | null;
+  description: string | null;
+  roles: CastingRoleResponse[];
   publishable: boolean;
+  modifiedAt: string | null;
 };
 
-// ======================
-// Related Entities
-// ======================
-export type BaseCastingBasicInfo = {
+export type EmployerCastingStatusResponse = {
   id: string;
-  sectionStatus: SiteMetadataObject;
+  defaultCode: string;
+  castingStatus: SiteMetadataObject | null;
+  hasBasicInfo: boolean;
+  hasRoles: boolean;
+  publishable: boolean;
+  modifiedAt: string | null;
+};
+
+export type CastingBasicInfoFormData = {
   title: string;
-  projectType: SiteMetadataObject;
-  projectTypeId: string;
-  location: string;
-  castingModality: SiteMetadataObject;
-  castingModalityId: string;
-  castingModalityText: string;
+  projectTypeId: string | null;
+  castingModalityId: string | null;
+  locationText: string;
   applicationDeadline: string;
-  hasWardrobeFitting: boolean;
+  hasWardrobeFitting: boolean | null;
   wardrobeFittingText: string;
   shootingStartDate: string;
   shootingEndDate: string;
   description: string;
 };
 
-export type BaseCastingRolesSection = {
-  id: string;
-  sectionStatus: SiteMetadataObject;
-  generalNotes: string;
-  roles: EmployerCastingRoleCardResponse[];
-};
-
-export type BaseCastingRole = {
-  id: string;
-  sectionId: string;
-  roleName: string;
-  roleType: SiteMetadataObject;
-  gender: SiteMetadataObject;
-  ageMin: number;
-  ageMax: number;
-  description: string;
-  professions: SiteMetadataObject[];
-  characteristics: Characteristics;
-  skills: SiteMetadataObject[];
-  remuneration: EmployerCastingRemunerationCardResponse;
-};
-
-export type BaseCastingRequirementsSection = {
-  id: string;
-  sectionStatus: SiteMetadataObject;
-  requirements: EmployerCastingRequirementCardResponse[];
-};
-
-export type BaseCastingRequirement = {
-  id: string;
-  sectionId: string;
-  roleId: string;
-  roleName: string;
-  requiresAudio: boolean;
-  requiresVideo: boolean;
-  description: string;
-};
-
-export type BaseCastingRemunerationsSection = {
-  id: string;
-  sectionStatus: SiteMetadataObject;
-  compensationType: SiteMetadataObject;
-  notes: string | null;
-  remunerations: EmployerCastingRemunerationCardResponse[];
-};
-
-export type BaseCastingRemuneration = {
-  id: string;
-  castingRoleId: string;
-  roleName: string;
-  isComplete: boolean;
-  payRateType: SiteMetadataObject;
-  currency: SiteMetadataObject;
-  amount: number;
-};
-
-export type CastingCheckoutRole = {
-  id: string;
-  roleName: string;
-  roleType: SiteMetadataObject;
-};
+export type CastingBasicInfoFieldKey =
+  | 'title'
+  | 'projectTypeId'
+  | 'castingModalityId'
+  | 'locationText'
+  | 'applicationDeadline'
+  | 'wardrobeFittingText'
+  | 'description';
 
 export type CastingSectionCheckout = {
   id: string;
@@ -132,18 +145,4 @@ export type CastingSectionCheckout = {
   roles: CastingCheckoutRole[];
 };
 
-/* ======================
-   Export & DeepNullable
-   ====================== */
-export type CastingSectionBasicInfo = WithAuditable<DeepNullableExceptId<BaseCastingBasicInfo>>;
-export type CastingSectionRoles = WithAuditable<BaseCastingRolesSection>;
-export type CastingSectionRequirements = WithAuditable<BaseCastingRequirementsSection>;
-export type CastingSectionRemunerations = WithAuditable<BaseCastingRemunerationsSection>;
-
-export type EmployerCastingRoleCardResponse = WithAuditable<BaseCastingRole>;
-export type EmployerCastingRequirementCardResponse = WithAuditable<BaseCastingRequirement>;
-export type EmployerCastingRemunerationCardResponse = WithAuditable<BaseCastingRemuneration>;
-
-export type CastingCardResponse = WithAuditable<BaseCastingCard>;
-export type CastingResponse = WithAuditable<BaseCastingResponse>;
-export type EmployerCastingEditorResponse = WithAuditable<BaseEmployerCastingEditorResponse>;
+export type CastingCardResponse = BaseCastingCard;

@@ -1,37 +1,16 @@
 import api from '../../../../shared/lib/axios';
 import { API_ROUTES } from '../../../../shared/lib/routes';
-import type { LastModifiedResponse } from '../../../../shared/types/auditable.types';
-import { stripUndefined } from '../../../../shared/utils/stripUndefined';
 import type { EmployerCastingsFiltersState } from '../components/Filter/EmployerCastingsFilterBar';
 import type {
   CastingCardResponse,
-  CastingSectionBasicInfo,
-  CastingSectionCheckout,
-  CastingSectionRemunerations,
-  CastingSectionRequirements,
-  CastingSectionRoles,
-  EmployerCastingEditorResponse,
-  EmployerCastingRequirementCardResponse,
-  EmployerCastingRoleCardResponse,
+  EmployerCastingDetailsResponse,
+  EmployerCastingStatusResponse,
 } from '../types/employerCastings.types';
 import type { EmployerCastingsOrderBy } from '../types/employerCastingsFilters.types';
-import type {
-  CastingBasicInfoPatchRequest,
-  CastingRequirementPatchRequest,
-  CastingRequirementUpsertRequest,
-  CastingRolePatchRequest,
-  CastingRoleRemunerationPatchRequest,
-  CastingRoleUpsertRequest,
-  CastingSectionRemunerationPatchRequest,
-} from '../types/requests';
+import type { CastingUpsertRequest } from '../types/requests';
 
 export const EMPLOYER_CASTINGS_LIST_CACHE_KEY = ['cache-employer-castings-list'] as const;
 export const EMPLOYER_CASTING_CACHE_KEY = ['cache-employer-casting'] as const;
-export const CASTING_SECTION_BASIC_INFO_CACHE_KEY = ['cache-casting-section-basic-info'] as const;
-export const CASTING_SECTION_ROLES_CACHE_KEY = ['cache-casting-section-roles'] as const;
-export const CASTING_SECTION_REQUIREMENTS_CACHE_KEY = ['cache-casting-section-requirements'] as const;
-export const CASTING_SECTION_REMUNERATIONS_CACHE_KEY = ['cache-casting-section-remunerations'] as const;
-export const CASTING_SECTION_CHECKOUT_CACHE_KEY = ['cache-casting-section-checkout'] as const;
 
 export type GetMyCastingsArgs = {
   page: number;
@@ -59,13 +38,24 @@ export async function getMyCastings({ page, size, filters, orderBy }: GetMyCasti
   return data;
 }
 
-export const getEmployerCastingEditorBySlug = async (slug: string): Promise<EmployerCastingEditorResponse> => {
-  const response = await api.get(API_ROUTES.EMPLOYER_CASTING + `/${slug}` + '/editor');
+export const getEmployerCastingDetailsBySlug = async (slug: string): Promise<EmployerCastingDetailsResponse> => {
+  const response = await api.get(API_ROUTES.EMPLOYER_CASTING + `/${slug}` + '/details');
   return response.data;
 };
 
-export const createEmptyCasting = async (): Promise<string> => {
-  const response = await api.post(API_ROUTES.EMPLOYER_CASTINGS);
+export const createCasting = async (payload: CastingUpsertRequest): Promise<EmployerCastingDetailsResponse> => {
+  const response = await api.post(API_ROUTES.EMPLOYER_CASTINGS, payload);
+  return response.data;
+};
+
+export const updateCasting = async ({
+  id,
+  payload,
+}: {
+  id: string;
+  payload: CastingUpsertRequest;
+}): Promise<EmployerCastingDetailsResponse> => {
+  const response = await api.put(`${API_ROUTES.EMPLOYER_CASTING}/${id}`, payload);
   return response.data;
 };
 
@@ -74,112 +64,28 @@ export async function deleteCasting({ id }: { id: string }) {
   return { id };
 }
 
-// Basic Info
-export const getSectionBasicInfoById = async (sectionId: string): Promise<CastingSectionBasicInfo> => {
-  const response = await api.get(API_ROUTES.CASTING_BASIC_INFO + `/${sectionId}`);
-  return response.data;
-};
-
-export async function patchCastingBasicInfo(payload: CastingBasicInfoPatchRequest): Promise<CastingSectionBasicInfo> {
-  const body = stripUndefined(payload);
-  const { data } = await api.patch(API_ROUTES.CASTING_BASIC_INFO, body);
-  return data;
-}
-
-// Roles
-export const createNewRole = async (payload: CastingRoleUpsertRequest): Promise<EmployerCastingRoleCardResponse> => {
-  const response = await api.post(API_ROUTES.CASTING_ROLE, payload);
-  return response.data;
-};
-
-export const getSectionRolesById = async (sectionId: string): Promise<CastingSectionRoles> => {
-  const response = await api.get(API_ROUTES.CASTING_ROLE + `/${sectionId}`);
-  return response.data;
-};
-
-export async function patchCastingRole(req: CastingRolePatchRequest) {
-  const { id, ...body } = req;
-  const res = await api.put(`${API_ROUTES.CASTING_ROLE}/${id}`, body);
-  return res.data;
-}
-
-export async function deleteCastingRole({ id }: { id: string }): Promise<{ id: string } & LastModifiedResponse> {
-  const { data } = await api.delete(`${API_ROUTES.CASTING_ROLE}/${id}`);
-  return { id, modifiedAt: data.modifiedAt };
-}
-
-// Requirements
-export const createBulkRequirement = async (
-  payload: CastingRequirementUpsertRequest
-): Promise<EmployerCastingRequirementCardResponse[]> => {
-  const response = await api.post(API_ROUTES.CASTING_REQUIREMENT, payload);
-  return response.data;
-};
-
-export const getSectionRequirementsById = async (sectionId: string): Promise<CastingSectionRequirements> => {
-  const response = await api.get(API_ROUTES.CASTING_REQUIREMENT + `/${sectionId}`);
-  return response.data;
-};
-
-export async function patchCastingRequirement(req: CastingRequirementPatchRequest) {
-  const { id, ...body } = req;
-  const res = await api.put(`${API_ROUTES.CASTING_REQUIREMENT}/${id}`, body);
-  return res.data;
-}
-
-export async function deleteCastingRequirement({ id }: { id: string }): Promise<{ id: string } & LastModifiedResponse> {
-  const { data } = await api.delete(`${API_ROUTES.CASTING_REQUIREMENT}/${id}`);
-  return { id, modifiedAt: data.modifiedAt };
-}
-
-// Remunerations
-export const getSectionRemunerationsById = async (sectionId: string): Promise<CastingSectionRemunerations> => {
-  const response = await api.get(API_ROUTES.CASTING_REMUNERATION + `/${sectionId}`);
-  return response.data;
-};
-
-export async function patchCastingSectionRemuneration(
-  payload: CastingSectionRemunerationPatchRequest
-): Promise<CastingSectionRemunerations> {
-  const body = stripUndefined(payload);
-  const { data } = await api.patch(API_ROUTES.CASTING_REMUNERATION, body);
-  return data;
-}
-
-export async function patchCastingRoleRemuneration(payload: CastingRoleRemunerationPatchRequest): Promise<any> {
-  const body = stripUndefined(payload);
-  const { data } = await api.patch(API_ROUTES.CASTING_REMUNERATION_REMUENRATIONS, body);
-  return data;
-}
-
-// Checkout
-export const getSectionCheckoutSummary = async (id: string): Promise<CastingSectionCheckout> => {
-  const response = await api.get(`${API_ROUTES.EMPLOYER_CASTING}/${id}/checkout-summary`);
-  return response.data;
-};
-
 // Casting Statuses
-export const publishCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
+export const publishCasting = async ({ id }: { id: string }): Promise<EmployerCastingStatusResponse> => {
   const response = await api.post(API_ROUTES.PUBLISH_CASTING(id));
   return response.data;
 };
 
-export const setDraftCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
+export const setDraftCasting = async ({ id }: { id: string }): Promise<EmployerCastingStatusResponse> => {
   const response = await api.post(API_ROUTES.DRAFT_CASTING(id));
   return response.data;
 };
 
-export const pauseCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
+export const pauseCasting = async ({ id }: { id: string }): Promise<EmployerCastingStatusResponse> => {
   const response = await api.post(API_ROUTES.PAUSE_CASTING(id));
   return response.data;
 };
 
-export const closeCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
+export const closeCasting = async ({ id }: { id: string }): Promise<EmployerCastingStatusResponse> => {
   const response = await api.post(API_ROUTES.CLOSE_CASTING(id));
   return response.data;
 };
 
-export const archiveCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
+export const archiveCasting = async ({ id }: { id: string }): Promise<EmployerCastingStatusResponse> => {
   const response = await api.post(API_ROUTES.ARCHIVE_CASTING(id));
   return response.data;
 };

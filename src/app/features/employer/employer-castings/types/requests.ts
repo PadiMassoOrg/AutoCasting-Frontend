@@ -1,48 +1,12 @@
-import type { CharacteristicsPatchRequest } from '../../../talent/talent-profile-edit/types/requests';
-import type { CastingSectionBasicInfo } from './employerCastings.types';
-
-export type CastingRoleUpsertRequest = {
-  rolesSectionId: string;
-  roleName: string;
-  roleTypeId: string;
-  genderId: string;
-  ageMin: number;
-  ageMax: number;
-  professionIds: string[];
+export type CastingUpsertRequest = {
+  title: string;
+  projectTypeId?: string | null;
+  castingModalityId?: string | null;
+  locationText?: string | null;
+  applicationDeadline?: string | null;
+  hasWardrobeFitting?: boolean | null;
+  wardrobeFittingText?: string | null;
+  shootingStartDate?: string | null;
+  shootingEndDate?: string | null;
   description?: string | null;
-  characteristics?: CharacteristicsPatchRequest | null;
-  skillIds?: string[] | null;
 };
-
-export type CastingRequirementUpsertRequest = {
-  requirementsSectionId: string;
-  roleIds: string[];
-  requiresAudio: boolean;
-  requiresVideo: boolean;
-  description?: string;
-};
-
-// Remuneration
-export type BaseCastingSectionRemuneration = {
-  id: string;
-  castingCompensationTypeId: string;
-  notes?: string | null;
-};
-
-export type BaseRoleRemunerationPatchRequest = {
-  id: string;
-  payRateTypeId?: string;
-  currencyId?: string;
-  amount?: number | null;
-};
-
-export type CastingBasicInfoPatchRequest = Partial<CastingSectionBasicInfo>;
-
-export type CastingRolePatchRequest = CastingRoleUpsertRequest & { id: string };
-export type CastingRoleDeleteRequest = { id: string };
-
-export type CastingRequirementPatchRequest = CastingRequirementUpsertRequest & { id: string };
-export type CastingRequirementDeleteRequest = { id: string };
-
-export type CastingSectionRemunerationPatchRequest = BaseCastingSectionRemuneration;
-export type CastingRoleRemunerationPatchRequest = BaseRoleRemunerationPatchRequest;

@@ -43,6 +43,7 @@ export default function ProtectedRoutesLayout() {
 
         {/* Employer */}
         <Route path={ROUTES.EMPLOYER} element={<EmployerProfileEditPage />} />
+        <Route path={ROUTES.EMPLOYER_CASTING + '/new/editor'} element={<EmployerCastingPage />} />
         <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/editor'} element={<EmployerCastingPage />} />
         <Route path={ROUTES.EMPLOYER_SETTINGS} element={<EmployerProfileSettingsPage />} />
       </Route>

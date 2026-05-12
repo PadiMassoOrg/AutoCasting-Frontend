@@ -4,178 +4,56 @@ import {
   FormSelectField,
   Label,
   parseLocalISODate,
+  RangeCalendar,
   TextareaField,
   toLocalISO,
-  useCommittedNullableBooleanValue,
 } from 'autocasting-ui-library-padimasso';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { useTranslation } from 'react-i18next';
-import { RangeCalendar } from 'autocasting-ui-library-padimasso';
 import { capitalize } from '../../../../../../shared/utils/formatUtils';
-import {
-  onSelect,
-  useCommittedText,
-  useCommittedUuid,
-  useIsoDateField,
-} from '../../../../../../shared/utils/formUtils';
+import { onSelect } from '../../../../../../shared/utils/formUtils';
 import { useCachedSiteMetadataOption } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
-import { useCastingBasicInfoAutosave } from '../../../hooks/autosaves';
 import { getCastingBasicInfoSchema } from '../../../schemas/castingBasicInfoSchema';
-import type { CastingSectionBasicInfo } from '../../../types/employerCastings.types';
+import type { CastingBasicInfoFieldKey, CastingBasicInfoFormData } from '../../../types/employerCastings.types';
 
-type Errors = {
-  title?: string | null;
-  projectTypeId?: string | null;
-  castingModalityId?: string | null;
-  applicationDeadline?: { year?: string | null; month?: string | null; day?: string | null } | null;
-  wardrobeFittingText?: string | null;
-  castingModalityText?: string | null;
-  description?: string | null;
-};
+type Errors = Partial<Record<CastingBasicInfoFieldKey, string | null>>;
 
-const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
+const CastingBasicInfoForm = ({
+  data,
+  backendErrors,
+  onChange,
+  onClearBackendError,
+}: {
+  data: CastingBasicInfoFormData;
+  backendErrors?: Partial<Record<CastingBasicInfoFieldKey, string>>;
+  onChange: (patch: Partial<CastingBasicInfoFormData>) => void;
+  onClearBackendError?: (field: CastingBasicInfoFieldKey) => void;
+}) => {
   const { t, i18n } = useTranslation();
-  const getApplicationDeadlineError = useCallback(
-    (iso: string) => {
-      if (!iso) return null;
-
-      const today = new Date();
-      const todayIso = [
-        today.getFullYear(),
-        String(today.getMonth() + 1).padStart(2, '0'),
-        String(today.getDate()).padStart(2, '0'),
-      ].join('-');
-
-      return iso < todayIso ? t('validation.application_deadline_past') : null;
-    },
-    [t]
-  );
-
+  const schema = useMemo(() => getCastingBasicInfoSchema(t), [t]);
   const projectTypeOptions = useCachedSiteMetadataOption('projectTypeOptions', t);
   const castingModalityOptions = useCachedSiteMetadataOption('castingModalityOptions', t);
-  const autosave = useCastingBasicInfoAutosave(data.id);
-  const schema = useMemo(() => getCastingBasicInfoSchema(t), [t]);
-  const backendFieldErrors = autosave.fieldErrors as Record<string, string | undefined>;
-
   const ON_SITE_CODE = t('sitemetadata.casting_modality.on_site');
   const YEAR_START = new Date().getFullYear();
   const YEAR_END = YEAR_START + 2;
 
-  const [range, setRange] = useState<DateRange | undefined>(undefined);
   const [errors, setErrors] = useState<Errors>({});
-  const [lastSentApplicationDeadline, setLastSentApplicationDeadline] = useState(data.applicationDeadline ?? '');
-
-  const savedRange = useMemo(
-    () => toRangeFromData(data.shootingStartDate, data.shootingEndDate),
-    [data.shootingStartDate, data.shootingEndDate]
-  );
+  const [range, setRange] = useState<DateRange | undefined>(undefined);
 
   useEffect(() => {
-    setRange(savedRange);
-  }, [data.id, savedRange?.from?.getTime(), savedRange?.to?.getTime()]);
-
-  useEffect(() => {
-    setLastSentApplicationDeadline(data.applicationDeadline ?? '');
-  }, [data.id, data.applicationDeadline]);
-
-  const title = useCommittedText(
-    data.title ?? '',
-    (v) => {
-      const r = schema.shape.title.safeParse(v);
-      setErrors((e) => ({ ...e, title: r.success ? null : r.error.errors[0]?.message }));
-      if (r.success) autosave.immediate({ id: data.id, title: v });
-    },
-    { trim: true }
-  );
-
-  const projectType = useCommittedUuid(data.projectType?.id ?? null, (id) => {
-    const raw = id ?? '';
-    const r = schema.shape.projectTypeId.safeParse(raw);
-    setErrors((e) => ({
-      ...e,
-      projectTypeId: r.success ? null : r.error.errors[0]?.message || t('validation.uuid_invalid'),
-    }));
-    if (r.success) autosave.immediate({ id: data.id, projectTypeId: id ?? undefined });
-  });
-
-  const castingModalityText = useCommittedText(data.castingModalityText ?? '', (v) => {
-    setErrors((e) => ({ ...e, castingModalityText: null }));
-    autosave.immediate({ id: data.id, castingModalityText: v || null });
-  });
-
-  const wardrobeFittingText = useCommittedText(data.wardrobeFittingText ?? '', (v) => {
-    setErrors((e) => ({ ...e, wardrobeFittingText: null }));
-    autosave.immediate({ id: data.id, wardrobeFittingText: v || null });
-  });
-
-  const castingModality = useCommittedUuid(data.castingModality?.id ?? null, (id) => {
-    const raw = id ?? '';
-    const r = schema.shape.castingModalityId.safeParse(raw);
-
-    setErrors((e) => ({
-      ...e,
-      castingModalityId: r.success ? null : r.error.errors[0]?.message || t('validation.uuid_invalid'),
-    }));
-
-    if (!r.success) return;
-
-    const nextCode = castingModalityOptions.find((o) => o.value === id)?.label ?? null;
-
-    if (nextCode && nextCode !== ON_SITE_CODE) {
-      autosave.immediate({
-        id: data.id,
-        castingModalityId: id ?? undefined,
-        castingModalityText: null,
-      });
-      castingModalityText.setValue('');
-      setErrors((e) => ({ ...e, castingModalityText: null }));
-      return;
-    }
-
-    autosave.immediate({ id: data.id, castingModalityId: id ?? undefined });
-  });
+    setRange(toRangeFromData(data.shootingStartDate, data.shootingEndDate));
+  }, [data.shootingStartDate, data.shootingEndDate]);
 
   const selectedCastingModalityStringCodeTranslation = useMemo(() => {
-    if (!castingModality.value) return null;
-    const opt = castingModalityOptions.find((o) => o.value === castingModality.value);
+    if (!data.castingModalityId) return null;
+    const opt = castingModalityOptions.find((option) => option.value === data.castingModalityId);
     return opt?.label ?? null;
-  }, [castingModality.value, castingModalityOptions]);
+  }, [data.castingModalityId, castingModalityOptions]);
 
   const isOnSite = selectedCastingModalityStringCodeTranslation === ON_SITE_CODE;
 
-  const applicationDeadline = useIsoDateField(data.applicationDeadline ?? '', () => {}, 600);
-
-  const applicationDeadlineIso = useMemo(() => {
-    if (!applicationDeadline.year || !applicationDeadline.month || !applicationDeadline.day) return '';
-    return `${applicationDeadline.year}-${applicationDeadline.month}-${applicationDeadline.day}`;
-  }, [applicationDeadline.year, applicationDeadline.month, applicationDeadline.day]);
-
-  const applicationDeadlineError = useMemo(
-    () => getApplicationDeadlineError(applicationDeadlineIso),
-    [applicationDeadlineIso, getApplicationDeadlineError]
-  );
-
-  const applicationDeadlineDayError = errors.applicationDeadline?.day ?? applicationDeadlineError ?? undefined;
-  const shouldShowApplicationDeadlineHint =
-    !applicationDeadlineIso && !!(applicationDeadline.day || applicationDeadline.month || applicationDeadline.year);
-  const applicationDeadlineFieldError =
-    applicationDeadlineDayError ??
-    (shouldShowApplicationDeadlineHint
-      ? t('employer_castings.dashboard.basic_info.application_deadline_incomplete')
-      : undefined);
-
-  const commitApplicationDeadline = useCallback(() => {
-    if (!applicationDeadlineIso) return;
-
-    const nextApplicationDeadlineError = getApplicationDeadlineError(applicationDeadlineIso);
-    if (nextApplicationDeadlineError) return;
-    if (applicationDeadlineIso === lastSentApplicationDeadline) return;
-
-    setLastSentApplicationDeadline(applicationDeadlineIso);
-    setErrors((e) => ({ ...e, applicationDeadline: null }));
-    autosave.immediate({ id: data.id, applicationDeadline: applicationDeadlineIso });
-  }, [applicationDeadlineIso, autosave, data.id, getApplicationDeadlineError, lastSentApplicationDeadline]);
+  const applicationDeadline = useMemo(() => parseIsoDate(data.applicationDeadline), [data.applicationDeadline]);
 
   const yearOptions = useMemo(
     () =>
@@ -194,41 +72,44 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
     }));
   }, [i18n.language]);
 
-  const hasWardrobeFitting = useCommittedNullableBooleanValue(data.hasWardrobeFitting, (v) => {
-    if (v === false) {
-      autosave.immediate({
-        id: data.id,
-        hasWardrobeFitting: false,
-        wardrobeFittingText: null,
-      });
-      wardrobeFittingText.setValue('');
-      setErrors((e) => ({ ...e, wardrobeFittingText: null }));
-      return;
-    }
+  const getApplicationDeadlineError = (iso: string) => {
+    if (!iso) return null;
 
-    autosave.immediate({
-      id: data.id,
-      hasWardrobeFitting: v ?? undefined,
-    });
-  });
+    const today = new Date();
+    const todayIso = [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, '0'),
+      String(today.getDate()).padStart(2, '0'),
+    ].join('-');
 
-  const description = useCommittedText(data.description ?? '', (v) => {
-    setErrors((e) => ({ ...e, description: null }));
-    autosave.immediate({ id: data.id, description: v || null });
-  });
+    return iso < todayIso ? t('validation.application_deadline_past') : null;
+  };
 
-  const handleRangeCommit = useCallback(
-    (from: Date, to: Date) => {
-      autosave.immediate({
-        id: data.id,
-        shootingStartDate: toLocalISO(from),
-        shootingEndDate: toLocalISO(to),
-      });
-    },
-    [autosave, data.id]
-  );
+  const applicationDeadlineError = getApplicationDeadlineError(data.applicationDeadline);
+  const shouldShowApplicationDeadlineHint =
+    !data.applicationDeadline && !!(applicationDeadline.day || applicationDeadline.month || applicationDeadline.year);
 
-  const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
+  const setLocalError = (field: CastingBasicInfoFieldKey, message: string | null) => {
+    setErrors((prev) => ({ ...prev, [field]: message }));
+  };
+
+  const setSchemaError = (
+    field: CastingBasicInfoFieldKey,
+    result: { success: boolean; error?: { errors: Array<{ message?: string }> } }
+  ) => {
+    setLocalError(field, result.success ? null : (result.error?.errors[0]?.message ?? null));
+  };
+
+  const clearError = (field: CastingBasicInfoFieldKey) => {
+    setLocalError(field, null);
+    onClearBackendError?.(field);
+  };
+
+  const resolveError = (field: CastingBasicInfoFieldKey, local?: string | null) => local ?? backendErrors?.[field];
+
+  const updateField = <K extends keyof CastingBasicInfoFormData>(field: K, value: CastingBasicInfoFormData[K]) => {
+    onChange({ [field]: value } as Partial<CastingBasicInfoFormData>);
+  };
 
   return (
     <div className="w-full flex flex-col">
@@ -237,10 +118,13 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         label={t('employer_castings.dashboard.basic_info.title')}
         labelClassName="font-semibold text-base"
         placeholder={t('general.placeholder.project_name')}
-        value={title.value}
-        onChange={title.onChange}
-        onBlur={title.onBlur}
-        onKeyDown={title.onKeyDown}
+        value={data.title}
+        onChange={(e) => {
+          const next = e.target.value;
+          updateField('title', next);
+          setSchemaError('title', schema.shape.title.safeParse(next));
+          onClearBackendError?.('title');
+        }}
         error={resolveError('title', errors.title)}
         required
       />
@@ -250,9 +134,13 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         label={t('employer_castings.dashboard.basic_info.project_type')}
         labelClassName="font-semibold text-base"
         placeholder={t('general.placeholder.select')}
-        value={projectType.value}
-        onChange={projectType.onChange}
-        onBlur={projectType.onBlur}
+        value={data.projectTypeId ?? ''}
+        onChange={(e) => {
+          const nextValue = e.target.value || null;
+          updateField('projectTypeId', nextValue);
+          setSchemaError('projectTypeId', schema.shape.projectTypeId.safeParse(nextValue ?? ''));
+          onClearBackendError?.('projectTypeId');
+        }}
         options={projectTypeOptions}
         error={resolveError('projectTypeId', errors.projectTypeId)}
         required
@@ -263,9 +151,25 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         label={t('employer_castings.dashboard.basic_info.casting_modality')}
         labelClassName="font-semibold text-base"
         placeholder={t('general.placeholder.select')}
-        value={castingModality.value}
-        onChange={castingModality.onChange}
-        onBlur={castingModality.onBlur}
+        value={data.castingModalityId ?? ''}
+        onChange={(e) => {
+          const nextValue = e.target.value || null;
+          const nextLabel = castingModalityOptions.find((option) => option.value === nextValue)?.label ?? null;
+
+          setSchemaError('castingModalityId', schema.shape.castingModalityId.safeParse(nextValue ?? ''));
+          onClearBackendError?.('castingModalityId');
+
+          if (nextLabel && nextLabel !== ON_SITE_CODE) {
+            onChange({
+              castingModalityId: nextValue,
+              locationText: '',
+            });
+            clearError('locationText');
+            return;
+          }
+
+          updateField('castingModalityId', nextValue);
+        }}
         options={castingModalityOptions}
         error={resolveError('castingModalityId', errors.castingModalityId)}
         required
@@ -273,23 +177,37 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
 
       {isOnSite && (
         <FormInputField
-          id="castingModalityText"
+          id="locationText"
           label={t('employer_castings.dashboard.basic_info.casting_modality_on_site')}
           labelClassName="font-semibold text-base"
           placeholder={t('general.placeholder.casting_modality')}
-          value={castingModalityText.value}
-          onChange={castingModalityText.onChange}
-          onBlur={castingModalityText.onBlur}
-          onKeyDown={castingModalityText.onKeyDown}
-          error={resolveError('castingModalityText', errors.castingModalityText)}
+          value={data.locationText}
+          onChange={(e) => {
+            const next = e.target.value;
+            updateField('locationText', next);
+            setSchemaError('locationText', schema.shape.locationText.safeParse(next));
+            onClearBackendError?.('locationText');
+          }}
+          error={resolveError('locationText', errors.locationText)}
           required
         />
       )}
 
       <BooleanRadioGroup
         label={t('employer_castings.dashboard.basic_info.has_wardrobe_fitting')}
-        value={hasWardrobeFitting.value}
-        onChange={(next) => hasWardrobeFitting.onChange(next ?? null)}
+        value={data.hasWardrobeFitting}
+        onChange={(next) => {
+          if (next === false) {
+            onChange({
+              hasWardrobeFitting: false,
+              wardrobeFittingText: '',
+            });
+            clearError('wardrobeFittingText');
+            return;
+          }
+
+          updateField('hasWardrobeFitting', next ?? null);
+        }}
         yesLabel={t('general.yes')}
         noLabel={t('general.no')}
         includeAnyOption={false}
@@ -297,16 +215,19 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         required
       />
 
-      {hasWardrobeFitting.value === true && (
+      {data.hasWardrobeFitting === true && (
         <FormInputField
           id="wardrobeFittingText"
           label={t('employer_castings.dashboard.basic_info.wardrobe_fitting_details')}
           labelClassName="font-semibold text-base"
           placeholder={t('general.placeholder.wardrobe_fitting')}
-          value={wardrobeFittingText.value}
-          onChange={wardrobeFittingText.onChange}
-          onBlur={wardrobeFittingText.onBlur}
-          onKeyDown={wardrobeFittingText.onKeyDown}
+          value={data.wardrobeFittingText}
+          onChange={(e) => {
+            const next = e.target.value;
+            updateField('wardrobeFittingText', next);
+            setSchemaError('wardrobeFittingText', schema.shape.wardrobeFittingText.safeParse(next));
+            onClearBackendError?.('wardrobeFittingText');
+          }}
           error={resolveError('wardrobeFittingText', errors.wardrobeFittingText)}
           required
         />
@@ -327,37 +248,44 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
             id="applicationDeadline-day"
             placeholder={t('general.placeholder.day')}
             value={applicationDeadline.day}
-            onChange={(e) => {
-              setErrors((prev) => ({ ...prev, applicationDeadline: null }));
-              onSelect((v) => applicationDeadline.setDay(v))(e);
-            }}
-            onBlur={commitApplicationDeadline}
+            onChange={onSelect((day) => {
+              const nextIso = buildIsoDate(day, applicationDeadline.month, applicationDeadline.year);
+              updateField('applicationDeadline', nextIso);
+              clearError('applicationDeadline');
+            })}
             options={applicationDeadline.dayOptions}
-            error={resolveError('applicationDeadline', applicationDeadlineFieldError)}
+            error={resolveError(
+              'applicationDeadline',
+              errors.applicationDeadline ??
+                applicationDeadlineError ??
+                (shouldShowApplicationDeadlineHint
+                  ? t('employer_castings.dashboard.basic_info.application_deadline_incomplete')
+                  : null)
+            )}
           />
           <FormSelectField
             id="applicationDeadline-month"
             placeholder={t('general.placeholder.month')}
             value={applicationDeadline.month}
-            onChange={(e) => {
-              setErrors((prev) => ({ ...prev, applicationDeadline: null }));
-              onSelect((v) => applicationDeadline.setMonth(v))(e);
-            }}
-            onBlur={commitApplicationDeadline}
+            onChange={onSelect((month) => {
+              const nextIso = buildIsoDate(applicationDeadline.day, month, applicationDeadline.year);
+              updateField('applicationDeadline', nextIso);
+              clearError('applicationDeadline');
+            })}
             options={monthOptions}
-            error={resolveError('applicationDeadline', errors.applicationDeadline?.month)}
+            error={resolveError('applicationDeadline', errors.applicationDeadline)}
           />
           <FormSelectField
             id="applicationDeadline-year"
             placeholder={t('general.placeholder.year')}
             value={applicationDeadline.year}
-            onChange={(e) => {
-              setErrors((prev) => ({ ...prev, applicationDeadline: null }));
-              onSelect((v) => applicationDeadline.setYear(v))(e);
-            }}
-            onBlur={commitApplicationDeadline}
+            onChange={onSelect((year) => {
+              const nextIso = buildIsoDate(applicationDeadline.day, applicationDeadline.month, year);
+              updateField('applicationDeadline', nextIso);
+              clearError('applicationDeadline');
+            })}
             options={yearOptions}
-            error={resolveError('applicationDeadline', errors.applicationDeadline?.year)}
+            error={resolveError('applicationDeadline', errors.applicationDeadline)}
           />
         </div>
       </div>
@@ -366,7 +294,12 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         label={t('employer_castings.dashboard.basic_info.shooting_dates')}
         value={range}
         onChange={setRange}
-        onCommit={handleRangeCommit}
+        onCommit={(from, to) => {
+          onChange({
+            shootingStartDate: toLocalISO(from),
+            shootingEndDate: toLocalISO(to),
+          });
+        }}
         language={i18n.language}
         required
       />
@@ -377,14 +310,44 @@ const CastingBasicInfoForm = ({ data }: { data: CastingSectionBasicInfo }) => {
         id="description"
         label={t('employer_castings.dashboard.basic_info.description')}
         placeholder={t('general.placeholder.about')}
-        value={description.value}
-        onChange={description.onChange}
-        onBlur={description.onBlur}
-        onKeyDown={description.onKeyDown}
+        value={data.description}
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+          const next = e.target.value;
+          updateField('description', next);
+          setSchemaError('description', schema.shape.description.safeParse(next));
+          onClearBackendError?.('description');
+        }}
         error={resolveError('description', errors.description)}
       />
     </div>
   );
+};
+
+const parseIsoDate = (iso: string) => {
+  const [year = '', month = '', day = ''] = iso.split('-');
+  const dayOptions = getDayOptions(month, year);
+
+  return {
+    day,
+    month,
+    year,
+    dayOptions,
+  };
+};
+
+const buildIsoDate = (day?: string, month?: string, year?: string) => {
+  if (!day || !month || !year) return '';
+  return `${year}-${month}-${day}`;
+};
+
+const getDayOptions = (month?: string, year?: string) => {
+  const fallbackDays = 31;
+  const maxDays = month && year ? new Date(Number(year), Number(month), 0).getDate() : fallbackDays;
+
+  return Array.from({ length: maxDays }, (_, index) => {
+    const value = String(index + 1).padStart(2, '0');
+    return { value, label: value };
+  });
 };
 
 const toRangeFromData = (start?: string | null, end?: string | null): DateRange | undefined => {

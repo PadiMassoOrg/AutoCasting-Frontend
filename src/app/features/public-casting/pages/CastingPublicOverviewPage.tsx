@@ -34,7 +34,7 @@ const PublicCastingOverviewPage = () => {
 
   const isTalentLogged = Boolean(isAuth) && mode === USER_MODE_TALENT;
 
-  const allRoles = casting?.rolesSection.roles ?? [];
+  const allRoles = casting?.roles ?? [];
   const hasRoles = allRoles.length > 0;
   const hasAppliedAnyRole = appliedIdsSet.size > 0;
   const appliedAllRoles = hasRoles && allRoles.every((role) => appliedIdsSet.has(role.id));
@@ -85,9 +85,7 @@ const PublicCastingOverviewPage = () => {
     if (appliedIdsSet.has(role.id)) return;
     if (!casting) return;
 
-    const requirements: CastingRequirement[] = (casting.requirementsSection.requirements ?? []).filter(
-      (r) => r.roleId === role.id
-    );
+    const requirements: CastingRequirement[] = toRequirements(role);
 
     const hasRequirements = requirements.length > 0;
 
@@ -120,13 +118,14 @@ const PublicCastingOverviewPage = () => {
     );
   }
 
+  const employerInfo = casting.employerInfo;
   const right = (
     <>
-      <EmployerInfoSection data={casting.employerInfo} />
+      {employerInfo && <EmployerInfoSection data={employerInfo} />}
 
       {showApplyInfoSection && (
         <ApplySection
-          employer={casting.employerInfo.companyName!}
+          employer={employerInfo?.companyName ?? ''}
           requirements={[]}
           roleId=""
           alreadyApplied={appliedAllRoles}
@@ -141,10 +140,10 @@ const PublicCastingOverviewPage = () => {
     return (
       <main className="flex flex-row gap-10">
         <section className="flex-1">
-          <BasicInfoSection data={casting.basicInfoSection} />
+          <BasicInfoSection data={casting} />
           <Separator className="opacity-0 my-2" />
           <RolesSection
-            data={casting.rolesSection}
+            data={casting.roles ?? []}
             showApplyButton={showApplyButton}
             applyDisabled={!isTalentLogged || apply.isPending}
             isRoleApplied={isRoleApplied}
@@ -158,10 +157,10 @@ const PublicCastingOverviewPage = () => {
 
   return (
     <div className="relative pt-3 pb-24 flex flex-col gap-3">
-      <BasicInfoSection data={casting.basicInfoSection} />
+      <BasicInfoSection data={casting} />
       <Separator className="opacity-0 my-1" />
       <RolesSection
-        data={casting.rolesSection}
+        data={casting.roles ?? []}
         showApplyButton={showApplyButton}
         applyDisabled={!isTalentLogged || apply.isPending}
         isRoleApplied={isRoleApplied}
@@ -171,6 +170,21 @@ const PublicCastingOverviewPage = () => {
       {right}
     </div>
   );
+};
+
+const toRequirements = (role: CastingRole): CastingRequirement[] => {
+  if (!role.id) return [];
+  if (!role.requiresAudio && !role.requiresVideo) return [];
+
+  return [
+    {
+      id: role.id,
+      roleId: role.id,
+      description: role.requirementDescription ?? '',
+      requiresAudio: role.requiresAudio,
+      requiresVideo: role.requiresVideo,
+    },
+  ];
 };
 
 export default PublicCastingOverviewPage;

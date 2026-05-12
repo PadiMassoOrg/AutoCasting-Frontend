@@ -11,13 +11,13 @@ import {
   publishCasting,
   setDraftCasting,
 } from '../../services/employerCastingService';
-import type { EmployerCastingEditorResponse } from '../../types/employerCastings.types';
+import type { EmployerCastingStatusResponse } from '../../types/employerCastings.types';
 
 export type CastingStatusAction = 'publish' | 'draft' | 'pause' | 'close' | 'archive';
 
 type Vars = { id: string; slug?: string };
 
-const mutationByAction: Record<CastingStatusAction, (v: { id: string }) => Promise<EmployerCastingEditorResponse>> = {
+const mutationByAction: Record<CastingStatusAction, (v: { id: string }) => Promise<EmployerCastingStatusResponse>> = {
   publish: publishCasting,
   draft: setDraftCasting,
   pause: pauseCasting,
@@ -30,7 +30,7 @@ export const useCastingStatusMutation = (action: CastingStatusAction) => {
   const { showToast } = useToast();
   const queryClient = useQueryClient();
 
-  return useMutation<EmployerCastingEditorResponse, unknown, Vars>({
+  return useMutation<EmployerCastingStatusResponse, unknown, Vars>({
     mutationFn: ({ id }) => mutationByAction[action]({ id }),
     onSuccess: async (data, variables) => {
       await queryClient.invalidateQueries({ queryKey: EMPLOYER_CASTINGS_LIST_CACHE_KEY });
