@@ -3,14 +3,18 @@ import { API_ROUTES } from '../../../../shared/lib/routes';
 import type { EmployerCastingsFiltersState } from '../components/Filter/EmployerCastingsFilterBar';
 import type {
   CastingCardResponse,
+  CastingRoleResponse,
+  EmployerCastingEditorResponse,
   EmployerCastingDetailsResponse,
   EmployerCastingStatusResponse,
 } from '../types/employerCastings.types';
 import type { EmployerCastingsOrderBy } from '../types/employerCastingsFilters.types';
-import type { CastingUpsertRequest } from '../types/requests';
+import type { CastingRoleRequest, CastingUpsertRequest } from '../types/requests';
 
 export const EMPLOYER_CASTINGS_LIST_CACHE_KEY = ['cache-employer-castings-list'] as const;
 export const EMPLOYER_CASTING_CACHE_KEY = ['cache-employer-casting'] as const;
+export const EMPLOYER_CASTING_EDITOR_CACHE_KEY = ['cache-employer-casting-editor'] as const;
+export const EMPLOYER_CASTING_ROLE_CACHE_KEY = ['cache-employer-casting-role'] as const;
 
 export type GetMyCastingsArgs = {
   page: number;
@@ -38,8 +42,18 @@ export async function getMyCastings({ page, size, filters, orderBy }: GetMyCasti
   return data;
 }
 
+export const getEmployerCastingEditorBySlug = async (slug: string): Promise<EmployerCastingEditorResponse> => {
+  const response = await api.get(API_ROUTES.EMPLOYER_CASTING_EDITOR(slug));
+  return response.data;
+};
+
+export const createEmptyCasting = async (): Promise<string> => {
+  const response = await api.post(API_ROUTES.EMPLOYER_CASTINGS_EMPTY);
+  return response.data;
+};
+
 export const getEmployerCastingDetailsBySlug = async (slug: string): Promise<EmployerCastingDetailsResponse> => {
-  const response = await api.get(API_ROUTES.EMPLOYER_CASTING + `/${slug}` + '/details');
+  const response = await api.get(API_ROUTES.EMPLOYER_CASTING_DETAILS(slug));
   return response.data;
 };
 
@@ -58,6 +72,32 @@ export const updateCasting = async ({
   const response = await api.put(`${API_ROUTES.EMPLOYER_CASTING}/${id}`, payload);
   return response.data;
 };
+
+export const getCastingRoleById = async (roleId: string): Promise<CastingRoleResponse> => {
+  const response = await api.get(API_ROUTES.EMPLOYER_CASTING_ROLE_DETAILS(roleId));
+  return response.data;
+};
+
+export const createCastingRole = async (payload: CastingRoleRequest): Promise<CastingRoleResponse> => {
+  const response = await api.post(API_ROUTES.CASTING_ROLE, payload);
+  return response.data;
+};
+
+export const updateCastingRole = async ({
+  roleId,
+  payload,
+}: {
+  roleId: string;
+  payload: CastingRoleRequest;
+}): Promise<CastingRoleResponse> => {
+  const response = await api.put(`${API_ROUTES.CASTING_ROLE}/${roleId}`, payload);
+  return response.data;
+};
+
+export async function deleteCastingRole({ roleId }: { roleId: string }) {
+  await api.delete(`${API_ROUTES.CASTING_ROLE}/${roleId}`);
+  return { roleId };
+}
 
 export async function deleteCasting({ id }: { id: string }) {
   await api.delete(`${API_ROUTES.EMPLOYER_CASTING}/${id}`);

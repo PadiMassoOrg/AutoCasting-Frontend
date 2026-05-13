@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useToast } from '../../../../context/ToastContext';
 import { handleBackendLocalFieldOrToastError } from '../../../../shared/utils/backendErrorHandling';
 import {
-  createCasting,
   EMPLOYER_CASTING_CACHE_KEY,
+  EMPLOYER_CASTING_EDITOR_CACHE_KEY,
   EMPLOYER_CASTINGS_LIST_CACHE_KEY,
   updateCasting,
 } from '../services/employerCastingService';
@@ -13,7 +13,7 @@ import type { CastingBasicInfoFieldKey, EmployerCastingDetailsResponse } from '.
 import type { CastingUpsertRequest } from '../types/requests';
 
 type SaveCastingVars = {
-  id?: string;
+  id: string;
   payload: CastingUpsertRequest;
 };
 
@@ -46,10 +46,7 @@ export const useUpdateCastingMutation = (slug?: string) => {
   }, []);
 
   const mutation = useMutation<EmployerCastingDetailsResponse, unknown, SaveCastingVars>({
-    mutationFn: ({ id, payload }) => {
-      if (!id) return createCasting(payload);
-      return updateCasting({ id, payload });
-    },
+    mutationFn: ({ id, payload }) => updateCasting({ id, payload }),
     onMutate: () => {
       clearAllBackendErrors();
     },
@@ -57,6 +54,7 @@ export const useUpdateCastingMutation = (slug?: string) => {
       await queryClient.invalidateQueries({ queryKey: EMPLOYER_CASTINGS_LIST_CACHE_KEY });
       if (slug) {
         await queryClient.invalidateQueries({ queryKey: [...EMPLOYER_CASTING_CACHE_KEY, slug] });
+        await queryClient.invalidateQueries({ queryKey: [...EMPLOYER_CASTING_EDITOR_CACHE_KEY, slug] });
       }
     },
     onError: (error) => {
@@ -75,7 +73,7 @@ export const useUpdateCastingMutation = (slug?: string) => {
   });
 
   const submit = useCallback(
-    (payload: CastingUpsertRequest, id?: string) => mutation.mutateAsync({ id, payload }),
+    (payload: CastingUpsertRequest, id: string) => mutation.mutateAsync({ id, payload }),
     [mutation]
   );
 

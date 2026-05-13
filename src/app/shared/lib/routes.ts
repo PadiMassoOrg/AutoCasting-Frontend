@@ -99,6 +99,7 @@ export const API_ROUTES = {
   EMPLOYER_SOCIAL_MEDIA: '/employer/social-media',
   EMPLOYER_CASTINGS: '/employer/castings',
   EMPLOYER_CASTING: '/employer/casting',
+  EMPLOYER_CASTINGS_EMPTY: '/employer/castings/empty',
   // Casting Status
   PUBLISH_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/publish`,
   DRAFT_CASTING: (castingId: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/draft`,
@@ -108,6 +109,9 @@ export const API_ROUTES = {
   EMPLOYER_CASTING_APPLICANTS: (castingSlug: string) => `${API_ROUTES.EMPLOYER_CASTING}/${castingSlug}/applicants`,
   EMPLOYER_CASTING_APPLICANTS_GROUPED: (castingSlug: string) =>
     `${API_ROUTES.EMPLOYER_CASTING}/${castingSlug}/applicants/grouped`,
+  EMPLOYER_CASTING_EDITOR: (slug: string) => `${API_ROUTES.EMPLOYER_CASTING}/${slug}/editor`,
+  EMPLOYER_CASTING_DETAILS: (slug: string) => `${API_ROUTES.EMPLOYER_CASTING}/${slug}/details`,
+  EMPLOYER_CASTING_ROLE_DETAILS: (roleId: string) => `${API_ROUTES.CASTING_ROLE}/details/${roleId}`,
   // Application Status
   EMPLOYER_CASTING_APPLICATIONS: '/employer/applications',
   PRESELECT_APPLICATION: (applicationId: string) =>
