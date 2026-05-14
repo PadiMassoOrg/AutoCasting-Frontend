@@ -6,6 +6,7 @@ import {
   FormCurrencyField,
   FormInputField,
   FormSelectField,
+  Icon,
   Label,
   MultiSelectDropdown,
   Separator,
@@ -323,9 +324,10 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
       <Separator className="opacity-20 mt-2 mb-8" />
 
       <section className="grid grid-cols-1 lg:grid-cols-2 lg:items-start lg:gap-x-4">
-        <article className="flex flex-col">
+        <article className="mt-2 flex flex-col">
           <BooleanRadioGroup
             name="tattoo"
+            orientation="horizontal"
             label={t('profile.characteristics.tattoo')}
             value={formValues?.tattoo ?? null}
             includeAnyOption
@@ -335,6 +337,7 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
           />
           <BooleanRadioGroup
             name="passport"
+            orientation="horizontal"
             label={t('profile.characteristics.passport')}
             value={formValues?.passport ?? null}
             includeAnyOption
@@ -344,6 +347,7 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
           />
           <BooleanRadioGroup
             name="drivingLicense"
+            orientation="horizontal"
             label={t('profile.characteristics.drivingLicense')}
             value={formValues?.drivingLicense ?? null}
             includeAnyOption
@@ -353,15 +357,17 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
           />
         </article>
 
-        <article className="flex flex-col">
-          <div className="mb-4 flex items-center justify-between gap-4">
+        <article className="flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-4">
             <Label className="text-base font-semibold">{t('profile.skills.skills')}</Label>
-            <Button type="button" variant="outline" className="!w-auto" onClick={openSkillsModal}>
-              + {t('profile.skills.skills')}
+            <Button type="button" variant="primaryOutline" className="!w-auto" onClick={openSkillsModal}>
+              <span className="flex flex-row gap-2">
+                <Icon name="plus" size={16} /> {t('profile.skills.add_new_placeholder')}
+              </span>
             </Button>
           </div>
 
-          <div className="min-h-[220px] rounded-2xl border border-(--color-secondary-outline) p-4">
+          <div className="min-h-[190px] rounded-2xl border border-(--color-secondary-outline) p-4">
             <GroupedSkills
               skills={selectedSkills}
               onRemove={(skillId) => {
