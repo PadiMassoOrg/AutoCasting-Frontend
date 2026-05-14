@@ -119,127 +119,122 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
 
   return (
     <article className="flex flex-col">
-      {/* Name Profession Type Gender */}
-      <section className="flex flex-col lg:flex-row lg:gap-4">
-        <article className="w-full flex flex-col">
-          <FormInputField
-            id="roleName"
-            label={t('employer_castings.dashboard.roles.role.role_name')}
-            labelClassName="font-semibold text-base"
-            placeholder={t('general.placeholder.role_name')}
-            value={formValues?.roleName ?? ''}
-            onChange={(e) => {
-              const next = e.target.value;
-              updateField('roleName', next, 'roleName');
-            }}
-            error={resolveError('roleName')}
-            required
-          />
+      <section className="grid grid-cols-1 lg:grid-cols-2 lg:items-start lg:gap-x-4">
+        <FormInputField
+          id="roleName"
+          label={t('employer_castings.dashboard.roles.role.role_name')}
+          labelClassName="font-semibold text-base"
+          placeholder={t('general.placeholder.role_name')}
+          value={formValues?.roleName ?? ''}
+          onChange={(e) => {
+            const next = e.target.value;
+            updateField('roleName', next, 'roleName');
+          }}
+          error={resolveError('roleName')}
+          required
+        />
 
-          <article className="flex flex-col">
-            <div className="flex mb-2">
-              <Label className="text-base font-semibold">
-                {t('employer_castings.dashboard.roles.role.talent_profession')}
-              </Label>
-              <span className="text-red-500 ml-1" aria-hidden="true">
-                *
-              </span>
-            </div>
-            <MultiSelectDropdown
-              options={professionsRaw}
-              getId={(profession: SiteMetadataObject) => profession.id}
-              getLabel={(profession: SiteMetadataObject) => t(profession.stringCode)}
-              selected={formValues?.professionIds ?? []}
-              onChange={(next: string[]) => {
-                updateField('professionIds', next, 'professionIds');
+        <FormSelectField
+          id="roleTypeId"
+          label={t('casting-database.filter.role_type')}
+          labelClassName="font-semibold text-base"
+          placeholder={t('general.placeholder.select')}
+          value={formValues?.roleTypeId ?? ''}
+          onChange={(e) => {
+            const next = e.target.value || null;
+            updateField('roleTypeId', next, 'roleTypeId');
+          }}
+          options={roleTypeOptions}
+          error={resolveError('roleTypeId')}
+          required
+        />
+
+        <article className="w-full flex flex-col">
+          <div className="mb-1 flex">
+            <Label className="text-base font-semibold">
+              {t('employer_castings.dashboard.roles.role.talent_profession')}
+            </Label>
+            <span className="text-red-500 ml-1" aria-hidden="true">
+              *
+            </span>
+          </div>
+          <MultiSelectDropdown
+            options={professionsRaw}
+            getId={(profession: SiteMetadataObject) => profession.id}
+            getLabel={(profession: SiteMetadataObject) => t(profession.stringCode)}
+            selected={formValues?.professionIds ?? []}
+            onChange={(next: string[]) => {
+              updateField('professionIds', next, 'professionIds');
+            }}
+            maxPanelHeight="16rem"
+            error={resolveError('professionIds')}
+          />
+        </article>
+
+        <FormSelectField
+          id="genderId"
+          label={t('profile.basic_info.gender')}
+          labelClassName="font-semibold text-base"
+          placeholder={t('general.placeholder.select')}
+          value={formValues?.genderId ?? ''}
+          onChange={(e) => {
+            const next = e.target.value || null;
+            updateField('genderId', next, 'genderId');
+          }}
+          options={genderOptions}
+          error={resolveError('genderId')}
+          required
+        />
+
+        <article className="flex flex-col">
+          <div className="mb-1 flex">
+            <Label className="text-base font-semibold">{t('talent.filter.basic_info.age_range')}</Label>
+            <span className="text-red-500 ml-1" aria-hidden="true">
+              *
+            </span>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <FormInputField
+              id="ageMin"
+              placeholder={t('general.placeholder.min')}
+              value={formValues?.ageMin ?? ''}
+              onChange={(e) => {
+                const next = e.target.value.replace(/\D/g, '').slice(0, 2);
+                updateField('ageMin', next, 'ageMin');
               }}
-              maxPanelHeight="16rem"
-              error={resolveError('professionIds')}
+              error={resolveError('ageMin')}
             />
-          </article>
-
-          <article className="flex flex-col">
-            <div className="flex mb-2">
-              <Label className="text-base font-semibold">{t('talent.filter.basic_info.age_range')}</Label>
-              <span className="text-red-500 ml-1" aria-hidden="true">
-                *
-              </span>
-            </div>
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <FormInputField
-                id="ageMin"
-                placeholder={t('general.placeholder.min')}
-                value={formValues?.ageMin ?? ''}
-                onChange={(e) => {
-                  const next = e.target.value.replace(/\D/g, '').slice(0, 2);
-                  updateField('ageMin', next, 'ageMin');
-                }}
-                error={resolveError('ageMin')}
-              />
-              <FormInputField
-                id="ageMax"
-                placeholder={t('general.placeholder.max')}
-                value={formValues?.ageMax ?? ''}
-                onChange={(e) => {
-                  const next = e.target.value.replace(/\D/g, '').slice(0, 2);
-                  updateField('ageMax', next, 'ageMax');
-                }}
-                error={resolveError('ageMax')}
-              />
-            </div>
-          </article>
+            <FormInputField
+              id="ageMax"
+              placeholder={t('general.placeholder.max')}
+              value={formValues?.ageMax ?? ''}
+              onChange={(e) => {
+                const next = e.target.value.replace(/\D/g, '').slice(0, 2);
+                updateField('ageMax', next, 'ageMax');
+              }}
+              error={resolveError('ageMax')}
+            />
+          </div>
         </article>
 
-        <article className="w-full flex flex-col">
-          <FormSelectField
-            id="roleTypeId"
-            label={t('casting-database.filter.role_type')}
-            labelClassName="font-semibold text-base"
-            placeholder={t('general.placeholder.select')}
-            value={formValues?.roleTypeId ?? ''}
-            onChange={(e) => {
-              const next = e.target.value || null;
-              updateField('roleTypeId', next, 'roleTypeId');
-            }}
-            options={roleTypeOptions}
-            error={resolveError('roleTypeId')}
-            required
-          />
-
-          <FormSelectField
-            id="genderId"
-            label={t('profile.basic_info.gender')}
-            labelClassName="font-semibold text-base"
-            placeholder={t('general.placeholder.select')}
-            value={formValues?.genderId ?? ''}
-            onChange={(e) => {
-              const next = e.target.value || null;
-              updateField('genderId', next, 'genderId');
-            }}
-            options={genderOptions}
-            error={resolveError('genderId')}
-            required
-          />
-
-          <FormSelectField
-            id="ethnicityId"
-            label={t('profile.characteristics.ethnicity')}
-            labelClassName="font-semibold text-base"
-            placeholder={t('general.placeholder.select')}
-            value={formValues?.ethnicityId ?? ''}
-            onChange={(e) => {
-              const next = e.target.value || null;
-              updateField('ethnicityId', next);
-            }}
-            options={ethnicityOptions}
-          />
-        </article>
+        <FormSelectField
+          id="ethnicityId"
+          label={t('profile.characteristics.ethnicity')}
+          labelClassName="font-semibold text-base"
+          placeholder={t('general.placeholder.select')}
+          value={formValues?.ethnicityId ?? ''}
+          onChange={(e) => {
+            const next = e.target.value || null;
+            updateField('ethnicityId', next);
+          }}
+          options={ethnicityOptions}
+        />
       </section>
 
-      <Separator className="opacity-20 my-6" />
+      <Separator className="opacity-20 mt-2 mb-8" />
 
-      <section className="flex flex-col lg:flex-row lg:gap-4">
-        <article className="w-full flex flex-col">
+      <section className="grid grid-cols-1 lg:grid-cols-2 lg:items-start lg:gap-x-4">
+        <article className="flex flex-col">
           <FormSelectField
             id="payRateTypeId"
             label={t('employer_castings.dashboard.remunerations.remuneration.pay_rate_type_label')}
@@ -255,17 +250,17 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
             required
           />
 
-          <div className="mb-2 flex">
-            <Label className="text-base font-semibold">
-              {t('employer_castings.dashboard.remunerations.remuneration.amount_label')}
-            </Label>
-            <span className="text-red-500 ml-1" aria-hidden="true">
-              *
-            </span>
-          </div>
+          <article className="flex flex-col">
+            <div className="mb-2 flex">
+              <Label className="text-base font-semibold">
+                {t('employer_castings.dashboard.remunerations.remuneration.amount_label')}
+              </Label>
+              <span className="text-red-500 ml-1" aria-hidden="true">
+                *
+              </span>
+            </div>
 
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
-            <div className="w-full sm:max-w-[180px]">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-[180px_minmax(0,1fr)] sm:items-end">
               <FormSelectField
                 id="currencyId"
                 placeholder={t('general.placeholder.select')}
@@ -276,9 +271,7 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
                 }}
                 options={currencyOptions}
               />
-            </div>
 
-            <div className="w-full">
               <FormCurrencyField
                 id="amount"
                 placeholder="0"
@@ -289,28 +282,15 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
                 error={resolveError('amount')}
               />
             </div>
-          </div>
-
-          <TextareaField
-            id="remunerationNotes"
-            label={t('employer_castings.dashboard.remunerations.collaborative.label')}
-            placeholder={t('employer_castings.dashboard.remunerations.collaborative.placeholder')}
-            value={formValues?.remunerationNotes ?? ''}
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-              const next = e.target.value;
-              updateField('remunerationNotes', next);
-            }}
-            onBlur={() => {}}
-            onKeyDown={() => {}}
-          />
+          </article>
         </article>
 
-        <article className="w-full flex flex-col">
+        <article className="flex flex-col">
           <div className="mb-2">
             <Label className="text-base font-semibold">{t('employer_castings.dashboard.requirements.edit')}</Label>
           </div>
 
-          <div className="flex flex-wrap gap-6 mb-4">
+          <div className="mb-2 flex flex-wrap gap-x-6 gap-y-3">
             <CheckboxFieldLike
               id="requiresVideo"
               label={t('employer_castings.dashboard.requirements.requirement.video_true')}
@@ -327,7 +307,6 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
 
           <TextareaField
             id="requirementDescription"
-            label={t('employer_castings.dashboard.requirements.requirement.description')}
             placeholder={t('general.placeholder.about')}
             value={formValues?.requirementDescription ?? ''}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -336,14 +315,15 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
             }}
             onBlur={() => {}}
             onKeyDown={() => {}}
+            minHeightClassName="h-[120px]"
           />
         </article>
       </section>
 
-      <Separator className="opacity-20 my-6" />
+      <Separator className="opacity-20 mt-2 mb-8" />
 
-      <section className="flex flex-col lg:flex-row lg:gap-4">
-        <article className="w-full flex flex-col gap-4">
+      <section className="grid grid-cols-1 lg:grid-cols-2 lg:items-start lg:gap-x-4">
+        <article className="flex flex-col">
           <BooleanRadioGroup
             name="tattoo"
             label={t('profile.characteristics.tattoo')}
@@ -373,7 +353,7 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
           />
         </article>
 
-        <article className="w-full flex flex-col">
+        <article className="flex flex-col">
           <div className="mb-4 flex items-center justify-between gap-4">
             <Label className="text-base font-semibold">{t('profile.skills.skills')}</Label>
             <Button type="button" variant="outline" className="!w-auto" onClick={openSkillsModal}>
@@ -394,19 +374,6 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
           </div>
         </article>
       </section>
-
-      <TextareaField
-        id="description"
-        label={t('general.placeholder.description')}
-        placeholder={t('general.placeholder.about')}
-        value={formValues?.description ?? ''}
-        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-          const next = e.target.value;
-          updateField('description', next);
-        }}
-        onBlur={() => {}}
-        onKeyDown={() => {}}
-      />
     </article>
   );
 };
