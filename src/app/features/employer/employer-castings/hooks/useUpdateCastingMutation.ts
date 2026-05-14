@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '../../../../context/ToastContext';
+import { useBackendErrorToast } from '../../../../shared/hooks/useBackendErrorToast';
 import { handleBackendLocalFieldOrToastError } from '../../../../shared/utils/backendErrorHandling';
 import {
   EMPLOYER_CASTING_CACHE_KEY,
@@ -9,7 +9,7 @@ import {
   EMPLOYER_CASTINGS_LIST_CACHE_KEY,
   updateCasting,
 } from '../services/employerCastingService';
-import type { CastingBasicInfoFieldKey, EmployerCastingDetailsResponse } from '../types/employerCastings.types';
+import type { CastingBasicInfoFieldKey, CastingResponse } from '../types/employerCastings.types';
 import type { CastingUpsertRequest } from '../types/requests';
 
 type SaveCastingVars = {
@@ -19,7 +19,7 @@ type SaveCastingVars = {
 
 export const useUpdateCastingMutation = (slug?: string) => {
   const { t } = useTranslation();
-  const { showToast } = useToast();
+  const showErrorToast = useBackendErrorToast();
   const queryClient = useQueryClient();
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<CastingBasicInfoFieldKey, string>>>({});
 
@@ -45,7 +45,7 @@ export const useUpdateCastingMutation = (slug?: string) => {
     });
   }, []);
 
-  const mutation = useMutation<EmployerCastingDetailsResponse, unknown, SaveCastingVars>({
+  const mutation = useMutation<CastingResponse, unknown, SaveCastingVars>({
     mutationFn: ({ id, payload }) => updateCasting({ id, payload }),
     onMutate: () => {
       clearAllBackendErrors();
@@ -62,12 +62,7 @@ export const useUpdateCastingMutation = (slug?: string) => {
         error,
         t,
         setFieldError,
-        showToast: (message) =>
-          showToast({
-            title: t('general.error'),
-            description: message,
-            type: 'danger',
-          }),
+        showToast: showErrorToast,
       });
     },
   });

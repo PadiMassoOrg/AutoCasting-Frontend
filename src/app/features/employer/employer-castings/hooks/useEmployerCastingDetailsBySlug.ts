@@ -6,7 +6,7 @@ import {
   getEmployerCastingDetailsBySlug,
   getEmployerCastingEditorBySlug,
 } from '../services/employerCastingService';
-import type { EmployerCastingDetailsResponse, EmployerCastingEditorResponse } from '../types/employerCastings.types';
+import type { CastingResponse, EmployerCastingEditorResponse } from '../types/employerCastings.types';
 
 export const useEmployerCastingEditorBySlug = (slug?: string) => {
   const token = useAuthToken();
@@ -27,7 +27,7 @@ export const useEmployerCastingEditorBySlug = (slug?: string) => {
 export const useEmployerCastingDetailsBySlug = (slug?: string) => {
   const token = useAuthToken();
 
-  return useQuery<EmployerCastingDetailsResponse>({
+  return useQuery<CastingResponse>({
     queryKey: slug
       ? [...EMPLOYER_CASTING_CACHE_KEY, slug, token ?? 'no-token']
       : [...EMPLOYER_CASTING_CACHE_KEY, 'no-slug', token ?? 'no-token'],

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '../../../../../context/ToastContext';
+import { useBackendErrorToast } from '../../../../../shared/hooks/useBackendErrorToast';
 import { handleBackendActionError } from '../../../../../shared/utils/backendErrorHandling';
 import {
   EMPLOYER_CASTINGS_LIST_CACHE_KEY,
@@ -11,13 +11,13 @@ import {
   publishCasting,
   setDraftCasting,
 } from '../../services/employerCastingService';
-import type { EmployerCastingStatusResponse } from '../../types/employerCastings.types';
+import type { EmployerCastingEditorResponse } from '../../types/employerCastings.types';
 
 export type CastingStatusAction = 'publish' | 'draft' | 'pause' | 'close' | 'archive';
 
 type Vars = { id: string; slug?: string };
 
-const mutationByAction: Record<CastingStatusAction, (v: { id: string }) => Promise<EmployerCastingStatusResponse>> = {
+const mutationByAction: Record<CastingStatusAction, (v: { id: string }) => Promise<EmployerCastingEditorResponse>> = {
   publish: publishCasting,
   draft: setDraftCasting,
   pause: pauseCasting,
@@ -27,10 +27,10 @@ const mutationByAction: Record<CastingStatusAction, (v: { id: string }) => Promi
 
 export const useCastingStatusMutation = (action: CastingStatusAction) => {
   const { t } = useTranslation();
-  const { showToast } = useToast();
+  const showErrorToast = useBackendErrorToast();
   const queryClient = useQueryClient();
 
-  return useMutation<EmployerCastingStatusResponse, unknown, Vars>({
+  return useMutation<EmployerCastingEditorResponse, unknown, Vars>({
     mutationFn: ({ id }) => mutationByAction[action]({ id }),
     onSuccess: async (data, variables) => {
       await queryClient.invalidateQueries({ queryKey: EMPLOYER_CASTINGS_LIST_CACHE_KEY });
@@ -46,12 +46,7 @@ export const useCastingStatusMutation = (action: CastingStatusAction) => {
       handleBackendActionError({
         error,
         t,
-        showToast: (message) =>
-          showToast({
-            title: t('general.error'),
-            description: message,
-            type: 'danger',
-          }),
+        showToast: showErrorToast,
       });
     },
   });

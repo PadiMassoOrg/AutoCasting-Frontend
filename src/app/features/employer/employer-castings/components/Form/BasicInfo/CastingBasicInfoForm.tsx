@@ -12,12 +12,34 @@ import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from '../../../../../../shared/utils/formatUtils';
-import { onSelect } from '../../../../../../shared/utils/formUtils';
+import { buildISODate, getDayOptions, onSelect, parseISODateParts } from '../../../../../../shared/utils/formUtils';
 import { useCachedSiteMetadataOption } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { getCastingBasicInfoSchema } from '../../../schemas/castingBasicInfoSchema';
 import type { CastingBasicInfoFieldKey, CastingBasicInfoFormData } from '../../../types/employerCastings.types';
 
 type Errors = Partial<Record<CastingBasicInfoFieldKey, string | null>>;
+
+const getApplicationDeadlineError = (iso: string, t: ReturnType<typeof useTranslation>['t']) => {
+  if (!iso) return null;
+
+  const today = new Date();
+  const todayIso = [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, '0'),
+    String(today.getDate()).padStart(2, '0'),
+  ].join('-');
+
+  return iso < todayIso ? t('validation.application_deadline_past') : null;
+};
+
+const toDateParts = (iso: string) => {
+  const parts = parseISODateParts(iso);
+
+  return {
+    ...parts,
+    dayOptions: getDayOptions(parts.month, parts.year),
+  };
+};
 
 const CastingBasicInfoForm = ({
   data,
@@ -53,7 +75,7 @@ const CastingBasicInfoForm = ({
 
   const isOnSite = selectedCastingModalityStringCodeTranslation === ON_SITE_CODE;
 
-  const applicationDeadline = useMemo(() => parseIsoDate(data.applicationDeadline), [data.applicationDeadline]);
+  const applicationDeadline = useMemo(() => toDateParts(data.applicationDeadline), [data.applicationDeadline]);
 
   const yearOptions = useMemo(
     () =>
@@ -72,20 +94,7 @@ const CastingBasicInfoForm = ({
     }));
   }, [i18n.language]);
 
-  const getApplicationDeadlineError = (iso: string) => {
-    if (!iso) return null;
-
-    const today = new Date();
-    const todayIso = [
-      today.getFullYear(),
-      String(today.getMonth() + 1).padStart(2, '0'),
-      String(today.getDate()).padStart(2, '0'),
-    ].join('-');
-
-    return iso < todayIso ? t('validation.application_deadline_past') : null;
-  };
-
-  const applicationDeadlineError = getApplicationDeadlineError(data.applicationDeadline);
+  const applicationDeadlineError = getApplicationDeadlineError(data.applicationDeadline, t);
   const shouldShowApplicationDeadlineHint =
     !data.applicationDeadline && !!(applicationDeadline.day || applicationDeadline.month || applicationDeadline.year);
 
@@ -249,7 +258,7 @@ const CastingBasicInfoForm = ({
             placeholder={t('general.placeholder.day')}
             value={applicationDeadline.day}
             onChange={onSelect((day) => {
-              const nextIso = buildIsoDate(day, applicationDeadline.month, applicationDeadline.year);
+              const nextIso = buildISODate(applicationDeadline.year, applicationDeadline.month, day);
               updateField('applicationDeadline', nextIso);
               clearError('applicationDeadline');
             })}
@@ -268,7 +277,7 @@ const CastingBasicInfoForm = ({
             placeholder={t('general.placeholder.month')}
             value={applicationDeadline.month}
             onChange={onSelect((month) => {
-              const nextIso = buildIsoDate(applicationDeadline.day, month, applicationDeadline.year);
+              const nextIso = buildISODate(applicationDeadline.year, month, applicationDeadline.day);
               updateField('applicationDeadline', nextIso);
               clearError('applicationDeadline');
             })}
@@ -280,7 +289,7 @@ const CastingBasicInfoForm = ({
             placeholder={t('general.placeholder.year')}
             value={applicationDeadline.year}
             onChange={onSelect((year) => {
-              const nextIso = buildIsoDate(applicationDeadline.day, applicationDeadline.month, year);
+              const nextIso = buildISODate(year, applicationDeadline.month, applicationDeadline.day);
               updateField('applicationDeadline', nextIso);
               clearError('applicationDeadline');
             })}
@@ -321,33 +330,6 @@ const CastingBasicInfoForm = ({
       />
     </div>
   );
-};
-
-const parseIsoDate = (iso: string) => {
-  const [year = '', month = '', day = ''] = iso.split('-');
-  const dayOptions = getDayOptions(month, year);
-
-  return {
-    day,
-    month,
-    year,
-    dayOptions,
-  };
-};
-
-const buildIsoDate = (day?: string, month?: string, year?: string) => {
-  if (!day || !month || !year) return '';
-  return `${year}-${month}-${day}`;
-};
-
-const getDayOptions = (month?: string, year?: string) => {
-  const fallbackDays = 31;
-  const maxDays = month && year ? new Date(Number(year), Number(month), 0).getDate() : fallbackDays;
-
-  return Array.from({ length: maxDays }, (_, index) => {
-    const value = String(index + 1).padStart(2, '0');
-    return { value, label: value };
-  });
 };
 
 const toRangeFromData = (start?: string | null, end?: string | null): DateRange | undefined => {

@@ -77,7 +77,7 @@ export function useIsoDateField(
   commitFn: (iso: string) => void,
   debounceMs = 600
 ) {
-  const { year: y0, month: m0, day: d0 } = parseISO(initialISO ?? '');
+  const { year: y0, month: m0, day: d0 } = parseISODateParts(initialISO ?? '');
   const [year, setYear] = useState(y0);
   const [month, setMonth] = useState(m0);
   const [day, setDay] = useState(d0);
@@ -346,16 +346,32 @@ export function useCommittedUuid(
 }
 
 // TODO - Move Helpers
-function parseISO(iso: string) {
+export function parseISODateParts(iso: string) {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
   if (!m) return { year: '', month: '', day: '' };
   return { year: m[1], month: m[2], day: m[3] };
 }
+
+export function buildISODate(year?: string, month?: string, day?: string) {
+  if (!year || !month || !day) return '';
+  return `${year}-${month}-${day}`;
+}
+
 function getDaysInMonth(year: string, month: string) {
   const y = Number(year || '2000');
   const m = Number(month || '1');
   return new Date(y, m, 0).getDate();
 }
+
+export function getDayOptions(month?: string, year?: string) {
+  const maxDays = getDaysInMonth(year ?? '', month ?? '');
+
+  return Array.from({ length: maxDays }, (_, i) => {
+    const value = String(i + 1).padStart(2, '0');
+    return { value, label: value };
+  });
+}
+
 function isValidDate(y: string, m: string, d: string) {
   const yy = Number(y),
     mm = Number(m),

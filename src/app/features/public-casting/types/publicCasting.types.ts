@@ -1,10 +1,10 @@
 import type {
-  EmployerCastingDetailsResponse,
+  CastingResponse,
   CastingEmployerInfoResponse,
   CastingRoleResponse,
 } from '../../employer/employer-castings/types/employerCastings.types';
 
-export type CastingDetailsResponse = EmployerCastingDetailsResponse;
+export type CastingDetailsResponse = CastingResponse;
 
 export type PublicCastingDetailsResponse = {
   casting: CastingDetailsResponse;

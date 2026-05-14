@@ -1,6 +1,6 @@
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 
-export type BaseCastingCard = {
+export type CastingCardResponse = {
   id: string;
   title: string;
   defaultCode: string;
@@ -9,12 +9,6 @@ export type BaseCastingCard = {
   projectType: SiteMetadataObject;
   status: SiteMetadataObject;
   allowedStatusCodes: string[];
-};
-
-export type CastingCheckoutRole = {
-  id: string;
-  roleName: string;
-  roleType: SiteMetadataObject;
 };
 
 export type CastingEmployerInfoResponse = {
@@ -66,21 +60,7 @@ export type CastingRoleResponse = {
   modifiedAt: string | null;
 };
 
-export type CastingRoleCardResponse = {
-  id: string;
-  castingId: string;
-  roleName: string;
-  gender: SiteMetadataObject | null;
-  ageMin: number | null;
-  ageMax: number | null;
-  professions: SiteMetadataObject[];
-  roleType: SiteMetadataObject | null;
-  skills: SiteMetadataObject[];
-  remuneration: CastingRoleRemunerationResponse | null;
-  modifiedAt: string | null;
-};
-
-export type EmployerCastingDetailsResponse = {
+export type CastingResponse = {
   id: string;
   defaultCode: string;
   castingStatus: SiteMetadataObject | null;
@@ -114,17 +94,11 @@ export type EmployerCastingEditorResponse = {
   shootingStartDate: string | null;
   shootingEndDate: string | null;
   description: string | null;
-  roles: CastingRoleCardResponse[];
-  publishable: boolean;
-  modifiedAt: string | null;
-};
-
-export type EmployerCastingStatusResponse = {
-  id: string;
-  defaultCode: string;
-  castingStatus: SiteMetadataObject | null;
-  hasBasicInfo: boolean;
-  hasRoles: boolean;
+  roles: Array<{
+    id: string;
+    roleName: string;
+    modifiedAt: string | null;
+  }>;
   publishable: boolean;
   modifiedAt: string | null;
 };
@@ -186,15 +160,3 @@ export type CastingRoleFieldKey =
   | 'currencyId'
   | 'ethnicityId'
   | 'amount';
-
-export type CastingSectionCheckout = {
-  id: string;
-  defaultCode: string;
-  castingTitle: string;
-  projectType: SiteMetadataObject;
-  castingModality: SiteMetadataObject;
-  applicationDeadline: string;
-  roles: CastingCheckoutRole[];
-};
-
-export type CastingCardResponse = BaseCastingCard;

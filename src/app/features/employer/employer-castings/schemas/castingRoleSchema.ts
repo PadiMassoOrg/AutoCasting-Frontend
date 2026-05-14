@@ -45,7 +45,7 @@ const optionalText = (t: TFunction, max = 2000) =>
     .trim()
     .max(max, { message: t('validation.invalid') });
 
-export const getCastingRoleSchemaObject = (t: TFunction) =>
+const getCastingRoleSchemaObject = (t: TFunction) =>
   z.object({
     roleName: z
       .string()
