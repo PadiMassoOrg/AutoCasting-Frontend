@@ -23,7 +23,15 @@ import {
   useCachedSiteMetadataSlice,
 } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
-import { getRoleRemunerationVisiblePayRateTypeOptions } from '../../../../../sitemetadata/utils/siteMetadataUtils';
+import {
+  CURRENCY_ARS,
+  GENDER_INDISTINCT,
+  getRoleRemunerationVisiblePayRateTypeOptions,
+  getSiteMetadataIdByStringCode,
+  getSiteMetadataStringCodeById,
+  isUnpaidPayRateType,
+  PAY_RATE_TYPE_UNPAID,
+} from '../../../../../sitemetadata/utils/siteMetadataUtils';
 import GroupedSkills from '../../../../../talent/talent-profile-edit/components/Form/Skills/GroupedSkills';
 import { NewSkillModal } from '../../../../../talent/talent-profile-edit/components/Form/Skills/NewSkillModal';
 import { getCastingRoleSchema } from '../../../schemas/castingRoleSchema';
@@ -55,6 +63,8 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
     [payRateTypeOptionsRaw, t]
   );
   const currencyOptions = useCachedSiteMetadataOption('currencyOptions', t);
+  const genderOptionsRaw = (useCachedSiteMetadataSlice('genderOptions') as SiteMetadataObject[] | undefined) ?? [];
+  const currencyOptionsRaw = (useCachedSiteMetadataSlice('currencyOptions') as SiteMetadataObject[] | undefined) ?? [];
   const ethnicityOptions = useCachedSiteMetadataOption('ethnicityOptions', t);
   const professionsRaw = (useCachedSiteMetadataSlice('professions') as SiteMetadataObject[] | undefined) ?? [];
   const allSkills = (useCachedSiteMetadataSlice('skills') as SiteMetadataObject[] | undefined) ?? [];
@@ -83,6 +93,59 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
     () => allSkills.filter((skill) => (formValues?.skillIds ?? []).includes(skill.id)),
     [allSkills, formValues?.skillIds]
   );
+  const defaultPayRateTypeId = useMemo(
+    () => getSiteMetadataIdByStringCode(payRateTypeOptionsRaw, PAY_RATE_TYPE_UNPAID),
+    [payRateTypeOptionsRaw]
+  );
+  const defaultCurrencyId = useMemo(
+    () => getSiteMetadataIdByStringCode(currencyOptionsRaw, CURRENCY_ARS),
+    [currencyOptionsRaw]
+  );
+  const defaultGenderId = useMemo(
+    () => getSiteMetadataIdByStringCode(genderOptionsRaw, GENDER_INDISTINCT),
+    [genderOptionsRaw]
+  );
+  const selectedPayRateTypeCode = useMemo(
+    () => getSiteMetadataStringCodeById(payRateTypeOptionsRaw, formValues?.payRateTypeId),
+    [formValues?.payRateTypeId, payRateTypeOptionsRaw]
+  );
+  const isUnpaidPayRate = selectedPayRateTypeCode === PAY_RATE_TYPE_UNPAID;
+
+  useEffect(() => {
+    const patch = getRoleFormDefaultsPatch({
+      payRateTypeId: formValues?.payRateTypeId,
+      currencyId: formValues?.currencyId,
+      genderId: formValues?.genderId,
+      defaultPayRateTypeId,
+      defaultCurrencyId,
+      defaultGenderId,
+    });
+
+    const entries = Object.entries(patch) as Array<
+      [keyof CastingRoleFormData, CastingRoleFormData[keyof CastingRoleFormData]]
+    >;
+    if (!entries.length) return;
+
+    entries.forEach(([field, value]) => {
+      setValue(field as Path<CastingRoleFormData>, value as never, {
+        shouldDirty: false,
+        shouldValidate: true,
+        shouldTouch: false,
+      });
+    });
+
+    onChange(patch);
+  }, [
+    defaultCurrencyId,
+    defaultGenderId,
+    defaultPayRateTypeId,
+    formValues?.currencyId,
+    formValues?.genderId,
+    formValues?.payRateTypeId,
+    onChange,
+    setValue,
+  ]);
+
   const resolveError = (field: CastingRoleFieldKey) => {
     const local = errors[field];
     return (local?.message as string | undefined) ?? backendErrors?.[field];
@@ -90,6 +153,30 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
 
   const clearBackend = (field: CastingRoleFieldKey) => {
     onClearBackendError?.(field);
+  };
+
+  const handlePayRateTypeChange = (next: string | null) => {
+    if (isUnpaidPayRateType(next, payRateTypeOptionsRaw)) {
+      setValue('payRateTypeId', next as never, {
+        shouldDirty: true,
+        shouldValidate: true,
+        shouldTouch: true,
+      });
+      setValue('amount', '' as never, {
+        shouldDirty: true,
+        shouldValidate: true,
+        shouldTouch: true,
+      });
+      onChange({
+        payRateTypeId: next,
+        amount: '',
+      });
+      clearBackend('payRateTypeId');
+      clearBackend('amount');
+      return;
+    }
+
+    updateField('payRateTypeId', next, 'payRateTypeId');
   };
 
   const updateField = <K extends keyof CastingRoleFormData>(
@@ -247,7 +334,7 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
             value={formValues?.payRateTypeId ?? ''}
             onChange={(e) => {
               const next = e.target.value || null;
-              updateField('payRateTypeId', next, 'payRateTypeId');
+              handlePayRateTypeChange(next);
             }}
             options={payRateTypeOptions}
             error={resolveError('payRateTypeId')}
@@ -264,11 +351,12 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
               </span>
             </div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-[180px_minmax(0,1fr)] sm:items-end">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-[140px_minmax(0,1fr)] sm:items-end">
               <FormSelectField
                 id="currencyId"
                 placeholder={t('general.placeholder.select')}
                 value={formValues?.currencyId ?? ''}
+                disabled={isUnpaidPayRate}
                 onChange={(e) => {
                   const next = e.target.value || null;
                   updateField('currencyId', next);
@@ -280,6 +368,7 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
                 id="amount"
                 placeholder="0"
                 value={formValues?.amount ?? ''}
+                disabled={isUnpaidPayRate}
                 onValueChange={(_, rawDigits) => {
                   updateField('amount', rawDigits, 'amount');
                 }}
@@ -385,6 +474,30 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
       </article>
     </article>
   );
+};
+
+const getRoleFormDefaultsPatch = ({
+  payRateTypeId,
+  currencyId,
+  genderId,
+  defaultPayRateTypeId,
+  defaultCurrencyId,
+  defaultGenderId,
+}: {
+  payRateTypeId: string | null | undefined;
+  currencyId: string | null | undefined;
+  genderId: string | null | undefined;
+  defaultPayRateTypeId: string | null;
+  defaultCurrencyId: string | null;
+  defaultGenderId: string | null;
+}): Partial<CastingRoleFormData> => {
+  const patch: Partial<CastingRoleFormData> = {};
+
+  if (!payRateTypeId && defaultPayRateTypeId) patch.payRateTypeId = defaultPayRateTypeId;
+  if (!currencyId && defaultCurrencyId) patch.currencyId = defaultCurrencyId;
+  if (!genderId && defaultGenderId) patch.genderId = defaultGenderId;
+
+  return patch;
 };
 
 function CheckboxFieldLike({

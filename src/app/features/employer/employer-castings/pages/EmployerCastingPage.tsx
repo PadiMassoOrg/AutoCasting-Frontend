@@ -21,6 +21,7 @@ import { useUpdateCastingMutation } from '../hooks/useUpdateCastingMutation';
 import {
   createCastingRole,
   EMPLOYER_CASTING_EDITOR_CACHE_KEY,
+  EMPLOYER_CASTING_ROLE_CACHE_KEY,
   updateCastingRole,
 } from '../services/employerCastingService';
 import type {
@@ -102,6 +103,15 @@ const EmployerCastingPage = () => {
       if (slug) {
         await queryClient.invalidateQueries({ queryKey: [...EMPLOYER_CASTING_EDITOR_CACHE_KEY, slug] });
       }
+      queryClient.setQueriesData(
+        {
+          queryKey: [...EMPLOYER_CASTING_ROLE_CACHE_KEY, savedRole.id],
+        },
+        savedRole
+      );
+      await queryClient.invalidateQueries({
+        queryKey: [...EMPLOYER_CASTING_ROLE_CACHE_KEY, savedRole.id],
+      });
       setSelectedRoleId('new');
       setRoleDraft(createEmptyRoleDraft(savedRole.castingId));
       setIsRoleFormValid(false);
