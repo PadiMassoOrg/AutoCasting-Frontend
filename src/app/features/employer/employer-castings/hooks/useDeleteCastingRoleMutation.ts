@@ -11,7 +11,7 @@ export const useDeleteCastingRoleMutation = (slug?: string) => {
 
   return useMutation<{ roleId: string }, unknown, { roleId: string }>({
     mutationFn: ({ roleId }) => deleteCastingRole({ roleId }),
-    onSuccess: async ({ roleId }) => {
+    onSuccess: async () => {
       if (slug) {
         await queryClient.invalidateQueries({ queryKey: [...EMPLOYER_CASTING_EDITOR_CACHE_KEY, slug] });
       }

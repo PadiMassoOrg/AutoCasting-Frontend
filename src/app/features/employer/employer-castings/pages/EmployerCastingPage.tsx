@@ -13,9 +13,9 @@ import { stableStringify } from '../../../../shared/utils/stableStringify';
 import { isCastingEditable } from '../../../sitemetadata/utils/siteMetadataUtils';
 import CastingBasicInfoForm from '../components/Form/BasicInfo/CastingBasicInfoForm';
 import CastingRoleForm from '../components/Form/Role/CastingRoleForm';
+import { useCastingRoleById } from '../hooks/useCastingRoleById';
 import { useDeleteCastingRoleMutation } from '../hooks/useDeleteCastingRoleMutation';
 import { useDuplicateCastingRoleMutation } from '../hooks/useDuplicateCastingRoleMutation';
-import { useCastingRoleById } from '../hooks/useCastingRoleById';
 import { useEmployerCastingEditorBySlug } from '../hooks/useEmployerCastingDetailsBySlug';
 import { useUpdateCastingMutation } from '../hooks/useUpdateCastingMutation';
 import {
@@ -23,13 +23,6 @@ import {
   EMPLOYER_CASTING_EDITOR_CACHE_KEY,
   updateCastingRole,
 } from '../services/employerCastingService';
-import {
-  createEmptyRoleDraft,
-  toBasicInfoFormData,
-  toCastingRoleRequest,
-  toCastingUpsertRequest,
-  toRoleFormData,
-} from '../utils/employerCastingEditorFormMappers';
 import type {
   CastingBasicInfoFormData,
   CastingRoleFieldKey,
@@ -37,6 +30,13 @@ import type {
   CastingRoleResponse,
 } from '../types/employerCastings.types';
 import type { CastingRoleRequest } from '../types/requests';
+import {
+  createEmptyRoleDraft,
+  toBasicInfoFormData,
+  toCastingRoleRequest,
+  toCastingUpsertRequest,
+  toRoleFormData,
+} from '../utils/employerCastingEditorFormMappers';
 
 const buildRoleOverflowMenuItems = ({
   roleId,
@@ -229,7 +229,7 @@ const EmployerCastingPage = () => {
       sectionTitle: t('employer_castings.dashboard.roles.roles'),
       sectionActions: (
         <Button variant="primary" onClick={handleRoleSave} disabled={!canSaveRole} loading={roleMutation.isPending}>
-          {t('general.save_changes')}
+          {t('employer_castings.dashboard.roles.save_role')}
         </Button>
       ),
       menuAction: {
@@ -293,12 +293,12 @@ const EmployerCastingPage = () => {
 
   const titleActions = (
     <Button
-      variant="primary"
+      variant="primaryOutline"
       onClick={handleBasicInfoSave}
       disabled={!hasTitle || !isDirty}
       loading={basicInfoMutation.isPending}
     >
-      {t('general.save_changes')}
+      {t('general.save_unpublished')}
     </Button>
   );
 

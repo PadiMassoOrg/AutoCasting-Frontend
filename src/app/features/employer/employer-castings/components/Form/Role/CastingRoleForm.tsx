@@ -12,7 +12,7 @@ import {
   TextareaField,
 } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, type ChangeEvent } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm, useWatch, type Path } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../../context/ModalContext';
 import {
@@ -61,7 +61,7 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
     setValue,
     formState: { errors, isValid },
   } = useForm<CastingRoleFormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as never,
     mode: 'onChange',
     defaultValues: data,
   });
@@ -93,7 +93,11 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
     value: CastingRoleFormData[K],
     clearBackendField?: CastingRoleFieldKey
   ) => {
-    setValue(field, value, { shouldDirty: true, shouldValidate: true, shouldTouch: true });
+    setValue(field as Path<CastingRoleFormData>, value as never, {
+      shouldDirty: true,
+      shouldValidate: true,
+      shouldTouch: true,
+    });
     onChange({ [field]: value } as Partial<CastingRoleFormData>);
     if (clearBackendField) clearBackend(clearBackendField);
   };
@@ -115,6 +119,7 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
 
   return (
     <article className="flex flex-col">
+      {/* Name Profession Type Gender */}
       <section className="flex flex-col lg:flex-row lg:gap-4">
         <article className="w-full flex flex-col">
           <FormInputField
@@ -131,8 +136,8 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
             required
           />
 
-          <div className="mb-6">
-            <div className="flex mb-1.5">
+          <article className="flex flex-col">
+            <div className="flex mb-2">
               <Label className="text-base font-semibold">
                 {t('employer_castings.dashboard.roles.role.talent_profession')}
               </Label>
@@ -151,10 +156,10 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
               maxPanelHeight="16rem"
               error={resolveError('professionIds')}
             />
-          </div>
+          </article>
 
-          <div>
-            <div className="flex mb-1.5">
+          <article className="flex flex-col">
+            <div className="flex mb-2">
               <Label className="text-base font-semibold">{t('talent.filter.basic_info.age_range')}</Label>
               <span className="text-red-500 ml-1" aria-hidden="true">
                 *
@@ -182,7 +187,7 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
                 error={resolveError('ageMax')}
               />
             </div>
-          </div>
+          </article>
         </article>
 
         <article className="w-full flex flex-col">

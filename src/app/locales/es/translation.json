@@ -19,7 +19,8 @@
     "add": "Agregar",
     "save": "Guardar",
     "search": "Buscar",
-    "save_changes": " Guardar Cambios",
+    "save_changes": "Guardar Cambios",
+    "save_unpublished": "Guardar sin publicar",
     "delete": "Eliminar",
     "clear": "Limpiar",
     "reset": "Resetear",
@@ -1068,6 +1069,7 @@
         "roles": "Roles",
         "add_new": "Nuevo Rol",
         "edit": "Editar Rol",
+        "save_role": "Guardar Rol",
         "delete": "¿Seguro deseas eliminar este rol?",
         "role": {
           "role": "Rol",
