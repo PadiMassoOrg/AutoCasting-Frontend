@@ -54,6 +54,7 @@ const buildRoleOverflowMenuItems = ({
   {
     key: `duplicate-${roleId}`,
     label: t('general.duplicate'),
+    iconName: 'duplicate',
     disabled: isDisabled,
     onSelect: () => onDuplicate(roleId),
   },

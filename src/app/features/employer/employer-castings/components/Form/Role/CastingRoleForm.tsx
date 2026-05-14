@@ -11,6 +11,8 @@ import {
   MultiSelectDropdown,
   Separator,
   TextareaField,
+  useMedia,
+  XL_SCREEN_SIZE,
 } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, type ChangeEvent } from 'react';
 import { useForm, useWatch, type Path } from 'react-hook-form';
@@ -38,6 +40,7 @@ type Props = {
 const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, onValidityChange }: Props) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
+  const isXLSize = useMedia(XL_SCREEN_SIZE);
 
   const roleTypeOptions = useCachedSiteMetadataOption('roleTypeOptions', t);
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
@@ -321,65 +324,65 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
         </article>
       </section>
 
+      <Separator className="opacity-20 my-8" />
+
+      <article className="w-[95%] m-auto flex flex-col lg:flex-row justify-between">
+        <BooleanRadioGroup
+          name="tattoo"
+          orientation={isXLSize ? 'horizontal' : 'vertical'}
+          label={t('profile.characteristics.tattoo')}
+          value={formValues?.tattoo ?? null}
+          includeAnyOption
+          anyValueMode="null"
+          anyOptionLabel={t('general.indistinct')}
+          onChange={(next: boolean | null | undefined) => updateField('tattoo', next ?? null)}
+        />
+        <BooleanRadioGroup
+          name="passport"
+          orientation={isXLSize ? 'horizontal' : 'vertical'}
+          label={t('profile.characteristics.passport')}
+          value={formValues?.passport ?? null}
+          includeAnyOption
+          anyValueMode="null"
+          anyOptionLabel={t('general.indistinct')}
+          onChange={(next: boolean | null | undefined) => updateField('passport', next ?? null)}
+        />
+        <BooleanRadioGroup
+          name="drivingLicense"
+          orientation={isXLSize ? 'horizontal' : 'vertical'}
+          label={t('profile.characteristics.drivingLicense')}
+          value={formValues?.drivingLicense ?? null}
+          includeAnyOption
+          anyValueMode="null"
+          anyOptionLabel={t('general.indistinct')}
+          onChange={(next: boolean | null | undefined) => updateField('drivingLicense', next ?? null)}
+        />
+      </article>
+
       <Separator className="opacity-20 mt-2 mb-8" />
 
-      <section className="grid grid-cols-1 lg:grid-cols-2 lg:items-start lg:gap-x-4">
-        <article className="mt-2 flex flex-col">
-          <BooleanRadioGroup
-            name="tattoo"
-            orientation="horizontal"
-            label={t('profile.characteristics.tattoo')}
-            value={formValues?.tattoo ?? null}
-            includeAnyOption
-            anyValueMode="null"
-            anyOptionLabel={t('general.indistinct')}
-            onChange={(next: boolean | null | undefined) => updateField('tattoo', next ?? null)}
-          />
-          <BooleanRadioGroup
-            name="passport"
-            orientation="horizontal"
-            label={t('profile.characteristics.passport')}
-            value={formValues?.passport ?? null}
-            includeAnyOption
-            anyValueMode="null"
-            anyOptionLabel={t('general.indistinct')}
-            onChange={(next: boolean | null | undefined) => updateField('passport', next ?? null)}
-          />
-          <BooleanRadioGroup
-            name="drivingLicense"
-            orientation="horizontal"
-            label={t('profile.characteristics.drivingLicense')}
-            value={formValues?.drivingLicense ?? null}
-            includeAnyOption
-            anyValueMode="null"
-            anyOptionLabel={t('general.indistinct')}
-            onChange={(next: boolean | null | undefined) => updateField('drivingLicense', next ?? null)}
-          />
-        </article>
+      <article className="flex flex-col gap-2">
+        <div className="flex items-center justify-between gap-4">
+          <Label className="text-base font-semibold">{t('profile.skills.skills')}</Label>
+          <Button type="button" variant="primaryOutline" className="!w-auto" onClick={openSkillsModal}>
+            <span className="flex flex-row gap-2">
+              <Icon name="plus" size={16} variant="primary" /> {t('profile.skills.add_new_placeholder')}
+            </span>
+          </Button>
+        </div>
 
-        <article className="flex flex-col gap-2">
-          <div className="flex items-center justify-between gap-4">
-            <Label className="text-base font-semibold">{t('profile.skills.skills')}</Label>
-            <Button type="button" variant="primaryOutline" className="!w-auto" onClick={openSkillsModal}>
-              <span className="flex flex-row gap-2">
-                <Icon name="plus" size={16} /> {t('profile.skills.add_new_placeholder')}
-              </span>
-            </Button>
-          </div>
-
-          <div className="min-h-[190px] rounded-2xl border border-(--color-secondary-outline) p-4">
-            <GroupedSkills
-              skills={selectedSkills}
-              onRemove={(skillId) => {
-                updateField(
-                  'skillIds',
-                  (formValues?.skillIds ?? []).filter((currentId) => currentId !== skillId)
-                );
-              }}
-            />
-          </div>
-        </article>
-      </section>
+        <div className="min-h-[300px] rounded-2xl border border-(--color-secondary-outline) p-4">
+          <GroupedSkills
+            skills={selectedSkills}
+            onRemove={(skillId) => {
+              updateField(
+                'skillIds',
+                (formValues?.skillIds ?? []).filter((currentId) => currentId !== skillId)
+              );
+            }}
+          />
+        </div>
+      </article>
     </article>
   );
 };
