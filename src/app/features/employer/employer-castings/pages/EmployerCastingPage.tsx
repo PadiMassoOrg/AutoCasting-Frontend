@@ -162,7 +162,11 @@ const EmployerCastingPage = () => {
   };
 
   const openCheckoutModal = () => {
-    openModal(<CastingCheckoutModal />, t('employer_castings.dashboard.checkout.checkout_summary.title'), 'xl_3');
+    openModal(
+      <CastingCheckoutModal data={data} />,
+      t('employer_castings.dashboard.checkout.checkout_summary.title'),
+      'xl_3'
+    );
   };
 
   const sections: DashboardShellSection<'basic' | 'roles'>[] = [
