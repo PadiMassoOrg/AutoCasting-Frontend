@@ -13,7 +13,7 @@ import {
 } from '../../../sitemetadata/utils/siteMetadataUtils';
 
 type Params = {
-  employerCastingDetailsPath: string;
+  detailsPath: string;
   publicCastingDetailsPath: string;
   editCastingPath?: string;
   onApplicants: () => void;
@@ -50,7 +50,7 @@ function resolveVisibility(statusCode?: string | null): Visibility {
 }
 
 export const useCastingOverflowMenuItems = ({
-  employerCastingDetailsPath,
+  detailsPath,
   publicCastingDetailsPath,
   editCastingPath,
   onApplicants,
@@ -70,7 +70,7 @@ export const useCastingOverflowMenuItems = ({
         label: t('employer_castings.actions.view_details'),
         iconName: 'open',
         disabled: !v.details,
-        onSelect: () => navigate(employerCastingDetailsPath),
+        onSelect: () => navigate(detailsPath),
       },
       {
         key: 'applicants',
@@ -118,7 +118,7 @@ export const useCastingOverflowMenuItems = ({
   }, [
     t,
     navigate,
-    employerCastingDetailsPath,
+    detailsPath,
     publicCastingDetailsPath,
     editCastingPath,
     onApplicants,

@@ -5,11 +5,10 @@ import EmployerCastingApplicantsPage from '../features/employer/employer-casting
 import { EmployerCastingPage, EmployerCastingsPage } from '../features/employer/employer-castings/pages';
 import { EmployerProfileEditPage } from '../features/employer/employer-profile-edit/pages';
 import { EmployerProfileSettingsPage } from '../features/employer/employer-profile-settings/pages';
-import { CastingDetailsPage } from '../features/public-casting/pages';
 import TalentCastingApplicationsPage from '../features/talent/talent-casting-applications/pages/TalentCastingApplicationsPage';
 import { TalentProfileEditPage } from '../features/talent/talent-profile-edit/pages';
 import { TalentProfileSettingsPage } from '../features/talent/talent-profile-settings/pages';
-import { NavigationLayout, ScrollContentLayout } from '../layouts';
+import { ScrollContentLayout } from '../layouts';
 import { getDashboardRouteForActiveMode, ROUTES } from '../shared/lib/routes';
 
 export default function ProtectedRoutesLayout() {
@@ -45,12 +44,6 @@ export default function ProtectedRoutesLayout() {
         <Route path={ROUTES.EMPLOYER} element={<EmployerProfileEditPage />} />
         <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/editor'} element={<EmployerCastingPage />} />
         <Route path={ROUTES.EMPLOYER_SETTINGS} element={<EmployerProfileSettingsPage />} />
-      </Route>
-      <Route element={<NavigationLayout />}>
-        <Route
-          path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/details'}
-          element={<CastingDetailsPage mode="employer" />}
-        />
       </Route>
       <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
     </Routes>
