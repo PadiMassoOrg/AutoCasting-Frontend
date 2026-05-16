@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
-import { UUID_RX } from '../../../../shared/utils/schemaUtils';
+import { parseHttpUrl, UUID_RX } from '../../../../shared/utils/schemaUtils';
 
 const baseUrlField = (t: TFunction) =>
   z
@@ -8,12 +8,7 @@ const baseUrlField = (t: TFunction) =>
     .trim()
     .min(1, { message: t('validation.required') })
     .superRefine((s, ctx) => {
-      try {
-        const u = new URL(s);
-        if (u.protocol !== 'http:' && u.protocol !== 'https:') {
-          ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('validation.url_invalid') });
-        }
-      } catch {
+      if (!parseHttpUrl(s)) {
         ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('validation.url_invalid') });
       }
     });

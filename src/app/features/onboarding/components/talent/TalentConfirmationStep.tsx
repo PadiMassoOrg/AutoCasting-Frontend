@@ -1,6 +1,7 @@
-import { Button, ButtonRow, Icon, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
+import { Button, ButtonRow, Icon, WizardActions, type WizardStepProps } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
+import OnboardingStepShell from '../OnboardingStepShell';
 import Logo from '../../../../shared/icons/og-image.svg';
 import { useMeData } from '../../../auth/hooks/useMeData';
 import { useUpdateOnboardingMutation } from '../../hooks/useUpdateOnboardingMutation';
@@ -30,62 +31,41 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
   };
 
   return (
-    <section className="w-full relative max-w-[400px]">
-      <WizardStep>
-        <div className="flex min-h-[85vh] lg:min-h-[70vh] flex-col justify-between">
-          <div className="flex flex-col">
-            {/* Header */}
-            <div className="w-full flex flex-col items-center gap-4 mb-6">
-              <img src={Logo} className="w-14" />
-              <button
-                type="button"
-                className="w-full py-3 rounded-lg bg-[var(--color-primary-white)] text-[14px] font-semibold uppercase text-[var(--color-primary-purple)]"
-              >
-                {t('onboarding.mode_selector.talent.title')}
-              </button>
-            </div>
-
-            {/* Progress */}
-            <div className="flex flex-col gap-1 mb-8">
-              <div className="w-full h-[9px] rounded-full bg-[var(--color-secondary-offwhite)] overflow-hidden">
-                <div
-                  className="h-[9px] bg-[var(--color-primary-purple)] transition-all"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-              <p className="text-[13px] mt-1 font-semibold">
-                {stepIndex + 1} {t('onboarding.common.of')} {totalSteps}
-              </p>
-            </div>
-
-            {/* Contenido principal */}
-            <div className="text-center flex flex-col gap-1 flex-1">
-              <h1 className="text-2xl font-semibold mb-3">{t('onboarding.talent.step_confirmation.header')}</h1>
-              <p className="text-sm">{t('onboarding.talent.step_confirmation.subtitle')}</p>
-              <div className="text-sm mt-4 flex flex-col items-center gap-4">
-                {t('onboarding.common.edit_profile_label')}
-                <span className="flex flex-row items-center gap-2 ">
-                  <p className="text-sm"> {t('onboarding.common.edit_profile_label_profile')}</p>
-                  <ButtonRow items={[<Icon variant="primary" name="profile" className="cursor-default" />]}></ButtonRow>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-6">
-            <div className="flex justify-between items-center gap-4">
+    <OnboardingStepShell
+      modeLabel={t('onboarding.mode_selector.talent.title')}
+      title={t('onboarding.talent.step_confirmation.header')}
+      subtitle={t('onboarding.talent.step_confirmation.subtitle')}
+      stepIndex={stepIndex}
+      totalSteps={totalSteps}
+      progress={progress}
+      topSlot={<img src={Logo} className="w-14" />}
+      bodyClassName="text-center"
+      footer={
+        <>
+          <WizardActions
+            secondaryAction={
               <Button variant="outline" type="button" onClick={goBack}>
                 {t('buttons.back')}
               </Button>
+            }
+            primaryAction={
               <Button variant="primary" type="button" onClick={handleConfirm} loading={isPending}>
                 {t('buttons.to_profile')}
               </Button>
-            </div>
-            <ContinueLaterButton />
-          </div>
-        </div>
-      </WizardStep>
-    </section>
+            }
+          />
+          <ContinueLaterButton />
+        </>
+      }
+    >
+      <div className="flex flex-col gap-4 text-sm">
+        <p>{t('onboarding.common.edit_profile_label')}</p>
+        <span className="flex flex-row items-center justify-center gap-2">
+          <p className="text-sm">{t('onboarding.common.edit_profile_label_profile')}</p>
+          <ButtonRow items={[<Icon variant="primary" name="profile" className="cursor-default" />]}></ButtonRow>
+        </span>
+      </div>
+    </OnboardingStepShell>
   );
 }
 

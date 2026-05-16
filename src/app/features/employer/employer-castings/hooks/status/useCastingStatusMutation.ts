@@ -5,6 +5,7 @@ import { handleBackendActionError } from '../../../../../shared/utils/backendErr
 import {
   EMPLOYER_CASTINGS_LIST_CACHE_KEY,
   EMPLOYER_CASTING_CACHE_KEY,
+  EMPLOYER_CASTING_EDITOR_CACHE_KEY,
   archiveCasting,
   closeCasting,
   pauseCasting,
@@ -39,6 +40,10 @@ export const useCastingStatusMutation = (action: CastingStatusAction) => {
         queryClient.setQueriesData({ queryKey: [...EMPLOYER_CASTING_CACHE_KEY, variables.slug] }, data);
         await queryClient.invalidateQueries({
           queryKey: [...EMPLOYER_CASTING_CACHE_KEY, variables.slug],
+        });
+        queryClient.setQueriesData({ queryKey: [...EMPLOYER_CASTING_EDITOR_CACHE_KEY, variables.slug] }, data);
+        await queryClient.invalidateQueries({
+          queryKey: [...EMPLOYER_CASTING_EDITOR_CACHE_KEY, variables.slug],
         });
       }
     },

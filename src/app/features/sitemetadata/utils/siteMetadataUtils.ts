@@ -76,9 +76,7 @@ export type CastingActionConfirmationModalConfig = {
   confirmButtonVariant?: 'primary' | 'danger';
 };
 
-export type CastingStatusChangeModalConfig = CastingActionConfirmationModalConfig;
-
-export const CASTING_STATUS_CHANGE_MODAL_CONFIG_BY_CODE: Record<string, CastingStatusChangeModalConfig> = {
+export const CASTING_STATUS_CHANGE_MODAL_CONFIG_BY_CODE: Record<string, CastingActionConfirmationModalConfig> = {
   [CASTING_STATUS_PUBLISHED]: {
     titleKey: 'employer_castings.casting_card.status.published.title',
     descriptionKey: 'employer_castings.casting_card.status.published.description',
@@ -287,7 +285,7 @@ export const collapseTalentCastingApplicationStatusIdsForDisplay = ({
 
 export const getCastingStatusChangeModalConfig = (
   status?: Pick<SiteMetadataObject, 'stringCode'> | null
-): CastingStatusChangeModalConfig | null => {
+): CastingActionConfirmationModalConfig | null => {
   const stringCode = status?.stringCode;
   if (!stringCode) return null;
 

@@ -1,5 +1,4 @@
 import CastingActionConfirmationModal from './CastingActionConfirmationModal';
-import CastingCheckoutModal from './CastingCheckoutModal';
-import CastingStatusChangeModal from './CastingStatusChangeModal';
+import CastingCheckoutModal from './Checkout/CastingCheckoutModal';
 
-export { CastingActionConfirmationModal, CastingCheckoutModal, CastingStatusChangeModal };
+export { CastingActionConfirmationModal, CastingCheckoutModal };

@@ -82,11 +82,39 @@ const EmployerCastingPage = () => {
   const castingId = data?.id ?? null;
 
   const selectedRoleQuery = useCastingRoleById(selectedRoleId && selectedRoleId !== 'new' ? selectedRoleId : null);
+  const roleCards = data?.roles ?? [];
+  const initialDraft = useMemo(() => (data ? toBasicInfoFormData(data) : null), [data]);
+  const currentRoleInitialDraft = useMemo(() => {
+    if (selectedRoleId === 'new') return createEmptyRoleDraft(castingId);
+    if (selectedRoleQuery.data) return toRoleFormData(selectedRoleQuery.data);
+    return null;
+  }, [castingId, selectedRoleId, selectedRoleQuery.data]);
+
+  const resetRoleEditor = (nextRoleId: string | 'new', nextRoleDraft: CastingRoleFormData | null) => {
+    setSelectedRoleId(nextRoleId);
+    setRoleDraft(nextRoleDraft);
+    roleMutation.clearAllBackendErrors();
+    setIsRoleFormValid(false);
+    setRoleFormRenderKey((prev) => prev + 1);
+  };
+
+  const startNewRoleDraft = () => {
+    resetRoleEditor('new', createEmptyRoleDraft(castingId));
+    setActiveSectionKey('roles');
+  };
+
+  const openExistingRole = (roleId: string) => {
+    setSelectedRoleId(roleId);
+    roleMutation.clearAllBackendErrors();
+    setIsRoleFormValid(false);
+    setRoleFormRenderKey((prev) => prev + 1);
+    setActiveSectionKey('roles');
+  };
 
   useEffect(() => {
     if (!data) return;
-    setDraft(toBasicInfoFormData(data));
-  }, [data]);
+    setDraft(initialDraft);
+  }, [data, initialDraft]);
 
   useEffect(() => {
     if (selectedRoleId !== 'new') return;
@@ -98,12 +126,6 @@ const EmployerCastingPage = () => {
     setRoleDraft(toRoleFormData(selectedRoleQuery.data));
   }, [selectedRoleQuery.data]);
 
-  const currentRoleInitialDraft = useMemo(() => {
-    if (selectedRoleId === 'new') return createEmptyRoleDraft(castingId);
-    if (selectedRoleQuery.data) return toRoleFormData(selectedRoleQuery.data);
-    return null;
-  }, [castingId, selectedRoleId, selectedRoleQuery.data]);
-
   if (error && !data) return <ServerError />;
   if (isLoading || !draft || !data) return null;
 
@@ -111,26 +133,22 @@ const EmployerCastingPage = () => {
     return <Navigate to={ROUTES.EMPLOYER_CASTINGS} replace />;
   }
 
-  const initialDraft = toBasicInfoFormData(data);
-  const isDirty = stableStringify(draft) !== stableStringify(initialDraft);
+  const isDirty = initialDraft ? stableStringify(draft) !== stableStringify(initialDraft) : false;
   const hasTitle = draft.title.trim().length > 0;
   const isRoleDirty =
     !!roleDraft && !!currentRoleInitialDraft && stableStringify(roleDraft) !== stableStringify(currentRoleInitialDraft);
   const canSaveRole = Boolean(roleDraft && castingId && isRoleFormValid && isRoleDirty);
-
-  const roleCards = data?.roles ?? [];
 
   const handleDeleteRole = async (roleId: string) => {
     const remainingRoles = roleCards.filter((role) => role.id !== roleId);
     const isDeletingSelectedRole = selectedRoleId === roleId;
     const nextSelectedRoleId = isDeletingSelectedRole ? (remainingRoles[0]?.id ?? 'new') : selectedRoleId;
 
-    roleMutation.clearAllBackendErrors();
-    setSelectedRoleId(nextSelectedRoleId);
     if (isDeletingSelectedRole && nextSelectedRoleId === 'new') {
-      setRoleDraft(createEmptyRoleDraft(castingId));
-      setIsRoleFormValid(false);
-      setRoleFormRenderKey((prev) => prev + 1);
+      resetRoleEditor('new', createEmptyRoleDraft(castingId));
+    } else if (isDeletingSelectedRole && nextSelectedRoleId) {
+      setSelectedRoleId(nextSelectedRoleId);
+      roleMutation.clearAllBackendErrors();
     }
 
     await deleteRoleMutation.mutateAsync({ roleId });
@@ -144,26 +162,18 @@ const EmployerCastingPage = () => {
   const handleRoleSave = async () => {
     if (!roleDraft || !castingId) return;
     const savedRole = await roleMutation.submit(toCastingRoleRequest(roleDraft, castingId), roleDraft.id ?? undefined);
-    setSelectedRoleId('new');
-    setRoleDraft(createEmptyRoleDraft(savedRole.castingId));
-    setIsRoleFormValid(false);
-    setRoleFormRenderKey((prev) => prev + 1);
+    resetRoleEditor('new', createEmptyRoleDraft(savedRole.castingId));
   };
 
   const handleDuplicateRole = async (roleId: string) => {
     const duplicatedRole = await duplicateRoleMutation.mutateAsync({ roleId });
-
-    setSelectedRoleId(duplicatedRole.id);
-    setRoleDraft(toRoleFormData(duplicatedRole));
-    roleMutation.clearAllBackendErrors();
-    setIsRoleFormValid(false);
-    setRoleFormRenderKey((prev) => prev + 1);
+    resetRoleEditor(duplicatedRole.id, toRoleFormData(duplicatedRole));
     setActiveSectionKey('roles');
   };
 
   const openCheckoutModal = () => {
     openModal(
-      <CastingCheckoutModal data={data} />,
+      <CastingCheckoutModal castingId={data.id} slug={slug ?? data.defaultCode} onClose={closeModal} />,
       t('employer_castings.dashboard.checkout.checkout_summary.title'),
       'xl_3'
     );
@@ -188,13 +198,7 @@ const EmployerCastingPage = () => {
     {
       key: 'roles',
       label: t('employer_castings.dashboard.roles.roles'),
-      onSelect: () => {
-        setSelectedRoleId('new');
-        setRoleDraft(createEmptyRoleDraft(castingId));
-        roleMutation.clearAllBackendErrors();
-        setIsRoleFormValid(false);
-        setRoleFormRenderKey((prev) => prev + 1);
-      },
+      onSelect: startNewRoleDraft,
       sectionTitle: t('employer_castings.dashboard.roles.roles'),
       sectionActions: (
         <Button variant="primary" onClick={handleRoleSave} disabled={!canSaveRole} loading={roleMutation.isPending}>
@@ -204,14 +208,7 @@ const EmployerCastingPage = () => {
       menuAction: {
         label: t('employer_castings.dashboard.roles.add_new'),
         active: activeSectionKey === 'roles' && selectedRoleId === 'new',
-        onClick: () => {
-          setSelectedRoleId('new');
-          setRoleDraft(createEmptyRoleDraft(castingId));
-          roleMutation.clearAllBackendErrors();
-          setIsRoleFormValid(false);
-          setRoleFormRenderKey((prev) => prev + 1);
-          setActiveSectionKey('roles');
-        },
+        onClick: startNewRoleDraft,
       },
       menuItems: roleCards.map((role) => ({
         key: role.id,
@@ -227,11 +224,7 @@ const EmployerCastingPage = () => {
           },
         }),
         onClick: () => {
-          setSelectedRoleId(role.id);
-          roleMutation.clearAllBackendErrors();
-          setIsRoleFormValid(false);
-          setRoleFormRenderKey((prev) => prev + 1);
-          setActiveSectionKey('roles');
+          openExistingRole(role.id);
         },
       })),
       render: () => {

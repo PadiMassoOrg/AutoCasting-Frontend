@@ -16,6 +16,7 @@
     "indistinct": "Indistinto",
     "any": "Cualquiera",
     "accept": "Aceptar",
+    "cancel": "Cancelar",
     "add": "Agregar",
     "save": "Guardar",
     "search": "Buscar",
@@ -45,6 +46,7 @@
     "cm": "cm",
     "back_to": "Volver a",
     "back": "Volver",
+    "continue": "Continuar",
     "creation_date": "Fecha de creación",
     "limit_date": "Fecha límite",
     "datetime": {
@@ -965,6 +967,17 @@
       "title": "¡Postulación enviada con éxito!",
       "text": "Gracias por aplicar. Tus materiales ya están disponibles para el equipo de casting."
     }
+  },
+  "applications": {
+    "already_applied": "No puedes aplicar dos veces al mismo casting.",
+    "audio_required": "Debes compartir un link de audio para completar la postulación.",
+    "id_required": "Debes proporcionar un applicationId.",
+    "ids_required": "Debes proporcionar al menos un applicationId.",
+    "not_found_or_forbidden": "No encontramos la postulación solicitada o no tienes permisos para verla.",
+    "requirement_invalid": "Requerimiento inválido.",
+    "requirements_missing": "Faltan requerimientos por completar.",
+    "status_required": "Debes proporcionar un status.",
+    "video_required": "Debes compartir un link de video para completar la postulación."
   },
   "settings": {
     "pills": {

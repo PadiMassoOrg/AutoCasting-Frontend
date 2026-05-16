@@ -103,6 +103,25 @@ export type EmployerCastingEditorResponse = {
   modifiedAt: string | null;
 };
 
+export type EmployerCastingCheckoutRoleResponse = {
+  id: string;
+  roleName: string;
+  roleType: SiteMetadataObject | null;
+  payRateType: SiteMetadataObject | null;
+  currency: SiteMetadataObject | null;
+  amount: number | null;
+};
+
+export type EmployerCastingCheckoutSummaryResponse = {
+  id: string;
+  defaultCode: string;
+  castingTitle: string | null;
+  projectType: SiteMetadataObject | null;
+  castingModality: SiteMetadataObject | null;
+  applicationDeadline: string | null;
+  roles: EmployerCastingCheckoutRoleResponse[];
+};
+
 export type CastingBasicInfoFormData = {
   title: string;
   projectTypeId: string | null;

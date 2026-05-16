@@ -111,6 +111,8 @@ export const API_ROUTES = {
     `${API_ROUTES.EMPLOYER_CASTING}/${castingSlug}/applicants/grouped`,
   EMPLOYER_CASTING_EDITOR: (slug: string) => `${API_ROUTES.EMPLOYER_CASTING}/${slug}/editor`,
   EMPLOYER_CASTING_DETAILS: (slug: string) => `${API_ROUTES.EMPLOYER_CASTING}/${slug}/details`,
+  EMPLOYER_CASTING_CHECKOUT_SUMMARY: (castingId: string) =>
+    `${API_ROUTES.EMPLOYER_CASTING}/${castingId}/checkout-summary`,
   EMPLOYER_CASTING_ROLE_DETAILS: (roleId: string) => `${API_ROUTES.CASTING_ROLE}/details/${roleId}`,
   EMPLOYER_CASTING_ROLE_DUPLICATE: (roleId: string) => `${API_ROUTES.CASTING_ROLE}/${roleId}/duplicate`,
   // Application Status

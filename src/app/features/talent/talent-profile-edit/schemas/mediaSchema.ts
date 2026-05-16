@@ -1,17 +1,11 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
+import { isHostnameAllowed, parseHttpUrl } from '../../../../shared/utils/schemaUtils';
 
 const MAX_MB = 8;
 const MAX_BYTES = MAX_MB * 1024 * 1024;
 export const OTHER_SLOTS = 2;
 const VIDEO_HOST_WHITELIST = ['youtube.com', 'youtu.be', 'youtube-nocookie.com', 'vimeo.com'] as const;
-
-const isWhitelistedVideoHost = (hostname: string): boolean => {
-  const normalizedHostname = hostname.toLowerCase();
-  return VIDEO_HOST_WHITELIST.some(
-    (allowedHost) => normalizedHostname === allowedHost || normalizedHostname.endsWith(`.${allowedHost}`)
-  );
-};
 
 export const fileSchema = (t: TFunction) =>
   z
@@ -47,18 +41,14 @@ export const urlFieldSchema = (t: TFunction) =>
     .trim()
     .superRefine((s, ctx) => {
       if (!s) return;
-      try {
-        const u = new URL(s);
-        if (u.protocol !== 'http:' && u.protocol !== 'https:') {
-          ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('validation.url_invalid') });
-          return;
-        }
-
-        if (!isWhitelistedVideoHost(u.hostname)) {
-          ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('validation.video_host_invalid') });
-        }
-      } catch {
+      const url = parseHttpUrl(s);
+      if (!url) {
         ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('validation.url_invalid') });
+        return;
+      }
+
+      if (!isHostnameAllowed(url.hostname, VIDEO_HOST_WHITELIST)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('validation.video_host_invalid') });
       }
     });
 
