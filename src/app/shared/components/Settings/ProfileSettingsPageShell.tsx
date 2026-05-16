@@ -1,5 +1,5 @@
-import { DashboardShell } from 'autocasting-ui-library-padimasso';
 import type { DashboardShellSection } from 'autocasting-ui-library-padimasso';
+import { DashboardShell } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../lib/routes';

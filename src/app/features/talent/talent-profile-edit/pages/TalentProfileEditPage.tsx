@@ -5,17 +5,17 @@ import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
 import { TalentProfileModeToggle } from '../components';
 import {
+  TalentProfileCreditsEditAction,
+  TalentProfileEducationEditAction,
+  TalentProfileSkillsEditAction,
+} from '../components/Action';
+import {
   TalentProfileCreditsEditSection,
   TalentProfileDetailsEditSection,
   TalentProfileEducationEditSection,
   TalentProfileMediaEditSection,
   TalentProfileSkillsEditSection,
 } from '../components/Section';
-import {
-  TalentProfileCreditsEditAction,
-  TalentProfileEducationEditAction,
-  TalentProfileSkillsEditAction,
-} from '../components/Action';
 import TalentProfileBasicInfoEditSection from '../components/Section/TalentProfileBasicInfoEditSection';
 import { useOwnTalentProfileNavigation } from '../hooks/useOwnTalentProfileNavigation';
 import { useTalentProfile } from '../hooks/useTalentProfile';
@@ -122,7 +122,7 @@ export default function TalentProfileEditPage() {
   const bottomSectionRenderer = () => {
     if (!data) return;
     return (
-      <div className="text-sm text-(--color-secondary-gray)">
+      <div className="p-4 text-sm text-(--color-secondary-gray)">
         <p>{t('general.datetime.last_saved')}:</p>
         <p>{formatLastSavedDateTime(data.modifiedAt, t)}</p>
       </div>

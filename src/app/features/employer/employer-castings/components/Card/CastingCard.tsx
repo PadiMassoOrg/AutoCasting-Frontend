@@ -14,7 +14,7 @@ import {
 import { useCastingStatusActions } from '../../hooks/status/useCastingStatusActions';
 import { useCastingOverflowMenuItems } from '../../hooks/useCastingOverflowMenuItems';
 import type { CastingCardResponse } from '../../types/employerCastings.types';
-import CastingActionConfirmationModal from '../Modal/CastingActionConfirmationModal';
+import { CastingActionConfirmationModal } from '../Modal/';
 
 const CastingCard = ({
   data,

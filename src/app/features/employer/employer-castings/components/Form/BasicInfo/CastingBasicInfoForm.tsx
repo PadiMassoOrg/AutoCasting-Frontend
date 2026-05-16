@@ -12,7 +12,7 @@ import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { useTranslation } from 'react-i18next';
 import { capitalize } from '../../../../../../shared/utils/formatUtils';
-import { buildISODate, getDayOptions, onSelect, parseISODateParts } from '../../../../../../shared/utils/formUtils';
+import { onSelect, useIsoDateField } from '../../../../../../shared/utils/formUtils';
 import { useCachedSiteMetadataOption } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { getCastingBasicInfoSchema } from '../../../schemas/castingBasicInfoSchema';
 import type { CastingBasicInfoFieldKey, CastingBasicInfoFormData } from '../../../types/employerCastings.types';
@@ -30,15 +30,6 @@ const getApplicationDeadlineError = (iso: string, t: ReturnType<typeof useTransl
   ].join('-');
 
   return iso < todayIso ? t('validation.application_deadline_past') : null;
-};
-
-const toDateParts = (iso: string) => {
-  const parts = parseISODateParts(iso);
-
-  return {
-    ...parts,
-    dayOptions: getDayOptions(parts.month, parts.year),
-  };
 };
 
 const CastingBasicInfoForm = ({
@@ -75,7 +66,14 @@ const CastingBasicInfoForm = ({
 
   const isOnSite = selectedCastingModalityStringCodeTranslation === ON_SITE_CODE;
 
-  const applicationDeadline = useMemo(() => toDateParts(data.applicationDeadline), [data.applicationDeadline]);
+  const applicationDeadline = useIsoDateField(
+    data.applicationDeadline,
+    (iso) => {
+      updateField('applicationDeadline', iso);
+      clearError('applicationDeadline');
+    },
+    0
+  );
 
   const yearOptions = useMemo(
     () =>
@@ -257,11 +255,10 @@ const CastingBasicInfoForm = ({
             id="applicationDeadline-day"
             placeholder={t('general.placeholder.day')}
             value={applicationDeadline.day}
-            onChange={onSelect((day) => {
-              const nextIso = buildISODate(applicationDeadline.year, applicationDeadline.month, day);
-              updateField('applicationDeadline', nextIso);
-              clearError('applicationDeadline');
-            })}
+            onChange={(e) => {
+              onSelect((day) => applicationDeadline.onDay(day))(e);
+            }}
+            onBlur={applicationDeadline.onAnyBlur}
             options={applicationDeadline.dayOptions}
             error={resolveError(
               'applicationDeadline',
@@ -276,11 +273,10 @@ const CastingBasicInfoForm = ({
             id="applicationDeadline-month"
             placeholder={t('general.placeholder.month')}
             value={applicationDeadline.month}
-            onChange={onSelect((month) => {
-              const nextIso = buildISODate(applicationDeadline.year, month, applicationDeadline.day);
-              updateField('applicationDeadline', nextIso);
-              clearError('applicationDeadline');
-            })}
+            onChange={(e) => {
+              onSelect((month) => applicationDeadline.onMonth(month))(e);
+            }}
+            onBlur={applicationDeadline.onAnyBlur}
             options={monthOptions}
             error={resolveError('applicationDeadline', errors.applicationDeadline)}
           />
@@ -288,11 +284,10 @@ const CastingBasicInfoForm = ({
             id="applicationDeadline-year"
             placeholder={t('general.placeholder.year')}
             value={applicationDeadline.year}
-            onChange={onSelect((year) => {
-              const nextIso = buildISODate(year, applicationDeadline.month, applicationDeadline.day);
-              updateField('applicationDeadline', nextIso);
-              clearError('applicationDeadline');
-            })}
+            onChange={(e) => {
+              onSelect((year) => applicationDeadline.onYear(year))(e);
+            }}
+            onBlur={applicationDeadline.onAnyBlur}
             options={yearOptions}
             error={resolveError('applicationDeadline', errors.applicationDeadline)}
           />

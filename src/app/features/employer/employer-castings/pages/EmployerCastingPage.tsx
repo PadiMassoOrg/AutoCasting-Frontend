@@ -1,36 +1,29 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { DashboardShellSection } from 'autocasting-ui-library-padimasso';
-import { Button, DashboardShell, type OverflowMenuItem } from 'autocasting-ui-library-padimasso';
+import {
+  Button,
+  DashboardShell,
+  SectionCard,
+  Separator,
+  type OverflowMenuItem,
+} from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router-dom';
+import { useModal } from '../../../../context/ModalContext';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
-import { useBackendErrorToast } from '../../../../shared/hooks/useBackendErrorToast';
 import { ROUTES } from '../../../../shared/lib/routes';
-import { handleBackendLocalFieldOrToastError } from '../../../../shared/utils/backendErrorHandling';
-import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
 import { stableStringify } from '../../../../shared/utils/stableStringify';
 import { isCastingEditable } from '../../../sitemetadata/utils/siteMetadataUtils';
 import CastingBasicInfoForm from '../components/Form/BasicInfo/CastingBasicInfoForm';
 import CastingRoleForm from '../components/Form/Role/CastingRoleForm';
+import { CastingCheckoutModal } from '../components/Modal/';
 import { useCastingRoleById } from '../hooks/useCastingRoleById';
 import { useDeleteCastingRoleMutation } from '../hooks/useDeleteCastingRoleMutation';
 import { useDuplicateCastingRoleMutation } from '../hooks/useDuplicateCastingRoleMutation';
 import { useEmployerCastingEditorBySlug } from '../hooks/useEmployerCastingDetailsBySlug';
 import { useUpdateCastingMutation } from '../hooks/useUpdateCastingMutation';
-import {
-  createCastingRole,
-  EMPLOYER_CASTING_EDITOR_CACHE_KEY,
-  EMPLOYER_CASTING_ROLE_CACHE_KEY,
-  updateCastingRole,
-} from '../services/employerCastingService';
-import type {
-  CastingBasicInfoFormData,
-  CastingRoleFieldKey,
-  CastingRoleFormData,
-  CastingRoleResponse,
-} from '../types/employerCastings.types';
-import type { CastingRoleRequest } from '../types/requests';
+import { useUpsertCastingRoleMutation } from '../hooks/useUpsertCastingRoleMutation';
+import type { CastingBasicInfoFormData, CastingRoleFormData } from '../types/employerCastings.types';
 import {
   createEmptyRoleDraft,
   toBasicInfoFormData,
@@ -71,11 +64,11 @@ const buildRoleOverflowMenuItems = ({
 
 const EmployerCastingPage = () => {
   const { t } = useTranslation();
-  const showErrorToast = useBackendErrorToast();
-  const queryClient = useQueryClient();
   const { slug } = useParams<{ slug: string }>();
+  const { openModal, closeModal } = useModal();
   const { data, isLoading, error } = useEmployerCastingEditorBySlug(slug);
   const basicInfoMutation = useUpdateCastingMutation(slug);
+  const roleMutation = useUpsertCastingRoleMutation(slug);
   const deleteRoleMutation = useDeleteCastingRoleMutation(slug);
   const duplicateRoleMutation = useDuplicateCastingRoleMutation(slug);
 
@@ -83,56 +76,12 @@ const EmployerCastingPage = () => {
   const [draft, setDraft] = useState<CastingBasicInfoFormData | null>(null);
   const [selectedRoleId, setSelectedRoleId] = useState<string | 'new' | null>(null);
   const [roleDraft, setRoleDraft] = useState<CastingRoleFormData | null>(null);
-  const [roleFieldErrors, setRoleFieldErrors] = useState<Partial<Record<CastingRoleFieldKey, string>>>({});
   const [isRoleFormValid, setIsRoleFormValid] = useState(false);
   const [roleFormRenderKey, setRoleFormRenderKey] = useState(0);
 
   const castingId = data?.id ?? null;
 
   const selectedRoleQuery = useCastingRoleById(selectedRoleId && selectedRoleId !== 'new' ? selectedRoleId : null);
-
-  const roleMutation = useMutation<CastingRoleResponse, unknown, { roleId?: string; payload: CastingRoleRequest }>({
-    mutationFn: ({ roleId, payload }) => {
-      if (!roleId) return createCastingRole(payload);
-      return updateCastingRole({ roleId, payload });
-    },
-    onMutate: () => {
-      setRoleFieldErrors({});
-    },
-    onSuccess: async (savedRole) => {
-      if (slug) {
-        await queryClient.invalidateQueries({ queryKey: [...EMPLOYER_CASTING_EDITOR_CACHE_KEY, slug] });
-      }
-      queryClient.setQueriesData(
-        {
-          queryKey: [...EMPLOYER_CASTING_ROLE_CACHE_KEY, savedRole.id],
-        },
-        savedRole
-      );
-      await queryClient.invalidateQueries({
-        queryKey: [...EMPLOYER_CASTING_ROLE_CACHE_KEY, savedRole.id],
-      });
-      setSelectedRoleId('new');
-      setRoleDraft(createEmptyRoleDraft(savedRole.castingId));
-      setIsRoleFormValid(false);
-      setRoleFormRenderKey((prev) => prev + 1);
-    },
-    onError: (error) => {
-      handleBackendLocalFieldOrToastError<CastingRoleFieldKey>({
-        error,
-        t,
-        setFieldError: (field, message) => {
-          setRoleFieldErrors((prev) => {
-            const next = { ...prev };
-            if (!message) delete next[field];
-            else next[field] = message;
-            return next;
-          });
-        },
-        showToast: showErrorToast,
-      });
-    },
-  });
 
   useEffect(() => {
     if (!data) return;
@@ -176,7 +125,7 @@ const EmployerCastingPage = () => {
     const isDeletingSelectedRole = selectedRoleId === roleId;
     const nextSelectedRoleId = isDeletingSelectedRole ? (remainingRoles[0]?.id ?? 'new') : selectedRoleId;
 
-    setRoleFieldErrors({});
+    roleMutation.clearAllBackendErrors();
     setSelectedRoleId(nextSelectedRoleId);
     if (isDeletingSelectedRole && nextSelectedRoleId === 'new') {
       setRoleDraft(createEmptyRoleDraft(castingId));
@@ -194,10 +143,11 @@ const EmployerCastingPage = () => {
 
   const handleRoleSave = async () => {
     if (!roleDraft || !castingId) return;
-    await roleMutation.mutateAsync({
-      roleId: roleDraft.id ?? undefined,
-      payload: toCastingRoleRequest(roleDraft, castingId),
-    });
+    const savedRole = await roleMutation.submit(toCastingRoleRequest(roleDraft, castingId), roleDraft.id ?? undefined);
+    setSelectedRoleId('new');
+    setRoleDraft(createEmptyRoleDraft(savedRole.castingId));
+    setIsRoleFormValid(false);
+    setRoleFormRenderKey((prev) => prev + 1);
   };
 
   const handleDuplicateRole = async (roleId: string) => {
@@ -205,10 +155,14 @@ const EmployerCastingPage = () => {
 
     setSelectedRoleId(duplicatedRole.id);
     setRoleDraft(toRoleFormData(duplicatedRole));
-    setRoleFieldErrors({});
+    roleMutation.clearAllBackendErrors();
     setIsRoleFormValid(false);
     setRoleFormRenderKey((prev) => prev + 1);
     setActiveSectionKey('roles');
+  };
+
+  const openCheckoutModal = () => {
+    openModal(<CastingCheckoutModal />, t('employer_castings.dashboard.checkout.checkout_summary.title'), 'xl_3');
   };
 
   const sections: DashboardShellSection<'basic' | 'roles'>[] = [
@@ -233,7 +187,7 @@ const EmployerCastingPage = () => {
       onSelect: () => {
         setSelectedRoleId('new');
         setRoleDraft(createEmptyRoleDraft(castingId));
-        setRoleFieldErrors({});
+        roleMutation.clearAllBackendErrors();
         setIsRoleFormValid(false);
         setRoleFormRenderKey((prev) => prev + 1);
       },
@@ -249,7 +203,7 @@ const EmployerCastingPage = () => {
         onClick: () => {
           setSelectedRoleId('new');
           setRoleDraft(createEmptyRoleDraft(castingId));
-          setRoleFieldErrors({});
+          roleMutation.clearAllBackendErrors();
           setIsRoleFormValid(false);
           setRoleFormRenderKey((prev) => prev + 1);
           setActiveSectionKey('roles');
@@ -270,7 +224,7 @@ const EmployerCastingPage = () => {
         }),
         onClick: () => {
           setSelectedRoleId(role.id);
-          setRoleFieldErrors({});
+          roleMutation.clearAllBackendErrors();
           setIsRoleFormValid(false);
           setRoleFormRenderKey((prev) => prev + 1);
           setActiveSectionKey('roles');
@@ -283,18 +237,11 @@ const EmployerCastingPage = () => {
           <CastingRoleForm
             key={`${selectedRoleId ?? 'none'}-${roleFormRenderKey}`}
             data={roleDraft}
-            backendErrors={roleFieldErrors}
+            backendErrors={roleMutation.fieldErrors}
             onChange={(patch) => {
               setRoleDraft((prev) => (prev ? { ...prev, ...patch } : prev));
             }}
-            onClearBackendError={(field) => {
-              setRoleFieldErrors((prev) => {
-                if (!(field in prev)) return prev;
-                const next = { ...prev };
-                delete next[field];
-                return next;
-              });
-            }}
+            onClearBackendError={roleMutation.clearFieldError}
             onValidityChange={setIsRoleFormValid}
           />
         );
@@ -313,6 +260,19 @@ const EmployerCastingPage = () => {
     </Button>
   );
 
+  const bottomSection = (
+    <SectionCard>
+      <div className="flex flex-wrap flex-row items-center justify-between font-semibold">
+        <p>{t('employer_castings.dashboard.checkout.total')}:</p>
+        <h2>{t('employer_castings.dashboard.checkout.beta_total')}</h2>
+      </div>
+      <Separator className="opacity-20 my-4" />
+      <Button variant="primary" disabled={!data.publishable} onClick={openCheckoutModal}>
+        {t('employer_castings.dashboard.checkout.checkout_and_publish')}
+      </Button>
+    </SectionCard>
+  );
+
   return (
     <DashboardShell
       title={t('employer_castings.dashboard.title_edit')}
@@ -325,14 +285,7 @@ const EmployerCastingPage = () => {
           setActiveSectionKey(key);
         }
       }}
-      bottomSection={
-        data ? (
-          <div className="text-sm text-(--color-secondary-gray)">
-            <p>{t('general.datetime.last_saved')}:</p>
-            <p>{formatLastSavedDateTime(data.modifiedAt, t)}</p>
-          </div>
-        ) : undefined
-      }
+      bottomSection={bottomSection}
     />
   );
 };
