@@ -33,7 +33,7 @@ const CastingCard = ({
 
   const { setStatus, isPending: isStatusPending } = useCastingStatusActions();
 
-  const publicCastingDetailsPath = `${ROUTES.PUBLIC_CASTING}/${defaultCode}`;
+  const detailsPath = `${ROUTES.PUBLIC_CASTING}/${defaultCode}`;
   const editCastingPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/editor`;
   const applicantsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/applicants`;
 
@@ -58,8 +58,7 @@ const CastingCard = ({
   };
 
   const items = useCastingOverflowMenuItems({
-    detailsPath: publicCastingDetailsPath,
-    publicCastingDetailsPath,
+    detailsPath,
     editCastingPath,
     statusCode: status?.stringCode,
     onDelete: onDelete ? openDeleteModal : undefined,

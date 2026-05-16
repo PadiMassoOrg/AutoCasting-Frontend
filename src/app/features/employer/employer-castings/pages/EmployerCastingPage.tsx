@@ -184,6 +184,16 @@ const EmployerCastingPage = () => {
       key: 'basic',
       label: t('employer_castings.dashboard.basic_info.basic_info'),
       sectionTitle: t('employer_castings.dashboard.basic_info.basic_info'),
+      sectionActions: (
+        <Button
+          variant="primary"
+          onClick={handleBasicInfoSave}
+          disabled={!hasTitle || !isDirty}
+          loading={basicInfoMutation.isPending}
+        >
+          {t('general.save_changes')}
+        </Button>
+      ),
       render: () => (
         <CastingBasicInfoForm
           data={draft}
@@ -246,17 +256,6 @@ const EmployerCastingPage = () => {
     },
   ];
 
-  const titleActions = (
-    <Button
-      variant="primaryOutline"
-      onClick={handleBasicInfoSave}
-      disabled={!hasTitle || !isDirty}
-      loading={basicInfoMutation.isPending}
-    >
-      {t('general.save_unpublished')}
-    </Button>
-  );
-
   const bottomSection = (
     <SectionCard>
       <div className="flex flex-wrap flex-row items-center justify-between font-semibold">
@@ -273,7 +272,6 @@ const EmployerCastingPage = () => {
   return (
     <DashboardShell
       title={t('employer_castings.dashboard.title_edit')}
-      titleActions={titleActions}
       sections={sections}
       initialKey="basic"
       activeKey={activeSectionKey}

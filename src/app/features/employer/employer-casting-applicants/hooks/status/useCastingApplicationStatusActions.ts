@@ -67,11 +67,6 @@ export function useCastingApplicationStatusActions() {
     }
   };
 
-  const setStatusByCode = async (stringCode: string, params: SetStatusParams) => {
-    if (!allowedStatusCodes.includes(stringCode)) return;
-    await setStatus({ id: stringCode, stringCode }, params);
-  };
-
   const bulkSetStatusByCode = async (stringCode: string, params: { applicationIds: string[]; castingSlug: string }) => {
     if (!allowedStatusCodes.includes(stringCode)) return;
     await bulk.mutateAsync({
@@ -83,7 +78,6 @@ export function useCastingApplicationStatusActions() {
 
   return {
     setStatus,
-    setStatusByCode,
     bulkSetStatusByCode,
     isPending,
   };
