@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { MultiSelectDropdown } from 'autocasting-ui-library-padimasso';
-import type { EmployerCastingsFiltersState } from './EmployerCastingsFilterBar';
+import type { EmployerCastingsFiltersState } from '../../types/employerCastingsFilters.types';
 
 export default function EmployerCastingsFilterMenuContent({
   value,
@@ -22,6 +22,7 @@ export default function EmployerCastingsFilterMenuContent({
     onChange({
       projectTypeIds: undefined,
       statusIdTokens: undefined,
+      search: value.search,
     });
   };
 

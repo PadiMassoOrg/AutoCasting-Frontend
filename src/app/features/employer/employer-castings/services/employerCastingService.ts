@@ -1,44 +1,51 @@
 import api from '../../../../shared/lib/axios';
 import { API_ROUTES } from '../../../../shared/lib/routes';
-import type { LastModifiedResponse } from '../../../../shared/types/auditable.types';
-import { stripUndefined } from '../../../../shared/utils/stripUndefined';
-import type { EmployerCastingsFiltersState } from '../components/Filter/EmployerCastingsFilterBar';
 import type {
+  CastingResponse,
   CastingCardResponse,
-  CastingSectionBasicInfo,
-  CastingSectionCheckout,
-  CastingSectionRemunerations,
-  CastingSectionRequirements,
-  CastingSectionRoles,
+  CastingRoleResponse,
+  EmployerCastingCheckoutSummaryResponse,
   EmployerCastingEditorResponse,
-  EmployerCastingRequirementCardResponse,
-  EmployerCastingRoleCardResponse,
 } from '../types/employerCastings.types';
-import type { EmployerCastingsOrderBy } from '../types/employerCastingsFilters.types';
-import type {
-  CastingBasicInfoPatchRequest,
-  CastingRequirementPatchRequest,
-  CastingRequirementUpsertRequest,
-  CastingRolePatchRequest,
-  CastingRoleRemunerationPatchRequest,
-  CastingRoleUpsertRequest,
-  CastingSectionRemunerationPatchRequest,
-} from '../types/requests';
+import {
+  type EmployerCastingsFiltersState,
+  type EmployerCastingsOrderBy,
+} from '../types/employerCastingsFilters.types';
+import type { CastingRoleRequest, CastingUpsertRequest } from '../types/requests';
 
 export const EMPLOYER_CASTINGS_LIST_CACHE_KEY = ['cache-employer-castings-list'] as const;
 export const EMPLOYER_CASTING_CACHE_KEY = ['cache-employer-casting'] as const;
-export const CASTING_SECTION_BASIC_INFO_CACHE_KEY = ['cache-casting-section-basic-info'] as const;
-export const CASTING_SECTION_ROLES_CACHE_KEY = ['cache-casting-section-roles'] as const;
-export const CASTING_SECTION_REQUIREMENTS_CACHE_KEY = ['cache-casting-section-requirements'] as const;
-export const CASTING_SECTION_REMUNERATIONS_CACHE_KEY = ['cache-casting-section-remunerations'] as const;
-export const CASTING_SECTION_CHECKOUT_CACHE_KEY = ['cache-casting-section-checkout'] as const;
+export const EMPLOYER_CASTING_EDITOR_CACHE_KEY = ['cache-employer-casting-editor'] as const;
+export const EMPLOYER_CASTING_ROLE_CACHE_KEY = ['cache-employer-casting-role'] as const;
 
 export type GetMyCastingsArgs = {
   page: number;
   size: number;
   filters: EmployerCastingsFiltersState;
   orderBy: EmployerCastingsOrderBy;
-  search?: string;
+};
+
+const getData = async <T>(url: string): Promise<T> => {
+  const response = await api.get<T>(url);
+  return response.data;
+};
+
+const postData = async <T>(url: string, payload?: unknown): Promise<T> => {
+  const response = await api.post<T>(url, payload);
+  return response.data;
+};
+
+const putData = async <T>(url: string, payload: unknown): Promise<T> => {
+  const response = await api.put<T>(url, payload);
+  return response.data;
+};
+
+const deleteVoid = async (url: string): Promise<void> => {
+  await api.delete(url);
+};
+
+const appendQueryValues = (qs: URLSearchParams, key: string, values?: string[]) => {
+  values?.forEach((value) => qs.append(key, value));
 };
 
 // Castings
@@ -52,134 +59,72 @@ export async function getMyCastings({ page, size, filters, orderBy }: GetMyCasti
   const q = (filters.search ?? '').trim();
   if (q.length) qs.set('q', q);
 
-  (filters.projectTypeIds ?? []).forEach((token: string) => qs.append('projectTypeId', token));
-  (filters.statusIdTokens ?? []).forEach((token: string) => qs.append('statusId', token));
+  appendQueryValues(qs, 'projectTypeId', filters.projectTypeIds);
+  appendQueryValues(qs, 'statusId', filters.statusIdTokens);
 
-  const { data } = await api.get<CastingCardResponse[]>(`${API_ROUTES.EMPLOYER_CASTINGS}?${qs.toString()}`);
-  return data;
+  return getData<CastingCardResponse[]>(`${API_ROUTES.EMPLOYER_CASTINGS}?${qs.toString()}`);
 }
 
-export const getEmployerCastingEditorBySlug = async (slug: string): Promise<EmployerCastingEditorResponse> => {
-  const response = await api.get(API_ROUTES.EMPLOYER_CASTING + `/${slug}` + '/editor');
-  return response.data;
-};
+export const getEmployerCastingEditorBySlug = async (slug: string): Promise<EmployerCastingEditorResponse> =>
+  getData<EmployerCastingEditorResponse>(API_ROUTES.EMPLOYER_CASTING_EDITOR(slug));
 
-export const createEmptyCasting = async (): Promise<string> => {
-  const response = await api.post(API_ROUTES.EMPLOYER_CASTINGS);
-  return response.data;
-};
+export const createEmptyCasting = async (): Promise<string> => postData<string>(API_ROUTES.EMPLOYER_CASTINGS_EMPTY);
+
+export const getEmployerCastingDetailsBySlug = async (slug: string): Promise<CastingResponse> =>
+  getData<CastingResponse>(API_ROUTES.EMPLOYER_CASTING_DETAILS(slug));
+
+export const getEmployerCastingCheckoutSummary = async (
+  castingId: string
+): Promise<EmployerCastingCheckoutSummaryResponse> =>
+  getData<EmployerCastingCheckoutSummaryResponse>(API_ROUTES.EMPLOYER_CASTING_CHECKOUT_SUMMARY(castingId));
+
+export const updateCasting = async ({
+  id,
+  payload,
+}: {
+  id: string;
+  payload: CastingUpsertRequest;
+}): Promise<CastingResponse> => putData<CastingResponse>(`${API_ROUTES.EMPLOYER_CASTING}/${id}`, payload);
+
+export const getCastingRoleById = async (roleId: string): Promise<CastingRoleResponse> =>
+  getData<CastingRoleResponse>(API_ROUTES.EMPLOYER_CASTING_ROLE_DETAILS(roleId));
+
+export const createCastingRole = async (payload: CastingRoleRequest): Promise<CastingRoleResponse> =>
+  postData<CastingRoleResponse>(API_ROUTES.CASTING_ROLE, payload);
+
+export const updateCastingRole = async ({
+  roleId,
+  payload,
+}: {
+  roleId: string;
+  payload: CastingRoleRequest;
+}): Promise<CastingRoleResponse> => putData<CastingRoleResponse>(`${API_ROUTES.CASTING_ROLE}/${roleId}`, payload);
+
+export const duplicateCastingRole = async ({ roleId }: { roleId: string }): Promise<CastingRoleResponse> =>
+  postData<CastingRoleResponse>(API_ROUTES.EMPLOYER_CASTING_ROLE_DUPLICATE(roleId));
+
+export async function deleteCastingRole({ roleId }: { roleId: string }) {
+  await deleteVoid(`${API_ROUTES.CASTING_ROLE}/${roleId}`);
+  return { roleId };
+}
 
 export async function deleteCasting({ id }: { id: string }) {
-  await api.delete(`${API_ROUTES.EMPLOYER_CASTING}/${id}`);
+  await deleteVoid(`${API_ROUTES.EMPLOYER_CASTING}/${id}`);
   return { id };
 }
 
-// Basic Info
-export const getSectionBasicInfoById = async (sectionId: string): Promise<CastingSectionBasicInfo> => {
-  const response = await api.get(API_ROUTES.CASTING_BASIC_INFO + `/${sectionId}`);
-  return response.data;
-};
-
-export async function patchCastingBasicInfo(payload: CastingBasicInfoPatchRequest): Promise<CastingSectionBasicInfo> {
-  const body = stripUndefined(payload);
-  const { data } = await api.patch(API_ROUTES.CASTING_BASIC_INFO, body);
-  return data;
-}
-
-// Roles
-export const createNewRole = async (payload: CastingRoleUpsertRequest): Promise<EmployerCastingRoleCardResponse> => {
-  const response = await api.post(API_ROUTES.CASTING_ROLE, payload);
-  return response.data;
-};
-
-export const getSectionRolesById = async (sectionId: string): Promise<CastingSectionRoles> => {
-  const response = await api.get(API_ROUTES.CASTING_ROLE + `/${sectionId}`);
-  return response.data;
-};
-
-export async function patchCastingRole(req: CastingRolePatchRequest) {
-  const { id, ...body } = req;
-  const res = await api.put(`${API_ROUTES.CASTING_ROLE}/${id}`, body);
-  return res.data;
-}
-
-export async function deleteCastingRole({ id }: { id: string }): Promise<{ id: string } & LastModifiedResponse> {
-  const { data } = await api.delete(`${API_ROUTES.CASTING_ROLE}/${id}`);
-  return { id, modifiedAt: data.modifiedAt };
-}
-
-// Requirements
-export const createBulkRequirement = async (
-  payload: CastingRequirementUpsertRequest
-): Promise<EmployerCastingRequirementCardResponse[]> => {
-  const response = await api.post(API_ROUTES.CASTING_REQUIREMENT, payload);
-  return response.data;
-};
-
-export const getSectionRequirementsById = async (sectionId: string): Promise<CastingSectionRequirements> => {
-  const response = await api.get(API_ROUTES.CASTING_REQUIREMENT + `/${sectionId}`);
-  return response.data;
-};
-
-export async function patchCastingRequirement(req: CastingRequirementPatchRequest) {
-  const { id, ...body } = req;
-  const res = await api.put(`${API_ROUTES.CASTING_REQUIREMENT}/${id}`, body);
-  return res.data;
-}
-
-export async function deleteCastingRequirement({ id }: { id: string }): Promise<{ id: string } & LastModifiedResponse> {
-  const { data } = await api.delete(`${API_ROUTES.CASTING_REQUIREMENT}/${id}`);
-  return { id, modifiedAt: data.modifiedAt };
-}
-
-// Remunerations
-export const getSectionRemunerationsById = async (sectionId: string): Promise<CastingSectionRemunerations> => {
-  const response = await api.get(API_ROUTES.CASTING_REMUNERATION + `/${sectionId}`);
-  return response.data;
-};
-
-export async function patchCastingSectionRemuneration(
-  payload: CastingSectionRemunerationPatchRequest
-): Promise<CastingSectionRemunerations> {
-  const body = stripUndefined(payload);
-  const { data } = await api.patch(API_ROUTES.CASTING_REMUNERATION, body);
-  return data;
-}
-
-export async function patchCastingRoleRemuneration(payload: CastingRoleRemunerationPatchRequest): Promise<any> {
-  const body = stripUndefined(payload);
-  const { data } = await api.patch(API_ROUTES.CASTING_REMUNERATION_REMUENRATIONS, body);
-  return data;
-}
-
-// Checkout
-export const getSectionCheckoutSummary = async (id: string): Promise<CastingSectionCheckout> => {
-  const response = await api.get(`${API_ROUTES.EMPLOYER_CASTING}/${id}/checkout-summary`);
-  return response.data;
-};
-
 // Casting Statuses
-export const publishCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
-  const response = await api.post(API_ROUTES.PUBLISH_CASTING(id));
-  return response.data;
-};
+export const publishCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> =>
+  postData<EmployerCastingEditorResponse>(API_ROUTES.PUBLISH_CASTING(id));
 
-export const setDraftCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
-  const response = await api.post(API_ROUTES.DRAFT_CASTING(id));
-  return response.data;
-};
+export const setDraftCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> =>
+  postData<EmployerCastingEditorResponse>(API_ROUTES.DRAFT_CASTING(id));
 
-export const pauseCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
-  const response = await api.post(API_ROUTES.PAUSE_CASTING(id));
-  return response.data;
-};
+export const pauseCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> =>
+  postData<EmployerCastingEditorResponse>(API_ROUTES.PAUSE_CASTING(id));
 
-export const closeCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
-  const response = await api.post(API_ROUTES.CLOSE_CASTING(id));
-  return response.data;
-};
+export const closeCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> =>
+  postData<EmployerCastingEditorResponse>(API_ROUTES.CLOSE_CASTING(id));
 
-export const archiveCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> => {
-  const response = await api.post(API_ROUTES.ARCHIVE_CASTING(id));
-  return response.data;
-};
+export const archiveCasting = async ({ id }: { id: string }): Promise<EmployerCastingEditorResponse> =>
+  postData<EmployerCastingEditorResponse>(API_ROUTES.ARCHIVE_CASTING(id));

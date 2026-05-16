@@ -10,6 +10,7 @@ const TalentProfileSettingsPage = () => {
     {
       key: 'security',
       label: t('settings.pills.security'),
+      sectionTitle: t('settings.pills.security'),
       render: () => <TalentSettingsSecuritySection />,
     },
     // {

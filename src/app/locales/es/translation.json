@@ -16,16 +16,20 @@
     "indistinct": "Indistinto",
     "any": "Cualquiera",
     "accept": "Aceptar",
+    "cancel": "Cancelar",
     "add": "Agregar",
     "save": "Guardar",
     "search": "Buscar",
-    "save_changes": " Guardar Cambios",
+    "save_changes": "Guardar Cambios",
+    "save_unpublished": "Guardar sin publicar",
+    "exit_unpublished": "Salir sin publicar",
     "delete": "Eliminar",
     "clear": "Limpiar",
     "reset": "Resetear",
     "apply": "Aplicar",
     "finalize": "Finalizar",
     "edit": "Editar",
+    "duplicate": "Duplicar",
     "error": "Error",
     "publish": "Publicar",
     "pay_and_publish": "Pagar y Publicar",
@@ -43,6 +47,7 @@
     "cm": "cm",
     "back_to": "Volver a",
     "back": "Volver",
+    "continue": "Continuar",
     "creation_date": "Fecha de creación",
     "limit_date": "Fecha límite",
     "datetime": {
@@ -166,7 +171,7 @@
   },
   "server_error": {
     "auth": {
-      "access_denied": "No tienes permisos para realizar esta acción.",
+      "access_denied": "No tienes permisos padashboardra realizar esta acción.",
       "current_password_mismatch": "La contraseña actual no coincide.",
       "email_invalid": "Email inválido.",
       "invalid_credentials": "Usuario o contraseña incorrectos.",
@@ -964,6 +969,17 @@
       "text": "Gracias por aplicar. Tus materiales ya están disponibles para el equipo de casting."
     }
   },
+  "applications": {
+    "already_applied": "No puedes aplicar dos veces al mismo casting.",
+    "audio_required": "Debes compartir un link de audio para completar la postulación.",
+    "id_required": "Debes proporcionar un applicationId.",
+    "ids_required": "Debes proporcionar al menos un applicationId.",
+    "not_found_or_forbidden": "No encontramos la postulación solicitada o no tienes permisos para verla.",
+    "requirement_invalid": "Requerimiento inválido.",
+    "requirements_missing": "Faltan requerimientos por completar.",
+    "status_required": "Debes proporcionar un status.",
+    "video_required": "Debes compartir un link de video para completar la postulación."
+  },
   "settings": {
     "pills": {
       "security": "Seguridad",
@@ -1067,6 +1083,7 @@
         "roles": "Roles",
         "add_new": "Nuevo Rol",
         "edit": "Editar Rol",
+        "save_role": "Guardar Rol",
         "delete": "¿Seguro deseas eliminar este rol?",
         "role": {
           "role": "Rol",
@@ -1098,17 +1115,17 @@
         }
       },
       "checkout": {
+        "total": "Total",
+        "beta_total": "ARS $0",
         "checkout_and_publish": "Finalizar y Publicar",
         "subtitle": "Revisá el resumen. Cuando pagues, tu casting se publica automáticamente.",
         "checkout_summary": {
           "title": "Resumen del Casting",
           "coupon": "Cupón",
-          "beta_discount": "100% Version Beta",
-          "beta_total": "$0 ARS"
+          "beta_discount": "100% Version Beta"
         },
         "checkout_payment": {
           "title": "Finalización de Compra",
-          "beta_total": "$0 ARS",
           "disclaimer": "Al pagar, tu casting se publica automáticamente."
         }
       }

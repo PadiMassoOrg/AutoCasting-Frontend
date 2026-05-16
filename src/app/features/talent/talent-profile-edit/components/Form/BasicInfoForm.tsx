@@ -1,4 +1,4 @@
-import { ChoiceChip, FormInputField, FormSelectField, Label } from 'autocasting-ui-library-padimasso';
+import { ChoiceChip, FormInputField, FormSelectField, Label, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -125,32 +125,33 @@ export default function BasicInfoForm({
   const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
 
   return (
-    <div className="w-full flex flex-col gap-2">
-      <FormInputField
-        id="stageName"
-        label={t('profile.basic_info.artistic_name')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.stage_name')}
-        value={stageName.value}
-        onChange={stageName.onChange}
-        onBlur={stageName.onBlur}
-        onKeyDown={stageName.onKeyDown}
-        error={resolveError('stageName', errors.stageName)}
-      />
+    <>
+      <section className="flex flex-col lg:flex-row lg:gap-4">
+        <FormInputField
+          id="stageName"
+          label={t('profile.basic_info.artistic_name')}
+          labelClassName="font-semibold text-base"
+          placeholder={t('general.placeholder.stage_name')}
+          value={stageName.value}
+          onChange={stageName.onChange}
+          onBlur={stageName.onBlur}
+          onKeyDown={stageName.onKeyDown}
+          error={resolveError('stageName', errors.stageName)}
+        />
 
-      <FormSelectField
-        id="genderId"
-        label={t('profile.basic_info.gender')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.select')}
-        value={gender.value}
-        onChange={gender.onChange}
-        onBlur={gender.onBlur}
-        options={genderOptions}
-        error={resolveError('genderId', errors.genderId)}
-      />
-
-      <div className="flex flex-col gap-2">
+        <FormSelectField
+          id="genderId"
+          label={t('profile.basic_info.gender')}
+          labelClassName="font-semibold text-base"
+          placeholder={t('general.placeholder.select')}
+          value={gender.value}
+          onChange={gender.onChange}
+          onBlur={gender.onBlur}
+          options={genderOptions}
+          error={resolveError('genderId', errors.genderId)}
+        />
+      </section>
+      <div className="flex flex-col gap-2 lg:flex-1">
         <Label className="text-sm font-semibold">{t('profile.basic_info.birth_date')}</Label>
         <div className="grid grid-cols-3 gap-2">
           <FormSelectField
@@ -198,6 +199,8 @@ export default function BasicInfoForm({
         </div>
       </div>
 
+      <Separator className="opacity-20 mt-2 mb-6" />
+
       {/* Profesión */}
       <div className="flex flex-col gap-2">
         <Label className="text-sm font-bold">{t('profile.basic_info.profession')}</Label>
@@ -219,6 +222,6 @@ export default function BasicInfoForm({
           <span className="text-sm text-red-600">{profErrors ?? resolveError('professions')}</span>
         )}
       </div>
-    </div>
+    </>
   );
 }

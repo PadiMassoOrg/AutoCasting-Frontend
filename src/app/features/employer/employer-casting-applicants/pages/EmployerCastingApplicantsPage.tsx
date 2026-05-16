@@ -6,8 +6,7 @@ import { DashboardSection, DashboardShell } from 'autocasting-ui-library-padimas
 import { SectionTitle } from '../../../../shared/components/Section';
 import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { PublicProfileDetailsView } from '../../../public-profile/pages';
-import { useSectionRoles } from '../../employer-castings/hooks/section/useSectionRoles';
-import { useEmployerCastingEditorBySlug } from '../../employer-castings/hooks/useEmployerCastingDetailsBySlug';
+import { useEmployerCastingDetailsBySlug } from '../../employer-castings/hooks/useEmployerCastingDetailsBySlug';
 import { CastingApplicantCard } from '../components/Card';
 import CastingApplicantsBulkActionsBar from '../components/Filter/CastingApplicantsBulkActionsBar';
 import CastingApplicantsFilterBar from '../components/Filter/CastingApplicantsFilterBar';
@@ -139,16 +138,14 @@ const EmployerCastingApplicantsPage = () => {
     if (viewMode !== 'table') setViewMode('table');
   }, [isBulkSelectionActive, viewMode]);
 
-  const { data: castingEditor } = useEmployerCastingEditorBySlug(slug);
-  const rolesSectionId = castingEditor?.rolesSectionId ?? '';
-  const { data: rolesSection } = useSectionRoles(rolesSectionId);
+  const { data: castingDetails } = useEmployerCastingDetailsBySlug(slug);
 
   const roleOptions = useMemo(
     () =>
-      (rolesSection?.roles ?? [])
+      (castingDetails?.roles ?? [])
         .map((role) => ({ value: role.id, label: role.roleName }))
         .sort((a, b) => a.label.localeCompare(b.label)),
-    [rolesSection?.roles]
+    [castingDetails?.roles]
   );
 
   const handleOpenDetails = useCallback((talentPublicSlug: string) => {

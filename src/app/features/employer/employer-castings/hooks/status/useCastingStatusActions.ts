@@ -1,4 +1,3 @@
-// useCastingStatusActions.ts
 import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
 import {
   CASTING_STATUS_ARCHIVED,
@@ -22,8 +21,6 @@ const actionByStatusCode: Record<string, CastingStatusAction> = {
   [CASTING_STATUS_CLOSED]: 'close',
   [CASTING_STATUS_ARCHIVED]: 'archive',
 };
-
-const allowedStatusCodes = Object.keys(actionByStatusCode);
 
 export function useCastingStatusActions() {
   const publish = useCastingStatusMutation('publish');
@@ -59,14 +56,8 @@ export function useCastingStatusActions() {
     }
   };
 
-  const setStatusByCode = async (stringCode: string, params: SetStatusParams) => {
-    if (!allowedStatusCodes.includes(stringCode)) return;
-    await setStatus({ id: stringCode, stringCode }, params);
-  };
-
   return {
     setStatus,
-    setStatusByCode,
     isPending,
   };
 }

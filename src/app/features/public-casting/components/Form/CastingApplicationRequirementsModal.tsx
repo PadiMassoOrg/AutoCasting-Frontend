@@ -12,24 +12,18 @@ type Props = {
   onApply: (body: CastingApplicationRequest) => void | Promise<void>;
 };
 
-type DraftSubmission = {
-  castingRequirementId: string;
+type DraftForm = {
   audioUrl: string;
   videoUrl: string;
+  message: string;
+  notes: string;
 };
 
-type DraftForm = {
-  submissions: DraftSubmission[];
-};
-
-const makeInitial = (requirements: CastingRequirement[]): DraftForm => ({
-  submissions: (requirements ?? [])
-    .filter((r): r is CastingRequirement & { id: string } => !!r?.id)
-    .map((r) => ({
-      castingRequirementId: r.id,
-      audioUrl: '',
-      videoUrl: '',
-    })),
+const makeInitial = (_requirements: CastingRequirement[]): DraftForm => ({
+  audioUrl: '',
+  videoUrl: '',
+  message: '',
+  notes: '',
 });
 
 const CastingApplicationRequirementsModal = ({ requirements, onCancel, onApply }: Props) => {
@@ -54,24 +48,17 @@ const CastingApplicationRequirementsModal = ({ requirements, onCancel, onApply }
     });
   };
 
-  const onSubmissionChange = (idx: number, key: keyof DraftSubmission, value: string) => {
-    setForm((f) => {
-      const next = [...f.submissions];
-      next[idx] = { ...next[idx], [key]: value };
-      return { ...f, submissions: next };
-    });
-    setFieldError(`submissions.${idx}.${key}`, undefined);
+  const onFieldChange = (key: keyof DraftForm, value: string) => {
+    setForm((f) => ({ ...f, [key]: value }));
+    setFieldError(key, undefined);
   };
 
   const validateAndApply = async () => {
     const raw: CastingApplicationFormValues = {
-      message: '',
-      submissions: form.submissions.map((s) => ({
-        castingRequirementId: s.castingRequirementId,
-        audioUrl: s.audioUrl,
-        videoUrl: s.videoUrl,
-        notes: '',
-      })),
+      message: form.message,
+      audioUrl: form.audioUrl,
+      videoUrl: form.videoUrl,
+      notes: form.notes,
     };
 
     const parsed = schema.safeParse(raw);
@@ -87,17 +74,17 @@ const CastingApplicationRequirementsModal = ({ requirements, onCancel, onApply }
     }
 
     const body: CastingApplicationRequest = {
-      message: null,
-      submissions: parsed.data.submissions.map((s) => ({
-        castingRequirementId: s.castingRequirementId,
-        audioUrl: s.audioUrl?.trim() ? s.audioUrl.trim() : null,
-        videoUrl: s.videoUrl?.trim() ? s.videoUrl.trim() : null,
-        notes: null,
-      })),
+      message: parsed.data.message?.trim() ? parsed.data.message.trim() : null,
+      audioUrl: parsed.data.audioUrl?.trim() ? parsed.data.audioUrl.trim() : null,
+      videoUrl: parsed.data.videoUrl?.trim() ? parsed.data.videoUrl.trim() : null,
+      notes: parsed.data.notes?.trim() ? parsed.data.notes.trim() : null,
     };
 
     await execute(() => onApply(body));
   };
+
+  const requiresVideo = requirements.some((req) => req?.requiresVideo);
+  const requiresAudio = requirements.some((req) => req?.requiresAudio);
 
   return (
     <article className="flex flex-col">
@@ -114,43 +101,33 @@ const CastingApplicationRequirementsModal = ({ requirements, onCancel, onApply }
       </div>
 
       <div className="mt-6 flex flex-col gap-5">
-        {(requirements ?? []).map((req) => {
-          const requiresVideo = !!req?.requiresVideo;
-          const requiresAudio = !!req?.requiresAudio;
+        <div className="flex flex-col gap-2">
+          {requiresVideo && (
+            <FormInputField
+              id="video-url"
+              label={t('application.modal.video')}
+              labelClassName="font-semibold text-black"
+              required
+              placeholder="URL"
+              value={form.videoUrl}
+              onChange={(e) => onFieldChange('videoUrl', e.target.value)}
+              error={errors.videoUrl}
+            />
+          )}
 
-          const subIdx = form.submissions.findIndex((s) => s.castingRequirementId === req.id);
-          if (!req?.id || subIdx < 0) return null;
-
-          return (
-            <div key={req.id} className="flex flex-col gap-2">
-              {requiresVideo && (
-                <FormInputField
-                  id={`video-${req.id}`}
-                  label={t('application.modal.video')}
-                  labelClassName="font-semibold text-black"
-                  required
-                  placeholder="URL"
-                  value={form.submissions[subIdx].videoUrl}
-                  onChange={(e) => onSubmissionChange(subIdx, 'videoUrl', e.target.value)}
-                  error={errors[`submissions.${subIdx}.videoUrl`]}
-                />
-              )}
-
-              {requiresAudio && (
-                <FormInputField
-                  id={`audio-${req.id}`}
-                  label={t('application.modal.audio')}
-                  labelClassName="font-semibold text-black"
-                  required
-                  placeholder="URL"
-                  value={form.submissions[subIdx].audioUrl}
-                  onChange={(e) => onSubmissionChange(subIdx, 'audioUrl', e.target.value)}
-                  error={errors[`submissions.${subIdx}.audioUrl`]}
-                />
-              )}
-            </div>
-          );
-        })}
+          {requiresAudio && (
+            <FormInputField
+              id="audio-url"
+              label={t('application.modal.audio')}
+              labelClassName="font-semibold text-black"
+              required
+              placeholder="URL"
+              value={form.audioUrl}
+              onChange={(e) => onFieldChange('audioUrl', e.target.value)}
+              error={errors.audioUrl}
+            />
+          )}
+        </div>
       </div>
 
       <Separator className="opacity-20 my-4" />

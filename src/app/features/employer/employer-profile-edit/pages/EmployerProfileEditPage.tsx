@@ -1,7 +1,6 @@
 import type { DashboardShellSection } from 'autocasting-ui-library-padimasso';
-import { DashboardLoadingLabel, DashboardSection, DashboardShell } from 'autocasting-ui-library-padimasso';
+import { DashboardLoadingLabel, DashboardShell } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { SectionTitle } from '../../../../shared/components/Section';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { EmployerProfileBasicInfoEditSection } from '../components/Section';
 import { useEmployerProfile } from '../hooks/useEmployerProfile';
@@ -16,12 +15,8 @@ const EmployerProfileEditPage = () => {
     {
       key: 'basic',
       label: t('profile.pills.basic_info'),
-      render: () => (
-        <DashboardSection>
-          <SectionTitle title={t('employer_profile.profile')} />
-          <DashboardLoadingLabel />
-        </DashboardSection>
-      ),
+      sectionTitle: t('profile.pills.basic_info'),
+      render: () => <DashboardLoadingLabel />,
     },
   ];
 
@@ -32,6 +27,7 @@ const EmployerProfileEditPage = () => {
           {
             key: 'basic',
             label: t('profile.pills.basic_info'),
+            sectionTitle: t('profile.pills.basic_info'),
             render: () => <EmployerProfileBasicInfoEditSection data={data} />,
           },
         ];

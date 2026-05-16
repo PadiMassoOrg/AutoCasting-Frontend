@@ -22,7 +22,7 @@ function OnboardingWizard() {
 
   if (currentFlow === 'MODE') {
     return (
-      <Wizard key="mode-selector">
+      <Wizard key="mode-selector" className="h-full">
         <ModeSelectorStep
           onModeChosen={(mode) => {
             if (mode === 'TALENT') {
@@ -38,7 +38,7 @@ function OnboardingWizard() {
 
   if (currentFlow === 'TALENT') {
     return (
-      <Wizard key="talent-flow">
+      <Wizard key="talent-flow" className="h-full">
         <TalentBasicInfoStep onBackToModeSelector={() => setCurrentFlow('MODE')} />
         <TalentProfessionStep></TalentProfessionStep>
         <TalentMediaStep />
@@ -55,7 +55,7 @@ function OnboardingWizard() {
 
   if (currentFlow === 'EMPLOYER') {
     return (
-      <Wizard key="employer-flow">
+      <Wizard key="employer-flow" className="h-full">
         <EmployerBasicInfoStep onBackToModeSelector={() => setCurrentFlow('MODE')} />
         <EmployerMediaStep />
         <EmployerConfirmationStep onGoToProfile={() => navigate(ROUTES.EMPLOYER_CASTINGS)} />

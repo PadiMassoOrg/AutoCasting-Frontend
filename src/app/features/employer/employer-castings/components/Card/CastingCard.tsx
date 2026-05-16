@@ -14,7 +14,7 @@ import {
 import { useCastingStatusActions } from '../../hooks/status/useCastingStatusActions';
 import { useCastingOverflowMenuItems } from '../../hooks/useCastingOverflowMenuItems';
 import type { CastingCardResponse } from '../../types/employerCastings.types';
-import CastingActionConfirmationModal from '../Modal/CastingActionConfirmationModal';
+import { CastingActionConfirmationModal } from '../Modal/';
 
 const CastingCard = ({
   data,
@@ -33,8 +33,7 @@ const CastingCard = ({
 
   const { setStatus, isPending: isStatusPending } = useCastingStatusActions();
 
-  const publicCastingDetailsPath = `${ROUTES.PUBLIC_CASTING}/${defaultCode}`;
-  const employerCastingDetailsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/details`;
+  const detailsPath = `${ROUTES.PUBLIC_CASTING}/${defaultCode}`;
   const editCastingPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/editor`;
   const applicantsPath = `${ROUTES.EMPLOYER_CASTING}/${defaultCode}/applicants`;
 
@@ -59,8 +58,7 @@ const CastingCard = ({
   };
 
   const items = useCastingOverflowMenuItems({
-    employerCastingDetailsPath,
-    publicCastingDetailsPath,
+    detailsPath,
     editCastingPath,
     statusCode: status?.stringCode,
     onDelete: onDelete ? openDeleteModal : undefined,

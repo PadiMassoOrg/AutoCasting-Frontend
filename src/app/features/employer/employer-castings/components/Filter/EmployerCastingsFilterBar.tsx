@@ -2,14 +2,11 @@ import { OverflowMenu, SearchInput, TextDropdownTrigger } from 'autocasting-ui-l
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AUDITABLE_ORDER_BY } from '../../../../../shared/types/orderBy.types';
-import type { EmployerCastingsOrderBy } from '../../types/employerCastingsFilters.types';
+import {
+  type EmployerCastingsFiltersState,
+  type EmployerCastingsOrderBy,
+} from '../../types/employerCastingsFilters.types';
 import EmployerCastingsFilterMenuContent from './EmployerCastingFilterMenuContent';
-
-export type EmployerCastingsFiltersState = {
-  projectTypeIds?: string[];
-  statusIdTokens?: string[];
-  search?: string;
-};
 
 type Props = {
   filters: EmployerCastingsFiltersState;

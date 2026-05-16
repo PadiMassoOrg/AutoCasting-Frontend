@@ -13,8 +13,7 @@ import {
 } from '../../../sitemetadata/utils/siteMetadataUtils';
 
 type Params = {
-  employerCastingDetailsPath: string;
-  publicCastingDetailsPath: string;
+  detailsPath: string;
   editCastingPath?: string;
   onApplicants: () => void;
   onDelete?: () => void | Promise<void>;
@@ -50,8 +49,7 @@ function resolveVisibility(statusCode?: string | null): Visibility {
 }
 
 export const useCastingOverflowMenuItems = ({
-  employerCastingDetailsPath,
-  publicCastingDetailsPath,
+  detailsPath,
   editCastingPath,
   onApplicants,
   onDelete,
@@ -70,7 +68,7 @@ export const useCastingOverflowMenuItems = ({
         label: t('employer_castings.actions.view_details'),
         iconName: 'open',
         disabled: !v.details,
-        onSelect: () => navigate(employerCastingDetailsPath),
+        onSelect: () => navigate(detailsPath),
       },
       {
         key: 'applicants',
@@ -85,7 +83,7 @@ export const useCastingOverflowMenuItems = ({
         iconName: 'copyLink',
         disabled: !v.copyLink,
         onSelect: async () => {
-          const url = new URL(publicCastingDetailsPath, window.location.origin).toString();
+          const url = new URL(detailsPath, window.location.origin).toString();
           await copyToClipboardGraceful(url);
           showToast({ title: t('general.copied'), description: t('general.copied'), type: 'default' });
         },
@@ -115,15 +113,5 @@ export const useCastingOverflowMenuItems = ({
     }
 
     return items;
-  }, [
-    t,
-    navigate,
-    employerCastingDetailsPath,
-    publicCastingDetailsPath,
-    editCastingPath,
-    onApplicants,
-    onDelete,
-    deleteDisabled,
-    statusCode,
-  ]);
+  }, [t, navigate, detailsPath, editCastingPath, onApplicants, onDelete, deleteDisabled, statusCode]);
 };

@@ -4,13 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { DashboardSection, DashboardShell } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../shared/components/Section';
 import { CastingCard } from '../components/Card';
-import EmployerCastingsFilterBar, {
-  type EmployerCastingsFiltersState,
-} from '../components/Filter/EmployerCastingsFilterBar';
+import EmployerCastingsFilterBar from '../components/Filter/EmployerCastingsFilterBar';
 import { useCreateEmptyCastingMutation } from '../hooks/useCreateEmptyCastingMutation';
 import { useDeleteCastingMutation } from '../hooks/useDeleteCastingMutation';
 import { useEmployerCastings } from '../hooks/useEmployerCastings';
-import type { EmployerCastingsOrderBy } from '../types/employerCastingsFilters.types';
+import {
+  type EmployerCastingsFiltersState,
+  type EmployerCastingsOrderBy,
+} from '../types/employerCastingsFilters.types';
 
 const EmployerCastingsPage = () => {
   const { t } = useTranslation();
@@ -58,7 +59,7 @@ const EmployerCastingsPage = () => {
   const actionButtonRender = () => (
     <Button
       className="flex flex-row items-center justify-center gap-2"
-      onClick={createEmptyCasting}
+      onClick={() => createEmptyCasting()}
       loading={isCreatePending}
     >
       <Icon name="plus" variant="white" size={16} />

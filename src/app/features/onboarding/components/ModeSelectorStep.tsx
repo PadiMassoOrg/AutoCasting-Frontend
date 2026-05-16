@@ -1,4 +1,13 @@
-import { Button, Icon, Separator, WizardStep, type WizardStepProps } from 'autocasting-ui-library-padimasso';
+import {
+  Button,
+  Icon,
+  Separator,
+  WizardBody,
+  WizardFooter,
+  WizardHeader,
+  WizardLayout,
+  type WizardStepProps,
+} from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ContinueLaterButton } from '.';
@@ -71,15 +80,14 @@ function ModeSelectorStep({ onModeChosen }: Props) {
 
   return (
     <section className="w-full">
-      <WizardStep>
-        <div className="flex min-h-[85vh] lg:min-h-[70vh] flex-col justify-between gap-8">
-          <div className="flex flex-col items-center gap-4 pt-4">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold mb-4">{t('onboarding.mode_selector.header')}</h1>
-              <p className="text-sm">{t('onboarding.mode_selector.subtitle')}</p>
-            </div>
-          </div>
-          <div className="w-full flex flex-col gap-6 items-center lg:flex-row lg:items-stretch lg:justify-center">
+      <WizardLayout className="min-h-[85vh] justify-between gap-8 lg:min-h-[70vh]">
+        <WizardHeader
+          title={t('onboarding.mode_selector.header')}
+          subtitle={t('onboarding.mode_selector.subtitle')}
+          className="pt-4 text-center"
+        />
+        <WizardBody className="flex items-center justify-center">
+          <div className="flex w-full flex-col items-center gap-6 lg:flex-row lg:items-stretch lg:justify-center">
             {meData?.talentOnboardingStatus !== 'COMPLETED' && (
               <ModeCard mode="TALENT" onContinue={() => handleContinue('TALENT')} />
             )}
@@ -87,11 +95,11 @@ function ModeSelectorStep({ onModeChosen }: Props) {
               <ModeCard mode="EMPLOYER" onContinue={() => handleContinue('EMPLOYER')} />
             )}
           </div>
-          <div className="pb-6">
-            <ContinueLaterButton />
-          </div>
-        </div>
-      </WizardStep>
+        </WizardBody>
+        <WizardFooter className="flex-col items-stretch gap-6 border-t-0 pt-0">
+          <ContinueLaterButton />
+        </WizardFooter>
+      </WizardLayout>
     </section>
   );
 }

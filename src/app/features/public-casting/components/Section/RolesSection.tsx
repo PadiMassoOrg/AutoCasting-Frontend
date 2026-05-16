@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
-import type { CastingRole, CastingRolesSection } from '../../types/publicCasting.types';
+import type { CastingRole } from '../../types/publicCasting.types';
 import PublicRoleCard from '../PublicRoleCard';
 
 type Props = {
-  data: CastingRolesSection;
+  data: CastingRole[];
   showApplyButton?: boolean;
   isRoleApplied?: (role: CastingRole) => boolean;
   applyDisabled?: boolean;
@@ -20,7 +20,7 @@ const RolesSection = ({ data, showApplyButton = false, isRoleApplied, applyDisab
       </article>
 
       <article className="flex flex-col gap-6">
-        {data.roles?.map((i) => (
+        {data?.map((i) => (
           <PublicRoleCard
             key={i.id}
             data={i}

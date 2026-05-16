@@ -1,8 +1,8 @@
 import { TagChip, Icon } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import type { CastingBasicInfoSection } from '../../types/publicCasting.types';
+import type { CastingDetailsResponse } from '../../types/publicCasting.types';
 
-const BasicInfoSection = ({ data }: { data: CastingBasicInfoSection }) => {
+const BasicInfoSection = ({ data }: { data: CastingDetailsResponse }) => {
   const { t } = useTranslation();
 
   const deadlineText = `${t('casting.basic_info.deadline_complete')} ${data.applicationDeadline}`;
@@ -18,16 +18,16 @@ const BasicInfoSection = ({ data }: { data: CastingBasicInfoSection }) => {
           <span></span>
         </div>
         <div className="flex flex-row items-center gap-1">
-          <TagChip label={t(data.projectType!.stringCode!)} />
-          <TagChip label={t(data.castingModality!.stringCode!)} />
+          {data.projectType?.stringCode && <TagChip label={t(data.projectType.stringCode)} />}
+          {data.castingModality?.stringCode && <TagChip label={t(data.castingModality.stringCode)} />}
         </div>
       </article>
       {/* Location, Deadline, Shooting */}
       <article className="flex flex-col gap-2 text-sm text-[var(--color-secondary-grey-fonts)]">
-        {data.castingModalityText && (
+        {data.locationText && (
           <span className="flex flex-row gap-2 items-center">
             <Icon name="location" className="opacity-30" />
-            <p>{data.castingModalityText}</p>
+            <p>{data.locationText}</p>
           </span>
         )}
         <span className="flex flex-row gap-2 items-center">

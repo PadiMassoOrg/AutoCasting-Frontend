@@ -23,6 +23,10 @@ export const GENDER_INDISTINCT = 'sitemetadata.gender.indistinct' as const;
 
 // Pay Rate Type
 export const PAY_RATE_TYPE_COLLABORATIVE = 'sitemetadata.pay_rate_type.collaborative' as const;
+export const PAY_RATE_TYPE_UNPAID = 'sitemetadata.pay_rate_type.unpaid' as const;
+
+// Currency
+export const CURRENCY_ARS = 'sitemetadata.currency.ars' as const;
 
 // Ordered Lists
 export const CASTING_STATUS_ORDER = [
@@ -72,9 +76,7 @@ export type CastingActionConfirmationModalConfig = {
   confirmButtonVariant?: 'primary' | 'danger';
 };
 
-export type CastingStatusChangeModalConfig = CastingActionConfirmationModalConfig;
-
-export const CASTING_STATUS_CHANGE_MODAL_CONFIG_BY_CODE: Record<string, CastingStatusChangeModalConfig> = {
+export const CASTING_STATUS_CHANGE_MODAL_CONFIG_BY_CODE: Record<string, CastingActionConfirmationModalConfig> = {
   [CASTING_STATUS_PUBLISHED]: {
     titleKey: 'employer_castings.casting_card.status.published.title',
     descriptionKey: 'employer_castings.casting_card.status.published.description',
@@ -142,6 +144,27 @@ export const getRoleRemunerationVisiblePayRateTypeOptions = (
     items,
     excludedStringCodes: [PAY_RATE_TYPE_COLLABORATIVE],
   });
+};
+
+export const getSiteMetadataIdByStringCode = (
+  items: SiteMetadataObject[] | null | undefined,
+  stringCode: string
+): string | null => {
+  return items?.find((item) => item.stringCode === stringCode)?.id ?? null;
+};
+
+export const getSiteMetadataStringCodeById = (
+  items: SiteMetadataObject[] | null | undefined,
+  id: string | null | undefined
+): string | null => {
+  return items?.find((item) => item.id === id)?.stringCode ?? null;
+};
+
+export const isUnpaidPayRateType = (
+  payRateTypeId: string | null | undefined,
+  payRateTypeOptions: SiteMetadataObject[] | null | undefined
+): boolean => {
+  return getSiteMetadataStringCodeById(payRateTypeOptions, payRateTypeId) === PAY_RATE_TYPE_UNPAID;
 };
 
 // ==========================================================
@@ -262,7 +285,7 @@ export const collapseTalentCastingApplicationStatusIdsForDisplay = ({
 
 export const getCastingStatusChangeModalConfig = (
   status?: Pick<SiteMetadataObject, 'stringCode'> | null
-): CastingStatusChangeModalConfig | null => {
+): CastingActionConfirmationModalConfig | null => {
   const stringCode = status?.stringCode;
   if (!stringCode) return null;
 

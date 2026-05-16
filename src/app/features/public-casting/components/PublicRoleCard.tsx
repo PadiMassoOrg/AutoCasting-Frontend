@@ -147,36 +147,17 @@ const buildHeaderChips = (data: CastingRole, t: (k: string) => string): ChipConf
 
 const buildCharacteristicsChips = (data: CastingRole, t: (k: string) => string): ChipConfig[] => {
   const chips: ChipConfig[] = [];
-  const c = data.characteristics;
-
-  if (c?.heightCm != null) {
-    const heightLabel = `${c.heightCm} ${t('general.cm')}`;
-    chips.push({
-      key: 'height',
-      label: heightLabel,
-      translate: false,
-    });
-  }
-
-  if (c?.ethnicity) {
+  if (data.ethnicity) {
     chips.push({
       key: 'ethnicity',
-      label: c.ethnicity.stringCode!,
-      translate: true,
-    });
-  }
-
-  if (c?.hairColor) {
-    chips.push({
-      key: 'hairColor',
-      label: c.hairColor.stringCode!,
+      label: data.ethnicity.stringCode!,
       translate: true,
     });
   }
 
   const tattooLabel = formatBooleanLabeled({
     labelKey: 'profile.characteristics.tattoo',
-    value: c?.tattoo ?? null,
+    value: data.tattoo ?? null,
     t,
   });
   if (tattooLabel) {
@@ -189,7 +170,7 @@ const buildCharacteristicsChips = (data: CastingRole, t: (k: string) => string):
 
   const passportLabel = formatBooleanLabeled({
     labelKey: 'profile.characteristics.passport',
-    value: c?.passport ?? null,
+    value: data.passport ?? null,
     t,
   });
   if (passportLabel) {
@@ -202,7 +183,7 @@ const buildCharacteristicsChips = (data: CastingRole, t: (k: string) => string):
 
   const drivingLicenseLabel = formatBooleanLabeled({
     labelKey: 'profile.characteristics.drivingLicense',
-    value: c?.drivingLicense ?? null,
+    value: data.drivingLicense ?? null,
     t,
   });
   if (drivingLicenseLabel) {

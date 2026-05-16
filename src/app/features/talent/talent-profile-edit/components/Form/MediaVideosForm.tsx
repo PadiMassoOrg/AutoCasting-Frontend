@@ -45,30 +45,33 @@ const MediaVideosForm = ({ data }: { data: Media }) => {
   const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
 
   return (
-    <div className="w-full flex flex-col">
-      <FormInputField
-        id="introduction"
-        labelClassName="font-semibold text-base"
-        label={t('profile.media.introduction')}
-        placeholder={t('general.placeholder.url')}
-        value={introduction.value}
-        onChange={introduction.onChange}
-        onBlur={introduction.onBlur}
-        onKeyDown={introduction.onKeyDown}
-        error={resolveError('introductionVideoUrl', errors.intro)}
-      />
-
-      <FormInputField
-        id="videoreel"
-        label={t('profile.media.videoreel')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.url')}
-        value={videoreel.value}
-        onChange={videoreel.onChange}
-        onBlur={videoreel.onBlur}
-        onKeyDown={videoreel.onKeyDown}
-        error={resolveError('showReelVideoUrl', errors.reel)}
-      />
+    <div className="w-full flex flex-col xl:flex-row xl:gap-4">
+      <div className="flex-1">
+        <FormInputField
+          id="introduction"
+          labelClassName="font-semibold text-base"
+          label={t('profile.media.introduction')}
+          placeholder={t('general.placeholder.url')}
+          value={introduction.value}
+          onChange={introduction.onChange}
+          onBlur={introduction.onBlur}
+          onKeyDown={introduction.onKeyDown}
+          error={resolveError('introductionVideoUrl', errors.intro)}
+        />
+      </div>
+      <div className="flex-1">
+        <FormInputField
+          id="videoreel"
+          label={t('profile.media.videoreel')}
+          labelClassName="font-semibold text-base"
+          placeholder={t('general.placeholder.url')}
+          value={videoreel.value}
+          onChange={videoreel.onChange}
+          onBlur={videoreel.onBlur}
+          onKeyDown={videoreel.onKeyDown}
+          error={resolveError('showReelVideoUrl', errors.reel)}
+        />
+      </div>
     </div>
   );
 };
