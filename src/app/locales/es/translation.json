@@ -949,6 +949,16 @@
       "created_castings": "Castings creados",
       "member_since": "Miembro desde"
     },
+    "menu": {},
+    "detail": {
+      "project_description": "Descripción del Proyecto",
+      "casting_modality_on_site": "Casting Presencial",
+      "casting_wardrobe_fitting": "Prueba de Vestuario",
+      "role_basic_info": "Talento",
+      "role_characteristics": "Características",
+      "role_skills": "Habilidades",
+      "role_remuneration_title": "Remuneración"
+    },
     "filter": {
       "role_type": "Tipo de Rol"
     }

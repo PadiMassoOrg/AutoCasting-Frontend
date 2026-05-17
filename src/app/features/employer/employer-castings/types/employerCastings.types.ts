@@ -63,21 +63,21 @@ export type CastingRoleResponse = {
 export type CastingResponse = {
   id: string;
   defaultCode: string;
-  castingStatus: SiteMetadataObject | null;
-  employerInfo: CastingEmployerInfoResponse | null;
-  title: string | null;
-  projectType: SiteMetadataObject | null;
-  castingModality: SiteMetadataObject | null;
+  castingStatus: SiteMetadataObject;
+  employerInfo: CastingEmployerInfoResponse;
+  title: string;
+  projectType: SiteMetadataObject;
+  castingModality: SiteMetadataObject;
   locationText: string | null;
-  applicationDeadline: string | null;
-  hasWardrobeFitting: boolean | null;
+  applicationDeadline: string;
+  hasWardrobeFitting: boolean;
   wardrobeFittingText: string | null;
-  shootingStartDate: string | null;
-  shootingEndDate: string | null;
+  shootingStartDate: string;
+  shootingEndDate: string;
   description: string | null;
   roles: CastingRoleResponse[];
   publishable: boolean;
-  modifiedAt: string | null;
+  modifiedAt: string;
 };
 
 export type EmployerCastingEditorResponse = {

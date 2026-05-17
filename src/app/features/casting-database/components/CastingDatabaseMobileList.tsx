@@ -7,7 +7,7 @@ import { getCastingDatabase } from '../services/castingDatabaseService';
 import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';
 import CastingRolePublicCard from './CastingRolePublicCard';
 
-const MOBILE_PAGE_SIZE = 3;
+const MOBILE_PAGE_SIZE = 5;
 const MAX_AUTOFILL_PAGES = 6;
 const SCROLL_EPS = 8;
 
@@ -29,6 +29,7 @@ export default function CastingDatabaseMobileList({ filters, onOpenFilters }: Pr
   const inflightRef = useRef<AbortController | null>(null);
   const requestIdRef = useRef(0);
   const fetchingNextRef = useRef(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   const fetchPage = useCallback(
@@ -65,7 +66,7 @@ export default function CastingDatabaseMobileList({ filters, onOpenFilters }: Pr
   );
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'auto' });
     inflightRef.current?.abort();
     inflightRef.current = null;
     setItems([]);
@@ -77,7 +78,8 @@ export default function CastingDatabaseMobileList({ filters, onOpenFilters }: Pr
 
   useEffect(() => {
     const target = sentinelRef.current;
-    if (!target) return;
+    const root = scrollContainerRef.current;
+    if (!target || !root) return;
 
     const io = new IntersectionObserver(
       (entries) => {
@@ -86,7 +88,7 @@ export default function CastingDatabaseMobileList({ filters, onOpenFilters }: Pr
         if (!hasNext || loading || fetchingNextRef.current || error) return;
         fetchPage(page, false);
       },
-      { root: null, rootMargin: '600px 0px 800px 0px', threshold: 0 }
+      { root, rootMargin: '600px 0px 800px 0px', threshold: 0 }
     );
 
     io.observe(target);
@@ -101,7 +103,8 @@ export default function CastingDatabaseMobileList({ filters, onOpenFilters }: Pr
       let tries = 0;
       if (items.length === 0 && loading) return;
 
-      const root = (document.scrollingElement || document.documentElement) as HTMLElement;
+      const root = scrollContainerRef.current;
+      if (!root) return;
       while (
         !cancelled &&
         hasNext &&
@@ -139,7 +142,10 @@ export default function CastingDatabaseMobileList({ filters, onOpenFilters }: Pr
   const isFetchingNextPage = items.length > 0 && loading;
 
   return (
-    <>
+    <div
+      ref={scrollContainerRef}
+      className="scrollbar-hide flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain"
+    >
       <article className="flex items-center justify-between shrink-0 py-2">
         <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
         <button
@@ -190,6 +196,6 @@ export default function CastingDatabaseMobileList({ filters, onOpenFilters }: Pr
           ) : null}
         </>
       )}
-    </>
+    </div>
   );
 }

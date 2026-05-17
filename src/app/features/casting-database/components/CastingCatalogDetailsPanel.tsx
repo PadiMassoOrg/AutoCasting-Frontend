@@ -1,16 +1,16 @@
-import { Button, Icon, Separator, TagChip } from 'autocasting-ui-library-padimasso';
+import { Button, Icon, SectionCard, Separator, TagChip } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { ROUTES } from '../../../shared/lib/routes';
 import {
   formatAgeRange,
   formatBooleanLabeled,
+  formatCurrencyAmount,
   formatLocalDate,
   formatMemberSince,
 } from '../../../shared/utils/formatUtils';
 import type { CastingRoleResponse } from '../../employer/employer-castings/types/employerCastings.types';
 import type { PublicCastingDetailsResponse } from '../../public-casting/types/publicCasting.types';
+import { GENDER_INDISTINCT } from '../../sitemetadata/utils/siteMetadataUtils';
 
 type Props = {
   data: PublicCastingDetailsResponse;
@@ -20,8 +20,27 @@ type Props = {
 const CastingCatalogDetailsPanel = ({ data, selectedRoleId }: Props) => {
   const { t } = useTranslation();
   const casting = data.casting;
-  const role = casting.roles.find((item) => item.id === selectedRoleId) ?? null;
 
+  const {
+    defaultCode,
+    castingStatus,
+    employerInfo,
+    title,
+    projectType,
+    castingModality,
+    locationText,
+    applicationDeadline,
+    hasWardrobeFitting,
+    wardrobeFittingText,
+    shootingEndDate,
+    shootingStartDate,
+    description,
+    roles,
+    publishable,
+    modifiedAt,
+  } = casting;
+
+  const role = roles.find((item) => item.id === selectedRoleId) ?? null;
   const roleTags = useMemo(() => buildRoleTags(role, t), [role, t]);
   const characteristicTags = useMemo(() => buildCharacteristicTags(role, t), [role, t]);
   const skillTags = useMemo(
@@ -34,134 +53,125 @@ const CastingCatalogDetailsPanel = ({ data, selectedRoleId }: Props) => {
       })),
     [role?.skills, t]
   );
+  const amountLabel = formatCurrencyAmount(
+    role?.remuneration?.amount ?? null,
+    role?.remuneration?.currency?.stringCode ?? null
+  );
+  const payRateLabelKey = role?.remuneration?.payRateType?.stringCode;
+  const payRateLabel = payRateLabelKey ? t(payRateLabelKey) : '';
+
+  const finalAmountAndCurrencyLabel =
+    amountLabel && payRateLabel ? `${amountLabel} (${payRateLabel})` : amountLabel || payRateLabel || '';
 
   return (
-    <div className="flex min-h-full flex-col p-6 lg:p-8">
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex min-w-0 flex-col gap-3">
-            <h2 className="text-3xl font-bold text-(--color-primary-black) leading-tight">{casting.title}</h2>
-            <div className="flex flex-wrap gap-2">
-              {casting.projectType?.stringCode ? <TagChip label={t(casting.projectType.stringCode)} /> : null}
-              {casting.castingModality?.stringCode ? <TagChip label={t(casting.castingModality.stringCode)} /> : null}
-            </div>
-          </div>
+    <>
+      {/* Title + Apply */}
+      <section className="flex flex-row items-center justify-between">
+        <h2 className="text-2xl font-semibold">{role?.roleName}</h2>
+        <Button variant="primary" className="max-w-[230px]">
+          {t('general.apply')}
+        </Button>
+      </section>
 
-          {role ? (
-            <Button asChild variant="primary" className="lg:max-w-[220px]">
-              <Link to={`${ROUTES.PUBLIC_CASTING}/${casting.defaultCode}/roles/${role.id}`}>{t('general.apply')}</Link>
-            </Button>
-          ) : null}
-        </div>
+      <Separator className="opacity-20 my-6" />
 
-        <Separator className="opacity-20" />
-
-        <div className="grid gap-3 text-sm text-(--color-secondary-grey-fonts) lg:grid-cols-2">
-          {casting.locationText ? (
-            <span className="flex items-center gap-2">
-              <Icon name="location" className="opacity-30" />
-              <p>{casting.locationText}</p>
+      <section className="flex flex-col gap-10">
+        {/* Project Type + Modality + Deadline + Shooting Dates */}
+        <article className="flex flex-col gap-4">
+          <div className="flex flex-row items-center justify-between">
+            <span className="flex flex-row gap-2 items-center">
+              <TagChip label={t(projectType.stringCode)} />
+              <TagChip label={t(castingModality.stringCode)} />
             </span>
-          ) : null}
-          {casting.applicationDeadline ? (
             <span className="flex items-center gap-2">
               <Icon name="clock" className="opacity-30" />
-              <p>{`${t('casting.basic_info.deadline_complete')} ${formatLocalDate(casting.applicationDeadline, 'long')}`}</p>
+              <p className="text-sm font-light text-[var(--color-secondary-grey-fonts)]">{`${t('casting.basic_info.deadline_complete')} ${formatLocalDate(applicationDeadline, 'long')}`}</p>
             </span>
-          ) : null}
-          {casting.shootingStartDate || casting.shootingEndDate ? (
-            <span className="flex items-center gap-2 lg:col-span-2">
-              <Icon name="calendar" className="opacity-30" />
-              <p>{`${formatLocalDate(casting.shootingStartDate, 'long')} - ${formatLocalDate(casting.shootingEndDate, 'long')}`}</p>
-            </span>
-          ) : null}
-        </div>
+          </div>
+          <span className="flex items-center gap-2">
+            <Icon name="calendar" />
+            <p className="text-sm">{`${formatLocalDate(shootingStartDate, 'long')} - ${formatLocalDate(shootingEndDate, 'long')}`}</p>
+          </span>
+        </article>
 
-        {casting.description ? (
-          <section className="flex flex-col gap-2">
-            <h3 className="text-xl font-semibold text-(--color-primary-black)">Descripción del Proyecto</h3>
-            <p className="text-base font-light leading-7 text-(--color-primary-black)">{casting.description}</p>
-          </section>
-        ) : null}
+        {/* Description + Texts for Modality and Wardrobe */}
+        <article className="flex flex-col gap-8">
+          {description && (
+            <div className="flex flex-col gap-1">
+              <h3 className="text-sm font-semibold">{t('casting-database.detail.project_description')}</h3>
+              <p className="text-sm">{description}</p>
+            </div>
+          )}
+          {locationText && (
+            <div className="flex flex-col gap-1">
+              <h3 className="text-sm font-semibold">{t('casting-database.detail.casting_modality_on_site')}</h3>
+              <p>{locationText}</p>
+            </div>
+          )}
+          {wardrobeFittingText && (
+            <div className="flex flex-col gap-1">
+              <h3 className="text-sm font-semibold">{t('casting-database.detail.casting_wardrobe_fitting')}</h3>
+              <p>{wardrobeFittingText}</p>
+            </div>
+          )}
+        </article>
+      </section>
 
-        {casting.hasWardrobeFitting && casting.wardrobeFittingText ? (
-          <section className="flex flex-col gap-2">
-            <h3 className="text-xl font-semibold text-(--color-primary-black)">Prueba de vestuario</h3>
-            <p className="text-base font-light leading-7 text-(--color-primary-black)">{casting.wardrobeFittingText}</p>
-          </section>
-        ) : null}
+      <Separator className="opacity-20 my-6" />
 
-        {role ? (
-          <>
-            <Separator className="opacity-20" />
+      {/* Talent + Characteristics + Skills */}
+      <section className="flex flex-col gap-6">
+        {roleTags.length > 0 && (
+          <DetailTagSection title={t('casting-database.detail.role_basic_info')} tags={roleTags} />
+        )}
+        {characteristicTags.length > 0 && <DetailTagSection title="Características" tags={characteristicTags} />}
+        {skillTags.length > 0 && <DetailTagSection title="Skills" tags={skillTags} />}
+      </section>
 
-            <section className="flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <h3 className="text-xl font-semibold text-(--color-primary-black)">{role.roleName}</h3>
-                {role.description ? (
-                  <p className="text-base font-light leading-7 text-(--color-primary-black)">{role.description}</p>
-                ) : null}
+      <Separator className="opacity-20 my-6" />
+
+      {/* Remuneration + Employer */}
+      <section className="flex flex-col gap-6 text-base font-semibold">
+        <article className="self-end flex flex-row items-center gap-2">
+          <h2>{t('casting-database.detail.role_remuneration_title')}:</h2>
+          <span>{finalAmountAndCurrencyLabel}</span>
+        </article>
+        <SectionCard className="bg-[var(--color-secondary-offwhite)]">
+          <article className="flex flex-row items-center gap-2">
+            <img
+              src={employerInfo.imageUrl ?? ''}
+              alt={employerInfo.companyName ?? 'Employer'}
+              className="h-14 w-14 rounded-full object-cover"
+            />
+            <div className="w-full flex flex-col gap-1">
+              <div className="flex flex-row items-center justify-between">
+                <h4 className="text-base font-semibold">{employerInfo.companyName}</h4>
+                <span className="flex items-center gap-2">
+                  <Icon name="clapper" size={16} />
+                  <p className="text-sm font-light">
+                    {employerInfo.totalCastings} {t('casting-database.page.created_castings')}
+                  </p>
+                </span>
               </div>
-
-              {roleTags.length > 0 ? <DetailTagSection title="Talento" tags={roleTags} /> : null}
-
-              {characteristicTags.length > 0 ? (
-                <DetailTagSection title="Características" tags={characteristicTags} />
-              ) : null}
-
-              {skillTags.length > 0 ? <DetailTagSection title="Skills" tags={skillTags} /> : null}
-            </section>
-          </>
-        ) : null}
-
-        {casting.employerInfo ? (
-          <>
-            <Separator className="opacity-20" />
-
-            <section className="flex flex-col gap-4">
-              <h3 className="text-xl font-semibold text-(--color-primary-black)">Empresa</h3>
-              <div className="flex items-center gap-4">
-                <img
-                  src={casting.employerInfo.imageUrl ?? ''}
-                  alt={casting.employerInfo.companyName ?? 'Employer'}
-                  className="h-14 w-14 rounded-full object-cover"
-                />
-                <div className="flex flex-col gap-1">
-                  <h4 className="text-lg font-semibold">{casting.employerInfo.companyName}</h4>
-                  {casting.employerInfo.companyType?.stringCode ? (
-                    <TagChip label={t(casting.employerInfo.companyType.stringCode)} />
-                  ) : null}
-                </div>
+              <div className="flex flex-row items-center justify-between">
+                <TagChip label={t(employerInfo.companyType?.stringCode!)} />
+                <span className="flex items-center gap-2">
+                  <Icon name="profile" size={16} />
+                  <p className="text-sm font-light">{formatMemberSince(employerInfo.memberSince, t)}</p>
+                </span>
               </div>
-
-              <div className="grid gap-3 text-sm text-(--color-secondary-grey-fonts) lg:grid-cols-2">
-                {casting.employerInfo.totalCastings != null ? (
-                  <span className="flex items-center gap-2">
-                    <Icon name="clapper" />
-                    <p>
-                      {casting.employerInfo.totalCastings} {t('casting-database.page.created_castings')}
-                    </p>
-                  </span>
-                ) : null}
-                {casting.employerInfo.memberSince ? (
-                  <span className="flex items-center gap-2">
-                    <Icon name="profile" />
-                    <p>{formatMemberSince(casting.employerInfo.memberSince, t)}</p>
-                  </span>
-                ) : null}
-              </div>
-            </section>
-          </>
-        ) : null}
-      </div>
-    </div>
+            </div>
+          </article>
+        </SectionCard>
+      </section>
+    </>
   );
 };
 
 const DetailTagSection = ({ title, tags }: { title: string; tags: Array<{ key: string; label: string }> }) => {
   return (
-    <div className="flex flex-col gap-3">
-      <h4 className="text-lg font-semibold text-(--color-primary-black)">{`${title}:`}</h4>
+    <div className="flex flex-col gap-2">
+      <h4 className="text-sm font-semibold">{`${title}:`}</h4>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag) => (
           <TagChip key={tag.key} label={tag.label} />
@@ -185,7 +195,11 @@ const buildRoleTags = (role: CastingRoleResponse | null, t: (key: string) => str
   }
 
   if (role.gender?.stringCode) {
-    tags.push({ key: `gender-${role.gender.id}`, label: t(role.gender.stringCode) });
+    const genderLabel =
+      role.gender?.stringCode === GENDER_INDISTINCT
+        ? t('profile.basic_info.gender') + ': ' + t(role.gender?.stringCode)
+        : t(role.gender?.stringCode);
+    tags.push({ key: `gender-${role.gender.id}`, label: genderLabel });
   }
 
   if (role.ageMin != null || role.ageMax != null) {

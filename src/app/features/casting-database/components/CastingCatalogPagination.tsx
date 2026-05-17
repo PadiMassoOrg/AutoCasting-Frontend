@@ -11,6 +11,7 @@ type Props = {
 const CastingCatalogPagination = ({ page, size, hasNext, totalCount, onPageChange }: Props) => {
   const totalPages = totalCount && totalCount > 0 ? Math.ceil(totalCount / size) : null;
 
+  // TODO: Refinar CSS
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-t border-(--color-secondary-outline) pt-4">
       <p className="text-sm font-light text-(--color-secondary-grey-fonts)">
