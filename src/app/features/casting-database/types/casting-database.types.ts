@@ -1,7 +1,11 @@
 import type { BasePersonSearchFiltersQS } from '../../search/personSearchFilters.types';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
+export type {
+  PublicCastingDetailsResponse as CastingCatalogDetailsResponse,
+  PublicCastingRole as CastingCatalogRole,
+} from '../../public-casting/types/publicCasting.types';
 
-export type BaseCastingRolePublicCard = {
+export type CastingRolePublicCardResponse = {
   id: string;
   name: string;
   castingTitle: string;
@@ -22,8 +26,3 @@ export type CastingFiltersQS = BasePersonSearchFiltersQS & {
   castingModalityIds?: string[];
   locationText?: string;
 };
-
-/* ======================
-   Export & DeepNullable
-   ====================== */
-export type CastingRolePublicCardResponse = BaseCastingRolePublicCard;

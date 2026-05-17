@@ -25,7 +25,7 @@ const CastingDetailsPage = () => {
 
   const casting = publicQuery.data.casting;
   const alreadyApplied = Boolean(publicQuery.data.alreadyApplied);
-  const selectedRole = (casting.roles ?? []).find((role) => role.id === roleId) ?? null;
+  const selectedRole = casting.roles?.[0] ?? null;
   const requirements: CastingRequirement[] = toRequirements(selectedRole);
   const employerInfo = casting.employerInfo;
 

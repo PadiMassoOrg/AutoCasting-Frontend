@@ -1,6 +1,8 @@
 import { Button, Icon, SectionCard, Separator, TagChip } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { USER_MODE_TALENT, useUserMode } from '../../../context/UserModeContext';
+import { getAuthToken } from '../../../shared/lib/cookies';
 import {
   formatAgeRange,
   formatBooleanLabeled,
@@ -8,39 +10,34 @@ import {
   formatLocalDate,
   formatMemberSince,
 } from '../../../shared/utils/formatUtils';
-import type { CastingRoleResponse } from '../../employer/employer-castings/types/employerCastings.types';
-import type { PublicCastingDetailsResponse } from '../../public-casting/types/publicCasting.types';
 import { GENDER_INDISTINCT } from '../../sitemetadata/utils/siteMetadataUtils';
+import type { CastingCatalogDetailsResponse, CastingCatalogRole } from '../types/casting-database.types';
 
 type Props = {
-  data: PublicCastingDetailsResponse;
-  selectedRoleId: string;
+  data: CastingCatalogDetailsResponse;
 };
 
-const CastingCatalogDetailsPanel = ({ data, selectedRoleId }: Props) => {
+const CastingCatalogDetailsPanel = ({ data }: Props) => {
   const { t } = useTranslation();
+  const isAuth = getAuthToken();
+  const { mode } = useUserMode();
   const casting = data.casting;
+  const isApplyEnabled = Boolean(isAuth) && mode === USER_MODE_TALENT && !data.alreadyApplied;
 
   const {
-    defaultCode,
-    castingStatus,
     employerInfo,
-    title,
     projectType,
     castingModality,
     locationText,
     applicationDeadline,
-    hasWardrobeFitting,
     wardrobeFittingText,
     shootingEndDate,
     shootingStartDate,
     description,
     roles,
-    publishable,
-    modifiedAt,
   } = casting;
 
-  const role = roles.find((item) => item.id === selectedRoleId) ?? null;
+  const role = roles[0] ?? null;
   const roleTags = useMemo(() => buildRoleTags(role, t), [role, t]);
   const characteristicTags = useMemo(() => buildCharacteristicTags(role, t), [role, t]);
   const skillTags = useMemo(
@@ -68,7 +65,7 @@ const CastingCatalogDetailsPanel = ({ data, selectedRoleId }: Props) => {
       {/* Title + Apply */}
       <section className="flex flex-row items-center justify-between">
         <h2 className="text-2xl font-semibold">{role?.roleName}</h2>
-        <Button variant="primary" className="max-w-[230px]">
+        <Button variant="primary" className="max-w-[230px]" disabled={!isApplyEnabled}>
           {t('general.apply')}
         </Button>
       </section>
@@ -156,7 +153,9 @@ const CastingCatalogDetailsPanel = ({ data, selectedRoleId }: Props) => {
                 </span>
               </div>
               <div className="flex flex-row items-center justify-between">
-                <TagChip label={t(employerInfo.companyType?.stringCode!)} />
+                {employerInfo.companyType?.stringCode ? (
+                  <TagChip label={t(employerInfo.companyType.stringCode)} />
+                ) : null}
                 <span className="flex items-center gap-2">
                   <Icon name="profile" size={16} />
                   <p className="text-sm font-light">{formatMemberSince(employerInfo.memberSince, t)}</p>
@@ -183,7 +182,7 @@ const DetailTagSection = ({ title, tags }: { title: string; tags: Array<{ key: s
   );
 };
 
-const buildRoleTags = (role: CastingRoleResponse | null, t: (key: string) => string) => {
+const buildRoleTags = (role: CastingCatalogRole | null, t: (key: string) => string) => {
   if (!role) return [];
 
   const tags: Array<{ key: string; label: string }> = [];
@@ -214,7 +213,7 @@ const buildRoleTags = (role: CastingRoleResponse | null, t: (key: string) => str
   return tags;
 };
 
-const buildCharacteristicTags = (role: CastingRoleResponse | null, t: (key: string) => string) => {
+const buildCharacteristicTags = (role: CastingCatalogRole | null, t: (key: string) => string) => {
   if (!role) return [];
 
   const labels = [

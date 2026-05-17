@@ -49,13 +49,38 @@ const initialFilters: CastingFiltersQS = {
   locationText: undefined,
 };
 
+type CardsPaneHeaderProps = {
+  title: string;
+  filtersOpen: boolean;
+  onToggleFilters: () => void;
+  t: (key: string) => string;
+};
+
+function CardsPaneHeader({ title, filtersOpen, onToggleFilters, t }: CardsPaneHeaderProps) {
+  return (
+    <div className="sticky top-0 z-10 bg-(--color-secondary-white) pb-5">
+      <div className="flex items-center justify-between gap-4">
+        <h2 className="text-2xl font-semibold">{title}</h2>
+        <button
+          type="button"
+          className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-(--color-secondary-outline) bg-(--color-primary-white)"
+          onClick={onToggleFilters}
+          aria-label={filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
+          aria-pressed={filtersOpen}
+        >
+          <Icon name="filter" variant="primary" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 const CastingDatabasePage = () => {
   useViewportVhVar();
   const { t } = useTranslation(undefined, { useSuspense: false });
   const { header, footer } = useChromeBoxHeights();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
-  const pageViewportHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
-  const desktopFilterHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
+  const viewportHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
   const desktopPaneHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer + 48}px)`;
 
   const [filters, setFilters] = useState<CastingFiltersQS>(initialFilters);
@@ -133,20 +158,12 @@ const CastingDatabasePage = () => {
     if (desktopListingQuery.isLoading && !desktopListingQuery.data) {
       return (
         <div className="flex min-h-full w-full flex-col">
-          <div className="sticky top-0 z-10 bg-(--color-secondary-white) pb-5">
-            <div className="flex items-center justify-between gap-4">
-              <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
-              <button
-                type="button"
-                className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-(--color-secondary-outline) bg-(--color-primary-white)"
-                onClick={() => setFiltersOpen((value) => !value)}
-                aria-label={filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
-                aria-pressed={filtersOpen}
-              >
-                <Icon name="filter" variant="primary" />
-              </button>
-            </div>
-          </div>
+          <CardsPaneHeader
+            title={t('casting-database.page.title')}
+            filtersOpen={filtersOpen}
+            onToggleFilters={() => setFiltersOpen((value) => !value)}
+            t={t}
+          />
 
           <div className="flex flex-col gap-5 pb-4">
             {Array.from({ length: PAGE_SIZE }).map((_, index) => (
@@ -172,20 +189,12 @@ const CastingDatabasePage = () => {
 
     return (
       <div className="flex min-h-full w-full flex-col">
-        <div className="sticky top-0 z-10 bg-(--color-secondary-white) pb-5">
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
-            <button
-              type="button"
-              className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-(--color-secondary-outline) bg-(--color-primary-white)"
-              onClick={() => setFiltersOpen((value) => !value)}
-              aria-label={filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
-              aria-pressed={filtersOpen}
-            >
-              <Icon name="filter" variant="primary" />
-            </button>
-          </div>
-        </div>
+        <CardsPaneHeader
+          title={t('casting-database.page.title')}
+          filtersOpen={filtersOpen}
+          onToggleFilters={() => setFiltersOpen((value) => !value)}
+          t={t}
+        />
 
         <div className="flex flex-col gap-5 pb-5">
           {items.map((item) => (
@@ -250,20 +259,20 @@ const CastingDatabasePage = () => {
       return null;
     }
 
-    return <CastingCatalogDetailsPanel data={detailsQuery.data} selectedRoleId={selectedItem.id} />;
+    return <CastingCatalogDetailsPanel data={detailsQuery.data} />;
   }, [detailsQuery.data, detailsQuery.error, detailsQuery.isLoading, selectedItem, t]);
 
   return (
     <section
       className="w-full min-h-0 overflow-hidden bg-(--color-secondary-white)"
-      style={{ height: pageViewportHeight, minHeight: pageViewportHeight, maxHeight: pageViewportHeight }}
+      style={{ height: viewportHeight, minHeight: viewportHeight, maxHeight: viewportHeight }}
     >
       <div className="h-full w-full flex flex-col">
         <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0">
           {isDesktop && filtersOpen ? (
             <aside
               className="hidden self-stretch border-r border-(--color-secondary-outline) bg-(--color-primary-white) lg:flex lg:w-[330px] lg:flex-col lg:sticky lg:self-start"
-              style={{ top: `${header}px`, height: desktopFilterHeight }}
+              style={{ top: `${header}px`, height: viewportHeight }}
             >
               <div className="h-full min-h-0 flex-1 overflow-y-auto overscroll-contain p-5">
                 <CastingFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
