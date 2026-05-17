@@ -95,26 +95,28 @@ const CastingCatalogDetailsPanel = ({ data, selectedRoleId }: Props) => {
         </article>
 
         {/* Description + Texts for Modality and Wardrobe */}
-        <article className="flex flex-col gap-8">
-          {description && (
-            <div className="flex flex-col gap-1">
-              <h3 className="text-sm font-semibold">{t('casting-database.detail.project_description')}</h3>
-              <p className="text-sm">{description}</p>
-            </div>
-          )}
-          {locationText && (
-            <div className="flex flex-col gap-1">
-              <h3 className="text-sm font-semibold">{t('casting-database.detail.casting_modality_on_site')}</h3>
-              <p>{locationText}</p>
-            </div>
-          )}
-          {wardrobeFittingText && (
-            <div className="flex flex-col gap-1">
-              <h3 className="text-sm font-semibold">{t('casting-database.detail.casting_wardrobe_fitting')}</h3>
-              <p>{wardrobeFittingText}</p>
-            </div>
-          )}
-        </article>
+        {(description || locationText || wardrobeFittingText) && (
+          <article className="flex flex-col gap-8">
+            {description && (
+              <div className="flex flex-col gap-1">
+                <h3 className="text-sm font-semibold">{t('casting-database.detail.project_description')}</h3>
+                <p className="text-sm">{description}</p>
+              </div>
+            )}
+            {locationText && (
+              <div className="flex flex-col gap-1">
+                <h3 className="text-sm font-semibold">{t('casting-database.detail.casting_modality_on_site')}</h3>
+                <p>{locationText}</p>
+              </div>
+            )}
+            {wardrobeFittingText && (
+              <div className="flex flex-col gap-1">
+                <h3 className="text-sm font-semibold">{t('casting-database.detail.casting_wardrobe_fitting')}</h3>
+                <p>{wardrobeFittingText}</p>
+              </div>
+            )}
+          </article>
+        )}
       </section>
 
       <Separator className="opacity-20 my-6" />
