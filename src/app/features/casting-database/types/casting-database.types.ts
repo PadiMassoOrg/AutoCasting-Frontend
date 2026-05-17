@@ -4,6 +4,7 @@ import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.t
 export type BaseCastingRolePublicCard = {
   id: string;
   name: string;
+  castingTitle: string;
   employerImageUrl: string;
   employerCompanyName: string;
   projectType: SiteMetadataObject;

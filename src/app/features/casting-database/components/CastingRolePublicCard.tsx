@@ -1,33 +1,29 @@
-import { Button, ChevronRight, TagChip, Separator } from 'autocasting-ui-library-padimasso';
+import { Icon, SectionCard, Separator, TagChip } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { useMedia, XL_SCREEN_SIZE } from 'autocasting-ui-library-padimasso';
-import { ROUTES } from '../../../shared/lib/routes';
-import { formatAgeRange } from '../../../shared/utils/formatUtils';
+import { formatAgeRange, formatLocalDate } from '../../../shared/utils/formatUtils';
 import { GENDER_INDISTINCT } from '../../sitemetadata/utils/siteMetadataUtils';
 import type { CastingRolePublicCardResponse } from '../types/casting-database.types';
 
 type Props = {
   item: CastingRolePublicCardResponse;
+  selected?: boolean;
+  onSelect?: (item: CastingRolePublicCardResponse) => void;
 };
 
-const CastingRolePublicCard = ({ item }: Props) => {
+const CastingRolePublicCard = ({ item, selected = false, onSelect }: Props) => {
   const { t } = useTranslation();
-  const isDesktop = useMedia(XL_SCREEN_SIZE);
 
   const {
-    id,
     name,
+    castingTitle,
     employerImageUrl,
-    employerCompanyName,
     projectType,
-    castingModality,
-    professions,
+    shootingStartDate,
+    shootingEndDate,
     roleType,
     gender,
     ageMin,
     ageMax,
-    defaultCode,
   } = item;
 
   const genderRenderer = (stringcode: string) => {
@@ -38,79 +34,59 @@ const CastingRolePublicCard = ({ item }: Props) => {
     );
   };
 
-  if (!isDesktop) {
-    return (
-      <article className="w-full rounded-xl border border-[var(--color-secondary-outline)] bg-white p-5 flex flex-col gap-3">
-        <div className="flex flex-col gap-1">
-          <div className="flex flex-row items-center justify-between">
-            <h2 className="text-lg font-semibold">{name}</h2>
-          </div>
+  const cardClassName = ['cursor-pointer', selected && '!border-(--color-primary-purple)'].filter(Boolean).join(' ');
 
-          <div className="flex flex-row gap-1 items-center">
-            <img src={employerImageUrl} className="w-6 h-6 rounded-full object-cover"></img>
-            <p className="text-[var(--color-secondary-grey-fonts)] text-sm font-light">{employerCompanyName}</p>
-          </div>
-        </div>
+  const handleSelect = () => onSelect?.(item);
 
-        <div className="flex flex-row gap-1 items-center">
-          <TagChip label={t(projectType.stringCode)} />
-          <TagChip label={t(castingModality.stringCode)} />
-        </div>
-        <div className="flex flex-row gap-1 items-center flex-wrap">
-          {professions.slice(-3).map((p) => {
-            return <TagChip label={t(p.stringCode)} key={p.id} />;
-          })}
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    if (!onSelect) return;
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    onSelect(item);
+  };
 
-          <TagChip label={t(roleType.stringCode)} />
-          {genderRenderer(gender.stringCode)}
-          <TagChip label={formatAgeRange(ageMin, ageMax, t)} />
-        </div>
-        <Separator className="opacity-20"></Separator>
-        <Button asChild variant="primary">
-          <Link to={`${ROUTES.PUBLIC_CASTING}/${defaultCode}/roles/${id}`}>
-            {t('buttons.view_details')}
-            <ChevronRight />
-          </Link>
-        </Button>
-      </article>
-    );
-  }
-
-  if (isDesktop) {
-    return (
-      <article className="w-full rounded-xl border border-[var(--color-secondary-outline)] bg-white py-4 px-10 flex flex-col gap-4">
-        <div className="w-full flex flex-row justify-between items-start">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-lg font-semibold">{name}</h2>
-            <div className="flex flex-row gap-2 items-center">
-              <img src={employerImageUrl} className="w-6 h-6 rounded-full object-cover"></img>
-              <p className="text-[var(--color-secondary-grey-fonts)] text-sm font-light">{employerCompanyName}</p>
+  return (
+    <SectionCard
+      className={cardClassName}
+      onClick={handleSelect}
+      onKeyDown={handleKeyDown}
+      role={onSelect ? 'button' : undefined}
+      tabIndex={onSelect ? 0 : undefined}
+      aria-pressed={onSelect ? selected : undefined}
+    >
+      <div className="w-full flex flex-col">
+        {/* Upper Section */}
+        <article className="flex w-full items-start justify-between gap-3">
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            <img src={employerImageUrl} className="h-10 w-10 shrink-0 rounded-full object-cover"></img>
+            <div className="min-w-0 flex flex-1 flex-col">
+              <h2 className="truncate text-base font-semibold">{name}</h2>
+              <p className="truncate text-xs font-light text-(--color-secondary-grey-fonts)">{castingTitle}</p>
             </div>
           </div>
-          <div className="text-nowrap flex flex-row gap-1 items-center">
-            <TagChip label={t(projectType.stringCode)} />
-            <TagChip label={t(castingModality.stringCode)} />
+          <TagChip label={t(projectType.stringCode)} />
+        </article>
+
+        <Separator className="opacity-20 my-3"></Separator>
+
+        {/* Bottom Section */}
+        <article className="flex flex-col gap-2">
+          <div className="flex flex-row items-center gap-2">
+            <Icon name="calendar" variant="default" />
+            <p className="text-sm">{`${formatLocalDate(shootingStartDate, 'numeric')} - ${formatLocalDate(
+              shootingEndDate,
+              'numeric'
+            )}`}</p>
           </div>
-        </div>
-        <div className="flex flex-row items-end justify-between">
-          <div className="flex flex-row gap-1 items-center">
-            {professions.slice(-3).map((p) => {
-              return <TagChip label={t(p.stringCode)} key={p.id} />;
-            })}
-            <TagChip label={t(roleType.stringCode)} />
+          <div className="flex flex-row gap-1 items-center flex-wrap">
             {genderRenderer(gender.stringCode)}
+            <TagChip label={t(roleType.stringCode)} />
             <TagChip label={formatAgeRange(ageMin, ageMax, t)} />
           </div>
-          <Button asChild variant="primary" className="max-w-[180px]">
-            <Link to={`${ROUTES.PUBLIC_CASTING}/${defaultCode}/roles/${id}`}>
-              {t('buttons.view_details')}
-              <ChevronRight />
-            </Link>
-          </Button>
-        </div>
-      </article>
-    );
-  }
+        </article>
+      </div>
+    </SectionCard>
+  );
 };
 
 export default CastingRolePublicCard;

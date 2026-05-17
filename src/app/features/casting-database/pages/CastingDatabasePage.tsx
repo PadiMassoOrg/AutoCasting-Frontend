@@ -1,14 +1,29 @@
-import { Icon, Skeleton, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-library-padimasso';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  Icon,
+  LG_SCREEN_SIZE,
+  MasterDetailShell,
+  Skeleton,
+  useChromeBoxHeights,
+  useDebouncedValue,
+  useMedia,
+  useViewportVhVar,
+} from 'autocasting-ui-library-padimasso';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useChromeBoxHeights } from 'autocasting-ui-library-padimasso';
-import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
-import { CastingFilterBar, CastingMobileFiltersDrawer, CastingRolePublicCard } from '../components';
-import { getCastingDatabase } from '../services/castingDatabaseService';
+import ServerError from '../../../shared/components/ServerError/ServerError';
+import { usePublicCastingDetails } from '../../public-casting/hooks/usePublicCastingDetails';
+import {
+  CastingCatalogDetailsPanel,
+  CastingCatalogPagination,
+  CastingDatabaseMobileList,
+  CastingFilterBar,
+  CastingMobileFiltersDrawer,
+  CastingRolePublicCard,
+} from '../components';
+import { useCastingDatabasePage } from '../hooks/useCastingDatabasePage';
 import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';
 
-const MAX_AUTOFILL_PAGES = 6;
-const SCROLL_EPS = 8;
+const PAGE_SIZE = 5;
 
 const initialFilters: CastingFiltersQS = {
   roleName: '',
@@ -39,219 +54,221 @@ const CastingDatabasePage = () => {
   const { t } = useTranslation(undefined, { useSuspense: false });
   const { header, footer } = useChromeBoxHeights();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
-  const pageSize = isDesktop ? 6 : 3;
+  const pageViewportHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
   const desktopFilterHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
+  const desktopPaneHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer + 48}px)`;
 
   const [filters, setFilters] = useState<CastingFiltersQS>(initialFilters);
   const debouncedFilters = useDebouncedValue(filters, 350);
+  const [page, setPage] = useState(0);
+  const [selectedItem, setSelectedItem] = useState<CastingRolePublicCardResponse | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const firstRenderRef = useRef(true);
   useEffect(() => {
     firstRenderRef.current = false;
   }, []);
+
   const effectiveFilters = firstRenderRef.current ? filters : debouncedFilters;
 
-  const [items, setItems] = useState<CastingRolePublicCardResponse[]>([]);
-  const [page, setPage] = useState(0);
-  const [hasNext, setHasNext] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    setPage(0);
+  }, [effectiveFilters]);
 
-  const inflightRef = useRef<AbortController | null>(null);
-  const requestIdRef = useRef(0);
-  const fetchingNextRef = useRef(false);
+  const desktopListingQuery = useCastingDatabasePage({
+    page,
+    size: PAGE_SIZE,
+    filters: effectiveFilters,
+    enabled: isDesktop,
+  });
 
-  const sentinelRef = useRef<HTMLDivElement>(null);
+  const items = desktopListingQuery.data?.items ?? [];
+  const hasNext = Boolean(desktopListingQuery.data?.hasNext);
+  const totalCount = desktopListingQuery.data?.totalCount ?? null;
 
-  const fetchPage = useCallback(
-    async (p: number, replace = false) => {
-      if (fetchingNextRef.current) return;
-      fetchingNextRef.current = true;
-      setLoading(true);
-      if (replace) setError(null);
+  useEffect(() => {
+    if (!isDesktop) return;
+    if (items.length === 0) {
+      setSelectedItem(null);
+      return;
+    }
 
-      const thisReqId = ++requestIdRef.current;
-      const ctrl = new AbortController();
-      inflightRef.current = ctrl;
+    setSelectedItem((current) => {
+      if (!current) return items[0];
+      const sameItem = items.find((item) => item.id === current.id);
+      return sameItem ?? items[0];
+    });
+  }, [isDesktop, items]);
 
-      try {
-        const res = await getCastingDatabase(p, pageSize, effectiveFilters, { signal: ctrl.signal });
-        if (requestIdRef.current !== thisReqId) return;
-
-        const fresh = res.items ?? [];
-        setItems((prev) => (replace ? fresh : [...prev, ...fresh]));
-        setPage(res.page + 1);
-        setHasNext(!!res.hasNext);
-      } catch (e: any) {
-        if (e?.name === 'AbortError' || e?.name === 'CanceledError') {
-        } else {
-          setError('fetch_error');
-          setHasNext(false);
-        }
-      } finally {
-        if (inflightRef.current === ctrl) inflightRef.current = null;
-        fetchingNextRef.current = false;
-        setLoading(false);
-      }
+  const detailsQuery = usePublicCastingDetails(
+    {
+      slug: selectedItem?.defaultCode ?? '',
+      roleId: selectedItem?.id ?? '',
     },
-    [effectiveFilters, pageSize]
+    {
+      enabled: !!selectedItem,
+    }
   );
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'auto' });
-    inflightRef.current?.abort();
-    inflightRef.current = null;
-    setItems([]);
-    setPage(0);
-    setHasNext(true);
-    setError(null);
-    fetchPage(0, true);
-  }, [effectiveFilters, pageSize, fetchPage]);
+  const menu = useMemo(() => {
+    if (desktopListingQuery.isLoading && !desktopListingQuery.data) {
+      return (
+        <div className="flex min-h-full w-full flex-col">
+          <div className="sticky top-0 z-10 bg-(--color-secondary-white) pb-5">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
+              <button
+                type="button"
+                className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-(--color-secondary-outline) bg-(--color-primary-white)"
+                onClick={() => setFiltersOpen((value) => !value)}
+                aria-label={filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
+                aria-pressed={filtersOpen}
+              >
+                <Icon name="filter" variant="primary" />
+              </button>
+            </div>
+          </div>
 
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
+          <div className="flex flex-col gap-5 pb-4">
+            {Array.from({ length: PAGE_SIZE }).map((_, index) => (
+              <Skeleton
+                key={`casting-card-skeleton-${index}`}
+                className="h-[176px] w-full max-w-[390px] rounded-[24px]"
+              />
+            ))}
+          </div>
+        </div>
+      );
+    }
 
-  useEffect(() => {
-    const target = sentinelRef.current;
-    if (!target) return;
+    if (desktopListingQuery.error) {
+      return <p className="py-10 text-center font-normal text-(--color-alert-error)">{t('state.server_err')}</p>;
+    }
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (!entry.isIntersecting) return;
-        if (!hasNext || loading || fetchingNextRef.current || error) return;
-        fetchPage(page, false);
-      },
-      { root: null, rootMargin: '600px 0px 800px 0px', threshold: 0 }
+    if (items.length === 0) {
+      return (
+        <p className="py-10 text-center font-light text-(--color-secondary-grey-fonts)">{t('state.no_results')}</p>
+      );
+    }
+
+    return (
+      <div className="flex min-h-full w-full flex-col">
+        <div className="sticky top-0 z-10 bg-(--color-secondary-white) pb-5">
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
+            <button
+              type="button"
+              className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-(--color-secondary-outline) bg-(--color-primary-white)"
+              onClick={() => setFiltersOpen((value) => !value)}
+              aria-label={filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
+              aria-pressed={filtersOpen}
+            >
+              <Icon name="filter" variant="primary" />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-5 pb-5">
+          {items.map((item) => (
+            <CastingRolePublicCard
+              key={item.id}
+              item={item}
+              selected={item.id === selectedItem?.id}
+              onSelect={setSelectedItem}
+            />
+          ))}
+        </div>
+
+        <div className="mt-auto w-full pt-2">
+          <CastingCatalogPagination
+            page={page}
+            size={PAGE_SIZE}
+            hasNext={hasNext}
+            totalCount={totalCount}
+            onPageChange={setPage}
+          />
+        </div>
+      </div>
     );
+  }, [
+    hasNext,
+    items,
+    desktopListingQuery.data,
+    desktopListingQuery.error,
+    desktopListingQuery.isLoading,
+    filtersOpen,
+    page,
+    selectedItem?.id,
+    t,
+    totalCount,
+  ]);
 
-    io.observe(target);
-    return () => io.disconnect();
-  }, [hasNext, loading, page, fetchPage, error]);
+  const content = useMemo(() => {
+    if (!selectedItem) {
+      return (
+        <div className="flex h-full items-center justify-center p-8">
+          <p className="text-center font-light text-(--color-secondary-grey-fonts)">{t('state.no_results')}</p>
+        </div>
+      );
+    }
 
-  useEffect(() => {
-    if (error) return;
+    if (detailsQuery.isLoading && !detailsQuery.data) {
+      return (
+        <div className="flex flex-col gap-5 p-6 lg:p-8">
+          <Skeleton className="h-12 w-2/5 rounded-xl" />
+          <Skeleton className="h-8 w-40 rounded-xl" />
+          <Skeleton className="h-48 w-full rounded-xl" />
+          <Skeleton className="h-32 w-full rounded-xl" />
+        </div>
+      );
+    }
 
-    let cancelled = false;
-    (async () => {
-      let tries = 0;
-      if (items.length === 0 && loading) return;
+    if (detailsQuery.error) {
+      return <ServerError />;
+    }
 
-      const root = (document.scrollingElement || document.documentElement) as HTMLElement;
-      while (
-        !cancelled &&
-        hasNext &&
-        root.scrollHeight <= root.clientHeight + SCROLL_EPS &&
-        tries < MAX_AUTOFILL_PAGES
-      ) {
-        tries += 1;
-        await fetchPage(page, false);
-        await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
-      }
-    })();
+    if (!detailsQuery.data) {
+      return null;
+    }
 
-    return () => {
-      cancelled = true;
-    };
-  }, [items.length, hasNext, loading, fetchPage, page, error]);
-
-  useEffect(() => {
-    const onVis = () => {
-      if (document.hidden || error) return;
-      inflightRef.current?.abort();
-      setItems([]);
-      setPage(0);
-      setHasNext(true);
-      setError(null);
-      fetchPage(0, true);
-    };
-    document.addEventListener('visibilitychange', onVis);
-    return () => document.removeEventListener('visibilitychange', onVis);
-  }, [fetchPage, error]);
-
-  const showInitialSkeletons = items.length === 0 && loading && !error;
-  const showEmptyState = !loading && !error && items.length === 0;
-  const isFetchingNextPage = items.length > 0 && loading;
+    return <CastingCatalogDetailsPanel data={detailsQuery.data} selectedRoleId={selectedItem.id} />;
+  }, [detailsQuery.data, detailsQuery.error, detailsQuery.isLoading, selectedItem, t]);
 
   return (
-    <section className="w-full h-full min-h-0 bg-(--color-secondary-white)">
+    <section
+      className="w-full min-h-0 overflow-hidden bg-(--color-secondary-white)"
+      style={{ height: pageViewportHeight, minHeight: pageViewportHeight, maxHeight: pageViewportHeight }}
+    >
       <div className="h-full w-full flex flex-col">
-        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0 lg:overflow-visible">
-          {isDesktop && filtersOpen && (
+        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0">
+          {isDesktop && filtersOpen ? (
             <aside
-              className="hidden lg:flex lg:flex-col lg:w-[330px] self-stretch bg-(--color-primary-white) border-r border-(--color-secondary-outline) lg:sticky lg:self-start"
+              className="hidden self-stretch border-r border-(--color-secondary-outline) bg-(--color-primary-white) lg:flex lg:w-[330px] lg:flex-col lg:sticky lg:self-start"
               style={{ top: `${header}px`, height: desktopFilterHeight }}
             >
-              <div className="flex-1 h-full min-h-0 overflow-y-auto overscroll-contain p-5">
+              <div className="h-full min-h-0 flex-1 overflow-y-auto overscroll-contain p-5">
                 <CastingFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
               </div>
             </aside>
-          )}
+          ) : null}
 
           <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[40px] lg:py-[24px]">
-            <div className="w-full max-w-[1500px] mx-auto flex-1 min-h-0 h-full">
-              <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
-                <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
-                <button
-                  type="button"
-                  className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
-                  onClick={() => setMobileOpen(true)}
-                  aria-label={t('general.filters.open')}
-                >
-                  <span className="w-12 h-12 flex items-center justify-center bg-(--color-primary-white) rounded-lg">
-                    <Icon name="filter" variant="primary" size={20} />
-                  </span>
-                </button>
-              </article>
-
-              <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
-                <button
-                  type="button"
-                  className="cursor-pointer inline-flex items-center gap-3"
-                  onClick={() => setFiltersOpen((v) => !v)}
-                  aria-pressed={filtersOpen}
-                >
-                  <h2 className="text-sm font-light hover:text-(--color-primary-purple)">
-                    {filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
-                  </h2>
-                  <span className="w-11 h-11 flex items-center justify-center bg-(--color-primary-white) rounded-lg">
-                    <Icon name="filter" variant="primary" />
-                  </span>
-                </button>
-              </div>
-
-              {error ? (
-                <p className="py-18 text-center font-normal text-(--color-alert-error)">{t('state.server_err')}</p>
+            <div className="mx-auto flex w-full max-w-[1500px] flex-1 min-h-0 h-full flex-col gap-6">
+              {isDesktop ? (
+                <MasterDetailShell
+                  menu={menu}
+                  content={content}
+                  rootClassName="w-full h-full min-h-0 bg-transparent"
+                  menuPaneWidthClassName="lg:w-[390px]"
+                  menuPaneClassName="border-0 bg-transparent rounded-none"
+                  menuContentClassName="scrollbar-hide"
+                  contentPaneClassName="rounded-[24px]"
+                  desktopPaneHeight={desktopPaneHeight}
+                />
               ) : (
                 <>
-                  <article className="flex flex-col gap-6">
-                    {showInitialSkeletons &&
-                      Array.from({ length: pageSize }).map((_, i) => (
-                        <div key={`casting-skeleton-${i}`} className="w-full">
-                          <Skeleton className={`w-full ${isDesktop ? 'h-[176px]' : 'h-[228px]'} rounded-xl`} />
-                        </div>
-                      ))}
-
-                    {items.map((it) => (
-                      <div key={it.id} className="w-full">
-                        <CastingRolePublicCard item={it} />
-                      </div>
-                    ))}
-
-                    <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
-                  </article>
-
-                  {showEmptyState && (
-                    <p className="py-18 text-center font-light text-(--color-secondary-grey)">
-                      {t('state.no_results')}
-                    </p>
-                  )}
-                  {isFetchingNextPage && (
-                    <p className="py-10 text-center font-light text-(--color-secondary-grey)" aria-live="polite">
-                      {t('state.loading')}
-                    </p>
-                  )}
+                  <CastingDatabaseMobileList filters={effectiveFilters} onOpenFilters={() => setMobileOpen(true)} />
                 </>
               )}
             </div>
