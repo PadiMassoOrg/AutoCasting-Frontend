@@ -3,6 +3,7 @@ import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.t
 export type {
   PublicCastingDetailsResponse as CastingCatalogDetailsResponse,
   PublicCastingRole as CastingCatalogRole,
+  CastingRequirement,
 } from '../../public-casting/types/publicCasting.types';
 
 export type CastingRolePublicCardResponse = {

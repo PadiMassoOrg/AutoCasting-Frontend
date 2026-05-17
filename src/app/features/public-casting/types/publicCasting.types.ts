@@ -47,6 +47,7 @@ export type PublicCastingRole = {
 
 export type PublicCastingData = {
   employerInfo: PublicCastingEmployerInfo;
+  slug: string;
   title: string;
   projectType: SiteMetadataObject;
   castingModality: SiteMetadataObject;
