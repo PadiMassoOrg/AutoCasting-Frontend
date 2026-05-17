@@ -6,13 +6,9 @@ export type BaseCastingRolePublicCard = {
   name: string;
   castingTitle: string;
   employerImageUrl: string;
-  employerCompanyName: string;
   projectType: SiteMetadataObject;
-  castingModality: SiteMetadataObject;
-  location: string;
   shootingStartDate: string;
   shootingEndDate: string;
-  professions: SiteMetadataObject[];
   roleType: SiteMetadataObject;
   gender: SiteMetadataObject;
   ageMin: number;

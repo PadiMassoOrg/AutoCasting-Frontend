@@ -23,7 +23,7 @@ import {
 import { useCastingDatabasePage } from '../hooks/useCastingDatabasePage';
 import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 8;
 
 const initialFilters: CastingFiltersQS = {
   roleName: '',
@@ -64,6 +64,7 @@ const CastingDatabasePage = () => {
   const [selectedItem, setSelectedItem] = useState<CastingRolePublicCardResponse | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const menuScrollRef = useRef<HTMLDivElement>(null);
 
   const firstRenderRef = useRef(true);
   useEffect(() => {
@@ -75,6 +76,23 @@ const CastingDatabasePage = () => {
   useEffect(() => {
     setPage(0);
   }, [effectiveFilters]);
+
+  const scrollCardsToTop = () => {
+    menuScrollRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+    if (menuScrollRef.current) {
+      menuScrollRef.current.scrollTop = 0;
+    }
+
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  };
+
+  const handleDesktopPageChange = (nextPage: number) => {
+    scrollCardsToTop();
+    requestAnimationFrame(() => scrollCardsToTop());
+    setPage(nextPage);
+  };
 
   const desktopListingQuery = useCastingDatabasePage({
     page,
@@ -186,7 +204,7 @@ const CastingDatabasePage = () => {
             size={PAGE_SIZE}
             hasNext={hasNext}
             totalCount={totalCount}
-            onPageChange={setPage}
+            onPageChange={handleDesktopPageChange}
           />
         </div>
       </div>
@@ -263,6 +281,7 @@ const CastingDatabasePage = () => {
                   menuPaneWidthClassName="lg:w-[390px]"
                   menuPaneClassName="border-0 bg-transparent rounded-none"
                   menuContentClassName="scrollbar-hide"
+                  menuContentRef={menuScrollRef}
                   contentPaneClassName="rounded-[24px]"
                   desktopPaneHeight={desktopPaneHeight}
                 />
