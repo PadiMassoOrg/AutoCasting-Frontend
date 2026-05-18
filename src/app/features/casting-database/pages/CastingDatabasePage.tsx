@@ -2,6 +2,7 @@ import {
   Icon,
   LG_SCREEN_SIZE,
   MasterDetailShell,
+  Separator,
   Skeleton,
   useChromeBoxHeights,
   useDebouncedValue,
@@ -196,7 +197,7 @@ const CastingDatabasePage = () => {
           t={t}
         />
 
-        <div className="flex flex-col gap-5 pb-5">
+        <div className="flex flex-col gap-3">
           {items.map((item) => (
             <CastingRolePublicCard
               key={item.id}
@@ -206,16 +207,14 @@ const CastingDatabasePage = () => {
             />
           ))}
         </div>
-
-        <div className="mt-auto w-full pt-2">
-          <CastingCatalogPagination
-            page={page}
-            size={PAGE_SIZE}
-            hasNext={hasNext}
-            totalCount={totalCount}
-            onPageChange={handleDesktopPageChange}
-          />
-        </div>
+        <Separator className="opacity-0 my-2" />
+        <CastingCatalogPagination
+          page={page}
+          size={PAGE_SIZE}
+          hasNext={hasNext}
+          totalCount={totalCount}
+          onPageChange={handleDesktopPageChange}
+        />
       </div>
     );
   }, [

@@ -137,6 +137,14 @@
     },
     "group": {
       "byRole": "Separar por roles"
+    },
+    "pagination": {
+      "page": "Página",
+      "of": "de",
+      "first_page": "Primera página",
+      "previous_page": "Página anterior",
+      "next_page": "Página siguiente",
+      "last_page": "Última página"
     }
   },
   "validation": {
@@ -530,16 +538,16 @@
       "completed": "Completado"
     },
     "project_type": {
-      "digital_content": "Contenido digital / RRSS",
+      "digital_content": "Contenido Digital",
       "short_film": "Cortometraje",
       "documentary": "Documental",
       "feature_film": "Largometraje",
       "musical": "Musical",
-      "theatre_play": "Obra teatral",
-      "student_project": "Proyecto estudiantil / Universitario",
+      "theatre_play": "Teatral",
+      "student_project": "Estudiantil",
       "commercial": "Publicidad",
       "music_video": "Videoclip",
-      "other": "Otro"
+      "other": "Otros"
     },
     "casting_modality": {
       "casting": "Casting",
