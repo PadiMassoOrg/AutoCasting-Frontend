@@ -3,12 +3,13 @@ import {
   FilterSection,
   FormInputField,
   FormSelectField,
+  LG_SCREEN_SIZE,
   MultiSelectDropdown,
   Separator,
+  useMedia,
 } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { useCommittedInt } from '../../../shared/utils/formUtils';
 import {
   useCachedSiteMetadataOption,
@@ -36,11 +37,7 @@ export function CastingFilterBar({
   const genderOptionsRaw = useCachedSiteMetadataSlice('genderOptions');
   const ethnicityOptions = useCachedSiteMetadataOption('ethnicityOptions', t);
   const professionsRaw = useCachedSiteMetadataSlice('professions');
-  const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
-  const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye_color');
   const skillsRaw = useCachedSiteMetadataSlice('skills');
-  const projectTypesRaw = useCachedSiteMetadataSlice('projectTypeOptions');
-
   const visibleGenderOptions = useMemo(() => getTalentVisibleGenderOptions(genderOptionsRaw), [genderOptionsRaw]);
 
   const genderOptions = useMemo(
@@ -199,18 +196,6 @@ export function CastingFilterBar({
           }}
         />
 
-        <FormSelectField
-          id="ethnicityId"
-          label={t('profile.characteristics.ethnicity')}
-          labelClassName="font-semibold text-base"
-          options={ethnicityOptionsWithUnspecified}
-          value={(value.ethnicityIds && value.ethnicityIds[0]) ?? 'NULL'}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-            const v = e.target.value;
-            onChange({ ...value, ethnicityIds: v ? [v] : undefined });
-          }}
-        />
-
         <div>
           <h2 className="text-sm font-semibold mb-2">{t('talent.filter.basic_info.profession')}</h2>
           <MultiSelectDropdown
@@ -219,19 +204,6 @@ export function CastingFilterBar({
             getLabel={(p) => t(p.stringCode)}
             selected={value.professionId ?? []}
             onChange={(next) => onChange({ ...value, professionId: next.length ? next : undefined })}
-            maxPanelHeight="16rem"
-            forwardScrollToRef={forwardScrollToRef}
-          />
-        </div>
-
-        <div>
-          <h2 className="text-sm font-semibold mb-2">{t('casting.basic_info.project_type')}</h2>
-          <MultiSelectDropdown
-            options={projectTypesRaw ?? []}
-            getId={(p) => p.id}
-            getLabel={(p) => t(p.stringCode)}
-            selected={value.projectTypeIds ?? []}
-            onChange={(next) => onChange({ ...value, projectTypeIds: next.length ? next : undefined })}
             maxPanelHeight="16rem"
             forwardScrollToRef={forwardScrollToRef}
           />
@@ -269,31 +241,17 @@ export function CastingFilterBar({
           </div>
         </article>
 
-        <div>
-          <h2 className="text-sm font-semibold mb-2">{t('profile.characteristics.hairColor')}</h2>
-          <MultiSelectDropdown
-            options={hairOptions ?? []}
-            getId={(o) => o.value}
-            getLabel={(o) => o.label}
-            selected={value.hairColorIds ?? []}
-            onChange={(next) => onChange({ ...value, hairColorIds: next.length ? next : undefined })}
-            maxPanelHeight="16rem"
-            forwardScrollToRef={forwardScrollToRef}
-          />
-        </div>
-
-        <div>
-          <h2 className="text-sm font-semibold mb-2">{t('profile.characteristics.eyeColor')}</h2>
-          <MultiSelectDropdown
-            options={eyeOptions ?? []}
-            getId={(o) => o.value}
-            getLabel={(o) => o.label}
-            selected={value.eyeColorIds ?? []}
-            onChange={(next) => onChange({ ...value, eyeColorIds: next.length ? next : undefined })}
-            maxPanelHeight="16rem"
-            forwardScrollToRef={forwardScrollToRef}
-          />
-        </div>
+        <FormSelectField
+          id="ethnicityId"
+          label={t('profile.characteristics.ethnicity')}
+          labelClassName="font-semibold text-base"
+          options={ethnicityOptionsWithUnspecified}
+          value={(value.ethnicityIds && value.ethnicityIds[0]) ?? 'NULL'}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            const v = e.target.value;
+            onChange({ ...value, ethnicityIds: v ? [v] : undefined });
+          }}
+        />
 
         <div className="grid grid-cols-1">
           <BooleanRadioGroup
