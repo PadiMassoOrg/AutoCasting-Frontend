@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { usePublicCastingDetails } from '../../public-casting/hooks/usePublicCastingDetails';
 import {
+  CastingCatalogDetailsApplyAction,
   CastingCatalogDetailsPanel,
   CastingCatalogPagination,
   CastingDatabaseMobileList,
@@ -285,6 +286,19 @@ const CastingDatabasePage = () => {
                 <MasterDetailShell
                   menu={menu}
                   content={content}
+                  contentHeader={
+                    detailsQuery.data ? (
+                      <div className="flex min-w-0 flex-col">
+                        <h2 className="text-xl font-semibold">{detailsQuery.data.casting.roles[0]?.roleName}</h2>
+                        <p className="text-sm font-light text-(--color-secondary-grey-fonts)">
+                          {detailsQuery.data.casting.title}
+                        </p>
+                      </div>
+                    ) : undefined
+                  }
+                  contentActions={
+                    detailsQuery.data ? <CastingCatalogDetailsApplyAction data={detailsQuery.data} /> : undefined
+                  }
                   menuContentRef={menuScrollRef}
                   desktopPaneHeight={desktopPaneHeight}
                 />

@@ -1,11 +1,6 @@
-import { Button, Icon, SectionCard, Separator, TagChip } from 'autocasting-ui-library-padimasso';
+import { Icon, SectionCard, Separator, TagChip } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { useModal } from '../../../context/ModalContext';
-import { USER_MODE_TALENT, useUserMode } from '../../../context/UserModeContext';
-import { getAuthToken } from '../../../shared/lib/cookies';
-import { ROUTES } from '../../../shared/lib/routes';
 import { CastingModalityTagChip, ProjectTypeTagChip } from '../../../shared/components/Chip';
 import {
   formatAgeRange,
@@ -14,16 +9,8 @@ import {
   formatLocalDate,
   formatMemberSince,
 } from '../../../shared/utils/formatUtils';
-import CastingApplicationConfirmationModal from '../../public-casting/components/Form/CastingApplicationConfirmationModal';
-import CastingApplicationRequirementsModal from '../../public-casting/components/Form/CastingApplicationRequirementsModal';
-import { useCastingApplicationMutation } from '../../public-casting/hooks/useCastingApplicationMutation';
-import type { CastingApplicationRequest } from '../../public-casting/types/requests';
 import { GENDER_INDISTINCT } from '../../sitemetadata/utils/siteMetadataUtils';
-import type {
-  CastingCatalogDetailsResponse,
-  CastingCatalogRole,
-  CastingRequirement,
-} from '../types/casting-database.types';
+import type { CastingCatalogDetailsResponse, CastingCatalogRole } from '../types/casting-database.types';
 
 type Props = {
   data: CastingCatalogDetailsResponse;
@@ -31,17 +18,10 @@ type Props = {
 
 const CastingCatalogDetailsPanel = ({ data }: Props) => {
   const { t } = useTranslation();
-  const isAuth = getAuthToken();
-  const { mode } = useUserMode();
-  const navigate = useNavigate();
-  const { openModal, closeModal } = useModal();
-  const apply = useCastingApplicationMutation();
   const casting = data.casting;
-  const isApplyEnabled = Boolean(isAuth) && mode === USER_MODE_TALENT && !data.alreadyApplied;
 
   const {
     employerInfo,
-    slug,
     projectType,
     castingModality,
     locationText,
@@ -54,7 +34,6 @@ const CastingCatalogDetailsPanel = ({ data }: Props) => {
   } = casting;
 
   const role = roles[0] ?? null;
-  const requirements = toRequirements(role);
   const roleTags = useMemo(() => buildRoleTags(role, t), [role, t]);
   const characteristicTags = useMemo(() => buildCharacteristicTags(role, t), [role, t]);
   const skillTags = useMemo(
@@ -77,85 +56,8 @@ const CastingCatalogDetailsPanel = ({ data }: Props) => {
   const finalAmountAndCurrencyLabel =
     amountLabel && payRateLabel ? `${amountLabel} (${payRateLabel})` : amountLabel || payRateLabel || '';
 
-  const handleConfirmation = () => {
-    closeModal();
-    navigate(ROUTES.CASTING_DATABASE);
-  };
-
-  const openConfirmationModal = () => {
-    openModal(
-      <CastingApplicationConfirmationModal onConfirm={handleConfirmation} />,
-      t('application.confirmation_modal.title'),
-      'lg'
-    );
-  };
-
-  const callBackendDirect = () => {
-    if (!role?.id) return;
-
-    apply.mutate(
-      { roleId: role.id, slug },
-      {
-        onSuccess: () => {
-          openConfirmationModal();
-        },
-      }
-    );
-  };
-
-  const callBackendWithBody = (body: CastingApplicationRequest) => {
-    if (!role?.id) return;
-
-    apply.mutate(
-      { roleId: role.id, slug, request: body },
-      {
-        onSuccess: () => {
-          closeModal();
-          openConfirmationModal();
-        },
-      }
-    );
-  };
-
-  const onClickApply = () => {
-    if (!isApplyEnabled) return;
-    if (!role?.id) return;
-    if (apply.isPending) return;
-
-    if (requirements.length === 0) {
-      callBackendDirect();
-      return;
-    }
-
-    openModal(
-      <CastingApplicationRequirementsModal
-        requirements={requirements}
-        onCancel={closeModal}
-        onApply={callBackendWithBody}
-      />,
-      t('application.modal.title'),
-      'lg'
-    );
-  };
-
   return (
     <>
-      {/* Title + Apply */}
-      <section className="flex flex-row items-center justify-between">
-        <h2 className="text-2xl font-semibold">{role?.roleName}</h2>
-        <Button
-          variant="primary"
-          className="max-w-[230px]"
-          disabled={!isApplyEnabled}
-          loading={apply.isPending}
-          onClick={onClickApply}
-        >
-          {t('general.apply')}
-        </Button>
-      </section>
-
-      <Separator className="opacity-20 my-6" />
-
       <section className="flex flex-col gap-10">
         {/* Project Type + Modality + Deadline + Shooting Dates */}
         <article className="flex flex-col gap-4">
@@ -308,21 +210,6 @@ const buildCharacteristicTags = (role: CastingCatalogRole | null, t: (key: strin
   ].filter((value): value is string => Boolean(value));
 
   return labels.map((label, index) => ({ key: `characteristic-${index}`, label }));
-};
-
-const toRequirements = (role: CastingCatalogRole | null): CastingRequirement[] => {
-  if (!role?.id) return [];
-  if (!role.requiresAudio && !role.requiresVideo) return [];
-
-  return [
-    {
-      id: role.id,
-      roleId: role.id,
-      description: role.requirementDescription ?? '',
-      requiresAudio: role.requiresAudio,
-      requiresVideo: role.requiresVideo,
-    },
-  ];
 };
 
 export default CastingCatalogDetailsPanel;

@@ -988,6 +988,7 @@
     }
   },
   "applications": {
+    "already_applied_cta": "Postulacion enviada",
     "already_applied": "No puedes aplicar dos veces al mismo casting.",
     "audio_required": "Debes compartir un link de audio para completar la postulación.",
     "id_required": "Debes proporcionar un applicationId.",
