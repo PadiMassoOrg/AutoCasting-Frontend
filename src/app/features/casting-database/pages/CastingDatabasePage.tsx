@@ -11,11 +11,11 @@ import {
 } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { CastingDetailsDesktopBody } from '../../../shared/components/CastingDetails';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { usePublicCastingDetails } from '../../public-casting/hooks/usePublicCastingDetails';
 import {
   CastingCatalogDetailsApplyAction,
-  CastingCatalogDetailsPanel,
   CastingCatalogPagination,
   CastingDatabaseMobileList,
   CastingFilterBar,
@@ -259,7 +259,7 @@ const CastingDatabasePage = () => {
       return null;
     }
 
-    return <CastingCatalogDetailsPanel data={detailsQuery.data} />;
+    return <CastingDetailsDesktopBody casting={detailsQuery.data.casting} />;
   }, [detailsQuery.data, detailsQuery.error, detailsQuery.isLoading, selectedItem, t]);
 
   return (

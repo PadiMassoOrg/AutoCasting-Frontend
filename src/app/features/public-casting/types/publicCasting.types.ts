@@ -2,9 +2,9 @@ import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.t
 
 export type PublicCastingEmployerInfo = {
   id: string;
-  companyName: string | null;
+  companyName: string;
   companyType: SiteMetadataObject | null;
-  imageUrl: string | null;
+  imageUrl: string;
   socialMedia: {
     links: Array<{
       optionId: string;
