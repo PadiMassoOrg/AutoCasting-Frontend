@@ -973,10 +973,9 @@
   },
   "application": {
     "cta_title": "Aplicá como Talento",
-    "cta_text": "Al aplicar estás compartiendo tus Perfil con",
     "cta_auth_warning": "Este contenido solo está disponible para perfiles de talento. Iniciá sesión o creá tu cuenta para postularte a este casting.",
-    "cta_applied_warning": "Haz aplicado recientemente a este casting. Por favor, espera a que el equipo de casting revise tu postulación.",
-    "cta_multiple_applied_warning": "Ya te postulaste a algunos roles de este casting. Aún puedes postularte a los roles restantes.",
+    "cta_employer_warning": "Estás usando una cuenta de Empleador. Para aplicar a castings necesitás ingresar con un Perfil de Talento.",
+    "cta_switch_talent": "Cambiar a Talento",
     "modal": {
       "title": "Requerimientos",
       "video": "Video (Compartí tu link de YouTube, Vimeo, etc.)",
