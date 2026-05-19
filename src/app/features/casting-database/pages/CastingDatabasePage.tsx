@@ -285,12 +285,7 @@ const CastingDatabasePage = () => {
                 <MasterDetailShell
                   menu={menu}
                   content={content}
-                  rootClassName="w-full h-full min-h-0 bg-transparent"
-                  menuPaneWidthClassName="lg:w-[390px]"
-                  menuPaneClassName="border-0 bg-transparent rounded-none"
-                  menuContentClassName="scrollbar-hide"
                   menuContentRef={menuScrollRef}
-                  contentPaneClassName="rounded-[24px]"
                   desktopPaneHeight={desktopPaneHeight}
                 />
               ) : (
