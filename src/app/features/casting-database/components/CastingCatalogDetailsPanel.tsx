@@ -8,8 +8,10 @@ import {
   formatCurrencyAmount,
   formatLocalDate,
   formatMemberSince,
+  normalizeExternalUrl,
 } from '../../../shared/utils/formatUtils';
 import { GENDER_INDISTINCT } from '../../sitemetadata/utils/siteMetadataUtils';
+import { getSocialMediaIconName } from '../../talent/talent-profile-edit/components/Form/SocialMedia/SocialMediaIconMapper';
 import type { CastingCatalogDetailsResponse, CastingCatalogRole } from '../types/casting-database.types';
 
 type Props = {
@@ -52,9 +54,39 @@ const CastingCatalogDetailsPanel = ({ data }: Props) => {
   );
   const payRateLabelKey = role?.remuneration?.payRateType?.stringCode;
   const payRateLabel = payRateLabelKey ? t(payRateLabelKey) : '';
-
   const finalAmountAndCurrencyLabel =
     amountLabel && payRateLabel ? `${amountLabel} (${payRateLabel})` : amountLabel || payRateLabel || '';
+
+  const socialMediaItems =
+    employerInfo.socialMedia?.links
+      ?.filter((link: { url: string }) => !!link.url && link.url.trim().length > 0)
+      .map((link: { optionId: string; stringCode: string; url: string }) => {
+        const href = normalizeExternalUrl(link.url);
+        if (!href) return null;
+
+        const iconName = getSocialMediaIconName(link.stringCode);
+        if (!iconName) return null;
+
+        return (
+          <a key={link.optionId} href={href} target="_blank" rel="noopener noreferrer">
+            <Icon name={iconName} variant="default" size={16} />
+          </a>
+        );
+      })
+      .filter(Boolean) ?? [];
+
+  const websiteUrl = employerInfo.websiteUrl && (
+    <a href={employerInfo.websiteUrl} target="_blank" rel="noopener noreferrer">
+      <Icon name="web" variant="default" size={16} />
+    </a>
+  );
+
+  const allIcons = (
+    <div className="flex flex-row items-center gap-2 mb-1">
+      {websiteUrl}
+      {socialMediaItems}
+    </div>
+  );
 
   return (
     <>
@@ -139,9 +171,12 @@ const CastingCatalogDetailsPanel = ({ data }: Props) => {
                 </span>
               </div>
               <div className="flex flex-row items-center justify-between">
-                {employerInfo.companyType?.stringCode ? (
-                  <TagChip label={t(employerInfo.companyType.stringCode)} />
-                ) : null}
+                <span className="flex items-center gap-2">
+                  {employerInfo.companyType?.stringCode ? (
+                    <TagChip label={t(employerInfo.companyType.stringCode)} />
+                  ) : null}
+                  {allIcons}
+                </span>
                 <span className="flex items-center gap-2">
                   <Icon name="profile" size={16} />
                   <p className="text-sm font-light">{formatMemberSince(employerInfo.memberSince, t)}</p>
