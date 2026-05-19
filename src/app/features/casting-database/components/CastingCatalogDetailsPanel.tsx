@@ -6,6 +6,7 @@ import { useModal } from '../../../context/ModalContext';
 import { USER_MODE_TALENT, useUserMode } from '../../../context/UserModeContext';
 import { getAuthToken } from '../../../shared/lib/cookies';
 import { ROUTES } from '../../../shared/lib/routes';
+import { CastingModalityTagChip, ProjectTypeTagChip } from '../../../shared/components/Chip';
 import {
   formatAgeRange,
   formatBooleanLabeled,
@@ -160,8 +161,8 @@ const CastingCatalogDetailsPanel = ({ data }: Props) => {
         <article className="flex flex-col gap-4">
           <div className="flex flex-row items-center justify-between">
             <span className="flex flex-row gap-2 items-center">
-              <TagChip label={t(projectType.stringCode)} />
-              <TagChip label={t(castingModality.stringCode)} />
+              <ProjectTypeTagChip projectType={projectType} />
+              <CastingModalityTagChip castingModality={castingModality} />
             </span>
             <span className="flex items-center gap-2">
               <Icon name="clock" className="opacity-30" />

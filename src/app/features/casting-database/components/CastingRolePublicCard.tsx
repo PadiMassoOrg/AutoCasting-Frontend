@@ -1,5 +1,6 @@
 import { Icon, SectionCard, Separator, TagChip } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
+import { ProjectTypeTagChip } from '../../../shared/components/Chip';
 import { formatAgeRange, formatLocalDate } from '../../../shared/utils/formatUtils';
 import { GENDER_INDISTINCT } from '../../sitemetadata/utils/siteMetadataUtils';
 import type { CastingRolePublicCardResponse } from '../types/casting-database.types';
@@ -64,7 +65,7 @@ const CastingRolePublicCard = ({ item, selected = false, onSelect }: Props) => {
               <p className="truncate text-xs font-light text-(--color-secondary-grey-fonts)">{castingTitle}</p>
             </div>
           </div>
-          <TagChip label={t(projectType.stringCode)} />
+          <ProjectTypeTagChip projectType={projectType} />
         </article>
 
         <Separator className="opacity-20 my-3"></Separator>

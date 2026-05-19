@@ -56,6 +56,16 @@
     --casting-application-status-selected: #008856;
     --casting-application-status-not-proceeding: #ef0c0c;
     --casting-application-status-viewed: #a1a3b2;
+    --project-type-digital-content: #ff6b35;
+    --project-type-short-film: #f5b700;
+    --project-type-documentary: #2ead59;
+    --project-type-feature-film: #1e88e5;
+    --project-type-musical: #e91e63;
+    --project-type-theatre-play: #26a6ad;
+    --project-type-student-project: #26a69a;
+    --project-type-commercial: #ff8a00;
+    --project-type-music-video: #2962ff;
+    --project-type-other: #607d8b;
   }
 
   /* General */

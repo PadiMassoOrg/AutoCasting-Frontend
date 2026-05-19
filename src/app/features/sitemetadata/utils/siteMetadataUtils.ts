@@ -18,6 +18,18 @@ export const CASTING_APPLICATION_STATUS_SELECTED = 'sitemetadata.application_sta
 export const CASTING_APPLICATION_STATUS_NOT_PROCEEDING = 'sitemetadata.application_status.not_proceeding' as const;
 export const CASTING_APPLICATION_STATUS_VIEWED = 'sitemetadata.application_status.viewed' as const;
 
+// Project Type
+export const PROJECT_TYPE_DIGITAL_CONTENT = 'sitemetadata.project_type.digital_content' as const;
+export const PROJECT_TYPE_SHORT_FILM = 'sitemetadata.project_type.short_film' as const;
+export const PROJECT_TYPE_DOCUMENTARY = 'sitemetadata.project_type.documentary' as const;
+export const PROJECT_TYPE_FEATURE_FILM = 'sitemetadata.project_type.feature_film' as const;
+export const PROJECT_TYPE_MUSICAL = 'sitemetadata.project_type.musical' as const;
+export const PROJECT_TYPE_THEATRE_PLAY = 'sitemetadata.project_type.theatre_play' as const;
+export const PROJECT_TYPE_STUDENT_PROJECT = 'sitemetadata.project_type.student_project' as const;
+export const PROJECT_TYPE_COMMERCIAL = 'sitemetadata.project_type.commercial' as const;
+export const PROJECT_TYPE_MUSIC_VIDEO = 'sitemetadata.project_type.music_video' as const;
+export const PROJECT_TYPE_OTHER = 'sitemetadata.project_type.other' as const;
+
 // Gender
 export const GENDER_INDISTINCT = 'sitemetadata.gender.indistinct' as const;
 
@@ -62,6 +74,19 @@ export const CASTING_APPLICATION_STATUS_COLOR_VAR_BY_CODE: StatusColorMap = {
   [CASTING_APPLICATION_STATUS_SELECTED]: 'var(--casting-application-status-selected)',
   [CASTING_APPLICATION_STATUS_NOT_PROCEEDING]: 'var(--casting-application-status-not-proceeding)',
   [CASTING_APPLICATION_STATUS_VIEWED]: 'var(--casting-application-status-viewed)',
+};
+
+export const PROJECT_TYPE_COLOR_VAR_BY_CODE: StatusColorMap = {
+  [PROJECT_TYPE_DIGITAL_CONTENT]: 'var(--project-type-digital-content)',
+  [PROJECT_TYPE_SHORT_FILM]: 'var(--project-type-short-film)',
+  [PROJECT_TYPE_DOCUMENTARY]: 'var(--project-type-documentary)',
+  [PROJECT_TYPE_FEATURE_FILM]: 'var(--project-type-feature-film)',
+  [PROJECT_TYPE_MUSICAL]: 'var(--project-type-musical)',
+  [PROJECT_TYPE_THEATRE_PLAY]: 'var(--project-type-theatre-play)',
+  [PROJECT_TYPE_STUDENT_PROJECT]: 'var(--project-type-student-project)',
+  [PROJECT_TYPE_COMMERCIAL]: 'var(--project-type-commercial)',
+  [PROJECT_TYPE_MUSIC_VIDEO]: 'var(--project-type-music-video)',
+  [PROJECT_TYPE_OTHER]: 'var(--project-type-other)',
 };
 
 // ==========================================================
@@ -195,6 +220,11 @@ export function resolveCastingStatusColorVar(stringCode?: string | null): string
 export function resolveCastingApplicationStatusColorVar(stringCode?: string | null): string | null {
   if (!stringCode) return null;
   return CASTING_APPLICATION_STATUS_COLOR_VAR_BY_CODE[stringCode] ?? null;
+}
+
+export function resolveProjectTypeColorVar(stringCode?: string | null): string | null {
+  if (!stringCode) return null;
+  return PROJECT_TYPE_COLOR_VAR_BY_CODE[stringCode] ?? null;
 }
 
 export const normalizeCastingStatusForDisplay = (status?: SiteMetadataObject | null): SiteMetadataObject | null => {
