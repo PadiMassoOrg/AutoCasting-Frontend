@@ -116,7 +116,7 @@ export default function CastingCatalogDetailsApplyAction({ data }: Props) {
   return (
     <Button
       variant="primary"
-      className="w-fit"
+      className="w-fit max-w-[350px]"
       disabled={isAlreadyApplied}
       loading={apply.isPending}
       onClick={onClickApply}
