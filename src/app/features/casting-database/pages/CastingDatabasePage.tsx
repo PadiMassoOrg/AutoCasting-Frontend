@@ -12,6 +12,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CastingDetailsDesktopBody } from '../../../shared/components/CastingDetails';
+import { FiltersDrawerActionBar, FiltersDrawerShell } from '../../../shared/components/FiltersDrawer';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { usePublicCastingDetails } from '../../public-casting/hooks/usePublicCastingDetails';
 import {
@@ -77,6 +78,21 @@ function CardsPaneHeader({ title, filtersOpen, onToggleFilters, t }: CardsPaneHe
   );
 }
 
+function CardsPaneLayout({
+  title,
+  filtersOpen,
+  onToggleFilters,
+  t,
+  children,
+}: CardsPaneHeaderProps & { children: React.ReactNode }) {
+  return (
+    <div className="flex min-h-full w-full flex-col">
+      <CardsPaneHeader title={title} filtersOpen={filtersOpen} onToggleFilters={onToggleFilters} t={t} />
+      {children}
+    </div>
+  );
+}
+
 const CastingDatabasePage = () => {
   useViewportVhVar();
   const { t } = useTranslation(undefined, { useSuspense: false });
@@ -86,12 +102,19 @@ const CastingDatabasePage = () => {
   const desktopPaneHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer + 48}px)`;
 
   const [filters, setFilters] = useState<CastingFiltersQS>(initialFilters);
+  const [desktopDraftFilters, setDesktopDraftFilters] = useState<CastingFiltersQS>(initialFilters);
   const debouncedFilters = useDebouncedValue(filters, 350);
   const [page, setPage] = useState(0);
   const [selectedItem, setSelectedItem] = useState<CastingRolePublicCardResponse | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const menuScrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (filtersOpen) {
+      setDesktopDraftFilters(filters);
+    }
+  }, [filters, filtersOpen]);
 
   const firstRenderRef = useRef(true);
   useEffect(() => {
@@ -159,14 +182,12 @@ const CastingDatabasePage = () => {
   const menu = useMemo(() => {
     if (desktopListingQuery.isLoading && !desktopListingQuery.data) {
       return (
-        <div className="flex min-h-full w-full flex-col">
-          <CardsPaneHeader
-            title={t('casting-database.page.title')}
-            filtersOpen={filtersOpen}
-            onToggleFilters={() => setFiltersOpen((value) => !value)}
-            t={t}
-          />
-
+        <CardsPaneLayout
+          title={t('casting-database.page.title')}
+          filtersOpen={filtersOpen}
+          onToggleFilters={() => setFiltersOpen((value) => !value)}
+          t={t}
+        >
           <div className="flex flex-col gap-5 pb-4">
             {Array.from({ length: PAGE_SIZE }).map((_, index) => (
               <Skeleton
@@ -175,29 +196,43 @@ const CastingDatabasePage = () => {
               />
             ))}
           </div>
-        </div>
+        </CardsPaneLayout>
       );
     }
 
     if (desktopListingQuery.error) {
-      return <p className="py-10 text-center font-normal text-(--color-alert-error)">{t('state.server_err')}</p>;
-    }
-
-    if (items.length === 0) {
       return (
-        <p className="py-10 text-center font-light text-(--color-secondary-grey-fonts)">{t('state.no_results')}</p>
-      );
-    }
-
-    return (
-      <div className="flex min-h-full w-full flex-col">
-        <CardsPaneHeader
+        <CardsPaneLayout
           title={t('casting-database.page.title')}
           filtersOpen={filtersOpen}
           onToggleFilters={() => setFiltersOpen((value) => !value)}
           t={t}
-        />
+        >
+          <p className="py-10 text-center font-normal text-(--color-alert-error)">{t('state.server_err')}</p>
+        </CardsPaneLayout>
+      );
+    }
 
+    if (items.length === 0) {
+      return (
+        <CardsPaneLayout
+          title={t('casting-database.page.title')}
+          filtersOpen={filtersOpen}
+          onToggleFilters={() => setFiltersOpen((value) => !value)}
+          t={t}
+        >
+          <p className="py-10 text-center font-light text-(--color-secondary-grey-fonts)">{t('state.no_results')}</p>
+        </CardsPaneLayout>
+      );
+    }
+
+    return (
+      <CardsPaneLayout
+        title={t('casting-database.page.title')}
+        filtersOpen={filtersOpen}
+        onToggleFilters={() => setFiltersOpen((value) => !value)}
+        t={t}
+      >
         <div className="flex flex-col gap-3">
           {items.map((item) => (
             <CastingRolePublicCard
@@ -216,7 +251,7 @@ const CastingDatabasePage = () => {
           totalCount={totalCount}
           onPageChange={handleDesktopPageChange}
         />
-      </div>
+      </CardsPaneLayout>
     );
   }, [
     hasNext,
@@ -230,6 +265,29 @@ const CastingDatabasePage = () => {
     t,
     totalCount,
   ]);
+
+  const contentHeader = useMemo(() => {
+    if (detailsQuery.data) {
+      return (
+        <div className="flex min-w-0 flex-col">
+          <h2 className="text-xl font-semibold">{detailsQuery.data.casting.roles[0]?.roleName}</h2>
+          <p className="text-sm font-light text-(--color-secondary-grey-fonts)">{detailsQuery.data.casting.title}</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex min-w-0 flex-col">
+        <h2 className="text-xl font-semibold">{t('casting-database.page.title')}</h2>
+      </div>
+    );
+  }, [detailsQuery.data, t]);
+
+  const contentActions = useMemo(() => {
+    if (!detailsQuery.data) return undefined;
+
+    return <CastingCatalogDetailsApplyAction data={detailsQuery.data} />;
+  }, [detailsQuery.data]);
 
   const content = useMemo(() => {
     if (!selectedItem) {
@@ -269,36 +327,14 @@ const CastingDatabasePage = () => {
     >
       <div className="h-full w-full flex flex-col">
         <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0">
-          {isDesktop && filtersOpen ? (
-            <aside
-              className="hidden self-stretch border-r border-(--color-secondary-outline) bg-(--color-primary-white) lg:flex lg:w-[330px] lg:flex-col lg:sticky lg:self-start"
-              style={{ top: `${header}px`, height: viewportHeight }}
-            >
-              <div className="h-full min-h-0 flex-1 overflow-y-auto overscroll-contain p-5">
-                <CastingFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
-              </div>
-            </aside>
-          ) : null}
-
           <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[40px] lg:py-[24px]">
             <div className="mx-auto flex w-full max-w-[1500px] flex-1 min-h-0 h-full flex-col gap-6">
               {isDesktop ? (
                 <MasterDetailShell
                   menu={menu}
                   content={content}
-                  contentHeader={
-                    detailsQuery.data ? (
-                      <div className="flex min-w-0 flex-col">
-                        <h2 className="text-xl font-semibold">{detailsQuery.data.casting.roles[0]?.roleName}</h2>
-                        <p className="text-sm font-light text-(--color-secondary-grey-fonts)">
-                          {detailsQuery.data.casting.title}
-                        </p>
-                      </div>
-                    ) : undefined
-                  }
-                  contentActions={
-                    detailsQuery.data ? <CastingCatalogDetailsApplyAction data={detailsQuery.data} /> : undefined
-                  }
+                  contentHeader={contentHeader}
+                  contentActions={contentActions}
                   menuContentRef={menuScrollRef}
                   desktopPaneHeight={desktopPaneHeight}
                 />
@@ -318,6 +354,31 @@ const CastingDatabasePage = () => {
           onReset={() => setFilters(initialFilters)}
           onApply={(next) => setFilters(next)}
         />
+
+        <FiltersDrawerShell
+          open={isDesktop && filtersOpen}
+          onClose={() => setFiltersOpen(false)}
+          variant="desktop"
+          footer={
+            <FiltersDrawerActionBar
+              onReset={() => {
+                setDesktopDraftFilters({} as CastingFiltersQS);
+                setFilters(initialFilters);
+              }}
+              onApply={() => {
+                setFilters(desktopDraftFilters);
+                setFiltersOpen(false);
+              }}
+            />
+          }
+        >
+          <CastingFilterBar
+            value={desktopDraftFilters}
+            onChange={setDesktopDraftFilters}
+            onReset={() => setFilters(initialFilters)}
+            onClose={() => setFiltersOpen(false)}
+          />
+        </FiltersDrawerShell>
       </div>
     </section>
   );

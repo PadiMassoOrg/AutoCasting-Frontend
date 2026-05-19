@@ -136,15 +136,7 @@ export function CastingFilterBar({
     <aside className="z-[300] w-full flex flex-col items-stretch overflow-auto overflow-x-hidden lg:max-w-[350px] bg-[var(--primary-color-white)]">
       <header className="flex items-center justify-between pb-2">
         <h4 className="text-[14px] font-semibold">{t('general.filter.title')}</h4>
-        {isDesktop ? (
-          <button
-            type="button"
-            className="cursor-pointer text-xs font-light hover:text-(--color-primary-purple)"
-            onClick={handleReset}
-          >
-            {t('general.filter.reset')}
-          </button>
-        ) : (
+        {onClose ? (
           <button
             type="button"
             onClick={onClose}
@@ -153,10 +145,18 @@ export function CastingFilterBar({
           >
             ×
           </button>
+        ) : (
+          <button
+            type="button"
+            className="cursor-pointer text-xs font-light hover:text-(--color-primary-purple)"
+            onClick={handleReset}
+          >
+            {t('general.filter.reset')}
+          </button>
         )}
       </header>
 
-      <Separator className="opacity-20 mt-12" />
+      <Separator className="opacity-20 mt-6" />
 
       <FilterSection title={t('casting.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <article className="flex flex-col">

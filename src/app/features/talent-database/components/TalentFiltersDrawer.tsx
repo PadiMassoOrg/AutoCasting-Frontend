@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { FiltersDrawerActionBar, FiltersDrawerShell } from '../../../shared/components/FiltersDrawer';
-import type { CastingFiltersQS } from '../types/casting-database.types';
-import { CastingFilterBar } from './CastingFilterBar';
+import type { TalentFiltersQS } from '../types/talent-database.types';
+import { TalentFilterBar } from './TalentFilterBar';
 
-export function CastingMobileFiltersDrawer({
+export function TalentFiltersDrawer({
   open,
   onClose,
   value,
@@ -12,11 +12,11 @@ export function CastingMobileFiltersDrawer({
 }: {
   open: boolean;
   onClose: () => void;
-  value: CastingFiltersQS;
+  value: TalentFiltersQS;
   onReset?: () => void;
-  onApply?: (next: CastingFiltersQS) => void;
+  onApply?: (next: TalentFiltersQS) => void;
 }) {
-  const [draft, setDraft] = useState<CastingFiltersQS>(value);
+  const [draft, setDraft] = useState<TalentFiltersQS>(value);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export function CastingMobileFiltersDrawer({
       footer={
         <FiltersDrawerActionBar
           onReset={() => {
-            setDraft({} as CastingFiltersQS);
+            setDraft({});
             onReset?.();
           }}
           onApply={() => {
@@ -42,7 +42,7 @@ export function CastingMobileFiltersDrawer({
         />
       }
     >
-      <CastingFilterBar
+      <TalentFilterBar
         value={draft}
         onChange={setDraft}
         onReset={onReset}

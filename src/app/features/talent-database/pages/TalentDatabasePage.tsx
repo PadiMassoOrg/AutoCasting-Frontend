@@ -1,10 +1,10 @@
 import { Icon, Skeleton, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useChromeBoxHeights } from 'autocasting-ui-library-padimasso';
 import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
+import { FiltersDrawerActionBar, FiltersDrawerShell } from '../../../shared/components/FiltersDrawer';
 import { PublicProfileDetailsView } from '../../public-profile/pages';
-import { MobileFiltersDrawer, TalentCard, TalentFilterBar } from '../components';
+import { TalentCard, TalentFilterBar, TalentFiltersDrawer } from '../components';
 import { getTalentDatabase } from '../services/talentDatabaseService';
 import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
 
@@ -38,12 +38,11 @@ const MIN_CARD_WIDTH_PX = 260;
 export default function TalentDatabasePage() {
   useViewportVhVar();
   const { t } = useTranslation(undefined, { useSuspense: false });
-  const { header, footer } = useChromeBoxHeights();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
-  const desktopFilterHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
 
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
+  const [desktopDraftFilters, setDesktopDraftFilters] = useState<TalentFiltersQS>(initialFilters);
   const debouncedFilters = useDebouncedValue(filters, 350);
 
   const firstRenderRef = useRef(true);
@@ -116,6 +115,12 @@ export default function TalentDatabasePage() {
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (filtersOpen) {
+      setDesktopDraftFilters(filters);
+    }
+  }, [filters, filtersOpen]);
 
   useEffect(() => {
     const target = sentinelRef.current;
@@ -230,17 +235,6 @@ export default function TalentDatabasePage() {
     <section className="w-full h-full min-h-0 bg-(--color-secondary-white)">
       <div className="h-full w-full flex flex-col">
         <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0 lg:overflow-visible">
-          {isDesktop && filtersOpen && (
-            <aside
-              className="hidden lg:flex lg:flex-col lg:w-[330px] self-stretch bg-(--color-primary-white) border-r border-(--color-secondary-outline) lg:sticky lg:self-start"
-              style={{ top: `${header}px`, height: desktopFilterHeight }}
-            >
-              <div className="flex-1 h-full min-h-0 overflow-y-auto overscroll-contain p-5">
-                <TalentFilterBar value={filters} onChange={setFilters} onReset={() => setFilters(initialFilters)} />
-              </div>
-            </aside>
-          )}
-
           <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[40px] lg:py-[24px]">
             <div className="w-full max-w-[1500px] mx-auto flex-1 min-h-0 h-full">
               <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
@@ -315,13 +309,38 @@ export default function TalentDatabasePage() {
           </div>
         </div>
 
-        <MobileFiltersDrawer
+        <TalentFiltersDrawer
           open={mobileOpen}
           onClose={() => setMobileOpen(false)}
           value={filters}
           onReset={() => setFilters(initialFilters)}
           onApply={(next) => setFilters(next)}
         />
+
+        <FiltersDrawerShell
+          open={isDesktop && filtersOpen}
+          onClose={() => setFiltersOpen(false)}
+          variant="desktop"
+          footer={
+            <FiltersDrawerActionBar
+              onReset={() => {
+                setDesktopDraftFilters({} as TalentFiltersQS);
+                setFilters(initialFilters);
+              }}
+              onApply={() => {
+                setFilters(desktopDraftFilters);
+                setFiltersOpen(false);
+              }}
+            />
+          }
+        >
+          <TalentFilterBar
+            value={desktopDraftFilters}
+            onChange={setDesktopDraftFilters}
+            onReset={() => setFilters(initialFilters)}
+            onClose={() => setFiltersOpen(false)}
+          />
+        </FiltersDrawerShell>
 
         {isDesktop && (
           <PublicProfileDetailsView open={detailsOpen} onClose={handleCloseDetails} publicSlug={selectedPublicSlug} />
