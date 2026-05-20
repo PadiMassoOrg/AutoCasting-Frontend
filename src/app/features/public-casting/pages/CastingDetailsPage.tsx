@@ -1,11 +1,17 @@
-import { Label, Separator } from 'autocasting-ui-library-padimasso';
-import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
+import {
+  Label,
+  LG_SCREEN_SIZE,
+  MobileBottomBar,
+  SectionCard,
+  Separator,
+  useMedia,
+} from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import { CastingDetailsDesktopBody, CastingDetailsMobileBody } from '../../../shared/components/CastingDetails';
 import ServerError from '../../../shared/components/ServerError/ServerError';
-import { ApplySection, BasicInfoSection, EmployerInfoSection, RolesSection } from '../components/Section';
+import { CastingCatalogDetailsApplyAction } from '../../casting-database/components';
 import { usePublicCastingDetails } from '../hooks/usePublicCastingDetails';
-import type { CastingRequirement, CastingRole } from '../types/publicCasting.types';
 
 const CastingDetailsPage = () => {
   const { t } = useTranslation();
@@ -24,60 +30,37 @@ const CastingDetailsPage = () => {
   if (publicQuery.error) return <ServerError />;
 
   const casting = publicQuery.data.casting;
-  const alreadyApplied = Boolean(publicQuery.data.alreadyApplied);
-  const selectedRole = (casting.roles ?? []).find((role) => role.id === roleId) ?? null;
-  const requirements: CastingRequirement[] = toRequirements(selectedRole);
-  const employerInfo = casting.employerInfo;
-
-  const right = (
-    <>
-      {employerInfo && <EmployerInfoSection data={employerInfo} />}
-      <ApplySection
-        employer={employerInfo?.companyName ?? ''}
-        requirements={requirements}
-        roleId={roleId!}
-        alreadyApplied={alreadyApplied}
-      />
-    </>
-  );
+  const selectedRole = casting.roles?.[0] ?? null;
 
   if (isDesktop) {
     return (
-      <main className="flex flex-row gap-10">
-        <section className="flex-1">
-          <BasicInfoSection data={casting} />
-          <Separator className="opacity-0 my-2" />
-          <RolesSection data={casting.roles ?? []} />
+      <SectionCard className="flex flex-col gap-6">
+        <section className="flex items-start justify-between">
+          <div className="w-full">
+            <h2 className="text-3xl font-semibold">{selectedRole?.roleName}</h2>
+            <p className="text-base font-light text-(--color-secondary-grey-fonts)">{casting.title}</p>
+          </div>
+          <CastingCatalogDetailsApplyAction data={publicQuery.data} />
         </section>
-        <section className="flex flex-col gap-6 w-[350px]">{right}</section>
-      </main>
+
+        <Separator className="opacity-0 my-4" />
+
+        <CastingDetailsDesktopBody casting={publicQuery.data.casting} />
+      </SectionCard>
     );
   }
 
   return (
-    <div className="relative pt-3 pb-24 flex flex-col gap-3">
-      <BasicInfoSection data={casting} />
-      <Separator className="opacity-0 my-1" />
-      <RolesSection data={casting.roles ?? []} />
-      <Separator className="opacity-20 my-4" />
-      {right}
-    </div>
+    <main className="relative flex flex-col">
+      <SectionCard className="mb-16">
+        <CastingDetailsMobileBody casting={casting} />
+      </SectionCard>
+
+      <MobileBottomBar>
+        <CastingCatalogDetailsApplyAction data={publicQuery.data} />
+      </MobileBottomBar>
+    </main>
   );
-};
-
-const toRequirements = (role: CastingRole | null): CastingRequirement[] => {
-  if (!role?.id) return [];
-  if (!role.requiresAudio && !role.requiresVideo) return [];
-
-  return [
-    {
-      id: role.id,
-      roleId: role.id,
-      description: role.requirementDescription ?? '',
-      requiresAudio: role.requiresAudio,
-      requiresVideo: role.requiresVideo,
-    },
-  ];
 };
 
 export default CastingDetailsPage;

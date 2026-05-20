@@ -3,12 +3,13 @@ import {
   FilterSection,
   FormInputField,
   FormSelectField,
+  LG_SCREEN_SIZE,
   MultiSelectDropdown,
   Separator,
+  useMedia,
 } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { useCommittedInt, useCommittedText } from '../../../shared/utils/formUtils';
 import {
   useCachedSiteMetadataOption,
@@ -139,15 +140,7 @@ export function TalentFilterBar({
       <header className="flex items-center justify-between">
         <h4 className="text-[14px] font-bold">{t('general.filter.title')}</h4>
 
-        {isDesktop ? (
-          <button
-            type="button"
-            className="cursor-pointer text-xs font-light hover:text-[var(--color-primary-purple)]"
-            onClick={handleReset}
-          >
-            {t('general.filter.reset')}
-          </button>
-        ) : (
+        {onClose ? (
           <button
             type="button"
             onClick={onClose}
@@ -156,10 +149,18 @@ export function TalentFilterBar({
           >
             ×
           </button>
+        ) : (
+          <button
+            type="button"
+            className="cursor-pointer text-xs font-light hover:text-[var(--color-primary-purple)]"
+            onClick={handleReset}
+          >
+            {t('general.filter.reset')}
+          </button>
         )}
       </header>
 
-      <Separator className="opacity-20 mt-12" />
+      <Separator className="opacity-20 mt-6" />
 
       <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <FormInputField

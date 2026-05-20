@@ -3,12 +3,13 @@ import {
   FilterSection,
   FormInputField,
   FormSelectField,
+  LG_SCREEN_SIZE,
   MultiSelectDropdown,
   Separator,
+  useMedia,
 } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { useCommittedInt } from '../../../shared/utils/formUtils';
 import {
   useCachedSiteMetadataOption,
@@ -36,11 +37,7 @@ export function CastingFilterBar({
   const genderOptionsRaw = useCachedSiteMetadataSlice('genderOptions');
   const ethnicityOptions = useCachedSiteMetadataOption('ethnicityOptions', t);
   const professionsRaw = useCachedSiteMetadataSlice('professions');
-  const hairOptions = useCachedSiteMetadataOption('colorOptions', t, 'hair_color');
-  const eyeOptions = useCachedSiteMetadataOption('colorOptions', t, 'eye_color');
   const skillsRaw = useCachedSiteMetadataSlice('skills');
-  const projectTypesRaw = useCachedSiteMetadataSlice('projectTypeOptions');
-
   const visibleGenderOptions = useMemo(() => getTalentVisibleGenderOptions(genderOptionsRaw), [genderOptionsRaw]);
 
   const genderOptions = useMemo(
@@ -136,15 +133,7 @@ export function CastingFilterBar({
     <aside className="z-[300] w-full flex flex-col items-stretch overflow-auto overflow-x-hidden lg:max-w-[350px] bg-[var(--primary-color-white)]">
       <header className="flex items-center justify-between pb-2">
         <h4 className="text-[14px] font-semibold">{t('general.filter.title')}</h4>
-        {isDesktop ? (
-          <button
-            type="button"
-            className="cursor-pointer text-xs font-light hover:text-(--color-primary-purple)"
-            onClick={handleReset}
-          >
-            {t('general.filter.reset')}
-          </button>
-        ) : (
+        {onClose ? (
           <button
             type="button"
             onClick={onClose}
@@ -153,10 +142,18 @@ export function CastingFilterBar({
           >
             ×
           </button>
+        ) : (
+          <button
+            type="button"
+            className="cursor-pointer text-xs font-light hover:text-(--color-primary-purple)"
+            onClick={handleReset}
+          >
+            {t('general.filter.reset')}
+          </button>
         )}
       </header>
 
-      <Separator className="opacity-20 mt-12" />
+      <Separator className="opacity-20 mt-6" />
 
       <FilterSection title={t('casting.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <article className="flex flex-col">
@@ -199,18 +196,6 @@ export function CastingFilterBar({
           }}
         />
 
-        <FormSelectField
-          id="ethnicityId"
-          label={t('profile.characteristics.ethnicity')}
-          labelClassName="font-semibold text-base"
-          options={ethnicityOptionsWithUnspecified}
-          value={(value.ethnicityIds && value.ethnicityIds[0]) ?? 'NULL'}
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-            const v = e.target.value;
-            onChange({ ...value, ethnicityIds: v ? [v] : undefined });
-          }}
-        />
-
         <div>
           <h2 className="text-sm font-semibold mb-2">{t('talent.filter.basic_info.profession')}</h2>
           <MultiSelectDropdown
@@ -219,19 +204,6 @@ export function CastingFilterBar({
             getLabel={(p) => t(p.stringCode)}
             selected={value.professionId ?? []}
             onChange={(next) => onChange({ ...value, professionId: next.length ? next : undefined })}
-            maxPanelHeight="16rem"
-            forwardScrollToRef={forwardScrollToRef}
-          />
-        </div>
-
-        <div>
-          <h2 className="text-sm font-semibold mb-2">{t('casting.basic_info.project_type')}</h2>
-          <MultiSelectDropdown
-            options={projectTypesRaw ?? []}
-            getId={(p) => p.id}
-            getLabel={(p) => t(p.stringCode)}
-            selected={value.projectTypeIds ?? []}
-            onChange={(next) => onChange({ ...value, projectTypeIds: next.length ? next : undefined })}
             maxPanelHeight="16rem"
             forwardScrollToRef={forwardScrollToRef}
           />
@@ -269,31 +241,17 @@ export function CastingFilterBar({
           </div>
         </article>
 
-        <div>
-          <h2 className="text-sm font-semibold mb-2">{t('profile.characteristics.hairColor')}</h2>
-          <MultiSelectDropdown
-            options={hairOptions ?? []}
-            getId={(o) => o.value}
-            getLabel={(o) => o.label}
-            selected={value.hairColorIds ?? []}
-            onChange={(next) => onChange({ ...value, hairColorIds: next.length ? next : undefined })}
-            maxPanelHeight="16rem"
-            forwardScrollToRef={forwardScrollToRef}
-          />
-        </div>
-
-        <div>
-          <h2 className="text-sm font-semibold mb-2">{t('profile.characteristics.eyeColor')}</h2>
-          <MultiSelectDropdown
-            options={eyeOptions ?? []}
-            getId={(o) => o.value}
-            getLabel={(o) => o.label}
-            selected={value.eyeColorIds ?? []}
-            onChange={(next) => onChange({ ...value, eyeColorIds: next.length ? next : undefined })}
-            maxPanelHeight="16rem"
-            forwardScrollToRef={forwardScrollToRef}
-          />
-        </div>
+        <FormSelectField
+          id="ethnicityId"
+          label={t('profile.characteristics.ethnicity')}
+          labelClassName="font-semibold text-base"
+          options={ethnicityOptionsWithUnspecified}
+          value={(value.ethnicityIds && value.ethnicityIds[0]) ?? 'NULL'}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+            const v = e.target.value;
+            onChange({ ...value, ethnicityIds: v ? [v] : undefined });
+          }}
+        />
 
         <div className="grid grid-cols-1">
           <BooleanRadioGroup

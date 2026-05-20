@@ -49,7 +49,7 @@ export function formatAgeRange(min: number, max: number, t: (k: string) => strin
   if (min == null && max == null) return '';
   const minStr = min != null ? String(min) : '';
   const maxStr = max != null ? String(max) : '';
-  return `${minStr} - ${maxStr} ${t('general.years')}`;
+  return `${minStr}-${maxStr} ${t('general.years')}`;
 }
 
 // ==============================================

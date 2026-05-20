@@ -11,6 +11,7 @@ import type { EmployerCastingApplicantCardResponse } from '../../types/employerC
 type Props = {
   data: EmployerCastingApplicantCardResponse[];
   page: number;
+  pageSize: number;
   hasNext: boolean;
   onPageChange: (nextPage: number) => void;
   onOpenDetails: (talentPublicSlug: string) => void | Promise<void>;
@@ -23,6 +24,7 @@ type Props = {
 const CastingApplicantsDataGrid = ({
   data,
   page,
+  pageSize,
   hasNext,
   onPageChange,
   onOpenDetails,
@@ -168,6 +170,8 @@ const CastingApplicantsDataGrid = ({
     [t]
   );
 
+  const totalPages = totalCount && totalCount > 0 ? Math.ceil(totalCount / pageSize) : null;
+
   return (
     <DataGrid
       columns={columns}
@@ -188,13 +192,20 @@ const CastingApplicantsDataGrid = ({
       pagination={{
         page,
         hasNext,
+        pageCount: totalPages,
         onPageChange,
         pageLabel: ({ page: currentPage }) =>
           totalCount && totalCount > 0
-            ? `Página ${currentPage + 1} · ${totalCount} total`
-            : `Página ${currentPage + 1}`,
-        previousLabel: 'Anterior',
-        nextLabel: 'Siguiente',
+            ? `${t('general.pagination.page')} ${currentPage + 1} · ${totalCount} ${t('general.total').toLowerCase()}`
+            : `${t('general.pagination.page')} ${currentPage + 1}`,
+        labels: {
+          page: t('general.pagination.page'),
+          of: t('general.pagination.of'),
+          firstPageAriaLabel: t('general.pagination.first_page'),
+          previousPageAriaLabel: t('general.pagination.previous_page'),
+          nextPageAriaLabel: t('general.pagination.next_page'),
+          lastPageAriaLabel: t('general.pagination.last_page'),
+        },
       }}
     />
   );

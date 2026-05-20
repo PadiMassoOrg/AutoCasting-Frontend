@@ -258,6 +258,21 @@ const EmployerCastingPage = () => {
 
   const bottomSection = (
     <SectionCard>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-wrap flex-row items-center justify-between font-semibold">
+          <p>{t('employer_castings.dashboard.checkout.total')}:</p>
+          <h2>{t('employer_castings.dashboard.checkout.beta_total')}</h2>
+        </div>
+        <Separator className="opacity-20" />
+        <Button variant="primary" disabled={!data.publishable} onClick={openCheckoutModal}>
+          {t('employer_castings.dashboard.checkout.checkout_and_publish')}
+        </Button>
+      </div>
+    </SectionCard>
+  );
+
+  const mobileCheckoutBar = (
+    <article className="w-full flex flex-col px-6">
       <div className="flex flex-wrap flex-row items-center justify-between font-semibold">
         <p>{t('employer_castings.dashboard.checkout.total')}:</p>
         <h2>{t('employer_castings.dashboard.checkout.beta_total')}</h2>
@@ -266,7 +281,7 @@ const EmployerCastingPage = () => {
       <Button variant="primary" disabled={!data.publishable} onClick={openCheckoutModal}>
         {t('employer_castings.dashboard.checkout.checkout_and_publish')}
       </Button>
-    </SectionCard>
+    </article>
   );
 
   return (
@@ -281,6 +296,7 @@ const EmployerCastingPage = () => {
         }
       }}
       bottomSection={bottomSection}
+      mobileNavBottomBar={mobileCheckoutBar}
     />
   );
 };

@@ -137,6 +137,14 @@
     },
     "group": {
       "byRole": "Separar por roles"
+    },
+    "pagination": {
+      "page": "Página",
+      "of": "de",
+      "first_page": "Primera página",
+      "previous_page": "Página anterior",
+      "next_page": "Página siguiente",
+      "last_page": "Última página"
     }
   },
   "validation": {
@@ -530,16 +538,16 @@
       "completed": "Completado"
     },
     "project_type": {
-      "digital_content": "Contenido digital / RRSS",
+      "digital_content": "Contenido Digital",
       "short_film": "Cortometraje",
       "documentary": "Documental",
       "feature_film": "Largometraje",
       "musical": "Musical",
-      "theatre_play": "Obra teatral",
-      "student_project": "Proyecto estudiantil / Universitario",
+      "theatre_play": "Teatral",
+      "student_project": "Estudiantil",
       "commercial": "Publicidad",
       "music_video": "Videoclip",
-      "other": "Otro"
+      "other": "Otros"
     },
     "casting_modality": {
       "casting": "Casting",
@@ -949,16 +957,25 @@
       "created_castings": "Castings creados",
       "member_since": "Miembro desde"
     },
+    "menu": {},
+    "detail": {
+      "project_description": "Descripción del Proyecto",
+      "casting_modality_on_site": "Casting Presencial",
+      "casting_wardrobe_fitting": "Prueba de Vestuario",
+      "role_basic_info": "Talento",
+      "role_characteristics": "Características",
+      "role_skills": "Habilidades",
+      "role_remuneration_title": "Remuneración"
+    },
     "filter": {
       "role_type": "Tipo de Rol"
     }
   },
   "application": {
-    "cta_title": "¿Listo para aplicar?",
-    "cta_text": "Al aplicar estás compartiendo tus Perfil con",
+    "cta_title": "Aplicá como Talento",
     "cta_auth_warning": "Este contenido solo está disponible para perfiles de talento. Iniciá sesión o creá tu cuenta para postularte a este casting.",
-    "cta_applied_warning": "Haz aplicado recientemente a este casting. Por favor, espera a que el equipo de casting revise tu postulación.",
-    "cta_multiple_applied_warning": "Ya te postulaste a algunos roles de este casting. Aún puedes postularte a los roles restantes.",
+    "cta_employer_warning": "Estás usando una cuenta de Empleador. Para aplicar a castings necesitás ingresar con un Perfil de Talento.",
+    "cta_switch_talent": "Cambiar a Talento",
     "modal": {
       "title": "Requerimientos",
       "video": "Video (Compartí tu link de YouTube, Vimeo, etc.)",
@@ -970,6 +987,7 @@
     }
   },
   "applications": {
+    "already_applied_cta": "Postulacion enviada",
     "already_applied": "No puedes aplicar dos veces al mismo casting.",
     "audio_required": "Debes compartir un link de audio para completar la postulación.",
     "id_required": "Debes proporcionar un applicationId.",

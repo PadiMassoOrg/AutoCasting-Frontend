@@ -342,6 +342,7 @@ const EmployerCastingApplicantsPage = () => {
               <CastingApplicantsDataGrid
                 data={applicants}
                 page={tableData?.page ?? page}
+                pageSize={tablePageSize}
                 hasNext={tableData?.hasNext ?? false}
                 onPageChange={setPage}
                 onOpenDetails={handleOpenDetails}

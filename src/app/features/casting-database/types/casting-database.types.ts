@@ -1,17 +1,19 @@
 import type { BasePersonSearchFiltersQS } from '../../search/personSearchFilters.types';
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
+export type {
+  PublicCastingDetailsResponse as CastingCatalogDetailsResponse,
+  PublicCastingRole as CastingCatalogRole,
+  CastingRequirement,
+} from '../../public-casting/types/publicCasting.types';
 
-export type BaseCastingRolePublicCard = {
+export type CastingRolePublicCardResponse = {
   id: string;
   name: string;
+  castingTitle: string;
   employerImageUrl: string;
-  employerCompanyName: string;
   projectType: SiteMetadataObject;
-  castingModality: SiteMetadataObject;
-  location: string;
   shootingStartDate: string;
   shootingEndDate: string;
-  professions: SiteMetadataObject[];
   roleType: SiteMetadataObject;
   gender: SiteMetadataObject;
   ageMin: number;
@@ -25,8 +27,3 @@ export type CastingFiltersQS = BasePersonSearchFiltersQS & {
   castingModalityIds?: string[];
   locationText?: string;
 };
-
-/* ======================
-   Export & DeepNullable
-   ====================== */
-export type CastingRolePublicCardResponse = BaseCastingRolePublicCard;
