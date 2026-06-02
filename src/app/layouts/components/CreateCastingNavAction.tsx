@@ -12,7 +12,6 @@ type CreateCastingNavActionProps = {
 };
 
 export default function CreateCastingNavAction({
-  active = false,
   className,
   iconClassName,
   onAfterClick,
