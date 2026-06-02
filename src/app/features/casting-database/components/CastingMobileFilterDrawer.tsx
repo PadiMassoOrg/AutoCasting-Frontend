@@ -53,7 +53,6 @@ export function CastingMobileFiltersDrawer({
           draftRef.current = next;
           setDraft(next);
         }}
-        onReset={onReset}
         onClose={onClose}
         forwardScrollToRef={contentRef as React.RefObject<HTMLElement | null>}
       />
