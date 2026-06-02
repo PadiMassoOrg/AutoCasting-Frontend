@@ -23,13 +23,11 @@ import { getCastingFilterCounts } from '../utils/castingDatabaseFilterCounts';
 export function CastingFilterBar({
   value,
   onChange,
-  onReset,
   onClose,
   forwardScrollToRef,
 }: {
   value: CastingFiltersQS;
   onChange: (v: CastingFiltersQS) => void;
-  onReset?: () => void;
   onClose?: () => void;
   forwardScrollToRef?: React.RefObject<HTMLElement | null>;
 }) {
@@ -80,11 +78,6 @@ export function CastingFilterBar({
     [ethnicityOptions, t]
   );
 
-  const handleReset = () => {
-    onChange({});
-    onReset?.();
-  };
-
   const ageMin = useCommittedInt(value.ageMin ?? null, (v) => onChange({ ...value, ageMin: v ?? undefined }), {
     allowNull: true,
   });
@@ -116,7 +109,7 @@ export function CastingFilterBar({
   }, [skillsCats, value.skillId]);
 
   return (
-    <aside className="z-[300] w-full flex flex-col items-stretch overflow-auto overflow-x-hidden lg:max-w-[350px] bg-[var(--primary-color-white)]">
+    <aside className="z-[300] w-full flex flex-col items-stretch overflow-auto overflow-x-hidden bg-[var(--primary-color-white)]">
       <header className="flex items-center justify-between pb-2">
         <h4 className="text-[14px] font-semibold">{t('general.filter.title')}</h4>
         {onClose ? (
@@ -124,22 +117,14 @@ export function CastingFilterBar({
             type="button"
             onClick={onClose}
             aria-label={t('common.close') || 'Cerrar'}
-            className="cursor-pointer p-2 rounded-md text-3xl leading-none"
+            className="cursor-pointer p-1 rounded-md text-3xl leading-none"
           >
             ×
           </button>
-        ) : (
-          <button
-            type="button"
-            className="cursor-pointer text-xs font-light hover:text-(--color-primary-purple)"
-            onClick={handleReset}
-          >
-            {t('general.filter.reset')}
-          </button>
-        )}
+        ) : null}
       </header>
 
-      <Separator className="opacity-20 mt-6" />
+      <Separator className="opacity-20 mt-3" />
 
       <FilterSection title={t('casting.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <article className="flex flex-col">

@@ -334,6 +334,7 @@ export default function TalentDatabasePage() {
                 setDesktopDraftFilters({} as TalentFiltersQS);
                 desktopDraftFiltersRef.current = {} as TalentFiltersQS;
                 setFilters(initialFilters);
+                setFiltersOpen(false);
               }}
               onApply={() => {
                 setFilters(desktopDraftFiltersRef.current);
@@ -348,7 +349,6 @@ export default function TalentDatabasePage() {
               desktopDraftFiltersRef.current = next;
               setDesktopDraftFilters(next);
             }}
-            onReset={() => setFilters(initialFilters)}
             onClose={() => setFiltersOpen(false)}
           />
         </FiltersDrawerShell>

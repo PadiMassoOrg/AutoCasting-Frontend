@@ -389,6 +389,7 @@ const CastingDatabasePage = () => {
                 setDesktopDraftFilters({} as CastingFiltersQS);
                 desktopDraftFiltersRef.current = {} as CastingFiltersQS;
                 setFilters(initialFilters);
+                setFiltersOpen(false);
               }}
               onApply={() => {
                 setFilters(desktopDraftFiltersRef.current);
@@ -403,7 +404,6 @@ const CastingDatabasePage = () => {
               desktopDraftFiltersRef.current = next;
               setDesktopDraftFilters(next);
             }}
-            onReset={() => setFilters(initialFilters)}
             onClose={() => setFiltersOpen(false)}
           />
         </FiltersDrawerShell>

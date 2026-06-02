@@ -23,13 +23,11 @@ import { getTalentFilterCounts } from '../utils/talentDatabaseFilterCounts';
 export function TalentFilterBar({
   value,
   onChange,
-  onReset,
   onClose,
   forwardScrollToRef,
 }: {
   value: TalentFiltersQS;
   onChange: (v: TalentFiltersQS) => void;
-  onReset?: () => void;
   onClose?: () => void;
   forwardScrollToRef?: React.RefObject<HTMLElement | null>;
 }) {
@@ -84,11 +82,6 @@ export function TalentFilterBar({
     [ethnicityOptions, t]
   );
 
-  const handleReset = () => {
-    onChange({});
-    onReset?.();
-  };
-
   const stageName = useCommittedText(value.stageName ?? '', (v) => onChange({ ...value, stageName: v || undefined }));
   const ageMin = useCommittedInt(value.ageMin ?? null, (v) => onChange({ ...value, ageMin: v ?? undefined }), {
     allowNull: true,
@@ -121,8 +114,8 @@ export function TalentFilterBar({
   }, [skillsCats, value.skillId]);
 
   return (
-    <aside className="z-[300] w-full flex flex-col items-stretch overflow-auto overflow-x-hidden lg:max-w-[350px] bg-[var(--primary-color-white)]">
-      <header className="flex items-center justify-between">
+    <aside className="z-[300] w-full flex flex-col items-stretch overflow-auto overflow-x-hidden bg-[var(--primary-color-white)]">
+      <header className="flex items-center justify-between gap-4">
         <h4 className="text-[14px] font-bold">{t('general.filter.title')}</h4>
 
         {onClose ? (
@@ -130,22 +123,14 @@ export function TalentFilterBar({
             type="button"
             onClick={onClose}
             aria-label={t('common.close') || 'Cerrar'}
-            className="cursor-pointer p-2 rounded-md text-3xl leading-none"
+            className="cursor-pointer p-1 rounded-md text-3xl leading-none"
           >
             ×
           </button>
-        ) : (
-          <button
-            type="button"
-            className="cursor-pointer text-xs font-light hover:text-[var(--color-primary-purple)]"
-            onClick={handleReset}
-          >
-            {t('general.filter.reset')}
-          </button>
-        )}
+        ) : null}
       </header>
 
-      <Separator className="opacity-20 mt-6" />
+      <Separator className="opacity-20 mt-3" />
 
       <FilterSection title={t('profile.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <FormInputField
