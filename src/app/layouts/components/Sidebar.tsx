@@ -9,6 +9,7 @@ import { Icon } from 'autocasting-ui-library-padimasso';
 import clsx from 'clsx';
 import { USER_MODE_TALENT, useUserMode } from '../../context/UserModeContext';
 import Waves from '../../shared/icons/wave.svg';
+import CreateCastingNavAction from './CreateCastingNavAction';
 import UserModeSwitcher from './UserModeSwitcher';
 
 type Props = {
@@ -44,6 +45,10 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
   // Employer
   const activeEmployerProfile = isRouteActive(ROUTES.EMPLOYER, true);
   const activeEmployerCastings = isRouteActive(ROUTES.EMPLOYER_CASTINGS, true);
+  const activeEmployerCastingEditor = !!matchPath(
+    { path: `${ROUTES.EMPLOYER_CASTING}/:slug/editor`, end: false },
+    location.pathname
+  );
   const activeEmployerSettings = isRouteActive(ROUTES.EMPLOYER_SETTINGS, true);
 
   useEffect(() => {
@@ -137,6 +142,14 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                     </>
                   ) : (
                     <>
+                      <li className="cursor-pointer">
+                        <CreateCastingNavAction
+                          active={activeEmployerCastingEditor}
+                          className={clsx(baseClass, 'w-full text-left', activeEmployerCastingEditor && activeClass)}
+                          onAfterClick={onClose}
+                          iconClassName="w-6"
+                        />
+                      </li>
                       <li onClick={onClose}>
                         <Link to={ROUTES.EMPLOYER_CASTINGS}>
                           <span className={clsx(baseClass, activeEmployerCastings && activeClass)}>
