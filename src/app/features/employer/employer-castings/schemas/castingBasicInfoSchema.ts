@@ -40,6 +40,10 @@ export function getCastingBasicInfoSchema(t: TFunction) {
     wardrobeFittingText: optionalShortText,
     shootingStartDate: optionalIsoDate,
     shootingEndDate: optionalIsoDate,
-    description: z.string().trim().optional(),
+    description: z
+      .string()
+      .trim()
+      .max(3000, { message: t('validation.max_char') })
+      .optional(),
   });
 }

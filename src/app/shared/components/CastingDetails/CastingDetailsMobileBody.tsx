@@ -12,6 +12,7 @@ import {
   CastingDetailsEmployerCard,
   DetailTagSection,
 } from './CastingDetailsDesktopBody';
+import ExpandableText from '../ExpandableText/ExpandableText';
 
 type Props = {
   casting: PublicCastingData;
@@ -69,7 +70,7 @@ const CastingDetailsMobileBody = ({ casting }: Props) => {
               {description && (
                 <div className="flex flex-col gap-1">
                   <h3 className="text-sm font-semibold">{t('casting-database.detail.project_description')}</h3>
-                  <p className="text-sm">{description}</p>
+                  <ExpandableText text={description} />
                 </div>
               )}
               {locationText && (

@@ -315,6 +315,7 @@ const CastingBasicInfoForm = ({
         label={t('employer_castings.dashboard.basic_info.description')}
         placeholder={t('general.placeholder.about')}
         value={data.description}
+        maxLength={3000}
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
           const next = e.target.value;
           updateField('description', next);

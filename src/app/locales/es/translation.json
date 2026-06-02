@@ -35,6 +35,8 @@
     "pay_and_publish": "Pagar y Publicar",
     "publish_casting": "Publicar Casting",
     "copied": "Copaiado con éxito.",
+    "show_more": "Ver más",
+    "show_less": "Ver menos",
     "logout": "Cerrar Sesión",
     "no_data": "Sin información.",
     "untitled": "Sin título.",
@@ -836,7 +838,7 @@
     "media": {
       "media": "Media",
       "photos": "Fotos",
-      "must_have_one_photo": "DECIDIR TRADUCCION",
+      "must_have_one_photo": "Tu perfil debe tener al menos una foto. Subí una nueva para reemplazarla.",
       "headshot_fullbody": "Primer Plano y Cuerpo Entero",
       "other": "Otras Fotos",
       "videos": "Videos",
@@ -965,6 +967,7 @@
       "role_basic_info": "Talento",
       "role_characteristics": "Características",
       "role_skills": "Habilidades",
+      "role_requirements_description": "Requerimientos",
       "role_remuneration_title": "Remuneración"
     },
     "filter": {

@@ -178,4 +178,5 @@ export type CastingRoleFieldKey =
   | 'payRateTypeId'
   | 'currencyId'
   | 'ethnicityId'
+  | 'requirementDescription'
   | 'amount';

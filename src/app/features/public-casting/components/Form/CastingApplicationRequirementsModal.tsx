@@ -2,6 +2,7 @@ import { Button, FormInputField, Separator } from 'autocasting-ui-library-padima
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { usePendingAction } from 'autocasting-ui-library-padimasso';
+import ExpandableText from '../../../../shared/components/ExpandableText/ExpandableText';
 import { getCastingApplicationSchema, type CastingApplicationFormValues } from '../../schemas/castingApplicationSchema';
 import type { CastingRequirement } from '../../types/publicCasting.types';
 import type { CastingApplicationRequest } from '../../types/requests';
@@ -94,9 +95,9 @@ const CastingApplicationRequirementsModal = ({ requirements, onCancel, onApply }
           .map((r) => r?.description?.trim())
           .filter(Boolean)
           .map((desc, idx) => (
-            <p key={idx} className={idx === 0 ? '' : 'mt-3'}>
-              {desc}
-            </p>
+            <div key={idx} className={idx === 0 ? '' : 'mt-3'}>
+              <ExpandableText text={desc} />
+            </div>
           ))}
       </div>
 
