@@ -1,7 +1,13 @@
-import { Icon, Skeleton, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-library-padimasso';
+import {
+  Icon,
+  LG_SCREEN_SIZE,
+  Skeleton,
+  useDebouncedValue,
+  useMedia,
+  useViewportVhVar,
+} from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { FiltersDrawerActionBar, FiltersDrawerShell } from '../../../shared/components/FiltersDrawer';
 import { PublicProfileDetailsView } from '../../public-profile/pages';
 import { TalentCard, TalentFilterBar, TalentFiltersDrawer } from '../components';
@@ -252,7 +258,9 @@ export default function TalentDatabasePage() {
               </article>
 
               <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
+                <h2 className="text-lg font-bold text-(--color-primary-black) leading-tight">
+                  {t('talent.page.title')}
+                </h2>
                 <button
                   type="button"
                   className="cursor-pointer inline-flex items-center gap-3"

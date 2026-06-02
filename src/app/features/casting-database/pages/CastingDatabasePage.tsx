@@ -63,7 +63,7 @@ function CardsPaneHeader({ title, filtersOpen, onToggleFilters, t }: CardsPaneHe
   return (
     <div className="sticky top-0 z-10 bg-(--color-secondary-white) pb-5">
       <div className="flex items-center justify-between gap-4">
-        <h2 className="text-2xl font-semibold">{title}</h2>
+        <h1 className="text-lg font-bold text-(--color-primary-black) leading-tight">{title}</h1>
         <button
           type="button"
           className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-(--color-secondary-outline) bg-(--color-primary-white)"

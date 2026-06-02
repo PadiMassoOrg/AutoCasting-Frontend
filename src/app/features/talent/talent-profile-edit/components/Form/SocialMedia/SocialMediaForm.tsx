@@ -222,10 +222,10 @@ export default function SocialMediaForm({ data, onSaveLinks }: SocialMediaFormPr
       <Button
         type="button"
         className="mt-2 self-start lg:max-w-[250px] flex flex-row gap-2 items-center justify-center"
-        variant={freeOptions.length === 0 ? 'disabled' : 'primary'}
+        variant={freeOptions.length === 0 ? 'disabled' : 'primaryOutline'}
         onClick={handleAddRow}
       >
-        <Icon name="plus" variant="white" size={16} /> {t('profile.basic_info.add_social_media')}
+        <Icon name="plus" variant="primary" size={16} /> {t('profile.basic_info.add_social_media')}
       </Button>
     </div>
   );
