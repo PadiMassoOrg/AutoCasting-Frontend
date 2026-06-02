@@ -1,6 +1,7 @@
 import type { DashboardShellSection } from 'autocasting-ui-library-padimasso';
 import {
   Button,
+  DashboardLoadingLabel,
   DashboardShell,
   SectionCard,
   Separator,
@@ -127,10 +128,34 @@ const EmployerCastingPage = () => {
   }, [selectedRoleQuery.data]);
 
   if (error && !data) return <ServerError />;
-  if (isLoading || !draft || !data) return null;
 
-  if (!isCastingEditable(data.castingStatus)) {
+  if (data && !isCastingEditable(data.castingStatus)) {
     return <Navigate to={ROUTES.EMPLOYER_CASTINGS} replace />;
+  }
+
+  const loadingSections: DashboardShellSection<'basic' | 'roles'>[] = [
+    {
+      key: 'basic',
+      label: t('employer_castings.dashboard.basic_info.basic_info'),
+      sectionTitle: t('employer_castings.dashboard.basic_info.basic_info'),
+      render: () => <DashboardLoadingLabel />,
+    },
+    {
+      key: 'roles',
+      label: t('employer_castings.dashboard.roles.roles'),
+      sectionTitle: t('employer_castings.dashboard.roles.roles'),
+      render: () => <DashboardLoadingLabel />,
+    },
+  ];
+
+  if (isLoading || !draft || !data) {
+    return (
+      <DashboardShell
+        title={t('employer_castings.dashboard.title_edit')}
+        sections={loadingSections}
+        initialKey="basic"
+      />
+    );
   }
 
   const isDirty = initialDraft ? stableStringify(draft) !== stableStringify(initialDraft) : false;
