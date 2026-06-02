@@ -1,5 +1,4 @@
 import {
-  Icon,
   LG_SCREEN_SIZE,
   MasterDetailShell,
   Separator,
@@ -12,9 +11,11 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CastingDetailsDesktopBody } from '../../../shared/components/CastingDetails';
+import FilterToggleButton from '../../../shared/components/FilterToggleButton/FilterToggleButton';
 import { FiltersDrawerActionBar, FiltersDrawerShell } from '../../../shared/components/FiltersDrawer';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { usePublicCastingDetails } from '../../public-casting/hooks/usePublicCastingDetails';
+import { useCachedSiteMetadataSlice } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import {
   CastingCatalogDetailsApplyAction,
   CastingCatalogPagination,
@@ -25,6 +26,7 @@ import {
 } from '../components';
 import { useCastingDatabasePage } from '../hooks/useCastingDatabasePage';
 import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';
+import { getCastingFilterCounts } from '../utils/castingDatabaseFilterCounts';
 
 const PAGE_SIZE = 8;
 
@@ -55,24 +57,23 @@ const initialFilters: CastingFiltersQS = {
 type CardsPaneHeaderProps = {
   title: string;
   filtersOpen: boolean;
+  activeFilterCount: number;
   onToggleFilters: () => void;
   t: (key: string) => string;
 };
 
-function CardsPaneHeader({ title, filtersOpen, onToggleFilters, t }: CardsPaneHeaderProps) {
+function CardsPaneHeader({ title, filtersOpen, activeFilterCount, onToggleFilters, t }: CardsPaneHeaderProps) {
   return (
-    <div className="sticky top-0 z-10 bg-(--color-secondary-white) pb-5">
-      <div className="flex items-center justify-between gap-4">
+    <div className="sticky top-0 z-10 overflow-visible bg-(--color-secondary-white) pb-5 pr-2 pt-2">
+      <div className="flex items-center justify-between gap-4 overflow-visible">
         <h1 className="text-lg font-bold text-(--color-primary-black) leading-tight">{title}</h1>
-        <button
-          type="button"
-          className="inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-(--color-secondary-outline) bg-(--color-primary-white)"
+        <FilterToggleButton
+          open={filtersOpen}
+          count={activeFilterCount}
           onClick={onToggleFilters}
-          aria-label={filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
-          aria-pressed={filtersOpen}
-        >
-          <Icon name="filter" variant="primary" />
-        </button>
+          ariaLabel={filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
+          ariaPressed={filtersOpen}
+        />
       </div>
     </div>
   );
@@ -81,13 +82,20 @@ function CardsPaneHeader({ title, filtersOpen, onToggleFilters, t }: CardsPaneHe
 function CardsPaneLayout({
   title,
   filtersOpen,
+  activeFilterCount,
   onToggleFilters,
   t,
   children,
 }: CardsPaneHeaderProps & { children: React.ReactNode }) {
   return (
     <div className="flex min-h-full w-full flex-col">
-      <CardsPaneHeader title={title} filtersOpen={filtersOpen} onToggleFilters={onToggleFilters} t={t} />
+      <CardsPaneHeader
+        title={title}
+        filtersOpen={filtersOpen}
+        activeFilterCount={activeFilterCount}
+        onToggleFilters={onToggleFilters}
+        t={t}
+      />
       {children}
     </div>
   );
@@ -98,6 +106,7 @@ const CastingDatabasePage = () => {
   const { t } = useTranslation(undefined, { useSuspense: false });
   const { header, footer } = useChromeBoxHeights();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
+  const skillsRaw = useCachedSiteMetadataSlice('skills');
   const viewportHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer}px)`;
   const desktopPaneHeight = `calc(var(--app-vh, 1vh) * 100 - ${header + footer + 48}px)`;
 
@@ -124,6 +133,10 @@ const CastingDatabasePage = () => {
   }, []);
 
   const effectiveFilters = firstRenderRef.current ? filters : debouncedFilters;
+  const activeFilterCount = useMemo(
+    () => getCastingFilterCounts(filtersOpen ? desktopDraftFilters : filters, skillsRaw).totalCount,
+    [desktopDraftFilters, filters, filtersOpen, skillsRaw]
+  );
 
   useEffect(() => {
     setPage(0);
@@ -187,6 +200,7 @@ const CastingDatabasePage = () => {
         <CardsPaneLayout
           title={t('casting-database.page.title')}
           filtersOpen={filtersOpen}
+          activeFilterCount={activeFilterCount}
           onToggleFilters={() => setFiltersOpen((value) => !value)}
           t={t}
         >
@@ -207,6 +221,7 @@ const CastingDatabasePage = () => {
         <CardsPaneLayout
           title={t('casting-database.page.title')}
           filtersOpen={filtersOpen}
+          activeFilterCount={activeFilterCount}
           onToggleFilters={() => setFiltersOpen((value) => !value)}
           t={t}
         >
@@ -220,6 +235,7 @@ const CastingDatabasePage = () => {
         <CardsPaneLayout
           title={t('casting-database.page.title')}
           filtersOpen={filtersOpen}
+          activeFilterCount={activeFilterCount}
           onToggleFilters={() => setFiltersOpen((value) => !value)}
           t={t}
         >
@@ -232,6 +248,7 @@ const CastingDatabasePage = () => {
       <CardsPaneLayout
         title={t('casting-database.page.title')}
         filtersOpen={filtersOpen}
+        activeFilterCount={activeFilterCount}
         onToggleFilters={() => setFiltersOpen((value) => !value)}
         t={t}
       >
@@ -266,6 +283,7 @@ const CastingDatabasePage = () => {
     selectedItem?.id,
     t,
     totalCount,
+    activeFilterCount,
   ]);
 
   const contentHeader = useMemo(() => {
@@ -342,7 +360,11 @@ const CastingDatabasePage = () => {
                 />
               ) : (
                 <>
-                  <CastingDatabaseMobileList filters={effectiveFilters} onOpenFilters={() => setMobileOpen(true)} />
+                  <CastingDatabaseMobileList
+                    filters={effectiveFilters}
+                    activeFilterCount={getCastingFilterCounts(filters, skillsRaw).totalCount}
+                    onOpenFilters={() => setMobileOpen(true)}
+                  />
                 </>
               )}
             </div>

@@ -18,6 +18,7 @@ import {
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 import { getTalentVisibleGenderOptions } from '../../sitemetadata/utils/siteMetadataUtils';
 import type { TalentFiltersQS } from '../types/talent-database.types';
+import { getTalentFilterCounts } from '../utils/talentDatabaseFilterCounts';
 
 export function TalentFilterBar({
   value,
@@ -83,12 +84,6 @@ export function TalentFilterBar({
     [ethnicityOptions, t]
   );
 
-  const hasText = (s?: string | null) => !!s && s.trim().length > 0;
-  const hasAny = (arr?: unknown[]) => (arr?.length ?? 0) > 0;
-  const hasRange = (min?: number, max?: number) => min != null || max != null;
-  const genderActive = (value.genderIds ?? []).some((id) => id !== 'NULL');
-  const ethnicityActive = (value.ethnicityIds ?? []).some((id) => id !== 'NULL');
-
   const handleReset = () => {
     onChange({});
     onReset?.();
@@ -108,20 +103,10 @@ export function TalentFilterBar({
     allowNull: true,
   });
 
-  const basicCount =
-    (hasText(value.stageName) ? 1 : 0) +
-    (hasRange(value.ageMin, value.ageMax) ? 1 : 0) +
-    (genderActive ? 1 : 0) +
-    (ethnicityActive ? 1 : 0) +
-    (hasAny(value.professionId) ? 1 : 0);
-
-  const characteristicsCount =
-    (hasRange(value.heightMinCm, value.heightMaxCm) ? 1 : 0) +
-    (hasAny(value.hairColorIds) ? 1 : 0) +
-    (hasAny(value.eyeColorIds) ? 1 : 0) +
-    (value.tattoo !== undefined ? 1 : 0) +
-    (value.passport !== undefined ? 1 : 0) +
-    (value.drivingLicense !== undefined ? 1 : 0);
+  const { basicCount, characteristicsCount } = useMemo(
+    () => getTalentFilterCounts(value, skillsRaw),
+    [skillsRaw, value]
+  );
 
   const skillsCount = useMemo(() => {
     const selected = value.skillId ?? [];

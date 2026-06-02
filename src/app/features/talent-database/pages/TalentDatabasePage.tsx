@@ -1,5 +1,4 @@
 import {
-  Icon,
   LG_SCREEN_SIZE,
   Skeleton,
   useDebouncedValue,
@@ -9,10 +8,13 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FiltersDrawerActionBar, FiltersDrawerShell } from '../../../shared/components/FiltersDrawer';
+import FilterToggleButton from '../../../shared/components/FilterToggleButton/FilterToggleButton';
 import { PublicProfileDetailsView } from '../../public-profile/pages';
+import { useCachedSiteMetadataSlice } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import { TalentCard, TalentFilterBar, TalentFiltersDrawer } from '../components';
 import { getTalentDatabase } from '../services/talentDatabaseService';
 import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
+import { getTalentFilterCounts } from '../utils/talentDatabaseFilterCounts';
 
 const initialFilters: TalentFiltersQS = {
   includeNoHeadshot: undefined,
@@ -46,6 +48,7 @@ export default function TalentDatabasePage() {
   const { t } = useTranslation(undefined, { useSuspense: false });
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
+  const skillsRaw = useCachedSiteMetadataSlice('skills');
 
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
   const [desktopDraftFilters, setDesktopDraftFilters] = useState<TalentFiltersQS>(initialFilters);
@@ -238,6 +241,10 @@ export default function TalentDatabasePage() {
   const isFetchingNextPage = items.length > 0 && loading;
 
   const gridItems = useMemo(() => items, [items]);
+  const activeFilterCount = useMemo(
+    () => getTalentFilterCounts(filtersOpen ? desktopDraftFilters : filters, skillsRaw).totalCount,
+    [desktopDraftFilters, filters, filtersOpen, skillsRaw]
+  );
 
   return (
     <section className="w-full h-full min-h-0 bg-(--color-secondary-white)">
@@ -247,32 +254,25 @@ export default function TalentDatabasePage() {
             <div className="w-full max-w-[1500px] mx-auto flex-1 min-h-0 h-full">
               <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
                 <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
-                <button
-                  type="button"
-                  className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
+                <FilterToggleButton
+                  size="mobile"
+                  count={getTalentFilterCounts(filters, skillsRaw).totalCount}
                   onClick={() => setMobileOpen(true)}
-                  aria-label={t('general.filters.open')}
-                >
-                  <span className="w-12 h-12 flex items-center justify-center bg-(--color-primary-white) rounded-lg">
-                    <Icon name="filter" variant="primary" size={20} />
-                  </span>
-                </button>
+                  ariaLabel={t('general.filters.open')}
+                />
               </article>
 
               <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
                 <h2 className="text-lg font-bold text-(--color-primary-black) leading-tight">
                   {t('talent.page.title')}
                 </h2>
-                <button
-                  type="button"
-                  className="cursor-pointer inline-flex items-center gap-3"
+                <FilterToggleButton
+                  open={filtersOpen}
+                  count={activeFilterCount}
                   onClick={() => setFiltersOpen((v) => !v)}
-                  aria-pressed={filtersOpen}
-                >
-                  <span className="w-11 h-11 flex items-center justify-center bg-(--color-primary-white) rounded-lg">
-                    <Icon name="filter" variant="primary" />
-                  </span>
-                </button>
+                  ariaLabel={filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
+                  ariaPressed={filtersOpen}
+                />
               </div>
 
               {error ? (
