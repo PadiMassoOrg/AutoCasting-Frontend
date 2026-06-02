@@ -8,18 +8,17 @@ import CastingDatabasePage from '../features/casting-database/pages/CastingDatab
 import LegalAcceptanceRequiredGate from '../features/legal/components/LegalAcceptanceRequiredGate';
 import MainSiteLayout from '../features/main-site/layout/MainSiteLayout';
 import { PrivacyPage, SupportPage, TermsPage } from '../features/main-site/page';
-import MainSitePage from '../features/main-site/page/MainSitePage';
 import { OnboardingWizard } from '../features/onboarding/components';
 import { CastingDetailsPage, CastingPublicOverviewPage } from '../features/public-casting/pages';
 import { PublicProfilePage } from '../features/public-profile/pages';
-import { useOwnTalentProfileNavigation } from '../features/talent/talent-profile-edit/hooks/useOwnTalentProfileNavigation';
 import { TalentDatabasePage } from '../features/talent-database/pages';
+import { useOwnTalentProfileNavigation } from '../features/talent/talent-profile-edit/hooks/useOwnTalentProfileNavigation';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
 import { EmptyLayout, NavigationLayout, ScrollContentLayout } from '../layouts';
+import ScrollToTopOnRouteChange from '../shared/components/ScrollToTopOnRouteChange';
 import { clearClientSession } from '../shared/lib/authSession';
 import { getAuthTokenExpirationTime } from '../shared/lib/cookies';
 import { ROUTES } from '../shared/lib/routes';
-import ScrollToTopOnRouteChange from '../shared/components/ScrollToTopOnRouteChange';
 import ProtectedRoute from './ProtectedRoute';
 import ProtectedRoutesLayout from './ProtectedRoutesLayout';
 
@@ -118,8 +117,8 @@ function AppRoutesContent() {
 
   return (
     <Routes>
-      <Route element={<MainSiteLayout />}>
-        <Route path={ROUTES.HOME} element={<MainSitePage />} />
+      <Route element={<ScrollContentLayout variant="desktop-full-bleed" />}>
+        <Route path={ROUTES.HOME} element={<TalentDatabasePage />} />
       </Route>
       <Route path={ROUTES.AUTH} element={<AuthenticationPage />} />
       <Route path={ROUTES.GOOGLE_OAUTH_SUCCESS} element={<GoogleAuthSuccessPage />} />
