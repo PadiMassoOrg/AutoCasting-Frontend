@@ -1,4 +1,4 @@
-import { ChevronUpDown, Separator } from 'autocasting-ui-library-padimasso';
+import { ChevronUpDown, Separator, TagChip } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
@@ -73,13 +73,7 @@ export default function SkillsPanel({ skills }: Props) {
               {isOpen && (
                 <article id={`skills-${catKey}`} className="mt-3 flex flex-wrap gap-2">
                   {list.map((s) => (
-                    <span
-                      key={s.id}
-                      className="inline-flex items-center rounded-xl border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px]"
-                      title={s.stringCode}
-                    >
-                      {t(s.stringCode)}
-                    </span>
+                    <TagChip key={s.id} label={t(s.stringCode)} />
                   ))}
                 </article>
               )}
