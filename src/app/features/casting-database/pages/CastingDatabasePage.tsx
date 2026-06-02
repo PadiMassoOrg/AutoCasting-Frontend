@@ -103,6 +103,7 @@ const CastingDatabasePage = () => {
 
   const [filters, setFilters] = useState<CastingFiltersQS>(initialFilters);
   const [desktopDraftFilters, setDesktopDraftFilters] = useState<CastingFiltersQS>(initialFilters);
+  const desktopDraftFiltersRef = useRef<CastingFiltersQS>(initialFilters);
   const debouncedFilters = useDebouncedValue(filters, 350);
   const [page, setPage] = useState(0);
   const [selectedItem, setSelectedItem] = useState<CastingRolePublicCardResponse | null>(null);
@@ -113,6 +114,7 @@ const CastingDatabasePage = () => {
   useEffect(() => {
     if (filtersOpen) {
       setDesktopDraftFilters(filters);
+      desktopDraftFiltersRef.current = filters;
     }
   }, [filters, filtersOpen]);
 
@@ -363,10 +365,11 @@ const CastingDatabasePage = () => {
             <FiltersDrawerActionBar
               onReset={() => {
                 setDesktopDraftFilters({} as CastingFiltersQS);
+                desktopDraftFiltersRef.current = {} as CastingFiltersQS;
                 setFilters(initialFilters);
               }}
               onApply={() => {
-                setFilters(desktopDraftFilters);
+                setFilters(desktopDraftFiltersRef.current);
                 setFiltersOpen(false);
               }}
             />
@@ -374,7 +377,10 @@ const CastingDatabasePage = () => {
         >
           <CastingFilterBar
             value={desktopDraftFilters}
-            onChange={setDesktopDraftFilters}
+            onChange={(next) => {
+              desktopDraftFiltersRef.current = next;
+              setDesktopDraftFilters(next);
+            }}
             onReset={() => setFilters(initialFilters)}
             onClose={() => setFiltersOpen(false)}
           />

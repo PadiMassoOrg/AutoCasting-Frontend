@@ -49,6 +49,7 @@ export default function TalentDatabasePage() {
 
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
   const [desktopDraftFilters, setDesktopDraftFilters] = useState<TalentFiltersQS>(initialFilters);
+  const desktopDraftFiltersRef = useRef<TalentFiltersQS>(initialFilters);
   const debouncedFilters = useDebouncedValue(filters, 350);
 
   const firstRenderRef = useRef(true);
@@ -125,6 +126,7 @@ export default function TalentDatabasePage() {
   useEffect(() => {
     if (filtersOpen) {
       setDesktopDraftFilters(filters);
+      desktopDraftFiltersRef.current = filters;
     }
   }, [filters, filtersOpen]);
 
@@ -267,9 +269,6 @@ export default function TalentDatabasePage() {
                   onClick={() => setFiltersOpen((v) => !v)}
                   aria-pressed={filtersOpen}
                 >
-                  <h2 className="text-sm font-light  hover:text-(--color-primary-purple)">
-                    {filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
-                  </h2>
                   <span className="w-11 h-11 flex items-center justify-center bg-(--color-primary-white) rounded-lg">
                     <Icon name="filter" variant="primary" />
                   </span>
@@ -333,10 +332,11 @@ export default function TalentDatabasePage() {
             <FiltersDrawerActionBar
               onReset={() => {
                 setDesktopDraftFilters({} as TalentFiltersQS);
+                desktopDraftFiltersRef.current = {} as TalentFiltersQS;
                 setFilters(initialFilters);
               }}
               onApply={() => {
-                setFilters(desktopDraftFilters);
+                setFilters(desktopDraftFiltersRef.current);
                 setFiltersOpen(false);
               }}
             />
@@ -344,7 +344,10 @@ export default function TalentDatabasePage() {
         >
           <TalentFilterBar
             value={desktopDraftFilters}
-            onChange={setDesktopDraftFilters}
+            onChange={(next) => {
+              desktopDraftFiltersRef.current = next;
+              setDesktopDraftFilters(next);
+            }}
             onReset={() => setFilters(initialFilters)}
             onClose={() => setFiltersOpen(false)}
           />

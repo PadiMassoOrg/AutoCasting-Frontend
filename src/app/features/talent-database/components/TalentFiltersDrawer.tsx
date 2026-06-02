@@ -18,9 +18,13 @@ export function TalentFiltersDrawer({
 }) {
   const [draft, setDraft] = useState<TalentFiltersQS>(value);
   const contentRef = useRef<HTMLDivElement>(null);
+  const draftRef = useRef<TalentFiltersQS>(value);
 
   useEffect(() => {
-    if (open) setDraft(value);
+    if (open) {
+      setDraft(value);
+      draftRef.current = value;
+    }
   }, [open, value]);
 
   return (
@@ -33,10 +37,11 @@ export function TalentFiltersDrawer({
         <FiltersDrawerActionBar
           onReset={() => {
             setDraft({});
+            draftRef.current = {};
             onReset?.();
           }}
           onApply={() => {
-            onApply?.(draft);
+            onApply?.(draftRef.current);
             onClose();
           }}
         />
@@ -44,7 +49,10 @@ export function TalentFiltersDrawer({
     >
       <TalentFilterBar
         value={draft}
-        onChange={setDraft}
+        onChange={(next) => {
+          draftRef.current = next;
+          setDraft(next);
+        }}
         onReset={onReset}
         onClose={onClose}
         forwardScrollToRef={contentRef as React.RefObject<HTMLElement | null>}

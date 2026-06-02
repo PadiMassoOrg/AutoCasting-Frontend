@@ -9,8 +9,9 @@ import {
   useToggleSet,
 } from '../../../../../shared/utils/formUtils';
 import { capitalize } from '../../../../../shared/utils/formatUtils';
-import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
+import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
+import { getTalentVisibleGenderOptions } from '../../../../sitemetadata/utils/siteMetadataUtils';
 import { useBasicInfoAutosave } from '../../hooks/autosaves';
 import { getBasicInfoSchema } from '../../schemas/basicInfoSchema';
 import type { TalentProfileBasicInfo } from '../../types/talentProfile.types';
@@ -43,7 +44,15 @@ export default function BasicInfoForm({
     return iso > todayIso ? t('validation.birth_date_future') : null;
   };
 
-  const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
+  const genderOptionsRaw = useCachedSiteMetadataSlice('genderOptions');
+  const genderOptions = useMemo(
+    () =>
+      getTalentVisibleGenderOptions(genderOptionsRaw).map((option) => ({
+        value: option.id,
+        label: t(option.stringCode),
+      })),
+    [genderOptionsRaw, t]
+  );
   const autosave = useBasicInfoAutosave();
   const schema = useMemo(() => getBasicInfoSchema(t), [t]);
   const backendFieldErrors = autosave.fieldErrors as Record<string, string | undefined>;
