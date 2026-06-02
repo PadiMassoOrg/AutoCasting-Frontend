@@ -34,7 +34,7 @@ export default function CreateCastingNavAction({
       disabled={isPending}
     >
       <span className="flex flex-row items-center gap-2">
-        <Icon name="clapperCreate" variant={active ? 'primary' : 'default'} className={iconClassName} />
+        <Icon name="plus" variant={'primary'} className={iconClassName} />
         {showLabel ? t('employer_castings.page.create_casting') : null}
       </span>
     </button>
