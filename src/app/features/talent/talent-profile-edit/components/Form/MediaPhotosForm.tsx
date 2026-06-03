@@ -2,6 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Label, UploadTile } from 'autocasting-ui-library-padimasso';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '../../../../../context/ToastContext';
 import { useProfileMediaDelete } from '../../../../../integrations/supabase/media/hooks/useProfileMediaDelete';
 import { useProfileMediaPatch } from '../../../../../integrations/supabase/media/hooks/useProfileMediaPatch';
 import { fileSchema, OTHER_SLOTS, otherIndexSchema } from '../../schemas/mediaSchema';
@@ -12,6 +13,7 @@ import { getBackendErrorMessage } from '../../../../../shared/utils/backendError
 export default function MediaPhotosForm({ media, supabaseId }: { media: Media; supabaseId: string }) {
   const qc = useQueryClient();
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const { mutate: upload } = useProfileMediaPatch(supabaseId);
   const { mutateAsync: removeMedia } = useProfileMediaDelete();
 
@@ -48,12 +50,13 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
     return count;
   })();
 
-  const showTimedHeadshotError = (message: string) => {
-    setErrHeadshot(message);
-    setTimeout(() => {
-      setErrHeadshot((current) => (current === message ? null : current));
-    }, 5500);
-  };
+  const showMustHaveOnePhotoToast = () =>
+    showToast({
+      title: t('general.warning'),
+      description: t('profile.media.must_have_one_photo'),
+      type: 'warning',
+      durationMs: 5500,
+    });
 
   const pick = (slot: 'headshot' | 'fullbody') => async (files: File[] | File) => {
     const file = Array.isArray(files) ? files[0] : files;
@@ -165,7 +168,7 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
 
   const onDeleteHeadshot = async () => {
     if (totalImages <= 1) {
-      showTimedHeadshotError(t('profile.media.must_have_one_photo'));
+      showMustHaveOnePhotoToast();
       return;
     }
     setErrHeadshot(null);
@@ -188,7 +191,7 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
 
   const onDeleteFullbody = async () => {
     if (totalImages <= 1) {
-      showTimedHeadshotError(t('profile.media.must_have_one_photo'));
+      showMustHaveOnePhotoToast();
       return;
     }
     setErrHeadshot(null);
@@ -212,7 +215,7 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
 
   const onDeleteOther = async (index: number) => {
     if (totalImages <= 1) {
-      showTimedHeadshotError(t('profile.media.must_have_one_photo'));
+      showMustHaveOnePhotoToast();
       return;
     }
     setErrHeadshot(null);

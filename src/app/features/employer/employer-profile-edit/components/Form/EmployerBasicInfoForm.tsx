@@ -8,6 +8,7 @@ import {
 } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '../../../../../context/ToastContext';
 import { useEmployerLogoPatch } from '../../../../../integrations/supabase/media/hooks/useEmployerLogoPatch';
 import { getBackendErrorMessage } from '../../../../../shared/utils/backendErrorHandling';
 import { useCommittedText, useCommittedUuid } from '../../../../../shared/utils/formUtils';
@@ -37,6 +38,7 @@ type Props = {
 
 export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const autosave = useEmployerBasicInfoAutosave();
   const socialMediaAutosave = useEmployerSocialMediaAutosave();
   const schema = useMemo(() => getEmployerBasicInfoSchema(t), [t]);
@@ -178,25 +180,23 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   };
 
   const handleDeleteLogo = () => {
-    const message = t('profile.media.must_have_one_photo');
-    setErrImage(message);
-    setErrors((e) => ({ ...e, imageUrl: message }));
-    setTimeout(() => {
-      setErrImage((current) => (current === message ? null : current));
-      setErrors((current) => (current.imageUrl === message ? { ...current, imageUrl: null } : current));
-    }, 5500);
+    showToast({
+      title: t('general.warning'),
+      description: t('profile.media.must_have_one_photo'),
+      type: 'warning',
+      durationMs: 5500,
+    });
   };
 
   const logoUrl = uploadPending ? undefined : withBust(currentLogoUrl, bust);
   const isLogoBusy = uploadPending;
-  const imageBlockSpacingClass = errImage ? 'lg:mb-[28px]' : '';
 
   const socialMediaData: ProfileSocialMedia = (data.socialMedia ?? { links: [] }) as ProfileSocialMedia;
   const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
 
   return (
     <div className="w-full flex flex-col gap-1">
-      <div className={`relative flex flex-col lg:block lg:gap-2 ${imageBlockSpacingClass}`}>
+      <div className="relative flex flex-col lg:gap-2 lg:block">
         <div className="flex flex-col gap-1 lg:pr-[280px]">
           <FormInputField
             id="companyName"
