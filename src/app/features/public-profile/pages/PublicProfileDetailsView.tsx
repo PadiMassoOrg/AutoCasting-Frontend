@@ -1,4 +1,4 @@
-import { DetailsView, ImageCarousel, SectionCard } from 'autocasting-ui-library-padimasso';
+import { Button, DetailsView, Icon, ImageCarousel, SectionCard, TagChip } from 'autocasting-ui-library-padimasso';
 import type { JSX } from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,7 @@ import VideoSection from '../../public-profile/components/VideoSection';
 import { ProfileShareActions, SocialMediaSection } from '../components';
 import { usePublicProfile } from '../hooks/usePublicProfile';
 import { SkillsPanel } from '../components/Details';
+import { Link } from 'react-router-dom';
 
 type Props = {
   open: boolean;
@@ -37,32 +38,25 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
   const skills = profile?.skills ?? [];
 
   const professions =
-    basicInfo?.professions && basicInfo.professions.length > 0
-      ? basicInfo.professions.reduce<JSX.Element[]>((acc, curr, index) => {
-          const label = t(curr.stringCode ?? '');
-          if (!label) return acc;
-
-          if (index === 0) return [<span key={curr.id}>{label}</span>];
-
-          return [
-            ...acc,
-            <span key={`sep-${index}`} className="mx-1">
-              •
-            </span>,
-            <span key={curr.id}>{label}</span>,
-          ];
-        }, [])
-      : null;
+    basicInfo?.professions &&
+    basicInfo.professions.length > 0 &&
+    basicInfo.professions.slice(0, 3).map((p) => <TagChip key={p.id ?? p.stringCode} label={t(p.stringCode!)} />);
 
   const url = `${window.location.origin}/profile/${profile?.publicSlug ?? ''}`;
 
   const loadedHeaderLeft = (
-    <div className="flex flex-col min-w-0">
+    <div className="flex flex-col min-w-0 gap-2">
       <h2 className="text-2xl font-bold truncate">{basicInfo?.stageName}</h2>
-      {professions && (
-        <span className="flex flex-wrap items-center text-sm text-(--color-secondary-grey)">{professions}</span>
-      )}
+      {professions && <span className="flex flex-wrap items-center gap-1">{professions}</span>}
     </div>
+  );
+
+  const renderButtonBar = (
+    <Link to={url}>
+      <Button variant="primary" className="flex flex-row gap-2 items-center">
+        {t('profile.page.view_profile')} <Icon name="open" variant="white" />
+      </Button>
+    </Link>
   );
 
   return (
@@ -72,6 +66,7 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
       headerLeft={loadedHeaderLeft}
       loading={isLoading}
       loadingHeaderHeightClassName="h-[52px]"
+      bottomBar={renderButtonBar}
     >
       <div className="flex flex-col gap-6">
         <div className="w-full flex flex-row items-center justify-between">
