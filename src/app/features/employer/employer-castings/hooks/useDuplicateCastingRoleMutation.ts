@@ -10,8 +10,8 @@ export const useDuplicateCastingRoleMutation = (slug?: string) => {
   const showErrorToast = useBackendErrorToast();
   const queryClient = useQueryClient();
 
-  return useMutation<CastingRoleResponse, unknown, { roleId: string }>({
-    mutationFn: ({ roleId }) => duplicateCastingRole({ roleId }),
+  return useMutation<CastingRoleResponse, unknown, { roleId: string; roleName?: string }>({
+    mutationFn: ({ roleId, roleName }) => duplicateCastingRole({ roleId, roleName }),
     onSuccess: async () => {
       if (slug) {
         await queryClient.invalidateQueries({ queryKey: [...EMPLOYER_CASTING_EDITOR_CACHE_KEY, slug] });

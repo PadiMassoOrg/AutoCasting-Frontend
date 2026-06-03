@@ -1106,6 +1106,7 @@
         "add_new": "Nuevo Rol",
         "edit": "Editar Rol",
         "save_role": "Guardar Rol",
+        "duplicate_name": "Copia de {{name}}",
         "delete": "¿Seguro deseas eliminar este rol?",
         "role": {
           "role": "Rol",

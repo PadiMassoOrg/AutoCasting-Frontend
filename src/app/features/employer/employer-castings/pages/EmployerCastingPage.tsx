@@ -191,7 +191,11 @@ const EmployerCastingPage = () => {
   };
 
   const handleDuplicateRole = async (roleId: string) => {
-    const duplicatedRole = await duplicateRoleMutation.mutateAsync({ roleId });
+    const sourceRole = roleCards.find((role) => role.id === roleId);
+    const duplicateRoleName = t('employer_castings.dashboard.roles.duplicate_name', {
+      name: sourceRole?.roleName ?? '',
+    });
+    const duplicatedRole = await duplicateRoleMutation.mutateAsync({ roleId, roleName: duplicateRoleName });
     resetRoleEditor(duplicatedRole.id, toRoleFormData(duplicatedRole));
     setActiveSectionKey('roles');
   };
