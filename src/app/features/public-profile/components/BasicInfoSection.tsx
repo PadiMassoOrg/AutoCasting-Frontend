@@ -1,6 +1,7 @@
-import { Button, LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
+import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
+import { TalentProfilePageModeSwitcher } from '../../talent/talent-profile-edit/components';
 import { useOwnTalentProfileNavigation } from '../../talent/talent-profile-edit/hooks/useOwnTalentProfileNavigation';
 import type { TalentPublicProfileResponse } from '../../talent/talent-profile-edit/types/talentProfile.types';
 import SocialMediaSection from './SocialMediaSection';
@@ -10,7 +11,7 @@ const BasicInfoSection = ({ data }: { data: TalentPublicProfileResponse }) => {
   const { t } = useTranslation();
   const { basicInfo, socialMedia } = data;
   const isDesktop = useMedia(LG_SCREEN_SIZE);
-  const { isOwnPublicProfile, isTalentMode, goToEditProfile } = useOwnTalentProfileNavigation({
+  const { isOwnPublicProfile, isTalentMode } = useOwnTalentProfileNavigation({
     viewedPublicSlug: data.publicSlug,
   });
 
@@ -21,16 +22,12 @@ const BasicInfoSection = ({ data }: { data: TalentPublicProfileResponse }) => {
       {isDesktop ? (
         <div className="flex items-center justify-between">
           <div className="flex flex-row items-center gap-10">
-            <h2 className="text-[32px] font-bold">{basicInfo.stageName}</h2>
+            <h2 className="text-[29px] font-bold">{basicInfo.stageName}</h2>
             <ViewerActions className="shrink-0" />
           </div>
           <div className="flex flex-row items-center gap-4">
             <SocialMediaSection data={socialMedia!} />
-            {showEditProfileButton && (
-              <Button variant="primary" className="w-auto!" onClick={goToEditProfile}>
-                {t('profile.page.edit_profile')}
-              </Button>
-            )}
+            {showEditProfileButton && <TalentProfilePageModeSwitcher viewedPublicSlug={data.publicSlug} />}
           </div>
         </div>
       ) : (

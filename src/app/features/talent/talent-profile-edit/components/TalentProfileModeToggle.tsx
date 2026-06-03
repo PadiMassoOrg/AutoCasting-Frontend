@@ -21,7 +21,7 @@ export default function TalentProfileModeToggle() {
   if (!isDesktop && isTalentMode)
     return (
       <MobileBottomBar>
-        <article className="w-full p-1 rounded-lg border border-[var(--color-secondary-outline)] shadow-sm flex items-center">
+        <article className="w-[90%] m-auto p-1 rounded-lg border border-[var(--color-secondary-outline)] shadow-sm flex items-center">
           <button
             type="button"
             onClick={goToPublicProfile}
