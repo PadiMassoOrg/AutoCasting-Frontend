@@ -1,5 +1,4 @@
 import { Button, DetailsView, Icon, ImageCarousel, SectionCard, TagChip } from 'autocasting-ui-library-padimasso';
-import type { JSX } from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import ServerError from '../../../shared/components/ServerError/ServerError';
