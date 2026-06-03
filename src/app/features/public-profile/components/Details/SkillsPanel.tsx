@@ -50,18 +50,20 @@ export default function SkillsPanel({ skills }: Props) {
       {categories.map((catKey, index) => {
         const list = groups[catKey];
         if (!list?.length) return null;
-        let customClass = index === 0 ? 'pt-0 pb-6' : 'py-6';
+        const hasMultipleCategories = categories.length > 1;
         return (
           <div key={catKey}>
-            <article className={customClass}>
+            <article>
               <span className="font-semibold text-base lg:text-[14px]">{t(catKey)}</span>
-              <article id={`skills-${catKey}`} className="mt-3 flex flex-wrap gap-2">
+              <article id={`skills-${catKey}`} className="mt-2 flex flex-wrap gap-2">
                 {list.map((s) => (
                   <TagChip key={s.id} label={t(s.stringCode)} />
                 ))}
               </article>
             </article>
-            <Separator className="opacity-20" />
+            {hasMultipleCategories && index < categories.length - 1 ? (
+              <Separator className="opacity-20 my-4.5" />
+            ) : null}
           </div>
         );
       })}

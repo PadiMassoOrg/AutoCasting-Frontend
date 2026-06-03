@@ -1,13 +1,12 @@
-import { DetailsView, Icon, ImageCarousel, Separator } from 'autocasting-ui-library-padimasso';
+import { DetailsView, ImageCarousel, SectionCard } from 'autocasting-ui-library-padimasso';
 import type { JSX } from 'react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import ServerError from '../../../shared/components/ServerError/ServerError';
-import ProfileInfoCarousel from '../../public-profile/components/Details/ProfileInfoCarousel';
 import VideoSection from '../../public-profile/components/VideoSection';
 import { ProfileShareActions, SocialMediaSection } from '../components';
 import { usePublicProfile } from '../hooks/usePublicProfile';
+import { SkillsPanel } from '../components/Details';
 
 type Props = {
   open: boolean;
@@ -35,6 +34,7 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
   const basicInfo = profile?.basicInfo;
   const media = profile?.media;
   const socialMedia = profile?.socialMedia;
+  const skills = profile?.skills ?? [];
 
   const professions =
     basicInfo?.professions && basicInfo.professions.length > 0
@@ -65,18 +65,11 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
     </div>
   );
 
-  const headerRight = (
-    <Link aria-label={t('profile.share.share_profile')} className="cursor-pointer" to={url}>
-      {!isLoading && <Icon name="open" variant="primary" />}
-    </Link>
-  );
-
   return (
     <DetailsView
       open={open}
       onClose={onClose}
       headerLeft={loadedHeaderLeft}
-      headerRight={headerRight}
       loading={isLoading}
       loadingHeaderHeightClassName="h-[52px]"
     >
@@ -86,8 +79,13 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
           {socialMedia && <SocialMediaSection data={socialMedia} />}
         </div>
         <ImageCarousel images={images.length > 0 ? images : null} isDesktop isDesktopXL />
-        {profile && <ProfileInfoCarousel profile={profile} infoPanelFixedHeight={true} />}
-        <Separator className="opacity-20 my-4" />
+
+        {skills.length > 0 && (
+          <SectionCard>
+            <SkillsPanel skills={skills} />
+          </SectionCard>
+        )}
+
         {media && <VideoSection data={media} />}
       </div>
     </DetailsView>

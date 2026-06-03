@@ -61,7 +61,7 @@ function GroupedSkills({ skills, onRemove }: { skills: SiteMetadataObject[]; onR
                 ))}
               </div>
             </article>
-            <Separator className="opacity-20 my-5.5" />
+            <Separator className="opacity-20 my-4.5" />
           </div>
         );
       })}
