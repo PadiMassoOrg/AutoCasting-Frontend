@@ -1,5 +1,5 @@
-import { ChevronUpDown, Separator, TagChip } from 'autocasting-ui-library-padimasso';
-import { useMemo, useState } from 'react';
+import { Separator, TagChip } from 'autocasting-ui-library-padimasso';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 type Props = { skills: SiteMetadataObject[] };
@@ -14,7 +14,6 @@ const ORDER_KEYS = [
 
 export default function SkillsPanel({ skills }: Props) {
   const { t } = useTranslation();
-  const [open, setOpen] = useState<Record<string, boolean>>({});
 
   const groups = useMemo(() => {
     const g: Record<string, SiteMetadataObject[]> = {};
@@ -51,32 +50,16 @@ export default function SkillsPanel({ skills }: Props) {
       {categories.map((catKey, index) => {
         const list = groups[catKey];
         if (!list?.length) return null;
-        const isOpen = open[catKey] ?? true;
         let customClass = index === 0 ? 'pt-0 pb-6' : 'py-6';
         return (
           <div key={catKey}>
             <article className={customClass}>
-              <button
-                type="button"
-                onClick={() => {
-                  const y = window.scrollY;
-                  setOpen((s) => ({ ...s, [catKey]: !isOpen }));
-                  requestAnimationFrame(() => window.scrollTo({ top: y }));
-                }}
-                className="w-full flex items-center justify-between cursor-pointer"
-                aria-expanded={isOpen}
-                aria-controls={`skills-${catKey}`}
-              >
-                <span className="font-semibold text-base lg:text-[14px]">{t(catKey)}:</span>
-                <ChevronUpDown open={isOpen} />
-              </button>
-              {isOpen && (
-                <article id={`skills-${catKey}`} className="mt-3 flex flex-wrap gap-2">
-                  {list.map((s) => (
-                    <TagChip key={s.id} label={t(s.stringCode)} />
-                  ))}
-                </article>
-              )}
+              <span className="font-semibold text-base lg:text-[14px]">{t(catKey)}</span>
+              <article id={`skills-${catKey}`} className="mt-3 flex flex-wrap gap-2">
+                {list.map((s) => (
+                  <TagChip key={s.id} label={t(s.stringCode)} />
+                ))}
+              </article>
             </article>
             <Separator className="opacity-20" />
           </div>

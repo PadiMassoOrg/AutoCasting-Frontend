@@ -1,5 +1,5 @@
 import { TagChip, Separator } from 'autocasting-ui-library-padimasso';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
 
@@ -13,7 +13,6 @@ const ORDER_KEYS = [
 
 function GroupedSkills({ skills, onRemove }: { skills: SiteMetadataObject[]; onRemove?: (id: string) => void }) {
   const { t } = useTranslation();
-  const [open, setOpen] = useState<Record<string, boolean>>({});
 
   const allCategorized = useMemo(() => skills.length > 0 && skills.every((s: any) => !!s.categoryStringCode), [skills]);
 
@@ -50,38 +49,19 @@ function GroupedSkills({ skills, onRemove }: { skills: SiteMetadataObject[]; onR
       {categories.map((cat) => {
         const list = groups[cat];
         if (!list?.length) return null;
-        const isOpen = open[cat] ?? true;
 
         return (
           <div key={cat}>
-            <article className="">
-              <button
-                type="button"
-                className="w-full flex items-center justify-between cursor-pointer"
-                aria-expanded={isOpen}
-                aria-controls={`skills-${cat}`}
-                onClick={() => setOpen((s) => ({ ...s, [cat]: !isOpen }))}
-              >
-                <span className="font-semibold text-base">{t(cat)}:</span>
-                <svg
-                  className={`w-6 h-6 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
-                </svg>
-              </button>
+            <article>
+              <span className="font-semibold text-sm">{t(cat)}</span>
 
-              {isOpen && (
-                <div id={`skills-${cat}`} className="mt-3 flex flex-wrap gap-2">
-                  {list.map((s) => (
-                    <TagChip key={s.id} label={t(s.stringCode)} onRemove={() => onRemove && onRemove(s.id)}></TagChip>
-                  ))}
-                </div>
-              )}
+              <div id={`skills-${cat}`} className="mt-2 flex flex-wrap gap-2">
+                {list.map((s) => (
+                  <TagChip key={s.id} label={t(s.stringCode)} onRemove={() => onRemove && onRemove(s.id)}></TagChip>
+                ))}
+              </div>
             </article>
-            <Separator className="opacity-20 my-6" />
+            <Separator className="opacity-20 my-5.5" />
           </div>
         );
       })}

@@ -86,7 +86,6 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
           {socialMedia && <SocialMediaSection data={socialMedia} />}
         </div>
         <ImageCarousel images={images.length > 0 ? images : null} isDesktop isDesktopXL />
-        <Separator className="opacity-20 my-4" />
         {profile && <ProfileInfoCarousel profile={profile} infoPanelFixedHeight={true} />}
         <Separator className="opacity-20 my-4" />
         {media && <VideoSection data={media} />}
