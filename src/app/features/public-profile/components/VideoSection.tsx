@@ -1,19 +1,26 @@
-import { VideoPreviewCard } from 'autocasting-ui-library-padimasso';
+import { LG_SCREEN_SIZE, useMedia, VideoPreviewCard, XL_SCREEN_SIZE } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import { LG_SCREEN_SIZE, useMedia, XL_SCREEN_SIZE } from 'autocasting-ui-library-padimasso';
 import type { Media } from '../../talent/talent-profile-edit/types/talentProfile.types';
 
-const VideoSection = ({ data }: { data: Media }) => {
+const VideoSection = ({
+  data,
+  useGrid = false,
+  gridOnDesktop = false,
+}: {
+  data: Media;
+  useGrid?: boolean;
+  gridOnDesktop?: boolean;
+}) => {
   const { t } = useTranslation();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
   const { introductionVideoUrl, showReelVideoUrl } = data;
 
   const hasVideos = Boolean(introductionVideoUrl || showReelVideoUrl);
-  const useGrid = isDesktop && !isDesktopXL;
+  const shouldUseGrid = useGrid || (gridOnDesktop && isDesktop && !isDesktopXL);
 
-  const containerCls = useGrid ? 'grid grid-cols-4 gap-6 items-start p-6' : 'flex flex-col gap-4 p-6';
-  const itemCls = useGrid ? 'flex flex-col gap-1' : 'flex flex-col gap-1';
+  const containerCls = shouldUseGrid ? 'grid grid-cols-2 gap-6 items-start p-6' : 'flex flex-col gap-4 p-6';
+  const itemCls = shouldUseGrid ? 'flex flex-col gap-1' : 'flex flex-col gap-1';
 
   return (
     <article className="w-full h-full flex flex-col gap-2 bg-[var(--color-primary-white)] rounded-lg border-[var(--color-secondary-outline)] border">

@@ -55,7 +55,7 @@ const PublicProfilePage = () => {
           </aside>
         </div>
         <Separator className="opacity-25 my-12" />
-        <VideoSection data={media} />
+        <VideoSection data={media} gridOnDesktop />
         <Separator className="opacity-25 my-12" />
       </article>
     );
@@ -92,7 +92,7 @@ const PublicProfilePage = () => {
 
             {/* Videos (columna fija de 350px) */}
             <div className="min-w-0 h-full min-h-0 overflow-auto flex flex-col">
-              <VideoSection data={media} />
+              <VideoSection data={media} gridOnDesktop />
             </div>
           </div>
         </div>

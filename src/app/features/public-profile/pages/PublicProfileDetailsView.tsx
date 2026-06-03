@@ -86,7 +86,7 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
           </SectionCard>
         )}
 
-        {media && <VideoSection data={media} />}
+        {media && <VideoSection data={media} useGrid />}
       </div>
     </DetailsView>
   );
