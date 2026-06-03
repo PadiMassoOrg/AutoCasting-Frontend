@@ -178,22 +178,25 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   };
 
   const handleDeleteLogo = () => {
-    setPreviewUrl(null);
-    setErrImage(null);
-    setErrors((e) => ({ ...e, imageUrl: null }));
-    autosave.immediate({ imageUrl: null });
-    setBust((prev) => prev + 1);
+    const message = t('profile.media.must_have_one_photo');
+    setErrImage(message);
+    setErrors((e) => ({ ...e, imageUrl: message }));
+    setTimeout(() => {
+      setErrImage((current) => (current === message ? null : current));
+      setErrors((current) => (current.imageUrl === message ? { ...current, imageUrl: null } : current));
+    }, 5500);
   };
 
   const logoUrl = uploadPending ? undefined : withBust(currentLogoUrl, bust);
   const isLogoBusy = uploadPending;
+  const imageBlockSpacingClass = errImage ? 'lg:mb-[28px]' : '';
 
   const socialMediaData: ProfileSocialMedia = (data.socialMedia ?? { links: [] }) as ProfileSocialMedia;
   const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
 
   return (
     <div className="w-full flex flex-col gap-1">
-      <div className="relative flex flex-col lg:gap-2 lg:block">
+      <div className={`relative flex flex-col lg:block lg:gap-2 ${imageBlockSpacingClass}`}>
         <div className="flex flex-col gap-1 lg:pr-[280px]">
           <FormInputField
             id="companyName"
@@ -233,7 +236,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
         </div>
 
         <div className="w-full max-w-[240px] lg:absolute lg:top-0 lg:right-0 lg:h-full lg:w-[240px]">
-          <div className="grid gap-1 lg:h-full lg:min-h-0 lg:grid-rows-[auto_minmax(0,1fr)_25px]">
+          <div className="grid gap-1 lg:h-full lg:grid-rows-[auto_minmax(0,1fr)_25px]">
             <Label className="w-full self-start text-sm font-semibold">{t('employer_profile.basic_info.image')}</Label>
             <div className="w-full aspect-[3/4] lg:h-full lg:min-h-0 lg:aspect-auto">
               <UploadTile
@@ -254,7 +257,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
             </div>
 
             {errImage ? (
-              <span className="w-full max-h-[25px] text-xs text-red-600">{errImage}</span>
+              <span className="w-full min-h-[25px] text-sm text-red-600">{errImage}</span>
             ) : (
               <div className="min-h-[25px] w-full" />
             )}
