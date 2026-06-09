@@ -27,12 +27,6 @@ function RouteTracker() {
   return null;
 }
 
-function PublicProfileRouteLayout() {
-  const { isOwnPublicProfile } = useOwnTalentProfileNavigation();
-
-  return <NavigationLayout variant={isOwnPublicProfile ? 'public-profile-own' : 'default'} />;
-}
-
 function isProtectedPath(pathname: string) {
   return pathname.startsWith(ROUTES.DASHBOARD);
 }
@@ -128,7 +122,7 @@ function AppRoutesContent() {
         <Route path={ROUTES.TERMS} element={<TermsPage />} />
         <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
       </Route>
-      <Route element={<PublicProfileRouteLayout />}>
+      <Route element={<NavigationLayout />}>
         <Route path={ROUTES.PUBLIC_PROFILE + '/:slug'} element={<PublicProfilePage />} />
       </Route>
       <Route element={<ScrollContentLayout variant="desktop-full-bleed" />}>
