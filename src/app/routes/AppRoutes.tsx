@@ -12,7 +12,6 @@ import { OnboardingWizard } from '../features/onboarding/components';
 import { CastingDetailsPage, CastingPublicOverviewPage } from '../features/public-casting/pages';
 import { PublicProfilePage } from '../features/public-profile/pages';
 import { TalentDatabasePage } from '../features/talent-database/pages';
-import { useOwnTalentProfileNavigation } from '../features/talent/talent-profile-edit/hooks/useOwnTalentProfileNavigation';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
 import { EmptyLayout, NavigationLayout, ScrollContentLayout } from '../layouts';
 import ScrollToTopOnRouteChange from '../shared/components/ScrollToTopOnRouteChange';

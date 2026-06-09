@@ -45,7 +45,7 @@ export default function FiltersDrawerShell({
 
   const panelClassName =
     variant === 'mobile'
-      ? 'fixed bottom-0 right-0 flex h-[100dvh] w-[82%] flex-col overflow-hidden bg-white'
+      ? 'fixed inset-[10px] flex flex-col overflow-hidden rounded-xl bg-white shadow-2xl'
       : 'fixed right-[10px] top-[10px] bottom-[10px] flex w-[400px] flex-col overflow-hidden rounded-xl bg-white';
 
   const footerClassName =

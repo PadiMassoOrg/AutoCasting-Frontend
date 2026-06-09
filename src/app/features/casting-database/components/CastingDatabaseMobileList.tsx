@@ -148,7 +148,7 @@ export default function CastingDatabaseMobileList({ filters, activeFilterCount, 
       ref={scrollContainerRef}
       className="scrollbar-hide flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain"
     >
-      <article className="flex items-center justify-between shrink-0 py-2">
+      <article className="flex items-center justify-between shrink-0 px-6 py-2">
         <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
         <FilterToggleButton
           size="mobile"

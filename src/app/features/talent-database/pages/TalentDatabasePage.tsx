@@ -11,7 +11,7 @@ import { FiltersDrawerActionBar, FiltersDrawerShell } from '../../../shared/comp
 import FilterToggleButton from '../../../shared/components/FilterToggleButton/FilterToggleButton';
 import { PublicProfileDetailsView } from '../../public-profile/pages';
 import { useCachedSiteMetadataSlice } from '../../sitemetadata/hooks/useCachedSiteMetadata';
-import { TalentCard, TalentFilterBar, TalentFiltersDrawer } from '../components';
+import { TalentCard, TalentFilterBar, TalentMobileFilterDrawer } from '../components';
 import { getTalentDatabase } from '../services/talentDatabaseService';
 import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
 import { getTalentFilterCounts } from '../utils/talentDatabaseFilterCounts';
@@ -249,10 +249,10 @@ export default function TalentDatabasePage() {
   return (
     <section className="w-full h-full min-h-0 bg-(--color-secondary-white)">
       <div className="h-full w-full flex flex-col">
-        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0 lg:overflow-visible">
+        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-visible lg:flex-row lg:gap-0 lg:overflow-visible">
           <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[40px] lg:py-[24px]">
             <div className="w-full max-w-[1500px] mx-auto flex-1 min-h-0 h-full">
-              <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
+              <article className="lg:hidden flex items-center justify-between shrink-0 px-6 py-2">
                 <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
                 <FilterToggleButton
                   size="mobile"
@@ -316,7 +316,7 @@ export default function TalentDatabasePage() {
           </div>
         </div>
 
-        <TalentFiltersDrawer
+        <TalentMobileFilterDrawer
           open={mobileOpen}
           onClose={() => setMobileOpen(false)}
           value={filters}

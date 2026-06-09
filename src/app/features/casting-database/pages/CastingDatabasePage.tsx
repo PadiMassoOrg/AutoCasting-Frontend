@@ -342,11 +342,11 @@ const CastingDatabasePage = () => {
 
   return (
     <section
-      className="w-full min-h-0 overflow-hidden bg-(--color-secondary-white)"
+      className="w-full min-h-0 overflow-visible lg:overflow-hidden bg-(--color-secondary-white)"
       style={{ height: viewportHeight, minHeight: viewportHeight, maxHeight: viewportHeight }}
     >
       <div className="h-full w-full flex flex-col">
-        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0">
+        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-visible lg:flex-row lg:gap-0">
           <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[40px] lg:py-[24px]">
             <div className="mx-auto flex w-full max-w-[1500px] flex-1 min-h-0 h-full flex-col gap-6">
               {isDesktop ? (

@@ -3,7 +3,7 @@ import { FiltersDrawerActionBar, FiltersDrawerShell } from '../../../shared/comp
 import type { TalentFiltersQS } from '../types/talent-database.types';
 import { TalentFilterBar } from './TalentFilterBar';
 
-export function TalentFiltersDrawer({
+export function TalentMobileFilterDrawer({
   open,
   onClose,
   value,
