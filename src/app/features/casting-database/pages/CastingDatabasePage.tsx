@@ -1,7 +1,6 @@
 import {
   LG_SCREEN_SIZE,
   MasterDetailShell,
-  Separator,
   Skeleton,
   useChromeBoxHeights,
   useDebouncedValue,
@@ -86,9 +85,10 @@ function CardsPaneLayout({
   onToggleFilters,
   t,
   children,
-}: CardsPaneHeaderProps & { children: React.ReactNode }) {
+  footer,
+}: CardsPaneHeaderProps & { children: React.ReactNode; footer?: React.ReactNode }) {
   return (
-    <div className="flex min-h-full w-full flex-col">
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden">
       <CardsPaneHeader
         title={title}
         filtersOpen={filtersOpen}
@@ -96,7 +96,8 @@ function CardsPaneLayout({
         onToggleFilters={onToggleFilters}
         t={t}
       />
-      {children}
+      <div className="flex-1 min-h-0 overflow-y-auto pr-2">{children}</div>
+      {footer ? <div className="shrink-0 pt-4">{footer}</div> : null}
     </div>
   );
 }
@@ -251,6 +252,15 @@ const CastingDatabasePage = () => {
         activeFilterCount={activeFilterCount}
         onToggleFilters={() => setFiltersOpen((value) => !value)}
         t={t}
+        footer={
+          <CastingCatalogPagination
+            page={page}
+            size={PAGE_SIZE}
+            hasNext={hasNext}
+            totalCount={totalCount}
+            onPageChange={handleDesktopPageChange}
+          />
+        }
       >
         <div className="flex flex-col gap-3">
           {items.map((item) => (
@@ -262,14 +272,6 @@ const CastingDatabasePage = () => {
             />
           ))}
         </div>
-        <Separator className="opacity-0 my-2" />
-        <CastingCatalogPagination
-          page={page}
-          size={PAGE_SIZE}
-          hasNext={hasNext}
-          totalCount={totalCount}
-          onPageChange={handleDesktopPageChange}
-        />
       </CardsPaneLayout>
     );
   }, [
