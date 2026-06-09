@@ -19,10 +19,10 @@ export default function SectionTitle({ title, action }: SectionTitleProps) {
         {showBack ? (
           <button type="button" onClick={goToNav} className="cursor-pointer flex items-center gap-1">
             <ChevronLeft />
-            <h2 className="text-lg font-semibold truncate">{title}</h2>
+            <h2 className="text-2xl font-semibold truncate">{title}</h2>
           </button>
         ) : (
-          <h2 className="text-lg font-semibold truncate">{title}</h2>
+          <h2 className="text-2xl font-semibold truncate">{title}</h2>
         )}
       </div>
 

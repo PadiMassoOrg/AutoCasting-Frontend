@@ -64,9 +64,9 @@ type CardsPaneHeaderProps = {
 
 function CardsPaneHeader({ title, filtersOpen, activeFilterCount, onToggleFilters, t }: CardsPaneHeaderProps) {
   return (
-    <div className="sticky top-0 z-10 overflow-visible bg-(--color-secondary-white) pb-5 pr-2 pt-2">
+    <div className="sticky top-0 z-10 overflow-visible bg-(--color-secondary-white) pb-5">
       <div className="flex items-center justify-between gap-4 overflow-visible">
-        <h1 className="text-lg font-bold text-(--color-primary-black) leading-tight">{title}</h1>
+        <h1 className="text-2xl font-bold text-(--color-primary-black) leading-tight">{title}</h1>
         <FilterToggleButton
           open={filtersOpen}
           count={activeFilterCount}

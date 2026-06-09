@@ -263,7 +263,7 @@ export default function TalentDatabasePage() {
               </article>
 
               <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-(--color-primary-black) leading-tight">
+                <h2 className="text-2xl font-bold text-(--color-primary-black) leading-tight">
                   {t('talent.page.title')}
                 </h2>
                 <FilterToggleButton
