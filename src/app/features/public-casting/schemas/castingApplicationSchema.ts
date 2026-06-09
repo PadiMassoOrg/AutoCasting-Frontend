@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
-import { parseHttpUrl } from '../../../shared/utils/schemaUtils';
+import { isAllowedExternalUrl } from '../../../shared/utils/schemaUtils';
 import type { CastingRequirement } from '../types/publicCasting.types';
 
 const optionalUrl = (t: TFunction) =>
@@ -9,7 +9,7 @@ const optionalUrl = (t: TFunction) =>
     .trim()
     .optional()
     .or(z.literal(''))
-    .refine((v) => !v || !!parseHttpUrl(v), { message: t('validation.url_invalid') });
+    .refine((v) => !v || isAllowedExternalUrl(v), { message: t('validation.url_invalid') });
 
 export const getCastingApplicationSchema = (t: TFunction, requirements: CastingRequirement[]) =>
   z
