@@ -92,7 +92,7 @@ function OnboardingStepShell({
               {children}
             </WizardBody>
           </div>
-          <Separator className=" opacity-20 mt-10 mb-4" />
+          <Separator className=" opacity-20 mb-4" />
           {footer ? <WizardFooter>{footer}</WizardFooter> : null}
         </WizardLayout>
       </SectionCard>

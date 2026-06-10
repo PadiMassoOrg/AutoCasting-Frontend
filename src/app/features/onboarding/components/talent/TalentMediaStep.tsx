@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
 import OnboardingStepShell from '../OnboardingStepShell';
 
+import { useProfileMediaDelete } from '../../../../integrations/supabase/media/hooks/useProfileMediaDelete';
 import { useProfileMediaPatch } from '../../../../integrations/supabase/media/hooks/useProfileMediaPatch';
 import { getBackendErrorMessage } from '../../../../shared/utils/backendErrorHandling';
 import { useTalentProfile } from '../../../talent/talent-profile-edit/hooks/useTalentProfile';
@@ -18,19 +19,23 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
   const { data: profile, isPending: profilePending } = useTalentProfile();
   const profileId = profile?.id!;
   const currentHeadshotUrl = profile?.media?.headshotImageUrl ?? null;
-  const { mutate: uploadHeadshot, isPending: uploadPending } = useProfileMediaPatch(profileId);
+  const currentFullbodyUrl = profile?.media?.fullBodyImageUrl ?? null;
+  const { mutate: uploadMedia, isPending: uploadPending } = useProfileMediaPatch(profileId);
+  const { mutateAsync: removeMedia } = useProfileMediaDelete();
 
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [preview, setPreview] = useState<Partial<Record<'headshot' | 'fullbody', string>>>({});
   const [errHeadshot, setErrHeadshot] = useState<string | null>(null);
-  const [bust, setBust] = useState(0);
+  const [bust, setBust] = useState<Partial<Record<'headshot' | 'fullbody', number>>>({});
   const [isDeleted, setIsDeleted] = useState(false);
+  const [isFullbodyDeleted, setIsFullbodyDeleted] = useState(false);
 
   const effectiveHeadshotUrl = isDeleted ? null : currentHeadshotUrl;
+  const effectiveFullbodyUrl = isFullbodyDeleted ? null : currentFullbodyUrl;
 
-  const canContinue = !!previewUrl || !!effectiveHeadshotUrl;
+  const canContinue = (!!preview.headshot || !!effectiveHeadshotUrl) && (!!preview.fullbody || !!effectiveFullbodyUrl);
   const isBusy = uploadPending || profilePending || !profileId;
 
-  const handleSelect = async (files: File[] | File) => {
+  const handleSelect = (slot: 'headshot' | 'fullbody') => async (files: File[] | File) => {
     const file = Array.isArray(files) ? files[0] : files;
     if (!file) return;
 
@@ -41,17 +46,20 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
       return;
     }
     setErrHeadshot(null);
-    setIsDeleted(false);
+    if (slot === 'headshot') setIsDeleted(false);
+    else setIsFullbodyDeleted(false);
 
     const localUrl = await fileToDataUrl(file);
-    setPreviewUrl(localUrl);
+    setPreview((prev) => ({ ...prev, [slot]: localUrl }));
 
-    uploadHeadshot(
-      { file, slot: 'headshot', previousUrl: currentHeadshotUrl ?? undefined },
+    const previousUrl = slot === 'headshot' ? (currentHeadshotUrl ?? undefined) : (currentFullbodyUrl ?? undefined);
+
+    uploadMedia(
+      { file, slot, previousUrl },
       {
         onSuccess: () => {
-          setPreviewUrl(null);
-          setBust((prev) => prev + 1);
+          setPreview((prev) => ({ ...prev, [slot]: undefined }));
+          setBust((prev) => ({ ...prev, [slot]: (prev[slot] ?? 0) + 1 }));
         },
         onError: (err: any) => {
           const msg = getBackendErrorMessage(err, t);
@@ -61,10 +69,22 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
     );
   };
 
-  const handleDelete = () => {
-    setPreviewUrl(null);
+  const handleDelete = async (slot: 'headshot' | 'fullbody') => {
+    setPreview((prev) => ({ ...prev, [slot]: undefined }));
     setErrHeadshot(null);
-    setIsDeleted(true);
+    if (slot === 'headshot') setIsDeleted(true);
+    else setIsFullbodyDeleted(true);
+
+    try {
+      await removeMedia({
+        slot,
+        url: slot === 'headshot' ? currentHeadshotUrl : currentFullbodyUrl,
+      });
+    } catch (error) {
+      if (slot === 'headshot') setIsDeleted(false);
+      else setIsFullbodyDeleted(false);
+      setErrHeadshot(getBackendErrorMessage(error, t));
+    }
   };
 
   const handleSubmit = (e: FormEvent) => {
@@ -80,7 +100,10 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
 
   if (profilePending || !profileId) return null;
 
-  const valueUrl = uploadPending || !effectiveHeadshotUrl ? undefined : withBust(effectiveHeadshotUrl, bust);
+  const headshotUrl =
+    uploadPending || !effectiveHeadshotUrl ? undefined : withBust(effectiveHeadshotUrl, bust.headshot);
+  const fullbodyUrl =
+    uploadPending || !effectiveFullbodyUrl ? undefined : withBust(effectiveFullbodyUrl, bust.fullbody);
   const tileBusy = uploadPending || profilePending;
 
   return (
@@ -111,33 +134,60 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
             </>
           }
         >
-          <div className="flex w-full flex-col">
-            <div className="w-full max-w-[160px] self-center sm:my-8 sm:max-w-[200px] sm:items-center">
-              <UploadTile
-                value={valueUrl}
-                previewUrl={previewUrl}
-                onSelect={handleSelect}
-                onDeleteClick={handleDelete}
-                disabled={isBusy}
-                busy={tileBusy}
-                busyText={t('state.loading')}
-                bustKey={undefined}
-                accept="image/*"
-                maxSizeMB={8}
-                objectFit="cover"
-                aspectRatio="3 / 4"
-                multiple={false}
-                openOnClick={!tileBusy}
-                className="h-full w-full"
-              />
+          <div className="grid w-full h-full grid-cols-2 gap-2 sm:items-center">
+            {/* Foto 1 */}
+            <div className="flex w-full flex-col gap-1">
+              <Label className="text-base font-semibold">{t('profile.media.headshot_slot')}</Label>
+              <div className="h-[200px] w-full sm:h-auto sm:aspect-[4/5]">
+                <UploadTile
+                  value={headshotUrl}
+                  previewUrl={preview.headshot ?? null}
+                  onSelect={handleSelect('headshot')}
+                  onDeleteClick={() => void handleDelete('headshot')}
+                  disabled={isBusy}
+                  busy={tileBusy}
+                  busyText={t('state.loading')}
+                  bustKey={undefined}
+                  accept="image/*"
+                  maxSizeMB={8}
+                  objectFit="cover"
+                  aspectRatio="3 / 4"
+                  multiple={false}
+                  openOnClick={!tileBusy}
+                  className="h-full w-full"
+                />
+              </div>
             </div>
-
-            {errHeadshot && (
-              <Label variant="error" className="pl-1">
-                {errHeadshot}
-              </Label>
-            )}
+            {/* Foto 2 */}
+            <div className="flex w-full flex-col gap-1">
+              <Label className="text-base font-semibold">{t('profile.media.fullbody_slot')}</Label>
+              <div className="h-[200px] w-full sm:h-auto sm:aspect-[4/5]">
+                <UploadTile
+                  value={fullbodyUrl}
+                  previewUrl={preview.fullbody ?? null}
+                  onSelect={handleSelect('fullbody')}
+                  onDeleteClick={() => void handleDelete('fullbody')}
+                  disabled={isBusy}
+                  busy={tileBusy}
+                  busyText={t('state.loading')}
+                  bustKey={undefined}
+                  accept="image/*"
+                  maxSizeMB={8}
+                  objectFit="cover"
+                  aspectRatio="3 / 4"
+                  multiple={false}
+                  openOnClick={!tileBusy}
+                  className="h-full w-full"
+                />
+              </div>
+            </div>
           </div>
+
+          {errHeadshot && (
+            <Label variant="error" className="pl-1">
+              {errHeadshot}
+            </Label>
+          )}
         </OnboardingStepShell>
       </form>
       <ContinueLaterButton />
