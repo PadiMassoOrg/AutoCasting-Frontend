@@ -154,7 +154,7 @@
     "uuid_invalid": "Valor inválido.",
     "invalid": "Valor inválido.",
     "email_invalid": "Email inválido.",
-    "url_invalid": "Ingresa una URL válida.",
+    "url_invalid": "Solo aceptamos enlaces de plataformas verificadas.",
     "application_deadline_past": "La fecha límite no puede ser anterior a hoy.",
     "birth_date_future": "La fecha de nacimiento no puede ser futura.",
     "video_host_invalid": "Solo se permiten URLs de YouTube o Vimeo.",

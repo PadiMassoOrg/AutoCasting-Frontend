@@ -86,7 +86,12 @@ function CardsPaneLayout({
   t,
   children,
   footer,
-}: CardsPaneHeaderProps & { children: React.ReactNode; footer?: React.ReactNode }) {
+  contentRef,
+}: CardsPaneHeaderProps & {
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+  contentRef?: React.RefObject<HTMLDivElement | null>;
+}) {
   return (
     <div className="flex h-full min-h-0 w-full flex-col overflow-hidden">
       <CardsPaneHeader
@@ -96,7 +101,9 @@ function CardsPaneLayout({
         onToggleFilters={onToggleFilters}
         t={t}
       />
-      <div className="flex-1 min-h-0 overflow-y-auto pr-2">{children}</div>
+      <div ref={contentRef} data-casting-cards-pane className="flex-1 min-h-0 overflow-y-auto pr-2">
+        {children}
+      </div>
       {footer ? <div className="shrink-0 pt-4">{footer}</div> : null}
     </div>
   );
@@ -120,6 +127,7 @@ const CastingDatabasePage = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const menuScrollRef = useRef<HTMLDivElement>(null);
+  const cardsPaneRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (filtersOpen) {
@@ -147,6 +155,11 @@ const CastingDatabasePage = () => {
     menuScrollRef.current?.scrollTo({ top: 0, behavior: 'auto' });
     if (menuScrollRef.current) {
       menuScrollRef.current.scrollTop = 0;
+    }
+
+    cardsPaneRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+    if (cardsPaneRef.current) {
+      cardsPaneRef.current.scrollTop = 0;
     }
 
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -261,6 +274,7 @@ const CastingDatabasePage = () => {
             onPageChange={handleDesktopPageChange}
           />
         }
+        contentRef={cardsPaneRef}
       >
         <div className="flex flex-col gap-3">
           {items.map((item) => (
