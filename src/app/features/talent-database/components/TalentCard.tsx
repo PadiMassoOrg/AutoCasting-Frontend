@@ -23,8 +23,6 @@ export default function TalentCard({ item, onClick }: Props) {
   };
 
   const img = headshotImageUrl || imagePlaceholder;
-  const displayedProfessions = (professions ?? []).filter(Boolean).slice(0, 2);
-
   const handleOpenProfile = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     window.location.href = ROUTES.PUBLIC_PROFILE + '/' + publicSlug;
@@ -73,7 +71,7 @@ export default function TalentCard({ item, onClick }: Props) {
       >
         <h3 className="text-2xl sm:text-xl font-semibold leading-tight line-clamp-1">{stageName}</h3>
         <div className="flex flex-wrap gap-2 mt-1">
-          {displayedProfessions.map((profession) => (
+          {professions.map((profession) => (
             <TagChip key={profession.id} label={t(profession.stringCode ?? '')}></TagChip>
           ))}
         </div>

@@ -1,4 +1,3 @@
-import type { ReactNode } from 'react';
 import FilterToggleButton from '../../../shared/components/FilterToggleButton/FilterToggleButton';
 
 type CardsPaneHeaderProps = {

@@ -7,6 +7,7 @@ import { useCachedSiteMetadataSlice } from '../../../sitemetadata/hooks/useCache
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 import { usePatchTalentBasicInfoMutation } from '../../../talent/talent-profile-edit/hooks/usePatchTalentBasicInfoMutation';
 import { useTalentProfile } from '../../../talent/talent-profile-edit/hooks/useTalentProfile';
+import { MAX_TALENT_PROFESSIONS } from '../../../talent/talent-profile-edit/constants';
 
 type Props = WizardStepProps & {
   onBackToModeSelector?: () => void;
@@ -40,6 +41,7 @@ const TalentProfessionStep = ({
   const toggleProfession = (id: string) => {
     setSelectedProfessionIds((prev) => {
       if (prev.includes(id)) return prev.filter((current) => current !== id);
+      if (prev.length >= MAX_TALENT_PROFESSIONS) return prev;
       return [...prev, id];
     });
     setError(null);
@@ -53,6 +55,10 @@ const TalentProfessionStep = ({
   const handleContinue = async () => {
     if (selectedProfessionIds.length < 1) {
       setError(t('validation.required'));
+      return;
+    }
+    if (selectedProfessionIds.length > MAX_TALENT_PROFESSIONS) {
+      setError(t('validation.max_items', { total: MAX_TALENT_PROFESSIONS }));
       return;
     }
 
@@ -97,18 +103,29 @@ const TalentProfessionStep = ({
       }
     >
       <div className="flex w-full flex-col gap-2">
-        <Label className="text-base font-semibold">{t('profile.basic_info.profession')}</Label>
+        <Label className="text-base font-semibold">
+          {t('profile.basic_info.profession_count', {
+            selected: selectedProfessionIds.length,
+            total: MAX_TALENT_PROFESSIONS,
+          })}
+        </Label>
         <div className="flex flex-wrap gap-2">
-          {professionsMeta.map((profession) => (
-            <ChoiceChip
-              className="bg-white"
-              key={profession.id}
-              label={t(profession.stringCode)}
-              selected={selectedProfessionIds.includes(profession.id)}
-              onClick={() => toggleProfession(profession.id)}
-              title={t(profession.stringCode)}
-            />
-          ))}
+          {professionsMeta.map((profession) => {
+            const active = selectedProfessionIds.includes(profession.id);
+            const disabled = !active && selectedProfessionIds.length >= MAX_TALENT_PROFESSIONS;
+
+            return (
+              <ChoiceChip
+                key={profession.id}
+                label={t(profession.stringCode)}
+                selected={active}
+                disabled={disabled}
+                className={disabled ? 'bg-white cursor-not-allowed opacity-50' : 'bg-white'}
+                onClick={() => toggleProfession(profession.id)}
+                title={t(profession.stringCode)}
+              />
+            );
+          })}
         </div>
         {error && (
           <Label variant="error" className="pl-1">

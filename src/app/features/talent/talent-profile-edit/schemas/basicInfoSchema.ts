@@ -1,6 +1,7 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
 import { NAME_RX, UUID_RX } from '../../../../shared/utils/schemaUtils';
+import { MAX_TALENT_PROFESSIONS } from '../constants';
 
 export function getBasicInfoSchema(t: TFunction) {
   const stageName = z
@@ -17,7 +18,9 @@ export function getBasicInfoSchema(t: TFunction) {
     .optional()
     .or(z.literal('').transform(() => undefined));
 
-  const professions = z.array(z.string().regex(UUID_RX));
+  const professions = z
+    .array(z.string().regex(UUID_RX))
+    .max(MAX_TALENT_PROFESSIONS, { message: t('validation.max_items', { total: MAX_TALENT_PROFESSIONS }) });
 
   return z.object({
     stageName,

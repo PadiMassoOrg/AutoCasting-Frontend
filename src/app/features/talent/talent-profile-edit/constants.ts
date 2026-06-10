@@ -1,0 +1,1 @@
+export const MAX_TALENT_PROFESSIONS = 2;

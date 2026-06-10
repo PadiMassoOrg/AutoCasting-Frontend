@@ -1,5 +1,4 @@
-import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
-import { type JSX } from 'react';
+import { LG_SCREEN_SIZE, TagChip, useMedia } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { TalentProfilePageModeSwitcher } from '../../talent/talent-profile-edit/components';
 import { useOwnTalentProfileNavigation } from '../../talent/talent-profile-edit/hooks/useOwnTalentProfileNavigation';
@@ -34,22 +33,10 @@ const BasicInfoSection = ({ data }: { data: TalentPublicProfileResponse }) => {
         <h2 className="text-[40px] text-center font-bold lg:text-start">{basicInfo.stageName}</h2>
       )}
 
-      <span
-        className={`
-        flex gap-1 items-center justify-center flex-wrap font-normal text-sm text-[var(--color-secondary-grey)] text-nowrap
-        lg:justify-start lg:ml-1 lg:mt-1
-        `}
-      >
-        {basicInfo.professions?.reduce<JSX.Element[]>((acc, curr, index) => {
-          if (index === 0) return [<span key={curr.id}>{t(curr.stringCode ? curr.stringCode : '')}</span>];
-          return [
-            ...acc,
-            <span key={`sep-${index}`} className="mx-1">
-              •
-            </span>,
-            <span key={curr.id}>{t(curr.stringCode ? curr.stringCode : '')}</span>,
-          ];
-        }, [])}
+      <span className="flex flex-wrap items-center justify-center gap-1 font-normal text-sm text-[var(--color-secondary-grey)] lg:justify-start lg:ml-1 lg:mt-1">
+        {basicInfo.professions?.map((profession) => (
+          <TagChip key={profession.id} label={t(profession.stringCode ?? '')} />
+        ))}
       </span>
     </article>
   );

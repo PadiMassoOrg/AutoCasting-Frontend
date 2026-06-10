@@ -167,6 +167,7 @@
     "day_invalid": "Día inválido.",
     "max_char": "El texto es demasiado largo.",
     "max_length": "El texto es muy largo.",
+    "max_items": "Solo puedes seleccionar hasta {{total}} opciones.",
     "type_image": "El archivo debe ser una imagen.",
     "max_size": "El archivo supera el tamaño máximo de {{mb}}MB.",
     "media_too_large_8mb": "El archivo supera el tamaño máximo de 8MB."
@@ -827,7 +828,8 @@
       "location": "Locación",
       "location_placeholder": "Escribe tu ciudad o barrio…",
       "profession": "Profesión",
-      "profession_label": "(Selecciona hasta 3) 0 de 3 seleccionadas",
+      "profession_count": "Profesión ({{selected}}/{{total}})",
+      "profession_label": "(Selecciona hasta {{total}}) 0 de {{total}} seleccionadas",
       "contact": "Contacto",
       "email": "Email",
       "whatsapp": "Whatsapp",
