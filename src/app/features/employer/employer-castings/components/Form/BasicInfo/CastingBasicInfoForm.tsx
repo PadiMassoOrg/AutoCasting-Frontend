@@ -11,8 +11,6 @@ import {
 import { useEffect, useMemo, useState, type ChangeEvent } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { useTranslation } from 'react-i18next';
-import { capitalize } from '../../../../../../shared/utils/formatUtils';
-import { onSelect, useIsoDateField } from '../../../../../../shared/utils/formUtils';
 import { useCachedSiteMetadataOption } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { getCastingBasicInfoSchema } from '../../../schemas/castingBasicInfoSchema';
 import type { CastingBasicInfoFieldKey, CastingBasicInfoFormData } from '../../../types/employerCastings.types';
@@ -48,12 +46,9 @@ const CastingBasicInfoForm = ({
   const projectTypeOptions = useCachedSiteMetadataOption('projectTypeOptions', t);
   const castingModalityOptions = useCachedSiteMetadataOption('castingModalityOptions', t);
   const ON_SITE_CODE = t('sitemetadata.casting_modality.on_site');
-  const YEAR_START = new Date().getFullYear();
-  const YEAR_END = YEAR_START + 2;
 
   const [errors, setErrors] = useState<Errors>({});
   const [range, setRange] = useState<DateRange | undefined>(undefined);
-  const [isShootingDatesOpen, setIsShootingDatesOpen] = useState(false);
 
   useEffect(() => {
     setRange(toRangeFromData(data.shootingStartDate, data.shootingEndDate));
@@ -61,55 +56,16 @@ const CastingBasicInfoForm = ({
 
   const selectedCastingModalityStringCodeTranslation = useMemo(() => {
     if (!data.castingModalityId) return null;
-    const opt = castingModalityOptions.find((option) => option.value === data.castingModalityId);
-    return opt?.label ?? null;
+    const option = castingModalityOptions.find((item) => item.value === data.castingModalityId);
+    return option?.label ?? null;
   }, [data.castingModalityId, castingModalityOptions]);
 
   const isOnSite = selectedCastingModalityStringCodeTranslation === ON_SITE_CODE;
-
-  const applicationDeadline = useIsoDateField(
-    data.applicationDeadline,
-    (iso) => {
-      updateField('applicationDeadline', iso);
-      clearError('applicationDeadline');
-    },
-    0
+  const selectedApplicationDeadline = useMemo(
+    () => parseLocalISODate(data.applicationDeadline),
+    [data.applicationDeadline]
   );
-
-  const yearOptions = useMemo(
-    () =>
-      Array.from({ length: YEAR_END - YEAR_START + 1 }, (_, i) => {
-        const y = String(YEAR_END - i);
-        return { value: y, label: y };
-      }),
-    []
-  );
-
-  const monthOptions = useMemo(() => {
-    const fmt = new Intl.DateTimeFormat(i18n.language, { month: 'long' });
-    return Array.from({ length: 12 }, (_, i) => ({
-      value: String(i + 1).padStart(2, '0'),
-      label: capitalize(fmt.format(new Date(2000, i, 1))),
-    }));
-  }, [i18n.language]);
-
   const applicationDeadlineError = getApplicationDeadlineError(data.applicationDeadline, t);
-  const shouldShowApplicationDeadlineHint =
-    !data.applicationDeadline && !!(applicationDeadline.day || applicationDeadline.month || applicationDeadline.year);
-  const shootingDatesLabel = useMemo(() => {
-    if (!range?.from && !range?.to) return t('general.placeholder.select');
-
-    const formatter = new Intl.DateTimeFormat(i18n.language, {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    });
-
-    if (range.from && range.to) return `${formatter.format(range.from)} - ${formatter.format(range.to)}`;
-    if (range.from) return formatter.format(range.from);
-    if (range.to) return formatter.format(range.to);
-    return t('general.placeholder.select');
-  }, [i18n.language, range?.from, range?.to, t]);
 
   const setLocalError = (field: CastingBasicInfoFieldKey, message: string | null) => {
     setErrors((prev) => ({ ...prev, [field]: message }));
@@ -135,8 +91,8 @@ const CastingBasicInfoForm = ({
 
   return (
     <article className="flex flex-col">
-      {/* Title + Disponibilidad */}
       <section className="grid grid-cols-1 lg:grid-cols-2 lg:items-start lg:gap-x-4">
+        {/* Title + Disponibilidad */}
         <FormInputField
           id="title"
           label={t('employer_castings.dashboard.basic_info.title')}
@@ -152,53 +108,25 @@ const CastingBasicInfoForm = ({
           error={resolveError('title', errors.title)}
           required
         />
+
         <span>
-          <div className="flex w-full flex-col">
-            <div className="mb-2 text-sm font-semibold">
-              {t('employer_castings.dashboard.basic_info.shooting_dates')}
-              <span className="text-red-500 ml-1" aria-hidden="true">
-                *
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={() => setIsShootingDatesOpen((prev) => !prev)}
-              className={`relative h-12 w-full rounded-xl border border-(--color-secondary-outline) px-5 pr-10 text-left text-base transition-colors duration-100 ease-in-out focus:outline-none focus:ring-0 focus:border-(--color-primary-purple) ${
-                !range?.from && !range?.to ? 'text-(--color-secondary-grey)' : 'text-(--color-primary-black)'
-              }`}
-              aria-expanded={isShootingDatesOpen}
-              aria-controls="shooting-dates-calendar"
-            >
-              {shootingDatesLabel}
-              <svg
-                className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2"
-                viewBox="0 0 24 24"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth={2} strokeLinecap="round" />
-              </svg>
-            </button>
-
-            {isShootingDatesOpen ? (
-              <RangeCalendar
-                className="mt-3 lg:max-w-none"
-                value={range}
-                onChange={setRange}
-                onCommit={(from, to) => {
-                  onChange({
-                    shootingStartDate: toLocalISO(from),
-                    shootingEndDate: toLocalISO(to),
-                  });
-                  setIsShootingDatesOpen(false);
-                }}
-                language={i18n.language}
-              />
-            ) : null}
-
-            <div className="min-h-[25px]"></div>
-          </div>
+          <RangeCalendar
+            selectionMode="range"
+            label={t('employer_castings.dashboard.basic_info.shooting_dates')}
+            className="lg:max-w-none"
+            value={range}
+            onChange={setRange}
+            onCommit={(from, to) => {
+              onChange({
+                shootingStartDate: toLocalISO(from),
+                shootingEndDate: toLocalISO(to),
+              });
+            }}
+            language={i18n.language}
+            required
+            displayMode="dropdown"
+            placeholder={t('general.placeholder.select')}
+          />
         </span>
 
         {/* Tipo + Deadline */}
@@ -220,58 +148,35 @@ const CastingBasicInfoForm = ({
         />
 
         <div className="flex flex-col gap-2">
-          <div className="flex">
-            <Label className="text-sm font-semibold">
-              {t('employer_castings.dashboard.basic_info.application_deadline')}
-            </Label>
-            <span className="text-red-500 ml-1" aria-hidden="true">
-              *
-            </span>
-          </div>
+          <RangeCalendar
+            selectionMode="single"
+            label={t('employer_castings.dashboard.basic_info.application_deadline')}
+            className="lg:max-w-none"
+            value={selectedApplicationDeadline}
+            onChange={(next) => {
+              updateField('applicationDeadline', next ? toLocalISO(next) : '');
+              clearError('applicationDeadline');
+            }}
+            onCommit={(date) => {
+              const iso = toLocalISO(date);
+              updateField('applicationDeadline', iso);
+              clearError('applicationDeadline');
+            }}
+            language={i18n.language}
+            required
+            displayMode="dropdown"
+            placeholder={t('general.placeholder.select')}
+          />
 
-          <div className="grid grid-cols-3 gap-2">
-            <FormSelectField
-              id="applicationDeadline-day"
-              placeholder={t('general.placeholder.day')}
-              value={applicationDeadline.day}
-              onChange={(e) => {
-                onSelect((day) => applicationDeadline.onDay(day))(e);
-              }}
-              onBlur={applicationDeadline.onAnyBlur}
-              options={applicationDeadline.dayOptions}
-              error={resolveError(
-                'applicationDeadline',
-                errors.applicationDeadline ??
-                  applicationDeadlineError ??
-                  (shouldShowApplicationDeadlineHint
-                    ? t('employer_castings.dashboard.basic_info.application_deadline_incomplete')
-                    : null)
-              )}
-            />
-            <FormSelectField
-              id="applicationDeadline-month"
-              placeholder={t('general.placeholder.month')}
-              value={applicationDeadline.month}
-              onChange={(e) => {
-                onSelect((month) => applicationDeadline.onMonth(month))(e);
-              }}
-              onBlur={applicationDeadline.onAnyBlur}
-              options={monthOptions}
-              error={resolveError('applicationDeadline', errors.applicationDeadline)}
-            />
-            <FormSelectField
-              id="applicationDeadline-year"
-              placeholder={t('general.placeholder.year')}
-              value={applicationDeadline.year}
-              onChange={(e) => {
-                onSelect((year) => applicationDeadline.onYear(year))(e);
-              }}
-              onBlur={applicationDeadline.onAnyBlur}
-              options={yearOptions}
-              error={resolveError('applicationDeadline', errors.applicationDeadline)}
-            />
+          <div className="min-h-[25px] overflow-visible">
+            {resolveError('applicationDeadline', errors.applicationDeadline ?? applicationDeadlineError) ? (
+              <Label variant="error" className="mt-0.4 pl-0.7 inline-block whitespace-nowrap">
+                {resolveError('applicationDeadline', errors.applicationDeadline ?? applicationDeadlineError)}
+              </Label>
+            ) : null}
           </div>
         </div>
+
         {/* Modality */}
         <span>
           <FormSelectField
@@ -321,6 +226,7 @@ const CastingBasicInfoForm = ({
             />
           )}
         </span>
+
         <span>
           <BooleanRadioGroup
             label={t('employer_castings.dashboard.basic_info.has_wardrobe_fitting')}
