@@ -17,6 +17,7 @@ import {
   normalizeExternalUrl,
 } from '../../utils/formatUtils';
 import { CastingModalityTagChip, ProjectTypeTagChip } from '../Chip';
+import ExpandableText from '../ExpandableText/ExpandableText';
 
 type Props = {
   casting: PublicCastingData;
@@ -66,7 +67,7 @@ const CastingDetailsDesktopBody = ({ casting }: Props) => {
             {description && (
               <div className="flex flex-col gap-1">
                 <h3 className="text-sm font-semibold">{t('casting-database.detail.project_description')}</h3>
-                <p className="text-sm">{description}</p>
+                <ExpandableText text={description} />
               </div>
             )}
             {locationText && (

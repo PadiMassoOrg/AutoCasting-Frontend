@@ -14,6 +14,7 @@ import clsx from 'clsx';
 import { useModal } from '../../context/ModalContext';
 import { USER_MODE_TALENT, useUserMode } from '../../context/UserModeContext';
 import { LogoutModal } from '../../features/auth/components';
+import CreateCastingNavAction from './CreateCastingNavAction';
 
 type NavbarVariant = 'icons' | 'icons-labels' | 'labels';
 type NavbarProps = HTMLAttributes<HTMLElement> & {
@@ -67,6 +68,10 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
   // Employer
   const activeEmployerProfile = isRouteActive(ROUTES.EMPLOYER, true);
   const activeEmployerCastings = isRouteActive(ROUTES.EMPLOYER_CASTINGS, true);
+  const activeEmployerCastingEditor = !!matchPath(
+    { path: `${ROUTES.EMPLOYER_CASTING}/:slug/editor`, end: false },
+    location.pathname
+  );
   const activeEmployerSettings = isRouteActive(ROUTES.EMPLOYER_SETTINGS, true);
 
   return (
@@ -168,6 +173,14 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
               </div>
             ) : (
               <div className="flex flex-row gap-2 items-center h-full">
+                <Tooltip title={t('employer_castings.page.create_casting')} position="bottomRight" nudgeY={-8}>
+                  <CreateCastingNavAction
+                    active={activeEmployerCastingEditor}
+                    className={clsx(baseClass, activeEmployerCastingEditor && activeClass)}
+                    iconClassName="w-6"
+                    showLabel={showLabels}
+                  />
+                </Tooltip>
                 <Tooltip title={t('general.tooltips.employer_castings')} position="bottomRight" nudgeY={-8}>
                   <Link to={ROUTES.EMPLOYER_CASTINGS}>
                     <span className={clsx(baseClass, activeEmployerCastings && activeClass)}>

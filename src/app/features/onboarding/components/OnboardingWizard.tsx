@@ -8,7 +8,6 @@ import { useMeData } from '../../auth/hooks/useMeData';
 import { EmployerBasicInfoStep, EmployerConfirmationStep, EmployerMediaStep } from './employer';
 import ModeSelectorStep from './ModeSelectorStep';
 import { TalentBasicInfoStep, TalentConfirmationStep, TalentMediaStep } from './talent';
-import TalentProfessionStep from './talent/TalentProfessionsStep';
 
 function OnboardingWizard() {
   const navigate = useNavigate();
@@ -40,7 +39,6 @@ function OnboardingWizard() {
     return (
       <Wizard key="talent-flow" className="h-full">
         <TalentBasicInfoStep onBackToModeSelector={() => setCurrentFlow('MODE')} />
-        <TalentProfessionStep></TalentProfessionStep>
         <TalentMediaStep />
         <TalentConfirmationStep
           onGoToProfile={() =>

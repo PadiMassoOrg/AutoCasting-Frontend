@@ -31,41 +31,37 @@ function TalentConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progres
   };
 
   return (
-    <OnboardingStepShell
-      modeLabel={t('onboarding.mode_selector.talent.title')}
-      title={t('onboarding.talent.step_confirmation.header')}
-      subtitle={t('onboarding.talent.step_confirmation.subtitle')}
-      stepIndex={stepIndex}
-      totalSteps={totalSteps}
-      progress={progress}
-      topSlot={<img src={Logo} className="w-14" />}
-      bodyClassName="text-center"
-      footer={
-        <>
-          <WizardActions
-            secondaryAction={
-              <Button variant="outline" type="button" onClick={goBack}>
-                {t('buttons.back')}
-              </Button>
-            }
-            primaryAction={
-              <Button variant="primary" type="button" onClick={handleConfirm} loading={isPending}>
-                {t('buttons.to_profile')}
-              </Button>
-            }
-          />
-          <ContinueLaterButton />
-        </>
-      }
-    >
-      <div className="flex flex-col gap-4 text-sm">
-        <p>{t('onboarding.common.edit_profile_label')}</p>
-        <span className="flex flex-row items-center justify-center gap-2">
-          <p className="text-sm">{t('onboarding.common.edit_profile_label_profile')}</p>
-          <ButtonRow items={[<Icon variant="primary" name="profile" className="cursor-default" />]}></ButtonRow>
-        </span>
-      </div>
-    </OnboardingStepShell>
+    <section className="flex flex-col gap-3.5">
+      <OnboardingStepShell
+        modeLabel={t('onboarding.mode_selector.talent.title')}
+        title={t('onboarding.talent.step_confirmation.header')}
+        subtitle={t('onboarding.talent.step_confirmation.subtitle')}
+        stepIndex={stepIndex}
+        totalSteps={totalSteps}
+        progress={progress}
+        topSlot={<img src={Logo} className="w-14" />}
+        bodyClassName="text-center"
+        footer={
+          <>
+            <WizardActions
+              secondaryAction={
+                <Button variant="outline" type="button" onClick={goBack}>
+                  {t('buttons.back')}
+                </Button>
+              }
+              primaryAction={
+                <Button variant="primary" type="button" onClick={handleConfirm} loading={isPending}>
+                  {t('buttons.to_profile')}
+                </Button>
+              }
+            />
+          </>
+        }
+      >
+        <p></p>
+      </OnboardingStepShell>
+      <ContinueLaterButton />
+    </section>
   );
 }
 

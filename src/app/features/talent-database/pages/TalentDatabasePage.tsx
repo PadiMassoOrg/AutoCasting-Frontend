@@ -1,12 +1,20 @@
-import { Icon, Skeleton, useDebouncedValue, useViewportVhVar } from 'autocasting-ui-library-padimasso';
+import {
+  LG_SCREEN_SIZE,
+  Skeleton,
+  useDebouncedValue,
+  useMedia,
+  useViewportVhVar,
+} from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { FiltersDrawerActionBar, FiltersDrawerShell } from '../../../shared/components/FiltersDrawer';
+import FilterToggleButton from '../../../shared/components/FilterToggleButton/FilterToggleButton';
 import { PublicProfileDetailsView } from '../../public-profile/pages';
-import { TalentCard, TalentFilterBar, TalentFiltersDrawer } from '../components';
+import { useCachedSiteMetadataSlice } from '../../sitemetadata/hooks/useCachedSiteMetadata';
+import { TalentCard, TalentFilterBar, TalentMobileFilterDrawer } from '../components';
 import { getTalentDatabase } from '../services/talentDatabaseService';
 import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
+import { getTalentFilterCounts } from '../utils/talentDatabaseFilterCounts';
 
 const initialFilters: TalentFiltersQS = {
   includeNoHeadshot: undefined,
@@ -40,9 +48,11 @@ export default function TalentDatabasePage() {
   const { t } = useTranslation(undefined, { useSuspense: false });
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const pageSize = isDesktop ? 6 : 3;
+  const skillsRaw = useCachedSiteMetadataSlice('skills');
 
   const [filters, setFilters] = useState<TalentFiltersQS>(initialFilters);
   const [desktopDraftFilters, setDesktopDraftFilters] = useState<TalentFiltersQS>(initialFilters);
+  const desktopDraftFiltersRef = useRef<TalentFiltersQS>(initialFilters);
   const debouncedFilters = useDebouncedValue(filters, 350);
 
   const firstRenderRef = useRef(true);
@@ -119,6 +129,7 @@ export default function TalentDatabasePage() {
   useEffect(() => {
     if (filtersOpen) {
       setDesktopDraftFilters(filters);
+      desktopDraftFiltersRef.current = filters;
     }
   }, [filters, filtersOpen]);
 
@@ -230,42 +241,38 @@ export default function TalentDatabasePage() {
   const isFetchingNextPage = items.length > 0 && loading;
 
   const gridItems = useMemo(() => items, [items]);
+  const activeFilterCount = useMemo(
+    () => getTalentFilterCounts(filtersOpen ? desktopDraftFilters : filters, skillsRaw).totalCount,
+    [desktopDraftFilters, filters, filtersOpen, skillsRaw]
+  );
 
   return (
     <section className="w-full h-full min-h-0 bg-(--color-secondary-white)">
       <div className="h-full w-full flex flex-col">
-        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-hidden lg:flex-row lg:gap-0 lg:overflow-visible">
+        <div className="flex-1 min-h-0 w-full min-w-0 flex flex-col gap-6 overflow-visible lg:flex-row lg:gap-0 lg:overflow-visible">
           <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[40px] lg:py-[24px]">
             <div className="w-full max-w-[1500px] mx-auto flex-1 min-h-0 h-full">
-              <article className="lg:hidden flex items-center justify-between shrink-0 py-2">
+              <article className="lg:hidden flex items-center justify-between shrink-0 mb-4">
                 <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
-                <button
-                  type="button"
-                  className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
+                <FilterToggleButton
+                  size="mobile"
+                  count={getTalentFilterCounts(filters, skillsRaw).totalCount}
                   onClick={() => setMobileOpen(true)}
-                  aria-label={t('general.filters.open')}
-                >
-                  <span className="w-12 h-12 flex items-center justify-center bg-(--color-primary-white) rounded-lg">
-                    <Icon name="filter" variant="primary" size={20} />
-                  </span>
-                </button>
+                  ariaLabel={t('general.filters.open')}
+                />
               </article>
 
               <div className="hidden w-full lg:flex flex-row items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold">{t('talent.page.title')}</h2>
-                <button
-                  type="button"
-                  className="cursor-pointer inline-flex items-center gap-3"
+                <h2 className="text-2xl font-bold text-(--color-primary-black) leading-tight">
+                  {t('talent.page.title')}
+                </h2>
+                <FilterToggleButton
+                  open={filtersOpen}
+                  count={activeFilterCount}
                   onClick={() => setFiltersOpen((v) => !v)}
-                  aria-pressed={filtersOpen}
-                >
-                  <h2 className="text-sm font-light  hover:text-(--color-primary-purple)">
-                    {filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
-                  </h2>
-                  <span className="w-11 h-11 flex items-center justify-center bg-(--color-primary-white) rounded-lg">
-                    <Icon name="filter" variant="primary" />
-                  </span>
-                </button>
+                  ariaLabel={filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
+                  ariaPressed={filtersOpen}
+                />
               </div>
 
               {error ? (
@@ -309,7 +316,7 @@ export default function TalentDatabasePage() {
           </div>
         </div>
 
-        <TalentFiltersDrawer
+        <TalentMobileFilterDrawer
           open={mobileOpen}
           onClose={() => setMobileOpen(false)}
           value={filters}
@@ -325,10 +332,12 @@ export default function TalentDatabasePage() {
             <FiltersDrawerActionBar
               onReset={() => {
                 setDesktopDraftFilters({} as TalentFiltersQS);
+                desktopDraftFiltersRef.current = {} as TalentFiltersQS;
                 setFilters(initialFilters);
+                setFiltersOpen(false);
               }}
               onApply={() => {
-                setFilters(desktopDraftFilters);
+                setFilters(desktopDraftFiltersRef.current);
                 setFiltersOpen(false);
               }}
             />
@@ -336,8 +345,10 @@ export default function TalentDatabasePage() {
         >
           <TalentFilterBar
             value={desktopDraftFilters}
-            onChange={setDesktopDraftFilters}
-            onReset={() => setFilters(initialFilters)}
+            onChange={(next) => {
+              desktopDraftFiltersRef.current = next;
+              setDesktopDraftFilters(next);
+            }}
             onClose={() => setFiltersOpen(false)}
           />
         </FiltersDrawerShell>

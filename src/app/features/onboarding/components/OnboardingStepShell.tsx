@@ -1,4 +1,11 @@
-import { WizardBody, WizardFooter, WizardHeader, WizardLayout } from 'autocasting-ui-library-padimasso';
+import {
+  SectionCard,
+  Separator,
+  WizardBody,
+  WizardFooter,
+  WizardHeader,
+  WizardLayout,
+} from 'autocasting-ui-library-padimasso';
 import clsx from 'clsx';
 import type { ReactNode } from 'react';
 
@@ -32,46 +39,63 @@ function OnboardingStepShell({
   alignBody = 'start',
 }: OnboardingStepShellProps) {
   return (
-    <section className={clsx('relative w-full max-w-[400px]', className)}>
-      <WizardLayout className="min-h-[80vh] justify-between lg:min-h-[65vh]">
-        <div className="flex min-h-0 flex-1 flex-col">
-          {(topSlot || modeLabel) && (
-            <div className="mb-2 flex w-full flex-col items-center gap-4">
-              {topSlot}
-              {modeLabel ? (
-                <div className="w-full rounded-lg bg-(--color-primary-white) py-3 text-center text-[14px] font-semibold uppercase text-(--color-primary-purple)">
-                  {modeLabel}
+    <section className={clsx('relative m-auto sm:w-full sm:max-w-[480px]', className)}>
+      <SectionCard>
+        <WizardLayout className="flex justify-between !h-[580px] sm:min-h-[65vh]">
+          <div className="flex min-h-0 flex-1 flex-col">
+            {(topSlot || modeLabel || typeof progress === 'number') && (
+              <div className="px-6">
+                <div className="flex w-full flex-col items-center gap-2">
+                  {topSlot}
+                  {modeLabel ? (
+                    <div className="w-full text-center text-[14px] font-semibold uppercase text-(--color-primary-purple)">
+                      {modeLabel}
+                    </div>
+                  ) : null}
+                  {typeof progress === 'number' ? (
+                    <WizardHeader
+                      title=""
+                      stepIndex={stepIndex}
+                      totalSteps={totalSteps}
+                      progress={progress}
+                      className="w-full gap-1"
+                      metaClassName="text-[13px] font-semibold"
+                      progressTrackClassName="h-[9px] w-full overflow-hidden rounded-full bg-[var(--color-secondary-offwhite)]"
+                      progressBarClassName="h-[9px] bg-[var(--color-primary-purple)] transition-all"
+                      contentClassName="text-center"
+                      titleClassName="hidden"
+                      subtitleClassName="hidden"
+                    />
+                  ) : null}
                 </div>
-              ) : null}
-            </div>
-          )}
+              </div>
+            )}
+            <Separator className=" opacity-20 my-4" />
+            {(title || subtitle) && (
+              <div className="px-3 mb-3">
+                <WizardHeader
+                  title={title}
+                  subtitle={subtitle}
+                  contentClassName="text-center flex flex-col gap-1"
+                  titleClassName="text-lg font-semibold"
+                  subtitleClassName="text-sm"
+                  showStepCount={false}
+                  showProgressBar={false}
+                  showProgressPercentage={false}
+                />
+              </div>
+            )}
 
-          {(title || subtitle || typeof progress === 'number') && (
-            <WizardHeader
-              title={title}
-              subtitle={subtitle}
-              stepIndex={stepIndex}
-              totalSteps={totalSteps}
-              progress={progress}
-              className="mb-4 gap-1"
-              metaClassName="text-[13px] mt-1 font-semibold"
-              progressTrackClassName="mb-1 h-[9px] w-full overflow-hidden rounded-full bg-[var(--color-secondary-offwhite)]"
-              progressBarClassName="h-[9px] bg-[var(--color-primary-purple)] transition-all"
-              contentClassName="text-center"
-              titleClassName="mb-1 text-2xl font-semibold"
-              subtitleClassName="text-sm"
-            />
-          )}
-
-          <WizardBody
-            className={clsx('pr-1', alignBody === 'center' ? 'flex items-center justify-center' : '', bodyClassName)}
-          >
-            {children}
-          </WizardBody>
-        </div>
-
-        {footer ? <WizardFooter className="mt-6 flex flex-col items-stretch gap-6">{footer}</WizardFooter> : null}
-      </WizardLayout>
+            <WizardBody
+              className={clsx('', alignBody === 'center' ? 'flex items-center justify-center' : '', bodyClassName)}
+            >
+              {children}
+            </WizardBody>
+          </div>
+          <Separator className=" opacity-20 mb-4" />
+          {footer ? <WizardFooter>{footer}</WizardFooter> : null}
+        </WizardLayout>
+      </SectionCard>
     </section>
   );
 }

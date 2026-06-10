@@ -10,9 +10,11 @@ import type { ActiveMode } from '../../auth/types/auth.types';
 import CastingApplicationTalentModeModal from '../../public-casting/components/Form/CastingApplicationTalentModeModal';
 import CastingApplicationAuthWarningModal from '../../public-casting/components/Form/CastingApplicationAuthWarningModal';
 import CastingApplicationConfirmationModal from '../../public-casting/components/Form/CastingApplicationConfirmationModal';
+import CastingApplicationProfileCompletionModal from '../../public-casting/components/Form/CastingApplicationProfileCompletionModal';
 import CastingApplicationRequirementsModal from '../../public-casting/components/Form/CastingApplicationRequirementsModal';
 import { useUpdateOnboardingMutation } from '../../onboarding/hooks/useUpdateOnboardingMutation';
 import { useCastingApplicationMutation } from '../../public-casting/hooks/useCastingApplicationMutation';
+import { useTalentProfile } from '../../talent/talent-profile-edit/hooks/useTalentProfile';
 import type { CastingApplicationRequest } from '../../public-casting/types/requests';
 import type {
   CastingCatalogDetailsResponse,
@@ -28,10 +30,28 @@ export default function CastingCatalogDetailsApplyAction({ data }: Props) {
   const { t } = useTranslation();
   const isAuth = getAuthToken();
   const { data: meData } = useMeData();
+  const { data: talentProfile, isLoading: isTalentProfileLoading } = useTalentProfile();
   const { mode, setMode } = useUserMode();
   const navigate = useNavigate();
   const { openModal, closeModal } = useModal();
-  const apply = useCastingApplicationMutation();
+  const openProfileCompletionModal = () => {
+    openModal(
+      <CastingApplicationProfileCompletionModal
+        onCancel={closeModal}
+        onConfirm={() => {
+          closeModal();
+          navigate(ROUTES.TALENT);
+        }}
+      />,
+      t('application.profile_completion_modal.title'),
+      'lg'
+    );
+  };
+  const apply = useCastingApplicationMutation({
+    onProfileMediaRequiredForApplication: () => {
+      openProfileCompletionModal();
+    },
+  });
   const { mutate: updateOnboarding, isPending: isSwitchingMode } = useUpdateOnboardingMutation();
   const isAlreadyApplied = Boolean(data.alreadyApplied);
   const isLoggedIn = Boolean(isAuth);
@@ -40,6 +60,10 @@ export default function CastingCatalogDetailsApplyAction({ data }: Props) {
   const canApply = isLoggedIn && isTalentMode;
   const role = data.casting.roles[0] ?? null;
   const requirements = toRequirements(role);
+  const hasCompleteTalentProfile = hasRequiredApplyPhotos(
+    talentProfile?.media?.headshotImageUrl,
+    talentProfile?.media?.fullBodyImageUrl
+  );
 
   const handleConfirmation = () => {
     closeModal();
@@ -146,6 +170,11 @@ export default function CastingCatalogDetailsApplyAction({ data }: Props) {
       return;
     }
     if (!canApply) return;
+    if (isTalentProfileLoading) return;
+    if (!hasCompleteTalentProfile) {
+      openProfileCompletionModal();
+      return;
+    }
     if (!role?.id) return;
 
     if (requirements.length === 0) {
@@ -169,12 +198,20 @@ export default function CastingCatalogDetailsApplyAction({ data }: Props) {
       variant="primary"
       className="w-fit max-w-[350px]"
       disabled={isAlreadyApplied}
-      loading={apply.isPending}
+      loading={apply.isPending || (isTalentMode && isTalentProfileLoading)}
       onClick={onClickApply}
     >
       {!isAlreadyApplied ? t('general.apply') : t('applications.already_applied_cta')}
     </Button>
   );
+}
+
+function hasRequiredApplyPhotos(headshotImageUrl?: string | null, fullBodyImageUrl?: string | null) {
+  return hasText(headshotImageUrl) && hasText(fullBodyImageUrl);
+}
+
+function hasText(value?: string | null) {
+  return typeof value === 'string' && value.trim().length > 0;
 }
 
 function toRequirements(role: CastingCatalogRole | null): CastingRequirement[] {

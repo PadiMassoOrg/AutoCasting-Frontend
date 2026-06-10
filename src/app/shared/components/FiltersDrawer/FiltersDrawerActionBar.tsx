@@ -9,6 +9,12 @@ type FiltersDrawerActionBarProps = {
 export default function FiltersDrawerActionBar({ onReset, onApply }: FiltersDrawerActionBarProps) {
   const { t } = useTranslation();
 
+  const handleApply = () => {
+    requestAnimationFrame(() => {
+      onApply();
+    });
+  };
+
   return (
     <>
       <Separator className="opacity-20 mb-4" />
@@ -16,7 +22,7 @@ export default function FiltersDrawerActionBar({ onReset, onApply }: FiltersDraw
         <Button type="button" variant="outline" className="flex-1" onClick={onReset}>
           {t('general.reset')}
         </Button>
-        <Button type="button" variant="primary" className="flex-1" onClick={onApply}>
+        <Button type="button" variant="primary" className="flex-1" onClick={handleApply}>
           {t('general.apply')}
         </Button>
       </div>

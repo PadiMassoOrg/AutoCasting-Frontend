@@ -1,9 +1,11 @@
 import type { DashboardShellSection } from 'autocasting-ui-library-padimasso';
-import { Button, DashboardLoadingLabel, DashboardShell } from 'autocasting-ui-library-padimasso';
+import { DashboardLoadingLabel, DashboardShell } from 'autocasting-ui-library-padimasso';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '../../../../context/ToastContext';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
-import { TalentProfileModeToggle } from '../components';
+import { TalentProfileModeToggle, TalentProfilePageModeSwitcher } from '../components';
 import {
   TalentProfileCreditsEditAction,
   TalentProfileEducationEditAction,
@@ -17,13 +19,41 @@ import {
   TalentProfileSkillsEditSection,
 } from '../components/Section';
 import TalentProfileBasicInfoEditSection from '../components/Section/TalentProfileBasicInfoEditSection';
-import { useOwnTalentProfileNavigation } from '../hooks/useOwnTalentProfileNavigation';
 import { useTalentProfile } from '../hooks/useTalentProfile';
+
+const CATALOG_VISIBILITY_TOAST_ID = 'talent-profile-catalog-visibility';
+
+const hasText = (value?: string | null) => typeof value === 'string' && value.trim().length > 0;
 
 export default function TalentProfileEditPage() {
   const { t } = useTranslation();
+  const { showToast, dismissToast } = useToast();
   const { data, error, isLoading } = useTalentProfile();
-  const { canViewPublicProfile, goToPublicProfile } = useOwnTalentProfileNavigation();
+
+  useEffect(() => {
+    if (isLoading || !data) return;
+
+    const hasRequiredPhotos = hasText(data.media?.headshotImageUrl) && hasText(data.media?.fullBodyImageUrl);
+    if (hasRequiredPhotos) {
+      dismissToast(CATALOG_VISIBILITY_TOAST_ID);
+      return;
+    }
+
+    showToast({
+      id: CATALOG_VISIBILITY_TOAST_ID,
+      title: t('profile.media.catalog_visibility_title'),
+      description: t('profile.media.catalog_visibility_description'),
+      type: 'warning',
+      position: 'top-center',
+      durationMs: 30000,
+      fullWidth: true,
+      closable: true,
+    });
+
+    return () => {
+      dismissToast(CATALOG_VISIBILITY_TOAST_ID);
+    };
+  }, [data, dismissToast, isLoading, showToast, t]);
 
   if (error && !data) return <ServerError />;
 
@@ -111,14 +141,6 @@ export default function TalentProfileEditPage() {
           },
         ];
 
-  const titleActionsRenderer = () => {
-    return (
-      <Button variant="primary" disabled={!canViewPublicProfile} onClick={goToPublicProfile}>
-        {t('profile.page.view_profile')}
-      </Button>
-    );
-  };
-
   const bottomSectionRenderer = () => {
     if (!data) return;
     return (
@@ -134,7 +156,7 @@ export default function TalentProfileEditPage() {
       <div className="flex-1 min-h-0 pb-14 lg:pb-0">
         <DashboardShell
           title={t('profile.page.profile')}
-          titleActions={titleActionsRenderer()}
+          titleActions={<TalentProfilePageModeSwitcher />}
           sections={sections}
           initialKey="basic"
           bottomSection={bottomSectionRenderer()}

@@ -402,10 +402,12 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
             id="requirementDescription"
             placeholder={t('general.placeholder.about')}
             value={formValues?.requirementDescription ?? ''}
+            maxLength={3000}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
               const next = e.target.value;
               updateField('requirementDescription', next);
             }}
+            error={resolveError('requirementDescription')}
             onBlur={() => {}}
             onKeyDown={() => {}}
             minHeightClassName="h-[120px]"

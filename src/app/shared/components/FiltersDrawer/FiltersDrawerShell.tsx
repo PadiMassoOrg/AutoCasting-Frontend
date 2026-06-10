@@ -45,13 +45,13 @@ export default function FiltersDrawerShell({
 
   const panelClassName =
     variant === 'mobile'
-      ? 'fixed bottom-0 right-0 flex h-[100dvh] w-[82%] flex-col overflow-hidden bg-white'
-      : 'fixed right-0 top-0 flex h-[100dvh] w-[350px] max-w-[100vw] flex-col overflow-hidden bg-white shadow-[-12px_0_32px_rgba(15,23,42,0.12)]';
+      ? 'fixed inset-[10px] flex flex-col overflow-hidden rounded-xl bg-white shadow-2xl'
+      : 'fixed right-[10px] top-[10px] bottom-[10px] flex w-[400px] flex-col overflow-hidden rounded-xl bg-white';
 
   const footerClassName =
     variant === 'mobile'
       ? 'shrink-0 bg-white p-6 pt-4 pb-[calc(env(safe-area-inset-bottom)+1rem)]'
-      : 'shrink-0 bg-white p-6 pt-4';
+      : 'shrink-0 bg-white p-6';
 
   return createPortal(
     <div className={rootClassName} style={{ overscrollBehavior: 'contain' }}>
@@ -59,7 +59,7 @@ export default function FiltersDrawerShell({
 
       <article className={panelClassName} role="dialog" aria-modal="true">
         <div ref={contentRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-          <div className="p-6">{children}</div>
+          <div className={variant === 'mobile' ? 'p-6' : 'p-6'}>{children}</div>
         </div>
         {footer ? <div className={footerClassName}>{footer}</div> : null}
       </article>

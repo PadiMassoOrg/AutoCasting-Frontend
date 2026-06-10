@@ -100,8 +100,17 @@ export const updateCastingRole = async ({
   payload: CastingRoleRequest;
 }): Promise<CastingRoleResponse> => putData<CastingRoleResponse>(`${API_ROUTES.CASTING_ROLE}/${roleId}`, payload);
 
-export const duplicateCastingRole = async ({ roleId }: { roleId: string }): Promise<CastingRoleResponse> =>
-  postData<CastingRoleResponse>(API_ROUTES.EMPLOYER_CASTING_ROLE_DUPLICATE(roleId));
+export const duplicateCastingRole = async ({
+  roleId,
+  roleName,
+}: {
+  roleId: string;
+  roleName?: string;
+}): Promise<CastingRoleResponse> =>
+  postData<CastingRoleResponse>(
+    API_ROUTES.EMPLOYER_CASTING_ROLE_DUPLICATE(roleId),
+    roleName ? { roleName } : undefined
+  );
 
 export async function deleteCastingRole({ roleId }: { roleId: string }) {
   await deleteVoid(`${API_ROUTES.CASTING_ROLE}/${roleId}`);

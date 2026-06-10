@@ -1,6 +1,7 @@
 import type { DashboardShellSection } from 'autocasting-ui-library-padimasso';
 import {
   Button,
+  DashboardLoadingLabel,
   DashboardShell,
   SectionCard,
   Separator,
@@ -127,10 +128,34 @@ const EmployerCastingPage = () => {
   }, [selectedRoleQuery.data]);
 
   if (error && !data) return <ServerError />;
-  if (isLoading || !draft || !data) return null;
 
-  if (!isCastingEditable(data.castingStatus)) {
+  if (data && !isCastingEditable(data.castingStatus)) {
     return <Navigate to={ROUTES.EMPLOYER_CASTINGS} replace />;
+  }
+
+  const loadingSections: DashboardShellSection<'basic' | 'roles'>[] = [
+    {
+      key: 'basic',
+      label: t('employer_castings.dashboard.basic_info.basic_info'),
+      sectionTitle: t('employer_castings.dashboard.basic_info.basic_info'),
+      render: () => <DashboardLoadingLabel />,
+    },
+    {
+      key: 'roles',
+      label: t('employer_castings.dashboard.roles.roles'),
+      sectionTitle: t('employer_castings.dashboard.roles.roles'),
+      render: () => <DashboardLoadingLabel />,
+    },
+  ];
+
+  if (isLoading || !draft || !data) {
+    return (
+      <DashboardShell
+        title={t('employer_castings.dashboard.title_edit')}
+        sections={loadingSections}
+        initialKey="basic"
+      />
+    );
   }
 
   const isDirty = initialDraft ? stableStringify(draft) !== stableStringify(initialDraft) : false;
@@ -166,7 +191,11 @@ const EmployerCastingPage = () => {
   };
 
   const handleDuplicateRole = async (roleId: string) => {
-    const duplicatedRole = await duplicateRoleMutation.mutateAsync({ roleId });
+    const sourceRole = roleCards.find((role) => role.id === roleId);
+    const duplicateRoleName = t('employer_castings.dashboard.roles.duplicate_name', {
+      name: sourceRole?.roleName ?? '',
+    });
+    const duplicatedRole = await duplicateRoleMutation.mutateAsync({ roleId, roleName: duplicateRoleName });
     resetRoleEditor(duplicatedRole.id, toRoleFormData(duplicatedRole));
     setActiveSectionKey('roles');
   };

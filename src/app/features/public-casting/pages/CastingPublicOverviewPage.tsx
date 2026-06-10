@@ -90,31 +90,30 @@ const CastingPublicOverviewPage = () => {
     );
   }
 
-  const menu = (
-    <div className="flex min-h-full w-full flex-col">
-      <div className="sticky top-0 z-10 bg-(--color-secondary-white) pb-5">
-        <div className="flex min-w-0 flex-col">
-          <h2 className="truncate text-2xl font-semibold">{casting.title}</h2>
-          <p className="text-sm font-light text-(--color-secondary-grey-fonts)">{t(casting.projectType.stringCode)}</p>
-        </div>
+  const menuHeader = (
+    <div className="sticky top-0 z-10 bg-(--color-secondary-white) pb-5">
+      <div className="flex min-w-0 flex-col">
+        <h2 className="truncate text-2xl font-semibold">{casting.title}</h2>
+        <p className="text-sm font-light text-(--color-secondary-grey-fonts)">{t(casting.projectType.stringCode)}</p>
       </div>
-
-      {items.length === 0 ? (
-        <p className="py-10 text-center font-light text-(--color-secondary-grey-fonts)">{t('state.no_results')}</p>
-      ) : (
-        <div className="flex flex-col gap-3">
-          {items.map((item) => (
-            <CastingRolePublicCard
-              key={item.id}
-              item={item}
-              selected={item.id === selectedItem?.id}
-              onSelect={(current) => setSelectedRoleId(current.id)}
-            />
-          ))}
-        </div>
-      )}
     </div>
   );
+
+  const menuContent =
+    items.length === 0 ? (
+      <p className="py-10 text-center font-light text-(--color-secondary-grey-fonts)">{t('state.no_results')}</p>
+    ) : (
+      <div className="flex flex-col gap-3">
+        {items.map((item) => (
+          <CastingRolePublicCard
+            key={item.id}
+            item={item}
+            selected={item.id === selectedItem?.id}
+            onSelect={(current) => setSelectedRoleId(current.id)}
+          />
+        ))}
+      </div>
+    );
 
   const contentHeader = detailsQuery.data ? (
     <div className="flex min-w-0 flex-col">
@@ -166,7 +165,8 @@ const CastingPublicOverviewPage = () => {
             <div className="min-w-0 flex-1 h-full flex flex-col lg:px-[40px] lg:py-[24px]">
               <div className="mx-auto flex w-full max-w-[1500px] flex-1 min-h-0 h-full flex-col gap-6">
                 <MasterDetailShell
-                  menu={menu}
+                  menuHeader={menuHeader}
+                  menuContent={menuContent}
                   content={content}
                   contentHeader={contentHeader}
                   contentActions={contentActions}

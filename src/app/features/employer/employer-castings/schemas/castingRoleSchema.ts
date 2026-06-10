@@ -43,7 +43,7 @@ const optionalText = (t: TFunction, max = 2000) =>
   z
     .string()
     .trim()
-    .max(max, { message: t('validation.invalid') });
+    .max(max, { message: t('validation.max_char') });
 
 const getCastingRoleSchemaObject = (t: TFunction) =>
   z.object({
@@ -72,7 +72,7 @@ const getCastingRoleSchemaObject = (t: TFunction) =>
     ethnicityId: optionalUuid(t),
     description: optionalText(t),
     remunerationNotes: optionalText(t),
-    requirementDescription: optionalText(t),
+    requirementDescription: optionalText(t, 3000),
   });
 
 export const getCastingRoleSchema = (t: TFunction, payRateTypeOptions?: SiteMetadataObject[] | null) =>

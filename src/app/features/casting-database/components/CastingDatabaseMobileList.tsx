@@ -1,8 +1,9 @@
-import { Icon, Skeleton } from 'autocasting-ui-library-padimasso';
+import { Skeleton } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../shared/lib/routes';
+import FilterToggleButton from '../../../shared/components/FilterToggleButton/FilterToggleButton';
 import { getCastingDatabase } from '../services/castingDatabaseService';
 import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';
 import CastingRolePublicCard from './CastingRolePublicCard';
@@ -13,10 +14,11 @@ const SCROLL_EPS = 8;
 
 type Props = {
   filters: CastingFiltersQS;
+  activeFilterCount: number;
   onOpenFilters: () => void;
 };
 
-export default function CastingDatabaseMobileList({ filters, onOpenFilters }: Props) {
+export default function CastingDatabaseMobileList({ filters, activeFilterCount, onOpenFilters }: Props) {
   const { t } = useTranslation(undefined, { useSuspense: false });
   const navigate = useNavigate();
 
@@ -146,18 +148,14 @@ export default function CastingDatabaseMobileList({ filters, onOpenFilters }: Pr
       ref={scrollContainerRef}
       className="scrollbar-hide flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain"
     >
-      <article className="flex items-center justify-between shrink-0 py-2">
+      <article className="flex items-center justify-between shrink-0 mb-4">
         <h2 className="text-2xl font-semibold">{t('casting-database.page.title')}</h2>
-        <button
-          type="button"
-          className="cursor-pointer inline-flex items-center gap-3 shadow-sm rounded-xl"
+        <FilterToggleButton
+          size="mobile"
+          count={activeFilterCount}
           onClick={onOpenFilters}
-          aria-label={t('general.filters.open')}
-        >
-          <span className="w-12 h-12 flex items-center justify-center bg-(--color-primary-white) rounded-lg">
-            <Icon name="filter" variant="primary" size={20} />
-          </span>
-        </button>
+          ariaLabel={t('general.filters.open')}
+        />
       </article>
 
       {error ? (

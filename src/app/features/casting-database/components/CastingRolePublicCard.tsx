@@ -71,7 +71,7 @@ const CastingRolePublicCard = ({ item, selected = false, onSelect }: Props) => {
         <Separator className="opacity-20 my-3"></Separator>
 
         {/* Bottom Section */}
-        <article className="flex flex-col gap-2">
+        <article className="flex flex-col gap-3">
           <div className="flex flex-row items-center gap-2">
             <Icon name="calendar" variant="default" />
             <p className="text-sm">{`${formatLocalDate(shootingStartDate, 'numeric')} - ${formatLocalDate(

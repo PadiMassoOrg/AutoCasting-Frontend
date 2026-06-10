@@ -31,10 +31,13 @@
     "edit": "Editar",
     "duplicate": "Duplicar",
     "error": "Error",
+    "warning": "Atención",
     "publish": "Publicar",
     "pay_and_publish": "Pagar y Publicar",
     "publish_casting": "Publicar Casting",
     "copied": "Copaiado con éxito.",
+    "show_more": "Ver más",
+    "show_less": "Ver menos",
     "logout": "Cerrar Sesión",
     "no_data": "Sin información.",
     "untitled": "Sin título.",
@@ -151,7 +154,7 @@
     "uuid_invalid": "Valor inválido.",
     "invalid": "Valor inválido.",
     "email_invalid": "Email inválido.",
-    "url_invalid": "Ingresa una URL válida.",
+    "url_invalid": "Solo aceptamos enlaces de plataformas verificadas.",
     "application_deadline_past": "La fecha límite no puede ser anterior a hoy.",
     "birth_date_future": "La fecha de nacimiento no puede ser futura.",
     "video_host_invalid": "Solo se permiten URLs de YouTube o Vimeo.",
@@ -164,6 +167,7 @@
     "day_invalid": "Día inválido.",
     "max_char": "El texto es demasiado largo.",
     "max_length": "El texto es muy largo.",
+    "max_items": "Solo puedes seleccionar hasta {{total}} opciones.",
     "type_image": "El archivo debe ser una imagen.",
     "max_size": "El archivo supera el tamaño máximo de {{mb}}MB.",
     "media_too_large_8mb": "El archivo supera el tamaño máximo de 8MB."
@@ -253,7 +257,10 @@
       }
     },
     "profile": {
-      "not_found": "No se encuentra el perfil."
+      "not_found": "No se encuentra el perfil.",
+      "media": {
+        "required_for_application": "Debes tener una foto de cara y una foto de cuerpo para aplicar."
+      }
     },
     "credit": {
       "forbidden": "No es posible visualizar el crédito.",
@@ -752,6 +759,7 @@
     "talent": {
       "step_basic_info": {
         "header": "Indicanos tu nombre",
+        "combined_header": "Indicanos tu nombre y a qué te dedicás",
         "subtitle": "Así vamos armando tu perfil para que puedan encontrarte.",
         "stage_name_label": "Nombre y apellido"
       },
@@ -760,8 +768,8 @@
         "subtitle": "Seleccioná tus profesiones para ayudarte a encontrar oportunidades. Podés elegir más de una opción."
       },
       "step_media": {
-        "header": "Subí tu foto de perfil",
-        "subtitle": "Podés agregar tu foto de perfil o book. Después vas a poder subir más si querés."
+        "header": "Subí tu foto de cara y cuerpo entero",
+        "subtitle": "Para aparecer en el catálogo de talentos necesitás una foto de rostro y una de cuerpo entero."
       },
       "step_confirmation": {
         "header": "¡Listo! Tu perfil empezó a tomar forma",
@@ -824,7 +832,8 @@
       "location": "Locación",
       "location_placeholder": "Escribe tu ciudad o barrio…",
       "profession": "Profesión",
-      "profession_label": "(Selecciona hasta 3) 0 de 3 seleccionadas",
+      "profession_count": "Profesión ({{selected}}/{{total}})",
+      "profession_label": "(Selecciona hasta {{total}}) 0 de {{total}} seleccionadas",
       "contact": "Contacto",
       "email": "Email",
       "whatsapp": "Whatsapp",
@@ -836,7 +845,12 @@
     "media": {
       "media": "Media",
       "photos": "Fotos",
-      "must_have_one_photo": "DECIDIR TRADUCCION",
+      "headshot_slot": "Foto de cara",
+      "fullbody_slot": "Foto de cuerpo",
+      "other_slot": "Otras fotos",
+      "catalog_visibility_title": "Tu perfil no es visible en el catalogo",
+      "catalog_visibility_description": "Subi foto de cara y una de cuerpo para ser visto en el catalogo y aplicar a busquedas",
+      "must_have_one_photo": "Tu perfil debe tener al menos una foto. Subí una nueva para reemplazarla.",
       "headshot_fullbody": "Primer Plano y Cuerpo Entero",
       "other": "Otras Fotos",
       "videos": "Videos",
@@ -965,6 +979,7 @@
       "role_basic_info": "Talento",
       "role_characteristics": "Características",
       "role_skills": "Habilidades",
+      "role_requirements_description": "Requerimientos",
       "role_remuneration_title": "Remuneración"
     },
     "filter": {
@@ -984,6 +999,12 @@
     "confirmation_modal": {
       "title": "¡Postulación enviada con éxito!",
       "text": "Gracias por aplicar. Tus materiales ya están disponibles para el equipo de casting."
+    },
+    "profile_completion_modal": {
+      "title": "Completá tu perfil para postularte",
+      "text": "Necesitás una foto de rostro y una de cuerpo entero para aparecer en los castings y enviar postulaciones.",
+      "cancel": "Salir",
+      "confirm": "Completar perfil"
     }
   },
   "applications": {
@@ -1102,6 +1123,7 @@
         "add_new": "Nuevo Rol",
         "edit": "Editar Rol",
         "save_role": "Guardar Rol",
+        "duplicate_name": "Copia de {{name}}",
         "delete": "¿Seguro deseas eliminar este rol?",
         "role": {
           "role": "Rol",

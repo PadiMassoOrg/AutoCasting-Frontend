@@ -18,9 +18,13 @@ export function CastingMobileFiltersDrawer({
 }) {
   const [draft, setDraft] = useState<CastingFiltersQS>(value);
   const contentRef = useRef<HTMLDivElement>(null);
+  const draftRef = useRef<CastingFiltersQS>(value);
 
   useEffect(() => {
-    if (open) setDraft(value);
+    if (open) {
+      setDraft(value);
+      draftRef.current = value;
+    }
   }, [open, value]);
 
   return (
@@ -33,10 +37,11 @@ export function CastingMobileFiltersDrawer({
         <FiltersDrawerActionBar
           onReset={() => {
             setDraft({} as CastingFiltersQS);
+            draftRef.current = {} as CastingFiltersQS;
             onReset?.();
           }}
           onApply={() => {
-            onApply?.(draft);
+            onApply?.(draftRef.current);
             onClose();
           }}
         />
@@ -44,8 +49,10 @@ export function CastingMobileFiltersDrawer({
     >
       <CastingFilterBar
         value={draft}
-        onChange={setDraft}
-        onReset={onReset}
+        onChange={(next) => {
+          draftRef.current = next;
+          setDraft(next);
+        }}
         onClose={onClose}
         forwardScrollToRef={contentRef as React.RefObject<HTMLElement | null>}
       />

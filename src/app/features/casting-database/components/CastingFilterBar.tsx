@@ -18,17 +18,16 @@ import {
 import type { SiteMetadataObject } from '../../sitemetadata/types/sitemetadata.types';
 import { getTalentVisibleGenderOptions } from '../../sitemetadata/utils/siteMetadataUtils';
 import type { CastingFiltersQS } from '../types/casting-database.types';
+import { getCastingFilterCounts } from '../utils/castingDatabaseFilterCounts';
 
 export function CastingFilterBar({
   value,
   onChange,
-  onReset,
   onClose,
   forwardScrollToRef,
 }: {
   value: CastingFiltersQS;
   onChange: (v: CastingFiltersQS) => void;
-  onReset?: () => void;
   onClose?: () => void;
   forwardScrollToRef?: React.RefObject<HTMLElement | null>;
 }) {
@@ -79,16 +78,6 @@ export function CastingFilterBar({
     [ethnicityOptions, t]
   );
 
-  const hasAny = (arr?: unknown[]) => (arr?.length ?? 0) > 0;
-  const hasRange = (min?: number, max?: number) => min != null || max != null;
-  const genderActive = (value.genderIds ?? []).some((id) => id !== 'NULL');
-  const ethnicityActive = (value.ethnicityIds ?? []).some((id) => id !== 'NULL');
-
-  const handleReset = () => {
-    onChange({});
-    onReset?.();
-  };
-
   const ageMin = useCommittedInt(value.ageMin ?? null, (v) => onChange({ ...value, ageMin: v ?? undefined }), {
     allowNull: true,
   });
@@ -102,20 +91,10 @@ export function CastingFilterBar({
     allowNull: true,
   });
 
-  const basicCount =
-    (hasRange(value.ageMin, value.ageMax) ? 1 : 0) +
-    (genderActive ? 1 : 0) +
-    (ethnicityActive ? 1 : 0) +
-    (hasAny(value.professionId) ? 1 : 0) +
-    (hasAny(value.projectTypeIds) ? 1 : 0);
-
-  const characteristicsCount =
-    (hasRange(value.heightMinCm, value.heightMaxCm) ? 1 : 0) +
-    (hasAny(value.hairColorIds) ? 1 : 0) +
-    (hasAny(value.eyeColorIds) ? 1 : 0) +
-    (value.tattoo !== undefined ? 1 : 0) +
-    (value.passport !== undefined ? 1 : 0) +
-    (value.drivingLicense !== undefined ? 1 : 0);
+  const { basicCount, characteristicsCount } = useMemo(
+    () => getCastingFilterCounts(value, skillsRaw),
+    [skillsRaw, value]
+  );
 
   const skillsCount = useMemo(() => {
     const selected = value.skillId ?? [];
@@ -130,7 +109,7 @@ export function CastingFilterBar({
   }, [skillsCats, value.skillId]);
 
   return (
-    <aside className="z-[300] w-full flex flex-col items-stretch overflow-auto overflow-x-hidden lg:max-w-[350px] bg-[var(--primary-color-white)]">
+    <aside className="z-[300] w-full flex flex-col items-stretch overflow-auto overflow-x-hidden bg-[var(--primary-color-white)]">
       <header className="flex items-center justify-between pb-2">
         <h4 className="text-[14px] font-semibold">{t('general.filter.title')}</h4>
         {onClose ? (
@@ -138,22 +117,14 @@ export function CastingFilterBar({
             type="button"
             onClick={onClose}
             aria-label={t('common.close') || 'Cerrar'}
-            className="cursor-pointer p-2 rounded-md text-3xl leading-none"
+            className="cursor-pointer p-1 rounded-md text-3xl leading-none"
           >
             ×
           </button>
-        ) : (
-          <button
-            type="button"
-            className="cursor-pointer text-xs font-light hover:text-(--color-primary-purple)"
-            onClick={handleReset}
-          >
-            {t('general.filter.reset')}
-          </button>
-        )}
+        ) : null}
       </header>
 
-      <Separator className="opacity-20 mt-6" />
+      <Separator className="opacity-20 mt-3" />
 
       <FilterSection title={t('casting.basic_info.basic_info')} count={basicCount} defaultOpen={isDesktop}>
         <article className="flex flex-col">

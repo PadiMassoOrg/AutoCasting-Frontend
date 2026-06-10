@@ -8,6 +8,7 @@ import {
 } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '../../../../../context/ToastContext';
 import { useEmployerLogoPatch } from '../../../../../integrations/supabase/media/hooks/useEmployerLogoPatch';
 import { getBackendErrorMessage } from '../../../../../shared/utils/backendErrorHandling';
 import { useCommittedText, useCommittedUuid } from '../../../../../shared/utils/formUtils';
@@ -37,6 +38,7 @@ type Props = {
 
 export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const autosave = useEmployerBasicInfoAutosave();
   const socialMediaAutosave = useEmployerSocialMediaAutosave();
   const schema = useMemo(() => getEmployerBasicInfoSchema(t), [t]);
@@ -178,11 +180,12 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   };
 
   const handleDeleteLogo = () => {
-    setPreviewUrl(null);
-    setErrImage(null);
-    setErrors((e) => ({ ...e, imageUrl: null }));
-    autosave.immediate({ imageUrl: null });
-    setBust((prev) => prev + 1);
+    showToast({
+      title: t('general.warning'),
+      description: t('profile.media.must_have_one_photo'),
+      type: 'warning',
+      durationMs: 5500,
+    });
   };
 
   const logoUrl = uploadPending ? undefined : withBust(currentLogoUrl, bust);
@@ -233,7 +236,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
         </div>
 
         <div className="w-full max-w-[240px] lg:absolute lg:top-0 lg:right-0 lg:h-full lg:w-[240px]">
-          <div className="grid gap-1 lg:h-full lg:min-h-0 lg:grid-rows-[auto_minmax(0,1fr)_25px]">
+          <div className="grid gap-1 lg:h-full lg:grid-rows-[auto_minmax(0,1fr)_25px]">
             <Label className="w-full self-start text-sm font-semibold">{t('employer_profile.basic_info.image')}</Label>
             <div className="w-full aspect-[3/4] lg:h-full lg:min-h-0 lg:aspect-auto">
               <UploadTile
@@ -254,7 +257,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
             </div>
 
             {errImage ? (
-              <span className="w-full max-h-[25px] text-xs text-red-600">{errImage}</span>
+              <span className="w-full min-h-[25px] text-sm text-red-600">{errImage}</span>
             ) : (
               <div className="min-h-[25px] w-full" />
             )}

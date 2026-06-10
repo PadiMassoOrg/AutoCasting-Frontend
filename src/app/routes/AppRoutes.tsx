@@ -8,30 +8,22 @@ import CastingDatabasePage from '../features/casting-database/pages/CastingDatab
 import LegalAcceptanceRequiredGate from '../features/legal/components/LegalAcceptanceRequiredGate';
 import MainSiteLayout from '../features/main-site/layout/MainSiteLayout';
 import { PrivacyPage, SupportPage, TermsPage } from '../features/main-site/page';
-import MainSitePage from '../features/main-site/page/MainSitePage';
 import { OnboardingWizard } from '../features/onboarding/components';
 import { CastingDetailsPage, CastingPublicOverviewPage } from '../features/public-casting/pages';
 import { PublicProfilePage } from '../features/public-profile/pages';
-import { useOwnTalentProfileNavigation } from '../features/talent/talent-profile-edit/hooks/useOwnTalentProfileNavigation';
 import { TalentDatabasePage } from '../features/talent-database/pages';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
 import { EmptyLayout, NavigationLayout, ScrollContentLayout } from '../layouts';
+import ScrollToTopOnRouteChange from '../shared/components/ScrollToTopOnRouteChange';
 import { clearClientSession } from '../shared/lib/authSession';
 import { getAuthTokenExpirationTime } from '../shared/lib/cookies';
 import { ROUTES } from '../shared/lib/routes';
-import ScrollToTopOnRouteChange from '../shared/components/ScrollToTopOnRouteChange';
 import ProtectedRoute from './ProtectedRoute';
 import ProtectedRoutesLayout from './ProtectedRoutesLayout';
 
 function RouteTracker() {
   useRouteTracking();
   return null;
-}
-
-function PublicProfileRouteLayout() {
-  const { isOwnPublicProfile } = useOwnTalentProfileNavigation();
-
-  return <NavigationLayout variant={isOwnPublicProfile ? 'public-profile-own' : 'default'} />;
 }
 
 function isProtectedPath(pathname: string) {
@@ -118,8 +110,8 @@ function AppRoutesContent() {
 
   return (
     <Routes>
-      <Route element={<MainSiteLayout />}>
-        <Route path={ROUTES.HOME} element={<MainSitePage />} />
+      <Route element={<ScrollContentLayout variant="desktop-full-bleed" />}>
+        <Route path={ROUTES.HOME} element={<TalentDatabasePage />} />
       </Route>
       <Route path={ROUTES.AUTH} element={<AuthenticationPage />} />
       <Route path={ROUTES.GOOGLE_OAUTH_SUCCESS} element={<GoogleAuthSuccessPage />} />
@@ -129,7 +121,7 @@ function AppRoutesContent() {
         <Route path={ROUTES.TERMS} element={<TermsPage />} />
         <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />
       </Route>
-      <Route element={<PublicProfileRouteLayout />}>
+      <Route element={<NavigationLayout />}>
         <Route path={ROUTES.PUBLIC_PROFILE + '/:slug'} element={<PublicProfilePage />} />
       </Route>
       <Route element={<ScrollContentLayout variant="desktop-full-bleed" />}>

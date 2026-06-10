@@ -9,9 +9,11 @@ import {
   useToggleSet,
 } from '../../../../../shared/utils/formUtils';
 import { capitalize } from '../../../../../shared/utils/formatUtils';
-import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
+import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../sitemetadata/types/sitemetadata.types';
+import { getTalentVisibleGenderOptions } from '../../../../sitemetadata/utils/siteMetadataUtils';
 import { useBasicInfoAutosave } from '../../hooks/autosaves';
+import { MAX_TALENT_PROFESSIONS } from '../../constants';
 import { getBasicInfoSchema } from '../../schemas/basicInfoSchema';
 import type { TalentProfileBasicInfo } from '../../types/talentProfile.types';
 
@@ -43,14 +45,21 @@ export default function BasicInfoForm({
     return iso > todayIso ? t('validation.birth_date_future') : null;
   };
 
-  const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
+  const genderOptionsRaw = useCachedSiteMetadataSlice('genderOptions');
+  const genderOptions = useMemo(
+    () =>
+      getTalentVisibleGenderOptions(genderOptionsRaw).map((option) => ({
+        value: option.id,
+        label: t(option.stringCode),
+      })),
+    [genderOptionsRaw, t]
+  );
   const autosave = useBasicInfoAutosave();
   const schema = useMemo(() => getBasicInfoSchema(t), [t]);
   const backendFieldErrors = autosave.fieldErrors as Record<string, string | undefined>;
   const YEAR_END = new Date().getFullYear();
   const YEAR_START = YEAR_END - 80;
 
-  const [profErrors, setProfErrors] = useState<string | null>(null);
   const [birthError, setBirthError] = useState<string | null>(() => getBirthDateError(data.birthDate ?? ''));
   const [errors, setErrors] = useState<Errors>({});
   const [lastSentBirthDate, setLastSentBirthDate] = useState(data.birthDate ?? '');
@@ -117,10 +126,11 @@ export default function BasicInfoForm({
     (data.professions ?? []).map((p) => p.id),
     (next) => {
       const r = schema.shape.professions.safeParse(next);
-      setProfErrors(r.success ? null : r.error.errors[0]?.message || t('validation.profession_min'));
       if (r.success) autosave.immediate({ professionIds: next });
     }
   );
+  const selectedProfessionCount = professions.values.length;
+  const hasReachedProfessionLimit = selectedProfessionCount >= MAX_TALENT_PROFESSIONS;
   const birthDayError = errors.birth?.day ?? birthError ?? undefined;
   const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;
 
@@ -203,24 +213,32 @@ export default function BasicInfoForm({
 
       {/* Profesión */}
       <div className="flex flex-col gap-2">
-        <Label className="text-sm font-bold">{t('profile.basic_info.profession')}</Label>
+        <Label className="text-sm font-bold">
+          {t('profile.basic_info.profession_count', {
+            selected: selectedProfessionCount,
+            total: MAX_TALENT_PROFESSIONS,
+          })}
+        </Label>
         <div className="flex flex-wrap gap-2">
           {professionsMeta.map((p) => {
             const active = professions.values.includes(p.id);
+            const disabled = !active && hasReachedProfessionLimit;
             return (
               <ChoiceChip
                 key={p.id}
                 label={t(p.stringCode)}
                 selected={active}
-                onClick={() => professions.toggle(p.id)}
+                disabled={disabled}
+                className={disabled ? 'cursor-not-allowed opacity-50' : undefined}
+                onClick={() => {
+                  if (disabled) return;
+                  professions.toggle(p.id);
+                }}
                 title={t(p.stringCode)}
               />
             );
           })}
         </div>
-        {(profErrors || resolveError('professions')) && (
-          <span className="text-sm text-red-600">{profErrors ?? resolveError('professions')}</span>
-        )}
       </div>
     </>
   );

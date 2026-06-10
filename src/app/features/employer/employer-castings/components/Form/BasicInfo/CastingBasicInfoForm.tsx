@@ -119,202 +119,211 @@ const CastingBasicInfoForm = ({
   };
 
   return (
-    <div className="w-full flex flex-col">
-      <FormInputField
-        id="title"
-        label={t('employer_castings.dashboard.basic_info.title')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.project_name')}
-        value={data.title}
-        onChange={(e) => {
-          const next = e.target.value;
-          updateField('title', next);
-          setSchemaError('title', schema.shape.title.safeParse(next));
-          onClearBackendError?.('title');
-        }}
-        error={resolveError('title', errors.title)}
-        required
-      />
-
-      <FormSelectField
-        id="projectTypeId"
-        label={t('employer_castings.dashboard.basic_info.project_type')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.select')}
-        value={data.projectTypeId ?? ''}
-        onChange={(e) => {
-          const nextValue = e.target.value || null;
-          updateField('projectTypeId', nextValue);
-          setSchemaError('projectTypeId', schema.shape.projectTypeId.safeParse(nextValue ?? ''));
-          onClearBackendError?.('projectTypeId');
-        }}
-        options={projectTypeOptions}
-        error={resolveError('projectTypeId', errors.projectTypeId)}
-        required
-      />
-
-      <FormSelectField
-        id="castingModalityId"
-        label={t('employer_castings.dashboard.basic_info.casting_modality')}
-        labelClassName="font-semibold text-base"
-        placeholder={t('general.placeholder.select')}
-        value={data.castingModalityId ?? ''}
-        onChange={(e) => {
-          const nextValue = e.target.value || null;
-          const nextLabel = castingModalityOptions.find((option) => option.value === nextValue)?.label ?? null;
-
-          setSchemaError('castingModalityId', schema.shape.castingModalityId.safeParse(nextValue ?? ''));
-          onClearBackendError?.('castingModalityId');
-
-          if (nextLabel && nextLabel !== ON_SITE_CODE) {
-            onChange({
-              castingModalityId: nextValue,
-              locationText: '',
-            });
-            clearError('locationText');
-            return;
-          }
-
-          updateField('castingModalityId', nextValue);
-        }}
-        options={castingModalityOptions}
-        error={resolveError('castingModalityId', errors.castingModalityId)}
-        required
-      />
-
-      {isOnSite && (
+    <article className="flex flex-col">
+      {/* Title + Disponibilidad */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 lg:items-start lg:gap-x-4">
         <FormInputField
-          id="locationText"
-          label={t('employer_castings.dashboard.basic_info.casting_modality_on_site')}
+          id="title"
+          label={t('employer_castings.dashboard.basic_info.title')}
           labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.casting_modality')}
-          value={data.locationText}
+          placeholder={t('general.placeholder.project_name')}
+          value={data.title}
           onChange={(e) => {
             const next = e.target.value;
-            updateField('locationText', next);
-            setSchemaError('locationText', schema.shape.locationText.safeParse(next));
-            onClearBackendError?.('locationText');
+            updateField('title', next);
+            setSchemaError('title', schema.shape.title.safeParse(next));
+            onClearBackendError?.('title');
           }}
-          error={resolveError('locationText', errors.locationText)}
+          error={resolveError('title', errors.title)}
           required
         />
-      )}
+        <span>
+          <RangeCalendar
+            label={t('employer_castings.dashboard.basic_info.shooting_dates')}
+            value={range}
+            onChange={setRange}
+            onCommit={(from, to) => {
+              onChange({
+                shootingStartDate: toLocalISO(from),
+                shootingEndDate: toLocalISO(to),
+              });
+            }}
+            language={i18n.language}
+            required
+          />
 
-      <BooleanRadioGroup
-        label={t('employer_castings.dashboard.basic_info.has_wardrobe_fitting')}
-        value={data.hasWardrobeFitting}
-        onChange={(next) => {
-          if (next === false) {
-            onChange({
-              hasWardrobeFitting: false,
-              wardrobeFittingText: '',
-            });
-            clearError('wardrobeFittingText');
-            return;
-          }
+          <div className="min-h-[25px]"></div>
+        </span>
 
-          updateField('hasWardrobeFitting', next ?? null);
-        }}
-        yesLabel={t('general.yes')}
-        noLabel={t('general.no')}
-        includeAnyOption={false}
-        name="hasWardrobeFitting"
-        required
-      />
-
-      {data.hasWardrobeFitting === true && (
-        <FormInputField
-          id="wardrobeFittingText"
-          label={t('employer_castings.dashboard.basic_info.wardrobe_fitting_details')}
+        {/* Tipo + Deadline */}
+        <FormSelectField
+          id="projectTypeId"
+          label={t('employer_castings.dashboard.basic_info.project_type')}
           labelClassName="font-semibold text-base"
-          placeholder={t('general.placeholder.wardrobe_fitting')}
-          value={data.wardrobeFittingText}
+          placeholder={t('general.placeholder.select')}
+          value={data.projectTypeId ?? ''}
           onChange={(e) => {
-            const next = e.target.value;
-            updateField('wardrobeFittingText', next);
-            setSchemaError('wardrobeFittingText', schema.shape.wardrobeFittingText.safeParse(next));
-            onClearBackendError?.('wardrobeFittingText');
+            const nextValue = e.target.value || null;
+            updateField('projectTypeId', nextValue);
+            setSchemaError('projectTypeId', schema.shape.projectTypeId.safeParse(nextValue ?? ''));
+            onClearBackendError?.('projectTypeId');
           }}
-          error={resolveError('wardrobeFittingText', errors.wardrobeFittingText)}
+          options={projectTypeOptions}
+          error={resolveError('projectTypeId', errors.projectTypeId)}
           required
         />
-      )}
 
-      <div className="flex flex-col gap-2">
-        <div className="flex">
-          <Label className="text-sm font-semibold">
-            {t('employer_castings.dashboard.basic_info.application_deadline')}
-          </Label>
-          <span className="text-red-500 ml-1" aria-hidden="true">
-            *
-          </span>
+        <div className="flex flex-col gap-2">
+          <div className="flex">
+            <Label className="text-sm font-semibold">
+              {t('employer_castings.dashboard.basic_info.application_deadline')}
+            </Label>
+            <span className="text-red-500 ml-1" aria-hidden="true">
+              *
+            </span>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2">
+            <FormSelectField
+              id="applicationDeadline-day"
+              placeholder={t('general.placeholder.day')}
+              value={applicationDeadline.day}
+              onChange={(e) => {
+                onSelect((day) => applicationDeadline.onDay(day))(e);
+              }}
+              onBlur={applicationDeadline.onAnyBlur}
+              options={applicationDeadline.dayOptions}
+              error={resolveError(
+                'applicationDeadline',
+                errors.applicationDeadline ??
+                  applicationDeadlineError ??
+                  (shouldShowApplicationDeadlineHint
+                    ? t('employer_castings.dashboard.basic_info.application_deadline_incomplete')
+                    : null)
+              )}
+            />
+            <FormSelectField
+              id="applicationDeadline-month"
+              placeholder={t('general.placeholder.month')}
+              value={applicationDeadline.month}
+              onChange={(e) => {
+                onSelect((month) => applicationDeadline.onMonth(month))(e);
+              }}
+              onBlur={applicationDeadline.onAnyBlur}
+              options={monthOptions}
+              error={resolveError('applicationDeadline', errors.applicationDeadline)}
+            />
+            <FormSelectField
+              id="applicationDeadline-year"
+              placeholder={t('general.placeholder.year')}
+              value={applicationDeadline.year}
+              onChange={(e) => {
+                onSelect((year) => applicationDeadline.onYear(year))(e);
+              }}
+              onBlur={applicationDeadline.onAnyBlur}
+              options={yearOptions}
+              error={resolveError('applicationDeadline', errors.applicationDeadline)}
+            />
+          </div>
         </div>
-
-        <div className="grid grid-cols-3 gap-2">
+        {/* Modality */}
+        <span>
           <FormSelectField
-            id="applicationDeadline-day"
-            placeholder={t('general.placeholder.day')}
-            value={applicationDeadline.day}
+            id="castingModalityId"
+            label={t('employer_castings.dashboard.basic_info.casting_modality')}
+            labelClassName="font-semibold text-base"
+            placeholder={t('general.placeholder.select')}
+            value={data.castingModalityId ?? ''}
             onChange={(e) => {
-              onSelect((day) => applicationDeadline.onDay(day))(e);
-            }}
-            onBlur={applicationDeadline.onAnyBlur}
-            options={applicationDeadline.dayOptions}
-            error={resolveError(
-              'applicationDeadline',
-              errors.applicationDeadline ??
-                applicationDeadlineError ??
-                (shouldShowApplicationDeadlineHint
-                  ? t('employer_castings.dashboard.basic_info.application_deadline_incomplete')
-                  : null)
-            )}
-          />
-          <FormSelectField
-            id="applicationDeadline-month"
-            placeholder={t('general.placeholder.month')}
-            value={applicationDeadline.month}
-            onChange={(e) => {
-              onSelect((month) => applicationDeadline.onMonth(month))(e);
-            }}
-            onBlur={applicationDeadline.onAnyBlur}
-            options={monthOptions}
-            error={resolveError('applicationDeadline', errors.applicationDeadline)}
-          />
-          <FormSelectField
-            id="applicationDeadline-year"
-            placeholder={t('general.placeholder.year')}
-            value={applicationDeadline.year}
-            onChange={(e) => {
-              onSelect((year) => applicationDeadline.onYear(year))(e);
-            }}
-            onBlur={applicationDeadline.onAnyBlur}
-            options={yearOptions}
-            error={resolveError('applicationDeadline', errors.applicationDeadline)}
-          />
-        </div>
-      </div>
+              const nextValue = e.target.value || null;
+              const nextLabel = castingModalityOptions.find((option) => option.value === nextValue)?.label ?? null;
 
-      <RangeCalendar
-        label={t('employer_castings.dashboard.basic_info.shooting_dates')}
-        value={range}
-        onChange={setRange}
-        onCommit={(from, to) => {
-          onChange({
-            shootingStartDate: toLocalISO(from),
-            shootingEndDate: toLocalISO(to),
-          });
-        }}
-        language={i18n.language}
-        required
-      />
+              setSchemaError('castingModalityId', schema.shape.castingModalityId.safeParse(nextValue ?? ''));
+              onClearBackendError?.('castingModalityId');
 
-      <div className="min-h-[25px]"></div>
+              if (nextLabel && nextLabel !== ON_SITE_CODE) {
+                onChange({
+                  castingModalityId: nextValue,
+                  locationText: '',
+                });
+                clearError('locationText');
+                return;
+              }
+
+              updateField('castingModalityId', nextValue);
+            }}
+            options={castingModalityOptions}
+            error={resolveError('castingModalityId', errors.castingModalityId)}
+            required
+          />
+
+          {isOnSite && (
+            <FormInputField
+              id="locationText"
+              label={t('employer_castings.dashboard.basic_info.casting_modality_on_site')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.casting_modality')}
+              value={data.locationText}
+              onChange={(e) => {
+                const next = e.target.value;
+                updateField('locationText', next);
+                setSchemaError('locationText', schema.shape.locationText.safeParse(next));
+                onClearBackendError?.('locationText');
+              }}
+              error={resolveError('locationText', errors.locationText)}
+              required
+            />
+          )}
+        </span>
+        <span>
+          <BooleanRadioGroup
+            label={t('employer_castings.dashboard.basic_info.has_wardrobe_fitting')}
+            value={data.hasWardrobeFitting}
+            onChange={(next) => {
+              if (next === false) {
+                onChange({
+                  hasWardrobeFitting: false,
+                  wardrobeFittingText: '',
+                });
+                clearError('wardrobeFittingText');
+                return;
+              }
+
+              updateField('hasWardrobeFitting', next ?? null);
+            }}
+            yesLabel={t('general.yes')}
+            noLabel={t('general.no')}
+            includeAnyOption={false}
+            name="hasWardrobeFitting"
+            required
+          />
+
+          {data.hasWardrobeFitting === true && (
+            <FormInputField
+              id="wardrobeFittingText"
+              label={t('employer_castings.dashboard.basic_info.wardrobe_fitting_details')}
+              labelClassName="font-semibold text-base"
+              placeholder={t('general.placeholder.wardrobe_fitting')}
+              value={data.wardrobeFittingText}
+              onChange={(e) => {
+                const next = e.target.value;
+                updateField('wardrobeFittingText', next);
+                setSchemaError('wardrobeFittingText', schema.shape.wardrobeFittingText.safeParse(next));
+                onClearBackendError?.('wardrobeFittingText');
+              }}
+              error={resolveError('wardrobeFittingText', errors.wardrobeFittingText)}
+              required
+            />
+          )}
+        </span>
+      </section>
 
       <TextareaField
         id="description"
         label={t('employer_castings.dashboard.basic_info.description')}
         placeholder={t('general.placeholder.about')}
         value={data.description}
+        maxLength={3000}
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
           const next = e.target.value;
           updateField('description', next);
@@ -323,7 +332,7 @@ const CastingBasicInfoForm = ({
         }}
         error={resolveError('description', errors.description)}
       />
-    </div>
+    </article>
   );
 };
 

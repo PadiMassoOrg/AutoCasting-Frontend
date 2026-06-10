@@ -4,6 +4,7 @@ import type { SliceResponse } from '../../../shared/types/sliceResponse.types';
 import { appendBasePersonFilters } from '../../search/buildPersonSearchQuery';
 import type { BasePersonSearchFiltersQS } from '../../search/personSearchFilters.types';
 import type { ProfileCardResponse, TalentFiltersQS } from '../types/talent-database.types';
+import { normalizeTalentDatabaseFilters } from '../utils/talentDatabaseFilterKey';
 
 export const TALENT_DATABASE_CACHE_KEY = ['cache-talent-database', 'v1'] as const;
 
@@ -34,6 +35,7 @@ function buildTalentQuery(page: number, size: number, filters?: TalentFiltersQS)
   qs.set('page', String(page));
   qs.set('size', String(size));
   if (!filters) return qs;
+  const cleanedFilters = normalizeTalentDatabaseFilters(filters);
 
   const append = (k: string, v: unknown) => {
     if (v === undefined || v === null || v === '') return;
@@ -46,10 +48,10 @@ function buildTalentQuery(page: number, size: number, filters?: TalentFiltersQS)
     qs.set(k, String(v));
   };
 
-  append('includeNoHeadshot', filters.includeNoHeadshot);
-  append('stageName', filters.stageName?.trim() || undefined);
+  append('includeNoHeadshot', cleanedFilters.includeNoHeadshot);
+  append('stageName', cleanedFilters.stageName || undefined);
 
-  appendBasePersonFilters(append, filters as BasePersonSearchFiltersQS);
+  appendBasePersonFilters(append, cleanedFilters as BasePersonSearchFiltersQS);
 
   return qs;
 }

@@ -54,6 +54,13 @@ export const commitOnBlur =
 export function useCommittedText(initial: string, commitFn: (v: string) => void, opts?: { trim?: boolean }) {
   const [value, setValue] = useState(initial ?? '');
   const last = useRef(initial ?? '');
+
+  useEffect(() => {
+    const next = initial ?? '';
+    last.current = next;
+    setValue(next);
+  }, [initial]);
+
   const commit = useCallback(() => {
     const v = opts?.trim ? value.trim() : value;
     if (v !== last.current) {
@@ -191,6 +198,13 @@ export function useCommittedInt(
   const [error, setError] = useState<string | null>(null);
   const debounce = useRef<number | null>(null);
 
+  useEffect(() => {
+    const next = initial ?? null;
+    last.current = next;
+    setValue(next == null ? '' : String(Math.trunc(next)));
+    setError(null);
+  }, [initial]);
+
   const clearDebounce = () => {
     if (debounce.current) {
       window.clearTimeout(debounce.current);
@@ -308,6 +322,13 @@ export function useCommittedUuid(
   const [value, setValue] = useState<string>(initial ?? '');
   const last = useRef<string | null>(initial ?? null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const next = initial ?? null;
+    last.current = next;
+    setValue(next ?? '');
+    setError(null);
+  }, [initial]);
 
   const commit = useCallback(
     (raw?: string) => {

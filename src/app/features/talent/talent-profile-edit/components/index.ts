@@ -1,2 +1,3 @@
 import TalentProfileModeToggle from './TalentProfileModeToggle';
-export { TalentProfileModeToggle };
+import TalentProfilePageModeSwitcher from './TalentProfilePageModeSwitcher';
+export { TalentProfileModeToggle, TalentProfilePageModeSwitcher };
