@@ -10,7 +10,6 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CastingDetailsDesktopBody } from '../../../shared/components/CastingDetails';
-import FilterToggleButton from '../../../shared/components/FilterToggleButton/FilterToggleButton';
 import { FiltersDrawerActionBar, FiltersDrawerShell } from '../../../shared/components/FiltersDrawer';
 import ServerError from '../../../shared/components/ServerError/ServerError';
 import { usePublicCastingDetails } from '../../public-casting/hooks/usePublicCastingDetails';
@@ -18,6 +17,7 @@ import { useCachedSiteMetadataSlice } from '../../sitemetadata/hooks/useCachedSi
 import {
   CastingCatalogDetailsApplyAction,
   CastingCatalogPagination,
+  CastingDatabaseCardsPane,
   CastingDatabaseMobileList,
   CastingFilterBar,
   CastingMobileFiltersDrawer,
@@ -53,62 +53,6 @@ const initialFilters: CastingFiltersQS = {
   locationText: undefined,
 };
 
-type CardsPaneHeaderProps = {
-  title: string;
-  filtersOpen: boolean;
-  activeFilterCount: number;
-  onToggleFilters: () => void;
-  t: (key: string) => string;
-};
-
-function CardsPaneHeader({ title, filtersOpen, activeFilterCount, onToggleFilters, t }: CardsPaneHeaderProps) {
-  return (
-    <div className="sticky top-0 z-10 overflow-visible bg-(--color-secondary-white) pb-5">
-      <div className="flex items-center justify-between gap-4 overflow-visible">
-        <h1 className="text-2xl font-bold text-(--color-primary-black) leading-tight">{title}</h1>
-        <FilterToggleButton
-          open={filtersOpen}
-          count={activeFilterCount}
-          onClick={onToggleFilters}
-          ariaLabel={filtersOpen ? t('general.filter.hide') : t('general.filter.show')}
-          ariaPressed={filtersOpen}
-        />
-      </div>
-    </div>
-  );
-}
-
-function CardsPaneLayout({
-  title,
-  filtersOpen,
-  activeFilterCount,
-  onToggleFilters,
-  t,
-  children,
-  footer,
-  contentRef,
-}: CardsPaneHeaderProps & {
-  children: React.ReactNode;
-  footer?: React.ReactNode;
-  contentRef?: React.RefObject<HTMLDivElement | null>;
-}) {
-  return (
-    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden">
-      <CardsPaneHeader
-        title={title}
-        filtersOpen={filtersOpen}
-        activeFilterCount={activeFilterCount}
-        onToggleFilters={onToggleFilters}
-        t={t}
-      />
-      <div ref={contentRef} data-casting-cards-pane className="flex-1 min-h-0 overflow-y-auto pr-2">
-        {children}
-      </div>
-      {footer ? <div className="shrink-0 pt-4">{footer}</div> : null}
-    </div>
-  );
-}
-
 const CastingDatabasePage = () => {
   useViewportVhVar();
   const { t } = useTranslation(undefined, { useSuspense: false });
@@ -127,7 +71,6 @@ const CastingDatabasePage = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const menuScrollRef = useRef<HTMLDivElement>(null);
-  const cardsPaneRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (filtersOpen) {
@@ -155,11 +98,6 @@ const CastingDatabasePage = () => {
     menuScrollRef.current?.scrollTo({ top: 0, behavior: 'auto' });
     if (menuScrollRef.current) {
       menuScrollRef.current.scrollTop = 0;
-    }
-
-    cardsPaneRef.current?.scrollTo({ top: 0, behavior: 'auto' });
-    if (cardsPaneRef.current) {
-      cardsPaneRef.current.scrollTop = 0;
     }
 
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -208,16 +146,23 @@ const CastingDatabasePage = () => {
     }
   );
 
-  const menu = useMemo(() => {
+  const menuHeader = useMemo(
+    () => (
+      <CastingDatabaseCardsPane
+        title={t('casting-database.page.title')}
+        filtersOpen={filtersOpen}
+        activeFilterCount={activeFilterCount}
+        onToggleFilters={() => setFiltersOpen((value) => !value)}
+        t={t}
+      />
+    ),
+    [activeFilterCount, filtersOpen, t]
+  );
+
+  const menuContent = useMemo(() => {
     if (desktopListingQuery.isLoading && !desktopListingQuery.data) {
       return (
-        <CardsPaneLayout
-          title={t('casting-database.page.title')}
-          filtersOpen={filtersOpen}
-          activeFilterCount={activeFilterCount}
-          onToggleFilters={() => setFiltersOpen((value) => !value)}
-          t={t}
-        >
+        <div className="flex min-h-full flex-col">
           <div className="flex flex-col gap-5 pb-4">
             {Array.from({ length: PAGE_SIZE }).map((_, index) => (
               <Skeleton
@@ -226,57 +171,29 @@ const CastingDatabasePage = () => {
               />
             ))}
           </div>
-        </CardsPaneLayout>
+        </div>
       );
     }
 
     if (desktopListingQuery.error) {
       return (
-        <CardsPaneLayout
-          title={t('casting-database.page.title')}
-          filtersOpen={filtersOpen}
-          activeFilterCount={activeFilterCount}
-          onToggleFilters={() => setFiltersOpen((value) => !value)}
-          t={t}
-        >
+        <div className="flex min-h-full flex-col">
           <p className="py-10 text-center font-normal text-(--color-alert-error)">{t('state.server_err')}</p>
-        </CardsPaneLayout>
+        </div>
       );
     }
 
     if (items.length === 0) {
       return (
-        <CardsPaneLayout
-          title={t('casting-database.page.title')}
-          filtersOpen={filtersOpen}
-          activeFilterCount={activeFilterCount}
-          onToggleFilters={() => setFiltersOpen((value) => !value)}
-          t={t}
-        >
+        <div className="flex min-h-full flex-col">
           <p className="py-10 text-center font-light text-(--color-secondary-grey-fonts)">{t('state.no_results')}</p>
-        </CardsPaneLayout>
+        </div>
       );
     }
 
     return (
-      <CardsPaneLayout
-        title={t('casting-database.page.title')}
-        filtersOpen={filtersOpen}
-        activeFilterCount={activeFilterCount}
-        onToggleFilters={() => setFiltersOpen((value) => !value)}
-        t={t}
-        footer={
-          <CastingCatalogPagination
-            page={page}
-            size={PAGE_SIZE}
-            hasNext={hasNext}
-            totalCount={totalCount}
-            onPageChange={handleDesktopPageChange}
-          />
-        }
-        contentRef={cardsPaneRef}
-      >
-        <div className="flex flex-col gap-3">
+      <div className="flex min-h-full flex-col">
+        <div className="flex flex-col gap-3 pr-2">
           {items.map((item) => (
             <CastingRolePublicCard
               key={item.id}
@@ -286,7 +203,7 @@ const CastingDatabasePage = () => {
             />
           ))}
         </div>
-      </CardsPaneLayout>
+      </div>
     );
   }, [
     hasNext,
@@ -367,7 +284,17 @@ const CastingDatabasePage = () => {
             <div className="mx-auto flex w-full max-w-[1500px] flex-1 min-h-0 h-full flex-col gap-6">
               {isDesktop ? (
                 <MasterDetailShell
-                  menu={menu}
+                  menuHeader={menuHeader}
+                  menuContent={menuContent}
+                  menuFooter={
+                    <CastingCatalogPagination
+                      page={page}
+                      size={PAGE_SIZE}
+                      hasNext={hasNext}
+                      totalCount={totalCount}
+                      onPageChange={handleDesktopPageChange}
+                    />
+                  }
                   content={content}
                   contentHeader={contentHeader}
                   contentActions={contentActions}
