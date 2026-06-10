@@ -1,4 +1,4 @@
-import { Button, ButtonRow, Icon, WizardActions, type WizardStepProps } from 'autocasting-ui-library-padimasso';
+import { Button, WizardActions, type WizardStepProps } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
 import OnboardingStepShell from '../OnboardingStepShell';

@@ -1,4 +1,3 @@
-import { Icon } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { USER_MODE_EMPLOYER, USER_MODE_TALENT, useUserMode } from '../../../context/UserModeContext';
