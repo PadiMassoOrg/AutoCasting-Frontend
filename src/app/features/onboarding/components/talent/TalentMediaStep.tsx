@@ -32,7 +32,6 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
   const effectiveHeadshotUrl = isDeleted ? null : currentHeadshotUrl;
   const effectiveFullbodyUrl = isFullbodyDeleted ? null : currentFullbodyUrl;
 
-  const canContinue = (!!preview.headshot || !!effectiveHeadshotUrl) && (!!preview.fullbody || !!effectiveFullbodyUrl);
   const isBusy = uploadPending || profilePending || !profileId;
 
   const handleSelect = (slot: 'headshot' | 'fullbody') => async (files: File[] | File) => {
@@ -89,7 +88,6 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!canContinue) return;
     goNext?.();
   };
 
@@ -126,7 +124,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
                   </Button>
                 }
                 primaryAction={
-                  <Button variant="primary" type="submit" disabled={!canContinue} loading={isBusy}>
+                  <Button variant="primary" type="submit" loading={isBusy}>
                     {t('buttons.next')}
                   </Button>
                 }
