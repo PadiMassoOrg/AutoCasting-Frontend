@@ -841,6 +841,9 @@
     "media": {
       "media": "Media",
       "photos": "Fotos",
+      "headshot_slot": "Foto de cara",
+      "fullbody_slot": "Foto de cuerpo",
+      "other_slot": "Otras fotos",
       "must_have_one_photo": "Tu perfil debe tener al menos una foto. Subí una nueva para reemplazarla.",
       "headshot_fullbody": "Primer Plano y Cuerpo Entero",
       "other": "Otras Fotos",

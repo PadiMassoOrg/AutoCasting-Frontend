@@ -33,6 +33,7 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
   const [errHeadshot, setErrHeadshot] = useState<string | null>(null);
 
   const others = liveMedia.otherPicturesUrl ?? [];
+  const otherSlotIndices = Array.from({ length: OTHER_SLOTS }, (_, index) => index);
 
   const headshotHasImage = (!removedHeadshot && !!liveMedia.headshotImageUrl) || !!preview.headshot;
   const fullbodyHasImage = (!removedFullbody && !!liveMedia.fullBodyImageUrl) || !!preview.fullbody;
@@ -254,90 +255,99 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
 
   return (
     <article className="flex flex-col gap-2">
-      <Label className="text-base font-semibold">{t('profile.media.photos')}</Label>
-
-      <div className="w-full max-w-[550px] grid grid-cols-2 gap-2 lg:max-w-none lg:grid-cols-4">
-        <div className="w-full overflow-visible">
-          <div className="w-full aspect-[3/4]">
-            <UploadTile
-              value={
-                removedHeadshot || pending.has('headshot')
-                  ? undefined
-                  : withBust(liveMedia.headshotImageUrl, bust.headshot)
-              }
-              previewUrl={preview.headshot ?? null}
-              onSelect={pick('headshot')}
-              disabled={pending.has('headshot')}
-              busy={pending.has('headshot')}
-              busyText={t('state.loading')}
-              bustKey={undefined}
-              accept="image/*"
-              maxSizeMB={8}
-              objectFit="cover"
-              openOnClick={!headshotHasImage}
-              onDeleteClick={onDeleteHeadshot}
-              className="w-full h-full"
-            />
+      <div className="w-full max-w-[550px] grid grid-cols-1 gap-4 sm:grid-cols-2 lg:max-w-none lg:grid-cols-4">
+        <div className="flex w-full flex-col gap-3">
+          <Label className="text-base font-semibold">{t('profile.media.headshot_slot')}</Label>
+          <div className="w-full overflow-visible">
+            <div className="w-full aspect-[3/4]">
+              <UploadTile
+                value={
+                  removedHeadshot || pending.has('headshot')
+                    ? undefined
+                    : withBust(liveMedia.headshotImageUrl, bust.headshot)
+                }
+                previewUrl={preview.headshot ?? null}
+                onSelect={pick('headshot')}
+                disabled={pending.has('headshot')}
+                busy={pending.has('headshot')}
+                busyText={t('state.loading')}
+                bustKey={undefined}
+                accept="image/*"
+                maxSizeMB={8}
+                objectFit="cover"
+                openOnClick={!headshotHasImage}
+                onDeleteClick={onDeleteHeadshot}
+                className="w-full h-full"
+              />
+            </div>
+            {!errHeadshot ? (
+              <div className="min-h-[25px]" />
+            ) : (
+              <span className="inline-block w-max max-w-none whitespace-nowrap text-sm text-red-600">
+                {errHeadshot}
+              </span>
+            )}
           </div>
-          {!errHeadshot ? (
+        </div>
+
+        <div className="flex w-full flex-col gap-3">
+          <Label className="text-base font-semibold">{t('profile.media.fullbody_slot')}</Label>
+          <div className="w-full">
+            <div className="w-full aspect-[3/4]">
+              <UploadTile
+                value={
+                  removedFullbody || pending.has('fullbody')
+                    ? undefined
+                    : withBust(liveMedia.fullBodyImageUrl, bust.fullbody)
+                }
+                previewUrl={preview.fullbody ?? null}
+                onSelect={pick('fullbody')}
+                disabled={pending.has('fullbody')}
+                busy={pending.has('fullbody')}
+                busyText={t('state.loading')}
+                bustKey={undefined}
+                accept="image/*"
+                maxSizeMB={8}
+                objectFit="cover"
+                openOnClick={!fullbodyHasImage}
+                onDeleteClick={onDeleteFullbody}
+                className="w-full h-full"
+              />
+            </div>
             <div className="min-h-[25px]" />
-          ) : (
-            <span className="inline-block w-max max-w-none whitespace-nowrap text-sm text-red-600">{errHeadshot}</span>
-          )}
-        </div>
-
-        <div className="w-full">
-          <div className="w-full aspect-[3/4]">
-            <UploadTile
-              value={
-                removedFullbody || pending.has('fullbody')
-                  ? undefined
-                  : withBust(liveMedia.fullBodyImageUrl, bust.fullbody)
-              }
-              previewUrl={preview.fullbody ?? null}
-              onSelect={pick('fullbody')}
-              disabled={pending.has('fullbody')}
-              busy={pending.has('fullbody')}
-              busyText={t('state.loading')}
-              bustKey={undefined}
-              accept="image/*"
-              maxSizeMB={8}
-              objectFit="cover"
-              openOnClick={!fullbodyHasImage}
-              onDeleteClick={onDeleteFullbody}
-              className="w-full h-full"
-            />
           </div>
-          <div className="min-h-[25px]" />
         </div>
 
-        {Array.from({ length: OTHER_SLOTS }, (_, i) => {
+        {otherSlotIndices.map((i) => {
           const isRemoved = removedOthers.has(i);
           const hasImg = otherHasImage(i);
 
           return (
-            <div key={i} className="w-full">
-              <div className="w-full aspect-[3/4]">
-                <UploadTile
-                  value={
-                    isRemoved || otherPending.has(i) ? undefined : withBust(others[i] as string | null, otherBust[i])
-                  }
-                  previewUrl={otherPreview[i] ?? null}
-                  onSelect={pickOther(i)}
-                  disabled={otherPending.has(i)}
-                  busy={otherPending.has(i)}
-                  busyText={t('state.loading')}
-                  bustKey={undefined}
-                  accept="image/*"
-                  maxSizeMB={8}
-                  objectFit="cover"
-                  multiple={false}
-                  openOnClick={!hasImg}
-                  onDeleteClick={() => onDeleteOther(i)}
-                  className="w-full h-full"
-                />
+            <div key={i} className="flex w-full flex-col gap-3">
+              <Label className="text-base font-semibold">{t('profile.media.other_slot')}</Label>
+              <div className="w-full">
+                <div className="w-full aspect-[3/4]">
+                  <UploadTile
+                    value={
+                      isRemoved || otherPending.has(i) ? undefined : withBust(others[i] as string | null, otherBust[i])
+                    }
+                    previewUrl={otherPreview[i] ?? null}
+                    onSelect={pickOther(i)}
+                    disabled={otherPending.has(i)}
+                    busy={otherPending.has(i)}
+                    busyText={t('state.loading')}
+                    bustKey={undefined}
+                    accept="image/*"
+                    maxSizeMB={8}
+                    objectFit="cover"
+                    multiple={false}
+                    openOnClick={!hasImg}
+                    onDeleteClick={() => onDeleteOther(i)}
+                    className="w-full h-full"
+                  />
+                </div>
+                <div className="min-h-[25px]" />
               </div>
-              <div className="min-h-[25px]" />
             </div>
           );
         })}
