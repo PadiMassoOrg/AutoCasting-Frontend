@@ -1,6 +1,8 @@
 import type { DashboardShellSection } from 'autocasting-ui-library-padimasso';
 import { DashboardLoadingLabel, DashboardShell } from 'autocasting-ui-library-padimasso';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useToast } from '../../../../context/ToastContext';
 import ServerError from '../../../../shared/components/ServerError/ServerError';
 import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
 import { TalentProfileModeToggle, TalentProfilePageModeSwitcher } from '../components';
@@ -19,9 +21,39 @@ import {
 import TalentProfileBasicInfoEditSection from '../components/Section/TalentProfileBasicInfoEditSection';
 import { useTalentProfile } from '../hooks/useTalentProfile';
 
+const CATALOG_VISIBILITY_TOAST_ID = 'talent-profile-catalog-visibility';
+
+const hasText = (value?: string | null) => typeof value === 'string' && value.trim().length > 0;
+
 export default function TalentProfileEditPage() {
   const { t } = useTranslation();
+  const { showToast, dismissToast } = useToast();
   const { data, error, isLoading } = useTalentProfile();
+
+  useEffect(() => {
+    if (isLoading || !data) return;
+
+    const hasRequiredPhotos = hasText(data.media?.headshotImageUrl) && hasText(data.media?.fullBodyImageUrl);
+    if (hasRequiredPhotos) {
+      dismissToast(CATALOG_VISIBILITY_TOAST_ID);
+      return;
+    }
+
+    showToast({
+      id: CATALOG_VISIBILITY_TOAST_ID,
+      title: t('profile.media.catalog_visibility_title'),
+      description: t('profile.media.catalog_visibility_description'),
+      type: 'warning',
+      position: 'top-center',
+      durationMs: 30000,
+      fullWidth: true,
+      closable: true,
+    });
+
+    return () => {
+      dismissToast(CATALOG_VISIBILITY_TOAST_ID);
+    };
+  }, [data, dismissToast, isLoading, showToast, t]);
 
   if (error && !data) return <ServerError />;
 

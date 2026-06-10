@@ -257,7 +257,10 @@
       }
     },
     "profile": {
-      "not_found": "No se encuentra el perfil."
+      "not_found": "No se encuentra el perfil.",
+      "media": {
+        "required_for_application": "Debes tener una foto de cara y una foto de cuerpo para aplicar."
+      }
     },
     "credit": {
       "forbidden": "No es posible visualizar el crédito.",
@@ -844,6 +847,8 @@
       "headshot_slot": "Foto de cara",
       "fullbody_slot": "Foto de cuerpo",
       "other_slot": "Otras fotos",
+      "catalog_visibility_title": "Tu perfil no es visible en el catalogo",
+      "catalog_visibility_description": "Subi foto de cara y una de cuerpo para ser visto en el catalogo y aplicar a busquedas",
       "must_have_one_photo": "Tu perfil debe tener al menos una foto. Subí una nueva para reemplazarla.",
       "headshot_fullbody": "Primer Plano y Cuerpo Entero",
       "other": "Otras Fotos",
