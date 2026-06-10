@@ -759,6 +759,7 @@
     "talent": {
       "step_basic_info": {
         "header": "Indicanos tu nombre",
+        "combined_header": "Indicanos tu nombre y a qué te dedicás",
         "subtitle": "Así vamos armando tu perfil para que puedan encontrarte.",
         "stage_name_label": "Nombre y apellido"
       },
@@ -767,8 +768,8 @@
         "subtitle": "Seleccioná tus profesiones para ayudarte a encontrar oportunidades. Podés elegir más de una opción."
       },
       "step_media": {
-        "header": "Subí tu foto de perfil",
-        "subtitle": "Podés agregar tu foto de perfil o book. Después vas a poder subir más si querés."
+        "header": "Subí tu foto de cara y cuerpo entero",
+        "subtitle": "Para aparecer en el catálogo de talentos necesitás una foto de rostro y una de cuerpo entero."
       },
       "step_confirmation": {
         "header": "¡Listo! Tu perfil empezó a tomar forma",
