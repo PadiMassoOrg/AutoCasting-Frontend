@@ -90,62 +90,64 @@ function EmployerMediaStep({
   const tileBusy = uploadPending || profilePending;
 
   return (
-    <form onSubmit={handleSubmit}>
-      <OnboardingStepShell
-        modeLabel={t('onboarding.mode_selector.employer.title')}
-        title={t('onboarding.employer.step_media.header')}
-        subtitle={t('onboarding.employer.step_media.subtitle')}
-        stepIndex={stepIndex}
-        totalSteps={totalSteps}
-        progress={progress}
-        alignBody="center"
-        footer={
-          <>
-            <WizardActions
-              secondaryAction={
-                <Button variant="outline" type="button" onClick={handleBackClick}>
-                  {t('buttons.back')}
-                </Button>
-              }
-              primaryAction={
-                <Button variant="primary" type="submit" disabled={!canContinue} loading={isBusy}>
-                  {t('buttons.next')}
-                </Button>
-              }
-            />
-            <ContinueLaterButton />
-          </>
-        }
-      >
-        <div className="flex w-full flex-col">
-          <div className="my-4 w-full max-w-[165px] self-center lg:my-8 lg:max-w-[195px] lg:items-center">
-            <UploadTile
-              value={valueUrl}
-              previewUrl={previewUrl}
-              onSelect={handleSelect}
-              onDeleteClick={handleDelete}
-              disabled={isBusy}
-              busy={tileBusy}
-              busyText={t('state.loading')}
-              bustKey={undefined}
-              accept="image/*"
-              maxSizeMB={8}
-              objectFit="cover"
-              aspectRatio="3 / 4"
-              multiple={false}
-              openOnClick={!tileBusy}
-              className="h-full w-full"
-            />
-          </div>
+    <section className="flex flex-col gap-3.5">
+      <form onSubmit={handleSubmit}>
+        <OnboardingStepShell
+          modeLabel={t('onboarding.mode_selector.employer.title')}
+          title={t('onboarding.employer.step_media.header')}
+          subtitle={t('onboarding.employer.step_media.subtitle')}
+          stepIndex={stepIndex}
+          totalSteps={totalSteps}
+          progress={progress}
+          alignBody="center"
+          footer={
+            <>
+              <WizardActions
+                secondaryAction={
+                  <Button variant="outline" type="button" onClick={handleBackClick}>
+                    {t('buttons.back')}
+                  </Button>
+                }
+                primaryAction={
+                  <Button variant="primary" type="submit" disabled={!canContinue} loading={isBusy}>
+                    {t('buttons.next')}
+                  </Button>
+                }
+              />
+            </>
+          }
+        >
+          <div className="flex w-full flex-col">
+            <div className="my-4 w-full max-w-[165px] self-center lg:my-8 lg:max-w-[195px] lg:items-center">
+              <UploadTile
+                value={valueUrl}
+                previewUrl={previewUrl}
+                onSelect={handleSelect}
+                onDeleteClick={handleDelete}
+                disabled={isBusy}
+                busy={tileBusy}
+                busyText={t('state.loading')}
+                bustKey={undefined}
+                accept="image/*"
+                maxSizeMB={8}
+                objectFit="cover"
+                aspectRatio="3 / 4"
+                multiple={false}
+                openOnClick={!tileBusy}
+                className="h-full w-full"
+              />
+            </div>
 
-          {errImage && (
-            <Label variant="error" className="pl-1">
-              {errImage}
-            </Label>
-          )}
-        </div>
-      </OnboardingStepShell>
-    </form>
+            {errImage && (
+              <Label variant="error" className="pl-1">
+                {errImage}
+              </Label>
+            )}
+          </div>
+        </OnboardingStepShell>
+      </form>
+      <ContinueLaterButton />
+    </section>
   );
 }
 
