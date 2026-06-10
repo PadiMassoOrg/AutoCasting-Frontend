@@ -998,6 +998,12 @@
     "confirmation_modal": {
       "title": "¡Postulación enviada con éxito!",
       "text": "Gracias por aplicar. Tus materiales ya están disponibles para el equipo de casting."
+    },
+    "profile_completion_modal": {
+      "title": "Completá tu perfil para postularte",
+      "text": "Necesitás una foto de rostro y una de cuerpo entero para aparecer en los castings y enviar postulaciones.",
+      "cancel": "Salir",
+      "confirm": "Completar perfil"
     }
   },
   "applications": {
