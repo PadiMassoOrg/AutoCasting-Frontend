@@ -141,6 +141,8 @@ export type CastingBasicInfoFieldKey =
   | 'castingModalityId'
   | 'locationText'
   | 'applicationDeadline'
+  | 'shootingStartDate'
+  | 'shootingEndDate'
   | 'wardrobeFittingText'
   | 'description';
 
