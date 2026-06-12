@@ -1,7 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { Label, UploadTile } from 'autocasting-ui-library-padimasso';
-import { useEffect, useState } from 'react';
+import { Button, Label, Separator, UploadTile, usePendingAction } from 'autocasting-ui-library-padimasso';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useModal } from '../../../../../context/ModalContext';
 import { useProfileMediaDelete } from '../../../../../integrations/supabase/media/hooks/useProfileMediaDelete';
 import { useProfileMediaPatch } from '../../../../../integrations/supabase/media/hooks/useProfileMediaPatch';
 import { fileSchema, OTHER_SLOTS, otherIndexSchema } from '../../schemas/mediaSchema';
@@ -12,10 +13,13 @@ import { getBackendErrorMessage } from '../../../../../shared/utils/backendError
 export default function MediaPhotosForm({ media, supabaseId }: { media: Media; supabaseId: string }) {
   const qc = useQueryClient();
   const { t } = useTranslation();
+  const { openModal, closeModal } = useModal();
   const { mutate: upload } = useProfileMediaPatch(supabaseId);
   const { mutateAsync: removeMedia } = useProfileMediaDelete();
 
   const [liveMedia, setLiveMedia] = useState<Media>(media);
+  const headshotTileRef = useRef<HTMLDivElement | null>(null);
+  const fullbodyTileRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => setLiveMedia(media), [media]);
 
@@ -38,6 +42,30 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
   const otherHasImage = (i: number) =>
     (!removedOthers.has(i) && typeof others[i] === 'string' && (others[i] as string).trim().length > 0) ||
     !!otherPreview[i];
+  const profileVisible = headshotHasImage && fullbodyHasImage;
+
+  const openSlotPicker = (slot: 'headshot' | 'fullbody') => {
+    const root = slot === 'headshot' ? headshotTileRef.current : fullbodyTileRef.current;
+    const input = root?.querySelector('input[type="file"]') as HTMLInputElement | null;
+    input?.click();
+  };
+
+  const openVisibilityWarningModal = (slot: 'headshot' | 'fullbody') => {
+    openModal(
+      <MediaVisibilityWarningModal
+        onDeleteAnyway={async () => {
+          const deleted = slot === 'headshot' ? await onDeleteHeadshot() : await onDeleteFullbody();
+          if (deleted) closeModal();
+        }}
+        onReplacePhoto={() => {
+          closeModal();
+          window.setTimeout(() => openSlotPicker(slot), 0);
+        }}
+      />,
+      t('profile.media.visibility_warning_title'),
+      'lg'
+    );
+  };
 
   const pick = (slot: 'headshot' | 'fullbody') => async (files: File[] | File) => {
     const file = Array.isArray(files) ? files[0] : files;
@@ -160,9 +188,11 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
         { queryKey: TALENT_PROFILE_CACHE_KEY, exact: false },
         (prev: TalentProfileResponse | undefined) => mergeMediaUpdate(prev, updated)
       );
+      return true;
     } catch (error) {
       setRemovedHeadshot(false);
       setErrHeadshot(getBackendErrorMessage(error, t));
+      return false;
     }
   };
 
@@ -180,9 +210,11 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
         { queryKey: TALENT_PROFILE_CACHE_KEY, exact: false },
         (prev: TalentProfileResponse | undefined) => mergeMediaUpdate(prev, updated)
       );
+      return true;
     } catch (error) {
       setRemovedFullbody(false);
       setErrHeadshot(getBackendErrorMessage(error, t));
+      return false;
     }
   };
 
@@ -229,6 +261,7 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
           <div className="w-full overflow-visible">
             <div className="w-full aspect-[3/4]">
               <UploadTile
+                ref={headshotTileRef}
                 value={
                   removedHeadshot || pending.has('headshot')
                     ? undefined
@@ -244,7 +277,11 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
                 maxSizeMB={8}
                 objectFit="cover"
                 openOnClick={!headshotHasImage}
-                onDeleteClick={onDeleteHeadshot}
+                onEditClick={() => openSlotPicker('headshot')}
+                onDeleteClick={() => {
+                  if (profileVisible) openVisibilityWarningModal('headshot');
+                  else void onDeleteHeadshot();
+                }}
                 className="w-full h-full"
               />
             </div>
@@ -263,6 +300,7 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
           <div className="w-full">
             <div className="w-full aspect-[3/4]">
               <UploadTile
+                ref={fullbodyTileRef}
                 value={
                   removedFullbody || pending.has('fullbody')
                     ? undefined
@@ -278,7 +316,11 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
                 maxSizeMB={8}
                 objectFit="cover"
                 openOnClick={!fullbodyHasImage}
-                onDeleteClick={onDeleteFullbody}
+                onEditClick={() => openSlotPicker('fullbody')}
+                onDeleteClick={() => {
+                  if (profileVisible) openVisibilityWarningModal('fullbody');
+                  else void onDeleteFullbody();
+                }}
                 className="w-full h-full"
               />
             </div>
@@ -323,6 +365,36 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
     </article>
   );
 }
+
+const MediaVisibilityWarningModal = ({
+  onDeleteAnyway,
+  onReplacePhoto,
+}: {
+  onDeleteAnyway: () => void | Promise<void>;
+  onReplacePhoto: () => void;
+}) => {
+  const { t } = useTranslation();
+  const { isPending, execute } = usePendingAction();
+
+  const handleDeleteAnyway = async () => {
+    await execute(onDeleteAnyway);
+  };
+
+  return (
+    <article className="flex flex-col gap-5">
+      <p className="text-base">{t('profile.media.visibility_warning_description')}</p>
+      <Separator className="opacity-20 my-2" />
+      <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <Button variant="outline" onClick={handleDeleteAnyway} loading={isPending}>
+          {t('profile.media.visibility_warning_delete_anyway')}
+        </Button>
+        <Button variant="primary" onClick={onReplacePhoto} disabled={isPending}>
+          {t('profile.media.visibility_warning_replace_photo')}
+        </Button>
+      </div>
+    </article>
+  );
+};
 
 const fileToDataUrl = (file: File) =>
   new Promise<string>((resolve, reject) => {
