@@ -39,7 +39,6 @@
     "show_more": "Ver más",
     "show_less": "Ver menos",
     "logout": "Cerrar Sesión",
-    "no_data": "Sin información.",
     "untitled": "Sin título.",
     "unspecified": "Sin especificar.",
     "selections": "Selecciones",
@@ -170,7 +169,13 @@
     "max_items": "Solo puedes seleccionar hasta {{total}} opciones.",
     "type_image": "El archivo debe ser una imagen.",
     "max_size": "El archivo supera el tamaño máximo de {{mb}}MB.",
-    "media_too_large_8mb": "El archivo supera el tamaño máximo de 8MB."
+    "media_too_large_8mb": "El archivo supera el tamaño máximo de 8MB.",
+    "profile": {
+      "no_skills": "No hay habilidades para mostrar",
+      "no_credits": "No hay créditos para mostrar.",
+      "no_education": "No hay formación para mostrar.",
+      "no_videos": "No hay videos."
+    }
   },
   "state": {
     "no_results": "No se encontraron resultados.",
@@ -732,23 +737,23 @@
   "onboarding": {
     "mode_selector": {
       "header": "¿Cómo querés usar autocasting?",
-      "subtitle": "Elegí si querés crear tu cuenta como Talento o como Empleador.",
+      "subtitle": "Elegí cómo querés empezar. Podrás cambiar entre Soy Talento y Busco Talento en cualquier momento.",
       "go_back": "Salir y continuar mas tarde",
       "talent": {
         "title": "Soy Talento",
-        "header": "Quiero conseguir castings",
-        "li_1": "Ver castings disponibles",
-        "li_2": "Postularte con tu perfil",
-        "li_3": "Gestionar tus aplicaciones",
-        "cta": "Continuar como Talento"
+        "header": "Busco oportunidades de trabajo",
+        "li_1": "Crear y compartir tu perfil digital",
+        "li_2": "Aparecer en el catálogo",
+        "li_3": "Aplicar a castings",
+        "cta": "Continuar"
       },
       "employer": {
         "title": "Busco Talento",
         "header": "Quiero publicar castings",
         "li_1": "Crear castings en minutos",
-        "li_2": "Ver perfiles completos",
-        "li_3": "Gestionar postulantes",
-        "cta": "Continuar como Empleador"
+        "li_2": "Ver catálogo de talentos",
+        "li_3": "Gestioná aplicantes en un solo lugar",
+        "cta": "Continuar"
       }
     },
     "common": {
@@ -800,7 +805,6 @@
   "profile": {
     "page": {
       "videos": "Videos",
-      "no_videos": "No hay videos.",
       "introduction_video": "Video de presentación",
       "showreel_video": "Videoreel",
       "socials": "Sociales",

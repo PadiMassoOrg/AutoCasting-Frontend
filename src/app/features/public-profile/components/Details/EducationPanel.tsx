@@ -16,7 +16,7 @@ const EducationPanel = ({ education }: { education: Education[] }) => {
   if (!items.length)
     return (
       <h2 className="h-full text-[var(--color-secondary-grey)] font-base flex flex-col items-center justify-center">
-        {t('general.no_data')}
+        {t('validation.profile.no_education')}
       </h2>
     );
   return (

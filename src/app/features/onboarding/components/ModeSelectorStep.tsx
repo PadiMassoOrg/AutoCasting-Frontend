@@ -1,6 +1,7 @@
 import {
   Button,
   Icon,
+  SectionCard,
   Separator,
   WizardBody,
   WizardFooter,
@@ -80,11 +81,12 @@ function ModeSelectorStep({ onModeChosen }: Props) {
 
   return (
     <section className="w-full">
-      <WizardLayout className="min-h-[85vh] justify-between gap-8 lg:min-h-[70vh]">
+      <WizardLayout className="min-h-[85vh] justify-between gap-6 lg:min-h-[70vh]">
         <WizardHeader
           title={t('onboarding.mode_selector.header')}
           subtitle={t('onboarding.mode_selector.subtitle')}
           className="pt-4 text-center"
+          titleClassName="text-lg font-semibold mb-2"
         />
         <WizardBody className="flex items-center justify-center">
           <div className="flex w-full flex-col items-center gap-6 lg:flex-row lg:items-stretch lg:justify-center">
@@ -114,7 +116,7 @@ const ModeCard = ({ mode, onContinue }: ModeCardProps) => {
   const modeKey = mode === 'TALENT' ? USER_MODE_TALENT : USER_MODE_EMPLOYER;
 
   return (
-    <div className="w-full max-w-[380px] bg-[var(--color-primary-white)] p-6 px-8 shadow-sm rounded-xl">
+    <SectionCard className="w-full max-w-[380px]">
       <p className="mtext-base font-semibold text-[var(--color-primary-purple)] text-center">
         {t(`onboarding.mode_selector.${modeKey}.title`)}
       </p>
@@ -137,7 +139,7 @@ const ModeCard = ({ mode, onContinue }: ModeCardProps) => {
       <Button variant="primary" onClick={onContinue}>
         {t(`onboarding.mode_selector.${modeKey}.cta`)}
       </Button>
-    </div>
+    </SectionCard>
   );
 };
 

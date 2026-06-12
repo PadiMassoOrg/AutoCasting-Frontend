@@ -73,13 +73,11 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
         </div>
         <ImageCarousel images={images.length > 0 ? images : null} isDesktop isDesktopXL />
 
-        {skills.length > 0 && (
-          <SectionCard>
-            <SkillsPanel skills={skills} />
-          </SectionCard>
-        )}
+        <SectionCard>
+          <SkillsPanel skills={skills} />
+        </SectionCard>
 
-        {media && <VideoSection data={media} useGrid />}
+        <VideoSection data={media!} useGrid />
       </div>
     </DetailsView>
   );
