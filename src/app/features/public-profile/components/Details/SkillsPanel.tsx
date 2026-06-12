@@ -42,9 +42,10 @@ export default function SkillsPanel({ skills }: Props) {
   if (!skills.length)
     return (
       <h2 className="w-full h-full text-[var(--color-secondary-grey)] font-base flex flex-col items-center justify-center">
-        {t('general.no_data')}
+        {t('validation.profile.no_skills')}
       </h2>
     );
+
   return (
     <div className="flex flex-col" style={{ overflowAnchor: 'none' }}>
       {categories.map((catKey, index) => {

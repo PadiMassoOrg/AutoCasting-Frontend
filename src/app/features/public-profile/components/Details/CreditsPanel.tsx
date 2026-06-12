@@ -46,7 +46,7 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
   if (!credits.length)
     return (
       <h2 className="h-full text-[var(--color-secondary-grey)] font-base flex flex-col items-center justify-center">
-        {t('general.no_data')}
+        {t('validation.profile.no_credits')}
       </h2>
     );
   return (

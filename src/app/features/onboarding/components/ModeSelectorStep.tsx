@@ -85,6 +85,7 @@ function ModeSelectorStep({ onModeChosen }: Props) {
           title={t('onboarding.mode_selector.header')}
           subtitle={t('onboarding.mode_selector.subtitle')}
           className="pt-4 text-center"
+          titleClassName="text-lg font-semibold mb-2"
         />
         <WizardBody className="flex items-center justify-center">
           <div className="flex w-full flex-col items-center gap-6 lg:flex-row lg:items-stretch lg:justify-center">
