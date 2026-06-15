@@ -48,13 +48,13 @@ export function NewSkillModal({
   const handleSave = async () => execute(() => onSave(selectedIds));
 
   return (
-    <article className="flex flex-col gap-2">
+    <article className="flex flex-col">
       {skillsCats.map(({ catCode, list, idSet }) => {
         const selectedInCat = selectedIds.filter((id) => idSet.has(id));
 
         return (
           <div key={catCode}>
-            <h2 className="text-sm font-semibold mb-2">{t(catCode)}</h2>
+            <h2 className="text-sm font-semibold">{t(catCode)}</h2>
             <MultiSelectDropdown
               options={list}
               getId={(skill) => skill.id}
@@ -67,7 +67,8 @@ export function NewSkillModal({
         );
       })}
 
-      <Separator className="opacity-20" />
+      <Separator className="opacity-20 mb-6" />
+
       <div className="flex gap-2">
         <Button variant="outline" onClick={onCancel}>
           {t('buttons.cancel')}
