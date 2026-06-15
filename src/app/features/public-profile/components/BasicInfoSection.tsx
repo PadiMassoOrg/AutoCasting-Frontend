@@ -33,7 +33,7 @@ const BasicInfoSection = ({ data }: { data: TalentPublicProfileResponse }) => {
         <h2 className="text-[40px] text-center font-bold lg:text-start">{basicInfo.stageName}</h2>
       )}
 
-      <span className="flex flex-wrap items-center justify-center gap-1 font-normal text-sm text-[var(--color-secondary-grey)] lg:justify-start lg:ml-1 lg:mt-1">
+      <span className="flex flex-wrap items-center justify-center gap-1 font-normal text-sm text-[var(--color-secondary-grey)] lg:justify-start lg:mt-2">
         {basicInfo.professions?.map((profession) => (
           <TagChip key={profession.id} label={t(profession.stringCode ?? '')} />
         ))}

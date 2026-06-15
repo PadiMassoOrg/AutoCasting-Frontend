@@ -20,7 +20,7 @@ export default function ViewerActions({ className }: Props) {
   const handleShare = async () => {
     await shareUrl({
       url,
-      onCopied: () => showToast({ title: t('general.copied'), description: t('general.copied'), type: 'default' }),
+      onCopied: () => showToast({ title: t('general.copied'), type: 'default' }),
       onError: () => showToast({ title: t('general.error'), description: t('general.error'), type: 'danger' }),
     });
   };
