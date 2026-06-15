@@ -48,7 +48,7 @@ const PublicProfilePage = () => {
         <BasicInfoSection data={data} />
         <div className="grid gap-10 grid-cols-[1fr_1fr] h-[690px] max-h-[690px] min-h-0">
           <section className="min-w-0 min-h-0">
-            <ImageCarousel images={hasImages ? images : null} isDesktop />
+            <ImageCarousel images={hasImages ? images : null} isDesktop enablePhotoZoomOverlay />
           </section>
           <aside className="min-w-0 min-h-0 h-full overflow-auto">
             <ProfileInfoCarousel profile={data} className="h-full" />
@@ -82,7 +82,7 @@ const PublicProfilePage = () => {
           <div className="flex-1 min-h-0 grid gap-6 grid-cols-[minmax(260px,1fr)_minmax(260px,474px)_minmax(260px,280px)] items-stretch">
             {/* Fotos */}
             <div className="min-w-0 h-full min-h-0">
-              <ImageCarousel images={hasImages ? images : null} isDesktop isDesktopXL />
+              <ImageCarousel images={hasImages ? images : null} isDesktop isDesktopXL enablePhotoZoomOverlay />
             </div>
 
             {/* Profile info (se auto–ajusta, máx 500px por el grid) */}
