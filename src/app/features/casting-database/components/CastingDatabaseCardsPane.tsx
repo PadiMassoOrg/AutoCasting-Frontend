@@ -16,7 +16,7 @@ export default function CastingDatabaseCardsPane({
   t,
 }: CardsPaneHeaderProps) {
   return (
-    <div className="bg-(--color-secondary-white) pb-5">
+    <div className="bg-(--color-secondary-white) pb-5 pt-2 pr-2">
       <div className="flex items-center justify-between gap-4 overflow-visible">
         <h1 className="text-2xl font-bold text-(--color-primary-black) leading-tight">{title}</h1>
         <FilterToggleButton
