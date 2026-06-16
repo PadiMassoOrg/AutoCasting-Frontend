@@ -17,7 +17,7 @@ const CastingCheckoutSummaryStep = ({ summary, onClose, onPublish, isPublishing 
   return (
     <WizardLayout className="h-full">
       <WizardBody>
-        <section className="flex flex-col gap-6">
+        <section className="flex flex-col gap-6 pb-4">
           <article className="flex flex-col gap-3">
             <h3 className="text-sm font-semibold">{castingTitle || '-'}</h3>
             <div className="flex items-center justify-between gap-4">
