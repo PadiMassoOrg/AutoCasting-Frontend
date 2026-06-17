@@ -314,7 +314,11 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
 
       <Separator className="opacity-20 my-8" />
 
-      <SocialMediaForm data={socialMediaData} onSaveLinks={(payload) => socialMediaAutosave.immediate(payload)} />
+      <SocialMediaForm
+        data={socialMediaData}
+        onSaveLinks={(payload) => socialMediaAutosave.immediate(payload)}
+        isLoading={socialMediaAutosave.isPending}
+      />
     </div>
   );
 }

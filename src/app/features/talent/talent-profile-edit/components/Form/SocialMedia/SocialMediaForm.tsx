@@ -18,6 +18,7 @@ import SocialMediaRow from './SocialMediaRow';
 type SocialMediaFormProps = {
   data: ProfileSocialMedia;
   onSaveLinks: (payload: SocialMediaLinksPayload) => void;
+  isLoading?: boolean;
 };
 
 type SocialMediaFormValues = {
@@ -33,7 +34,7 @@ export type SocialMediaLinksPayload = {
   links: { optionId: string; url: string | null }[];
 };
 
-export default function SocialMediaForm({ data, onSaveLinks }: SocialMediaFormProps) {
+export default function SocialMediaForm({ data, onSaveLinks, isLoading = false }: SocialMediaFormProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { data: allOptions = [] } = useSiteMetadataSlice('socialMediaOptions');
@@ -223,6 +224,7 @@ export default function SocialMediaForm({ data, onSaveLinks }: SocialMediaFormPr
         type="button"
         className="mt-2 self-start lg:max-w-[250px] flex flex-row gap-2 items-center justify-center"
         variant={freeOptions.length === 0 ? 'disabled' : 'primaryOutline'}
+        loading={isLoading}
         onClick={handleAddRow}
       >
         <Icon name="plus" variant="primary" size={16} /> {t('profile.basic_info.add_social_media')}

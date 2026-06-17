@@ -29,7 +29,7 @@ export const ROUTES = {
   PRIVACY: '/privacy-policy',
   // Company:
   LINKEDIN_URL: 'https://www.linkedin.com/feed/',
-  INSTAGRAM_URL: 'https://www.instagram.com/',
+  INSTAGRAM_URL: 'https://www.instagram.com/autocasting.app/',
 };
 
 export const getDashboardRouteForActiveMode = (activeMode: 'TALENT' | 'EMPLOYER' | null) => {

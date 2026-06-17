@@ -24,7 +24,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
   const { mode } = useUserMode();
   const location = useLocation();
 
-  const baseClass = 'p-3 px-4 flex flex-row items-center gap-2';
+  const baseClass = 'p-3 flex flex-row items-center gap-2';
   const activeClass =
     'rounded-lg bg-[var(--color-primary-white)] shadow-sm text-[var(--color-primary-purple)] font-semibold';
 
@@ -66,12 +66,12 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
       <img src={Waves} alt="" className="absolute xs:hidden bottom-0 left-0 w-full h-[11rem]" />
       <aside className="absolute inset-0 flex flex-col">
         {/* Header */}
-        <header className="py-3 px-6 flex items-center justify-between border-[var(--color-secondary-outline)] border-b bg-white">
+        <header className="py-3 px-8 flex items-center justify-between border-[var(--color-secondary-outline)] border-b bg-white">
           <LinkLogo horizontal />
           <Icon onClick={onClose} name="burgerClose" className="cursor-pointer w-6" />
         </header>
         {/* Content */}
-        <nav className="w-[70%] h-full m-auto text-base font-semibold pt-2">
+        <nav className="w-[75%] h-full m-auto text-base font-semibold pt-2">
           <div className="grid grid-rows-[3.5fr_1fr] place-items-center w-full h-full">
             <div className="w-full flex flex-col">
               {/* Public */}
@@ -208,18 +208,6 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
               </ul>
               {/* Socials */}
               <ul className="flex flex-row gap-2">
-                <li onClick={onClose}>
-                  <a
-                    href={ROUTES.LINKEDIN_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="cursor-pointer"
-                    aria-label={t('routes.linkedIn')}
-                    title="LinkedIn"
-                  >
-                    <Icon name={'linkedin'} variant="primary" />
-                  </a>
-                </li>
                 <li onClick={onClose}>
                   <a
                     href={ROUTES.INSTAGRAM_URL}

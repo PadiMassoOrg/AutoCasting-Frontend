@@ -168,6 +168,7 @@ export function useSectionAutosave<TPayload, TResult, TFieldKey extends string =
 
   return {
     saving,
+    isPending: saving === 'saving' || mutation.isPending,
     fieldErrors,
     clearFieldError,
     clearAllBackendErrors,

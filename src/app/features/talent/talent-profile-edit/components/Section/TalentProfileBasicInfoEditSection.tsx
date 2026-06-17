@@ -13,7 +13,11 @@ const TalentProfileBasicInfoEditSection = ({ profile }: { profile: TalentProfile
     <>
       <BasicInfoForm data={profile.basicInfo} professionsMeta={professions} />
       <Separator className="opacity-20 my-8" />
-      <SocialMediaForm data={profile.socialMedia} onSaveLinks={(payload) => socialMediaAutosave.immediate(payload)} />
+      <SocialMediaForm
+        data={profile.socialMedia}
+        onSaveLinks={(payload) => socialMediaAutosave.immediate(payload)}
+        isLoading={socialMediaAutosave.isPending}
+      />
     </>
   );
 };
