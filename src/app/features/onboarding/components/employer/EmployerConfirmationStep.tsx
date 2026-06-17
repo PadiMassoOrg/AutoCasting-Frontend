@@ -5,13 +5,12 @@ import OnboardingStepShell from '../OnboardingStepShell';
 import Logo from '../../../../shared/icons/og-image.svg';
 import { useMeData } from '../../../auth/hooks/useMeData';
 import { useUpdateOnboardingMutation } from '../../hooks/useUpdateOnboardingMutation';
+import { ROUTES } from '../../../../shared/lib/routes';
+import { useNavigate } from 'react-router-dom';
 
-type Props = WizardStepProps & {
-  onGoToProfile: () => void;
-};
-
-function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progress = 100, onGoToProfile }: Props) {
+function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progress = 100 }: WizardStepProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { data: meData } = useMeData();
   const { mutate: updateOnboarding, isPending } = useUpdateOnboardingMutation();
 
@@ -24,7 +23,7 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
       },
       {
         onSuccess: () => {
-          onGoToProfile();
+          navigate(ROUTES.TALENT_DATABASE);
         },
       }
     );
@@ -51,7 +50,7 @@ function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progr
               }
               primaryAction={
                 <Button variant="primary" type="button" onClick={handleConfirm} loading={isPending}>
-                  {t('buttons.to_profile')}
+                  {t('buttons.step_into')}
                 </Button>
               }
             />

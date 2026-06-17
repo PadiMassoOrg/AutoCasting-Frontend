@@ -358,7 +358,7 @@
     "understood": "Entendido",
     "back": "Atras",
     "next": "Siguiente",
-    "to_profile": "Ir a mi perfil",
+    "step_into": "Ingresar",
     "view_details": "Ver Detailles"
   },
   "routes": {

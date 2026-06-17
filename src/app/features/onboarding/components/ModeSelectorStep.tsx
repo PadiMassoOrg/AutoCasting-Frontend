@@ -13,9 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ContinueLaterButton } from '.';
 import { USER_MODE_EMPLOYER, USER_MODE_TALENT, useUserMode } from '../../../context/UserModeContext';
-import { getAuthToken } from '../../../shared/lib/cookies';
 import { ROUTES } from '../../../shared/lib/routes';
-import { jwtDecoder } from '../../../shared/utils/jwtDecoder';
 import { useMeData } from '../../auth/hooks/useMeData';
 import type { ActiveMode } from '../../auth/types/auth.types';
 import { useUpdateOnboardingMutation } from '../hooks/useUpdateOnboardingMutation';
@@ -26,14 +24,10 @@ type Props = WizardStepProps & {
 
 function ModeSelectorStep({ onModeChosen }: Props) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { data: meData } = useMeData();
   const { mutate: updateOnboarding } = useUpdateOnboardingMutation();
   const { setMode } = useUserMode();
-  const navigate = useNavigate();
-
-  const token = getAuthToken();
-  const decoded = token ? jwtDecoder(token) : null;
-  const talentProfileSlug = decoded?.talentProfileSlug;
 
   const handleContinue = (mode: ActiveMode) => {
     if (!meData) return;
@@ -62,13 +56,13 @@ function ModeSelectorStep({ onModeChosen }: Props) {
           if (nextActiveMode === 'TALENT') {
             setMode(USER_MODE_TALENT);
             if (talentOnboardingStatus === 'COMPLETED') {
-              navigate(talentProfileSlug ? `${ROUTES.PUBLIC_PROFILE}/${talentProfileSlug}` : ROUTES.TALENT);
+              navigate(ROUTES.TALENT_DATABASE);
               return;
             }
           } else if (nextActiveMode === 'EMPLOYER') {
             setMode(USER_MODE_EMPLOYER);
             if (employerOnboardingStatus === 'COMPLETED') {
-              navigate(ROUTES.EMPLOYER);
+              navigate(ROUTES.TALENT_DATABASE);
               return;
             }
           }
