@@ -54,6 +54,10 @@ const CastingApplicantsDataGrid = ({
             <img
               src={row.talentHeadshotImageUrl}
               alt={row.talentStageName}
+              loading="lazy"
+              decoding="async"
+              width={32}
+              height={32}
               className="h-8 w-8 rounded-full object-cover shrink-0"
             />
             <button

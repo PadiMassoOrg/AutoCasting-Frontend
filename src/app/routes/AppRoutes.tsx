@@ -1,17 +1,10 @@
-import { useEffect } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { Route, BrowserRouter as Router, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { PageLoading } from 'autocasting-ui-library-padimasso';
 import { USER_MODE_EMPLOYER, USER_MODE_TALENT, useUserMode } from '../context/UserModeContext';
 import { useAuthToken } from '../features/auth/hooks/useAuthToken';
 import { useMeData } from '../features/auth/hooks/useMeData';
-import { AuthenticationPage, GoogleAuthSuccessPage, ResetPasswordPage } from '../features/auth/pages';
-import CastingDatabasePage from '../features/casting-database/pages/CastingDatabasePage';
 import LegalAcceptanceRequiredGate from '../features/legal/components/LegalAcceptanceRequiredGate';
-import MainSiteLayout from '../features/main-site/layout/MainSiteLayout';
-import { PrivacyPage, SupportPage, TermsPage } from '../features/main-site/page';
-import { OnboardingWizard } from '../features/onboarding/components';
-import { CastingDetailsPage, CastingPublicOverviewPage } from '../features/public-casting/pages';
-import { PublicProfilePage } from '../features/public-profile/pages';
-import { TalentDatabasePage } from '../features/talent-database/pages';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
 import { EmptyLayout, NavigationLayout, ScrollContentLayout } from '../layouts';
 import ScrollToTopOnRouteChange from '../shared/components/ScrollToTopOnRouteChange';
@@ -20,6 +13,20 @@ import { getAuthTokenExpirationTime } from '../shared/lib/cookies';
 import { ROUTES } from '../shared/lib/routes';
 import ProtectedRoute from './ProtectedRoute';
 import ProtectedRoutesLayout from './ProtectedRoutesLayout';
+
+const AuthenticationPage = lazy(() => import('../features/auth/pages/AuthenticationPage'));
+const GoogleAuthSuccessPage = lazy(() => import('../features/auth/pages/GoogleAuthSuccessPage'));
+const ResetPasswordPage = lazy(() => import('../features/auth/pages/ResetPasswordPage'));
+const CastingDatabasePage = lazy(() => import('../features/casting-database/pages/CastingDatabasePage'));
+const MainSiteLayout = lazy(() => import('../features/main-site/layout/MainSiteLayout'));
+const PrivacyPage = lazy(() => import('../features/main-site/page/PrivacyPage'));
+const SupportPage = lazy(() => import('../features/main-site/page/SupportPage'));
+const TermsPage = lazy(() => import('../features/main-site/page/TermsPage'));
+const OnboardingWizard = lazy(() => import('../features/onboarding/components/OnboardingWizard'));
+const CastingDetailsPage = lazy(() => import('../features/public-casting/pages/CastingDetailsPage'));
+const CastingPublicOverviewPage = lazy(() => import('../features/public-casting/pages/CastingPublicOverviewPage'));
+const PublicProfilePage = lazy(() => import('../features/public-profile/pages/PublicProfilePage'));
+const TalentDatabasePage = lazy(() => import('../features/talent-database/pages/TalentDatabasePage'));
 
 function RouteTracker() {
   useRouteTracking();
@@ -145,11 +152,13 @@ function AppRoutesContent() {
 export default function AppRoutes() {
   return (
     <Router>
-      <AuthSessionWatcher />
-      <RouteTracker />
-      <ScrollToTopOnRouteChange />
-      <LegalAcceptanceRequiredGate />
-      <AppRoutesContent />
+      <Suspense fallback={<PageLoading />}>
+        <AuthSessionWatcher />
+        <RouteTracker />
+        <ScrollToTopOnRouteChange />
+        <LegalAcceptanceRequiredGate />
+        <AppRoutesContent />
+      </Suspense>
     </Router>
   );
 }

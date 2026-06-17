@@ -43,7 +43,15 @@ export default function TalentCard({ item, onClick }: Props) {
           h-[300px] md:h-full md:group-hover:h-[300px] md:group-focus-within:h-[300px]
         "
       >
-        <img src={img} alt={stageName ?? 'profile image'} loading="lazy" className="h-full w-full object-cover" />
+        <img
+          src={img}
+          alt={stageName ?? 'profile image'}
+          loading="lazy"
+          decoding="async"
+          width={400}
+          height={300}
+          className="h-full w-full object-cover"
+        />
         <ButtonRow
           className="
             absolute top-4 right-4 z-10 items-center justify-center

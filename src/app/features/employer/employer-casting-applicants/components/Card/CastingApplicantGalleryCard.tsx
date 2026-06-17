@@ -45,6 +45,9 @@ const CastingApplicantGalleryCard = ({ data }: { data: EmployerCastingApplicantC
           src={talentHeadshotImageUrl}
           alt={talentStageName ?? 'profile image'}
           loading="lazy"
+          decoding="async"
+          width={1200}
+          height={350}
           className="h-full w-full object-cover"
         />
         {isMetadataReady ? (

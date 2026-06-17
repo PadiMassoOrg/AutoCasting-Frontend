@@ -59,7 +59,15 @@ const CastingRolePublicCard = ({ item, selected = false, onSelect }: Props) => {
         {/* Upper Section */}
         <article className="flex w-full items-start justify-between gap-3">
           <div className="flex min-w-0 flex-1 items-center gap-2">
-            <img src={employerImageUrl} className="h-10 w-10 shrink-0 rounded-full object-cover"></img>
+            <img
+              src={employerImageUrl}
+              alt={castingTitle}
+              loading="lazy"
+              decoding="async"
+              width={40}
+              height={40}
+              className="h-10 w-10 shrink-0 rounded-full object-cover"
+            />
             <div className="min-w-0 flex flex-1 flex-col">
               <h2 className="truncate text-base font-semibold">{name}</h2>
               <p className="truncate text-xs font-light text-(--color-secondary-grey-fonts)">{castingTitle}</p>

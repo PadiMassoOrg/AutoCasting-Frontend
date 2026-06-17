@@ -58,7 +58,15 @@ const CastingApplicantCard = ({ data, isDesktop, onOpenDetails }: Props) => {
     <SectionCard className="md:w-[415px]">
       {/* Profile and Status */}
       <div className="flex flex-row items-center gap-3 min-w-0">
-        <img src={talentHeadshotImageUrl} alt={talentStageName} className="w-10 h-10 rounded-full object-cover" />
+        <img
+          src={talentHeadshotImageUrl}
+          alt={talentStageName}
+          loading="lazy"
+          decoding="async"
+          width={40}
+          height={40}
+          className="w-10 h-10 rounded-full object-cover"
+        />
         <div className="flex flex-col flex-1 min-w-0">
           <div className="flex flex-row items-center justify-between gap-3 min-w-0">
             <h2
