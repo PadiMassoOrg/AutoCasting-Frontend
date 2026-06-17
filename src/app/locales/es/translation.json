@@ -141,6 +141,7 @@
       "byRole": "Separar por roles"
     },
     "pagination": {
+      "results": "Resultados",
       "page": "Página",
       "of": "de",
       "first_page": "Primera página",

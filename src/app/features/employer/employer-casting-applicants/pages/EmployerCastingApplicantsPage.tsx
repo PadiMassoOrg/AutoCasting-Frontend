@@ -1,4 +1,4 @@
-import { IconViewSwitcher, Label, Skeleton } from 'autocasting-ui-library-padimasso';
+import { IconViewSwitcher, Label } from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -89,7 +89,11 @@ const EmployerCastingApplicantsPage = () => {
     setPage(0);
   }, [slug, filters]);
 
-  const { data: tableData, isLoading: isTableLoading } = useEmployerCastingApplicants(tableArgs, {
+  const {
+    data: tableData,
+    isFetching: isTableFetching,
+    isRefetching: isTableRefetching,
+  } = useEmployerCastingApplicants(tableArgs, {
     enabled: !isGalleryDesktop,
   });
 
@@ -98,12 +102,9 @@ const EmployerCastingApplicantsPage = () => {
     fetchNextPage,
     hasNextPage: galleryHasNextPage,
     isFetchingNextPage: isGalleryFetchingNextPage,
-    isLoading: isGalleryLoading,
   } = useEmployerCastingApplicantsInfinite(galleryArgs, { enabled: isGalleryDesktop });
 
-  const { data: groupedData, isLoading: isGroupedLoading } = useEmployerCastingApplicantsGrouped(groupedArgs, {
-    enabled: shouldUseGroupedGallery,
-  });
+  const { data: groupedData } = useEmployerCastingApplicantsGrouped(groupedArgs, { enabled: shouldUseGroupedGallery });
 
   useEffect(() => {
     if (!shouldUseGroupedGallery) return;
@@ -122,6 +123,8 @@ const EmployerCastingApplicantsPage = () => {
     [groupedRolesState]
   );
   const totalApplicantsCount = tableData?.totalCount ?? applicants.length;
+  const isTableLoading = isTableFetching || isTableRefetching;
+  const hasGalleryData = shouldUseGroupedGallery ? groupedData != null : galleryData != null;
   const selectedApplicants = useMemo(
     () => applicants.filter((applicant) => selectedRowKeys.includes(applicant.applicationId)),
     [applicants, selectedRowKeys]
@@ -131,7 +134,6 @@ const EmployerCastingApplicantsPage = () => {
     [selectedApplicants]
   );
   const isBulkSelectionActive = selectedRowKeys.length > 0;
-  const title = applicants.length > 0 ? `${applicants[0].castingTitle}` : '';
 
   useEffect(() => {
     if (!isBulkSelectionActive) return;
@@ -147,6 +149,11 @@ const EmployerCastingApplicantsPage = () => {
         .sort((a, b) => a.label.localeCompare(b.label)),
     [castingDetails?.roles]
   );
+
+  const pageTitle = useMemo(() => {
+    const castingTitle = castingDetails?.title ?? '';
+    return `${t('employer_casting_applicants.page.title')} ${castingTitle}`.trimEnd();
+  }, [castingDetails?.title, t]);
 
   const handleOpenDetails = useCallback((talentPublicSlug: string) => {
     setSelectedPublicSlug(talentPublicSlug);
@@ -165,12 +172,8 @@ const EmployerCastingApplicantsPage = () => {
 
   const showGalleryEmpty =
     isGalleryDesktop &&
-    (shouldUseGroupedGallery
-      ? !isGroupedLoading && groupedApplicantsCount === 0
-      : !isGalleryLoading && applicants.length === 0);
-  const showTableInitialSkeletons = !isGalleryDesktop && isTableLoading && applicants.length === 0;
-  const showGalleryInitialSkeletons = isGalleryDesktop && !shouldUseGroupedGallery && isGalleryLoading;
-  const showGroupedInitialSkeletons = isGalleryDesktop && shouldUseGroupedGallery && isGroupedLoading;
+    hasGalleryData &&
+    (shouldUseGroupedGallery ? groupedApplicantsCount === 0 : applicants.length === 0);
 
   const handleGroupedRoleReachEnd = useCallback(
     (roleId: string) => {
@@ -241,7 +244,7 @@ const EmployerCastingApplicantsPage = () => {
   return (
     <DashboardShell>
       <DashboardSection>
-        <SectionTitle title={t('employer_casting_applicants.page.title') + ' ' + title} />
+        <SectionTitle title={pageTitle} />
 
         <div className="flex items-center gap-3 min-h-[56px]">
           <div className="flex-1 min-w-0">
@@ -273,104 +276,51 @@ const EmployerCastingApplicantsPage = () => {
           )}
         </div>
 
-        {(
-          resolvedViewMode === 'gallery'
-            ? showGalleryEmpty && !showGalleryInitialSkeletons && !showGroupedInitialSkeletons
-            : applicants.length === 0 && !showTableInitialSkeletons
-        ) ? (
+        {resolvedViewMode === 'gallery' && showGalleryEmpty ? (
           <Label className="w-full text-center text-(--color-secondary-grey-fonts) pt-10">
             {t('employer_casting_applicants.page.empty_page')}
           </Label>
         ) : resolvedViewMode === 'gallery' ? (
           shouldUseGroupedGallery ? (
-            showGroupedInitialSkeletons ? (
-              <div className="w-full flex flex-col gap-6" aria-live="polite">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={`grouped-gallery-skeleton-${i}`} className="w-full">
-                    <Skeleton className="h-8 w-48 mb-3 rounded-md" />
-                    <div className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-                      {Array.from({ length: 3 }).map((__, j) => (
-                        <Skeleton
-                          key={`grouped-gallery-card-skeleton-${i}-${j}`}
-                          className="h-[450px] w-full rounded-xl"
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <CastingApplicantsGalleryGrouped
-                roles={groupedRolesState}
-                onReachRoleEnd={handleGroupedRoleReachEnd}
-                loadingRoleIds={loadingRoleIds}
-              />
-            )
+            <CastingApplicantsGalleryGrouped
+              roles={groupedRolesState}
+              onReachRoleEnd={handleGroupedRoleReachEnd}
+              loadingRoleIds={loadingRoleIds}
+            />
           ) : (
-            <>
-              {showGalleryInitialSkeletons ? (
-                <div className="grid gap-4 grid-cols-1 md:grid-cols-2 xl:grid-cols-3" aria-live="polite">
-                  {Array.from({ length: galleryPageSize }).map((_, i) => (
-                    <Skeleton key={`gallery-skeleton-${i}`} className="h-[450px] w-full rounded-xl" />
-                  ))}
-                </div>
-              ) : (
-                <CastingApplicantsGallery
-                  data={applicants}
-                  hasNext={galleryHasNextPage}
-                  isLoadingNext={isGalleryFetchingNextPage}
-                  onReachEnd={handleGalleryReachEnd}
-                />
-              )}
-              {isGalleryFetchingNextPage && (
-                <p className="py-8 text-center font-light text-(--color-secondary-grey)" aria-live="polite">
-                  {t('state.loading')}
-                </p>
-              )}
-            </>
+            <CastingApplicantsGallery
+              data={applicants}
+              hasNext={galleryHasNextPage}
+              isLoadingNext={isGalleryFetchingNextPage}
+              onReachEnd={handleGalleryReachEnd}
+            />
           )
         ) : isDesktop ? (
-          <div className="w-full flex flex-col gap-6">
-            {showTableInitialSkeletons ? (
-              <div className="w-full flex flex-col gap-3" aria-live="polite">
-                <Skeleton className="h-12 w-full rounded-lg" />
-                {Array.from({ length: tablePageSize }).map((_, i) => (
-                  <Skeleton key={`applicants-table-row-skeleton-${i}`} className="h-14 w-full rounded-lg" />
-                ))}
-              </div>
-            ) : (
-              <CastingApplicantsDataGrid
-                data={applicants}
-                page={tableData?.page ?? page}
-                pageSize={tablePageSize}
-                hasNext={tableData?.hasNext ?? false}
-                onPageChange={setPage}
-                onOpenDetails={handleOpenDetails}
-                enableBulkSelection
-                selectedRowKeys={selectedRowKeys.filter((id) =>
-                  applicants.some((applicant) => applicant.applicationId === id)
-                )}
-                onSelectedRowKeysChange={handleSelectedRowKeysChange}
-                totalCount={totalApplicantsCount}
-              />
+          <CastingApplicantsDataGrid
+            data={applicants}
+            page={tableData?.page ?? page}
+            pageSize={tablePageSize}
+            hasNext={tableData?.hasNext ?? false}
+            onPageChange={setPage}
+            onOpenDetails={handleOpenDetails}
+            loading={isTableLoading}
+            enableBulkSelection
+            selectedRowKeys={selectedRowKeys.filter((id) =>
+              applicants.some((applicant) => applicant.applicationId === id)
             )}
-          </div>
+            onSelectedRowKeysChange={handleSelectedRowKeysChange}
+            totalCount={totalApplicantsCount}
+          />
         ) : (
           <div className="w-full flex flex-col flex-wrap gap-6 md:flex-row">
-            {showTableInitialSkeletons
-              ? Array.from({ length: tablePageSize }).map((_, i) => (
-                  <div key={`applicant-card-skeleton-${i}`} className="w-full md:w-[415px]">
-                    <Skeleton className="h-[320px] w-full rounded-xl" />
-                  </div>
-                ))
-              : applicants.map((i) => (
-                  <CastingApplicantCard
-                    key={i.applicationId}
-                    data={i}
-                    isDesktop={isDesktop}
-                    onOpenDetails={handleOpenDetails}
-                  />
-                ))}
+            {applicants.map((i) => (
+              <CastingApplicantCard
+                key={i.applicationId}
+                data={i}
+                isDesktop={isDesktop}
+                onOpenDetails={handleOpenDetails}
+              />
+            ))}
           </div>
         )}
       </DashboardSection>

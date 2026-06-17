@@ -17,5 +17,6 @@ export const useEmployerCastingApplicants = (args: GetEmployerApplicantsArgs, op
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     retry: 1,
+    placeholderData: (previousData) => previousData,
   });
 };

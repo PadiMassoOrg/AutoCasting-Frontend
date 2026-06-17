@@ -20,5 +20,6 @@ export const useEmployerCastingApplicantsGrouped = (
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     retry: 1,
+    placeholderData: (previousData) => previousData,
   });
 };

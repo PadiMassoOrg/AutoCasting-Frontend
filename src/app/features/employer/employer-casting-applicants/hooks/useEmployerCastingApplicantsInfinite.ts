@@ -38,5 +38,6 @@ export const useEmployerCastingApplicantsInfinite = (
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     retry: 1,
+    placeholderData: (previousData) => previousData,
   });
 };

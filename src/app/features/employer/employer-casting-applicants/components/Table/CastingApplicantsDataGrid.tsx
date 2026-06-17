@@ -15,6 +15,7 @@ type Props = {
   hasNext: boolean;
   onPageChange: (nextPage: number) => void;
   onOpenDetails: (talentPublicSlug: string) => void | Promise<void>;
+  loading?: boolean;
   enableBulkSelection?: boolean;
   selectedRowKeys?: string[];
   onSelectedRowKeysChange?: (next: string[]) => void;
@@ -28,6 +29,7 @@ const CastingApplicantsDataGrid = ({
   hasNext,
   onPageChange,
   onOpenDetails,
+  loading = false,
   enableBulkSelection = false,
   selectedRowKeys,
   onSelectedRowKeysChange,
@@ -85,8 +87,11 @@ const CastingApplicantsDataGrid = ({
                 <p className="text-xs font-semibold text-(--color-primary-purple)">-</p>
               </span>
             ) : (
-              row.requirementSubmissions.map((requirement) => (
-                <div key={requirement.castingRequirementId} className="flex flex-row items-center gap-2 cursor-pointer">
+              row.requirementSubmissions.map((requirement, index) => (
+                <div
+                  key={`${row.applicationId}-${requirement.castingRequirementId ?? 'requirement'}-${index}`}
+                  className="flex flex-row items-center gap-2 cursor-pointer"
+                >
                   {requirement.requiresAudio && (
                     <a
                       href={requirement.audioUrl}
@@ -171,11 +176,22 @@ const CastingApplicantsDataGrid = ({
   );
 
   const totalPages = totalCount && totalCount > 0 ? Math.ceil(totalCount / pageSize) : null;
+  const paginationLabels = {
+    results: t('general.pagination.results'),
+    page: t('general.pagination.page'),
+    of: t('general.pagination.of'),
+    firstPage: t('general.pagination.first_page'),
+    previousPage: t('general.pagination.previous_page'),
+    nextPage: t('general.pagination.next_page'),
+    lastPage: t('general.pagination.last_page'),
+  };
 
   return (
     <DataGrid
       columns={columns}
       data={data}
+      loading={loading}
+      minRows={pageSize}
       rowKey="applicationId"
       enableBulkSelection={enableBulkSelection}
       selection={
@@ -193,19 +209,9 @@ const CastingApplicantsDataGrid = ({
         page,
         hasNext,
         pageCount: totalPages,
+        totalCount,
+        labels: paginationLabels,
         onPageChange,
-        pageLabel: ({ page: currentPage }) =>
-          totalCount && totalCount > 0
-            ? `${t('general.pagination.page')} ${currentPage + 1} · ${totalCount} ${t('general.total').toLowerCase()}`
-            : `${t('general.pagination.page')} ${currentPage + 1}`,
-        labels: {
-          page: t('general.pagination.page'),
-          of: t('general.pagination.of'),
-          firstPageAriaLabel: t('general.pagination.first_page'),
-          previousPageAriaLabel: t('general.pagination.previous_page'),
-          nextPageAriaLabel: t('general.pagination.next_page'),
-          lastPageAriaLabel: t('general.pagination.last_page'),
-        },
       }}
     />
   );
