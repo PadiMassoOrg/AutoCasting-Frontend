@@ -13,7 +13,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CastingDetailsDesktopBody } from '../../../shared/components/CastingDetails';
-import ServerError from '../../../shared/components/ServerError/ServerError';
+import { NotFoundPage, ServerErrorPage } from '../../../shared/components/ErrorPage';
+import { isBackendNotFoundError } from '../../../shared/utils/backendErrorHandling';
 import { CastingCatalogDetailsApplyAction, CastingRolePublicCard } from '../../casting-database/components';
 import type { CastingRolePublicCardResponse } from '../../casting-database/types/casting-database.types';
 import { usePublicCastingDetails } from '../hooks/usePublicCastingDetails';
@@ -81,7 +82,8 @@ const CastingPublicOverviewPage = () => {
     }
   );
 
-  if (overviewQuery.isError) return <ServerError />;
+  if (overviewQuery.isError)
+    return isBackendNotFoundError(overviewQuery.error) ? <NotFoundPage /> : <ServerErrorPage />;
   if (overviewQuery.isLoading || !casting) {
     return (
       <Label className="w-full pt-10 flex items-center justify-center text-center text-[var(--color-secondary-grey-fonts)]">
@@ -148,7 +150,7 @@ const CastingPublicOverviewPage = () => {
       );
     }
 
-    if (detailsQuery.error) return <ServerError />;
+    if (detailsQuery.error) return isBackendNotFoundError(detailsQuery.error) ? <NotFoundPage /> : <ServerErrorPage />;
     if (!detailsQuery.data) return null;
 
     return <CastingDetailsDesktopBody casting={detailsQuery.data.casting} />;

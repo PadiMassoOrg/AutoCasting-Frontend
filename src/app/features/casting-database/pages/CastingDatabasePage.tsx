@@ -10,8 +10,8 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CastingDetailsDesktopBody } from '../../../shared/components/CastingDetails';
+import { ServerErrorPage } from '../../../shared/components/ErrorPage';
 import { FiltersDrawerActionBar, FiltersDrawerShell } from '../../../shared/components/FiltersDrawer';
-import ServerError from '../../../shared/components/ServerError/ServerError';
 import { usePublicCastingDetails } from '../../public-casting/hooks/usePublicCastingDetails';
 import { useCachedSiteMetadataSlice } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import {
@@ -263,7 +263,7 @@ const CastingDatabasePage = () => {
     }
 
     if (detailsQuery.error) {
-      return <ServerError />;
+      return <ServerErrorPage />;
     }
 
     if (!detailsQuery.data) {

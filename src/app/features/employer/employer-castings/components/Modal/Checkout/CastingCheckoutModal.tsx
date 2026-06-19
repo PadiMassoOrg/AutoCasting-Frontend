@@ -1,7 +1,7 @@
 import { Wizard, type WizardStepProps } from 'autocasting-ui-library-padimasso';
-import ServerError from '../../../../../../shared/components/ServerError/ServerError';
-import { useEmployerCastingCheckoutSummary } from '../../../hooks/useEmployerCastingCheckoutSummary';
+import { ServerErrorPage } from '../../../../../../shared/components/ErrorPage';
 import { useCastingStatusMutation } from '../../../hooks/status/useCastingStatusMutation';
+import { useEmployerCastingCheckoutSummary } from '../../../hooks/useEmployerCastingCheckoutSummary';
 import type { EmployerCastingCheckoutSummaryResponse } from '../../../types/employerCastings.types';
 import { CastingCheckoutSummaryStep } from './CastingCheckoutSummaryStep';
 
@@ -38,7 +38,7 @@ const CastingCheckoutModal = ({ castingId, slug, onClose }: CastingCheckoutModal
   if (error || !data) {
     return (
       <div className="flex h-[70dvh] items-center justify-center">
-        <ServerError />
+        <ServerErrorPage />
       </div>
     );
   }

@@ -3,7 +3,7 @@ import { DashboardLoadingLabel, DashboardShell } from 'autocasting-ui-library-pa
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '../../../../context/ToastContext';
-import ServerError from '../../../../shared/components/ServerError/ServerError';
+import { ServerErrorPage } from '../../../../shared/components/ErrorPage';
 import { formatLastSavedDateTime } from '../../../../shared/utils/formatUtils';
 import { TalentProfileModeToggle, TalentProfilePageModeSwitcher } from '../components';
 import {
@@ -55,7 +55,7 @@ export default function TalentProfileEditPage() {
     };
   }, [data, dismissToast, isLoading, showToast, t]);
 
-  if (error && !data) return <ServerError />;
+  if (error && !data) return <ServerErrorPage />;
 
   const loadingSections: DashboardShellSection[] = [
     {

@@ -8,7 +8,8 @@ import {
 } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import ServerError from '../../../shared/components/ServerError/ServerError';
+import { NotFoundPage, ServerErrorPage } from '../../../shared/components/ErrorPage';
+import { isBackendNotFoundError } from '../../../shared/utils/backendErrorHandling';
 import { TalentProfileModeToggle } from '../../talent/talent-profile-edit/components';
 import { BasicInfoSection, SocialMediaSection, VideoSection, ViewerActions } from '../components';
 import ProfileInfoCarousel from '../components/Details/ProfileInfoCarousel';
@@ -24,6 +25,7 @@ const PublicProfilePage = () => {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
 
+  if (error) return isBackendNotFoundError(error) ? <NotFoundPage /> : <ServerErrorPage />;
   if (isLoading || !data) {
     return (
       <Label className="w-full pt-10 flex items-center justify-center text-center text-[var(--color-secondary-grey-fonts)]">
@@ -31,7 +33,6 @@ const PublicProfilePage = () => {
       </Label>
     );
   }
-  if (error) return <ServerError />;
 
   const { socialMedia, media } = data;
 

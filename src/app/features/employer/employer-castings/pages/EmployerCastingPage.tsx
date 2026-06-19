@@ -11,7 +11,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router-dom';
 import { useModal } from '../../../../context/ModalContext';
-import ServerError from '../../../../shared/components/ServerError/ServerError';
+import { ServerErrorPage } from '../../../../shared/components/ErrorPage';
 import { ROUTES } from '../../../../shared/lib/routes';
 import { stableStringify } from '../../../../shared/utils/stableStringify';
 import { isCastingEditable } from '../../../sitemetadata/utils/siteMetadataUtils';
@@ -127,7 +127,7 @@ const EmployerCastingPage = () => {
     setRoleDraft(toRoleFormData(selectedRoleQuery.data));
   }, [selectedRoleQuery.data]);
 
-  if (error && !data) return <ServerError />;
+  if (error && !data) return <ServerErrorPage />;
 
   if (data && !isCastingEditable(data.castingStatus)) {
     return <Navigate to={ROUTES.EMPLOYER_CASTINGS} replace />;

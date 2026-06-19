@@ -2,7 +2,7 @@ import { Button, DetailsView, Icon, ImageCarousel, SectionCard, TagChip } from '
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import ServerError from '../../../shared/components/ServerError/ServerError';
+import { ServerErrorPage } from '../../../shared/components/ErrorPage';
 import VideoSection from '../../public-profile/components/VideoSection';
 import { ProfileShareActions, SocialMediaSection } from '../components';
 import { usePublicProfile } from '../hooks/usePublicProfile';
@@ -28,7 +28,7 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
   }, [profile]);
 
   if (!open) return null;
-  if (error) return <ServerError />;
+  if (error) return <ServerErrorPage />;
   if (!isLoading && !profile) return null;
 
   const basicInfo = profile?.basicInfo;

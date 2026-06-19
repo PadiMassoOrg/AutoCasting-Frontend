@@ -610,9 +610,16 @@
     }
   },
   "error_page": {
-    "title": "¡Ups! Algo salió mal.",
-    "description": "Estamos trabajando para solucionar el problema.",
-    "subtext": "Por favor, intentá de nuevo en unos minutos."
+    "general": {
+      "title": "¡Ups! Algo salió mal.",
+      "description": "Estamos trabajando para solucionar el problema.",
+      "subtext": "Por favor, intentá de nuevo en unos minutos."
+    },
+    "not_found": {
+      "title": "No encontramos esta página.",
+      "description": "El perfil o casting que buscás no está disponible.",
+      "subtext": "Puede haber sido eliminado, ocultado o suspendido."
+    }
   },
   "landing": {
     "page": {
