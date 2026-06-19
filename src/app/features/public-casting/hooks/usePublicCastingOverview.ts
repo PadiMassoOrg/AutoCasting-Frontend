@@ -18,7 +18,7 @@ export const usePublicCastingOverview = (args: Args, options?: Options) => {
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    retry: 1,
+    retry: 0,
     ...(options ?? {}),
   });
 };

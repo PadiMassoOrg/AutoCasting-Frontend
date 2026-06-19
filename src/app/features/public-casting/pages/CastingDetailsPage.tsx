@@ -9,7 +9,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { CastingDetailsDesktopBody, CastingDetailsMobileBody } from '../../../shared/components/CastingDetails';
-import ServerError from '../../../shared/components/ServerError/ServerError';
+import { NotFoundPage, ServerErrorPage } from '../../../shared/components/ErrorPage';
+import { isBackendNotFoundError } from '../../../shared/utils/backendErrorHandling';
 import { CastingCatalogDetailsApplyAction } from '../../casting-database/components';
 import { usePublicCastingDetails } from '../hooks/usePublicCastingDetails';
 
@@ -20,6 +21,7 @@ const CastingDetailsPage = () => {
 
   const publicQuery = usePublicCastingDetails({ slug: slug!, roleId: roleId! });
 
+  if (publicQuery.error) return isBackendNotFoundError(publicQuery.error) ? <NotFoundPage /> : <ServerErrorPage />;
   if (publicQuery.isLoading || !publicQuery.data) {
     return (
       <Label className="w-full pt-10 flex items-center justify-center text-center text-[var(--color-secondary-grey-fonts)]">
@@ -27,7 +29,6 @@ const CastingDetailsPage = () => {
       </Label>
     );
   }
-  if (publicQuery.error) return <ServerError />;
 
   const casting = publicQuery.data.casting;
   const selectedRole = casting.roles?.[0] ?? null;

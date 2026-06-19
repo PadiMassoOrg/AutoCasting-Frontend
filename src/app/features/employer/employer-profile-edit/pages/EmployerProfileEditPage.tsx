@@ -1,7 +1,7 @@
 import type { DashboardShellSection } from 'autocasting-ui-library-padimasso';
 import { DashboardLoadingLabel, DashboardShell } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
-import ServerError from '../../../../shared/components/ServerError/ServerError';
+import { ServerErrorPage } from '../../../../shared/components/ErrorPage';
 import { EmployerProfileBasicInfoEditSection } from '../components/Section';
 import { useEmployerProfile } from '../hooks/useEmployerProfile';
 
@@ -9,7 +9,7 @@ const EmployerProfileEditPage = () => {
   const { t } = useTranslation();
   const { data, error, isLoading } = useEmployerProfile();
 
-  if (error && !data) return <ServerError />;
+  if (error && !data) return <ServerErrorPage />;
 
   const loadingSections: DashboardShellSection[] = [
     {

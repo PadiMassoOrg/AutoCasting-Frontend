@@ -116,6 +116,14 @@ export const renderBackendMessageDescriptor = (descriptor: BackendMessageDescrip
 export const getBackendErrorMessage = (error: unknown, t: TFunction) =>
   renderBackendMessageDescriptor(getBackendErrorPayload(error).message, t);
 
+export const getBackendErrorStatus = (error: unknown): number | null => {
+  return getBackendErrorPayload(error).status;
+};
+
+export const isBackendNotFoundError = (error: unknown): boolean => {
+  return getBackendErrorStatus(error) === 404;
+};
+
 export const shouldToastBackendError = (payload: BackendErrorPayload) => {
   if (!payload.status) return true;
   if (payload.status >= 500) return true;

@@ -11,5 +11,6 @@ export const usePublicProfile = (slug?: string | null, enabled = true) => {
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
+    retry: 0,
   });
 };
