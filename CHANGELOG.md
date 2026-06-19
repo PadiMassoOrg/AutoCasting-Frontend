@@ -1,12 +1,11 @@
 # Changelog
 
-## FECHA (placeholder)
+## 2026-06-19
 
-- (placeholder)
-- Versión: `1.1.0`
-- Estado: `Pendiente`
-
--
+- Versión: `1.0.1`
+- Estado: `Lanzado`
+- Backend Error handling
+- Se usan 404 Page y 500 Page.
 
 ## 2026-06-17
 
