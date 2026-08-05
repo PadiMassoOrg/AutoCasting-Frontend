@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-05
+
+- Versión: `1.0.3`
+- Bugfixes: copyLink icon in details view and formatText before commiting to db.
+
 ## 2026-06-23
 
 - Versión: `1.0.2`
