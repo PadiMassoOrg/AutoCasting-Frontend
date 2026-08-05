@@ -95,7 +95,15 @@ export default function CreditModal({ mode, initial, onSave, onCancel }: Props) 
       return;
     }
 
-    await execute(() => onSave({ ...form }));
+    await execute(() =>
+      onSave({
+        ...form,
+        projectName: parsed.data.projectName,
+        producerName: parsed.data.producerName,
+        role: parsed.data.role,
+        year: parsed.data.year,
+      })
+    );
   };
 
   return (

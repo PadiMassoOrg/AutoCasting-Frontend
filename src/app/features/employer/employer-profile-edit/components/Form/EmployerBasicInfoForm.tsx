@@ -6,7 +6,7 @@ import {
   TextareaField,
   UploadTile,
 } from 'autocasting-ui-library-padimasso';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '../../../../../context/ToastContext';
 import { useEmployerLogoPatch } from '../../../../../integrations/supabase/media/hooks/useEmployerLogoPatch';
@@ -62,7 +62,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
         ...e,
         companyName: r.success ? null : r.error.errors[0]?.message || t('validation.required'),
       }));
-      if (r.success) autosave.immediate({ companyName: v });
+      if (r.success) autosave.immediate({ companyName: r.data });
     },
     { trim: true }
   );
@@ -112,11 +112,12 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   const address = useCommittedText(
     data.address ?? '',
     (v) => {
+      const r = schema.shape.address.safeParse(v);
       setErrors((e) => ({
         ...e,
-        address: null,
+        address: r.success ? null : r.error.errors[0]?.message || t('validation.max_char'),
       }));
-      autosave.immediate({ address: v || null });
+      if (r.success) autosave.immediate({ address: r.data || null });
     },
     { trim: true }
   );
@@ -136,11 +137,12 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   const about = useCommittedText(
     data.about ?? '',
     (v) => {
+      const r = schema.shape.about.safeParse(v);
       setErrors((e) => ({
         ...e,
-        about: null,
+        about: r.success ? null : r.error.errors[0]?.message || t('validation.max_char'),
       }));
-      autosave.immediate({ about: v || null });
+      if (r.success) autosave.immediate({ about: r.data || null });
     },
     { trim: true }
   );
@@ -306,9 +308,8 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
         label={t('employer_profile.basic_info.about')}
         placeholder={t('general.placeholder.about')}
         value={about.value}
-        onChange={about.onChange}
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => about.setValue(e.target.value)}
         onBlur={about.onBlur}
-        onKeyDown={about.onKeyDown}
         error={resolveError('about', errors.about)}
       />
 

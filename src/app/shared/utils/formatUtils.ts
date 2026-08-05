@@ -5,6 +5,26 @@ export const capitalize = (s: string) => {
   return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
 };
 
+export const capitalizeWords = (text: string): string => {
+  return text
+    .split(' ')
+    .map((word) => (word ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : word))
+    .join(' ');
+};
+
+export const isAllCaps = (text: string): boolean => {
+  const letters = text.replace(/[^A-Za-zÀ-ÿ]/g, '');
+  return letters.length > 0 && letters === letters.toUpperCase() && letters !== letters.toLowerCase();
+};
+
+export const sentenceCase = (text: string): string => {
+  return text.toLowerCase().replace(/(^\s*[a-zà-ÿ]|[.!?]\s+[a-zà-ÿ])/g, (match) => match.toUpperCase());
+};
+
+export const capitalizeIfShouting = (text: string): string => (isAllCaps(text) ? capitalizeWords(text) : text);
+
+export const sentenceCaseIfShouting = (text: string): string => (isAllCaps(text) ? sentenceCase(text) : text);
+
 function capitalizeDateLabel(text: string): string {
   const exceptions = new Set(['de', 'del']);
 

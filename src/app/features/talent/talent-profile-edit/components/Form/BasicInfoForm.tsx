@@ -72,7 +72,7 @@ export default function BasicInfoForm({
         ...e,
         stageName: r.success ? null : r.error.errors[0]?.message || t('validation.stage_name_required'),
       }));
-      if (r.success) autosave.immediate({ stageName: v });
+      if (r.success) autosave.immediate({ stageName: r.data });
     },
     { trim: true }
   );

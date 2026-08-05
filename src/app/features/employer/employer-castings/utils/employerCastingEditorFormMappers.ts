@@ -1,3 +1,4 @@
+import { capitalizeIfShouting, sentenceCaseIfShouting } from '../../../../shared/utils/formatUtils';
 import type {
   CastingBasicInfoFormData,
   CastingRoleFormData,
@@ -72,6 +73,11 @@ const toNullableString = (value: string) => {
   return trimmed.length ? trimmed : null;
 };
 
+const toNullableSentenceCaseString = (value: string) => {
+  const result = toNullableString(value);
+  return result ? sentenceCaseIfShouting(result) : result;
+};
+
 const toNullableNumber = (value: string) => {
   const trimmed = value.trim();
   if (!trimmed.length) return null;
@@ -79,35 +85,35 @@ const toNullableNumber = (value: string) => {
 };
 
 export const toCastingUpsertRequest = (draft: CastingBasicInfoFormData): CastingUpsertRequest => ({
-  title: draft.title.trim(),
+  title: capitalizeIfShouting(draft.title.trim()),
   projectTypeId: draft.projectTypeId ?? null,
   castingModalityId: draft.castingModalityId ?? null,
-  locationText: toNullableString(draft.locationText),
+  locationText: toNullableSentenceCaseString(draft.locationText),
   applicationDeadline: draft.applicationDeadline || null,
   hasWardrobeFitting: draft.hasWardrobeFitting,
-  wardrobeFittingText: toNullableString(draft.wardrobeFittingText),
+  wardrobeFittingText: toNullableSentenceCaseString(draft.wardrobeFittingText),
   shootingStartDate: draft.shootingStartDate || null,
   shootingEndDate: draft.shootingEndDate || null,
-  description: toNullableString(draft.description),
+  description: toNullableSentenceCaseString(draft.description),
 });
 
 export const toCastingRoleRequest = (draft: CastingRoleFormData, castingId: string): CastingRoleRequest => ({
   castingId,
-  roleName: draft.roleName.trim(),
+  roleName: capitalizeIfShouting(draft.roleName.trim()),
   roleTypeId: draft.roleTypeId!,
   genderId: draft.genderId!,
   ageMin: Number(draft.ageMin),
   ageMax: Number(draft.ageMax),
-  description: toNullableString(draft.description),
+  description: toNullableSentenceCaseString(draft.description),
   professionIds: draft.professionIds,
   skillIds: draft.skillIds,
   payRateTypeId: draft.payRateTypeId!,
   currencyId: draft.currencyId ?? null,
   amount: toNullableNumber(draft.amount),
-  remunerationNotes: toNullableString(draft.remunerationNotes),
+  remunerationNotes: toNullableSentenceCaseString(draft.remunerationNotes),
   requiresAudio: draft.requiresAudio,
   requiresVideo: draft.requiresVideo,
-  requirementDescription: toNullableString(draft.requirementDescription),
+  requirementDescription: toNullableSentenceCaseString(draft.requirementDescription),
   ethnicityId: draft.ethnicityId ?? null,
   tattoo: draft.tattoo,
   passport: draft.passport,

@@ -1,5 +1,6 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
+import { capitalizeIfShouting, sentenceCaseIfShouting } from '../../../../shared/utils/formatUtils';
 import { NAME_RX, TAX_NUMBER_RX, UUID_RX } from '../../../../shared/utils/schemaUtils';
 
 export function getEmployerBasicInfoSchema(t: TFunction) {
@@ -8,7 +9,8 @@ export function getEmployerBasicInfoSchema(t: TFunction) {
     .trim()
     .min(1, { message: t('validation.required') })
     .max(255, { message: t('validation.max_char') })
-    .regex(NAME_RX, { message: t('validation.invalid') });
+    .regex(NAME_RX, { message: t('validation.invalid') })
+    .transform(capitalizeIfShouting);
 
   const taxNumber = z
     .string()
@@ -36,6 +38,7 @@ export function getEmployerBasicInfoSchema(t: TFunction) {
     .string()
     .trim()
     .max(255, { message: t('validation.max_char') })
+    .transform(sentenceCaseIfShouting)
     .optional();
 
   const websiteUrl = z
@@ -48,6 +51,7 @@ export function getEmployerBasicInfoSchema(t: TFunction) {
     .string()
     .trim()
     .max(255, { message: t('validation.max_char') })
+    .transform(sentenceCaseIfShouting)
     .optional();
 
   return z.object({

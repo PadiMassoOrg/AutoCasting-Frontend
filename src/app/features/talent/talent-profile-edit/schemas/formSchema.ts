@@ -1,5 +1,6 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
+import { capitalizeIfShouting } from '../../../../shared/utils/formatUtils';
 import { NAME_RX, UUID_RX } from '../../../../shared/utils/schemaUtils';
 
 export const getEducationSchema = (t: TFunction) =>
@@ -9,14 +10,16 @@ export const getEducationSchema = (t: TFunction) =>
       .trim()
       .min(1, { message: t('validation.required') })
       .max(255, { message: t('validation.max_char') })
-      .regex(NAME_RX, { message: t('validation.invalid') }),
+      .regex(NAME_RX, { message: t('validation.invalid') })
+      .transform(capitalizeIfShouting),
 
     courseName: z
       .string()
       .trim()
       .min(1, { message: t('validation.required') })
       .max(255, { message: t('validation.max_char') })
-      .regex(NAME_RX, { message: t('validation.invalid') }),
+      .regex(NAME_RX, { message: t('validation.invalid') })
+      .transform(capitalizeIfShouting),
 
     graduationYear: z
       .string()
@@ -41,21 +44,24 @@ export const getCreditSchema = (t: TFunction) =>
       .trim()
       .min(1, { message: t('validation.required') })
       .max(255, { message: t('validation.max_char') })
-      .regex(NAME_RX, { message: t('validation.invalid') }),
+      .regex(NAME_RX, { message: t('validation.invalid') })
+      .transform(capitalizeIfShouting),
 
     producerName: z
       .string()
       .trim()
       .min(1, { message: t('validation.required') })
       .max(255, { message: t('validation.max_char') })
-      .regex(NAME_RX, { message: t('validation.invalid') }),
+      .regex(NAME_RX, { message: t('validation.invalid') })
+      .transform(capitalizeIfShouting),
 
     role: z
       .string()
       .trim()
       .min(1, { message: t('validation.required') })
       .max(255, { message: t('validation.max_char') })
-      .regex(NAME_RX, { message: t('validation.invalid') }),
+      .regex(NAME_RX, { message: t('validation.invalid') })
+      .transform(capitalizeIfShouting),
 
     year: z
       .string()

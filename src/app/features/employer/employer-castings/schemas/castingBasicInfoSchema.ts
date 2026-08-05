@@ -1,5 +1,6 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
+import { capitalizeIfShouting, sentenceCaseIfShouting } from '../../../../shared/utils/formatUtils';
 import { NAME_RX, UUID_RX } from '../../../../shared/utils/schemaUtils';
 
 export function getCastingBasicInfoSchema(t: TFunction) {
@@ -14,6 +15,7 @@ export function getCastingBasicInfoSchema(t: TFunction) {
     .string()
     .trim()
     .max(255, { message: t('validation.max_char') })
+    .transform(sentenceCaseIfShouting)
     .optional();
 
   const optionalIsoDate = z
@@ -28,7 +30,8 @@ export function getCastingBasicInfoSchema(t: TFunction) {
     .trim()
     .min(1, { message: t('validation.required') })
     .max(255, { message: t('validation.max_char') })
-    .regex(NAME_RX, { message: t('validation.invalid') });
+    .regex(NAME_RX, { message: t('validation.invalid') })
+    .transform(capitalizeIfShouting);
 
   return z.object({
     title,
@@ -44,6 +47,7 @@ export function getCastingBasicInfoSchema(t: TFunction) {
       .string()
       .trim()
       .max(3000, { message: t('validation.max_char') })
+      .transform(sentenceCaseIfShouting)
       .optional(),
   });
 }
