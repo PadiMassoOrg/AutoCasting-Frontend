@@ -1,5 +1,6 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
+import { sentenceCaseIfShouting } from '../../../shared/utils/formatUtils';
 import { isAllowedExternalUrl } from '../../../shared/utils/schemaUtils';
 import type { CastingRequirement } from '../types/publicCasting.types';
 
@@ -14,10 +15,10 @@ const optionalUrl = (t: TFunction) =>
 export const getCastingApplicationSchema = (t: TFunction, requirements: CastingRequirement[]) =>
   z
     .object({
-      message: z.string().trim().optional().or(z.literal('')),
+      message: z.string().trim().transform(sentenceCaseIfShouting).optional().or(z.literal('')),
       audioUrl: optionalUrl(t),
       videoUrl: optionalUrl(t),
-      notes: z.string().trim().optional().or(z.literal('')),
+      notes: z.string().trim().transform(sentenceCaseIfShouting).optional().or(z.literal('')),
     })
     .superRefine((val, ctx) => {
       const requiresAudio = requirements.some((req) => req?.requiresAudio);

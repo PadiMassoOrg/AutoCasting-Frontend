@@ -82,7 +82,14 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
       return;
     }
 
-    await execute(() => onSave({ ...form }));
+    await execute(() =>
+      onSave({
+        ...form,
+        institution: parsed.data.institution,
+        courseName: parsed.data.courseName,
+        graduationYear: parsed.data.graduationYear,
+      })
+    );
   };
 
   return (

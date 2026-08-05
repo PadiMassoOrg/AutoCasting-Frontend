@@ -1,6 +1,7 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
+import { capitalizeIfShouting, sentenceCaseIfShouting } from '../../../../shared/utils/formatUtils';
 import { NAME_RX, UUID_RX } from '../../../../shared/utils/schemaUtils';
 
 const requiredUuid = (t: TFunction) =>
@@ -43,7 +44,8 @@ const optionalText = (t: TFunction, max = 2000) =>
   z
     .string()
     .trim()
-    .max(max, { message: t('validation.max_char') });
+    .max(max, { message: t('validation.max_char') })
+    .transform(sentenceCaseIfShouting);
 
 const getCastingRoleSchemaObject = (t: TFunction) =>
   z.object({
@@ -52,7 +54,8 @@ const getCastingRoleSchemaObject = (t: TFunction) =>
       .trim()
       .min(1, { message: t('validation.required') })
       .max(255, { message: t('validation.max_char') })
-      .regex(NAME_RX, { message: t('validation.invalid') }),
+      .regex(NAME_RX, { message: t('validation.invalid') })
+      .transform(capitalizeIfShouting),
     roleTypeId: requiredUuid(t),
     genderId: requiredUuid(t),
     ageMin: requiredShortIntText(t),
