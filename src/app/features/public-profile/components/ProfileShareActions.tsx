@@ -32,7 +32,7 @@ export default function ProfileShareActions({ data }: Props) {
     );
   }
 
-  items.push(<Icon name="copy" onClick={handleShare} />);
+  items.push(<Icon name="copyLink" onClick={handleShare} />);
 
   if (items.length === 0) return null;
 
