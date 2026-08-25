@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../../context/ModalContext';
 import { USER_MODE_EMPLOYER, USER_MODE_TALENT, useUserMode } from '../../../context/UserModeContext';
-import { getAuthToken } from '../../../shared/lib/cookies';
+import { getRawAuthToken } from '../../../shared/lib/cookies';
 import { getDashboardRouteForActiveMode, ROUTES } from '../../../shared/lib/routes';
 import { useMeData } from '../../auth/hooks/useMeData';
 import type { ActiveMode } from '../../auth/types/auth.types';
@@ -28,7 +28,7 @@ type Props = {
 
 export default function CastingCatalogDetailsApplyAction({ data }: Props) {
   const { t } = useTranslation();
-  const isAuth = getAuthToken();
+  const isAuth = getRawAuthToken();
   const { data: meData } = useMeData();
   const { data: talentProfile, isLoading: isTalentProfileLoading } = useTalentProfile();
   const { mode, setMode } = useUserMode();

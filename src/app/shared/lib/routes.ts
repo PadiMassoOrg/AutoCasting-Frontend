@@ -60,6 +60,8 @@ export const API_ROUTES = {
   AUTH_LOGIN: '/auth/login',
   AUTH_REGISTER: '/auth/register',
   AUTH_ME_DATA: '/auth/me',
+  AUTH_REFRESH: '/auth/refresh',
+  AUTH_LOGOUT: '/auth/logout',
   OAUTH_GOOGLE: '/oauth2/authorization/google',
   FORGOT_PASSWORD: '/auth/forgot-password',
   RESET_PASSWORD: '/auth/reset-password',

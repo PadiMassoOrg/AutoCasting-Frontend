@@ -7,7 +7,7 @@ import { useAuthToken } from '../../../features/auth/hooks/useAuthToken';
 import { acceptCurrentLegalDocuments } from '../../../features/auth/services/authService';
 import api from '../../../shared/lib/axios';
 import { forceLogoutRedirect } from '../../../shared/lib/authSession';
-import { getAuthToken } from '../../../shared/lib/cookies';
+import { getRawAuthToken } from '../../../shared/lib/cookies';
 import { registerLegalAcceptanceHandler, requestLegalAcceptance } from '../../../shared/lib/legalAcceptanceGate';
 import { API_ROUTES, ROUTES } from '../../../shared/lib/routes';
 
@@ -36,7 +36,7 @@ const LegalAcceptanceRequiredModal = ({
   const handleAccept = async () => {
     if (isBusy) return;
 
-    const token = getAuthToken();
+    const token = getRawAuthToken();
     if (!token) {
       onCancel();
       return;

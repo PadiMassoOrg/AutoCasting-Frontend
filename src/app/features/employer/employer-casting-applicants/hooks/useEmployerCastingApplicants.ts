@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getAuthToken } from '../../../../shared/lib/cookies';
+import { getRawAuthToken } from '../../../../shared/lib/cookies';
 import {
   getEmployerApplicantsByCastingSlug,
   getEmployerCastingApplicantsQueryKey,
@@ -7,7 +7,7 @@ import {
 } from '../services/employerCastingApplicantsService';
 
 export const useEmployerCastingApplicants = (args: GetEmployerApplicantsArgs, opts?: { enabled?: boolean }) => {
-  const token = getAuthToken();
+  const token = getRawAuthToken();
 
   return useQuery({
     queryKey: getEmployerCastingApplicantsQueryKey(args),

@@ -19,6 +19,7 @@ export type ResetPasswordRequest = {
 // Response
 export type AuthenticationResponse = {
   token: string;
+  refreshToken: string;
 };
 
 export type MeDataResponse = {

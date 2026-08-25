@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { getAuthToken } from '../../../../shared/lib/cookies';
+import { getRawAuthToken } from '../../../../shared/lib/cookies';
 import type { SliceResponse } from '../../../../shared/types/sliceResponse.types';
 import type { EmployerCastingApplicantCardResponse } from '../types/employerCastingApplicants.types';
 import {
@@ -14,7 +14,7 @@ export const useEmployerCastingApplicantsInfinite = (
   args: UseEmployerCastingApplicantsInfiniteArgs,
   opts?: { enabled?: boolean }
 ) => {
-  const token = getAuthToken();
+  const token = getRawAuthToken();
 
   return useInfiniteQuery<SliceResponse<EmployerCastingApplicantCardResponse>>({
     queryKey: [

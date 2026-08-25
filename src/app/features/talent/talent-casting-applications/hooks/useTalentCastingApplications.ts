@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getAuthToken } from '../../../../shared/lib/cookies';
+import { getRawAuthToken } from '../../../../shared/lib/cookies';
 import {
   TALENT_CASTING_APPLICATIONS_CACHE_KEY,
   getMyTalentApplications,
@@ -7,12 +7,11 @@ import {
 } from '../services/talentCastingApplicationsService';
 
 export const useTalentCastingApplications = (args: GetMyTalentApplicationsArgs) => {
-  const token = getAuthToken();
+  const token = getRawAuthToken();
 
   return useQuery({
     queryKey: [
       ...TALENT_CASTING_APPLICATIONS_CACHE_KEY,
-      token ?? 'no-token',
       args.page,
       args.size,
       args.orderBy,
