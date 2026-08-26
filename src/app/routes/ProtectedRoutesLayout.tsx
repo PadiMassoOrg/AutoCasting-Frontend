@@ -14,16 +14,11 @@ const EmployerCastingsPage = lazy(() => import('../features/employer/employer-ca
 const EmployerProfileEditPage = lazy(
   () => import('../features/employer/employer-profile-edit/pages/EmployerProfileEditPage')
 );
-const EmployerProfileSettingsPage = lazy(
-  () => import('../features/employer/employer-profile-settings/pages/EmployerProfileSettingsPage')
-);
 const TalentCastingApplicationsPage = lazy(
   () => import('../features/talent/talent-casting-applications/pages/TalentCastingApplicationsPage')
 );
 const TalentProfileEditPage = lazy(() => import('../features/talent/talent-profile-edit/pages/TalentProfileEditPage'));
-const TalentProfileSettingsPage = lazy(
-  () => import('../features/talent/talent-profile-settings/pages/TalentProfileSettingsPage')
-);
+const SettingsPage = lazy(() => import('../features/settings/pages/SettingsPage'));
 
 export default function ProtectedRoutesLayout() {
   const token = useAuthToken();
@@ -56,12 +51,13 @@ export default function ProtectedRoutesLayout() {
         <Route element={<ScrollContentLayout variant="desktop-full-bleed" />}>
           {/* Talent */}
           <Route path={ROUTES.TALENT} element={<TalentProfileEditPage />} />
-          <Route path={ROUTES.TALENT_SETTINGS} element={<TalentProfileSettingsPage />} />
 
           {/* Employer */}
           <Route path={ROUTES.EMPLOYER} element={<EmployerProfileEditPage />} />
           <Route path={ROUTES.EMPLOYER_CASTING + '/:slug' + '/editor'} element={<EmployerCastingPage />} />
-          <Route path={ROUTES.EMPLOYER_SETTINGS} element={<EmployerProfileSettingsPage />} />
+
+          {/* Settings — account-level, shared by both modes */}
+          <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
         </Route>
         <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
       </Routes>

@@ -13,9 +13,8 @@ export const ROUTES = {
   TALENT_MEDIA: '/dashboard/talent/media',
   TALENT_DETAILS: '/dashboard/talent/details',
   TALENT_APPLIED_CASTINGS: '/dashboard/talent/applications',
-  TALENT_SETTINGS: '/dashboard/talent/settings',
+  SETTINGS: '/dashboard/settings',
   EMPLOYER: '/dashboard/employer',
-  EMPLOYER_SETTINGS: '/dashboard/employer/settings',
   EMPLOYER_CASTINGS: '/dashboard/employer/castings',
   EMPLOYER_CASTING: '/dashboard/employer/casting',
   // Public

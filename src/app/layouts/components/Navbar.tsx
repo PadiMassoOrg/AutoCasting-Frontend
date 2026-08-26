@@ -64,7 +64,6 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
   // Talent
   const activeAppliedCastings = isRouteActive(ROUTES.TALENT_APPLIED_CASTINGS, true);
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
-  const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
   // Employer
   const activeEmployerProfile = isRouteActive(ROUTES.EMPLOYER, true);
   const activeEmployerCastings = isRouteActive(ROUTES.EMPLOYER_CASTINGS, true);
@@ -72,7 +71,8 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
     { path: `${ROUTES.EMPLOYER_CASTING}/:slug/editor`, end: false },
     location.pathname
   );
-  const activeEmployerSettings = isRouteActive(ROUTES.EMPLOYER_SETTINGS, true);
+  // Settings — account-level, shared by both modes
+  const activeSettings = isRouteActive(ROUTES.SETTINGS, true);
 
   return (
     <nav
@@ -163,7 +163,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                   </Link>
                 </Tooltip>
                 <Tooltip title={t('general.tooltips.settings')} position="bottomRight" nudgeY={-8}>
-                  <Link to={ROUTES.TALENT_SETTINGS}>
+                  <Link to={ROUTES.SETTINGS}>
                     <span className={clsx(baseClass, activeSettings && activeClass)}>
                       {showIcons && <Icon name="settings" variant={activeSettings ? 'primary' : 'default'} />}
                       {showLabels && t('routes.settings')}
@@ -206,9 +206,9 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                   </Link>
                 </Tooltip>
                 <Tooltip title={t('general.tooltips.settings')} position="bottomRight" nudgeY={-8}>
-                  <Link to={ROUTES.EMPLOYER_SETTINGS}>
-                    <span className={clsx(baseClass, activeEmployerSettings && activeClass)}>
-                      {showIcons && <Icon name="settings" variant={activeEmployerSettings ? 'primary' : 'default'} />}
+                  <Link to={ROUTES.SETTINGS}>
+                    <span className={clsx(baseClass, activeSettings && activeClass)}>
+                      {showIcons && <Icon name="settings" variant={activeSettings ? 'primary' : 'default'} />}
                       {showLabels && t('routes.settings')}
                     </span>
                   </Link>
