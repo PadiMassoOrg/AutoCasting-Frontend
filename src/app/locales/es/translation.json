@@ -1108,7 +1108,7 @@
         "archived": {
           "title": "Archivar Casting",
           "description": "El casting será archivado.",
-          "description_2": "Podrás seguir viendo su información y los postulantes recibidos, pero no podrá editarse ni volver a publicarse.",
+          "description_2": "No Podrás seguir viendo su información ni los postulantes recibidos, tampoco podrá editarse ni volver a publicarse.",
           "confirm_button": "Archivar Casting"
         }
       },
