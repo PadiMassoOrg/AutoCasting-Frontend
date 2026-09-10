@@ -25,6 +25,13 @@ i18n
             return String(value);
           }
         }
+        if (format === 'date' && value) {
+          try {
+            return new Intl.DateTimeFormat(lng ?? 'es', { dateStyle: 'long' }).format(new Date(value));
+          } catch {
+            return String(value);
+          }
+        }
         return value;
       },
     },

@@ -6,8 +6,7 @@
     "instagram": "https://www.instagram.com"
   },
   "maintenance": {
-    "scheduled": "Entraremos en mantenimiento el {{date, datetime}}.",
-    "live": "Estamos en mantenimiento. Volvemos en unos minutos."
+    "scheduled": "Entraremos en mantenimiento el {{date, date}}."
   },
   "general": {
     "yes": "Sí",
@@ -18,6 +17,7 @@
     "confirm": "Confirmar",
     "accept": "Aceptar",
     "cancel": "Cancelar",
+    "close": "Cerrar",
     "add": "Agregar",
     "save": "Guardar",
     "search": "Buscar",
@@ -173,6 +173,7 @@
     "type_image": "El archivo debe ser una imagen.",
     "max_size": "El archivo supera el tamaño máximo de {{mb}}MB.",
     "media_too_large_8mb": "El archivo supera el tamaño máximo de 8MB.",
+    "media_decode_failed": "No pudimos procesar esta imagen. Probá con otra o convertila a JPG.",
     "profile": {
       "no_skills": "No hay habilidades para mostrar",
       "no_credits": "No hay créditos para mostrar.",
@@ -1108,7 +1109,7 @@
         "archived": {
           "title": "Archivar Casting",
           "description": "El casting será archivado.",
-          "description_2": "Podrás seguir viendo su información y los postulantes recibidos, pero no podrá editarse ni volver a publicarse.",
+          "description_2": "No Podrás seguir viendo su información ni los postulantes recibidos, tampoco podrá editarse ni volver a publicarse.",
           "confirm_button": "Archivar Casting"
         }
       },

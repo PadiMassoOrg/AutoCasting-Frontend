@@ -249,7 +249,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
                 disabled={isLogoBusy}
                 busy={isLogoBusy}
                 busyText={t('state.loading')}
-                accept="image/*"
+                accept="image/*,.heic,.heif"
                 maxSizeMB={8}
                 objectFit="cover"
                 multiple={false}

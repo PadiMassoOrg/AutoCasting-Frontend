@@ -9,6 +9,7 @@ import { useRouteTracking } from '../integrations/analytics/routeTracking';
 import { EmptyLayout, NavigationLayout, ScrollContentLayout } from '../layouts';
 import ScrollToTopOnRouteChange from '../shared/components/ScrollToTopOnRouteChange';
 import { clearClientSession } from '../shared/lib/authSession';
+import { getOrStartRefresh } from '../shared/lib/axios';
 import { getAuthTokenExpirationTime } from '../shared/lib/cookies';
 import { ROUTES } from '../shared/lib/routes';
 import ProtectedRoute from './ProtectedRoute';
@@ -53,22 +54,30 @@ function AuthSessionWatcher() {
     const expirationTime = getAuthTokenExpirationTime(token);
     if (!expirationTime) return;
 
-    const msUntilExpiration = expirationTime - Date.now();
-
-    if (msUntilExpiration <= 0) {
-      clearClientSession();
-      if (isProtectedPath(location.pathname)) {
-        navigate(ROUTES.HOME, { replace: true });
-      }
-      return;
-    }
-
-    const timerId = window.setTimeout(() => {
+    // The access token's own exp claim being reached only means it needs to be
+    // silently refreshed, not that the session is dead — attempt that first (shared
+    // with the axios interceptor's single-flight refresh) and only actually log the
+    // user out if the refresh token is also invalid/expired/revoked.
+    const handleExpiry = async () => {
       const wasProtectedPath = isProtectedPath(location.pathname);
+      const newToken = await getOrStartRefresh();
+      if (newToken) return;
+
       clearClientSession();
       if (wasProtectedPath) {
         navigate(ROUTES.HOME, { replace: true });
       }
+    };
+
+    const msUntilExpiration = expirationTime - Date.now();
+
+    if (msUntilExpiration <= 0) {
+      void handleExpiry();
+      return;
+    }
+
+    const timerId = window.setTimeout(() => {
+      void handleExpiry();
     }, msUntilExpiration);
 
     return () => window.clearTimeout(timerId);

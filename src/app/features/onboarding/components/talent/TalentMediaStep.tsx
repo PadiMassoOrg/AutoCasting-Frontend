@@ -146,7 +146,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
                   busy={tileBusy}
                   busyText={t('state.loading')}
                   bustKey={undefined}
-                  accept="image/*"
+                  accept="image/*,.heic,.heif"
                   maxSizeMB={8}
                   objectFit="cover"
                   aspectRatio="3 / 4"
@@ -169,7 +169,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
                   busy={tileBusy}
                   busyText={t('state.loading')}
                   bustKey={undefined}
-                  accept="image/*"
+                  accept="image/*,.heic,.heif"
                   maxSizeMB={8}
                   objectFit="cover"
                   aspectRatio="3 / 4"

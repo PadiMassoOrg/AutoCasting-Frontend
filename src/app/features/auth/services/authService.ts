@@ -1,5 +1,5 @@
 import api from '../../../shared/lib/axios';
-import { getAuthToken } from '../../../shared/lib/cookies';
+import { getRawAuthToken, getRefreshToken } from '../../../shared/lib/cookies';
 import { forceLogoutRedirect } from '../../../shared/lib/authSession';
 import { API_ROUTES } from '../../../shared/lib/routes';
 import type {
@@ -54,8 +54,16 @@ export const registerAndAcceptLegal = async (
   return response;
 };
 
+export const logoutRequest = async (refreshToken: string): Promise<void> => {
+  await api.post(API_ROUTES.AUTH_LOGOUT, { refreshToken });
+};
+
 export const meData = async (): Promise<MeDataResponse> => {
-  const token = getAuthToken();
+  // Use the raw (non-self-expiring) token here — an expired token must still be sent so
+  // the backend can 401 it and the axios interceptor can silently refresh, instead of this
+  // throwing NO_TOKEN locally and short-circuiting before the request (and the refresh
+  // flow) ever gets a chance to run.
+  const token = getRawAuthToken();
   if (!token) {
     throw new Error('NO_TOKEN');
   }
@@ -80,5 +88,11 @@ export const resetPassword = async (data: ResetPasswordRequest) => {
 };
 
 export const logout = () => {
+  const refreshToken = getRefreshToken();
   forceLogoutRedirect();
+  if (refreshToken) {
+    void logoutRequest(refreshToken).catch(() => {
+      // best-effort — client-side session is already cleared regardless of server outcome
+    });
+  }
 };

@@ -41,7 +41,6 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
   // Talent
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
   const activeAppliedCastings = isRouteActive(ROUTES.TALENT_APPLIED_CASTINGS, true);
-  const activeSettings = isRouteActive(ROUTES.TALENT_SETTINGS, true);
   // Employer
   const activeEmployerProfile = isRouteActive(ROUTES.EMPLOYER, true);
   const activeEmployerCastings = isRouteActive(ROUTES.EMPLOYER_CASTINGS, true);
@@ -49,7 +48,8 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
     { path: `${ROUTES.EMPLOYER_CASTING}/:slug/editor`, end: false },
     location.pathname
   );
-  const activeEmployerSettings = isRouteActive(ROUTES.EMPLOYER_SETTINGS, true);
+  // Settings — account-level, shared by both modes
+  const activeSettings = isRouteActive(ROUTES.SETTINGS, true);
 
   useEffect(() => {
     if (!open) return;
@@ -132,7 +132,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                         </Link>
                       </li>
                       <li onClick={onClose}>
-                        <Link to={ROUTES.TALENT_SETTINGS}>
+                        <Link to={ROUTES.SETTINGS}>
                           <span className={clsx(baseClass, activeSettings && activeClass)}>
                             <Icon name="settings" variant={activeSettings ? 'primary' : 'default'} />{' '}
                             {t('routes.settings')}
@@ -167,9 +167,9 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                         </Link>
                       </li>
                       <li onClick={onClose}>
-                        <Link to={ROUTES.EMPLOYER_SETTINGS}>
-                          <span className={clsx(baseClass, activeEmployerSettings && activeClass)}>
-                            <Icon name="settings" variant={activeEmployerSettings ? 'primary' : 'default'} />{' '}
+                        <Link to={ROUTES.SETTINGS}>
+                          <span className={clsx(baseClass, activeSettings && activeClass)}>
+                            <Icon name="settings" variant={activeSettings ? 'primary' : 'default'} />{' '}
                             {t('routes.settings')}
                           </span>
                         </Link>

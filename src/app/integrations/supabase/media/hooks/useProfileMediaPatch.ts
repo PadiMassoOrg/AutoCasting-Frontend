@@ -4,7 +4,7 @@ import {
   TALENT_PROFILE_CACHE_KEY,
 } from '../../../../features/talent/talent-profile-edit/services/talentProfileService';
 import { SUPABASE } from '../../constants';
-import { assertImageSourceSize, optimizeImageForUpload } from '../lib/imageOptimization';
+import { assertImageSourceSize, isHeicImage, optimizeImageForUpload } from '../lib/imageOptimization';
 import { uploadPublic, removeByPublicUrl } from '../lib/profile-media';
 
 type Slot = 'headshot' | 'fullbody' | 'other';
@@ -35,7 +35,7 @@ export function useProfileMediaPatch(profileId: string) {
   return useMutation({
     mutationFn: async (args: MutationArgs) => {
       const { file, slot, previousUrl } = args;
-      if (!file.type.startsWith('image/')) throw new Error('validation.type_image');
+      if (!file.type.startsWith('image/') && !isHeicImage(file)) throw new Error('validation.type_image');
       assertImageSourceSize(file);
 
       const optimizedFile = await optimizeImageForUpload(file, 'talent-photo');

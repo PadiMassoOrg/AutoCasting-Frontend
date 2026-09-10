@@ -1,7 +1,6 @@
-import { Label, Skeleton } from 'autocasting-ui-library-padimasso';
+import { DashboardSection, DashboardShell, Label, Skeleton } from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
-import { useMemo, useState } from 'react';
-import { DashboardSection, DashboardShell } from 'autocasting-ui-library-padimasso';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { SectionTitle } from '../../../../shared/components/Section';
 import TalentCastingApplicationCard from '../components/Card/TalentCastingApplicationCard';
 import TalentCastingApplicationFilterBar, {
@@ -9,6 +8,8 @@ import TalentCastingApplicationFilterBar, {
 } from '../components/Filter/TalentCastingApplicationFilterBar';
 import { useTalentCastingApplications } from '../hooks/useTalentCastingApplications';
 import type { TalentCastingApplicationsOrderBy } from '../types/talentCastingApplicationFilters.types';
+
+const PAGE_SIZE = 10;
 
 const TalentCastingApplications = () => {
   const [filters, setFilters] = useState<TalentCastingApplicationsFiltersState>({
@@ -22,17 +23,37 @@ const TalentCastingApplications = () => {
 
   const args = useMemo(
     () => ({
-      page: 0,
-      size: 10,
+      size: PAGE_SIZE,
       filters,
       orderBy,
     }),
     [filters, orderBy]
   );
 
-  const { data, isLoading } = useTalentCastingApplications(args);
-  const applications = data?.items ?? [];
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useTalentCastingApplications(args);
+  const applications = useMemo(() => (data?.pages ?? []).flatMap((slice) => slice.items ?? []), [data?.pages]);
   const showInitialSkeletons = isLoading && applications.length === 0;
+
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!hasNextPage) return;
+
+    const target = sentinelRef.current;
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry?.isIntersecting || isFetchingNextPage) return;
+        void fetchNextPage();
+      },
+      { root: null, rootMargin: '600px 0px 800px 0px', threshold: 0 }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <DashboardShell>
@@ -54,13 +75,24 @@ const TalentCastingApplications = () => {
               </div>
             ))
           ) : applications.length > 0 ? (
-            applications.map((i) => <TalentCastingApplicationCard key={i.castingRoleId} data={i} />)
+            <>
+              {applications.map((i) => (
+                <TalentCastingApplicationCard key={i.castingRoleId} data={i} />
+              ))}
+              <div ref={sentinelRef} aria-hidden="true" className="h-px w-full" />
+            </>
           ) : (
             <Label className="w-full text-center text-[var(--color-secondary-grey-fonts)] pt-10">
               {t('talent_applied_castings.page.empty_page')}
             </Label>
           )}
         </div>
+
+        {isFetchingNextPage && (
+          <p className="py-10 text-center font-light text-(--color-secondary-grey)" aria-live="polite">
+            {t('state.loading')}
+          </p>
+        )}
       </DashboardSection>
     </DashboardShell>
   );

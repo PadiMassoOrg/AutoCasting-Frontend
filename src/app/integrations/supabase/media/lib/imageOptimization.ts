@@ -31,8 +31,31 @@ const PRESETS: Record<ImageUploadKind, Preset> = {
 const MAX_ACCEPTED_SOURCE_BYTES = 8 * MB;
 const OUTPUT_MIME = 'image/webp';
 
+const HEIC_MIME = /^image\/(heic|heif)(-sequence)?$/i;
+const HEIC_EXT = /\.(heic|heif)$/i;
+
+// HEIC/HEIF only decodes natively in Safari — every other browser (and the
+// canvas re-encode pipeline below) needs it turned into a JPEG first.
+export function isHeicImage(file: File): boolean {
+  return HEIC_MIME.test(file.type) || (file.type === '' && HEIC_EXT.test(file.name));
+}
+
 export function isCompressibleImage(file: File): boolean {
+  if (isHeicImage(file)) return true;
   return file.type.startsWith('image/') && file.type !== 'image/svg+xml';
+}
+
+async function normalizeHeic(file: File): Promise<File> {
+  if (!isHeicImage(file)) return file;
+
+  try {
+    const { heicTo } = await import('heic-to');
+    const jpegBlob = await heicTo({ blob: file, type: 'image/jpeg', quality: 0.92 });
+    const name = HEIC_EXT.test(file.name) ? file.name.replace(HEIC_EXT, '.jpg') : `${file.name}.jpg`;
+    return new File([jpegBlob], name, { type: 'image/jpeg', lastModified: Date.now() });
+  } catch {
+    throw new Error('validation.media_decode_failed');
+  }
 }
 
 export function assertImageSourceSize(file: File) {
@@ -45,7 +68,8 @@ export async function optimizeImageForUpload(file: File, kind: ImageUploadKind):
   if (!isCompressibleImage(file)) return file;
 
   const preset = PRESETS[kind];
-  const bitmap = await readBitmap(file);
+  const source = await normalizeHeic(file);
+  const bitmap = await readBitmap(source);
 
   try {
     const { width, height } = fitWithin(bitmap.width, bitmap.height, preset.maxSide);
@@ -68,8 +92,8 @@ export async function optimizeImageForUpload(file: File, kind: ImageUploadKind):
       out = await canvasToBlob(canvas, OUTPUT_MIME, quality);
     }
 
-    const optimizedFile = blobToFile(out, forceWebpName(file.name));
-    return optimizedFile.size <= file.size ? optimizedFile : file;
+    const optimizedFile = blobToFile(out, forceWebpName(source.name));
+    return optimizedFile.size <= source.size ? optimizedFile : source;
   } finally {
     bitmap.close();
   }
