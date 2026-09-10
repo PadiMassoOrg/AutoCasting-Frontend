@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-10
+
+- Versión: `1.2.0`
+- Auth: refresh-token flow (silent access-token renewal, single-flight, password + Google OAuth2 sessions), `/auth/logout` revocation.
+- Talent applications: infinite scroll.
+- Settings: talent/employer settings pages merged into one shared page.
+- Castings: archived-casting warning on apply.
+- Maintenance warning banner now driven by a shared Supabase `app_config` row (replaces `public/config.json`).
+- Media: HEIC image handling fix.
+- Legal: Terms & Privacy 3.6.0 re-acceptance (backend-published; adds mobile-app coverage).
+
 ## 2026-08-05
 
 - Versión: `1.0.3`
