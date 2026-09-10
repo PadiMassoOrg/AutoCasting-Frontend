@@ -173,6 +173,7 @@
     "type_image": "El archivo debe ser una imagen.",
     "max_size": "El archivo supera el tamaño máximo de {{mb}}MB.",
     "media_too_large_8mb": "El archivo supera el tamaño máximo de 8MB.",
+    "media_decode_failed": "No pudimos procesar esta imagen. Probá con otra o convertila a JPG.",
     "profile": {
       "no_skills": "No hay habilidades para mostrar",
       "no_credits": "No hay créditos para mostrar.",

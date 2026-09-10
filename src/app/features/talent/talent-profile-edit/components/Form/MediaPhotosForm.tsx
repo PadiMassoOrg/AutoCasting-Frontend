@@ -273,7 +273,7 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
                 busy={pending.has('headshot')}
                 busyText={t('state.loading')}
                 bustKey={undefined}
-                accept="image/*"
+                accept="image/*,.heic,.heif"
                 maxSizeMB={8}
                 objectFit="cover"
                 openOnClick={!headshotHasImage}
@@ -312,7 +312,7 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
                 busy={pending.has('fullbody')}
                 busyText={t('state.loading')}
                 bustKey={undefined}
-                accept="image/*"
+                accept="image/*,.heic,.heif"
                 maxSizeMB={8}
                 objectFit="cover"
                 openOnClick={!fullbodyHasImage}
@@ -347,7 +347,7 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
                     busy={otherPending.has(i)}
                     busyText={t('state.loading')}
                     bustKey={undefined}
-                    accept="image/*"
+                    accept="image/*,.heic,.heif"
                     maxSizeMB={8}
                     objectFit="cover"
                     multiple={false}

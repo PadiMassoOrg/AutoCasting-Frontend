@@ -128,7 +128,7 @@ function EmployerMediaStep({
                 busy={tileBusy}
                 busyText={t('state.loading')}
                 bustKey={undefined}
-                accept="image/*"
+                accept="image/*,.heic,.heif"
                 maxSizeMB={8}
                 objectFit="cover"
                 aspectRatio="3 / 4"

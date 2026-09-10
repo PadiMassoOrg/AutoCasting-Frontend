@@ -5,7 +5,7 @@ import {
 } from '../../../../features/employer/employer-profile-edit/services/employerProfileService';
 import type { EmployerProfileBasicInfo } from '../../../../features/employer/employer-profile-edit/types/employerProfile.types';
 import { SUPABASE } from '../../constants';
-import { assertImageSourceSize, optimizeImageForUpload } from '../lib/imageOptimization';
+import { assertImageSourceSize, isHeicImage, optimizeImageForUpload } from '../lib/imageOptimization';
 import { uploadPublic, removeByPublicUrl } from '../lib/profile-media';
 
 type MutationArgs = { file: File; previousUrl?: string | null };
@@ -28,7 +28,7 @@ export function useEmployerLogoPatch(profileId: string) {
 
   return useMutation<EmployerProfileBasicInfo, unknown, MutationArgs>({
     mutationFn: async ({ file, previousUrl }) => {
-      if (!file.type.startsWith('image/')) throw new Error('validation.type_image');
+      if (!file.type.startsWith('image/') && !isHeicImage(file)) throw new Error('validation.type_image');
       assertImageSourceSize(file);
 
       const optimizedFile = await optimizeImageForUpload(file, 'employer-logo');
