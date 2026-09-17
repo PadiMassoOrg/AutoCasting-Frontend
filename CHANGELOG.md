@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-17
+
+- Versión: `1.2.1`
+- Fix: en la vista de postulantes del employer (bulk actions), el link "mailto" de la barra de acciones masivas solo incluía los emails de los postulantes visibles en la página actual, no de todos los seleccionados entre múltiples páginas. Ahora los emails seleccionados se capturan al momento de la selección y persisten al cambiar de página.
+
 ## 2026-09-10
 
 - Versión: `1.2.0`
