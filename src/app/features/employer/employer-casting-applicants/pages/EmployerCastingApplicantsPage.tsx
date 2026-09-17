@@ -47,7 +47,9 @@ const EmployerCastingApplicantsPage = () => {
   const [separateByRoles, setSeparateByRoles] = useState(false);
   const [groupedRolesState, setGroupedRolesState] = useState<EmployerCastingApplicantsRoleSliceResponse[]>([]);
   const [loadingRoleIds, setLoadingRoleIds] = useState<Record<string, boolean>>({});
-  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  // Maps selected applicationId -> talentEmail, captured at selection time so it survives page
+  // changes (the applicant row itself is no longer available once its page is no longer loaded).
+  const [selectedApplicantEmailsByRow, setSelectedApplicantEmailsByRow] = useState<Map<string, string>>(new Map());
   const { bulkSetStatusByCode, isPending: isBulkStatusPending } = useCastingApplicationStatusActions();
 
   const resolvedViewMode: ApplicantsViewMode = isDesktop ? viewMode : 'table';
@@ -125,13 +127,13 @@ const EmployerCastingApplicantsPage = () => {
   const totalApplicantsCount = tableData?.totalCount ?? applicants.length;
   const isTableLoading = isTableFetching || isTableRefetching;
   const hasGalleryData = shouldUseGroupedGallery ? groupedData != null : galleryData != null;
-  const selectedApplicants = useMemo(
-    () => applicants.filter((applicant) => selectedRowKeys.includes(applicant.applicationId)),
-    [applicants, selectedRowKeys]
+  const selectedRowKeys = useMemo(
+    () => Array.from(selectedApplicantEmailsByRow.keys()),
+    [selectedApplicantEmailsByRow]
   );
   const selectedApplicantEmails = useMemo(
-    () => selectedApplicants.map((applicant) => applicant.talentEmail),
-    [selectedApplicants]
+    () => Array.from(selectedApplicantEmailsByRow.values()),
+    [selectedApplicantEmailsByRow]
   );
   const isBulkSelectionActive = selectedRowKeys.length > 0;
 
@@ -223,10 +225,21 @@ const EmployerCastingApplicantsPage = () => {
   const handleSelectedRowKeysChange = useCallback(
     (nextSelectedVisibleKeys: string[]) => {
       const visibleIdsSet = new Set(applicants.map((applicant) => applicant.applicationId));
-      setSelectedRowKeys((previous) => {
-        const withoutCurrentPage = previous.filter((id) => !visibleIdsSet.has(id));
-        const nextVisibleUnique = Array.from(new Set(nextSelectedVisibleKeys));
-        return [...withoutCurrentPage, ...nextVisibleUnique];
+      const nextVisibleUniqueSet = new Set(nextSelectedVisibleKeys);
+
+      setSelectedApplicantEmailsByRow((previous) => {
+        const next = new Map(previous);
+        // Drop deselected rows from the current page/view, keep other pages' selections untouched.
+        visibleIdsSet.forEach((id) => {
+          if (!nextVisibleUniqueSet.has(id)) next.delete(id);
+        });
+        // Capture the email now, while the full applicant row is still available.
+        applicants.forEach((applicant) => {
+          if (nextVisibleUniqueSet.has(applicant.applicationId)) {
+            next.set(applicant.applicationId, applicant.talentEmail);
+          }
+        });
+        return next;
       });
     },
     [applicants]
@@ -236,7 +249,7 @@ const EmployerCastingApplicantsPage = () => {
     async (nextStatus: SiteMetadataObject) => {
       if (!selectedRowKeys.length) return;
       await bulkSetStatusByCode(nextStatus.stringCode, { applicationIds: selectedRowKeys, castingSlug: slug });
-      setSelectedRowKeys([]);
+      setSelectedApplicantEmailsByRow(new Map());
     },
     [bulkSetStatusByCode, selectedRowKeys, slug]
   );
@@ -253,7 +266,7 @@ const EmployerCastingApplicantsPage = () => {
                 selectedCount={selectedRowKeys.length}
                 selectedEmails={selectedApplicantEmails}
                 onBulkStatusSelect={handleBulkStatusSelect}
-                onClearSelection={() => setSelectedRowKeys([])}
+                onClearSelection={() => setSelectedApplicantEmailsByRow(new Map())}
                 isPending={isBulkStatusPending}
               />
             ) : (
