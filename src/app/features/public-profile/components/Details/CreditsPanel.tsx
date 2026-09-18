@@ -50,7 +50,7 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
       </h2>
     );
   return (
-    <div className="flex flex-col lg:pb-6" style={{ overflowAnchor: 'none' }}>
+    <div className="flex flex-col pb-6" style={{ overflowAnchor: 'none' }}>
       {categories.map((catKey, index) => {
         const list = groups[catKey];
         const isOpen = open[catKey] ?? true;

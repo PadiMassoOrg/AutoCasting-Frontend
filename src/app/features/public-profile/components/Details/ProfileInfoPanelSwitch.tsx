@@ -1,5 +1,5 @@
 import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { CharacteristicsPanel, CreditsPanel, EducationPanel, SkillsPanel } from '.';
 import type { TalentPublicProfileResponse } from '../../../talent/talent-profile-edit/types/talentProfile.types';
 
@@ -8,33 +8,31 @@ type PillKey = 'characteristics' | 'skills' | 'credits' | 'education';
 const ProfileInfoPanelSwitch = ({
   activeKey,
   profile,
+  onCharacteristicsHeightChange,
 }: {
   activeKey: PillKey;
   profile: TalentPublicProfileResponse;
+  onCharacteristicsHeightChange?: (height: number) => void;
 }) => {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const characteristicsRef = useRef<HTMLDivElement>(null);
-  const [characteristicsHeight, setCharacteristicsHeight] = useState<number>();
 
   useLayoutEffect(() => {
-    if (isDesktop || activeKey !== 'characteristics') return;
+    if (isDesktop || activeKey !== 'characteristics' || !onCharacteristicsHeightChange) return;
     const el = characteristicsRef.current;
     if (!el) return;
-    const update = () => setCharacteristicsHeight(el.scrollHeight);
+    const update = () => onCharacteristicsHeightChange(el.scrollHeight);
     update();
     const ro = new ResizeObserver(update);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [isDesktop, activeKey]);
-
-  const otherPanelStyle =
-    !isDesktop && characteristicsHeight ? { height: characteristicsHeight, overflowY: 'auto' as const } : undefined;
+  }, [isDesktop, activeKey, onCharacteristicsHeightChange]);
 
   return (
     <>
       <div
         ref={characteristicsRef}
-        className="w-full h-full"
+        className="w-full"
         role="tabpanel"
         id={`panel-characteristics`}
         aria-labelledby="tab-characteristics"
@@ -45,7 +43,6 @@ const ProfileInfoPanelSwitch = ({
 
       <div
         className="w-full h-full"
-        style={otherPanelStyle}
         role="tabpanel"
         id={`panel-skills`}
         aria-labelledby="tab-skills"
@@ -56,7 +53,6 @@ const ProfileInfoPanelSwitch = ({
 
       <div
         className="w-full h-full"
-        style={otherPanelStyle}
         role="tabpanel"
         id={`panel-credits`}
         aria-labelledby="tab-credits"
@@ -67,7 +63,6 @@ const ProfileInfoPanelSwitch = ({
 
       <div
         className="w-full h-full"
-        style={otherPanelStyle}
         role="tabpanel"
         id={`panel-education`}
         aria-labelledby="tab-education"
