@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-18
+
+- Versión: `1.3.0`
+- Perfil público: en Características/Habilidades/Créditos/Formación (paneles del InfoCarousel), en pantallas menores a `lg` cada panel ahora toma la misma altura que Características (calculada dinámicamente), con scroll interno cuando el contenido excede esa altura — antes cada panel tenía su propia altura natural.
+- Créditos: el separador entre categorías ya no se renderiza después de la última categoría.
+- Galería de fotos: PhotoZoom (ampliar imagen) ahora también está disponible en mobile, no solo en desktop.
+- CI: nuevo workflow de GitHub Actions (lint, build, test) en push/PR a `main`, `develop` y `release/**`.
+- Tests: nuevas suites de tests unitarios (Vitest) cubriendo `CastingBasicInfoForm`/`CastingRoleForm`, el checkout de castings del employer, y `useCastingOverflowMenuItems`/`siteMetadataUtils`.
+- Consume `autocasting-ui-library-padimasso@^1.7.10`.
+
 ## 2026-09-17
 
 - Versión: `1.2.1`
