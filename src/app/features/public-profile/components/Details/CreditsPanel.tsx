@@ -50,52 +50,49 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
       </h2>
     );
   return (
-    <div className="flex flex-col" style={{ overflowAnchor: 'none' }}>
+    <div className="flex flex-col lg:pb-6" style={{ overflowAnchor: 'none' }}>
       {categories.map((catKey, index) => {
         const list = groups[catKey];
         const isOpen = open[catKey] ?? true;
         const isLast = index === categories.length - 1;
-        let customClass = index === 0 ? 'pt-0 pb-6' : 'py-6';
         return (
           <div key={catKey}>
-            <div className={customClass}>
-              {/* Header colapsable */}
-              <button
-                type="button"
-                onClick={() => {
-                  const y = window.scrollY;
-                  setOpen((s) => ({ ...s, [catKey]: !isOpen }));
-                  requestAnimationFrame(() => window.scrollTo({ top: y }));
-                }}
-                className="w-full flex items-center justify-between cursor-pointer"
-                aria-expanded={isOpen}
-                aria-controls={`credits-${catKey}`}
-              >
-                <span className="font-semibold text-base lg:text-[14px]">{t(catKey)}:</span>
-                <ChevronUpDown open={isOpen} />
-              </button>
+            {/* Header colapsable */}
+            <button
+              type="button"
+              onClick={() => {
+                const y = window.scrollY;
+                setOpen((s) => ({ ...s, [catKey]: !isOpen }));
+                requestAnimationFrame(() => window.scrollTo({ top: y }));
+              }}
+              className="w-full flex items-center justify-between cursor-pointer"
+              aria-expanded={isOpen}
+              aria-controls={`credits-${catKey}`}
+            >
+              <span className="font-semibold text-base lg:text-[14px]">{t(catKey)}:</span>
+              <ChevronUpDown open={isOpen} />
+            </button>
 
-              {/* Lista de Credits */}
-              {isOpen && (
-                <article id={`credits-${catKey}`} className="mt-3 flex flex-col gap-4">
-                  {list.map((c) => (
-                    <div key={c.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3">
-                      <div className="flex items-center justify-between gap-4">
-                        <h4 className="font-semibold text-base lg:text-[14px] leading-snug">{c.projectName}</h4>
-                        <span className="shrink-0 rounded-lg border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px] font-light tracking-wide">
-                          {c.year}
-                        </span>
-                      </div>
-                      <div className="mt-3 text-base lg:text-[14px] font-light text-[var(--color-secondary-grey-fonts)]">
-                        {c.role}
-                        {c.producerName ? ` — ${c.producerName}` : ''}
-                      </div>
+            {/* Lista de Credits */}
+            {isOpen && (
+              <article id={`credits-${catKey}`} className="mt-3 flex flex-col gap-4">
+                {list.map((c) => (
+                  <div key={c.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3">
+                    <div className="flex items-center justify-between gap-4">
+                      <h4 className="font-semibold text-base lg:text-[14px] leading-snug">{c.projectName}</h4>
+                      <span className="shrink-0 rounded-lg border border-[var(--color-secondary-outline)] px-3 py-1 text-base lg:text-[14px] font-light tracking-wide">
+                        {c.year}
+                      </span>
                     </div>
-                  ))}
-                </article>
-              )}
-            </div>
-            {!isLast && <Separator className="opacity-20" />}
+                    <div className="mt-3 text-base lg:text-[14px] font-light text-[var(--color-secondary-grey-fonts)]">
+                      {c.role}
+                      {c.producerName ? ` — ${c.producerName}` : ''}
+                    </div>
+                  </div>
+                ))}
+              </article>
+            )}
+            {!isLast && <Separator className="opacity-20 my-6" />}
           </div>
         );
       })}
