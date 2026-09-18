@@ -20,7 +20,7 @@ const EducationPanel = ({ education }: { education: Education[] }) => {
       </h2>
     );
   return (
-    <article className="flex flex-col gap-4">
+    <article className="flex flex-col gap-4 pb-6">
       {items.map((e) => (
         <div key={e.id} className="rounded-xl border border-[var(--color-secondary-outline)] px-4 py-3">
           <div className="flex items-center justify-between gap-4">

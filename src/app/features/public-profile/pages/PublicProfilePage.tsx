@@ -105,7 +105,7 @@ const PublicProfilePage = () => {
     <div className="relative pt-3 pb-24 flex flex-col gap-4">
       <ViewerActions />
       <BasicInfoSection data={data} />
-      <ImageCarousel images={hasImages ? images : null} />
+      <ImageCarousel images={hasImages ? images : null} enablePhotoZoomOverlay />
       <div className="flex flex-col items-center justify-center mt-12">
         <SocialMediaSection data={socialMedia} />
       </div>

@@ -47,7 +47,7 @@ export default function SkillsPanel({ skills }: Props) {
     );
 
   return (
-    <div className="flex flex-col" style={{ overflowAnchor: 'none' }}>
+    <div className="flex flex-col pb-6" style={{ overflowAnchor: 'none' }}>
       {categories.map((catKey, index) => {
         const list = groups[catKey];
         if (!list?.length) return null;

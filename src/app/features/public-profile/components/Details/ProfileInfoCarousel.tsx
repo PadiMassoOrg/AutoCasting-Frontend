@@ -1,4 +1,5 @@
-import { InfoCarousel } from 'autocasting-ui-library-padimasso';
+import { InfoCarousel, LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TalentPublicProfileResponse } from '../../../talent/talent-profile-edit/types/talentProfile.types';
 import ProfileInfoPanelSwitch from './ProfileInfoPanelSwitch';
@@ -16,6 +17,8 @@ export default function ProfileInfoCarousel({
   className?: string;
 }) {
   const { t } = useTranslation();
+  const isDesktop = useMedia(LG_SCREEN_SIZE);
+  const [characteristicsHeight, setCharacteristicsHeight] = useState<number>();
 
   const labels: Record<PillKey, string> = {
     characteristics: t('profile.pills.characteristics'),
@@ -23,6 +26,22 @@ export default function ProfileInfoCarousel({
     credits: t('profile.pills.credits'),
     education: t('profile.pills.education'),
   };
+
+  const renderers = useMemo(
+    () => ({
+      characteristics: (p: TalentPublicProfileResponse) => (
+        <ProfileInfoPanelSwitch
+          activeKey="characteristics"
+          profile={p}
+          onCharacteristicsHeightChange={setCharacteristicsHeight}
+        />
+      ),
+      skills: (p: TalentPublicProfileResponse) => <ProfileInfoPanelSwitch activeKey="skills" profile={p} />,
+      credits: (p: TalentPublicProfileResponse) => <ProfileInfoPanelSwitch activeKey="credits" profile={p} />,
+      education: (p: TalentPublicProfileResponse) => <ProfileInfoPanelSwitch activeKey="education" profile={p} />,
+    }),
+    []
+  );
 
   return (
     <InfoCarousel<PillKey, TalentPublicProfileResponse>
@@ -34,18 +53,10 @@ export default function ProfileInfoCarousel({
       className={className}
       defaultActive="characteristics"
       fixedHeight={infoPanelFixedHeight}
+      panelHeightPx={!isDesktop ? characteristicsHeight : undefined}
     />
   );
 }
-
-const renderers = {
-  characteristics: (p: TalentPublicProfileResponse) => (
-    <ProfileInfoPanelSwitch activeKey="characteristics" profile={p} />
-  ),
-  skills: (p: TalentPublicProfileResponse) => <ProfileInfoPanelSwitch activeKey="skills" profile={p} />,
-  credits: (p: TalentPublicProfileResponse) => <ProfileInfoPanelSwitch activeKey="credits" profile={p} />,
-  education: (p: TalentPublicProfileResponse) => <ProfileInfoPanelSwitch activeKey="education" profile={p} />,
-} as const;
 
 const getCount = {
   skills: (p: TalentPublicProfileResponse) => p.skills?.length ?? 0,
