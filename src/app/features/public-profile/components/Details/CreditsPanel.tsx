@@ -32,7 +32,7 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
   }, [credits]);
 
   const categories = useMemo(() => {
-    const cats = Object.keys(groups);
+    const cats = Object.keys(groups).filter((k) => groups[k]?.length);
     return cats.sort((a, b) => {
       const ia = ORDER_KEYS.indexOf(a);
       const ib = ORDER_KEYS.indexOf(b);
@@ -53,8 +53,8 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
     <div className="flex flex-col" style={{ overflowAnchor: 'none' }}>
       {categories.map((catKey, index) => {
         const list = groups[catKey];
-        if (!list?.length) return null;
         const isOpen = open[catKey] ?? true;
+        const isLast = index === categories.length - 1;
         let customClass = index === 0 ? 'pt-0 pb-6' : 'py-6';
         return (
           <div key={catKey}>
@@ -95,7 +95,7 @@ const CreditsPanel = ({ credits }: { credits: Credit[] }) => {
                 </article>
               )}
             </div>
-            <Separator className="opacity-20" />
+            {!isLast && <Separator className="opacity-20" />}
           </div>
         );
       })}
