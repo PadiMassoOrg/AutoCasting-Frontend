@@ -127,7 +127,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
       }));
       if (r.success) autosave.immediate({ chestCm: r.data as any });
     },
-    { trim: true }
+    { trim: true, transform: (v) => v.toUpperCase() }
   );
 
   const hipCm = useCommittedText(
@@ -140,7 +140,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
       }));
       if (r.success) autosave.immediate({ hipCm: r.data as any });
     },
-    { trim: true }
+    { trim: true, transform: (v) => v.toUpperCase() }
   );
 
   const shirtSize = useCommittedText(
@@ -153,7 +153,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
       }));
       if (r.success) autosave.immediate({ shirtSize: r.data as string | undefined });
     },
-    { trim: true }
+    { trim: true, transform: (v) => v.toUpperCase() }
   );
 
   const pantSize = useCommittedText(
@@ -166,7 +166,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
       }));
       if (r.success) autosave.immediate({ pantSize: r.data as string | undefined });
     },
-    { trim: true }
+    { trim: true, transform: (v) => v.toUpperCase() }
   );
 
   const dressSize = useCommittedText(
@@ -179,7 +179,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
       }));
       if (r.success) autosave.immediate({ dressSize: r.data as string | undefined });
     },
-    { trim: true }
+    { trim: true, transform: (v) => v.toUpperCase() }
   );
 
   const shoeSize = useCommittedText(
@@ -192,7 +192,7 @@ export default function CharacteristicsForm({ data }: { data: Characteristics })
       }));
       if (r.success) autosave.immediate({ shoeSize: r.data as string | undefined });
     },
-    { trim: true }
+    { trim: true, transform: (v) => v.toUpperCase() }
   );
 
   // ======================

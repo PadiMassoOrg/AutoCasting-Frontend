@@ -51,14 +51,27 @@ export const commitOnBlur =
   () =>
     commit();
 
-export function useCommittedText(initial: string, commitFn: (v: string) => void, opts?: { trim?: boolean }) {
-  const [value, setValue] = useState(initial ?? '');
-  const last = useRef(initial ?? '');
+export function useCommittedText(
+  initial: string,
+  commitFn: (v: string) => void,
+  opts?: { trim?: boolean; transform?: (v: string) => string }
+) {
+  // `opts.transform` is typically passed as an inline arrow function (a new reference every
+  // render). Read it via a ref instead of depending on its identity directly, so passing a
+  // fresh function each render doesn't retrigger the resync effect below on every keystroke
+  // (which would otherwise snap `value` back to `initial`, blocking typing/deleting entirely).
+  const transformRef = useRef(opts?.transform);
+  transformRef.current = opts?.transform;
+  const apply = useCallback((v: string) => (transformRef.current ? transformRef.current(v) : v), []);
+
+  const [value, setValue] = useState(apply(initial ?? ''));
+  const last = useRef(apply(initial ?? ''));
 
   useEffect(() => {
-    const next = initial ?? '';
+    const next = apply(initial ?? '');
     last.current = next;
     setValue(next);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only resync when `initial` changes
   }, [initial]);
 
   const commit = useCallback(() => {
@@ -72,7 +85,7 @@ export function useCommittedText(initial: string, commitFn: (v: string) => void,
   return {
     value,
     setValue,
-    onChange: onInput(setValue),
+    onChange: onInput((v) => setValue(apply(v))),
     onBlur: commitOnBlur(commit),
     onKeyDown: commitOnEnter(commit),
     commit, // por si lo necesitas manual

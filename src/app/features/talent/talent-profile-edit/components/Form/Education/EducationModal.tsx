@@ -1,7 +1,6 @@
-import { Button, FormInputField, Separator } from 'autocasting-ui-library-padimasso';
+import { Button, FormInputField, Separator, usePendingAction } from 'autocasting-ui-library-padimasso';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { usePendingAction } from 'autocasting-ui-library-padimasso';
 import { getEducationSchema, type EducationFormKey, type EducationFormValues } from '../../../schemas/formSchema';
 import type { Education } from '../../../types/talentProfile.types';
 
@@ -95,17 +94,6 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
   return (
     <article className="flex flex-col">
       <FormInputField
-        id="institution"
-        label={t('profile.education.institution')}
-        labelClassName="font-semibold"
-        required
-        placeholder={t('profile.education.institution_placeholder')}
-        value={form.institution}
-        onChange={(e) => onChange('institution', e.target.value)}
-        error={errors.institution}
-      />
-
-      <FormInputField
         id="courseName"
         label={t('profile.education.courseName')}
         labelClassName="font-semibold"
@@ -115,6 +103,17 @@ const EducationModal = ({ mode, initial, onSave, onCancel }: Props) => {
         onChange={(e) => onChange('courseName', e.target.value)}
         // pattern="[A-Za-zÀ-ÿ0-9 ]*"
         error={errors.courseName}
+      />
+
+      <FormInputField
+        id="institution"
+        label={t('profile.education.institution')}
+        labelClassName="font-semibold"
+        required
+        placeholder={t('profile.education.institution_placeholder')}
+        value={form.institution}
+        onChange={(e) => onChange('institution', e.target.value)}
+        error={errors.institution}
       />
 
       <FormInputField

@@ -9,7 +9,7 @@ type Props = {
 
 const CastingApplicantsGalleryGrouped = ({ roles, onReachRoleEnd, loadingRoleIds = {} }: Props) => {
   return (
-    <div className="w-full flex flex-col gap-2">
+    <div className="w-full flex flex-col gap-4">
       {roles.map((role) => (
         <section key={role.roleId} className="w-full flex flex-col gap-2">
           <h3 className="text-base font-semibold">{role.roleName}</h3>
