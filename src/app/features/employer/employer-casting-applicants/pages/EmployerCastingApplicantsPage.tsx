@@ -1,11 +1,18 @@
-import { IconViewSwitcher, Label } from 'autocasting-ui-library-padimasso';
+import {
+  DashboardSection,
+  DashboardShell,
+  IconViewSwitcher,
+  Label,
+  LG_SCREEN_SIZE,
+  showToast,
+  useMedia,
+} from 'autocasting-ui-library-padimasso';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { DashboardSection, DashboardShell } from 'autocasting-ui-library-padimasso';
 import { SectionTitle } from '../../../../shared/components/Section';
-import { LG_SCREEN_SIZE, useMedia } from 'autocasting-ui-library-padimasso';
 import { PublicProfileDetailsView } from '../../../public-profile/pages';
+import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 import { useEmployerCastingDetailsBySlug } from '../../employer-castings/hooks/useEmployerCastingDetailsBySlug';
 import { CastingApplicantCard } from '../components/Card';
 import CastingApplicantsBulkActionsBar from '../components/Filter/CastingApplicantsBulkActionsBar';
@@ -13,12 +20,11 @@ import CastingApplicantsFilterBar from '../components/Filter/CastingApplicantsFi
 import CastingApplicantsGallery from '../components/Gallery/CastingApplicantsGallery';
 import CastingApplicantsGalleryGrouped from '../components/Gallery/CastingApplicantsGalleryGrouped';
 import CastingApplicantsDataGrid from '../components/Table/CastingApplicantsDataGrid';
-import { useEmployerCastingApplicants } from '../hooks/useEmployerCastingApplicants';
-import { useEmployerCastingApplicantsInfinite } from '../hooks/useEmployerCastingApplicantsInfinite';
-import { useEmployerCastingApplicantsGrouped } from '../hooks/useEmployerCastingApplicantsGrouped';
-import { getEmployerApplicantsByCastingSlug } from '../services/employerCastingApplicantsService';
 import { useCastingApplicationStatusActions } from '../hooks/status/useCastingApplicationStatusActions';
-import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
+import { useEmployerCastingApplicants } from '../hooks/useEmployerCastingApplicants';
+import { useEmployerCastingApplicantsGrouped } from '../hooks/useEmployerCastingApplicantsGrouped';
+import { useEmployerCastingApplicantsInfinite } from '../hooks/useEmployerCastingApplicantsInfinite';
+import { getEmployerApplicantsByCastingSlug } from '../services/employerCastingApplicantsService';
 import type { EmployerCastingApplicantsRoleSliceResponse } from '../types/employerCastingApplicants.types';
 import type { EmployerCastingApplicantsFiltersState } from '../types/employerCastingApplicantsFilter.types';
 
@@ -95,6 +101,7 @@ const EmployerCastingApplicantsPage = () => {
     data: tableData,
     isFetching: isTableFetching,
     isRefetching: isTableRefetching,
+    isError: isTableError,
   } = useEmployerCastingApplicants(tableArgs, {
     enabled: !isGalleryDesktop,
   });
@@ -104,9 +111,12 @@ const EmployerCastingApplicantsPage = () => {
     fetchNextPage,
     hasNextPage: galleryHasNextPage,
     isFetchingNextPage: isGalleryFetchingNextPage,
+    isError: isGalleryError,
   } = useEmployerCastingApplicantsInfinite(galleryArgs, { enabled: isGalleryDesktop });
 
-  const { data: groupedData } = useEmployerCastingApplicantsGrouped(groupedArgs, { enabled: shouldUseGroupedGallery });
+  const { data: groupedData, isError: isGroupedError } = useEmployerCastingApplicantsGrouped(groupedArgs, {
+    enabled: shouldUseGroupedGallery,
+  });
 
   useEffect(() => {
     if (!shouldUseGroupedGallery) return;
@@ -176,6 +186,24 @@ const EmployerCastingApplicantsPage = () => {
     isGalleryDesktop &&
     hasGalleryData &&
     (shouldUseGroupedGallery ? groupedApplicantsCount === 0 : applicants.length === 0);
+
+  const isGalleryViewError = shouldUseGroupedGallery ? isGroupedError : isGalleryError;
+  const isCurrentViewError = resolvedViewMode === 'gallery' ? isGalleryViewError : isTableError;
+
+  useEffect(() => {
+    if (!isCurrentViewError) return;
+    showToast({
+      // Stable id: re-firing (e.g. filters change while still erroring, or switching between
+      // table/gallery while both are erroring) replaces the existing toast instead of stacking
+      // a new one — important since durationMs is Infinity and it never auto-dismisses.
+      id: 'employer-casting-applicants-fetch-error',
+      title: t('general.error'),
+      description: t('state.server_err'),
+      type: 'danger',
+      closable: true,
+      durationMs: Infinity,
+    });
+  }, [isCurrentViewError, t]);
 
   const handleGroupedRoleReachEnd = useCallback(
     (roleId: string) => {

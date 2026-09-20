@@ -1,4 +1,6 @@
+import { showToast } from 'autocasting-ui-library-padimasso';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import i18n from 'i18next';
 import {
   patchMedia,
   TALENT_PROFILE_CACHE_KEY,
@@ -29,10 +31,14 @@ export function useProfileMediaDelete() {
         try {
           await removeByPublicUrl(url);
         } catch (err) {
-          // Blank on purpose
           // Si el objeto ya no existe o hay error menor, seguimos igual con el PATCH
-          // (evita bloquear el flujo por un 404 del storage).
-          // console.warn('removeByPublicUrl fallo, continuo con PATCH', err);
+          // (evita bloquear el flujo por un 404 del storage), pero lo logueamos y avisamos
+          // para tener visibilidad de que el archivo puede seguir ocupando espacio en el bucket.
+          console.error('Error removing media file on delete', url, err);
+          showToast({
+            title: i18n.t('validation.media_previous_file_cleanup_failed'),
+            type: 'warning',
+          });
         }
       }
 

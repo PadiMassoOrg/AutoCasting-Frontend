@@ -18,7 +18,6 @@ export const getTalentDatabase = async (
 
   const response = await api.get(`${API_ROUTES.TALENT_DATABASE}?${qs.toString()}`, {
     signal: opts?.signal,
-    headers: { 'Cache-Control': 'no-store' },
     validateStatus: (s) => (s >= 200 && s < 300) || s === 204,
   });
 

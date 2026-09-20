@@ -1,4 +1,6 @@
+import { showToast } from 'autocasting-ui-library-padimasso';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import i18n from 'i18next';
 import {
   patchMedia,
   TALENT_PROFILE_CACHE_KEY,
@@ -41,7 +43,7 @@ export function useProfileMediaPatch(profileId: string) {
       const optimizedFile = await optimizeImageForUpload(file, 'talent-photo');
 
       const key = buildStorageKey(profileId, slot, optimizedFile);
-      const { publicUrl } = await uploadPublic(key, optimizedFile);
+      const { publicUrl, key: uploadedKey } = await uploadPublic(key, optimizedFile);
 
       const payload: any = {};
       if (slot === 'headshot') payload.headshotImageUrl = publicUrl;
@@ -51,13 +53,30 @@ export function useProfileMediaPatch(profileId: string) {
         payload.otherPictures = [{ index, url: publicUrl }];
       }
 
-      const updatedMedia = await patchMedia(payload);
+      let updatedMedia;
+      try {
+        updatedMedia = await patchMedia(payload);
+      } catch (patchError) {
+        // The upload above already landed in Storage; if the PATCH that would reference it
+        // fails, the file is orphaned (no DB row points to it). Best-effort clean it up so it
+        // doesn't accumulate as unreferenced storage, then rethrow the original error.
+        try {
+          await removeByPublicUrl(publicUrl);
+        } catch (cleanupError) {
+          console.error('Error cleaning up orphaned upload after failed PATCH', uploadedKey, cleanupError);
+        }
+        throw patchError;
+      }
 
       if (previousUrl) {
         try {
           await removeByPublicUrl(previousUrl);
         } catch (e) {
           console.error('Error removing previous media file', e);
+          showToast({
+            title: i18n.t('validation.media_previous_file_cleanup_failed'),
+            type: 'warning',
+          });
         }
       }
 
