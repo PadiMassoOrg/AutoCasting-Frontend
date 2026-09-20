@@ -5,6 +5,7 @@ import {
   patchMedia,
   TALENT_PROFILE_CACHE_KEY,
 } from '../../../../features/talent/talent-profile-edit/services/talentProfileService';
+import { invalidateTalentDatabase } from '../../../../features/talent-database/hooks/talentDatabaseInvalidation';
 import type { MediaPatchRequest } from '../../../../features/talent/talent-profile-edit/types/requests';
 import { removeByPublicUrl } from '../lib/profile-media';
 
@@ -59,6 +60,10 @@ export function useProfileMediaDelete() {
         prev ? { ...prev, media: updated, modifiedAt: updated.modifiedAt ?? prev.modifiedAt } : prev
       );
       qc.invalidateQueries({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false, refetchType: 'active' });
+      // Deleting a headshot/full-body photo can flip catalog visibility (see
+      // TalentCatalogVisibility on the backend) — invalidate the public talent database so it
+      // doesn't keep showing this profile based on a stale cached page.
+      invalidateTalentDatabase(qc);
     },
   });
 }

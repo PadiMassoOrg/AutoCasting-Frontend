@@ -8,15 +8,9 @@ type UseTalentDatabaseInfiniteArgs = {
   pageSize: number;
   filters: TalentFiltersQS;
   enabled?: boolean;
-  staleTimeMs?: number; // default 60s
 };
 
-export function useTalentDatabaseInfinite({
-  pageSize,
-  filters,
-  enabled = true,
-  staleTimeMs = 60_000,
-}: UseTalentDatabaseInfiniteArgs) {
+export function useTalentDatabaseInfinite({ pageSize, filters, enabled = true }: UseTalentDatabaseInfiniteArgs) {
   const normalized = normalizeTalentDatabaseFilters(filters);
   const filtersKey = talentDatabaseFiltersKey(normalized);
 
@@ -26,8 +20,14 @@ export function useTalentDatabaseInfinite({
     initialPageParam: 0,
     getNextPageParam: (lastPage) => (lastPage.hasNext ? lastPage.page + 1 : undefined),
     enabled,
-    staleTime: staleTimeMs,
-    gcTime: 10 * 60_000,
+    // Catalog visibility (headshot/full-body/deleted/suspended) can change at any time from
+    // outside this page's own session (another tab, another device, an admin action) — this must
+    // always reflect the current server state, never a stale client cache. Any client-side
+    // caching here previously caused a real bug: a talent could delete their required photo and
+    // still see themselves listed (or complete their profile and not appear) until a full reload.
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     retry: 1,

@@ -5,6 +5,7 @@ import {
   patchMedia,
   TALENT_PROFILE_CACHE_KEY,
 } from '../../../../features/talent/talent-profile-edit/services/talentProfileService';
+import { invalidateTalentDatabase } from '../../../../features/talent-database/hooks/talentDatabaseInvalidation';
 import { SUPABASE } from '../../constants';
 import { assertImageSourceSize, isHeicImage, optimizeImageForUpload } from '../lib/imageOptimization';
 import { uploadPublic, removeByPublicUrl } from '../lib/profile-media';
@@ -87,6 +88,10 @@ export function useProfileMediaPatch(profileId: string) {
         prev ? { ...prev, media: updatedMedia, modifiedAt: updatedMedia.modifiedAt ?? prev.modifiedAt } : prev
       );
       qc.invalidateQueries({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false, refetchType: 'active' });
+      // Headshot/full-body changes can flip catalog visibility (see TalentCatalogVisibility on the
+      // backend) — invalidate the public talent database so it doesn't keep showing this profile
+      // as (in)visible based on a stale cached page.
+      invalidateTalentDatabase(qc);
     },
   });
 }
