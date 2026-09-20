@@ -2,6 +2,7 @@ import {
   LG_SCREEN_SIZE,
   MasterDetailShell,
   Skeleton,
+  showToast,
   useChromeBoxHeights,
   useDebouncedValue,
   useMedia,
@@ -123,6 +124,21 @@ const CastingDatabasePage = () => {
   const totalCount = desktopListingQuery.data?.totalCount ?? null;
 
   useEffect(() => {
+    if (!desktopListingQuery.error) return;
+    showToast({
+      // Stable id: re-firing (e.g. page/filters change while still erroring) replaces the
+      // existing toast instead of stacking a new one — important since durationMs is Infinity
+      // and it never auto-dismisses.
+      id: 'casting-database-fetch-error',
+      title: t('general.error'),
+      description: t('state.server_err'),
+      type: 'danger',
+      closable: true,
+      durationMs: Infinity,
+    });
+  }, [desktopListingQuery.error, t]);
+
+  useEffect(() => {
     if (!isDesktop) return;
     if (items.length === 0) {
       setSelectedItem(null);
@@ -143,6 +159,11 @@ const CastingDatabasePage = () => {
     },
     {
       enabled: !!selectedItem,
+      // Keep the previous selection's details (and thus contentActions/content) visible while
+      // the next one loads, instead of a truthy->falsy->truthy flicker on every casting switch —
+      // that flicker was unmounting/remounting CastingCatalogDetailsApplyAction each time, which
+      // re-fires useMeData() (mount-triggered refetch) on every single selection change.
+      placeholderData: (previousData) => previousData,
     }
   );
 
@@ -175,14 +196,6 @@ const CastingDatabasePage = () => {
       );
     }
 
-    if (desktopListingQuery.error) {
-      return (
-        <div className="flex min-h-full flex-col">
-          <p className="py-10 text-center font-normal text-(--color-alert-error)">{t('state.server_err')}</p>
-        </div>
-      );
-    }
-
     if (items.length === 0) {
       return (
         <div className="flex min-h-full flex-col">
@@ -209,7 +222,6 @@ const CastingDatabasePage = () => {
     hasNext,
     items,
     desktopListingQuery.data,
-    desktopListingQuery.error,
     desktopListingQuery.isLoading,
     filtersOpen,
     page,

@@ -1,8 +1,11 @@
+import { showToast } from 'autocasting-ui-library-padimasso';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import i18n from 'i18next';
 import {
   patchMedia,
   TALENT_PROFILE_CACHE_KEY,
 } from '../../../../features/talent/talent-profile-edit/services/talentProfileService';
+import { invalidateTalentDatabase } from '../../../../features/talent-database/hooks/talentDatabaseInvalidation';
 import type { MediaPatchRequest } from '../../../../features/talent/talent-profile-edit/types/requests';
 import { removeByPublicUrl } from '../lib/profile-media';
 
@@ -29,10 +32,14 @@ export function useProfileMediaDelete() {
         try {
           await removeByPublicUrl(url);
         } catch (err) {
-          // Blank on purpose
           // Si el objeto ya no existe o hay error menor, seguimos igual con el PATCH
-          // (evita bloquear el flujo por un 404 del storage).
-          // console.warn('removeByPublicUrl fallo, continuo con PATCH', err);
+          // (evita bloquear el flujo por un 404 del storage), pero lo logueamos y avisamos
+          // para tener visibilidad de que el archivo puede seguir ocupando espacio en el bucket.
+          console.error('Error removing media file on delete', url, err);
+          showToast({
+            title: i18n.t('validation.media_previous_file_cleanup_failed'),
+            type: 'warning',
+          });
         }
       }
 
@@ -53,6 +60,10 @@ export function useProfileMediaDelete() {
         prev ? { ...prev, media: updated, modifiedAt: updated.modifiedAt ?? prev.modifiedAt } : prev
       );
       qc.invalidateQueries({ queryKey: TALENT_PROFILE_CACHE_KEY, exact: false, refetchType: 'active' });
+      // Deleting a headshot/full-body photo can flip catalog visibility (see
+      // TalentCatalogVisibility on the backend) — invalidate the public talent database so it
+      // doesn't keep showing this profile based on a stale cached page.
+      invalidateTalentDatabase(qc);
     },
   });
 }

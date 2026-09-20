@@ -1,4 +1,6 @@
+import { showToast } from 'autocasting-ui-library-padimasso';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import i18n from 'i18next';
 import {
   EMPLOYER_PROFILE_CACHE_KEY,
   patchEmployerBasicInfo,
@@ -34,15 +36,32 @@ export function useEmployerLogoPatch(profileId: string) {
       const optimizedFile = await optimizeImageForUpload(file, 'employer-logo');
 
       const key = buildStorageKey(profileId, optimizedFile);
-      const { publicUrl } = await uploadPublic(key, optimizedFile);
+      const { publicUrl, key: uploadedKey } = await uploadPublic(key, optimizedFile);
 
-      const updated = await patchEmployerBasicInfo({ imageUrl: publicUrl });
+      let updated: EmployerProfileBasicInfo;
+      try {
+        updated = await patchEmployerBasicInfo({ imageUrl: publicUrl });
+      } catch (patchError) {
+        // The upload above already landed in Storage; if the PATCH that would reference it
+        // fails, the file is orphaned (no DB row points to it). Best-effort clean it up so it
+        // doesn't accumulate as unreferenced storage, then rethrow the original error.
+        try {
+          await removeByPublicUrl(publicUrl);
+        } catch (cleanupError) {
+          console.error('Error cleaning up orphaned upload after failed PATCH', uploadedKey, cleanupError);
+        }
+        throw patchError;
+      }
 
       if (previousUrl) {
         try {
           await removeByPublicUrl(previousUrl);
         } catch (e) {
           console.error('Error removing previous employer logo', e);
+          showToast({
+            title: i18n.t('validation.media_previous_file_cleanup_failed'),
+            type: 'warning',
+          });
         }
       }
 

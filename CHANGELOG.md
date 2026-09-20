@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-09-20
+
+- Versión: `1.3.1`
+- Fix: pantallas con fetch que podía fallar en silencio (postulantes del employer en tabla/galería/agrupado, aplicaciones del talent, catálogo de talentos, catálogo de castings) ahora muestran feedback en error en vez de quedarse colgadas — mensaje inline (`CastingDatabasePage`, `TalentDatabasePage`, aplicaciones) o toast cerrable e infinito con id estable para evitar apilamiento (postulantes del employer, catálogo de castings).
+- Fix: el catálogo de talentos y el catálogo de castings dejaron de cachear por hasta 60s — ahora siempre refetchean al montar. Un talento que subía/borraba su foto de cara o cuerpo entero no reflejaba el cambio de visibilidad en catálogo hasta un reload completo de la página.
+- Fix: subir/borrar una foto de perfil de talento ahora también invalida la cache del catálogo público (antes solo invalidaba la cache del propio perfil), cubriendo el caso de una pestaña del catálogo ya abierta en paralelo.
+- Fix: uploads a Supabase Storage que quedaban huérfanos si el PATCH posterior fallaba ahora se limpian; fallos al borrar el archivo anterior ya no se silencian (log + toast de aviso).
+- Fix: `EmployerCastingApplicantsPage` (tabla y galería) ya no dispara `GET /api/v1/talent` (403) para un usuario en modo employer — ese fetch solo es relevante para el flujo de aplicar como talent.
+- Fix: se remueve el row "Cintura" del panel de características del perfil público — el campo no tiene ningún input correspondiente en el formulario de edición.
+- Fix: los talles de indumentaria (remera, pantalón, vestido, calzado) ahora se pasan a mayúsculas mientras se escriben.
+- Fix: Créditos y Formación — título del curso, nombre del proyecto y rol ahora se capitalizan palabra por palabra siempre (no solo si el texto estaba en mayúsculas); institución y director/productor mantienen la regla anterior (solo si estaba en mayúsculas).
+- Tests: nuevas suites de Vitest cubriendo las reglas de capitalización de formSchema, el fix de `useCommittedText`, la omisión de "Cintura" en `CharacteristicsPanel`, el layout de `FetchErrorState`, y la invalidación de cache del catálogo en las mutaciones de media.
+
 ## 2026-09-18
 
 - Versión: `1.3.0`

@@ -1,6 +1,7 @@
 import { DashboardSection, DashboardShell, Label, Skeleton } from 'autocasting-ui-library-padimasso';
 import { t } from 'i18next';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { FetchErrorState } from '../../../../shared/components/FetchErrorState';
 import { SectionTitle } from '../../../../shared/components/Section';
 import TalentCastingApplicationCard from '../components/Card/TalentCastingApplicationCard';
 import TalentCastingApplicationFilterBar, {
@@ -30,7 +31,8 @@ const TalentCastingApplications = () => {
     [filters, orderBy]
   );
 
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useTalentCastingApplications(args);
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage, isError } =
+    useTalentCastingApplications(args);
   const applications = useMemo(() => (data?.pages ?? []).flatMap((slice) => slice.items ?? []), [data?.pages]);
   const showInitialSkeletons = isLoading && applications.length === 0;
 
@@ -68,7 +70,9 @@ const TalentCastingApplications = () => {
         />
 
         <div className="w-full flex flex-col flex-wrap gap-6 lg:flex-row">
-          {showInitialSkeletons ? (
+          {isError && applications.length === 0 ? (
+            <FetchErrorState className="w-full py-10 text-center" />
+          ) : showInitialSkeletons ? (
             Array.from({ length: 6 }).map((_, i) => (
               <div key={`application-card-skeleton-${i}`} className="lg:min-w-[415px]">
                 <Skeleton className="h-[226px] w-full rounded-xl" />

@@ -30,8 +30,14 @@ export default function CastingCatalogDetailsApplyAction({ data }: Props) {
   const { t } = useTranslation();
   const isAuth = getRawAuthToken();
   const { data: meData } = useMeData();
-  const { data: talentProfile, isLoading: isTalentProfileLoading } = useTalentProfile();
   const { mode, setMode } = useUserMode();
+  const isTalentMode = mode === USER_MODE_TALENT;
+  // Only relevant when the current user could actually apply as talent — fetching it for an
+  // employer-mode (or logged-out) user hits GET /api/v1/talent for an account with no talent
+  // profile, which the backend correctly rejects with a 403.
+  const { data: talentProfile, isLoading: isTalentProfileLoading } = useTalentProfile({
+    enabled: Boolean(isAuth) && isTalentMode,
+  });
   const navigate = useNavigate();
   const { openModal, closeModal } = useModal();
   const openProfileCompletionModal = () => {
@@ -55,7 +61,6 @@ export default function CastingCatalogDetailsApplyAction({ data }: Props) {
   const { mutate: updateOnboarding, isPending: isSwitchingMode } = useUpdateOnboardingMutation();
   const isAlreadyApplied = Boolean(data.alreadyApplied);
   const isLoggedIn = Boolean(isAuth);
-  const isTalentMode = mode === USER_MODE_TALENT;
   const isEmployerMode = mode === USER_MODE_EMPLOYER;
   const canApply = isLoggedIn && isTalentMode;
   const role = data.casting.roles[0] ?? null;

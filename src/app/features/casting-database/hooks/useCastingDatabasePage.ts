@@ -26,8 +26,15 @@ export function useCastingDatabasePage({ page, size, filters, enabled = true }: 
     queryKey: getCastingDatabasePageQueryKey({ page, size, filters: normalizedFilters }),
     queryFn: ({ signal }) => getCastingDatabase(page, size, normalizedFilters, { signal }),
     enabled,
-    staleTime: 60_000,
-    gcTime: 10 * 60_000,
+    // Catalog eligibility (a role's casting must still be published, its employer not suspended,
+    // etc.) can change at any time from outside this session — always reflect current server
+    // state rather than a stale client cache (see useTalentDatabaseInfinite for the concrete bug
+    // this caused on the talent side). staleTime: 0 + refetchOnMount: 'always' together guarantee
+    // a fresh request every time this page mounts; gcTime is kept small (not 0) only so the
+    // previous page's rows can still serve as `placeholderData` during a page-change within the
+    // same mount, not to allow reusing data across a real revisit.
+    staleTime: 0,
+    gcTime: 5_000,
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

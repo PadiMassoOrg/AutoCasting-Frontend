@@ -3,7 +3,7 @@ import { getRawAuthToken } from '../../../../shared/lib/cookies';
 import { getMyProfile, TALENT_PROFILE_CACHE_KEY } from '../services/talentProfileService';
 import type { TalentProfileResponse } from '../types/talentProfile.types';
 
-export const useTalentProfile = () => {
+export const useTalentProfile = (opts?: { enabled?: boolean }) => {
   const token = getRawAuthToken();
 
   return useQuery({
@@ -12,7 +12,7 @@ export const useTalentProfile = () => {
     select: (p): TalentProfileResponse => ({
       ...p,
     }),
-    enabled: !!token,
+    enabled: (opts?.enabled ?? true) && !!token,
     staleTime: 0,
     refetchOnMount: 'always',
     refetchOnWindowFocus: false,
