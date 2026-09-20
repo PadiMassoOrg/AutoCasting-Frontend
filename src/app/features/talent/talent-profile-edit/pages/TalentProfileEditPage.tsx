@@ -153,7 +153,17 @@ export default function TalentProfileEditPage() {
 
   return (
     <div className="relative h-full flex flex-col">
-      <div className="flex-1 min-h-0 pb-14 lg:pb-0">
+      {/*
+        TalentProfileModeToggle renders as a `fixed` MobileBottomBar on mobile, so it's out of
+        flow and doesn't push this scrollable content up on its own — without this, the last
+        section's content (and any toast anchored to it) sits behind/under the bar. The bar's own
+        non-safe-area height is: MobileBottomBar's pt-3 (12px) + its own +16px bottom pad, plus
+        the toggle's article p-1 (8px) + button h-10 (40px) = 76px, plus a small breathing buffer;
+        env(safe-area-inset-bottom) accounts for the device's own home-indicator/notch inset on
+        top of that (0px on devices without one, so this never over-pads elsewhere). The toggle
+        bar is mobile-only, so `lg:pb-0` turns this off again at the desktop breakpoint.
+      */}
+      <div className="flex-1 min-h-0 pb-[calc(env(safe-area-inset-bottom,0px)+84px)] lg:pb-0">
         <DashboardShell
           title={t('profile.page.profile')}
           titleActions={<TalentProfilePageModeSwitcher />}
