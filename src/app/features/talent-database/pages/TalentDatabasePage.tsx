@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { FetchErrorState } from '../../../shared/components/FetchErrorState';
 import { FiltersDrawerActionBar, FiltersDrawerShell } from '../../../shared/components/FiltersDrawer';
 import FilterToggleButton from '../../../shared/components/FilterToggleButton/FilterToggleButton';
+import { usePreservedScroll } from '../../../shared/hooks/usePreservedScroll';
 import { PublicProfileDetailsView } from '../../public-profile/pages';
 import { useCachedSiteMetadataSlice } from '../../sitemetadata/hooks/useCachedSiteMetadata';
 import { TalentCard, TalentFilterBar, TalentMobileFilterDrawer } from '../components';
@@ -62,6 +63,7 @@ export default function TalentDatabasePage() {
 
   const [selectedPublicSlug, setSelectedPublicSlug] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const { captureScroll } = usePreservedScroll(detailsOpen);
 
   const sentinelRef = useRef<HTMLDivElement>(null);
   const cardsGridRef = useRef<HTMLElement>(null);
@@ -145,10 +147,14 @@ export default function TalentDatabasePage() {
     };
   }, [filtersOpen]);
 
-  const handleOpenDetails = useCallback((card: ProfileCardResponse) => {
-    setSelectedPublicSlug(card.publicSlug);
-    setDetailsOpen(true);
-  }, []);
+  const handleOpenDetails = useCallback(
+    (card: ProfileCardResponse) => {
+      captureScroll();
+      setSelectedPublicSlug(card.publicSlug);
+      setDetailsOpen(true);
+    },
+    [captureScroll]
+  );
 
   const handleCloseDetails = useCallback(() => {
     setDetailsOpen(false);

@@ -11,6 +11,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { SectionTitle } from '../../../../shared/components/Section';
+import { usePreservedScroll } from '../../../../shared/hooks/usePreservedScroll';
 import { PublicProfileDetailsView } from '../../../public-profile/pages';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
 import { useEmployerCastingDetailsBySlug } from '../../employer-castings/hooks/useEmployerCastingDetailsBySlug';
@@ -49,6 +50,7 @@ const EmployerCastingApplicantsPage = () => {
   const groupedPerRoleSize = 5;
   const [selectedPublicSlug, setSelectedPublicSlug] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const { captureScroll } = usePreservedScroll(detailsOpen);
   const [viewMode, setViewMode] = useState<ApplicantsViewMode>('table');
   const [separateByRoles, setSeparateByRoles] = useState(false);
   const [groupedRolesState, setGroupedRolesState] = useState<EmployerCastingApplicantsRoleSliceResponse[]>([]);
@@ -167,10 +169,14 @@ const EmployerCastingApplicantsPage = () => {
     return `${t('employer_casting_applicants.page.title')} ${castingTitle}`.trimEnd();
   }, [castingDetails?.title, t]);
 
-  const handleOpenDetails = useCallback((talentPublicSlug: string) => {
-    setSelectedPublicSlug(talentPublicSlug);
-    setDetailsOpen(true);
-  }, []);
+  const handleOpenDetails = useCallback(
+    (talentPublicSlug: string) => {
+      captureScroll();
+      setSelectedPublicSlug(talentPublicSlug);
+      setDetailsOpen(true);
+    },
+    [captureScroll]
+  );
 
   const handleCloseDetails = useCallback(() => {
     setDetailsOpen(false);
