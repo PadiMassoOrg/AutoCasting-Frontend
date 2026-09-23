@@ -32,4 +32,5 @@ export type CastingRoleRequest = {
   tattoo?: boolean | null;
   passport?: boolean | null;
   drivingLicense?: boolean | null;
+  referencePhotoUrl?: string | null;
 };
