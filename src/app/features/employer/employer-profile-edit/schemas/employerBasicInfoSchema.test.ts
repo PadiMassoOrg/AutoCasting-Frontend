@@ -135,13 +135,15 @@ describe('getEmployerBasicInfoSchema', () => {
   });
 
   describe('websiteUrl', () => {
-    it('rejects a websiteUrl longer than 255 characters', () => {
+    // AI-49: backend widened website_url from varchar(255) to text (Supabase-style URLs with
+    // signed-URL query params routinely exceed 255 chars) — the frontend schema must not cap it either.
+    it('accepts a websiteUrl longer than 255 characters', () => {
       const result = getEmployerBasicInfoSchema(t).safeParse({
         ...validPayload,
         websiteUrl: `https://${'a'.repeat(250)}.com`,
       });
 
-      expect(result.success).toBe(false);
+      expect(result.success).toBe(true);
     });
 
     it('allows websiteUrl to be omitted', () => {
