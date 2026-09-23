@@ -192,23 +192,26 @@ export function CastingFilterBar({
           />
         </div>
 
-        <RangeCalendar
-          selectionMode="range"
-          label={t('employer_castings.dashboard.basic_info.shooting_dates')}
-          className="lg:max-w-none"
-          value={shootingDateRange}
-          onChange={setShootingDateRange}
-          onCommit={(from, to) => {
-            onChange({
-              ...value,
-              shootingDateFrom: from ? toLocalISO(from) : undefined,
-              shootingDateTo: to ? toLocalISO(to) : undefined,
-            });
-          }}
-          language={i18n.language}
-          displayMode="inline"
-          placeholder={t('general.placeholder.select')}
-        />
+        <div>
+          <RangeCalendar
+            selectionMode="range"
+            label={t('employer_castings.dashboard.basic_info.shooting_dates')}
+            className="lg:max-w-none"
+            value={shootingDateRange}
+            onChange={setShootingDateRange}
+            onCommit={(from, to) => {
+              onChange({
+                ...value,
+                shootingDateFrom: from ? toLocalISO(from) : undefined,
+                shootingDateTo: to ? toLocalISO(to) : undefined,
+              });
+            }}
+            language={i18n.language}
+            displayMode="inline"
+            placeholder={t('general.placeholder.select')}
+          />
+          <div className="min-h-[25px]" />
+        </div>
       </FilterSection>
 
       <Separator className="opacity-20" />
