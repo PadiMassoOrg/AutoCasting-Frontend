@@ -26,4 +26,6 @@ export type CastingFiltersQS = BasePersonSearchFiltersQS & {
   projectTypeIds?: string[];
   castingModalityIds?: string[];
   locationText?: string;
+  shootingDateFrom?: string;
+  shootingDateTo?: string;
 };

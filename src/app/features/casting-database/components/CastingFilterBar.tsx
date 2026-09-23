@@ -5,10 +5,14 @@ import {
   FormSelectField,
   LG_SCREEN_SIZE,
   MultiSelectDropdown,
+  parseLocalISODate,
+  RangeCalendar,
   Separator,
+  toLocalISO,
   useMedia,
 } from 'autocasting-ui-library-padimasso';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import type { DateRange } from 'react-day-picker';
 import { useTranslation } from 'react-i18next';
 import { useCommittedInt } from '../../../shared/utils/formUtils';
 import {
@@ -31,7 +35,7 @@ export function CastingFilterBar({
   onClose?: () => void;
   forwardScrollToRef?: React.RefObject<HTMLElement | null>;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const genderOptionsRaw = useCachedSiteMetadataSlice('genderOptions');
   const ethnicityOptions = useCachedSiteMetadataOption('ethnicityOptions', t);
@@ -95,6 +99,14 @@ export function CastingFilterBar({
     () => getCastingFilterCounts(value, skillsRaw),
     [skillsRaw, value]
   );
+
+  const [shootingDateRange, setShootingDateRange] = useState<DateRange | undefined>(undefined);
+
+  useEffect(() => {
+    const from = parseLocalISODate(value.shootingDateFrom);
+    const to = parseLocalISODate(value.shootingDateTo);
+    setShootingDateRange(!from && !to ? undefined : { from: from ?? to, to: to ?? from });
+  }, [value.shootingDateFrom, value.shootingDateTo]);
 
   const skillsCount = useMemo(() => {
     const selected = value.skillId ?? [];
@@ -179,6 +191,24 @@ export function CastingFilterBar({
             forwardScrollToRef={forwardScrollToRef}
           />
         </div>
+
+        <RangeCalendar
+          selectionMode="range"
+          label={t('employer_castings.dashboard.basic_info.shooting_dates')}
+          className="lg:max-w-none"
+          value={shootingDateRange}
+          onChange={setShootingDateRange}
+          onCommit={(from, to) => {
+            onChange({
+              ...value,
+              shootingDateFrom: from ? toLocalISO(from) : undefined,
+              shootingDateTo: to ? toLocalISO(to) : undefined,
+            });
+          }}
+          language={i18n.language}
+          displayMode="inline"
+          placeholder={t('general.placeholder.select')}
+        />
       </FilterSection>
 
       <Separator className="opacity-20" />

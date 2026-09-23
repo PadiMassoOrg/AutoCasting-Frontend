@@ -47,7 +47,8 @@ export function getCastingFilterCounts(
     (hasAny(value.professionId) ? 1 : 0) +
     (hasAny(value.projectTypeIds) ? 1 : 0) +
     (hasAny(value.castingModalityIds) ? 1 : 0) +
-    (hasText(value.locationText) ? 1 : 0);
+    (hasText(value.locationText) ? 1 : 0) +
+    (hasText(value.shootingDateFrom) || hasText(value.shootingDateTo) ? 1 : 0);
 
   const characteristicsCount =
     (hasRange(value.heightMinCm, value.heightMaxCm) ? 1 : 0) +

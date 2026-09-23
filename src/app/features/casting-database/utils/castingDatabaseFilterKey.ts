@@ -17,6 +17,8 @@ export function normalizeCastingDatabaseFilters(filters: CastingFiltersQS): Cast
     ...filters,
     roleName: (filters.roleName ?? '').trim(),
     locationText: filters.locationText?.trim() || undefined,
+    shootingDateFrom: filters.shootingDateFrom?.trim() || undefined,
+    shootingDateTo: filters.shootingDateTo?.trim() || undefined,
 
     genderIds: cleanArray(filters.genderIds) as any,
     ethnicityIds: cleanArray(filters.ethnicityIds) as any,
