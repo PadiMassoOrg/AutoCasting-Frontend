@@ -92,6 +92,7 @@ export const getCastingRoleSchema = (t: TFunction, payRateTypeOptions?: SiteMeta
     const amountRequired =
       selectedPayRateTypeCode != null &&
       !selectedPayRateTypeCode.endsWith('.unpaid') &&
+      !selectedPayRateTypeCode.endsWith('.to_be_agreed') &&
       !selectedPayRateTypeCode.endsWith('.collaborative') &&
       !selectedPayRateTypeCode.endsWith('.cooperative');
 

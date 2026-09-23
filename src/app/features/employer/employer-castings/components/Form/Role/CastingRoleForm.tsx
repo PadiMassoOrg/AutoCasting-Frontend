@@ -32,8 +32,7 @@ import {
   GENDER_INDISTINCT,
   getRoleRemunerationVisiblePayRateTypeOptions,
   getSiteMetadataIdByStringCode,
-  getSiteMetadataStringCodeById,
-  isUnpaidPayRateType,
+  isUnpaidLikePayRateType,
   PAY_RATE_TYPE_UNPAID,
 } from '../../../../../sitemetadata/utils/siteMetadataUtils';
 import GroupedSkills from '../../../../../talent/talent-profile-edit/components/Form/Skills/GroupedSkills';
@@ -225,11 +224,7 @@ const CastingRoleForm = ({
     () => getSiteMetadataIdByStringCode(genderOptionsRaw, GENDER_INDISTINCT),
     [genderOptionsRaw]
   );
-  const selectedPayRateTypeCode = useMemo(
-    () => getSiteMetadataStringCodeById(payRateTypeOptionsRaw, formValues?.payRateTypeId),
-    [formValues?.payRateTypeId, payRateTypeOptionsRaw]
-  );
-  const isUnpaidPayRate = selectedPayRateTypeCode === PAY_RATE_TYPE_UNPAID;
+  const isUnpaidPayRate = isUnpaidLikePayRateType(formValues?.payRateTypeId, payRateTypeOptionsRaw);
 
   useEffect(() => {
     const patch = getRoleFormDefaultsPatch({
@@ -276,7 +271,7 @@ const CastingRoleForm = ({
   };
 
   const handlePayRateTypeChange = (next: string | null) => {
-    if (isUnpaidPayRateType(next, payRateTypeOptionsRaw)) {
+    if (isUnpaidLikePayRateType(next, payRateTypeOptionsRaw)) {
       setValue('payRateTypeId', next as never, {
         shouldDirty: true,
         shouldValidate: true,

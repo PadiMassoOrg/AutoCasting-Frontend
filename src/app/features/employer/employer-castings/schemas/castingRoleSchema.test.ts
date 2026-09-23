@@ -9,12 +9,14 @@ const UNPAID_ID = '11111111-1111-4111-8111-111111111111';
 const COLLABORATIVE_ID = '22222222-2222-4222-8222-222222222222';
 const COOPERATIVE_ID = '33333333-3333-4333-8333-333333333333';
 const FIXED_PAID_ID = '44444444-4444-4444-8444-444444444444';
+const TO_BE_AGREED_ID = '99999999-9999-4999-8999-999999999999';
 
 const payRateTypeOptions: SiteMetadataObject[] = [
   { id: UNPAID_ID, stringCode: 'sitemetadata.pay_rate_type.unpaid' },
   { id: COLLABORATIVE_ID, stringCode: 'sitemetadata.pay_rate_type.collaborative' },
   { id: COOPERATIVE_ID, stringCode: 'sitemetadata.pay_rate_type.cooperative' },
   { id: FIXED_PAID_ID, stringCode: 'sitemetadata.pay_rate_type.fixed' },
+  { id: TO_BE_AGREED_ID, stringCode: 'sitemetadata.pay_rate_type.to_be_agreed' },
 ];
 
 const validPayload = {
@@ -149,6 +151,17 @@ describe('getCastingRoleSchema', () => {
       const result = getCastingRoleSchema(t, payRateTypeOptions).safeParse({
         ...validPayload,
         payRateTypeId: COOPERATIVE_ID,
+        amount: '',
+        currencyId: undefined,
+      });
+
+      expect(result.success).toBe(true);
+    });
+
+    it('does not require amount for a "to be agreed" pay-rate type', () => {
+      const result = getCastingRoleSchema(t, payRateTypeOptions).safeParse({
+        ...validPayload,
+        payRateTypeId: TO_BE_AGREED_ID,
         amount: '',
         currencyId: undefined,
       });

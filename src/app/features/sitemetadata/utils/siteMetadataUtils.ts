@@ -36,6 +36,7 @@ export const GENDER_INDISTINCT = 'sitemetadata.gender.indistinct' as const;
 // Pay Rate Type
 export const PAY_RATE_TYPE_COLLABORATIVE = 'sitemetadata.pay_rate_type.collaborative' as const;
 export const PAY_RATE_TYPE_UNPAID = 'sitemetadata.pay_rate_type.unpaid' as const;
+export const PAY_RATE_TYPE_TO_BE_AGREED = 'sitemetadata.pay_rate_type.to_be_agreed' as const;
 
 // Currency
 export const CURRENCY_ARS = 'sitemetadata.currency.ars' as const;
@@ -190,6 +191,16 @@ export const isUnpaidPayRateType = (
   payRateTypeOptions: SiteMetadataObject[] | null | undefined
 ): boolean => {
   return getSiteMetadataStringCodeById(payRateTypeOptions, payRateTypeId) === PAY_RATE_TYPE_UNPAID;
+};
+
+// "Unpaid-like" also covers "to be agreed" ("A convenir"): neither has a fixed
+// amount, so both disable the currency/amount inputs in the role editor.
+export const isUnpaidLikePayRateType = (
+  payRateTypeId: string | null | undefined,
+  payRateTypeOptions: SiteMetadataObject[] | null | undefined
+): boolean => {
+  const stringCode = getSiteMetadataStringCodeById(payRateTypeOptions, payRateTypeId);
+  return stringCode === PAY_RATE_TYPE_UNPAID || stringCode === PAY_RATE_TYPE_TO_BE_AGREED;
 };
 
 // ==========================================================
