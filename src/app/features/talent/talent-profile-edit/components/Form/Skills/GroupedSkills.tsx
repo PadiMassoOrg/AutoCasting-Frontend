@@ -46,9 +46,11 @@ function GroupedSkills({ skills, onRemove }: { skills: SiteMetadataObject[]; onR
 
   return (
     <div className="flex flex-col">
-      {categories.map((cat) => {
+      {categories.map((cat, index) => {
         const list = groups[cat];
         if (!list?.length) return null;
+
+        const isLast = index === categories.length - 1;
 
         return (
           <div key={cat}>
@@ -61,7 +63,7 @@ function GroupedSkills({ skills, onRemove }: { skills: SiteMetadataObject[]; onR
                 ))}
               </div>
             </article>
-            <Separator className="opacity-20 my-4.5" />
+            {!isLast ? <Separator className="opacity-20 my-4.5" /> : null}
           </div>
         );
       })}

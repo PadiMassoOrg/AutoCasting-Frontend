@@ -603,9 +603,9 @@ const CastingRoleForm = ({
 
       <Separator className="opacity-20 mt-2 mb-8" />
 
-      <section className="w-full flex flex-row items-center gap-8">
+      <section className="w-full flex flex-col lg:flex-row lg:items-center gap-8">
         <article className="w-full flex flex-col gap-2">
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 lg:gap-4">
             <Label className="text-base font-semibold">{t('profile.skills.skills')}</Label>
             <Button type="button" variant="primaryOutline" className="!w-auto" onClick={openSkillsModal}>
               <span className="flex flex-row gap-2">
@@ -614,7 +614,7 @@ const CastingRoleForm = ({
             </Button>
           </div>
 
-          <div className="min-h-[300px] rounded-2xl border border-(--color-secondary-outline) p-4">
+          <div className="h-100 lg:h-75 overflow-y-auto rounded-2xl border border-(--color-secondary-outline) p-4">
             <GroupedSkills
               skills={selectedSkills}
               onRemove={(skillId) => {
