@@ -46,13 +46,38 @@ describe('getCastingBasicInfoSchema', () => {
       }
     });
 
-    it('leaves a non-shouting title unchanged', () => {
-      const result = getCastingBasicInfoSchema(t).safeParse({ ...validPayload, title: 'Lead role casting' });
+    // Title Case is applied unconditionally (not just when shouting), so every word's first
+    // letter is capitalized regardless of how the title was originally typed.
+    it('title-cases a lowercase title', () => {
+      const result = getCastingBasicInfoSchema(t).safeParse({ ...validPayload, title: 'lead role casting' });
 
       expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.title).toBe('Lead role casting');
+        expect(result.data.title).toBe('Lead Role Casting');
       }
+    });
+
+    it('title-cases a mixed-case title', () => {
+      const result = getCastingBasicInfoSchema(t).safeParse({ ...validPayload, title: 'lead ROLE casting' });
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.title).toBe('Lead Role Casting');
+      }
+    });
+
+    // AI-47: title used to be restricted to a fixed character set (shared NAME_RX-style regex),
+    // which rejected legitimate titles like "Serie: Temporada 2". Title is now free text.
+    it('accepts a title containing a colon', () => {
+      const result = getCastingBasicInfoSchema(t).safeParse({ ...validPayload, title: 'Serie: Temporada 2' });
+
+      expect(result.success).toBe(true);
+    });
+
+    it('accepts a title with any character, e.g. "@"', () => {
+      const result = getCastingBasicInfoSchema(t).safeParse({ ...validPayload, title: 'Casting @ Studio' });
+
+      expect(result.success).toBe(true);
     });
   });
 

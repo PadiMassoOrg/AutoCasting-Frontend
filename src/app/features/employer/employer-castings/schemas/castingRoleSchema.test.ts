@@ -211,5 +211,53 @@ describe('getCastingRoleSchema', () => {
         expect(result.data.roleName).toBe('Lead Role');
       }
     });
+
+    // Title Case is applied unconditionally (not just when shouting), so every word's first
+    // letter is capitalized regardless of how the roleName was originally typed.
+    it('title-cases a lowercase roleName', () => {
+      const result = getCastingRoleSchema(t, payRateTypeOptions).safeParse({
+        ...validPayload,
+        roleName: 'lead role',
+      });
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.roleName).toBe('Lead Role');
+      }
+    });
+
+    it('title-cases a mixed-case roleName', () => {
+      const result = getCastingRoleSchema(t, payRateTypeOptions).safeParse({
+        ...validPayload,
+        roleName: 'lead ROLE',
+      });
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.roleName).toBe('Lead Role');
+      }
+    });
+  });
+
+  describe('roleName free text', () => {
+    // AI-47: roleName used to be restricted to a fixed character set (shared NAME_RX-style
+    // regex). Widened to free text, matching the casting title fix.
+    it('accepts a roleName containing a colon', () => {
+      const result = getCastingRoleSchema(t, payRateTypeOptions).safeParse({
+        ...validPayload,
+        roleName: 'Extra: Escena 2',
+      });
+
+      expect(result.success).toBe(true);
+    });
+
+    it('accepts a roleName with any character, e.g. "@"', () => {
+      const result = getCastingRoleSchema(t, payRateTypeOptions).safeParse({
+        ...validPayload,
+        roleName: 'Role @ Studio',
+      });
+
+      expect(result.success).toBe(true);
+    });
   });
 });
