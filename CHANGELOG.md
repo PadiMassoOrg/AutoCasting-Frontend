@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-09-24
+
+- Versión: `1.3.3`
+- Fix: Add Photo Zoom to details view.
+
 ## 2026-09-23
 
 - Versión: `1.3.2`

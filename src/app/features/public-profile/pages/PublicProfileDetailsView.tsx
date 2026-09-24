@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import { ServerErrorPage } from '../../../shared/components/ErrorPage';
 import VideoSection from '../../public-profile/components/VideoSection';
 import { ProfileShareActions, SocialMediaSection } from '../components';
-import { usePublicProfile } from '../hooks/usePublicProfile';
 import { SkillsPanel } from '../components/Details';
+import { usePublicProfile } from '../hooks/usePublicProfile';
 
 type Props = {
   open: boolean;
@@ -71,7 +71,7 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
           {profile && <ProfileShareActions data={profile} />}
           {socialMedia && <SocialMediaSection data={socialMedia} />}
         </div>
-        <ImageCarousel images={images.length > 0 ? images : null} isDesktop isDesktopXL />
+        <ImageCarousel images={images.length > 0 ? images : null} isDesktop isDesktopXL enablePhotoZoomOverlay />
 
         <SectionCard>
           <SkillsPanel skills={skills} />
