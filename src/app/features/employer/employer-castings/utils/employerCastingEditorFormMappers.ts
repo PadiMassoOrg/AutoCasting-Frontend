@@ -1,4 +1,4 @@
-import { capitalizeIfShouting, sentenceCaseIfShouting } from '../../../../shared/utils/formatUtils';
+import { capitalizeWords, sentenceCaseIfShouting } from '../../../../shared/utils/formatUtils';
 import type {
   CastingBasicInfoFormData,
   CastingRoleFormData,
@@ -29,6 +29,7 @@ export const createEmptyRoleDraft = (castingId: string | null): CastingRoleFormD
   tattoo: null,
   passport: null,
   drivingLicense: null,
+  referencePhotoUrl: null,
 });
 
 export const toBasicInfoFormData = (data: EmployerCastingEditorResponse): CastingBasicInfoFormData => ({
@@ -66,6 +67,7 @@ export const toRoleFormData = (data: CastingRoleResponse): CastingRoleFormData =
   tattoo: data.tattoo ?? null,
   passport: data.passport ?? null,
   drivingLicense: data.drivingLicense ?? null,
+  referencePhotoUrl: data.referencePhotoUrl ?? null,
 });
 
 const toNullableString = (value: string) => {
@@ -85,7 +87,7 @@ const toNullableNumber = (value: string) => {
 };
 
 export const toCastingUpsertRequest = (draft: CastingBasicInfoFormData): CastingUpsertRequest => ({
-  title: capitalizeIfShouting(draft.title.trim()),
+  title: capitalizeWords(draft.title.trim()),
   projectTypeId: draft.projectTypeId ?? null,
   castingModalityId: draft.castingModalityId ?? null,
   locationText: toNullableSentenceCaseString(draft.locationText),
@@ -99,7 +101,7 @@ export const toCastingUpsertRequest = (draft: CastingBasicInfoFormData): Casting
 
 export const toCastingRoleRequest = (draft: CastingRoleFormData, castingId: string): CastingRoleRequest => ({
   castingId,
-  roleName: capitalizeIfShouting(draft.roleName.trim()),
+  roleName: capitalizeWords(draft.roleName.trim()),
   roleTypeId: draft.roleTypeId!,
   genderId: draft.genderId!,
   ageMin: Number(draft.ageMin),
@@ -118,4 +120,5 @@ export const toCastingRoleRequest = (draft: CastingRoleFormData, castingId: stri
   tattoo: draft.tattoo,
   passport: draft.passport,
   drivingLicense: draft.drivingLicense,
+  referencePhotoUrl: draft.referencePhotoUrl,
 });

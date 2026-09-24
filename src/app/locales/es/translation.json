@@ -1148,7 +1148,8 @@
         "role": {
           "role": "Rol",
           "role_name": "Nombre del Rol",
-          "talent_profession": "Profesión del talento"
+          "talent_profession": "Profesión del talento",
+          "reference_photo": "Foto de referencia"
         }
       },
       "requirements": {

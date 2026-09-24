@@ -43,6 +43,7 @@ export type PublicCastingRole = {
   requiresAudio: boolean;
   requiresVideo: boolean;
   requirementDescription: string | null;
+  referencePhotoUrl: string | null;
 };
 
 export type PublicCastingData = {

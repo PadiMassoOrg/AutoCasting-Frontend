@@ -7,7 +7,7 @@ import {
   Separator,
   type OverflowMenuItem,
 } from 'autocasting-ui-library-padimasso';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router-dom';
 import { useModal } from '../../../../context/ModalContext';
@@ -16,7 +16,7 @@ import { ROUTES } from '../../../../shared/lib/routes';
 import { stableStringify } from '../../../../shared/utils/stableStringify';
 import { isCastingEditable } from '../../../sitemetadata/utils/siteMetadataUtils';
 import CastingBasicInfoForm from '../components/Form/BasicInfo/CastingBasicInfoForm';
-import CastingRoleForm from '../components/Form/Role/CastingRoleForm';
+import CastingRoleForm, { type CommitReferencePhoto } from '../components/Form/Role/CastingRoleForm';
 import { CastingCheckoutModal } from '../components/Modal/';
 import { useCastingRoleById } from '../hooks/useCastingRoleById';
 import { useDeleteCastingRoleMutation } from '../hooks/useDeleteCastingRoleMutation';
@@ -79,6 +79,8 @@ const EmployerCastingPage = () => {
   const [roleDraft, setRoleDraft] = useState<CastingRoleFormData | null>(null);
   const [isRoleFormValid, setIsRoleFormValid] = useState(false);
   const [roleFormRenderKey, setRoleFormRenderKey] = useState(0);
+  const [isReferencePhotoDirty, setIsReferencePhotoDirty] = useState(false);
+  const commitPendingReferencePhotoRef = useRef<CommitReferencePhoto>(async () => null);
 
   const castingId = data?.id ?? null;
 
@@ -97,6 +99,8 @@ const EmployerCastingPage = () => {
     roleMutation.clearAllBackendErrors();
     setIsRoleFormValid(false);
     setRoleFormRenderKey((prev) => prev + 1);
+    commitPendingReferencePhotoRef.current = async () => null;
+    setIsReferencePhotoDirty(false);
   };
 
   const startNewRoleDraft = () => {
@@ -161,7 +165,10 @@ const EmployerCastingPage = () => {
   const isDirty = initialDraft ? stableStringify(draft) !== stableStringify(initialDraft) : false;
   const hasTitle = draft.title.trim().length > 0;
   const isRoleDirty =
-    !!roleDraft && !!currentRoleInitialDraft && stableStringify(roleDraft) !== stableStringify(currentRoleInitialDraft);
+    (!!roleDraft &&
+      !!currentRoleInitialDraft &&
+      stableStringify(roleDraft) !== stableStringify(currentRoleInitialDraft)) ||
+    isReferencePhotoDirty;
   const canSaveRole = Boolean(roleDraft && castingId && isRoleFormValid && isRoleDirty);
 
   const handleDeleteRole = async (roleId: string) => {
@@ -186,7 +193,17 @@ const EmployerCastingPage = () => {
 
   const handleRoleSave = async () => {
     if (!roleDraft || !castingId) return;
-    const savedRole = await roleMutation.submit(toCastingRoleRequest(roleDraft, castingId), roleDraft.id ?? undefined);
+
+    // Reference photo is only ever committed to Supabase (uploaded, and any replaced/removed
+    // file actually deleted) right here, gated on the role save itself — never on file
+    // select or on the delete button alone. If the commit fails, the role save is aborted
+    // entirely rather than saving a role pointing at a missing photo.
+    const referencePhotoUrl = await commitPendingReferencePhotoRef.current();
+
+    const savedRole = await roleMutation.submit(
+      { ...toCastingRoleRequest(roleDraft, castingId), referencePhotoUrl },
+      roleDraft.id ?? undefined
+    );
     resetRoleEditor('new', createEmptyRoleDraft(savedRole.castingId));
   };
 
@@ -273,12 +290,17 @@ const EmployerCastingPage = () => {
           <CastingRoleForm
             key={`${selectedRoleId ?? 'none'}-${roleFormRenderKey}`}
             data={roleDraft}
+            employerProfileId={data.employerProfileId}
             backendErrors={roleMutation.fieldErrors}
             onChange={(patch) => {
               setRoleDraft((prev) => (prev ? { ...prev, ...patch } : prev));
             }}
             onClearBackendError={roleMutation.clearFieldError}
             onValidityChange={setIsRoleFormValid}
+            onPendingReferencePhotoDirtyChange={setIsReferencePhotoDirty}
+            onRegisterCommitReferencePhoto={(commit) => {
+              commitPendingReferencePhotoRef.current = commit;
+            }}
           />
         );
       },

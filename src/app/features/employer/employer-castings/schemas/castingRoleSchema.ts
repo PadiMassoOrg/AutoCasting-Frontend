@@ -1,8 +1,8 @@
 import type { TFunction } from 'i18next';
 import { z } from 'zod';
 import type { SiteMetadataObject } from '../../../sitemetadata/types/sitemetadata.types';
-import { capitalizeIfShouting, sentenceCaseIfShouting } from '../../../../shared/utils/formatUtils';
-import { NAME_RX, UUID_RX } from '../../../../shared/utils/schemaUtils';
+import { capitalizeWords, sentenceCaseIfShouting } from '../../../../shared/utils/formatUtils';
+import { UUID_RX } from '../../../../shared/utils/schemaUtils';
 
 const requiredUuid = (t: TFunction) =>
   z.preprocess(
@@ -54,8 +54,7 @@ const getCastingRoleSchemaObject = (t: TFunction) =>
       .trim()
       .min(1, { message: t('validation.required') })
       .max(255, { message: t('validation.max_char') })
-      .regex(NAME_RX, { message: t('validation.invalid') })
-      .transform(capitalizeIfShouting),
+      .transform(capitalizeWords),
     roleTypeId: requiredUuid(t),
     genderId: requiredUuid(t),
     ageMin: requiredShortIntText(t),
@@ -93,6 +92,7 @@ export const getCastingRoleSchema = (t: TFunction, payRateTypeOptions?: SiteMeta
     const amountRequired =
       selectedPayRateTypeCode != null &&
       !selectedPayRateTypeCode.endsWith('.unpaid') &&
+      !selectedPayRateTypeCode.endsWith('.to_be_agreed') &&
       !selectedPayRateTypeCode.endsWith('.collaborative') &&
       !selectedPayRateTypeCode.endsWith('.cooperative');
 

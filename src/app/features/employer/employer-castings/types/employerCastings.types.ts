@@ -57,6 +57,7 @@ export type CastingRoleResponse = {
   requiresAudio: boolean;
   requiresVideo: boolean;
   requirementDescription: string | null;
+  referencePhotoUrl: string | null;
   modifiedAt: string | null;
 };
 
@@ -82,6 +83,7 @@ export type CastingResponse = {
 
 export type EmployerCastingEditorResponse = {
   id: string;
+  employerProfileId: string;
   defaultCode: string;
   castingStatus: SiteMetadataObject | null;
   title: string | null;
@@ -168,6 +170,7 @@ export type CastingRoleFormData = {
   tattoo: boolean | null;
   passport: boolean | null;
   drivingLicense: boolean | null;
+  referencePhotoUrl: string | null;
 };
 
 export type CastingRoleFieldKey =

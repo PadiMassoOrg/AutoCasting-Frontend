@@ -11,13 +11,17 @@ import {
   MultiSelectDropdown,
   Separator,
   TextareaField,
+  UploadTile,
   useMedia,
   XL_SCREEN_SIZE,
 } from 'autocasting-ui-library-padimasso';
-import { useEffect, useMemo, type ChangeEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import { useForm, useWatch, type Path } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useModal } from '../../../../../../context/ModalContext';
+import { useCastingRolePhotoUpload } from '../../../../../../integrations/supabase/media/hooks/useCastingRolePhotoUpload';
+import { removeByPublicUrl } from '../../../../../../integrations/supabase/media/lib/profile-media';
+import { getBackendErrorMessage } from '../../../../../../shared/utils/backendErrorHandling';
 import {
   useCachedSiteMetadataOption,
   useCachedSiteMetadataSlice,
@@ -28,8 +32,7 @@ import {
   GENDER_INDISTINCT,
   getRoleRemunerationVisiblePayRateTypeOptions,
   getSiteMetadataIdByStringCode,
-  getSiteMetadataStringCodeById,
-  isUnpaidPayRateType,
+  isUnpaidLikePayRateType,
   PAY_RATE_TYPE_UNPAID,
 } from '../../../../../sitemetadata/utils/siteMetadataUtils';
 import GroupedSkills from '../../../../../talent/talent-profile-edit/components/Form/Skills/GroupedSkills';
@@ -37,18 +40,125 @@ import { NewSkillModal } from '../../../../../talent/talent-profile-edit/compone
 import { getCastingRoleSchema } from '../../../schemas/castingRoleSchema';
 import type { CastingRoleFieldKey, CastingRoleFormData } from '../../../types/employerCastings.types';
 
+/**
+ * Uploads a pending reference-photo selection (if any) and/or deletes an old one that was
+ * replaced/removed, returning the URL that should be persisted on the role (null if there is
+ * none). Registered with the parent so it can be awaited right before the role save request is
+ * built — see CastingRoleForm's commitPendingReferencePhoto and EmployerCastingPage's
+ * handleRoleSave.
+ */
+export type CommitReferencePhoto = () => Promise<string | null>;
+
 type Props = {
   data: CastingRoleFormData;
+  employerProfileId: string;
   backendErrors?: Partial<Record<CastingRoleFieldKey, string>>;
   onChange: (patch: Partial<CastingRoleFormData>) => void;
   onClearBackendError?: (field: CastingRoleFieldKey) => void;
   onValidityChange?: (isValid: boolean) => void;
+  onRegisterCommitReferencePhoto?: (commit: CommitReferencePhoto) => void;
+  onPendingReferencePhotoDirtyChange?: (isDirty: boolean) => void;
 };
 
-const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, onValidityChange }: Props) => {
+const CastingRoleForm = ({
+  data,
+  employerProfileId,
+  backendErrors,
+  onChange,
+  onClearBackendError,
+  onValidityChange,
+  onRegisterCommitReferencePhoto,
+  onPendingReferencePhotoDirtyChange,
+}: Props) => {
   const { t } = useTranslation();
   const { openModal, closeModal } = useModal();
   const isXLSize = useMedia(XL_SCREEN_SIZE);
+  const { mutateAsync: uploadReferencePhoto, isPending: referencePhotoUploadPending } = useCastingRolePhotoUpload(
+    employerProfileId,
+    data.castingId ?? ''
+  );
+  const [referencePhotoPreviewUrl, setReferencePhotoPreviewUrl] = useState<string | null>(null);
+  const [referencePhotoError, setReferencePhotoError] = useState<string | null>(null);
+  // Reference photo is never uploaded/deleted on selection — only committed (uploaded and/or
+  // the previous file removed) once the role is actually saved, so an abandoned draft never
+  // leaves an orphaned file in Supabase. See commitPendingReferencePhoto below. Because the
+  // pending change lives here (not in the roleDraft the parent diffs against its initial
+  // snapshot), it's reported separately via onPendingReferencePhotoDirtyChange so the parent's
+  // save button reacts to it too.
+  const pendingFileRef = useRef<File | null>(null);
+  const pendingRemovalRef = useRef(false);
+  const persistedUrlRef = useRef<string | null>(data.referencePhotoUrl ?? null);
+  const [isReferencePhotoDirty, setIsReferencePhotoDirty] = useState(false);
+
+  // Resets all pending-photo state on a real role switch (data.id change) — the form remounts
+  // for this anyway (parent uses a role-keyed `key`), but keeping this explicit avoids relying
+  // on remount timing alone.
+  useEffect(() => {
+    pendingFileRef.current = null;
+    pendingRemovalRef.current = false;
+    persistedUrlRef.current = data.referencePhotoUrl ?? null;
+    setIsReferencePhotoDirty(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.id]);
+
+  // Re-syncs persistedUrlRef when the same role's data prop refreshes without a role switch
+  // (e.g. useCastingRoleById's background refetch on mount resolving after the initial
+  // render) — but only while nothing is pending, so a refetch resolving mid-interaction never
+  // silently clobbers an in-progress pick/delete and re-disables the save button.
+  useEffect(() => {
+    const hasPendingChange = pendingFileRef.current != null || pendingRemovalRef.current;
+    if (hasPendingChange) return;
+    persistedUrlRef.current = data.referencePhotoUrl ?? null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.referencePhotoUrl]);
+
+  useEffect(() => {
+    onPendingReferencePhotoDirtyChange?.(isReferencePhotoDirty);
+  }, [isReferencePhotoDirty, onPendingReferencePhotoDirtyChange]);
+
+  const commitPendingReferencePhoto: CommitReferencePhoto = async () => {
+    const file = pendingFileRef.current;
+    const removed = pendingRemovalRef.current;
+    const previousUrl = persistedUrlRef.current;
+
+    if (!file && !removed) return previousUrl;
+
+    setReferencePhotoError(null);
+
+    if (file) {
+      let publicUrl: string;
+      try {
+        publicUrl = await uploadReferencePhoto({ file });
+      } catch (err: unknown) {
+        setReferencePhotoError(getBackendErrorMessage(err, t));
+        throw err;
+      }
+      if (previousUrl) {
+        await removeByPublicUrl(previousUrl).catch((e) => {
+          console.error('Error removing previous casting role reference photo', e);
+        });
+      }
+      pendingFileRef.current = null;
+      pendingRemovalRef.current = false;
+      persistedUrlRef.current = publicUrl;
+      setIsReferencePhotoDirty(false);
+      return publicUrl;
+    }
+
+    if (previousUrl) {
+      await removeByPublicUrl(previousUrl).catch((e) => {
+        console.error('Error removing casting role reference photo', e);
+      });
+    }
+    pendingRemovalRef.current = false;
+    persistedUrlRef.current = null;
+    setIsReferencePhotoDirty(false);
+    return null;
+  };
+
+  useEffect(() => {
+    onRegisterCommitReferencePhoto?.(commitPendingReferencePhoto);
+  });
 
   const roleTypeOptions = useCachedSiteMetadataOption('roleTypeOptions', t);
   const genderOptions = useCachedSiteMetadataOption('genderOptions', t);
@@ -73,6 +183,7 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
     control,
     reset,
     setValue,
+    trigger,
     formState: { errors, isValid },
   } = useForm<CastingRoleFormData>({
     resolver: zodResolver(schema) as never,
@@ -83,7 +194,15 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
 
   useEffect(() => {
     reset(data);
-  }, [data.id, reset]);
+    // react-hook-form doesn't compute formState.isValid until the first validation run (a
+    // field change/blur, or this explicit trigger). For an existing, already-saved role that
+    // is presumably still valid, that leaves isValid: false until some field is touched —
+    // which blocks saving a role where only the reference photo changed, since that field
+    // isn't managed by react-hook-form at all. Only do this for an existing role (data.id set)
+    // — a brand-new draft is empty by definition and must not be eagerly validated/show errors
+    // before the user has touched anything.
+    if (data.id) void trigger();
+  }, [data.id, reset, trigger]);
 
   useEffect(() => {
     onValidityChange?.(isValid);
@@ -105,11 +224,7 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
     () => getSiteMetadataIdByStringCode(genderOptionsRaw, GENDER_INDISTINCT),
     [genderOptionsRaw]
   );
-  const selectedPayRateTypeCode = useMemo(
-    () => getSiteMetadataStringCodeById(payRateTypeOptionsRaw, formValues?.payRateTypeId),
-    [formValues?.payRateTypeId, payRateTypeOptionsRaw]
-  );
-  const isUnpaidPayRate = selectedPayRateTypeCode === PAY_RATE_TYPE_UNPAID;
+  const isUnpaidPayRate = isUnpaidLikePayRateType(formValues?.payRateTypeId, payRateTypeOptionsRaw);
 
   useEffect(() => {
     const patch = getRoleFormDefaultsPatch({
@@ -156,7 +271,7 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
   };
 
   const handlePayRateTypeChange = (next: string | null) => {
-    if (isUnpaidPayRateType(next, payRateTypeOptionsRaw)) {
+    if (isUnpaidLikePayRateType(next, payRateTypeOptionsRaw)) {
       setValue('payRateTypeId', next as never, {
         shouldDirty: true,
         shouldValidate: true,
@@ -191,6 +306,37 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
     });
     onChange({ [field]: value } as Partial<CastingRoleFormData>);
     if (clearBackendField) clearBackend(clearBackendField);
+  };
+
+  // Reference photo is uploaded to Supabase only when the role is actually saved (see
+  // commitPendingReferencePhoto, called by the parent from handleRoleSave) — not on file
+  // select. Picking a photo on a brand-new role draft that never gets saved must never leave
+  // an orphaned file in Supabase, so selection only stores the raw File locally and shows a
+  // client-side preview until save time.
+  const handleSelectReferencePhoto = async (files: File[] | File) => {
+    const file = Array.isArray(files) ? files[0] : files;
+    if (!file) return;
+
+    setReferencePhotoError(null);
+    const localUrl = await fileToDataUrl(file);
+    setReferencePhotoPreviewUrl(localUrl);
+    pendingFileRef.current = file;
+    pendingRemovalRef.current = false;
+    // Always a real change from baseline — a newly picked file is never equal to whatever
+    // was (or wasn't) persisted.
+    setIsReferencePhotoDirty(true);
+  };
+
+  const handleDeleteReferencePhoto = () => {
+    setReferencePhotoPreviewUrl(null);
+    setReferencePhotoError(null);
+    updateField('referencePhotoUrl', null);
+    pendingFileRef.current = null;
+    pendingRemovalRef.current = true;
+    // Only a real change if there was actually a persisted photo to remove — e.g. pick a
+    // photo then delete it before saving nets back to the original (no-photo) baseline, and
+    // the save button must not think anything changed.
+    setIsReferencePhotoDirty(persistedUrlRef.current != null);
   };
 
   const openSkillsModal = () => {
@@ -452,31 +598,65 @@ const CastingRoleForm = ({ data, backendErrors, onChange, onClearBackendError, o
 
       <Separator className="opacity-20 mt-2 mb-8" />
 
-      <article className="flex flex-col gap-2">
-        <div className="flex items-center justify-between gap-4">
-          <Label className="text-base font-semibold">{t('profile.skills.skills')}</Label>
-          <Button type="button" variant="primaryOutline" className="!w-auto" onClick={openSkillsModal}>
-            <span className="flex flex-row gap-2">
-              <Icon name="plus" size={16} variant="primary" /> {t('profile.skills.add_new_placeholder')}
-            </span>
-          </Button>
-        </div>
+      <section className="w-full flex flex-col lg:flex-row lg:items-center gap-8">
+        <article className="w-full flex flex-col gap-2">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 lg:gap-4">
+            <Label className="text-base font-semibold">{t('profile.skills.skills')}</Label>
+            <Button type="button" variant="primaryOutline" className="!w-auto" onClick={openSkillsModal}>
+              <span className="flex flex-row gap-2">
+                <Icon name="plus" size={16} variant="primary" /> {t('profile.skills.add_new_placeholder')}
+              </span>
+            </Button>
+          </div>
 
-        <div className="min-h-[300px] rounded-2xl border border-(--color-secondary-outline) p-4">
-          <GroupedSkills
-            skills={selectedSkills}
-            onRemove={(skillId) => {
-              updateField(
-                'skillIds',
-                (formValues?.skillIds ?? []).filter((currentId) => currentId !== skillId)
-              );
-            }}
-          />
-        </div>
-      </article>
+          <div className="h-100 lg:h-75 overflow-y-auto rounded-2xl border border-(--color-secondary-outline) p-4">
+            <GroupedSkills
+              skills={selectedSkills}
+              onRemove={(skillId) => {
+                updateField(
+                  'skillIds',
+                  (formValues?.skillIds ?? []).filter((currentId) => currentId !== skillId)
+                );
+              }}
+            />
+          </div>
+        </article>
+
+        <article className="flex flex-col gap-2">
+          <Label className="text-base font-semibold">
+            {t('employer_castings.dashboard.roles.role.reference_photo')}
+          </Label>
+          <div className="min-w-[240px] max-w-[240px] aspect-[3/4]">
+            <UploadTile
+              value={formValues?.referencePhotoUrl ?? undefined}
+              previewUrl={referencePhotoPreviewUrl}
+              onSelect={handleSelectReferencePhoto}
+              onDeleteClick={handleDeleteReferencePhoto}
+              disabled={referencePhotoUploadPending}
+              busy={referencePhotoUploadPending}
+              busyText={t('state.loading')}
+              accept="image/*,.heic,.heif"
+              maxSizeMB={8}
+              objectFit="cover"
+              multiple={false}
+              openOnClick={!referencePhotoUploadPending}
+              className="w-full h-full"
+            />
+          </div>
+          {referencePhotoError ? <span className="text-sm text-red-600">{referencePhotoError}</span> : null}
+        </article>
+      </section>
     </article>
   );
 };
+
+const fileToDataUrl = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 
 const getRoleFormDefaultsPatch = ({
   payRateTypeId,

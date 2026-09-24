@@ -9,12 +9,14 @@ const UNPAID_ID = '11111111-1111-4111-8111-111111111111';
 const COLLABORATIVE_ID = '22222222-2222-4222-8222-222222222222';
 const COOPERATIVE_ID = '33333333-3333-4333-8333-333333333333';
 const FIXED_PAID_ID = '44444444-4444-4444-8444-444444444444';
+const TO_BE_AGREED_ID = '99999999-9999-4999-8999-999999999999';
 
 const payRateTypeOptions: SiteMetadataObject[] = [
   { id: UNPAID_ID, stringCode: 'sitemetadata.pay_rate_type.unpaid' },
   { id: COLLABORATIVE_ID, stringCode: 'sitemetadata.pay_rate_type.collaborative' },
   { id: COOPERATIVE_ID, stringCode: 'sitemetadata.pay_rate_type.cooperative' },
   { id: FIXED_PAID_ID, stringCode: 'sitemetadata.pay_rate_type.fixed' },
+  { id: TO_BE_AGREED_ID, stringCode: 'sitemetadata.pay_rate_type.to_be_agreed' },
 ];
 
 const validPayload = {
@@ -156,6 +158,17 @@ describe('getCastingRoleSchema', () => {
       expect(result.success).toBe(true);
     });
 
+    it('does not require amount for a "to be agreed" pay-rate type', () => {
+      const result = getCastingRoleSchema(t, payRateTypeOptions).safeParse({
+        ...validPayload,
+        payRateTypeId: TO_BE_AGREED_ID,
+        amount: '',
+        currencyId: undefined,
+      });
+
+      expect(result.success).toBe(true);
+    });
+
     it('requires amount when the selected pay-rate type is unknown/not found in options', () => {
       const result = getCastingRoleSchema(t, payRateTypeOptions).safeParse({
         ...validPayload,
@@ -210,6 +223,54 @@ describe('getCastingRoleSchema', () => {
       if (result.success) {
         expect(result.data.roleName).toBe('Lead Role');
       }
+    });
+
+    // Title Case is applied unconditionally (not just when shouting), so every word's first
+    // letter is capitalized regardless of how the roleName was originally typed.
+    it('title-cases a lowercase roleName', () => {
+      const result = getCastingRoleSchema(t, payRateTypeOptions).safeParse({
+        ...validPayload,
+        roleName: 'lead role',
+      });
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.roleName).toBe('Lead Role');
+      }
+    });
+
+    it('title-cases a mixed-case roleName', () => {
+      const result = getCastingRoleSchema(t, payRateTypeOptions).safeParse({
+        ...validPayload,
+        roleName: 'lead ROLE',
+      });
+
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.roleName).toBe('Lead Role');
+      }
+    });
+  });
+
+  describe('roleName free text', () => {
+    // AI-47: roleName used to be restricted to a fixed character set (shared NAME_RX-style
+    // regex). Widened to free text, matching the casting title fix.
+    it('accepts a roleName containing a colon', () => {
+      const result = getCastingRoleSchema(t, payRateTypeOptions).safeParse({
+        ...validPayload,
+        roleName: 'Extra: Escena 2',
+      });
+
+      expect(result.success).toBe(true);
+    });
+
+    it('accepts a roleName with any character, e.g. "@"', () => {
+      const result = getCastingRoleSchema(t, payRateTypeOptions).safeParse({
+        ...validPayload,
+        roleName: 'Role @ Studio',
+      });
+
+      expect(result.success).toBe(true);
     });
   });
 });

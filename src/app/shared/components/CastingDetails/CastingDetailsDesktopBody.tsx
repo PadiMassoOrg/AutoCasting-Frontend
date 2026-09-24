@@ -1,4 +1,12 @@
-import { Icon, LG_SCREEN_SIZE, SectionCard, Separator, TagChip, useMedia } from 'autocasting-ui-library-padimasso';
+import {
+  Icon,
+  Label,
+  LG_SCREEN_SIZE,
+  SectionCard,
+  Separator,
+  TagChip,
+  useMedia,
+} from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type {
@@ -88,14 +96,32 @@ const CastingDetailsDesktopBody = ({ casting }: Props) => {
 
       <Separator className="opacity-20 my-6" />
 
-      <section className="flex flex-col gap-6">
-        {roleTags.length > 0 && (
-          <DetailTagSection title={t('casting-database.detail.role_basic_info')} tags={roleTags} />
+      <section className="flex flex-row items-start gap-6">
+        <div className="flex flex-1 flex-col gap-6">
+          {roleTags.length > 0 && (
+            <DetailTagSection title={t('casting-database.detail.role_basic_info')} tags={roleTags} />
+          )}
+          {characteristicTags.length > 0 && (
+            <DetailTagSection title={t('casting-database.detail.role_characteristics')} tags={characteristicTags} />
+          )}
+          {skillTags.length > 0 && (
+            <DetailTagSection title={t('casting-database.detail.role_skills')} tags={skillTags} />
+          )}
+        </div>
+        {role?.referencePhotoUrl && (
+          <article className="flex flex-col gap-2">
+            <Label className="text-base font-semibold">
+              {t('employer_castings.dashboard.roles.role.reference_photo')}
+            </Label>
+            <img
+              src={role.referencePhotoUrl}
+              alt={role.roleName}
+              loading="lazy"
+              decoding="async"
+              className="w-45 shrink-0 aspect-3/4 rounded-2xl object-cover"
+            />
+          </article>
         )}
-        {characteristicTags.length > 0 && (
-          <DetailTagSection title={t('casting-database.detail.role_characteristics')} tags={characteristicTags} />
-        )}
-        {skillTags.length > 0 && <DetailTagSection title={t('casting-database.detail.role_skills')} tags={skillTags} />}
       </section>
 
       <Separator className="opacity-20 my-6" />

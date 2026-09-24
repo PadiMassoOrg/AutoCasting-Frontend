@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-09-23
+
+- Versión: `1.3.2`
+- Feature: foto de referencia para roles de casting — selector con preview local en el formulario de rol (solo se sube/borra de Supabase al guardar el rol, nunca en la sola selección), mostrada en la página pública de detalle del casting junto a Habilidades.
+- Fix: el título del casting rechazaba `:` por validación de Zod aunque igual se guardaba correctamente en el backend — se removió la regex restrictiva del schema.
+- Feature: filtro de Casting Database por rango de fechas de rodaje (desde/hasta), mismo componente de calendario que en Información Básica del casting.
+- Fix: el panel de Habilidades del formulario de rol ahora tiene scroll interno y coincide en altura con la foto de referencia (antes tenía altura mínima libre).
+- Fix: el tipo de tarifa "A convenir" ahora deshabilita los inputs de moneda/monto y no exige un monto, igual que "No remunerado" — antes se comportaba como un rol pago.
+- Fix: se remueve el límite de 255 caracteres en el website URL del employer, ya sin motivo tras el ajuste de columna en el backend.
+- Tests: nueva suite de Vitest cubriendo el default de tipo de tarifa/moneda al abrir un rol (rol pago mantiene su moneda guardada, roles sin monto fijo completan ARS, borrador nuevo arranca en No remunerado + ARS).
+
 ## 2026-09-20
 
 - Versión: `1.3.1`

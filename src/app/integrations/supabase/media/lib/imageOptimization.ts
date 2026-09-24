@@ -9,7 +9,7 @@ type Preset = {
   qualityStep: number;
 };
 
-type ImageUploadKind = 'talent-photo' | 'employer-logo';
+type ImageUploadKind = 'talent-photo' | 'employer-logo' | 'casting-role-photo';
 
 const PRESETS: Record<ImageUploadKind, Preset> = {
   'talent-photo': {
@@ -20,6 +20,13 @@ const PRESETS: Record<ImageUploadKind, Preset> = {
     qualityStep: 0.06,
   },
   'employer-logo': {
+    maxSide: 1200,
+    targetBytes: 300 * KB,
+    initialQuality: 0.84,
+    minQuality: 0.62,
+    qualityStep: 0.06,
+  },
+  'casting-role-photo': {
     maxSide: 1200,
     targetBytes: 300 * KB,
     initialQuality: 0.84,

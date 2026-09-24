@@ -41,11 +41,7 @@ export function getEmployerBasicInfoSchema(t: TFunction) {
     .transform(sentenceCaseIfShouting)
     .optional();
 
-  const websiteUrl = z
-    .string()
-    .trim()
-    .max(255, { message: t('validation.max_char') })
-    .optional();
+  const websiteUrl = z.string().trim().optional();
 
   const about = z
     .string()

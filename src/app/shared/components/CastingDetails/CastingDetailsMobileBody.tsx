@@ -1,9 +1,10 @@
-import { Icon, Separator } from 'autocasting-ui-library-padimasso';
+import { Icon, Label, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { PublicCastingData } from '../../../features/public-casting/types/publicCasting.types';
 import { formatLocalDate } from '../../utils/formatUtils';
 import { CastingModalityTagChip, ProjectTypeTagChip } from '../Chip';
+import ExpandableText from '../ExpandableText/ExpandableText';
 import {
   buildCharacteristicTags,
   buildRoleTags,
@@ -12,7 +13,6 @@ import {
   CastingDetailsEmployerCard,
   DetailTagSection,
 } from './CastingDetailsDesktopBody';
-import ExpandableText from '../ExpandableText/ExpandableText';
 
 type Props = {
   casting: PublicCastingData;
@@ -100,6 +100,20 @@ const CastingDetailsMobileBody = ({ casting }: Props) => {
           <DetailTagSection title={t('casting-database.detail.role_characteristics')} tags={characteristicTags} />
         )}
         {skillTags.length > 0 && <DetailTagSection title={t('casting-database.detail.role_skills')} tags={skillTags} />}
+        {role?.referencePhotoUrl && (
+          <article className="flex flex-col gap-2">
+            <Label className="text-base font-semibold">
+              {t('employer_castings.dashboard.roles.role.reference_photo')}
+            </Label>
+            <img
+              src={role.referencePhotoUrl}
+              alt={role.roleName}
+              loading="lazy"
+              decoding="async"
+              className="w-45 h-70 aspect-3/4 rounded-2xl object-cover"
+            />
+          </article>
+        )}
       </section>
 
       <Separator className="opacity-20" />

@@ -76,6 +76,8 @@ function buildCastingQuery(page: number, size: number, filters?: CastingFiltersQ
   append('locationText', cleanedFilters.locationText);
   append('projectTypeId', cleanedFilters.projectTypeIds as any);
   append('castingModalityId', cleanedFilters.castingModalityIds as any);
+  append('shootingDateFrom', cleanedFilters.shootingDateFrom);
+  append('shootingDateTo', cleanedFilters.shootingDateTo);
 
   appendBasePersonFilters(append, cleanedFilters as BasePersonSearchFiltersQS);
 
