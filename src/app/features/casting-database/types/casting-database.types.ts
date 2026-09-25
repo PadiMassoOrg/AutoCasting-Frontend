@@ -10,7 +10,7 @@ export type CastingRolePublicCardResponse = {
   id: string;
   name: string;
   castingTitle: string;
-  employerImageUrl: string;
+  employerImageUrl: string | null;
   projectType: SiteMetadataObject;
   shootingStartDate: string;
   shootingEndDate: string;

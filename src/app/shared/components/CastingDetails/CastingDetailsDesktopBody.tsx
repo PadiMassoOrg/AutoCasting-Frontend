@@ -29,9 +29,10 @@ import ExpandableText from '../ExpandableText/ExpandableText';
 
 type Props = {
   casting: PublicCastingData;
+  hideEmployer?: boolean;
 };
 
-const CastingDetailsDesktopBody = ({ casting }: Props) => {
+const CastingDetailsDesktopBody = ({ casting, hideEmployer = false }: Props) => {
   const { t } = useTranslation();
   const {
     projectType,
@@ -128,7 +129,7 @@ const CastingDetailsDesktopBody = ({ casting }: Props) => {
 
       <section className="flex flex-col gap-6">
         <CastingDetailsCompensation role={role} />
-        <CastingDetailsEmployerCard employerInfo={casting.employerInfo} />
+        {!hideEmployer && <CastingDetailsEmployerCard employerInfo={casting.employerInfo} />}
       </section>
     </>
   );

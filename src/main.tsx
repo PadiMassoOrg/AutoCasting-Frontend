@@ -13,6 +13,7 @@ import { LanguageProvider } from './app/context/LanguageContext';
 import { ModalProvider } from './app/context/ModalContext';
 import { ToastProvider } from './app/context/ToastContext';
 import { UserModeProvider } from './app/context/UserModeContext';
+import { PUBLIC_PROPOSAL_CACHE_KEY } from './app/features/proposals/services/proposalsService';
 import { AppRoutes } from './app/routes';
 import { QUERY_CACHE_PERSIST_KEY, queryClient } from './app/shared/lib/queryClient';
 
@@ -42,6 +43,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
             // 1) NO persistir si hay una promise asociada (in-flight/cancelable)
             if (q?.promise) return false;
+
+            if (query.queryKey[0] === PUBLIC_PROPOSAL_CACHE_KEY[0]) return false;
 
             // 2) Persistir solo success + idle (sin background refetch)
             return query.state.status === 'success' && query.state.fetchStatus === 'idle';

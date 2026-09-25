@@ -1,12 +1,12 @@
 import { clearAuthToken } from './cookies';
 import { queryClient } from './queryClient';
 import { ROUTES } from './routes';
-import { USER_MODE_STORAGE_KEY } from './storageKeys';
+import { PENDING_PROPOSAL_STORAGE_KEY, USER_MODE_STORAGE_KEY } from './storageKeys';
 
 const ME_DATA_CACHE_PREFIX = 'cache-me-data';
 
 export const clearClientSession = () => {
-  void queryClient.cancelQueries();
+  void queryClient.cancelQueries({ predicate: (query) => !query.meta?.survivesLogout });
 
   // Evita limpiar todo el QueryClient (costoso en logout con cache grande).
   queryClient.removeQueries({
@@ -17,12 +17,16 @@ export const clearClientSession = () => {
 
   try {
     window.localStorage.removeItem(USER_MODE_STORAGE_KEY);
+    window.localStorage.removeItem(PENDING_PROPOSAL_STORAGE_KEY);
   } catch {
     // ignore localStorage failures
   }
 };
 
+const isOnProposalLink = () => window.location.pathname.startsWith(ROUTES.PROPOSAL + '/');
+
 export const forceLogoutRedirect = () => {
   clearClientSession();
+  if (isOnProposalLink()) return;
   window.location.replace(ROUTES.HOME);
 };

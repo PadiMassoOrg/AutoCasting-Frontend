@@ -5,6 +5,7 @@ import { USER_MODE_EMPLOYER, USER_MODE_TALENT, useUserMode } from '../context/Us
 import { useAuthToken } from '../features/auth/hooks/useAuthToken';
 import { useMeData } from '../features/auth/hooks/useMeData';
 import LegalAcceptanceRequiredGate from '../features/legal/components/LegalAcceptanceRequiredGate';
+import PendingProposalResolver from '../features/proposals/components/PendingProposalResolver';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
 import { EmptyLayout, NavigationLayout, ScrollContentLayout } from '../layouts';
 import ScrollToTopOnRouteChange from '../shared/components/ScrollToTopOnRouteChange';
@@ -26,6 +27,7 @@ const TermsPage = lazy(() => import('../features/main-site/page/TermsPage'));
 const OnboardingWizard = lazy(() => import('../features/onboarding/components/OnboardingWizard'));
 const CastingDetailsPage = lazy(() => import('../features/public-casting/pages/CastingDetailsPage'));
 const CastingPublicOverviewPage = lazy(() => import('../features/public-casting/pages/CastingPublicOverviewPage'));
+const ProposalPage = lazy(() => import('../features/proposals/pages/ProposalPage'));
 const PublicProfilePage = lazy(() => import('../features/public-profile/pages/PublicProfilePage'));
 const TalentDatabasePage = lazy(() => import('../features/talent-database/pages/TalentDatabasePage'));
 
@@ -88,6 +90,7 @@ function AuthSessionWatcher() {
 
 function AppRoutesContent() {
   const token = useAuthToken();
+  const location = useLocation();
   const { data: meData } = useMeData();
   const { mode, setMode } = useUserMode();
 
@@ -112,7 +115,9 @@ function AppRoutesContent() {
   const needsEmployerWizard =
     hasToken && hasMeData && meData.activeMode === 'EMPLOYER' && meData.employerOnboardingStatus !== 'COMPLETED';
 
-  const shouldForceWizard = hasToken && hasMeData && (needsInitialWizard || needsTalentWizard || needsEmployerWizard);
+  const isProposalLink = location.pathname.startsWith(ROUTES.PROPOSAL + '/');
+  const shouldForceWizard =
+    hasToken && hasMeData && !isProposalLink && (needsInitialWizard || needsTalentWizard || needsEmployerWizard);
 
   if (shouldForceWizard) {
     return (
@@ -130,6 +135,7 @@ function AppRoutesContent() {
         <Route path={ROUTES.HOME} element={<TalentDatabasePage />} />
       </Route>
       <Route path={ROUTES.AUTH} element={<AuthenticationPage />} />
+      <Route path={ROUTES.PROPOSAL + '/:token/*'} element={<ProposalPage />} />
       <Route path={ROUTES.GOOGLE_OAUTH_SUCCESS} element={<GoogleAuthSuccessPage />} />
       <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
       <Route element={<MainSiteLayout />}>
@@ -166,6 +172,7 @@ export default function AppRoutes() {
         <RouteTracker />
         <ScrollToTopOnRouteChange />
         <LegalAcceptanceRequiredGate />
+        <PendingProposalResolver />
         <AppRoutesContent />
       </Suspense>
     </Router>

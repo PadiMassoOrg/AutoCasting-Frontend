@@ -16,27 +16,9 @@ import { CastingDetailsDesktopBody } from '../../../shared/components/CastingDet
 import { NotFoundPage, ServerErrorPage } from '../../../shared/components/ErrorPage';
 import { isBackendNotFoundError } from '../../../shared/utils/backendErrorHandling';
 import { CastingCatalogDetailsApplyAction, CastingRolePublicCard } from '../../casting-database/components';
-import type { CastingRolePublicCardResponse } from '../../casting-database/types/casting-database.types';
 import { usePublicCastingDetails } from '../hooks/usePublicCastingDetails';
 import { usePublicCastingOverview } from '../hooks/usePublicCastingOverview';
-import type { PublicCastingData, PublicCastingRole } from '../types/publicCasting.types';
-
-function mapRoleToCard(role: PublicCastingRole, casting: PublicCastingData): CastingRolePublicCardResponse {
-  return {
-    id: role.id,
-    name: role.roleName,
-    castingTitle: casting.title,
-    employerImageUrl: casting.employerInfo?.imageUrl ?? '',
-    projectType: casting.projectType,
-    shootingStartDate: casting.shootingStartDate,
-    shootingEndDate: casting.shootingEndDate,
-    roleType: role.roleType ?? { id: '', stringCode: 'general.not_specified' },
-    gender: role.gender ?? { id: '', stringCode: 'general.not_specified' },
-    ageMin: role.ageMin ?? 0,
-    ageMax: role.ageMax ?? 0,
-    defaultCode: casting.slug,
-  };
-}
+import { mapRoleToCard } from '../utils/mapRoleToCard';
 
 const CastingPublicOverviewPage = () => {
   useViewportVhVar();

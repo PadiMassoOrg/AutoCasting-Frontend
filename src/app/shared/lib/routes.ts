@@ -22,6 +22,7 @@ export const ROUTES = {
   TALENT_DATABASE: '/talent-database',
   CASTING_DATABASE: '/casting-database',
   PUBLIC_CASTING: '/casting',
+  PROPOSAL: '/proposal',
   SUPPORT: '/support',
   FAQ: '/faq',
   TERMS: '/terms-and-conditions',
@@ -127,4 +128,9 @@ export const API_ROUTES = {
   VIEW_APPLICATION: (applicationId: string) => `${API_ROUTES.EMPLOYER_CASTING_APPLICATIONS}/${applicationId}/view`,
   BLANK_APPLICATION: (applicationId: string) => `${API_ROUTES.EMPLOYER_CASTING_APPLICATIONS}/${applicationId}/blank`,
   BULK_APPLICATION_STATUS: '/employer/applications/bulk/status',
+  // Proposals
+  PROPOSAL: (token: string) => `/proposals/${token}`,
+  PROPOSAL_ATTACH: (token: string) => `/proposals/${token}/attach`,
+  PROPOSAL_CLAIM: (token: string) => `/proposals/${token}/claim`,
+  PROPOSAL_CLAIM_RESULT: (token: string) => `/proposals/${token}/claim-result`,
 };
