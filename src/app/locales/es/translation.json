@@ -566,6 +566,9 @@
       "music_video": "Videoclip",
       "other": "Otros"
     },
+    "proposal_type": {
+      "casting": "Casting"
+    },
     "casting_modality": {
       "casting": "Casting",
       "on_site": "Presencial",
