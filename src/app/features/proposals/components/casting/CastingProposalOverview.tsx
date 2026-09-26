@@ -1,18 +1,14 @@
-import {
-  LG_SCREEN_SIZE,
-  MasterDetailShell,
-  SectionCard,
-  Separator,
-  useMedia,
-  useViewportVhVar,
-} from 'autocasting-ui-library-padimasso';
+import { LG_SCREEN_SIZE, MasterDetailShell, useMedia, useViewportVhVar } from 'autocasting-ui-library-padimasso';
 import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { CastingDetailsDesktopBody } from '../../../../shared/components/CastingDetails';
-import { CastingRolePublicCard } from '../../../casting-database/components';
+import { LoadMoreSentinel } from '../../../../shared/components/LoadMoreSentinel';
+import { useClientPagination } from '../../../../shared/hooks/useClientPagination';
+import { CastingCatalogPagination, CastingRolePublicCard } from '../../../casting-database/components';
 import type { PublicCastingData } from '../../../public-casting/types/publicCasting.types';
 import { mapRoleToCard } from '../../../public-casting/utils/mapRoleToCard';
+import { ROLE_LIST_PAGE_SIZE } from '../../../public-casting/utils/roleListPageSize';
 import ProposalClaimBanner from '../ProposalClaimBanner';
 
 type Props = {
@@ -30,6 +26,8 @@ export default function CastingProposalOverview({ casting, onClaim }: Props) {
 
   const items = useMemo(() => casting.roles.map((role) => mapRoleToCard(role, casting)), [casting]);
   const selectedRole = casting.roles.find((role) => role.id === selectedRoleId) ?? casting.roles[0] ?? null;
+  const pageSize = ROLE_LIST_PAGE_SIZE;
+  const pagination = useClientPagination(items, pageSize);
 
   if (isDesktop) {
     const menuHeader = (
@@ -43,7 +41,7 @@ export default function CastingProposalOverview({ casting, onClaim }: Props) {
 
     const menuContent = (
       <div className="flex flex-col gap-3">
-        {items.map((item) => (
+        {pagination.pageItems.map((item) => (
           <CastingRolePublicCard
             key={item.id}
             item={item}
@@ -52,6 +50,22 @@ export default function CastingProposalOverview({ casting, onClaim }: Props) {
           />
         ))}
       </div>
+    );
+
+    const handlePageChange = (nextPage: number) => {
+      menuScrollRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+      pagination.setPage(nextPage);
+      setSelectedRoleId(items[nextPage * pageSize]?.id ?? null);
+    };
+
+    const menuFooter = (
+      <CastingCatalogPagination
+        page={pagination.page}
+        size={pageSize}
+        hasNext={pagination.hasNext}
+        totalCount={pagination.totalCount}
+        onPageChange={handlePageChange}
+      />
     );
 
     const contentHeader = (
@@ -76,6 +90,7 @@ export default function CastingProposalOverview({ casting, onClaim }: Props) {
             <MasterDetailShell
               menuHeader={menuHeader}
               menuContent={menuContent}
+              menuFooter={menuFooter}
               content={content}
               contentHeader={contentHeader}
               menuContentRef={menuScrollRef}
@@ -91,19 +106,16 @@ export default function CastingProposalOverview({ casting, onClaim }: Props) {
     <div className="relative flex flex-col gap-6">
       <ProposalClaimBanner onClaim={onClaim} />
 
-      <SectionCard className="flex flex-col gap-4">
-        <div className="flex min-w-0 flex-col">
-          <h1 className="truncate text-2xl font-semibold">{casting.title}</h1>
-          <p className="text-sm font-light text-(--color-secondary-grey-fonts)">{t(casting.projectType.stringCode)}</p>
-        </div>
-      </SectionCard>
-
-      <Separator className="opacity-0 my-1" />
+      <div className="flex min-w-0 flex-col">
+        <h2 className="truncate text-2xl font-semibold">{casting.title}</h2>
+        <p className="text-sm font-light text-(--color-secondary-grey-fonts)">{t(casting.projectType.stringCode)}</p>
+      </div>
 
       <div className="flex flex-col gap-6">
-        {items.map((item) => (
+        {pagination.revealedItems.map((item) => (
           <CastingRolePublicCard key={item.id} item={item} onSelect={(current) => navigate(`roles/${current.id}`)} />
         ))}
+        <LoadMoreSentinel enabled={pagination.hasNext} onVisible={pagination.loadMore} />
       </div>
     </div>
   );

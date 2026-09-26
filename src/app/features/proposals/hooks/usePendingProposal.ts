@@ -6,6 +6,7 @@ import { useToast } from '../../../context/ToastContext';
 import { ROUTES } from '../../../shared/lib/routes';
 import { useAuthToken } from '../../auth/hooks/useAuthToken';
 import { useMeData } from '../../auth/hooks/useMeData';
+import { useSessionFromOtherTab } from '../../auth/hooks/useSessionFromOtherTab';
 import { ME_DATA_CACHE_KEY } from '../../auth/services/authService';
 import { attachProposal, claimOrGetClaimResult } from '../services/proposalsService';
 import { clearPendingProposal, readPendingProposal } from '../utils/pendingProposal';
@@ -21,10 +22,11 @@ export const usePendingProposal = () => {
   const { showToast } = useToast();
   const authToken = useAuthToken();
   const { data: meData } = useMeData();
+  const sessionFromOtherTab = useSessionFromOtherTab();
   const handledStepRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!authToken || !meData || pathname.startsWith(ROUTES.PROPOSAL + '/')) return;
+    if (!authToken || !meData || sessionFromOtherTab || pathname.startsWith(ROUTES.PROPOSAL + '/')) return;
 
     const pending = readPendingProposal();
     if (!pending) return;
@@ -65,5 +67,5 @@ export const usePendingProposal = () => {
       .catch((error) => {
         if (isProposalLinkInvalidError(error)) handleInvalidLink();
       });
-  }, [authToken, meData, navigate, pathname, queryClient, showToast, t]);
+  }, [authToken, meData, navigate, pathname, queryClient, sessionFromOtherTab, showToast, t]);
 };

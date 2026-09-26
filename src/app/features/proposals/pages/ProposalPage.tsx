@@ -18,17 +18,13 @@ const ProposalPage = () => {
   const { showToast } = useToast();
   const { token } = useParams<{ token: string }>();
   const authToken = useAuthToken();
-  const { data, error, isLoading } = usePublicProposal(token, !authToken);
+  const { data, error, isLoading } = usePublicProposal(token);
   const definition = data ? PROPOSAL_TYPE_REGISTRY[data.typeCode] : undefined;
   const isInvalidLink = (!!error && isProposalLinkInvalidError(error)) || (!!data && !definition);
 
   useEffect(() => {
     clearPendingProposal();
   }, []);
-
-  useEffect(() => {
-    if (authToken) logoutInPlace();
-  }, [authToken]);
 
   useEffect(() => {
     if (!isInvalidLink) return;
@@ -40,6 +36,7 @@ const ProposalPage = () => {
 
   const claim = () => {
     if (!data || !token) return;
+    if (authToken) logoutInPlace();
     savePendingProposal({
       token,
       typeCode: data.typeCode,
@@ -50,7 +47,7 @@ const ProposalPage = () => {
 
   return (
     <main className="min-h-screen w-full min-w-0 bg-(--color-secondary-white) p-6 lg:p-0">
-      {!authToken && !isLoading && data && definition ? (
+      {!isLoading && data && definition ? (
         <definition.Preview preview={data.preview} onClaim={claim} />
       ) : (
         <Label className="w-full pt-10 flex items-center justify-center text-center text-(--color-secondary-grey-fonts)">

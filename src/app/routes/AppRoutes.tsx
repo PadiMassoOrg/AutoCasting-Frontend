@@ -4,6 +4,7 @@ import { PageLoading } from 'autocasting-ui-library-padimasso';
 import { USER_MODE_EMPLOYER, USER_MODE_TALENT, useUserMode } from '../context/UserModeContext';
 import { useAuthToken } from '../features/auth/hooks/useAuthToken';
 import { useMeData } from '../features/auth/hooks/useMeData';
+import { useSessionFromOtherTab } from '../features/auth/hooks/useSessionFromOtherTab';
 import LegalAcceptanceRequiredGate from '../features/legal/components/LegalAcceptanceRequiredGate';
 import PendingProposalResolver from '../features/proposals/components/PendingProposalResolver';
 import { useRouteTracking } from '../integrations/analytics/routeTracking';
@@ -93,6 +94,7 @@ function AppRoutesContent() {
   const location = useLocation();
   const { data: meData } = useMeData();
   const { mode, setMode } = useUserMode();
+  const sessionFromOtherTab = useSessionFromOtherTab();
 
   const hasToken = !!token;
   const hasMeData = !!meData;
@@ -116,8 +118,9 @@ function AppRoutesContent() {
     hasToken && hasMeData && meData.activeMode === 'EMPLOYER' && meData.employerOnboardingStatus !== 'COMPLETED';
 
   const isProposalLink = location.pathname.startsWith(ROUTES.PROPOSAL + '/');
+  const wizardApplies = !isProposalLink && (!sessionFromOtherTab || isProtectedPath(location.pathname));
   const shouldForceWizard =
-    hasToken && hasMeData && !isProposalLink && (needsInitialWizard || needsTalentWizard || needsEmployerWizard);
+    hasToken && hasMeData && wizardApplies && (needsInitialWizard || needsTalentWizard || needsEmployerWizard);
 
   if (shouldForceWizard) {
     return (

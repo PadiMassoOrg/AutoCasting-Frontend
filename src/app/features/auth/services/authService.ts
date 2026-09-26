@@ -2,6 +2,7 @@ import api from '../../../shared/lib/axios';
 import { getRawAuthToken, getRefreshToken } from '../../../shared/lib/cookies';
 import { clearClientSession, forceLogoutRedirect } from '../../../shared/lib/authSession';
 import { API_ROUTES } from '../../../shared/lib/routes';
+import { clearPendingProposal } from '../../proposals/utils/pendingProposal';
 import type {
   AuthenticationResponse,
   ForgotPasswordRequest,
@@ -97,6 +98,7 @@ const revokeRefreshToken = (refreshToken: string | undefined) => {
 
 export const logout = () => {
   const refreshToken = getRefreshToken();
+  clearPendingProposal();
   forceLogoutRedirect();
   revokeRefreshToken(refreshToken);
 };

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearClientSession, forceLogoutRedirect } from './authSession';
 import { ROUTES } from './routes';
+import { PENDING_PROPOSAL_STORAGE_KEY } from './storageKeys';
 
 const clearAuthTokenMock = vi.fn();
 const cancelQueriesMock = vi.fn();
@@ -55,5 +56,13 @@ describe('clearClientSession', () => {
     const { predicate } = cancelQueriesMock.mock.calls[0][0] as { predicate: (query: { meta?: object }) => boolean };
     expect(predicate({ meta: { survivesLogout: true } })).toBe(false);
     expect(predicate({})).toBe(true);
+  });
+
+  it('keeps a pending proposal so a forced logout cannot drop a claim in progress', () => {
+    window.localStorage.setItem(PENDING_PROPOSAL_STORAGE_KEY, '{"token":"token-1"}');
+
+    clearClientSession();
+
+    expect(window.localStorage.getItem(PENDING_PROPOSAL_STORAGE_KEY)).toBe('{"token":"token-1"}');
   });
 });

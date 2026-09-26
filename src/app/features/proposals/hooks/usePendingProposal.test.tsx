@@ -11,6 +11,7 @@ const navigateMock = vi.fn();
 const showToastMock = vi.fn();
 let authToken: string | null = 'jwt';
 let meData: Record<string, unknown> | undefined;
+let sessionFromOtherTab = false;
 
 vi.mock('../services/proposalsService', () => ({
   attachProposal: (...args: unknown[]) => attachProposalMock(...args),
@@ -18,6 +19,7 @@ vi.mock('../services/proposalsService', () => ({
 }));
 vi.mock('../../auth/hooks/useAuthToken', () => ({ useAuthToken: () => authToken }));
 vi.mock('../../auth/hooks/useMeData', () => ({ useMeData: () => ({ data: meData }) }));
+vi.mock('../../auth/hooks/useSessionFromOtherTab', () => ({ useSessionFromOtherTab: () => sessionFromOtherTab }));
 vi.mock('../../auth/services/authService', () => ({ ME_DATA_CACHE_KEY: ['cache-me-data'] }));
 vi.mock('../components/casting/CastingProposalPreview', () => ({ default: () => null }));
 vi.mock('../../../context/ToastContext', () => ({ useToast: () => ({ showToast: showToastMock }) }));
@@ -47,6 +49,7 @@ describe('usePendingProposal', () => {
     navigateMock.mockReset();
     showToastMock.mockReset();
     authToken = 'jwt';
+    sessionFromOtherTab = false;
     pathname = '/dashboard';
     meData = { activeMode: null, employerOnboardingStatus: 'NOT_STARTED', talentOnboardingStatus: 'NOT_STARTED' };
   });
@@ -67,7 +70,19 @@ describe('usePendingProposal', () => {
     expect(attachProposalMock).not.toHaveBeenCalled();
   });
 
-  it('stays idle on a proposal link page, where the visitor is being logged out', () => {
+  it('stays idle in a tab that received another tab’s login', () => {
+    sessionFromOtherTab = true;
+    meData = { ...meData, employerOnboardingStatus: 'COMPLETED' };
+    savePending();
+
+    renderHook(() => usePendingProposal(), { wrapper });
+
+    expect(attachProposalMock).not.toHaveBeenCalled();
+    expect(claimOrGetClaimResultMock).not.toHaveBeenCalled();
+    expect(navigateMock).not.toHaveBeenCalled();
+  });
+
+  it('stays idle on a proposal link page', () => {
     pathname = '/proposal/new-token';
     meData = { ...meData, employerOnboardingStatus: 'COMPLETED' };
     savePending();
