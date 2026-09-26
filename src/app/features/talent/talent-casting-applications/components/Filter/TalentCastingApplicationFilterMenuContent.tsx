@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useMultiSelectLabels } from '../../../../../shared/hooks/useMultiSelectLabels';
 import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import {
   collapseTalentCastingApplicationStatusIdsForDisplay,
@@ -16,6 +17,7 @@ export default function TalentCastingApplicationFilterMenuContent({
   onChange: (next: TalentCastingApplicationsFiltersState) => void;
 }) {
   const { t } = useTranslation();
+  const multiSelectLabels = useMultiSelectLabels();
 
   const projectTypesRaw = useCachedSiteMetadataSlice('projectTypeOptions');
   const castingStatusesRaw = useCachedSiteMetadataSlice('castingStatusOptions');
@@ -60,6 +62,7 @@ export default function TalentCastingApplicationFilterMenuContent({
         <div className="flex flex-col gap-2">
           <h3 className="text-base font-semibold">{t('casting.basic_info.project_type')}</h3>
           <MultiSelectDropdown
+            {...multiSelectLabels}
             options={projectTypesRaw ?? []}
             getId={(p) => p.id}
             getLabel={(p) => t(p.stringCode)}
@@ -78,6 +81,7 @@ export default function TalentCastingApplicationFilterMenuContent({
         <div className="flex flex-col gap-2">
           <h3 className="text-base font-semibold">{t('employer_castings.casting_card.status.status')}</h3>
           <MultiSelectDropdown
+            {...multiSelectLabels}
             options={visibleCastingStatuses}
             getId={(p) => p.id}
             getLabel={(p) => t(p.stringCode)}
@@ -91,6 +95,7 @@ export default function TalentCastingApplicationFilterMenuContent({
         <div className="flex flex-col gap-2">
           <h3 className="text-base font-semibold">{t('casting.basic_info.casting_modality')}</h3>
           <MultiSelectDropdown
+            {...multiSelectLabels}
             options={castingModalitiesRaw ?? []}
             getId={(p) => p.id}
             getLabel={(p) => t(p.stringCode)}

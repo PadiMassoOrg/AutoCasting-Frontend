@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { useMultiSelectLabels } from '../../../../../shared/hooks/useMultiSelectLabels';
 import { useCachedSiteMetadataSlice } from '../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import { MultiSelectDropdown } from 'autocasting-ui-library-padimasso';
 import type { EmployerCastingsFiltersState } from '../../types/employerCastingsFilters.types';
@@ -11,6 +12,7 @@ export default function EmployerCastingsFilterMenuContent({
   onChange: (next: EmployerCastingsFiltersState) => void;
 }) {
   const { t } = useTranslation();
+  const multiSelectLabels = useMultiSelectLabels();
 
   const projectTypesRaw = useCachedSiteMetadataSlice('projectTypeOptions');
   const castingStatusesRaw = useCachedSiteMetadataSlice('castingStatusOptions');
@@ -32,6 +34,7 @@ export default function EmployerCastingsFilterMenuContent({
         <div className="flex flex-col gap-2">
           <h3 className="text-base font-semibold">{t('casting.basic_info.project_type')}</h3>
           <MultiSelectDropdown
+            {...multiSelectLabels}
             options={projectTypesRaw ?? []}
             getId={(p) => p.id}
             getLabel={(p) => t(p.stringCode)}
@@ -44,6 +47,7 @@ export default function EmployerCastingsFilterMenuContent({
         <div className="flex flex-col gap-2">
           <h3 className="text-base font-semibold">{t('employer_castings.casting_card.status.status')}</h3>
           <MultiSelectDropdown
+            {...multiSelectLabels}
             options={castingStatusesRaw ?? []}
             getId={(p) => p.id}
             getLabel={(p) => t(p.stringCode)}

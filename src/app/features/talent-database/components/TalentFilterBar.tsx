@@ -10,6 +10,7 @@ import {
 } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMultiSelectLabels } from '../../../shared/hooks/useMultiSelectLabels';
 import { useCommittedInt, useCommittedText } from '../../../shared/utils/formUtils';
 import {
   useCachedSiteMetadataOption,
@@ -32,6 +33,7 @@ export function TalentFilterBar({
   forwardScrollToRef?: React.RefObject<HTMLElement | null>;
 }) {
   const { t } = useTranslation();
+  const multiSelectLabels = useMultiSelectLabels();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
 
   const genderOptionsRaw = useCachedSiteMetadataSlice('genderOptions');
@@ -187,6 +189,7 @@ export function TalentFilterBar({
         <div>
           <h2 className="text-sm font-semibold mb-2">{t('talent.filter.basic_info.profession')}</h2>
           <MultiSelectDropdown
+            {...multiSelectLabels}
             options={professionsRaw ?? []}
             getId={(p) => p.id}
             getLabel={(p) => t(p.stringCode)}
@@ -244,6 +247,7 @@ export function TalentFilterBar({
         <div>
           <h2 className="text-sm font-semibold mb-2">{t('profile.characteristics.hairColor')}</h2>
           <MultiSelectDropdown
+            {...multiSelectLabels}
             options={hairOptions ?? []}
             getId={(o) => o.value}
             getLabel={(o) => o.label}
@@ -257,6 +261,7 @@ export function TalentFilterBar({
         <div>
           <h2 className="text-sm font-semibold mb-2">{t('profile.characteristics.eyeColor')}</h2>
           <MultiSelectDropdown
+            {...multiSelectLabels}
             options={eyeOptions ?? []}
             getId={(o) => o.value}
             getLabel={(o) => o.label}
@@ -318,6 +323,7 @@ export function TalentFilterBar({
             <div key={catCode}>
               <h2 className="text-sm font-semibold mb-2">{t(catCode)}</h2>
               <MultiSelectDropdown
+                {...multiSelectLabels}
                 options={list}
                 getId={(s) => s.id}
                 getLabel={(s) => t(s.stringCode)}
