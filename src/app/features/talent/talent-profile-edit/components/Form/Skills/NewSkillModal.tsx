@@ -1,6 +1,7 @@
 import { Button, Separator } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMultiSelectLabels } from '../../../../../../shared/hooks/useMultiSelectLabels';
 import { MultiSelectDropdown } from 'autocasting-ui-library-padimasso';
 import { useCachedSiteMetadataSlice } from '../../../../../sitemetadata/hooks/useCachedSiteMetadata';
 import type { SiteMetadataObject } from '../../../../../sitemetadata/types/sitemetadata.types';
@@ -16,6 +17,7 @@ export function NewSkillModal({
   onCancel: () => void;
 }) {
   const { t } = useTranslation();
+  const multiSelectLabels = useMultiSelectLabels();
   const [selectedIds, setSelectedIds] = useState<string[]>(() => initial.map((s) => s.id));
   const { isPending, execute } = usePendingAction();
   const skillsRaw = (useCachedSiteMetadataSlice('skills') as SiteMetadataObject[] | undefined) ?? [];
@@ -56,6 +58,7 @@ export function NewSkillModal({
           <div key={catCode}>
             <h2 className="text-sm font-semibold">{t(catCode)}</h2>
             <MultiSelectDropdown
+              {...multiSelectLabels}
               options={list}
               getId={(skill) => skill.id}
               getLabel={(skill) => t(skill.stringCode)}

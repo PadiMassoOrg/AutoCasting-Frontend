@@ -18,6 +18,7 @@ import {
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import { useForm, useWatch, type Path } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useMultiSelectLabels } from '../../../../../../shared/hooks/useMultiSelectLabels';
 import { useModal } from '../../../../../../context/ModalContext';
 import { useCastingRolePhotoUpload } from '../../../../../../integrations/supabase/media/hooks/useCastingRolePhotoUpload';
 import { removeByPublicUrl } from '../../../../../../integrations/supabase/media/lib/profile-media';
@@ -71,6 +72,7 @@ const CastingRoleForm = ({
   onPendingReferencePhotoDirtyChange,
 }: Props) => {
   const { t } = useTranslation();
+  const multiSelectLabels = useMultiSelectLabels();
   const { openModal, closeModal } = useModal();
   const isXLSize = useMedia(XL_SCREEN_SIZE);
   const { mutateAsync: uploadReferencePhoto, isPending: referencePhotoUploadPending } = useCastingRolePhotoUpload(
@@ -396,6 +398,7 @@ const CastingRoleForm = ({
             </span>
           </div>
           <MultiSelectDropdown
+            {...multiSelectLabels}
             options={professionsRaw}
             getId={(profession: SiteMetadataObject) => profession.id}
             getLabel={(profession: SiteMetadataObject) => t(profession.stringCode)}

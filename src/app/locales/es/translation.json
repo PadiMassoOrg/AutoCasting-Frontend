@@ -192,6 +192,10 @@
     "switch_to_employer": "Cambiar a: Busco Talento"
   },
   "server_error": {
+    "proposals": {
+      "link_invalid": "Este link ya no es válido.",
+      "requirement_not_met": "Completá tu perfil de empresa para reclamar este casting."
+    },
     "auth": {
       "access_denied": "No tienes permisos padashboardra realizar esta acción.",
       "current_password_mismatch": "La contraseña actual no coincide.",
@@ -475,7 +479,7 @@
       "english_uk": "Inglés (Reino Unido)"
     },
     "profession": {
-      "actor": "Actor",
+      "actor": "Actor/Actriz",
       "dancer": "Bailarín",
       "singer": "Cantante",
       "influencer": "Influencer",
@@ -565,6 +569,9 @@
       "commercial": "Publicidad",
       "music_video": "Videoclip",
       "other": "Otros"
+    },
+    "proposal_type": {
+      "casting": "Casting"
     },
     "casting_modality": {
       "casting": "Casting",
@@ -1280,5 +1287,19 @@
         "a": "autocasting es online y se puede usar desde cualquier lugar. La comunidad de talentos y oportunidades va a crecer a nivel internacional."
       }
     ]
+  },
+  "proposals": {
+    "link_invalid": "Este link ya no es válido o ya fue utilizado.",
+    "page": {
+      "title": "Preparamos este casting para vos",
+      "description": "Revisalo y reclamalo con tu cuenta de Autocasting (si no tenés una, la creás en el momento). Después lo vas a poder gestionar desde tu panel.",
+      "claim": "Reclamar casting"
+    },
+    "casting": {
+      "claimed_title": "¡Casting reclamado!",
+      "claimed_published": "Tu casting ya está publicado.",
+      "claimed_draft_deadline": "Tu casting quedó en borrador: actualizá la fecha límite para publicarlo.",
+      "claimed_draft": "Tu casting quedó en borrador: revisalo y publicalo desde tu panel."
+    }
   }
 }

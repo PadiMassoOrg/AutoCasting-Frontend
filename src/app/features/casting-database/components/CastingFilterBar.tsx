@@ -14,6 +14,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { useTranslation } from 'react-i18next';
+import { useMultiSelectLabels } from '../../../shared/hooks/useMultiSelectLabels';
 import { useCommittedInt } from '../../../shared/utils/formUtils';
 import {
   useCachedSiteMetadataOption,
@@ -36,6 +37,7 @@ export function CastingFilterBar({
   forwardScrollToRef?: React.RefObject<HTMLElement | null>;
 }) {
   const { t, i18n } = useTranslation();
+  const multiSelectLabels = useMultiSelectLabels();
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const genderOptionsRaw = useCachedSiteMetadataSlice('genderOptions');
   const ethnicityOptions = useCachedSiteMetadataOption('ethnicityOptions', t);
@@ -182,6 +184,7 @@ export function CastingFilterBar({
         <div>
           <h2 className="text-sm font-semibold mb-2">{t('talent.filter.basic_info.profession')}</h2>
           <MultiSelectDropdown
+            {...multiSelectLabels}
             options={professionsRaw ?? []}
             getId={(p) => p.id}
             getLabel={(p) => t(p.stringCode)}
@@ -308,6 +311,7 @@ export function CastingFilterBar({
             <div key={catCode}>
               <h2 className="text-sm font-semibold mb-2">{t(catCode)}</h2>
               <MultiSelectDropdown
+                {...multiSelectLabels}
                 options={list}
                 getId={(s) => s.id}
                 getLabel={(s) => t(s.stringCode)}

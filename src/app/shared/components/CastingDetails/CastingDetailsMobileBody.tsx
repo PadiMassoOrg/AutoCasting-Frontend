@@ -16,9 +16,10 @@ import {
 
 type Props = {
   casting: PublicCastingData;
+  hideEmployer?: boolean;
 };
 
-const CastingDetailsMobileBody = ({ casting }: Props) => {
+const CastingDetailsMobileBody = ({ casting, hideEmployer = false }: Props) => {
   const { t } = useTranslation();
   const {
     title,
@@ -120,7 +121,7 @@ const CastingDetailsMobileBody = ({ casting }: Props) => {
 
       <section className="flex flex-col gap-4">
         <CastingDetailsCompensation role={role} />
-        <CastingDetailsEmployerCard employerInfo={casting.employerInfo} />
+        {!hideEmployer && <CastingDetailsEmployerCard employerInfo={casting.employerInfo} />}
       </section>
     </div>
   );

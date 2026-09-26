@@ -6,8 +6,8 @@ const REFRESH_COOKIE_NAME = 'refreshToken';
 const AUTH_COOKIE_PATH = '/';
 const FALLBACK_AUTH_COOKIE_DAYS = 7;
 const REFRESH_COOKIE_DAYS = 30;
-const AUTH_TOKEN_CHANGE_EVENT = 'autocasting:auth-token-changed';
-const AUTH_TOKEN_SYNC_STORAGE_KEY = 'autocasting:auth-token-sync';
+export const AUTH_TOKEN_CHANGE_EVENT = 'autocasting:auth-token-changed';
+export const AUTH_TOKEN_SYNC_STORAGE_KEY = 'autocasting:auth-token-sync';
 
 const emitAuthTokenChange = () => {
   if (typeof window === 'undefined') return;

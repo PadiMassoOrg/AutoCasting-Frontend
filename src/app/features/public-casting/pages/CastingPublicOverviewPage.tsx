@@ -14,29 +14,18 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CastingDetailsDesktopBody } from '../../../shared/components/CastingDetails';
 import { NotFoundPage, ServerErrorPage } from '../../../shared/components/ErrorPage';
+import { LoadMoreSentinel } from '../../../shared/components/LoadMoreSentinel';
+import { useClientPagination } from '../../../shared/hooks/useClientPagination';
 import { isBackendNotFoundError } from '../../../shared/utils/backendErrorHandling';
-import { CastingCatalogDetailsApplyAction, CastingRolePublicCard } from '../../casting-database/components';
-import type { CastingRolePublicCardResponse } from '../../casting-database/types/casting-database.types';
+import {
+  CastingCatalogDetailsApplyAction,
+  CastingCatalogPagination,
+  CastingRolePublicCard,
+} from '../../casting-database/components';
 import { usePublicCastingDetails } from '../hooks/usePublicCastingDetails';
 import { usePublicCastingOverview } from '../hooks/usePublicCastingOverview';
-import type { PublicCastingData, PublicCastingRole } from '../types/publicCasting.types';
-
-function mapRoleToCard(role: PublicCastingRole, casting: PublicCastingData): CastingRolePublicCardResponse {
-  return {
-    id: role.id,
-    name: role.roleName,
-    castingTitle: casting.title,
-    employerImageUrl: casting.employerInfo?.imageUrl ?? '',
-    projectType: casting.projectType,
-    shootingStartDate: casting.shootingStartDate,
-    shootingEndDate: casting.shootingEndDate,
-    roleType: role.roleType ?? { id: '', stringCode: 'general.not_specified' },
-    gender: role.gender ?? { id: '', stringCode: 'general.not_specified' },
-    ageMin: role.ageMin ?? 0,
-    ageMax: role.ageMax ?? 0,
-    defaultCode: casting.slug,
-  };
-}
+import { mapRoleToCard } from '../utils/mapRoleToCard';
+import { ROLE_LIST_PAGE_SIZE } from '../utils/roleListPageSize';
 
 const CastingPublicOverviewPage = () => {
   useViewportVhVar();
@@ -71,6 +60,8 @@ const CastingPublicOverviewPage = () => {
   }, [items]);
 
   const selectedItem = useMemo(() => items.find((item) => item.id === selectedRoleId) ?? null, [items, selectedRoleId]);
+  const pageSize = ROLE_LIST_PAGE_SIZE;
+  const pagination = useClientPagination(items, pageSize);
 
   const detailsQuery = usePublicCastingDetails(
     {
@@ -106,7 +97,7 @@ const CastingPublicOverviewPage = () => {
       <p className="py-10 text-center font-light text-(--color-secondary-grey-fonts)">{t('state.no_results')}</p>
     ) : (
       <div className="flex flex-col gap-3">
-        {items.map((item) => (
+        {pagination.pageItems.map((item) => (
           <CastingRolePublicCard
             key={item.id}
             item={item}
@@ -126,6 +117,22 @@ const CastingPublicOverviewPage = () => {
     <div className="flex min-w-0 flex-col">
       <h2 className="text-xl font-semibold">{casting.title}</h2>
     </div>
+  );
+
+  const handlePageChange = (nextPage: number) => {
+    menuScrollRef.current?.scrollTo({ top: 0, behavior: 'auto' });
+    pagination.setPage(nextPage);
+    setSelectedRoleId(items[nextPage * pageSize]?.id ?? null);
+  };
+
+  const menuFooter = (
+    <CastingCatalogPagination
+      page={pagination.page}
+      size={pageSize}
+      hasNext={pagination.hasNext}
+      totalCount={pagination.totalCount}
+      onPageChange={handlePageChange}
+    />
   );
 
   const contentActions = detailsQuery.data ? <CastingCatalogDetailsApplyAction data={detailsQuery.data} /> : undefined;
@@ -169,6 +176,7 @@ const CastingPublicOverviewPage = () => {
                 <MasterDetailShell
                   menuHeader={menuHeader}
                   menuContent={menuContent}
+                  menuFooter={menuFooter}
                   content={content}
                   contentHeader={contentHeader}
                   contentActions={contentActions}
@@ -195,13 +203,14 @@ const CastingPublicOverviewPage = () => {
       <Separator className="opacity-0 my-1" />
 
       <div className="flex flex-col gap-6">
-        {items.map((item) => (
+        {pagination.revealedItems.map((item) => (
           <CastingRolePublicCard
             key={item.id}
             item={item}
             onSelect={(current) => navigate(`/casting/${current.defaultCode}/roles/${current.id}`)}
           />
         ))}
+        <LoadMoreSentinel enabled={pagination.hasNext} onVisible={pagination.loadMore} />
       </div>
     </main>
   );

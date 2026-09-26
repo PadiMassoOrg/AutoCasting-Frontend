@@ -1,13 +1,17 @@
 import { Wizard } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useMeData } from '../../auth/hooks/useMeData';
+import { readPendingProposal } from '../../proposals/utils/pendingProposal';
 import { EmployerBasicInfoStep, EmployerConfirmationStep, EmployerMediaStep } from './employer';
 import ModeSelectorStep from './ModeSelectorStep';
 import { TalentBasicInfoStep, TalentConfirmationStep, TalentMediaStep } from './talent';
 
 function OnboardingWizard() {
   const { data: meData, isLoading } = useMeData();
-  const [currentFlow, setCurrentFlow] = useState<'MODE' | 'TALENT' | 'EMPLOYER'>('MODE');
+  const [pendingProposal] = useState(() => readPendingProposal());
+  const [currentFlow, setCurrentFlow] = useState<'MODE' | 'TALENT' | 'EMPLOYER'>(
+    pendingProposal?.requirement.requiredMode ?? 'MODE'
+  );
 
   if (isLoading || !meData) return null;
 
@@ -40,7 +44,7 @@ function OnboardingWizard() {
   if (currentFlow === 'EMPLOYER') {
     return (
       <Wizard key="employer-flow" className="h-full">
-        <EmployerBasicInfoStep onBackToModeSelector={() => setCurrentFlow('MODE')} />
+        <EmployerBasicInfoStep onBackToModeSelector={pendingProposal ? undefined : () => setCurrentFlow('MODE')} />
         <EmployerMediaStep />
         <EmployerConfirmationStep />
       </Wizard>

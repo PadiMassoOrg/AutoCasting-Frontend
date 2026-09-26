@@ -10,7 +10,7 @@ import { usePatchEmployerBasicInfoMutation } from '../../../employer/employer-pr
 import { type EmployerBasicInfoValues, getEmployerBasicInfoSchema } from '../../schemas/emplyoerBasicInfoStepSchema';
 
 type Props = WizardStepProps & {
-  onBackToModeSelector: () => void;
+  onBackToModeSelector?: () => void;
 };
 
 function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, totalSteps = 1, progress = 0 }: Props) {
@@ -80,9 +80,11 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
             <>
               <WizardActions
                 secondaryAction={
-                  <Button variant="outline" type="button" onClick={onBackToModeSelector}>
-                    {t('buttons.back')}
-                  </Button>
+                  onBackToModeSelector && (
+                    <Button variant="outline" type="button" onClick={onBackToModeSelector}>
+                      {t('buttons.back')}
+                    </Button>
+                  )
                 }
                 primaryAction={
                   <Button variant="primary" type="submit" disabled={isNextDisabled} loading={isSubmitting || isPending}>

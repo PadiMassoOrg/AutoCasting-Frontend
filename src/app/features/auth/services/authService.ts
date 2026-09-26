@@ -1,7 +1,8 @@
 import api from '../../../shared/lib/axios';
 import { getRawAuthToken, getRefreshToken } from '../../../shared/lib/cookies';
-import { forceLogoutRedirect } from '../../../shared/lib/authSession';
+import { clearClientSession, forceLogoutRedirect } from '../../../shared/lib/authSession';
 import { API_ROUTES } from '../../../shared/lib/routes';
+import { clearPendingProposal } from '../../proposals/utils/pendingProposal';
 import type {
   AuthenticationResponse,
   ForgotPasswordRequest,
@@ -87,12 +88,23 @@ export const resetPassword = async (data: ResetPasswordRequest) => {
   return response.data;
 };
 
-export const logout = () => {
-  const refreshToken = getRefreshToken();
-  forceLogoutRedirect();
+const revokeRefreshToken = (refreshToken: string | undefined) => {
   if (refreshToken) {
     void logoutRequest(refreshToken).catch(() => {
       // best-effort — client-side session is already cleared regardless of server outcome
     });
   }
+};
+
+export const logout = () => {
+  const refreshToken = getRefreshToken();
+  clearPendingProposal();
+  forceLogoutRedirect();
+  revokeRefreshToken(refreshToken);
+};
+
+export const logoutInPlace = () => {
+  const refreshToken = getRefreshToken();
+  clearClientSession();
+  revokeRefreshToken(refreshToken);
 };
