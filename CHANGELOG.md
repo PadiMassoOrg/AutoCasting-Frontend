@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-27
+
+- Versión: `1.4.0`
+- Feature (AI-55, AI-57): página de proposal `/proposal/:token` fuera del shell de la app, con listado y detalle de roles y banner "Reclamar casting". Al reclamar se cierra la sesión activa y se piden credenciales; la proposal pendiente (2 h) se resuelve después de registro, login u onboarding, con el wizard iniciando en el modo requerido y un toast con el resultado del claim. Las limpiezas automáticas de sesión ya no descartan la proposal pendiente.
+- Feature (AI-57): paginación del lado del cliente (5 por página) del listado de roles en la página pública del casting y en la preview de la proposal.
+- Feature (AI-55): sitemetadata extendida para proposals y labels traducidos en los dropdowns de selección múltiple.
+- Fix (AI-63): el título del casting en la página pública del casting (encabezado lateral en desktop y tarjeta en mobile) se muestra completo en varias líneas, sin elipsis.
+- Fix: "Copiar link" en el listado de castings del employer solo está habilitado para castings publicados (antes también para pausados, cuyo link público ya no existe).
+- Dependencias: `autocasting-ui-library-padimasso` `^1.8.0` (estados deshabilitados de inputs, indicador de orden en tablas).
+
 ## 2026-09-24
 
 - Versión: `1.3.3`
