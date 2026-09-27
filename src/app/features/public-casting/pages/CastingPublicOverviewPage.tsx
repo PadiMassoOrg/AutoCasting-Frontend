@@ -86,7 +86,7 @@ const CastingPublicOverviewPage = () => {
   const menuHeader = (
     <div className="sticky top-0 z-10 bg-(--color-secondary-white) pb-5">
       <div className="flex min-w-0 flex-col">
-        <h2 className="truncate text-2xl font-semibold">{casting.title}</h2>
+        <h2 className="break-words text-2xl font-semibold">{casting.title}</h2>
         <p className="text-sm font-light text-(--color-secondary-grey-fonts)">{t(casting.projectType.stringCode)}</p>
       </div>
     </div>
@@ -195,7 +195,7 @@ const CastingPublicOverviewPage = () => {
     <main className="relative flex flex-col gap-6">
       <SectionCard className="flex flex-col gap-4">
         <div className="flex min-w-0 flex-col">
-          <h1 className="truncate text-2xl font-semibold">{casting.title}</h1>
+          <h1 className="break-words text-2xl font-semibold">{casting.title}</h1>
           <p className="text-sm font-light text-(--color-secondary-grey-fonts)">{t(casting.projectType.stringCode)}</p>
         </div>
       </SectionCard>
