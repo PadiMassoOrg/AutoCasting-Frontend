@@ -79,11 +79,11 @@ describe('useCastingOverflowMenuItems', () => {
     expect(findItem(items, 'copy_link')?.disabled).toBe(true);
   });
 
-  it('enables applicants and copyLink for a paused casting', () => {
+  it('enables applicants but not copyLink for a paused casting (public link only exists while published)', () => {
     const items = renderMenu(CASTING_STATUS_PAUSED);
 
     expect(findItem(items, 'applicants')?.disabled).toBe(false);
-    expect(findItem(items, 'copy_link')?.disabled).toBe(false);
+    expect(findItem(items, 'copy_link')?.disabled).toBe(true);
   });
 
   it('disables everything but delete for an archived casting', () => {
