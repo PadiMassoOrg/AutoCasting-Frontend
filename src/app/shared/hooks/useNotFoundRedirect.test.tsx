@@ -17,16 +17,18 @@ describe('useNotFoundRedirect', () => {
     showToastMock.mockReset();
   });
 
-  it('redirects with an error toast when the backend answers 404', () => {
+  it('redirects with a warning toast when the backend answers 404', () => {
     const { result } = renderHook(() =>
       useNotFoundRedirect(backendError(404), '/casting-database', 'casting.unavailable')
     );
 
     expect(result.current).toBe(true);
     expect(showToastMock).toHaveBeenCalledWith({
-      title: 'general.error',
+      title: 'state.no_results',
       description: 'casting.unavailable',
-      type: 'danger',
+      type: 'warning',
+      durationMs: 7000,
+      closable: true,
     });
     expect(navigateMock).toHaveBeenCalledWith('/casting-database', { replace: true });
   });

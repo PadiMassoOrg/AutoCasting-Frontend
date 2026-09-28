@@ -18,7 +18,7 @@ export const useNotFoundRedirect = (error: unknown, to: string, messageKey: stri
     showToast({
       title: t('state.no_results'),
       description: t(messageKey),
-      type: 'danger',
+      type: 'warning',
       durationMs: 7000,
       closable: true,
     });
