@@ -2,7 +2,7 @@ import type { SocialMediaPatchRequest } from '../../../talent/talent-profile-edi
 
 export type EmployerBasicInfoPatchRequest = {
   companyName?: string;
-  taxNumber?: string;
+  taxNumber?: string | null;
   companyTypeId?: string | null;
   companyEmail?: string | null;
   imageUrl?: string | null;

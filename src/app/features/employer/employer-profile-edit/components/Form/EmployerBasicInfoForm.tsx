@@ -8,7 +8,7 @@ import {
 } from 'autocasting-ui-library-padimasso';
 import { useMemo, useState, type ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '../../../../../context/ToastContext';
+import { useEmployerLogoDelete } from '../../../../../integrations/supabase/media/hooks/useEmployerLogoDelete';
 import { useEmployerLogoPatch } from '../../../../../integrations/supabase/media/hooks/useEmployerLogoPatch';
 import { getBackendErrorMessage } from '../../../../../shared/utils/backendErrorHandling';
 import { useCommittedText, useCommittedUuid } from '../../../../../shared/utils/formUtils';
@@ -38,7 +38,6 @@ type Props = {
 
 export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
   const autosave = useEmployerBasicInfoAutosave();
   const socialMediaAutosave = useEmployerSocialMediaAutosave();
   const schema = useMemo(() => getEmployerBasicInfoSchema(t), [t]);
@@ -51,6 +50,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   const [bust, setBust] = useState(0);
 
   const { mutate: uploadLogo, isPending: uploadPending } = useEmployerLogoPatch(profileId);
+  const { mutate: deleteLogo, isPending: deletePending } = useEmployerLogoDelete();
 
   const currentLogoUrl = data.imageUrl ?? null;
 
@@ -73,9 +73,9 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
       const r = schema.shape.taxNumber.safeParse(v);
       setErrors((e) => ({
         ...e,
-        taxNumber: r.success ? null : r.error.errors[0]?.message || t('validation.required'),
+        taxNumber: r.success ? null : r.error.errors[0]?.message || t('validation.invalid'),
       }));
-      if (r.success) autosave.immediate({ taxNumber: v });
+      if (r.success) autosave.immediate({ taxNumber: v || null });
     },
     { trim: true }
   );
@@ -182,16 +182,24 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
   };
 
   const handleDeleteLogo = () => {
-    showToast({
-      title: t('general.warning'),
-      description: t('profile.media.must_have_one_photo'),
-      type: 'warning',
-      durationMs: 5500,
-    });
+    setPreviewUrl(null);
+    setErrImage(null);
+    setErrors((e) => ({ ...e, imageUrl: null }));
+
+    deleteLogo(
+      { url: currentLogoUrl },
+      {
+        onError: (err: unknown) => {
+          const msg = getBackendErrorMessage(err, t);
+          setErrImage(msg);
+          setErrors((e) => ({ ...e, imageUrl: msg }));
+        },
+      }
+    );
   };
 
-  const logoUrl = uploadPending ? undefined : withBust(currentLogoUrl, bust);
-  const isLogoBusy = uploadPending;
+  const isLogoBusy = uploadPending || deletePending;
+  const logoUrl = isLogoBusy ? undefined : withBust(currentLogoUrl, bust);
 
   const socialMediaData: ProfileSocialMedia = (data.socialMedia ?? { links: [] }) as ProfileSocialMedia;
   const resolveError = (field: string, local?: string | null) => local ?? backendFieldErrors[field] ?? undefined;

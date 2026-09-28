@@ -9,7 +9,7 @@ export type TalentCastingApplicationCardResponse = {
   castingRoleId: string;
   castingSlug: string;
   companyName: string;
-  employerImageUrl: string;
+  employerImageUrl: string | null;
   castingModalityText: string | null;
   shootingStartDate: string;
   shootingEndDate: string;

@@ -15,9 +15,10 @@ export function getEmployerBasicInfoSchema(t: TFunction) {
   const taxNumber = z
     .string()
     .trim()
-    .min(1, { message: t('validation.required') })
     .max(255, { message: t('validation.max_char') })
-    .regex(TAX_NUMBER_RX, { message: t('validation.invalid') });
+    .regex(TAX_NUMBER_RX, { message: t('validation.invalid') })
+    .optional()
+    .or(z.literal('').transform(() => undefined));
 
   const companyTypeId = z
     .string()

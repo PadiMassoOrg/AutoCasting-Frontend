@@ -25,7 +25,6 @@ vi.mock('./employer', () => ({
       {onBackToModeSelector && <span>back-to-mode-selector</span>}
     </div>
   ),
-  EmployerMediaStep: () => null,
   EmployerConfirmationStep: () => null,
 }));
 
