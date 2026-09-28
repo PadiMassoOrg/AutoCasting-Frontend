@@ -32,7 +32,7 @@ type Visibility = {
 const VISIBILITY_BY_STATUS: Record<string, Omit<Visibility, 'edit'>> = {
   [CASTING_STATUS_DRAFT]: { details: false, applicants: false, copyLink: false, delete: true },
   [CASTING_STATUS_CLOSED]: { details: false, applicants: true, copyLink: false, delete: true },
-  [CASTING_STATUS_PAUSED]: { details: false, applicants: true, copyLink: true, delete: true },
+  [CASTING_STATUS_PAUSED]: { details: false, applicants: true, copyLink: false, delete: true },
   [CASTING_STATUS_PUBLISHED]: { details: true, applicants: true, copyLink: true, delete: true },
   [CASTING_STATUS_ARCHIVED]: { details: false, applicants: false, copyLink: false, delete: true },
 };
