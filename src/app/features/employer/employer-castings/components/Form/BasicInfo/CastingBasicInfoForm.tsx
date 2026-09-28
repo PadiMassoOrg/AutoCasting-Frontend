@@ -17,19 +17,6 @@ import type { CastingBasicInfoFieldKey, CastingBasicInfoFormData } from '../../.
 
 type Errors = Partial<Record<CastingBasicInfoFieldKey, string | null>>;
 
-const getApplicationDeadlineError = (iso: string, t: ReturnType<typeof useTranslation>['t']) => {
-  if (!iso) return null;
-
-  const today = new Date();
-  const todayIso = [
-    today.getFullYear(),
-    String(today.getMonth() + 1).padStart(2, '0'),
-    String(today.getDate()).padStart(2, '0'),
-  ].join('-');
-
-  return iso < todayIso ? t('validation.application_deadline_past') : null;
-};
-
 const CastingBasicInfoForm = ({
   data,
   backendErrors,
@@ -86,7 +73,8 @@ const CastingBasicInfoForm = ({
     () => parseLocalISODate(data.applicationDeadline),
     [data.applicationDeadline]
   );
-  const applicationDeadlineError = getApplicationDeadlineError(data.applicationDeadline, t);
+  const deadlineCheck = schema.shape.applicationDeadline.safeParse(data.applicationDeadline);
+  const applicationDeadlineError = deadlineCheck.success ? null : (deadlineCheck.error.errors[0]?.message ?? null);
 
   const setLocalError = (field: CastingBasicInfoFieldKey, message: string | null) => {
     setErrors((prev) => ({ ...prev, [field]: message }));

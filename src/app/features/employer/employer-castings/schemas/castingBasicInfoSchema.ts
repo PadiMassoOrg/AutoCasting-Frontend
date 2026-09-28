@@ -3,6 +3,16 @@ import { z } from 'zod';
 import { capitalizeWords, sentenceCaseIfShouting } from '../../../../shared/utils/formatUtils';
 import { UUID_RX } from '../../../../shared/utils/schemaUtils';
 
+// Today's date in the browser's local time, as an ISO date (YYYY-MM-DD).
+const todayIso = () => {
+  const today = new Date();
+  return [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, '0'),
+    String(today.getDate()).padStart(2, '0'),
+  ].join('-');
+};
+
 export function getCastingBasicInfoSchema(t: TFunction) {
   const optionalUuid = z
     .string()
@@ -37,7 +47,9 @@ export function getCastingBasicInfoSchema(t: TFunction) {
     projectTypeId: optionalUuid,
     castingModalityId: optionalUuid,
     locationText: optionalShortText,
-    applicationDeadline: optionalIsoDate,
+    applicationDeadline: optionalIsoDate.refine((value) => !value || value >= todayIso(), {
+      message: t('validation.application_deadline_past'),
+    }),
     hasWardrobeFitting: z.boolean().nullable().optional(),
     wardrobeFittingText: optionalShortText,
     shootingStartDate: optionalIsoDate,

@@ -8,8 +8,9 @@ import {
 } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { NotFoundPage, ServerErrorPage } from '../../../shared/components/ErrorPage';
-import { isBackendNotFoundError } from '../../../shared/utils/backendErrorHandling';
+import { ServerErrorPage } from '../../../shared/components/ErrorPage';
+import { useNotFoundRedirect } from '../../../shared/hooks/useNotFoundRedirect';
+import { ROUTES } from '../../../shared/lib/routes';
 import { TalentProfileModeToggle } from '../../talent/talent-profile-edit/components';
 import { BasicInfoSection, SocialMediaSection, VideoSection, ViewerActions } from '../components';
 import ProfileInfoCarousel from '../components/Details/ProfileInfoCarousel';
@@ -24,8 +25,10 @@ const PublicProfilePage = () => {
   const { data, error, isLoading } = usePublicProfile(slug);
   const isDesktop = useMedia(LG_SCREEN_SIZE);
   const isDesktopXL = useMedia(XL_SCREEN_SIZE);
+  const isUnavailable = useNotFoundRedirect(error, ROUTES.TALENT_DATABASE, 'profile.unavailable');
 
-  if (error) return isBackendNotFoundError(error) ? <NotFoundPage /> : <ServerErrorPage />;
+  if (isUnavailable) return null;
+  if (error) return <ServerErrorPage />;
   if (isLoading || !data) {
     return (
       <Label className="w-full pt-10 flex items-center justify-center text-center text-[var(--color-secondary-grey-fonts)]">

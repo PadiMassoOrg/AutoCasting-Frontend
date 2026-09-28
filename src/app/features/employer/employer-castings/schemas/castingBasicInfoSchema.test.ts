@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { TFunction } from 'i18next';
 import { getCastingBasicInfoSchema } from './castingBasicInfoSchema';
 
@@ -18,6 +18,15 @@ const validPayload = {
 };
 
 describe('getCastingBasicInfoSchema', () => {
+  beforeAll(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(2026, 8, 28, 12, 0, 0));
+  });
+
+  afterAll(() => {
+    vi.useRealTimers();
+  });
+
   it('accepts a fully valid payload', () => {
     const result = getCastingBasicInfoSchema(t).safeParse(validPayload);
 
@@ -125,6 +134,21 @@ describe('getCastingBasicInfoSchema', () => {
       const result = getCastingBasicInfoSchema(t).safeParse({ ...validPayload, shootingStartDate: '2027-05-01' });
 
       expect(result.success).toBe(true);
+    });
+
+    it('accepts an applicationDeadline of today', () => {
+      const result = getCastingBasicInfoSchema(t).safeParse({ ...validPayload, applicationDeadline: '2026-09-28' });
+
+      expect(result.success).toBe(true);
+    });
+
+    it('rejects an applicationDeadline before today', () => {
+      const result = getCastingBasicInfoSchema(t).safeParse({ ...validPayload, applicationDeadline: '2026-09-27' });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.errors[0]?.message).toBe('validation.application_deadline_past');
+      }
     });
   });
 
