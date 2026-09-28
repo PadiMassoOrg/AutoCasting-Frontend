@@ -15,7 +15,13 @@ export const useNotFoundRedirect = (error: unknown, to: string, messageKey: stri
 
   useEffect(() => {
     if (!isNotFound) return;
-    showToast({ title: t('general.error'), description: t(messageKey), type: 'danger' });
+    showToast({
+      title: t('state.no_results'),
+      description: t(messageKey),
+      type: 'danger',
+      durationMs: 7000,
+      closable: true,
+    });
     navigate(to, { replace: true });
   }, [isNotFound, messageKey, navigate, showToast, t, to]);
 
