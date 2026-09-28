@@ -19,7 +19,6 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
   const { submit, fieldErrors, clearFieldError, isPending } = usePatchEmployerBasicInfoMutation();
 
   const savedCompanyName = profile?.basicInfo?.companyName ?? '';
-  const savedTaxNumber = profile?.basicInfo?.taxNumber ?? '';
 
   const {
     register,
@@ -31,7 +30,6 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
     mode: 'onChange',
     defaultValues: {
       companyName: '',
-      taxNumber: '',
     },
   });
 
@@ -39,22 +37,17 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
     if (profile) {
       reset({
         companyName: savedCompanyName,
-        taxNumber: savedTaxNumber,
       });
     }
-  }, [profile, savedCompanyName, savedTaxNumber, reset]);
+  }, [profile, savedCompanyName, reset]);
 
   const companyNameRegister = register('companyName', {
     onChange: () => clearFieldError('companyName'),
-  });
-  const taxNumberRegister = register('taxNumber', {
-    onChange: () => clearFieldError('taxNumber'),
   });
 
   const onSubmit = async (data: EmployerBasicInfoValues) => {
     const result = await submit({
       companyName: data.companyName,
-      taxNumber: data.taxNumber,
     }).catch(() => null);
     if (!result) return;
     goNext?.();
@@ -63,7 +56,6 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
   if (profilePending && !profile) return null;
 
   const isNextDisabled = !isValid;
-  const taxNumberError = errors.taxNumber?.message ?? fieldErrors.taxNumber;
 
   return (
     <section className="flex flex-col gap-3.5">
@@ -104,24 +96,6 @@ function EmployerBasicInfoStep({ onBackToModeSelector, goNext, stepIndex = 0, to
               {...companyNameRegister}
               error={errors.companyName?.message ?? fieldErrors.companyName}
             />
-
-            <div className="flex flex-col">
-              <FormInputField
-                id="taxNumber"
-                type="text"
-                placeholder={t('general.placeholder.tax_number')}
-                className="bg-[var(--color-primary-white)]"
-                {...taxNumberRegister}
-                error={taxNumberError}
-              />
-              <p
-                className={`pl-2 text-xs italic text-[var(--color-secondary-grey-fonts)] ${
-                  taxNumberError ? 'pt-1' : '-mt-[10px]'
-                }`}
-              >
-                {t('onboarding.employer.step_basic_info.tax_disclaimer')}
-              </p>
-            </div>
           </div>
         </OnboardingStepShell>
       </form>

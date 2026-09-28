@@ -26,6 +26,7 @@ import { useUpdateCastingMutation } from '../hooks/useUpdateCastingMutation';
 import { useUpsertCastingRoleMutation } from '../hooks/useUpsertCastingRoleMutation';
 import { getCastingBasicInfoSchema } from '../schemas/castingBasicInfoSchema';
 import type { CastingBasicInfoFormData, CastingRoleFormData } from '../types/employerCastings.types';
+import { canPublishCasting } from '../utils/canPublishCasting';
 import {
   createEmptyRoleDraft,
   toBasicInfoFormData,
@@ -171,9 +172,14 @@ const EmployerCastingPage = () => {
       stableStringify(roleDraft) !== stableStringify(currentRoleInitialDraft)) ||
     isReferencePhotoDirty;
   const canSaveRole = Boolean(roleDraft && castingId && isRoleFormValid && isRoleDirty);
-  // Publishing uses the saved casting, so it also waits for valid, saved basic info and roles.
-  const isBasicInfoValid = getCastingBasicInfoSchema(t).safeParse(draft).success;
-  const canPublish = data.publishable && isBasicInfoValid && !isDirty && !isRoleDirty;
+  const canPublish = canPublishCasting({
+    publishable: data.publishable,
+    savedRolesCount: roleCards.length,
+    isBasicInfoValid: getCastingBasicInfoSchema(t).safeParse(draft).success,
+    isBasicInfoDirty: isDirty,
+    selectedRoleId,
+    isRoleDirty,
+  });
 
   const handleDeleteRole = async (roleId: string) => {
     const remainingRoles = roleCards.filter((role) => role.id !== roleId);

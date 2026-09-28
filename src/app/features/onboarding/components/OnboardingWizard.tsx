@@ -2,7 +2,7 @@ import { Wizard } from 'autocasting-ui-library-padimasso';
 import { useState } from 'react';
 import { useMeData } from '../../auth/hooks/useMeData';
 import { readPendingProposal } from '../../proposals/utils/pendingProposal';
-import { EmployerBasicInfoStep, EmployerConfirmationStep, EmployerMediaStep } from './employer';
+import { EmployerBasicInfoStep, EmployerConfirmationStep } from './employer';
 import ModeSelectorStep from './ModeSelectorStep';
 import { TalentBasicInfoStep, TalentConfirmationStep, TalentMediaStep } from './talent';
 
@@ -45,7 +45,6 @@ function OnboardingWizard() {
     return (
       <Wizard key="employer-flow" className="h-full">
         <EmployerBasicInfoStep onBackToModeSelector={pendingProposal ? undefined : () => setCurrentFlow('MODE')} />
-        <EmployerMediaStep />
         <EmployerConfirmationStep />
       </Wizard>
     );

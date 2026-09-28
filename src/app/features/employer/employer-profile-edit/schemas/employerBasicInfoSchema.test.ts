@@ -45,10 +45,20 @@ describe('getEmployerBasicInfoSchema', () => {
   });
 
   describe('taxNumber', () => {
-    it('rejects an empty taxNumber', () => {
+    it('treats an empty string as absent', () => {
       const result = getEmployerBasicInfoSchema(t).safeParse({ ...validPayload, taxNumber: '' });
 
-      expect(result.success).toBe(false);
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.taxNumber).toBeUndefined();
+      }
+    });
+
+    it('allows taxNumber to be omitted entirely', () => {
+      const { taxNumber, ...rest } = validPayload;
+      const result = getEmployerBasicInfoSchema(t).safeParse(rest);
+
+      expect(result.success).toBe(true);
     });
 
     it('rejects a taxNumber with invalid characters', () => {

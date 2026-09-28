@@ -8,7 +8,7 @@ import { useUpdateOnboardingMutation } from '../../hooks/useUpdateOnboardingMuta
 import { ROUTES } from '../../../../shared/lib/routes';
 import { useNavigate } from 'react-router-dom';
 
-function EmployerConfirmationStep({ goBack, stepIndex = 2, totalSteps = 3, progress = 100 }: WizardStepProps) {
+function EmployerConfirmationStep({ goBack, stepIndex = 1, totalSteps = 2, progress = 100 }: WizardStepProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: meData } = useMeData();

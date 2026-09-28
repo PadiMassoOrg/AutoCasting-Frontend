@@ -34,15 +34,17 @@ const TalentCastingApplicationCard = ({ data }: { data: TalentCastingApplication
         </div>
         {/* Employer */}
         <div className="flex flex-row items-center gap-2">
-          <img
-            src={employerImageUrl}
-            alt="employer Image"
-            loading="lazy"
-            decoding="async"
-            width={24}
-            height={24}
-            className="w-6 h-6 rounded-full object-cover"
-          />
+          {employerImageUrl && (
+            <img
+              src={employerImageUrl}
+              alt="employer Image"
+              loading="lazy"
+              decoding="async"
+              width={24}
+              height={24}
+              className="w-6 h-6 rounded-full object-cover"
+            />
+          )}
           <p className="text-xs font-light text-[var(--color-secondary-gray)]">{companyName}</p>
         </div>
         {/* Project Type and Modality */}

@@ -207,15 +207,17 @@ export const CastingDetailsEmployerCard = ({ employerInfo }: { employerInfo: Pub
     return (
       <SectionCard className="bg-[var(--color-secondary-offwhite)]">
         <article className="flex flex-row items-center gap-1.5">
-          <img
-            src={employerInfo.imageUrl}
-            alt={employerInfo.companyName ?? 'Employer'}
-            loading="lazy"
-            decoding="async"
-            width={56}
-            height={56}
-            className="h-14 w-14 rounded-full object-cover"
-          />
+          {employerInfo.imageUrl && (
+            <img
+              src={employerInfo.imageUrl}
+              alt={employerInfo.companyName ?? 'Employer'}
+              loading="lazy"
+              decoding="async"
+              width={56}
+              height={56}
+              className="h-14 w-14 rounded-full object-cover"
+            />
+          )}
           <div className="flex flex-col gap-1 flex-wrap">
             <h4 className="text-base font-semibold">{employerInfo.companyName}</h4>
             <span className="flex items-center gap-2">
@@ -244,15 +246,17 @@ export const CastingDetailsEmployerCard = ({ employerInfo }: { employerInfo: Pub
     return (
       <SectionCard className="bg-[var(--color-secondary-offwhite)]">
         <article className="flex flex-row items-center gap-2">
-          <img
-            src={employerInfo.imageUrl}
-            alt={employerInfo.companyName ?? 'Employer'}
-            loading="lazy"
-            decoding="async"
-            width={56}
-            height={56}
-            className="h-14 w-14 rounded-full object-cover"
-          />
+          {employerInfo.imageUrl && (
+            <img
+              src={employerInfo.imageUrl}
+              alt={employerInfo.companyName ?? 'Employer'}
+              loading="lazy"
+              decoding="async"
+              width={56}
+              height={56}
+              className="h-14 w-14 rounded-full object-cover"
+            />
+          )}
           <div className="w-full flex flex-col gap-1">
             <div className="flex flex-row items-center justify-between">
               <h4 className="text-base font-semibold">{employerInfo.companyName}</h4>
