@@ -47,7 +47,7 @@ export function isHeicImage(file: File): boolean {
   return HEIC_MIME.test(file.type) || (file.type === '' && HEIC_EXT.test(file.name));
 }
 
-export function isCompressibleImage(file: File): boolean {
+export function isConvertibleImage(file: File): boolean {
   if (isHeicImage(file)) return true;
   return file.type.startsWith('image/') && file.type !== 'image/svg+xml';
 }
@@ -71,8 +71,9 @@ export function assertImageSourceSize(file: File) {
   }
 }
 
+// Every upload is stored as WebP: anything that can't be converted is rejected, never uploaded as-is.
 export async function optimizeImageForUpload(file: File, kind: ImageUploadKind): Promise<File> {
-  if (!isCompressibleImage(file)) return file;
+  if (!isConvertibleImage(file)) throw new Error('validation.type_image');
 
   const preset = PRESETS[kind];
   const source = await normalizeHeic(file);
@@ -92,15 +93,14 @@ export async function optimizeImageForUpload(file: File, kind: ImageUploadKind):
     ctx.drawImage(bitmap, 0, 0, width, height);
 
     let quality = preset.initialQuality;
-    let out = await canvasToBlob(canvas, OUTPUT_MIME, quality);
+    let out = await encodeWebp(canvas, ctx, quality);
 
     while (out.size > preset.targetBytes && quality > preset.minQuality) {
       quality = Math.max(preset.minQuality, quality - preset.qualityStep);
-      out = await canvasToBlob(canvas, OUTPUT_MIME, quality);
+      out = await encodeWebp(canvas, ctx, quality);
     }
 
-    const optimizedFile = blobToFile(out, forceWebpName(source.name));
-    return optimizedFile.size <= source.size ? optimizedFile : source;
+    return blobToFile(out, forceWebpName(source.name));
   } finally {
     bitmap.close();
   }
@@ -135,6 +135,27 @@ async function readBitmap(file: File): Promise<ImageBitmap> {
   }
 }
 
+let nativeWebpEncoding: boolean | undefined;
+
+// Browsers without canvas WebP encoding (e.g. older Safari) silently return a PNG from
+// toBlob('image/webp'), so the result's type is checked and the WASM encoder takes over.
+async function encodeWebp(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, quality: number): Promise<Blob> {
+  if (nativeWebpEncoding !== false) {
+    const blob = await canvasToBlob(canvas, OUTPUT_MIME, quality);
+    nativeWebpEncoding = blob.type === OUTPUT_MIME;
+    if (nativeWebpEncoding) return blob;
+  }
+
+  try {
+    const { default: encode } = await import('@jsquash/webp/encode');
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const buffer = await encode(imageData, { quality: Math.round(quality * 100) });
+    return new Blob([buffer], { type: OUTPUT_MIME });
+  } catch {
+    throw new Error('validation.media_decode_failed');
+  }
+}
+
 function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality: number): Promise<Blob> {
   return new Promise((resolve, reject) => {
     canvas.toBlob(
@@ -153,7 +174,7 @@ function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality: number):
 
 function blobToFile(blob: Blob, name: string): File {
   return new File([blob], name, {
-    type: blob.type || OUTPUT_MIME,
+    type: OUTPUT_MIME,
     lastModified: Date.now(),
   });
 }

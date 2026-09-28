@@ -4,6 +4,9 @@ import { defineConfig, searchForWorkspaceRoot } from 'vite';
 
 export default defineConfig({
   plugins: [react()],
+  optimizeDeps: {
+    exclude: ['@jsquash/webp'],
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
