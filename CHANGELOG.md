@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-09-28 (2)
+
+- Versión: `1.4.2`
+- Fix (AI-68): toda imagen subida a Supabase (fotos del talento, logo del employer, foto de referencia del rol) se guarda siempre en WebP: ya no se sube el archivo original cuando el WebP resulta más pesado, los formatos que no se pueden convertir (p. ej. SVG) se rechazan, y en navegadores sin codificación WebP nativa (p. ej. Safari antiguo) se usa `@jsquash/webp` (WASM, cargado solo cuando hace falta). Las imágenes ya subidas no se migran.
+- Dependencias: `@jsquash/webp` `^1.5.0`; `vite.config.ts` lo excluye de `optimizeDeps`.
+- Tests: Vitest para `optimizeImageForUpload` (WebP nativo, fallback WASM, rechazo de formatos no convertibles).
+
 ## 2026-09-28
 
 - Versión: `1.4.1`
