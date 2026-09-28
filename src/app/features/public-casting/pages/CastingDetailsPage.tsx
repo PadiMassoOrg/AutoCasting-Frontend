@@ -9,8 +9,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { CastingDetailsDesktopBody, CastingDetailsMobileBody } from '../../../shared/components/CastingDetails';
-import { NotFoundPage, ServerErrorPage } from '../../../shared/components/ErrorPage';
-import { isBackendNotFoundError } from '../../../shared/utils/backendErrorHandling';
+import { ServerErrorPage } from '../../../shared/components/ErrorPage';
+import { useNotFoundRedirect } from '../../../shared/hooks/useNotFoundRedirect';
+import { ROUTES } from '../../../shared/lib/routes';
 import { CastingCatalogDetailsApplyAction } from '../../casting-database/components';
 import { usePublicCastingDetails } from '../hooks/usePublicCastingDetails';
 
@@ -20,8 +21,10 @@ const CastingDetailsPage = () => {
   const isDesktop = useMedia(LG_SCREEN_SIZE);
 
   const publicQuery = usePublicCastingDetails({ slug: slug!, roleId: roleId! });
+  const isUnavailable = useNotFoundRedirect(publicQuery.error, ROUTES.CASTING_DATABASE, 'casting.unavailable');
 
-  if (publicQuery.error) return isBackendNotFoundError(publicQuery.error) ? <NotFoundPage /> : <ServerErrorPage />;
+  if (isUnavailable) return null;
+  if (publicQuery.error) return <ServerErrorPage />;
   if (publicQuery.isLoading || !publicQuery.data) {
     return (
       <Label className="w-full pt-10 flex items-center justify-center text-center text-[var(--color-secondary-grey-fonts)]">

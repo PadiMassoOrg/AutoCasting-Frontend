@@ -13,10 +13,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CastingDetailsDesktopBody } from '../../../shared/components/CastingDetails';
-import { NotFoundPage, ServerErrorPage } from '../../../shared/components/ErrorPage';
+import { ServerErrorPage } from '../../../shared/components/ErrorPage';
+import { useNotFoundRedirect } from '../../../shared/hooks/useNotFoundRedirect';
+import { ROUTES } from '../../../shared/lib/routes';
 import { LoadMoreSentinel } from '../../../shared/components/LoadMoreSentinel';
 import { useClientPagination } from '../../../shared/hooks/useClientPagination';
-import { isBackendNotFoundError } from '../../../shared/utils/backendErrorHandling';
 import {
   CastingCatalogDetailsApplyAction,
   CastingCatalogPagination,
@@ -72,9 +73,15 @@ const CastingPublicOverviewPage = () => {
       enabled: Boolean(slug && selectedRoleId && isDesktop),
     }
   );
+  // Either query answering 404 means the casting is no longer offered (e.g. its deadline passed).
+  const isUnavailable = useNotFoundRedirect(
+    overviewQuery.error ?? detailsQuery.error,
+    ROUTES.CASTING_DATABASE,
+    'casting.unavailable'
+  );
 
-  if (overviewQuery.isError)
-    return isBackendNotFoundError(overviewQuery.error) ? <NotFoundPage /> : <ServerErrorPage />;
+  if (isUnavailable) return null;
+  if (overviewQuery.isError) return <ServerErrorPage />;
   if (overviewQuery.isLoading || !casting) {
     return (
       <Label className="w-full pt-10 flex items-center justify-center text-center text-[var(--color-secondary-grey-fonts)]">
@@ -157,7 +164,7 @@ const CastingPublicOverviewPage = () => {
       );
     }
 
-    if (detailsQuery.error) return isBackendNotFoundError(detailsQuery.error) ? <NotFoundPage /> : <ServerErrorPage />;
+    if (detailsQuery.error) return <ServerErrorPage />;
     if (!detailsQuery.data) return null;
 
     return <CastingDetailsDesktopBody casting={detailsQuery.data.casting} />;
