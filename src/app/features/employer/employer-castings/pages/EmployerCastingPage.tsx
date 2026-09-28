@@ -24,6 +24,7 @@ import { useDuplicateCastingRoleMutation } from '../hooks/useDuplicateCastingRol
 import { useEmployerCastingEditorBySlug } from '../hooks/useEmployerCastingDetailsBySlug';
 import { useUpdateCastingMutation } from '../hooks/useUpdateCastingMutation';
 import { useUpsertCastingRoleMutation } from '../hooks/useUpsertCastingRoleMutation';
+import { getCastingBasicInfoSchema } from '../schemas/castingBasicInfoSchema';
 import type { CastingBasicInfoFormData, CastingRoleFormData } from '../types/employerCastings.types';
 import {
   createEmptyRoleDraft,
@@ -170,6 +171,9 @@ const EmployerCastingPage = () => {
       stableStringify(roleDraft) !== stableStringify(currentRoleInitialDraft)) ||
     isReferencePhotoDirty;
   const canSaveRole = Boolean(roleDraft && castingId && isRoleFormValid && isRoleDirty);
+  // Publishing uses the saved casting, so it also waits for valid, saved basic info and roles.
+  const isBasicInfoValid = getCastingBasicInfoSchema(t).safeParse(draft).success;
+  const canPublish = data.publishable && isBasicInfoValid && !isDirty && !isRoleDirty;
 
   const handleDeleteRole = async (roleId: string) => {
     const remainingRoles = roleCards.filter((role) => role.id !== roleId);
@@ -315,7 +319,7 @@ const EmployerCastingPage = () => {
           <h2>{t('employer_castings.dashboard.checkout.beta_total')}</h2>
         </div>
         <Separator className="opacity-20" />
-        <Button variant="primary" disabled={!data.publishable} onClick={openCheckoutModal}>
+        <Button variant="primary" disabled={!canPublish} onClick={openCheckoutModal}>
           {t('employer_castings.dashboard.checkout.checkout_and_publish')}
         </Button>
       </div>
@@ -329,7 +333,7 @@ const EmployerCastingPage = () => {
         <h2>{t('employer_castings.dashboard.checkout.beta_total')}</h2>
       </div>
       <Separator className="opacity-20 my-4" />
-      <Button variant="primary" disabled={!data.publishable} onClick={openCheckoutModal}>
+      <Button variant="primary" disabled={!canPublish} onClick={openCheckoutModal}>
         {t('employer_castings.dashboard.checkout.checkout_and_publish')}
       </Button>
     </article>
