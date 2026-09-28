@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-09-28
+
+- Versión: `1.4.1`
+- Fix (AI-65): el onboarding de employer pasa a 2 pasos — el primero solo pide el nombre de la empresa (se quita el CUIT/CUIL) y se elimina el paso de foto/logo.
+- Fix (AI-65): en el perfil del employer el CUIT/CUIL es opcional (vacío se guarda como `null`) y la foto se puede borrar (`useEmployerLogoDelete`: primero limpia `imageUrl` en el backend, después borra el archivo en Supabase, con aviso si falla la limpieza).
+- Fix (AI-65): si el employer no tiene foto, la tarjeta de postulaciones del talento y el recuadro del employer en el detalle del casting ya no muestran una imagen rota.
+- Fix (AI-65): "Finalizar y Publicar" se habilita con al menos un rol guardado aunque el formulario de "Nuevo Rol" (que se abre solo al guardar un rol) tenga valores por defecto; solo lo bloquean cambios sin guardar en un rol existente (`canPublishCasting`).
+- Textos: `voice_talent` pasa a "Locución/Actor de voz".
+- Tests: Vitest para `useEmployerLogoDelete`, el schema del paso de onboarding, el schema de datos básicos del employer y `canPublishCasting`.
+
 ## 2026-09-27
 
 - Versión: `1.4.0`
