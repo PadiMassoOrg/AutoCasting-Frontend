@@ -7,10 +7,10 @@ const TalentCatalogSection = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="w-full flex flex-col gap-8 lg:gap-12">
+    <section className="w-full flex flex-col gap-8 lg:gap-12 lg:py-20">
       <div className="w-full flex flex-col gap-10 items-center lg:flex-row">
         <article className="w-full flex flex-col items-start gap-6 lg:flex-1">
-          <h2 className="text-3xl lg:text-4xl font-extrabold">{t('landing.talent.catalog.header')}</h2>
+          <h2 className="text-xl lg:text-3xl lg:text-4xl font-extrabold">{t('landing.talent.catalog.header')}</h2>
           <p className="text-base">{t('landing.talent.catalog.text')}</p>
           <Button variant="primary" asChild className="max-w-[250px] m-auto mt-8 mb-6 lg:m-0">
             <a href={ROUTES.AUTH_REGISTER} rel="noopener noreferrer">

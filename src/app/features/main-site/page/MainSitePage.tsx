@@ -30,7 +30,7 @@ const MainSitePage = () => {
   const handleViewChange = (nextView: MainSiteView) => setSearchParams({ view: nextView }, { replace: true });
 
   return (
-    <main className="max-w-[1500px] m-auto px-12">
+    <main className="max-w-[1500px] m-auto px-6 lg:px-12">
       <HeroSection></HeroSection>
       <div ref={sectionRef} className="w-full flex justify-center scroll-mt-20">
         <ViewSwitcher value={view} onChange={handleViewChange} />

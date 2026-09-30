@@ -646,6 +646,11 @@
         "header": "¡Listo!",
         "text": "Una vez en nuestro catálogo productores y directores van a poder encontrarte",
         "cta": "Creá tu Perfil"
+      },
+      "profile": {
+        "header": "Portfolio Digital",
+        "text": "Completa tu CV online y compartí tu portfolio con quien vos quieras con un link único.",
+        "cta": "Creá tu Perfil"
       }
     },
     "services": {
