@@ -13,21 +13,29 @@ const MainSitePage = () => {
   const requestedView = searchParams.get('view');
   const view: MainSiteView = requestedView === 'employer' ? 'employer' : 'talent';
   const sectionRef = useRef<HTMLDivElement>(null);
+  const isSwitcherClick = useRef(false);
 
   useEffect(() => {
-    // Only jump past the Hero for a view already present in the URL on
-    // load (e.g. a shared link) - the switcher itself must not scroll.
-    if (!requestedView) return;
+    // Jump past the Hero whenever a view shows up in the URL from outside
+    // the switcher itself (a shared link, or browser back/forward landing
+    // on one) - a click on the switcher already sits at the section, so it
+    // must not re-trigger this scroll.
+    if (!requestedView || isSwitcherClick.current) {
+      isSwitcherClick.current = false;
+      return;
+    }
 
     const timerId = window.setTimeout(() => {
-      sectionRef.current?.scrollIntoView({ behavior: 'auto', block: 'start' });
+      sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, SCROLL_TO_TOP_SETTLE_MS);
 
     return () => window.clearTimeout(timerId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount only, not on every switcher click
-  }, []);
+  }, [requestedView]);
 
-  const handleViewChange = (nextView: MainSiteView) => setSearchParams({ view: nextView }, { replace: true });
+  const handleViewChange = (nextView: MainSiteView) => {
+    isSwitcherClick.current = true;
+    setSearchParams({ view: nextView }, { replace: true });
+  };
 
   return (
     <main className="max-w-[1500px] m-auto px-6 lg:px-12">
