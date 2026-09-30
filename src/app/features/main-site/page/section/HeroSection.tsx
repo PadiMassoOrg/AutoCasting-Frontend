@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import heroImg from '../../images/new/hero-banner.png';
+import heroImg from '../../images/hero-banner.png';
 
 const HeroSection = () => {
   const { t } = useTranslation();
@@ -28,7 +28,7 @@ const HeroSection = () => {
         </article>
 
         {/* Right Side */}
-        <img src={heroImg} alt="" className="block lg:max-w-[500px] ml-auto" />
+        <img src={heroImg} alt="" className="hidden lg:block lg:max-w-[500px] ml-auto " />
       </div>
     </section>
   );
