@@ -1,6 +1,5 @@
 export const ROUTES = {
-  // HOMEPAGE TEMP
-  HOME: '/talent-database',
+  HOME: '/',
   ALL: '/*',
   // Auth
   AUTH: '/authentication',
