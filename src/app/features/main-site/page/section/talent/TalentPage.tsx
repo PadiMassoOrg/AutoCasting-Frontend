@@ -1,5 +1,5 @@
-const TalentSection = () => {
+const TalentPage = () => {
   return <div className="w-full h-[100vh]">TalentSection</div>;
 };
 
-export default TalentSection;
+export default TalentPage;

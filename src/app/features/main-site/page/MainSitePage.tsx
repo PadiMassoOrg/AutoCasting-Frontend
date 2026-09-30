@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ViewSwitcher, type MainSiteView } from '../components/UI';
-import { EmployerSection, HeroSection, TalentSection } from './section';
+import { EmployerPage, HeroSection, TalentPage } from './section';
 
 // ScrollToTop (mounted globally in AppRoutes) forces the window back to
 // top for up to 180ms after any route/search change - scrolling to the
@@ -35,7 +35,7 @@ const MainSitePage = () => {
       <div ref={sectionRef} className="w-full flex justify-center scroll-mt-20">
         <ViewSwitcher value={view} onChange={handleViewChange} />
       </div>
-      {view === 'talent' ? <TalentSection /> : <EmployerSection />}
+      {view === 'talent' ? <TalentPage /> : <EmployerPage />}
     </main>
   );
 };
