@@ -5,7 +5,7 @@ const HeroSection = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="w-full min-h-[92vh] grid place-items-center">
+    <section className="w-full min-h-[93vh] grid place-items-center">
       <div
         className="
       w-[85%] gap-8
