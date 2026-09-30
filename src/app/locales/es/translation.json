@@ -641,6 +641,11 @@
       "onboarding": {
         "header": "Creá tu perfil",
         "text": "Creá tu perfil y aparecé en nuestro catálogo de talentos gratis en 2 simples pasos"
+      },
+      "catalog": {
+        "header": "¡Listo!",
+        "text": "Una vez en nuestro catálogo productores y directores van a poder encontrarte",
+        "cta": "Creá tu Perfil"
       }
     },
     "services": {
