@@ -1,3 +1,4 @@
+import TalentApplySection from './TalentApplySection';
 import TalentCatalogSection from './TalentCatalogSection';
 import TalentOnboardingSection from './TalentOnboardingSection';
 import TalentProfileSection from './TalentProfileSection';
@@ -8,6 +9,7 @@ const TalentPage = () => {
       <TalentOnboardingSection></TalentOnboardingSection>
       <TalentCatalogSection></TalentCatalogSection>
       <TalentProfileSection></TalentProfileSection>
+      <TalentApplySection></TalentApplySection>
     </div>
   );
 };

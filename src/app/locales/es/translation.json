@@ -651,6 +651,11 @@
         "header": "Portfolio Digital",
         "text": "Completa tu CV online y compartí tu portfolio con quien vos quieras con un link único.",
         "cta": "Creá tu Perfil"
+      },
+      "apply": {
+        "header": "Aplicá a Castings",
+        "text": "Una vez completes tu perfil, cargues tus fotos y videos vas a poder aplicar a los castings que vos quieras en un solo click.",
+        "cta": "Creá tu Perfil"
       }
     },
     "services": {
