@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-09-30
+
+- Versión: `1.5.0`
+- Infra (AI-76): el Frontend apunta a la nueva Production de Argentina. `VITE_BASE_API_URL` pasa de Heroku a `https://autocasting-ar-api.fly.dev` (Fly.io, São Paulo) y Supabase pasa al proyecto `savubzaypraqdehudynb` (`sa-east-1`) en `.env.production` y `.env.development` (URL y anon key). Las imágenes OG/Twitter de `index.html` usan el nuevo host.
+- Fix: la ruta de `twitter:image` en `index.html` usaba `Autocasting` con mayúscula y no existía; ahora apunta a `autocasting/OG.IMG.jpg`.
+- `public/config.json`: `apiBaseUrl` (sin uso) actualizado al backend de Fly.
+- Deploy: publicar solo durante la ventana de corte, después de la sincronización final de datos con Heroku en mantenimiento.
+
 ## 2026-09-28 (2)
 
 - Versión: `1.4.2`
