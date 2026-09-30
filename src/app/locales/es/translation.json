@@ -637,6 +637,12 @@
       "talent": "Soy talento",
       "employer": "Busco talento"
     },
+    "talent": {
+      "onboarding": {
+        "header": "Creá tu perfil",
+        "text": "Creá tu perfil y aparecé en nuestro catálogo de talentos gratis en 2 simples pasos"
+      }
+    },
     "services": {
       "header": "¿Porqué autocasting?",
       "service1": {

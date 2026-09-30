@@ -5,14 +5,8 @@ const HeroSection = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="w-full min-h-[93vh] grid place-items-center">
-      <div
-        className="
-      w-[85%] gap-8
-      lg:w-[85%] lg:grid lg:grid-cols-2 lg:max-w-[1400px]
-      lg:items-center lg:justify-between lg:gap-x-8
-    "
-      >
+    <section className="w-full min-h-[90vh] grid place-items-center">
+      <div className="w-full flex flex-row gap-2 items-center">
         {/* Left Side */}
         <article
           className="
@@ -28,7 +22,7 @@ const HeroSection = () => {
         </article>
 
         {/* Right Side */}
-        <img src={heroImg} alt="" className="hidden lg:block lg:max-w-[500px] ml-auto " />
+        <img src={heroImg} alt="" className="hidden lg:block lg:max-w-[500px] ml-auto" />
       </div>
     </section>
   );

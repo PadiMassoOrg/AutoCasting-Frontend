@@ -1,5 +1,11 @@
+import TalentOnboardingSection from './TalentOnboardingSection';
+
 const TalentPage = () => {
-  return <div className="w-full h-[100vh]">TalentSection</div>;
+  return (
+    <section>
+      <TalentOnboardingSection></TalentOnboardingSection>
+    </section>
+  );
 };
 
 export default TalentPage;
