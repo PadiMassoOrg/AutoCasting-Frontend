@@ -633,6 +633,10 @@
       "header_hilight": "Autocasting",
       "text": "La plataforma que conecta talentos con directores y productores."
     },
+    "switcher": {
+      "talent": "Soy talento",
+      "employer": "Busco talento"
+    },
     "services": {
       "header": "¿Porqué autocasting?",
       "service1": {
