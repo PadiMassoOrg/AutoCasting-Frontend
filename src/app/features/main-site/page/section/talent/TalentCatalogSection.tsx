@@ -7,7 +7,7 @@ const TalentCatalogSection = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="w-full flex flex-col gap-8 lg:gap-12 lg:py-20">
+    <section className="w-full flex flex-col gap-8 lg:gap-12 lg:py-16">
       <div className="w-full flex flex-col gap-10 items-center lg:flex-row">
         <article className="w-full flex flex-col items-start gap-6 lg:flex-1">
           <h2 className="text-xl lg:text-3xl lg:text-4xl font-extrabold">{t('landing.talent.catalog.header')}</h2>

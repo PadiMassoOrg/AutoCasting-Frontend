@@ -21,7 +21,10 @@ export default function ViewSwitcher({ value, onChange, className }: Props) {
     <div
       role="tablist"
       aria-label={t('landing.switcher.talent') + ' / ' + t('landing.switcher.employer')}
-      className={clsx('inline-flex items-center rounded-full border border-(--color-secondary-outline) p-1', className)}
+      className={clsx(
+        'inline-flex items-center rounded-full border border-(--color-secondary-outline) bg-(--color-primary-white)/90 p-1 shadow-md backdrop-blur-sm',
+        className
+      )}
     >
       {options.map(({ key, label }) => {
         const selected = key === value;

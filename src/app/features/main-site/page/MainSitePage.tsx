@@ -1,3 +1,4 @@
+import { useChromeBoxHeights } from 'autocasting-ui-library-padimasso';
 import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ViewSwitcher, type MainSiteView } from '../components/UI';
@@ -12,38 +13,34 @@ const MainSitePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedView = searchParams.get('view');
   const view: MainSiteView = requestedView === 'employer' ? 'employer' : 'talent';
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isSwitcherClick = useRef(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const { header } = useChromeBoxHeights();
 
   useEffect(() => {
-    // Jump past the Hero whenever a view shows up in the URL from outside
-    // the switcher itself (a shared link, or browser back/forward landing
-    // on one) - a click on the switcher already sits at the section, so it
-    // must not re-trigger this scroll.
-    if (!requestedView || isSwitcherClick.current) {
-      isSwitcherClick.current = false;
-      return;
-    }
+    // Jump to the top of the selected page (Talent/Employer content, past
+    // the Hero and switcher) whenever the requested view changes - on load
+    // with a view already in the URL (a shared link, or browser
+    // back/forward), and on every switcher click too.
+    if (!requestedView) return;
 
     const timerId = window.setTimeout(() => {
-      sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, SCROLL_TO_TOP_SETTLE_MS);
 
     return () => window.clearTimeout(timerId);
   }, [requestedView]);
 
-  const handleViewChange = (nextView: MainSiteView) => {
-    isSwitcherClick.current = true;
-    setSearchParams({ view: nextView }, { replace: true });
-  };
+  const handleViewChange = (nextView: MainSiteView) => setSearchParams({ view: nextView }, { replace: true });
 
   return (
     <main className="max-w-[1500px] m-auto px-6 lg:px-12">
       <HeroSection></HeroSection>
-      <div ref={sectionRef} className="w-full flex justify-center scroll-mt-20">
+      <div className="w-full flex justify-center py-4 sticky z-70" style={{ top: header }}>
         <ViewSwitcher value={view} onChange={handleViewChange} />
       </div>
-      <div className="py-20">{view === 'talent' ? <TalentPage /> : <EmployerPage />}</div>
+      <div ref={contentRef} className="py-20 scroll-mt-20">
+        {view === 'talent' ? <TalentPage /> : <EmployerPage />}
+      </div>
     </main>
   );
 };
