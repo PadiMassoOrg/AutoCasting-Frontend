@@ -20,7 +20,7 @@
 --
 -- Run this once in the Supabase project (SQL Editor). It is idempotent and also
 -- migrates earlier versions of this table.
--- Project: qmtzkcmnmhvmaerqhaex  (same project already used for profile media)
+-- Project: savubzaypraqdehudynb  (same project already used for profile media)
 -- =============================================================================
 
 -- 1) Table -- single row, id is always 1 -----------------------------------
