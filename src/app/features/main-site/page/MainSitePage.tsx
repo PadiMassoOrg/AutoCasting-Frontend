@@ -35,7 +35,7 @@ const MainSitePage = () => {
       <div ref={sectionRef} className="w-full flex justify-center scroll-mt-20">
         <ViewSwitcher value={view} onChange={handleViewChange} />
       </div>
-      {view === 'talent' ? <TalentPage /> : <EmployerPage />}
+      <div className="py-20">{view === 'talent' ? <TalentPage /> : <EmployerPage />}</div>
     </main>
   );
 };
