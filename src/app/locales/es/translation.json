@@ -674,6 +674,21 @@
           "title": "Paso 3: Publicá tu casting (Gratis durante la fase beta)",
           "text": "Una vez finalizado y publicado el casting, los talentos podrán postularse con un solo clic."
         }
+      },
+      "manage": {
+        "header": "Gestioná tus postulantes",
+        "card1": {
+          "title": "Revisá tus postulantes",
+          "text": "Encontrá a todos los postulantes de tu casting en una misma lista. Accedé a sus perfiles y revisá los actings solicitados para cada rol."
+        },
+        "card2": {
+          "title": "Organizá y seleccioná",
+          "text": "Preseleccioná y seleccioná talentos para cada rol. También podés usar el modo Fototeca para compararlos y organizarlos visualmente."
+        },
+        "card3": {
+          "title": "Contactá a tus talentos",
+          "text": "Una vez seleccionados los talentos para cada rol, podés comunicarte directamente con ellos por email."
+        }
       }
     },
     "services": {

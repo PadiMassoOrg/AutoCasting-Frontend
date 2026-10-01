@@ -1,4 +1,6 @@
+import { Button } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
+import { ROUTES } from '../../../../../shared/lib/routes';
 import createCasting1 from '../../../images/employer/create_casting1.png';
 import createCasting2 from '../../../images/employer/create_casting2.png';
 import createCasting3 from '../../../images/employer/create_casting3.png';
@@ -42,6 +44,12 @@ const EmployerCreateCastingSection = () => {
 
         <img src={createCasting3} alt="" className="w-full h-auto max-w-[1024px]" />
       </article>
+
+      <Button variant="primary" asChild className="max-w-[250px] m-auto my-6 lg:m-0">
+        <a href={ROUTES.AUTH_REGISTER} rel="noopener noreferrer">
+          {t('landing.talent.catalog.cta')}
+        </a>
+      </Button>
     </section>
   );
 };
