@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { ROUTES } from '../../../shared/lib/routes';
 import { savePendingProposal, readPendingProposal } from '../utils/pendingProposal';
 import { usePendingProposal } from './usePendingProposal';
 
@@ -127,7 +128,7 @@ describe('usePendingProposal', () => {
 
     renderHook(() => usePendingProposal(), { wrapper });
 
-    await waitFor(() => expect(navigateMock).toHaveBeenCalledWith('/talent-database', { replace: true }));
+    await waitFor(() => expect(navigateMock).toHaveBeenCalledWith(ROUTES.HOME, { replace: true }));
     expect(showToastMock).toHaveBeenCalledWith(expect.objectContaining({ description: 'proposals.link_invalid' }));
     expect(readPendingProposal()).toBeNull();
   });
