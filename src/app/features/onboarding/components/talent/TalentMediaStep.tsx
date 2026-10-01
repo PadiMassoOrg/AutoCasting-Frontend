@@ -1,4 +1,4 @@
-import { Button, Label, UploadTile, WizardActions, type WizardStepProps } from 'autocasting-ui-library-padimasso';
+import { Button, Label, WizardActions, type WizardStepProps, UploadTile } from 'autocasting-ui-library-padimasso';
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
@@ -9,6 +9,7 @@ import { useProfileMediaPatch } from '../../../../integrations/supabase/media/ho
 import { getBackendErrorMessage } from '../../../../shared/utils/backendErrorHandling';
 import { useTalentProfile } from '../../../talent/talent-profile-edit/hooks/useTalentProfile';
 import { fileSchema } from '../../../talent/talent-profile-edit/schemas/mediaSchema';
+import { toThumbnailUrl } from '../../../../shared/lib/thumbnail';
 
 type Props = WizardStepProps & {
   onBackToModeSelector?: () => void;
@@ -139,6 +140,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
               <div className="h-[200px] w-full sm:h-auto sm:aspect-[4/5]">
                 <UploadTile
                   value={headshotUrl}
+                  thumbnailUrl={toThumbnailUrl(headshotUrl)}
                   previewUrl={preview.headshot ?? null}
                   onSelect={handleSelect('headshot')}
                   onDeleteClick={() => void handleDelete('headshot')}
@@ -162,6 +164,7 @@ function TalentMediaStep({ goNext, goBack, stepIndex = 1, totalSteps = 3, progre
               <div className="h-[200px] w-full sm:h-auto sm:aspect-[4/5]">
                 <UploadTile
                   value={fullbodyUrl}
+                  thumbnailUrl={toThumbnailUrl(fullbodyUrl)}
                   previewUrl={preview.fullbody ?? null}
                   onSelect={handleSelect('fullbody')}
                   onDeleteClick={() => void handleDelete('fullbody')}

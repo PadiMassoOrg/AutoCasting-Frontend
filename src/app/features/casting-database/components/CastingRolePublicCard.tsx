@@ -1,9 +1,10 @@
-import { Icon, SectionCard, Separator, TagChip } from 'autocasting-ui-library-padimasso';
+import { Icon, SectionCard, Separator, TagChip, ThumbnailImage } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { ProjectTypeTagChip } from '../../../shared/components/Chip';
 import { formatAgeRange, formatLocalDate } from '../../../shared/utils/formatUtils';
 import { GENDER_INDISTINCT } from '../../sitemetadata/utils/siteMetadataUtils';
 import type { CastingRolePublicCardResponse } from '../types/casting-database.types';
+import { toThumbnailUrl } from '../../../shared/lib/thumbnail';
 
 type Props = {
   item: CastingRolePublicCardResponse;
@@ -60,8 +61,9 @@ const CastingRolePublicCard = ({ item, selected = false, onSelect }: Props) => {
         <article className="flex w-full items-start justify-between gap-3">
           <div className="flex min-w-0 flex-1 items-center gap-2">
             {employerImageUrl && (
-              <img
+              <ThumbnailImage
                 src={employerImageUrl}
+                thumbnailSrc={toThumbnailUrl(employerImageUrl)}
                 alt={castingTitle}
                 loading="lazy"
                 decoding="async"

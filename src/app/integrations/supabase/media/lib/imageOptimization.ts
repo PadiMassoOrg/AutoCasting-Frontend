@@ -9,7 +9,12 @@ type Preset = {
   qualityStep: number;
 };
 
-type ImageUploadKind = 'talent-photo' | 'employer-logo' | 'casting-role-photo';
+type ImageUploadKind =
+  | 'talent-photo'
+  | 'talent-thumbnail'
+  | 'employer-logo'
+  | 'employer-logo-thumbnail'
+  | 'casting-role-photo';
 
 const PRESETS: Record<ImageUploadKind, Preset> = {
   'talent-photo': {
@@ -18,6 +23,22 @@ const PRESETS: Record<ImageUploadKind, Preset> = {
     initialQuality: 0.82,
     minQuality: 0.58,
     qualityStep: 0.06,
+  },
+  // Sized for listing cards on retina screens and phones; avatars reuse it.
+  'talent-thumbnail': {
+    maxSide: 800,
+    targetBytes: 90 * KB,
+    initialQuality: 0.8,
+    minQuality: 0.6,
+    qualityStep: 0.05,
+  },
+  // Logos show at 240 px (edit tile) and 24-56 px (avatars).
+  'employer-logo-thumbnail': {
+    maxSide: 480,
+    targetBytes: 50 * KB,
+    initialQuality: 0.8,
+    minQuality: 0.6,
+    qualityStep: 0.05,
   },
   'employer-logo': {
     maxSide: 1200,

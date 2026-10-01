@@ -1,9 +1,10 @@
-import { ButtonRow, TagChip, Icon } from 'autocasting-ui-library-padimasso';
+import { ButtonRow, TagChip, Icon, ThumbnailImage } from 'autocasting-ui-library-padimasso';
 import type { MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../../../app/shared/lib/routes';
 import imagePlaceholder from '../../../shared/icons/image_placeholder.svg';
 import type { ProfileCardResponse } from '../types/talent-database.types';
+import { toThumbnailUrl } from '../../../shared/lib/thumbnail';
 
 type Props = {
   item: ProfileCardResponse;
@@ -22,7 +23,6 @@ export default function TalentCard({ item, onClick }: Props) {
     }
   };
 
-  const img = headshotImageUrl || imagePlaceholder;
   const handleOpenProfile = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     window.location.href = ROUTES.PUBLIC_PROFILE + '/' + publicSlug;
@@ -43,8 +43,10 @@ export default function TalentCard({ item, onClick }: Props) {
           h-[300px] md:h-full md:group-hover:h-[300px] md:group-focus-within:h-[300px]
         "
       >
-        <img
-          src={img}
+        <ThumbnailImage
+          src={headshotImageUrl}
+          thumbnailSrc={toThumbnailUrl(headshotImageUrl)}
+          placeholderSrc={imagePlaceholder}
           alt={stageName ?? 'profile image'}
           loading="lazy"
           decoding="async"

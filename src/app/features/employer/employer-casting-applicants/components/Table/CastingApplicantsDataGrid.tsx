@@ -1,4 +1,10 @@
-import { DataGrid, Icon, type DataGridColumn, type OverflowMenuItem } from 'autocasting-ui-library-padimasso';
+import {
+  DataGrid,
+  Icon,
+  type DataGridColumn,
+  type OverflowMenuItem,
+  ThumbnailImage,
+} from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../../../../shared/lib/routes';
@@ -7,6 +13,7 @@ import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useC
 import { CASTING_APPLICATION_STATUS_ORDER } from '../../../../sitemetadata/utils/siteMetadataUtils';
 import { useCastingApplicationStatusActions } from '../../hooks/status/useCastingApplicationStatusActions';
 import type { EmployerCastingApplicantCardResponse } from '../../types/employerCastingApplicants.types';
+import { toThumbnailUrl } from '../../../../../shared/lib/thumbnail';
 
 type Props = {
   data: EmployerCastingApplicantCardResponse[];
@@ -51,8 +58,9 @@ const CastingApplicantsDataGrid = ({
         header: t('general.applicant'),
         render: (row) => (
           <div className="flex w-full items-center gap-3 min-w-0">
-            <img
+            <ThumbnailImage
               src={row.talentHeadshotImageUrl}
+              thumbnailSrc={toThumbnailUrl(row.talentHeadshotImageUrl)}
               alt={row.talentStageName}
               loading="lazy"
               decoding="async"

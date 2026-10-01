@@ -74,4 +74,40 @@ describe('useProfileMediaPatch', () => {
     await waitFor(() => expect(invalidateTalentDatabaseMock).toHaveBeenCalledTimes(1));
     expect(invalidateQueriesMock).toHaveBeenCalledWith(expect.objectContaining({ queryKey: ['cache-profile'] }));
   });
+
+  it('uploads a listing thumbnail next to the optimized photo', async () => {
+    uploadPublicMock.mockResolvedValue({
+      publicUrl: 'https://cdn/headshot.webp',
+      key: 'talent/p1/media/headshot/1.webp',
+    });
+    patchMediaMock.mockResolvedValue({ headshotImageUrl: 'https://cdn/headshot.webp' });
+
+    const { result } = renderHook(() => useProfileMediaPatch('profile-1'), { wrapper });
+
+    await act(async () => {
+      await result.current.mutateAsync({ file, slot: 'headshot' });
+    });
+
+    expect(uploadPublicMock).toHaveBeenCalledTimes(2);
+    expect(uploadPublicMock.mock.calls[1][0]).toBe('talent/p1/media/headshot/1.webp.thumb.webp');
+    expect(patchMediaMock).toHaveBeenCalledWith({ headshotImageUrl: 'https://cdn/headshot.webp' });
+  });
+
+  it('still saves the photo when the thumbnail upload fails', async () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    uploadPublicMock
+      .mockResolvedValueOnce({ publicUrl: 'https://cdn/headshot.webp', key: 'talent/p1/media/headshot/1.webp' })
+      .mockRejectedValueOnce(new Error('thumbnail upload failed'));
+    patchMediaMock.mockResolvedValue({ headshotImageUrl: 'https://cdn/headshot.webp' });
+
+    const { result } = renderHook(() => useProfileMediaPatch('profile-1'), { wrapper });
+
+    await act(async () => {
+      await result.current.mutateAsync({ file, slot: 'headshot' });
+    });
+
+    expect(patchMediaMock).toHaveBeenCalledWith({ headshotImageUrl: 'https://cdn/headshot.webp' });
+    expect(removeByPublicUrlMock).not.toHaveBeenCalled();
+    consoleErrorSpy.mockRestore();
+  });
 });

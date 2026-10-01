@@ -9,6 +9,7 @@ vi.mock('autocasting-ui-library-padimasso', () => ({
   SectionCard: ({ children }: { children: ReactNode }) => <section>{children}</section>,
   Separator: () => null,
   TagChip: ({ label }: { label: string }) => <span>{label}</span>,
+  ThumbnailImage: ({ src, alt }: { src?: string | null; alt?: string }) => <img src={src ?? undefined} alt={alt} />,
 }));
 vi.mock('../../../shared/components/Chip', () => ({ ProjectTypeTagChip: () => null }));
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));

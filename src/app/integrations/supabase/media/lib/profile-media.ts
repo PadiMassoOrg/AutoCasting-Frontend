@@ -1,5 +1,6 @@
 import { supabase } from '../../../../shared/lib/supabase';
 import { SUPABASE } from '../../constants';
+import { toThumbnailKey } from '../../../../shared/lib/thumbnail';
 
 export async function uploadPublic(key: string, file: File) {
   const { error } = await supabase.storage.from(SUPABASE.MAIN_BUCKET).upload(key, file, {
@@ -25,6 +26,7 @@ export async function removeByPublicUrl(publicUrl: string) {
   const keyEncoded = clean.slice(idx + marker.length); // "profiles/.../file.jpg"
   const key = decodeURIComponent(keyEncoded);
 
-  const { error } = await supabase.storage.from(SUPABASE.MAIN_BUCKET).remove([key]);
+  // Missing keys are ignored, so media without a listing thumbnail is not an error.
+  const { error } = await supabase.storage.from(SUPABASE.MAIN_BUCKET).remove([key, toThumbnailKey(key)]);
   if (error) throw error;
 }

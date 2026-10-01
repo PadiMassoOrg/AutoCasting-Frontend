@@ -9,6 +9,7 @@ import { fileSchema, OTHER_SLOTS, otherIndexSchema } from '../../schemas/mediaSc
 import { TALENT_PROFILE_CACHE_KEY } from '../../services/talentProfileService';
 import type { Media, TalentProfileResponse } from '../../types/talentProfile.types';
 import { getBackendErrorMessage } from '../../../../../shared/utils/backendErrorHandling';
+import { toThumbnailUrl } from '../../../../../shared/lib/thumbnail';
 
 export default function MediaPhotosForm({ media, supabaseId }: { media: Media; supabaseId: string }) {
   const qc = useQueryClient();
@@ -267,6 +268,9 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
                     ? undefined
                     : withBust(liveMedia.headshotImageUrl, bust.headshot)
                 }
+                thumbnailUrl={
+                  removedHeadshot || pending.has('headshot') ? undefined : toThumbnailUrl(liveMedia.headshotImageUrl)
+                }
                 previewUrl={preview.headshot ?? null}
                 onSelect={pick('headshot')}
                 disabled={pending.has('headshot')}
@@ -306,6 +310,9 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
                     ? undefined
                     : withBust(liveMedia.fullBodyImageUrl, bust.fullbody)
                 }
+                thumbnailUrl={
+                  removedFullbody || pending.has('fullbody') ? undefined : toThumbnailUrl(liveMedia.fullBodyImageUrl)
+                }
                 previewUrl={preview.fullbody ?? null}
                 onSelect={pick('fullbody')}
                 disabled={pending.has('fullbody')}
@@ -341,6 +348,7 @@ export default function MediaPhotosForm({ media, supabaseId }: { media: Media; s
                     value={
                       isRemoved || otherPending.has(i) ? undefined : withBust(others[i] as string | null, otherBust[i])
                     }
+                    thumbnailUrl={isRemoved || otherPending.has(i) ? undefined : toThumbnailUrl(others[i])}
                     previewUrl={otherPreview[i] ?? null}
                     onSelect={pickOther(i)}
                     disabled={otherPending.has(i)}

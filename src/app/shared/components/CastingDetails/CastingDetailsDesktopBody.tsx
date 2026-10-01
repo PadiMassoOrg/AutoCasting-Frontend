@@ -6,6 +6,7 @@ import {
   Separator,
   TagChip,
   useMedia,
+  ThumbnailImage,
 } from 'autocasting-ui-library-padimasso';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,6 +27,7 @@ import {
 } from '../../utils/formatUtils';
 import { CastingModalityTagChip, ProjectTypeTagChip } from '../Chip';
 import ExpandableText from '../ExpandableText/ExpandableText';
+import { toThumbnailUrl } from '../../lib/thumbnail';
 
 type Props = {
   casting: PublicCastingData;
@@ -208,8 +210,9 @@ export const CastingDetailsEmployerCard = ({ employerInfo }: { employerInfo: Pub
       <SectionCard className="bg-[var(--color-secondary-offwhite)]">
         <article className="flex flex-row items-center gap-1.5">
           {employerInfo.imageUrl && (
-            <img
+            <ThumbnailImage
               src={employerInfo.imageUrl}
+              thumbnailSrc={toThumbnailUrl(employerInfo.imageUrl)}
               alt={employerInfo.companyName ?? 'Employer'}
               loading="lazy"
               decoding="async"
@@ -247,8 +250,9 @@ export const CastingDetailsEmployerCard = ({ employerInfo }: { employerInfo: Pub
       <SectionCard className="bg-[var(--color-secondary-offwhite)]">
         <article className="flex flex-row items-center gap-2">
           {employerInfo.imageUrl && (
-            <img
+            <ThumbnailImage
               src={employerInfo.imageUrl}
+              thumbnailSrc={toThumbnailUrl(employerInfo.imageUrl)}
               alt={employerInfo.companyName ?? 'Employer'}
               loading="lazy"
               decoding="async"

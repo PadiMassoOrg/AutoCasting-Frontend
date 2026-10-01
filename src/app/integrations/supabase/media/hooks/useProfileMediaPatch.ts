@@ -9,6 +9,7 @@ import { invalidateTalentDatabase } from '../../../../features/talent-database/h
 import { SUPABASE } from '../../constants';
 import { assertImageSourceSize, isHeicImage, optimizeImageForUpload } from '../lib/imageOptimization';
 import { uploadPublic, removeByPublicUrl } from '../lib/profile-media';
+import { toThumbnailKey } from '../../../../shared/lib/thumbnail';
 
 type Slot = 'headshot' | 'fullbody' | 'other';
 
@@ -45,6 +46,14 @@ export function useProfileMediaPatch(profileId: string) {
 
       const key = buildStorageKey(profileId, slot, optimizedFile);
       const { publicUrl, key: uploadedKey } = await uploadPublic(key, optimizedFile);
+
+      // Best-effort: listings fall back to the full photo when the thumbnail is missing.
+      try {
+        const thumbnail = await optimizeImageForUpload(optimizedFile, 'talent-thumbnail');
+        await uploadPublic(toThumbnailKey(uploadedKey), thumbnail);
+      } catch (thumbnailError) {
+        console.error('Error uploading listing thumbnail', uploadedKey, thumbnailError);
+      }
 
       const payload: any = {};
       if (slot === 'headshot') payload.headshotImageUrl = publicUrl;

@@ -4,6 +4,8 @@ import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useC
 import { CASTING_APPLICATION_STATUS_ORDER } from '../../../../sitemetadata/utils/siteMetadataUtils';
 import { useCastingApplicationStatusActions } from '../../hooks/status/useCastingApplicationStatusActions';
 import type { EmployerCastingApplicantCardResponse } from '../../types/employerCastingApplicants.types';
+import { ThumbnailImage } from 'autocasting-ui-library-padimasso';
+import { toThumbnailUrl } from '../../../../../shared/lib/thumbnail';
 
 const CastingApplicantGalleryCard = ({ data }: { data: EmployerCastingApplicantCardResponse }) => {
   const { t } = useTranslation();
@@ -41,8 +43,9 @@ const CastingApplicantGalleryCard = ({ data }: { data: EmployerCastingApplicantC
           h-[350px] md:h-full md:group-hover:h-[350px] md:group-focus-within:h-[350px]
         "
       >
-        <img
+        <ThumbnailImage
           src={talentHeadshotImageUrl}
+          thumbnailSrc={toThumbnailUrl(talentHeadshotImageUrl)}
           alt={talentStageName ?? 'profile image'}
           loading="lazy"
           decoding="async"

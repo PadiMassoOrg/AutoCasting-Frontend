@@ -9,6 +9,7 @@ import type { EmployerProfileBasicInfo } from '../../../../features/employer/emp
 import { SUPABASE } from '../../constants';
 import { assertImageSourceSize, isHeicImage, optimizeImageForUpload } from '../lib/imageOptimization';
 import { uploadPublic, removeByPublicUrl } from '../lib/profile-media';
+import { toThumbnailKey } from '../../../../shared/lib/thumbnail';
 
 type MutationArgs = { file: File; previousUrl?: string | null };
 
@@ -37,6 +38,14 @@ export function useEmployerLogoPatch(profileId: string) {
 
       const key = buildStorageKey(profileId, optimizedFile);
       const { publicUrl, key: uploadedKey } = await uploadPublic(key, optimizedFile);
+
+      // Best-effort: avatars fall back to the full logo when the thumbnail is missing.
+      try {
+        const thumbnail = await optimizeImageForUpload(optimizedFile, 'employer-logo-thumbnail');
+        await uploadPublic(toThumbnailKey(uploadedKey), thumbnail);
+      } catch (thumbnailError) {
+        console.error('Error uploading logo thumbnail', uploadedKey, thumbnailError);
+      }
 
       let updated: EmployerProfileBasicInfo;
       try {
