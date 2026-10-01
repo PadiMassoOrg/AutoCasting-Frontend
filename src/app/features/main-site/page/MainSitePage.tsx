@@ -1,31 +1,46 @@
-import { LandingSection, PlanSection, ServicesSection, TutorialSection } from './section';
+import { useChromeBoxHeights } from 'autocasting-ui-library-padimasso';
+import { useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { ViewSwitcher, type MainSiteView } from '../components/UI';
+import { EmployerPage, HeroSection, TalentPage } from './section';
+
+// ScrollToTop (mounted globally in AppRoutes) forces the window back to
+// top for up to 180ms after any route/search change - scrolling to the
+// section must happen after that window closes, not on mount directly.
+const SCROLL_TO_TOP_SETTLE_MS = 200;
 
 const MainSitePage = () => {
-  // Each section handles it's own layout.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const requestedView = searchParams.get('view');
+  const view: MainSiteView = requestedView === 'employer' ? 'employer' : 'talent';
+  const contentRef = useRef<HTMLDivElement>(null);
+  const { header } = useChromeBoxHeights();
+
+  useEffect(() => {
+    // Jump to the top of the selected page (Talent/Employer content, past
+    // the Hero and switcher) whenever the requested view changes - on load
+    // with a view already in the URL (a shared link, or browser
+    // back/forward), and on every switcher click too.
+    if (!requestedView) return;
+
+    const timerId = window.setTimeout(() => {
+      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, SCROLL_TO_TOP_SETTLE_MS);
+
+    return () => window.clearTimeout(timerId);
+  }, [requestedView]);
+
+  const handleViewChange = (nextView: MainSiteView) => setSearchParams({ view: nextView }, { replace: true });
+
   return (
-    <main className="relative w-full flex flex-col items-center">
-      <LandingSection></LandingSection>
-      <ServicesSection></ServicesSection>
-      <TutorialSection></TutorialSection>
-      {/* Waves */}
-      <div className="w-full relative h-[5rem] lg:h-[10rem]">
-        {/* Mobile */}
-        <div className="absolute inset-x-0 top-0 h-[90px] pointer-events-none lg:hidden">
-          <svg viewBox="0 0 1440 240" preserveAspectRatio="none" className="w-full h-full block" aria-hidden="true">
-            <path d="M0,0 H1440 V185 Q720,60 0,135 Z" fill="var(--color-secondary-offwhite)" />
-          </svg>
-        </div>
-        {/* Desktop */}
-        <div className="hidden lg:block absolute inset-x-0 top-0 h-[150px] pointer-events-none">
-          <svg viewBox="0 0 1440 280" preserveAspectRatio="none" className="w-full h-full block" aria-hidden="true">
-            <path
-              fill="var(--color-secondary-offwhite)"
-              d="M0,32L40,69.3C80,107,160,181,240,224C320,267,400,277,480,256C560,235,640,181,720,138.7C800,96,880,64,960,53.3C1040,43,1120,53,1200,85.3C1280,117,1360,171,1400,197.3L1440,224L1440,0L1400,0C1360,0,1280,0,1200,0C1120,0,1040,0,960,0C880,0,800,0,720,0C640,0,560,0,480,0C400,0,320,0,240,0C160,0,80,0,40,0L0,0Z"
-            />
-          </svg>
-        </div>
+    <main className="max-w-[1550px] m-auto px-6 lg:px-12">
+      <HeroSection></HeroSection>
+      <div className="w-full flex justify-center py-4 sticky z-70" style={{ top: header }}>
+        <ViewSwitcher value={view} onChange={handleViewChange} />
       </div>
-      <PlanSection></PlanSection>
+      <div ref={contentRef} className="py-20 scroll-mt-20">
+        {view === 'talent' ? <TalentPage /> : <EmployerPage />}
+      </div>
     </main>
   );
 };

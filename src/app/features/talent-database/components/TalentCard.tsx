@@ -70,7 +70,7 @@ export default function TalentCard({ item, onClick }: Props) {
       </div>
       <div
         className="
-          flex flex-col transition-all duration-150 ease-in-out
+          shrink-0 flex flex-col transition-all duration-150 ease-in-out
           opacity-100 max-h-none
           md:opacity-0 md:max-h-0 md:overflow-hidden md:pointer-events-none
           md:group-hover:opacity-100 md:group-hover:max-h-none md:group-hover:pointer-events-auto

@@ -1,5 +1,4 @@
-import LandingSection from './LandingSection';
-import PlanSection from './PlanSection';
-import ServicesSection from './ServicesSection';
-import TutorialSection from './TutorialSection';
-export { LandingSection, PlanSection, ServicesSection, TutorialSection };
+import EmployerPage from './employer/EmployerPage';
+import HeroSection from './HeroSection';
+import TalentPage from './talent/TalentPage';
+export { EmployerPage, HeroSection, TalentPage };

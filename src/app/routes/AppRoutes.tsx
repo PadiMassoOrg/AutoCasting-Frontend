@@ -22,6 +22,7 @@ const GoogleAuthSuccessPage = lazy(() => import('../features/auth/pages/GoogleAu
 const ResetPasswordPage = lazy(() => import('../features/auth/pages/ResetPasswordPage'));
 const CastingDatabasePage = lazy(() => import('../features/casting-database/pages/CastingDatabasePage'));
 const MainSiteLayout = lazy(() => import('../features/main-site/layout/MainSiteLayout'));
+const MainPage = lazy(() => import('../features/main-site/page/MainSitePage'));
 const PrivacyPage = lazy(() => import('../features/main-site/page/PrivacyPage'));
 const SupportPage = lazy(() => import('../features/main-site/page/SupportPage'));
 const TermsPage = lazy(() => import('../features/main-site/page/TermsPage'));
@@ -134,14 +135,12 @@ function AppRoutesContent() {
 
   return (
     <Routes>
-      <Route element={<ScrollContentLayout variant="desktop-full-bleed" />}>
-        <Route path={ROUTES.HOME} element={<TalentDatabasePage />} />
-      </Route>
       <Route path={ROUTES.AUTH} element={<AuthenticationPage />} />
       <Route path={ROUTES.PROPOSAL + '/:token/*'} element={<ProposalPage />} />
       <Route path={ROUTES.GOOGLE_OAUTH_SUCCESS} element={<GoogleAuthSuccessPage />} />
       <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
       <Route element={<MainSiteLayout />}>
+        <Route path={ROUTES.HOME} element={<MainPage />} />
         <Route path={ROUTES.SUPPORT} element={<SupportPage />} />
         <Route path={ROUTES.TERMS} element={<TermsPage />} />
         <Route path={ROUTES.PRIVACY} element={<PrivacyPage />} />

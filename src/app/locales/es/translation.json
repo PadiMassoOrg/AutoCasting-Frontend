@@ -629,9 +629,67 @@
   },
   "landing": {
     "page": {
-      "header": "Conectá tu talento con tu próxima",
-      "header_hilight": "oportunidad",
-      "text": "Creá tu perfil, subí tus clips y compartí un solo link. Contacto directo con quienes contratan."
+      "header": "Bienvenidos a",
+      "header_hilight": "Autocasting",
+      "text": "La plataforma que conecta talentos con directores y productores."
+    },
+    "switcher": {
+      "talent": "Soy talento",
+      "employer": "Busco talento"
+    },
+    "talent": {
+      "onboarding": {
+        "header": "Creá tu perfil",
+        "text": "Creá tu perfil y aparecé en nuestro catálogo de talentos gratis en 2 simples pasos"
+      },
+      "catalog": {
+        "header": "¡Listo!",
+        "text": "Una vez en nuestro catálogo productores y directores van a poder encontrarte",
+        "cta": "Creá tu Perfil"
+      },
+      "profile": {
+        "header": "Portfolio Digital",
+        "text": "Completa tu CV online y compartí tu portfolio con quien vos quieras con un link único.",
+        "cta": "Creá tu Perfil"
+      },
+      "apply": {
+        "header": "Aplicá a Castings",
+        "text": "Una vez completes tu perfil, cargues tus fotos y videos vas a poder aplicar a los castings que vos quieras en un solo click.",
+        "cta": "Creá tu Perfil"
+      }
+    },
+    "employer": {
+      "createCasting": {
+        "header": "Creá y publicá castings",
+        "text": "Creá y publicá tus castings en 3 simples pasos",
+        "step1": {
+          "title": "Paso 1: Información general",
+          "text": "Completá la información general de tu casting, incluyendo: título, tipo de proyecto, modalidad del casting, fechas de disponibilidad, fecha límite para postularse y cualquier información adicional que quieras compartir."
+        },
+        "step2": {
+          "title": "Paso 2: Crear roles",
+          "text": "Completá la información requerida para cada rol de tu casting, especificando: nombre, tipo de personaje, profesión, género y rango de edad, además de la tarifa correspondiente. También vas a poder indicar qué tipo de material requerís del actor, ya sean actings o archivos de voz."
+        },
+        "step3": {
+          "title": "Paso 3: Publicá tu casting",
+          "text": "Una vez finalizado y publicado el casting, los talentos podrán postularse con un solo clic."
+        }
+      },
+      "manage": {
+        "header": "Gestioná tus postulantes",
+        "card1": {
+          "title": "Revisá tus postulantes",
+          "text": "Encontrá a todos los postulantes de tu casting en una misma lista. Accedé a sus perfiles y revisá los actings solicitados para cada rol."
+        },
+        "card2": {
+          "title": "Organizá y seleccioná",
+          "text": "Preseleccioná y seleccioná talentos para cada rol. También podés usar el modo Fototeca para compararlos y organizarlos visualmente."
+        },
+        "card3": {
+          "title": "Contactá a tus talentos",
+          "text": "Una vez seleccionados los talentos para cada rol, podés comunicarte directamente con ellos por email."
+        }
+      }
     },
     "services": {
       "header": "¿Porqué autocasting?",
