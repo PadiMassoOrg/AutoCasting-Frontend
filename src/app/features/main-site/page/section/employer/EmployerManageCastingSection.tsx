@@ -10,8 +10,8 @@ const EmployerManageCastingSection = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="w-full flex flex-col items-center">
-      <article className="flex flex-col h-[70vh] lg:h-[50vh] items-center justify-around">
+    <section className="w-full flex flex-col items-center gap-16 lg:gap-35">
+      <article className="flex flex-col items-center gap-16 lg:gap-20">
         <h2 className="w-full text-center text-3xl lg:text-4xl font-extrabold">
           {t('landing.employer.manage.header')}
         </h2>
