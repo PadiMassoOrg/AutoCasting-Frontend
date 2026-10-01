@@ -658,6 +658,24 @@
         "cta": "Creá tu Perfil"
       }
     },
+    "employer": {
+      "createCasting": {
+        "header": "Creá y publicá castings",
+        "text": "Creá y publicá tus castings en 3 simples pasos",
+        "step1": {
+          "title": "Paso 1: Información general",
+          "text": "Completá la información general de tu casting, incluyendo: título, tipo de proyecto, modalidad del casting, fechas de disponibilidad, fecha límite para postularse y cualquier información adicional que quieras compartir."
+        },
+        "step2": {
+          "title": "Paso 2: Crear roles",
+          "text": "Completá la información requerida para cada rol de tu casting, especificando: nombre, tipo de personaje, profesión, género y rango de edad, además de la tarifa correspondiente. También vas a poder indicar qué tipo de material requerís del actor, ya sean actings o archivos de voz."
+        },
+        "step3": {
+          "title": "Paso 3: Publicá tu casting (Gratis durante la fase beta)",
+          "text": "Una vez finalizado y publicado el casting, los talentos podrán postularse con un solo clic."
+        }
+      }
+    },
     "services": {
       "header": "¿Porqué autocasting?",
       "service1": {
