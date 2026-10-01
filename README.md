@@ -71,3 +71,20 @@ Accedé en: http://localhost:5173/
 - npm run format (Formatea el código con Prettier)
 
 ---
+
+## 🖼️ Backfill de miniaturas (una sola vez por entorno)
+
+Las fotos de talentos y los logos de employers subidos antes de AI-84 no tienen miniatura (`<key>.thumb.webp`), así que los listados cargan la foto completa. Este script las genera. Es idempotente: se puede volver a correr y saltea las fotos que ya tienen miniatura.
+
+Correrlo después del deploy del Frontend que sube miniaturas, primero con `--dry-run`. La service role key va solo en la terminal, nunca en un archivo del repo.
+
+```bash
+SUPABASE_URL=https://<proyecto>.supabase.co \
+SUPABASE_SERVICE_ROLE_KEY=<service-role-key> \
+SUPABASE_BUCKET=profile-media-develop \
+node scripts/backfill-thumbnails.mjs --dry-run   # opcional: --limit 20
+```
+
+Para producción usar `SUPABASE_BUCKET=profile-media-public`.
+
+---

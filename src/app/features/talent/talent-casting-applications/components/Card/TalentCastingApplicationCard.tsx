@@ -1,9 +1,10 @@
-import { Icon, SectionCard, TagChip } from 'autocasting-ui-library-padimasso';
+import { Icon, SectionCard, TagChip, ThumbnailImage } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { CastingStatusChip } from '../../../../../shared/components/Chip';
 import { formatCastingModalityText, formatLocalDate } from '../../../../../shared/utils/formatUtils';
 import { normalizeCastingStatusForDisplay } from '../../../../sitemetadata/utils/siteMetadataUtils';
 import type { TalentCastingApplicationCardResponse } from '../../types/talentCastingApplication.types';
+import { toThumbnailUrl } from '../../../../../shared/lib/thumbnail';
 
 const TalentCastingApplicationCard = ({ data }: { data: TalentCastingApplicationCardResponse }) => {
   const { t } = useTranslation();
@@ -35,8 +36,9 @@ const TalentCastingApplicationCard = ({ data }: { data: TalentCastingApplication
         {/* Employer */}
         <div className="flex flex-row items-center gap-2">
           {employerImageUrl && (
-            <img
+            <ThumbnailImage
               src={employerImageUrl}
+              thumbnailSrc={toThumbnailUrl(employerImageUrl)}
               alt="employer Image"
               loading="lazy"
               decoding="async"

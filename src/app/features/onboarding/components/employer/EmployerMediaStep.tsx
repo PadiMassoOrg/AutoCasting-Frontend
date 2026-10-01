@@ -1,4 +1,4 @@
-import { Button, Label, UploadTile, WizardActions, type WizardStepProps } from 'autocasting-ui-library-padimasso';
+import { Button, Label, WizardActions, type WizardStepProps, UploadTile } from 'autocasting-ui-library-padimasso';
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ContinueLaterButton } from '..';
@@ -7,6 +7,7 @@ import { useEmployerLogoPatch } from '../../../../integrations/supabase/media/ho
 import { getBackendErrorMessage } from '../../../../shared/utils/backendErrorHandling';
 import { useEmployerProfile } from '../../../employer/employer-profile-edit/hooks/useEmployerProfile';
 import { fileSchema } from '../../../talent/talent-profile-edit/schemas/mediaSchema';
+import { toThumbnailUrl } from '../../../../shared/lib/thumbnail';
 
 type Props = WizardStepProps & {
   onBackToModeSelector?: () => void;
@@ -121,6 +122,7 @@ function EmployerMediaStep({
             <div className="my-4 w-full max-w-[165px] self-center lg:my-8 lg:max-w-[195px] lg:items-center">
               <UploadTile
                 value={valueUrl}
+                thumbnailUrl={toThumbnailUrl(valueUrl)}
                 previewUrl={previewUrl}
                 onSelect={handleSelect}
                 onDeleteClick={handleDelete}

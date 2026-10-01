@@ -19,6 +19,7 @@ import type { ProfileSocialMedia } from '../../../../talent/talent-profile-edit/
 import { useEmployerBasicInfoAutosave, useEmployerSocialMediaAutosave } from '../../hooks/autosaves';
 import { getEmployerBasicInfoSchema } from '../../schemas/employerBasicInfoSchema';
 import type { EmployerProfileBasicInfo } from '../../types/employerProfile.types';
+import { toThumbnailUrl } from '../../../../../shared/lib/thumbnail';
 
 type Errors = {
   companyName?: string | null;
@@ -251,6 +252,7 @@ export default function EmployerBasicInfoForm({ data, profileId }: Props) {
             <div className="w-full aspect-[3/4] lg:h-full lg:min-h-0 lg:aspect-auto">
               <UploadTile
                 value={logoUrl}
+                thumbnailUrl={toThumbnailUrl(logoUrl)}
                 previewUrl={previewUrl}
                 onSelect={handleSelectLogo}
                 onDeleteClick={handleDeleteLogo}

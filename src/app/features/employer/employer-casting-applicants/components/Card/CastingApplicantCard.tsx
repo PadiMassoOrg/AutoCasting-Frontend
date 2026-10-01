@@ -1,4 +1,4 @@
-import { Icon, InlineList, SectionCard, Separator } from 'autocasting-ui-library-padimasso';
+import { Icon, InlineList, SectionCard, Separator, ThumbnailImage } from 'autocasting-ui-library-padimasso';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '../../../../../shared/lib/routes';
 import StatusDropdown from '../../../../sitemetadata/component/StatusDropdown';
@@ -6,6 +6,7 @@ import { useCachedSiteMetadataOption } from '../../../../sitemetadata/hooks/useC
 import { CASTING_APPLICATION_STATUS_ORDER } from '../../../../sitemetadata/utils/siteMetadataUtils';
 import { useCastingApplicationStatusActions } from '../../hooks/status/useCastingApplicationStatusActions';
 import type { EmployerCastingApplicantCardResponse } from '../../types/employerCastingApplicants.types';
+import { toThumbnailUrl } from '../../../../../shared/lib/thumbnail';
 
 type Props = {
   data: EmployerCastingApplicantCardResponse;
@@ -58,8 +59,9 @@ const CastingApplicantCard = ({ data, isDesktop, onOpenDetails }: Props) => {
     <SectionCard className="md:w-[415px]">
       {/* Profile and Status */}
       <div className="flex flex-row items-center gap-3 min-w-0">
-        <img
+        <ThumbnailImage
           src={talentHeadshotImageUrl}
+          thumbnailSrc={toThumbnailUrl(talentHeadshotImageUrl)}
           alt={talentStageName}
           loading="lazy"
           decoding="async"
