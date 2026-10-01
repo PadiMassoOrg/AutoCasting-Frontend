@@ -33,7 +33,7 @@ const MainSitePage = () => {
   const handleViewChange = (nextView: MainSiteView) => setSearchParams({ view: nextView }, { replace: true });
 
   return (
-    <main className="max-w-[1650px] m-auto px-6 lg:px-12">
+    <main className="max-w-[1550px] m-auto px-6 lg:px-12">
       <HeroSection></HeroSection>
       <div className="w-full flex justify-center py-4 sticky z-70" style={{ top: header }}>
         <ViewSwitcher value={view} onChange={handleViewChange} />
