@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-01
+
+- Versión: `1.6.0`
+- Feature (AI-14): nuevo sitio principal (`features/main-site`) como página de inicio (`ROUTES.HOME` ahora renderiza `MainSitePage` en lugar del catálogo de talentos): hero, footer, secciones y páginas para talento (onboarding, catálogo, perfil, postulación) y para employers (crear y gestionar casting), con switcher entre modos y scroll propio. Se elimina el sitio anterior (`LandingSection`, `PlanSection`, `ServicesSection`, `TutorialSection` e imágenes asociadas).
+- Feature (AI-84): se sube un thumbnail junto a cada foto de talento nueva (800 px) y logo de employer (480 px) como `<key>.thumb.webp`; un fallo del thumbnail nunca falla la subida. Reemplazar, borrar o revertir una foto borra también su thumbnail. Listados, avatares, edición de perfil y onboarding cargan el thumbnail con fallback a la imagen completa. `toThumbnailUrl` solo deriva thumbnails de archivos subidos por el propio Supabase de la app.
+- Scripts: `scripts/backfill-thumbnails.mjs` crea thumbnails para fotos y logos existentes (documentado en el README).
+- Dependencias: `autocasting-ui-library-padimasso` `^1.8.1`; `sharp` como devDependency (solo para el script).
+
 ## 2026-09-30
 
 - Versión: `1.5.0`
