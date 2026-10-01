@@ -671,7 +671,7 @@
           "text": "Completá la información requerida para cada rol de tu casting, especificando: nombre, tipo de personaje, profesión, género y rango de edad, además de la tarifa correspondiente. También vas a poder indicar qué tipo de material requerís del actor, ya sean actings o archivos de voz."
         },
         "step3": {
-          "title": "Paso 3: Publicá tu casting (Gratis durante la fase beta)",
+          "title": "Paso 3: Publicá tu casting",
           "text": "Una vez finalizado y publicado el casting, los talentos podrán postularse con un solo clic."
         }
       },
