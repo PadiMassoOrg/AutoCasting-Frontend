@@ -154,3 +154,33 @@ describe('getCreditSchema', () => {
     });
   });
 });
+
+describe('free text fields accept any printable character', () => {
+  it('accepts punctuation such as ":" in credit and education text', () => {
+    const credit = getCreditSchema(t).safeParse({
+      productionType: '3f2b8c1e-9d4a-4b7e-8a5c-1d2e3f4a5b6c',
+      projectName: 'Campaña Urbana: Voces de Ciudad',
+      producerName: 'Sur Content / Producciones!',
+      role: 'Lead (voz) "A"',
+      year: '2024',
+    });
+    const education = getEducationSchema(t).safeParse({
+      institution: 'Escuela: Nacional de Arte',
+      courseName: 'Actuación: nivel 1',
+      graduationYear: '2020',
+    });
+
+    expect(credit.success).toBe(true);
+    expect(education.success).toBe(true);
+  });
+
+  it('still rejects control characters', () => {
+    const result = getEducationSchema(t).safeParse({
+      institution: 'NYU\u0000',
+      courseName: 'Acting',
+      graduationYear: '2020',
+    });
+
+    expect(result.success).toBe(false);
+  });
+});
