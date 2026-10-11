@@ -20,6 +20,7 @@ export const ROUTES = {
   PUBLIC_PROFILE: '/profile',
   TALENT_DATABASE: '/talent-database',
   CASTING_DATABASE: '/casting-database',
+  EVENTS: '/events',
   PUBLIC_CASTING: '/casting',
   PROPOSAL: '/proposal',
   SUPPORT: '/support',
@@ -75,6 +76,8 @@ export const API_ROUTES = {
   // Database
   TALENT_DATABASE: '/talent-database',
   CASTINGS_DATABASE: '/castings-database',
+  // Events
+  EVENTS: '/events',
   // Casting
   CASTING: '/casting',
   // Application

@@ -21,6 +21,7 @@ const AuthenticationPage = lazy(() => import('../features/auth/pages/Authenticat
 const GoogleAuthSuccessPage = lazy(() => import('../features/auth/pages/GoogleAuthSuccessPage'));
 const ResetPasswordPage = lazy(() => import('../features/auth/pages/ResetPasswordPage'));
 const CastingDatabasePage = lazy(() => import('../features/casting-database/pages/CastingDatabasePage'));
+const EventsPage = lazy(() => import('../features/events/pages/EventsPage'));
 const MainSiteLayout = lazy(() => import('../features/main-site/layout/MainSiteLayout'));
 const MainPage = lazy(() => import('../features/main-site/page/MainSitePage'));
 const PrivacyPage = lazy(() => import('../features/main-site/page/PrivacyPage'));
@@ -153,6 +154,7 @@ function AppRoutesContent() {
         <Route path={ROUTES.PUBLIC_CASTING + '/:slug'} element={<CastingPublicOverviewPage />} />
         <Route path={ROUTES.TALENT_DATABASE} element={<TalentDatabasePage />} />
         <Route path={ROUTES.CASTING_DATABASE} element={<CastingDatabasePage />} />
+        <Route path={ROUTES.EVENTS} element={<EventsPage />} />
       </Route>
       <Route
         path={ROUTES.ALL}

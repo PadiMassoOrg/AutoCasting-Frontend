@@ -93,7 +93,8 @@
       "view_profile": "Ver Perfil",
       "settings": "Herramientas",
       "filters": "Filtros",
-      "logout": "Salir"
+      "logout": "Salir",
+      "events": "Eventos"
     },
     "placeholder": {
       "stage_name": "Escribe tu nombre completo aquí...",
@@ -388,7 +389,8 @@
     "privacy": "Políticas de Privacidad",
     "terms": "Términos y condiciones",
     "linkedIn": "LinkedIn",
-    "instagram": "Instagram"
+    "instagram": "Instagram",
+    "events": "Eventos"
   },
   "role": {
     "talent": "Talent",
@@ -1066,6 +1068,14 @@
     },
     "filter": {
       "role_type": "Tipo de Rol"
+    }
+  },
+  "events": {
+    "page": {
+      "title": "Eventos"
+    },
+    "filter": {
+      "dates": "Fechas"
     }
   },
   "application": {

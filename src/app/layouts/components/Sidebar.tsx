@@ -38,6 +38,7 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
   // Public
   const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
   const activeCastingDatabase = isRouteActive(ROUTES.CASTING_DATABASE);
+  const activeEvents = isRouteActive(ROUTES.EVENTS);
   // Talent
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
   const activeAppliedCastings = isRouteActive(ROUTES.TALENT_APPLIED_CASTINGS, true);
@@ -89,6 +90,14 @@ export default function Sidebar({ open, isAuthenticated, onClose, onLogout }: Pr
                     <span className={clsx(baseClass, activeCastingDatabase && activeClass)}>
                       <Icon name="clapper" variant={activeCastingDatabase ? 'primary' : 'default'} />
                       {t('routes.casting-database')}
+                    </span>
+                  </Link>
+                </li>
+                <li onClick={onClose}>
+                  <Link to={ROUTES.EVENTS}>
+                    <span className={clsx(baseClass, activeEvents && activeClass)}>
+                      <Icon name="calendar" variant={activeEvents ? 'primary' : 'default'} />
+                      {t('routes.events')}
                     </span>
                   </Link>
                 </li>

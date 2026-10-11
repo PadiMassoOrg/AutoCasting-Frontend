@@ -61,6 +61,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
   // Public
   const activeTalentDatabase = isRouteActive(ROUTES.TALENT_DATABASE);
   const activeCastingDatabase = isRouteActive(ROUTES.CASTING_DATABASE);
+  const activeEvents = isRouteActive(ROUTES.EVENTS);
   // Talent
   const activeAppliedCastings = isRouteActive(ROUTES.TALENT_APPLIED_CASTINGS, true);
   const activeTalentProfile = isRouteActive(ROUTES.TALENT, true);
@@ -125,6 +126,16 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>(function Navbar({ className 
                     </Tooltip>
                   )}
                   {showLabels && t('routes.casting-database')}
+                </span>
+              </Link>
+              <Link to={ROUTES.EVENTS}>
+                <span className={clsx(baseClass, activeEvents && activeClass)}>
+                  {showIcons && (
+                    <Tooltip title={t('general.tooltips.events')} position="bottomLeft" nudgeX={-10}>
+                      <Icon name="calendar" variant={activeEvents ? 'primary' : 'default'} />
+                    </Tooltip>
+                  )}
+                  {showLabels && t('routes.events')}
                 </span>
               </Link>
               {isAuth && <UserModeSwitcher showTooltip></UserModeSwitcher>}
