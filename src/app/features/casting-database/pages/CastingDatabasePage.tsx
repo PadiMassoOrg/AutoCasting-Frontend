@@ -8,10 +8,11 @@ import {
   useMedia,
   useViewportVhVar,
 } from 'autocasting-ui-library-padimasso';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CastingDetailsDesktopBody } from '../../../shared/components/CastingDetails';
-import { ServerErrorPage } from '../../../shared/components/ErrorPage';
+import { useDetailsLoadError } from '../../../shared/hooks/useDetailsLoadError';
 import { FiltersDrawerActionBar, FiltersDrawerShell } from '../../../shared/components/FiltersDrawer';
 import { usePublicCastingDetails } from '../../public-casting/hooks/usePublicCastingDetails';
 import { useCachedSiteMetadataSlice } from '../../sitemetadata/hooks/useCachedSiteMetadata';
@@ -24,6 +25,7 @@ import {
   CastingMobileFiltersDrawer,
   CastingRolePublicCard,
 } from '../components';
+import { CASTING_DATABASE_CACHE_KEY } from '../services/castingDatabaseService';
 import { useCastingDatabasePage } from '../hooks/useCastingDatabasePage';
 import type { CastingFiltersQS, CastingRolePublicCardResponse } from '../types/casting-database.types';
 import { getCastingFilterCounts } from '../utils/castingDatabaseFilterCounts';
@@ -167,6 +169,20 @@ const CastingDatabasePage = () => {
     }
   );
 
+  // Same handling as every details view: a failed load is a toast, never an error inside the pane. The selection
+  // stays (the first casting is always selected) and the listing is refreshed, so a casting that is no longer
+  // offered drops out of it and the first remaining one gets selected.
+  const queryClient = useQueryClient();
+  const refreshListing = useCallback(
+    () => queryClient.invalidateQueries({ queryKey: CASTING_DATABASE_CACHE_KEY }),
+    [queryClient]
+  );
+  useDetailsLoadError({
+    error: detailsQuery.error,
+    unavailableMessageKey: 'casting.unavailable',
+    onFail: refreshListing,
+  });
+
   const menuHeader = useMemo(
     () => (
       <CastingDatabaseCardsPane
@@ -255,7 +271,7 @@ const CastingDatabasePage = () => {
   }, [detailsQuery.data]);
 
   const content = useMemo(() => {
-    if (!selectedItem) {
+    if (!selectedItem || detailsQuery.error) {
       return (
         <div className="flex h-full items-center justify-center p-8">
           <p className="text-center font-light text-(--color-secondary-grey-fonts)">{t('state.no_results')}</p>
@@ -272,10 +288,6 @@ const CastingDatabasePage = () => {
           <Skeleton className="h-32 w-full rounded-xl" />
         </div>
       );
-    }
-
-    if (detailsQuery.error) {
-      return <ServerErrorPage />;
     }
 
     if (!detailsQuery.data) {

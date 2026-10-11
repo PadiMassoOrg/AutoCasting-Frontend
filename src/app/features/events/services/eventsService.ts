@@ -1,10 +1,11 @@
 import api from '../../../shared/lib/axios';
 import { API_ROUTES } from '../../../shared/lib/routes';
 import type { SliceResponse } from '../../../shared/types/sliceResponse.types';
-import type { EventCardResponse, EventFiltersQS } from '../types/events.types';
+import type { EventCardResponse, EventDetailsResponse, EventFiltersQS } from '../types/events.types';
 import { normalizeEventFilters } from '../utils/eventsFilterKey';
 
 export const EVENTS_CATALOG_CACHE_KEY = ['cache-events-catalog', 'v1'] as const;
+export const EVENT_DETAILS_CACHE_KEY = ['cache-event-details', 'v1'] as const;
 
 export const getEvents = async (
   page: number,
@@ -19,6 +20,11 @@ export const getEvents = async (
     headers: { 'Cache-Control': 'no-store' },
   });
 
+  return response.data;
+};
+
+export const getEventBySlug = async (slug: string): Promise<EventDetailsResponse> => {
+  const response = await api.get(`${API_ROUTES.EVENTS}/${encodeURIComponent(slug)}`);
   return response.data;
 };
 

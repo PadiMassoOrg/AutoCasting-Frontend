@@ -357,6 +357,9 @@
         "explicit_required": "Debes confirmar explícitamente tu aceptación de Términos y Política de Privacidad."
       },
       "hash_generation_failed": "No se pudo generar la firma del documento legal."
+    },
+    "events": {
+      "not_found": "No se encuentra el evento."
     }
   },
   "buttons": {
@@ -620,6 +623,11 @@
       "preselected": "Preseleccionado",
       "selected": "Seleccionado",
       "not_proceeding": "No Seleccionado"
+    },
+    "entry_access": {
+      "free": "Gratis",
+      "pay_at_door": "Pago en puerta",
+      "online": "Pago online"
     }
   },
   "error_page": {
@@ -1076,7 +1084,15 @@
     },
     "filter": {
       "dates": "Fechas"
-    }
+    },
+    "details": {
+      "dates": "Fechas",
+      "schedule": "Días y horarios",
+      "location": "Ubicación",
+      "description": "Descripción",
+      "buy_ticket": "Comprar Entrada"
+    },
+    "unavailable": "Este evento ya no está disponible: puede haber sido eliminado u ocultado."
   },
   "application": {
     "cta_title": "Aplicá como Talento",

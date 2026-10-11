@@ -32,6 +32,11 @@ export const ROUTES = {
   INSTAGRAM_URL: 'https://www.instagram.com/autocasting.app/',
 };
 
+// A details overlay opened over a list page lives in the URL (e.g. /events/E-1A2B3C4D): for scrolling and
+// analytics that path is still the list page, so opening or closing the overlay is not a page change.
+export const toListPathname = (pathname: string) =>
+  pathname.startsWith(`${ROUTES.EVENTS}/`) ? ROUTES.EVENTS : pathname;
+
 export const getDashboardRouteForActiveMode = (activeMode: 'TALENT' | 'EMPLOYER' | null) => {
   return activeMode === 'EMPLOYER' ? ROUTES.EMPLOYER_CASTINGS : ROUTES.TALENT_APPLIED_CASTINGS;
 };

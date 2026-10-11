@@ -2,7 +2,7 @@ import { Button, DetailsView, Icon, ImageCarousel, SectionCard, TagChip } from '
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { ServerErrorPage } from '../../../shared/components/ErrorPage';
+import { useDetailsLoadError } from '../../../shared/hooks/useDetailsLoadError';
 import VideoSection from '../../public-profile/components/VideoSection';
 import { ProfileShareActions, SocialMediaSection } from '../components';
 import { SkillsPanel } from '../components/Details';
@@ -17,6 +17,8 @@ type Props = {
 export default function PublicProfileDetailsView({ open, onClose, publicSlug }: Props) {
   const { t } = useTranslation();
   const { data: profile, error, isLoading } = usePublicProfile(publicSlug, open);
+  // Same handling as every details view: a failed load is a toast and the view closes, never an error inside it.
+  const hasLoadError = useDetailsLoadError({ error, unavailableMessageKey: 'profile.unavailable', onFail: onClose });
 
   const images = useMemo(() => {
     const media = profile?.media;
@@ -28,7 +30,7 @@ export default function PublicProfileDetailsView({ open, onClose, publicSlug }: 
   }, [profile]);
 
   if (!open) return null;
-  if (error) return <ServerErrorPage />;
+  if (hasLoadError) return null;
   if (!isLoading && !profile) return null;
 
   const basicInfo = profile?.basicInfo;

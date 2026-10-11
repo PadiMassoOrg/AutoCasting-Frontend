@@ -1,5 +1,6 @@
 import { ScrollToTop } from 'autocasting-ui-library-padimasso';
 import { useLocation } from 'react-router-dom';
+import { toListPathname } from '../lib/routes';
 
 // The main-site landing's "view" param swaps a section in place without
 // navigating, so switching between its values must not trigger the global
@@ -10,7 +11,8 @@ import { useLocation } from 'react-router-dom';
 const NORMALIZED_PARAMS = ['view'];
 
 export default function ScrollToTopOnRouteChange() {
-  const { pathname, search } = useLocation();
+  const { pathname: rawPathname, search } = useLocation();
+  const pathname = toListPathname(rawPathname);
   const searchParams = new URLSearchParams(search);
   NORMALIZED_PARAMS.forEach((param) => {
     if (searchParams.has(param)) searchParams.set(param, '_');

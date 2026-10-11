@@ -1,10 +1,12 @@
 import { LG_SCREEN_SIZE, Skeleton, useMedia, useViewportVhVar } from 'autocasting-ui-library-padimasso';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FetchErrorState } from '../../../shared/components/FetchErrorState';
 import FilterToggleButton from '../../../shared/components/FilterToggleButton/FilterToggleButton';
 import { LoadMoreSentinel } from '../../../shared/components/LoadMoreSentinel';
-import { EventCard, EventsFiltersDrawer } from '../components';
+import { usePreservedScroll } from '../../../shared/hooks/usePreservedScroll';
+import { EventCard, EventDetailsView, EventsFiltersDrawer } from '../components';
+import { useEventDetailsRoute } from '../hooks/useEventDetailsRoute';
 import { useEventsInfinite } from '../hooks/useEventsInfinite';
 import type { EventCardResponse, EventFiltersQS } from '../types/events.types';
 import { countActiveEventFilters } from '../utils/eventsFilterKey';
@@ -19,6 +21,22 @@ export default function EventsPage() {
 
   const [filters, setFilters] = useState<EventFiltersQS>(initialFilters);
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const { slug, openEvent, closeEvent } = useEventDetailsRoute();
+  const { captureScroll } = usePreservedScroll(!!slug);
+
+  const handleSelectEvent = useCallback(
+    (item: EventCardResponse) => {
+      captureScroll();
+      openEvent(item.slug);
+    },
+    [captureScroll, openEvent]
+  );
+
+  // Back/Forward can land on an event while the filters drawer is open: only one overlay at a time.
+  useEffect(() => {
+    if (slug) setFiltersOpen(false);
+  }, [slug]);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useEventsInfinite({
     pageSize,
@@ -68,7 +86,7 @@ export default function EventsPage() {
                     ))}
 
                   {items.map((item) => (
-                    <EventCard key={item.id} item={item} />
+                    <EventCard key={item.id} item={item} onSelect={handleSelectEvent} />
                   ))}
                 </article>
 
@@ -98,6 +116,8 @@ export default function EventsPage() {
           onReset={() => setFilters(initialFilters)}
           onApply={(next) => setFilters(next)}
         />
+
+        <EventDetailsView open={!!slug} onClose={closeEvent} slug={slug} />
       </div>
     </section>
   );

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { toListPathname } from '../../shared/lib/routes';
 
 declare global {
   interface Window {
@@ -13,7 +14,7 @@ export function useRouteTracking() {
   const lastPath = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    const path = `${pathname}${search}${hash}`;
+    const path = `${toListPathname(pathname)}${search}${hash}`;
 
     // Evita el doble-disparo en dev por React.StrictMode
     if (lastPath.current === path) return;

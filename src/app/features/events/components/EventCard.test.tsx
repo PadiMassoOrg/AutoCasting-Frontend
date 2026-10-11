@@ -1,12 +1,24 @@
-import { render } from '@testing-library/react';
-import type { ReactNode } from 'react';
+import { fireEvent, render } from '@testing-library/react';
+import type { KeyboardEventHandler, MouseEventHandler, ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import type { EventCardResponse } from '../types/events.types';
 import EventCard from './EventCard';
 
 vi.mock('autocasting-ui-library-padimasso', () => ({
   Icon: () => null,
-  SectionCard: ({ children }: { children: ReactNode }) => <section>{children}</section>,
+  SectionCard: ({
+    children,
+    onClick,
+    onKeyDown,
+  }: {
+    children: ReactNode;
+    onClick?: MouseEventHandler;
+    onKeyDown?: KeyboardEventHandler;
+  }) => (
+    <section role="button" tabIndex={0} onClick={onClick} onKeyDown={onKeyDown}>
+      {children}
+    </section>
+  ),
   Separator: () => null,
   ThumbnailImage: ({ src, alt }: { src?: string | null; alt?: string }) => <img src={src ?? undefined} alt={alt} />,
 }));
@@ -25,34 +37,61 @@ const item = (overrides: Partial<EventCardResponse> = {}): EventCardResponse => 
 
 describe('EventCard', () => {
   it('shows name and dates info', () => {
-    const { container } = render(<EventCard item={item()} />);
+    const { container } = render(<EventCard item={item()} onSelect={vi.fn()} />);
 
     expect(container.textContent).toContain('Muestra de teatro');
     expect(container.textContent).toContain('Lun-Mar 20:30hs');
   });
 
   it('shows start and end dates', () => {
-    const { container } = render(<EventCard item={item()} />);
+    const { container } = render(<EventCard item={item()} onSelect={vi.fn()} />);
 
     expect(container.textContent).toContain('12/10/2026 - 14/10/2026');
   });
 
   it('shows the location', () => {
-    const { container } = render(<EventCard item={item()} />);
+    const { container } = render(<EventCard item={item()} onSelect={vi.fn()} />);
 
     expect(container.textContent).toContain('Teatro del Abasto, Buenos Aires');
   });
 
   it('shows the event image', () => {
-    const { container } = render(<EventCard item={item()} />);
+    const { container } = render(<EventCard item={item()} onSelect={vi.fn()} />);
 
     expect(container.querySelector('img')?.getAttribute('src')).toBe('https://img/event.jpeg');
   });
 
   it('omits the dates info when missing', () => {
-    const { container } = render(<EventCard item={item({ datesInfo: null })} />);
+    const { container } = render(<EventCard item={item({ datesInfo: null })} onSelect={vi.fn()} />);
 
     expect(container.textContent).not.toContain('Lun-Mar 20:30hs');
     expect(container.textContent).toContain('Muestra de teatro');
+  });
+
+  it('calls onSelect with the event when clicked', () => {
+    const onSelect = vi.fn();
+    const { container } = render(<EventCard item={item()} onSelect={onSelect} />);
+
+    fireEvent.click(container.querySelector('section')!);
+
+    expect(onSelect).toHaveBeenCalledWith(item());
+  });
+
+  it.each(['Enter', ' '])('calls onSelect when "%s" is pressed', (key) => {
+    const onSelect = vi.fn();
+    const { container } = render(<EventCard item={item()} onSelect={onSelect} />);
+
+    fireEvent.keyDown(container.querySelector('section')!, { key });
+
+    expect(onSelect).toHaveBeenCalledTimes(1);
+  });
+
+  it('ignores other keys', () => {
+    const onSelect = vi.fn();
+    const { container } = render(<EventCard item={item()} onSelect={onSelect} />);
+
+    fireEvent.keyDown(container.querySelector('section')!, { key: 'a' });
+
+    expect(onSelect).not.toHaveBeenCalled();
   });
 });

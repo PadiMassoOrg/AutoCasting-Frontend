@@ -154,7 +154,7 @@ function AppRoutesContent() {
         <Route path={ROUTES.PUBLIC_CASTING + '/:slug'} element={<CastingPublicOverviewPage />} />
         <Route path={ROUTES.TALENT_DATABASE} element={<TalentDatabasePage />} />
         <Route path={ROUTES.CASTING_DATABASE} element={<CastingDatabasePage />} />
-        <Route path={ROUTES.EVENTS} element={<EventsPage />} />
+        <Route path={`${ROUTES.EVENTS}/:slug?`} element={<EventsPage />} />
       </Route>
       <Route
         path={ROUTES.ALL}

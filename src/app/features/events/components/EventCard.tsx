@@ -5,13 +5,27 @@ import type { EventCardResponse } from '../types/events.types';
 
 type Props = {
   item: EventCardResponse;
+  onSelect: (item: EventCardResponse) => void;
 };
 
-export default function EventCard({ item }: Props) {
+export default function EventCard({ item, onSelect }: Props) {
   const { name, startDate, endDate, datesInfo, location, imageUrl } = item;
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    onSelect(item);
+  };
+
   return (
-    <SectionCard withContentWrapper={false}>
+    <SectionCard
+      withContentWrapper={false}
+      className="cursor-pointer"
+      onClick={() => onSelect(item)}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+    >
       <div className="w-full flex flex-col p-4">
         <div className="aspect-[77/40] w-full overflow-hidden rounded-xl">
           <ThumbnailImage

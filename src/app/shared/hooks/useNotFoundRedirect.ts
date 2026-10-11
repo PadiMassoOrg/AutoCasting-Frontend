@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../context/ToastContext';
 import { isBackendNotFoundError } from '../utils/backendErrorHandling';
+import { unavailableToast } from '../utils/unavailableToast';
 
 // When a public resource is no longer available (backend 404), send the visitor to `to` with an error
 // toast instead of rendering an error page. Returns true while redirecting so the page renders nothing.
@@ -15,13 +16,7 @@ export const useNotFoundRedirect = (error: unknown, to: string, messageKey: stri
 
   useEffect(() => {
     if (!isNotFound) return;
-    showToast({
-      title: t('state.no_results'),
-      description: t(messageKey),
-      type: 'warning',
-      durationMs: 7000,
-      closable: true,
-    });
+    showToast(unavailableToast(t, messageKey));
     navigate(to, { replace: true });
   }, [isNotFound, messageKey, navigate, showToast, t, to]);
 

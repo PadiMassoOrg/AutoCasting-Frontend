@@ -28,6 +28,7 @@ export type SiteMetadataResponse = {
   currencyOptions: SiteMetadataObject[];
   castingApplicationStatusOptions: SiteMetadataObject[];
   proposalTypeOptions: SiteMetadataObject[];
+  entryAccessOptions: SiteMetadataObject[];
 };
 
 export type SiteMetadataVersion = {

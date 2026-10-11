@@ -30,6 +30,9 @@ export const PROJECT_TYPE_COMMERCIAL = 'sitemetadata.project_type.commercial' as
 export const PROJECT_TYPE_MUSIC_VIDEO = 'sitemetadata.project_type.music_video' as const;
 export const PROJECT_TYPE_OTHER = 'sitemetadata.project_type.other' as const;
 
+// Entry Access (events)
+export const ENTRY_ACCESS_ONLINE = 'sitemetadata.entry_access.online' as const;
+
 // Gender
 export const GENDER_INDISTINCT = 'sitemetadata.gender.indistinct' as const;
 
