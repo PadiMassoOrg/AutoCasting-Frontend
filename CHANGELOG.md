@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-10-22
+
+- Versión: `1.6.1`
+- Feature (AI-96): ruta `/unsubscribe/:token` (link de baja de los emails masivos): redirige al home y muestra un toast con el resultado. Llama al Backend sin token de sesión y queda exenta del wizard de onboarding forzado, igual que los links de proposals.
+- Fix (AI-69): los nombres de texto libre (créditos, educación, nombre artístico) aceptan cualquier carácter imprimible; solo se rechazan caracteres de control.
+- Cambio menor en la landing (`MainSitePage`).
+- Tests: Vitest para `UnsubscribeRedirect`.
+- Requiere Backend `1.6.1`.
+
 ## 2026-10-01
 
 - Versión: `1.6.0`
