@@ -22,6 +22,7 @@ export const ROUTES = {
   CASTING_DATABASE: '/casting-database',
   PUBLIC_CASTING: '/casting',
   PROPOSAL: '/proposal',
+  UNSUBSCRIBE: '/unsubscribe',
   SUPPORT: '/support',
   FAQ: '/faq',
   TERMS: '/terms-and-conditions',
@@ -132,4 +133,6 @@ export const API_ROUTES = {
   PROPOSAL_ATTACH: (token: string) => `/proposals/${token}/attach`,
   PROPOSAL_CLAIM: (token: string) => `/proposals/${token}/claim`,
   PROPOSAL_CLAIM_RESULT: (token: string) => `/proposals/${token}/claim-result`,
+  // Email preferences
+  EMAIL_UNSUBSCRIBE: (token: string) => `/email-preferences/${token}/unsubscribe`,
 };

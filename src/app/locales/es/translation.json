@@ -1343,6 +1343,11 @@
       }
     ]
   },
+  "email_preferences": {
+    "unsubscribed_title": "Listo, te diste de baja.",
+    "unsubscribed": "No vas a recibir más estos emails.",
+    "link_invalid": "Este link de baja no es válido."
+  },
   "proposals": {
     "link_invalid": "Este link ya no es válido o ya fue utilizado.",
     "page": {

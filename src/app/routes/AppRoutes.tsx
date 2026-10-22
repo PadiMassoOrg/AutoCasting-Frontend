@@ -31,6 +31,7 @@ const CastingDetailsPage = lazy(() => import('../features/public-casting/pages/C
 const CastingPublicOverviewPage = lazy(() => import('../features/public-casting/pages/CastingPublicOverviewPage'));
 const ProposalPage = lazy(() => import('../features/proposals/pages/ProposalPage'));
 const PublicProfilePage = lazy(() => import('../features/public-profile/pages/PublicProfilePage'));
+const UnsubscribeRedirect = lazy(() => import('../features/email-preferences/components/UnsubscribeRedirect'));
 const TalentDatabasePage = lazy(() => import('../features/talent-database/pages/TalentDatabasePage'));
 
 function RouteTracker() {
@@ -118,8 +119,9 @@ function AppRoutesContent() {
   const needsEmployerWizard =
     hasToken && hasMeData && meData.activeMode === 'EMPLOYER' && meData.employerOnboardingStatus !== 'COMPLETED';
 
-  const isProposalLink = location.pathname.startsWith(ROUTES.PROPOSAL + '/');
-  const wizardApplies = !isProposalLink && (!sessionFromOtherTab || isProtectedPath(location.pathname));
+  const isTokenLink =
+    location.pathname.startsWith(ROUTES.PROPOSAL + '/') || location.pathname.startsWith(ROUTES.UNSUBSCRIBE + '/');
+  const wizardApplies = !isTokenLink && (!sessionFromOtherTab || isProtectedPath(location.pathname));
   const shouldForceWizard =
     hasToken && hasMeData && wizardApplies && (needsInitialWizard || needsTalentWizard || needsEmployerWizard);
 
@@ -137,6 +139,7 @@ function AppRoutesContent() {
     <Routes>
       <Route path={ROUTES.AUTH} element={<AuthenticationPage />} />
       <Route path={ROUTES.PROPOSAL + '/:token/*'} element={<ProposalPage />} />
+      <Route path={ROUTES.UNSUBSCRIBE + '/:token'} element={<UnsubscribeRedirect />} />
       <Route path={ROUTES.GOOGLE_OAUTH_SUCCESS} element={<GoogleAuthSuccessPage />} />
       <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
       <Route element={<MainSiteLayout />}>
